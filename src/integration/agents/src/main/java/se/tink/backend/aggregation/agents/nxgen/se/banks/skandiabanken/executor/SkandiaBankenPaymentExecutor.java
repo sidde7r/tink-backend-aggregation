@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
@@ -62,7 +61,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
     private void submitPayment(PaymentRequest paymentRequest) {
         try {
-            apiClient.submitPayment(addPaymentRequestToList(paymentRequest));
+            apiClient.submitPayment(paymentRequest);
         } catch (HttpResponseException e) {
             throw getTransferFailedException(
                     TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
@@ -72,16 +71,14 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     }
 
     private void signPayment(String encryptedPaymentId) {
-        ArrayList<String> paymentIdList = addEncryptedPaymentIdToList(encryptedPaymentId);
-
-        String signReference = initPaymentSigning(paymentIdList);
+        String signReference = initPaymentSigning(encryptedPaymentId);
 
         supplementalInformationController.openMobileBankIdAsync(null);
 
         poll(signReference);
 
         try {
-            apiClient.completePayment(paymentIdList, signReference);
+            apiClient.completePayment(encryptedPaymentId, signReference);
         } catch (HttpResponseException e) {
             throw getTransferFailedException(
                     TransferExceptionMessage.COMPLETE_PAYMENT_FAILED,
@@ -90,10 +87,10 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         }
     }
 
-    private String initPaymentSigning(ArrayList<String> paymentIdList) {
+    private String initPaymentSigning(String encryptedPaymentId) {
         PaymentInitSignResponse initSignResponse;
         try {
-            initSignResponse = apiClient.initSignPayment(paymentIdList);
+            initSignResponse = apiClient.initSignPayment(encryptedPaymentId);
         } catch (HttpResponseException e) {
             throw getTransferFailedException(
                     TransferExceptionMessage.INIT_SIGN_FAILED,
@@ -114,18 +111,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     private String getEncryptedPaymentIdFromBank(PaymentRequest paymentRequest) {
         FetchPaymentsResponse unapprovedPayments = apiClient.fetchUnapprovedPayments();
         return findPayment(unapprovedPayments, paymentRequest).getEncryptedPaymentId();
-    }
-
-    private ArrayList<PaymentRequest> addPaymentRequestToList(PaymentRequest paymentRequest) {
-        ArrayList<PaymentRequest> paymentRequestList = new ArrayList<>();
-        paymentRequestList.add(paymentRequest);
-        return paymentRequestList;
-    }
-
-    private ArrayList<String> addEncryptedPaymentIdToList(String encryptedPaymentId) {
-        ArrayList<String> paymentIdList = new ArrayList<>();
-        paymentIdList.add(encryptedPaymentId);
-        return paymentIdList;
     }
 
     private UpcomingPaymentEntity findPayment(
