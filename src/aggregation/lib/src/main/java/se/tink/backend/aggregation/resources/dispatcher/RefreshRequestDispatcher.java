@@ -88,7 +88,7 @@ public class RefreshRequestDispatcher {
         return clientInfo.getAppId().equals("3c759efb06d04530bc365a338e4a0e7f")
                 && ABTestingGroupCalculator.newMd5GroupCalculator()
                         .isInTestGroupAllowZeroAndOneTestTraffic(
-                                0.05, request.getCredentials().getId());
+                                0.3, request.getCredentials().getId());
     }
 
     private boolean isHighPrioRequest(CredentialsRequest request) {
