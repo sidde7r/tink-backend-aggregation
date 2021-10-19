@@ -1,0 +1,72 @@
+
+REQUEST 1
+POST https://api.alandsbanken.se/oidc/v1.0/token?grant_type=authorization_code
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"eyJraWQiOiIxZmE0MDAzZS03OGFlLTQ4ZDEtODM1Mi01OTY4MzM2NjAzOWYiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI**HASHED:5n**wic2NvcGUiOiJvcGVuaWQgYWNjb3VudHMiLCJzdHJvbmdseUF1dGhlbnRpY2F0ZWQiOmZhbHNlLCJpc3MiOiJodHRwczpcL1wvYXBpLmFsYW5kc2Jhbmtlbi5zZSIsImNuZiI6eyJ4NXQjUzI1NiI6IjRjbi1fcGx3U183SDNIekY0d0kwQ2xIdEZieFBiTmxreG94d1FMMUkzY0UifSwiZXhwIjoxNjMwMzE5MzAxLCJpYXQiOjE2MzAzMTkxMjEsImp0aSI6IjA2ZjYxYmI1LWQ3ZjQtNDk5OS04ZjhhLWM5NmJiNWExOTRlNiIsInRlbmFudCI6ImFsYW5kc2Jhbmtlbi1zZSJ9.LqeE4jBe_7115gYVGP4shRCV4OGkI7BN0wxA5HBOrfxNkWxk_1VGeKhGgNiOBxHaWIGp1jeYw1kbWCpByd-ruuiHJiX-oLfvt-ZxFaAO1fn4wdD4Qn1fTW_xFdE-XkboTNasbg5nLtpQYcTLO1nU1j8mjhonJLC8V6pWjSnywIyMgSSFEI7YSq98wfxQ5sTmGoW6yTEeQarV_Rp_2sJZSTLpktzysaPH30aCcgQYp5t-0AmINW0dksK4hta_x8kBA2sdEU1Y9fPFblGZ19e8jmBgR5Rh3aF5JXEFw51ETD2DaopJz6drvKmxMAR5himZSzsvbN2w0N5tG6Ewi0umLQ","scope":"openid accounts","token_type":"Bearer","expires_in":180}
+
+REQUEST 2
+POST https://api.alandsbanken.se/oidc/v1.0/token?grant_type=client_credentials
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"eyJraWQiOiIxZmE0MDAzZS03OGFlLTQ4ZDEtODM1Mi01OTY4MzM2NjAzOWYiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI**HASHED:5n**wic2NvcGUiOiJvcGVuaWQgYWNjb3VudHMiLCJzdHJvbmdseUF1dGhlbnRpY2F0ZWQiOmZhbHNlLCJpc3MiOiJodHRwczpcL1wvYXBpLmFsYW5kc2Jhbmtlbi5zZSIsImNuZiI6eyJ4NXQjUzI1NiI6IjRjbi1fcGx3U183SDNIekY0d0kwQ2xIdEZieFBiTmxreG94d1FMMUkzY0UifSwiZXhwIjoxNjMwMzE5MzAxLCJpYXQiOjE2MzAzMTkxMjEsImp0aSI6IjA2ZjYxYmI1LWQ3ZjQtNDk5OS04ZjhhLWM5NmJiNWExOTRlNiIsInRlbmFudCI6ImFsYW5kc2Jhbmtlbi1zZSJ9.LqeE4jBe_7115gYVGP4shRCV4OGkI7BN0wxA5HBOrfxNkWxk_1VGeKhGgNiOBxHaWIGp1jeYw1kbWCpByd-ruuiHJiX-oLfvt-ZxFaAO1fn4wdD4Qn1fTW_xFdE-XkboTNasbg5nLtpQYcTLO1nU1j8mjhonJLC8V6pWjSnywIyMgSSFEI7YSq98wfxQ5sTmGoW6yTEeQarV_Rp_2sJZSTLpktzysaPH30aCcgQYp5t-0AmINW0dksK4hta_x8kBA2sdEU1Y9fPFblGZ19e8jmBgR5Rh3aF5JXEFw51ETD2DaopJz6drvKmxMAR5himZSzsvbN2w0N5tG6Ewi0umLQ","scope":"openid accounts","token_type":"Bearer","expires_in":180}
+
+REQUEST 3
+POST https://api.alandsbanken.se/open-banking/v3.1/aisp/account-access-consents
+
+RESPONSE 3
+201
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"ConsentId":"**HASHED:YH**","CreationDateTime":"**HASHED:TO**","Status":"**HASHED:0+**","StatusUpdateDateTime":"**HASHED:TO**","Permissions":["**HASHED:2c**","**HASHED:vO**","**HASHED:ce**","**HASHED:wc**","**HASHED:xz**"],"ExpirationDateTime":"**HASHED:Bp**"},"Risk":{},"Links":{"Self":"**HASHED:+2**/open-banking/v3.1/aisp/account-access-consents/**HASHED:YH**"},"Meta":{}}
+
+REQUEST 4
+GET https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Account":[{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","Currency":"SEK","AccountType":"Personal","AccountSubType":"CurrentAccount","Description":"PREMIUMKONTO","Account":[{"SchemeName":"UK.OBIE.IBAN","Identification":"SE1923000000023100231222","Name":"WICK JOHN"}]}]},"Links":{"Self":"https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts"},"Meta":{}}
+
+REQUEST 5
+GET https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts/22372fe2-fb83-11eb-8fdb-ff271038e1b7/balances
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Balance":[{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","CreditDebitIndicator":"Credit","Type":"InterimBooked","DateTime":"2021-08-24T16:25:12.786Z","Amount":{"Amount":"1872.61","Currency":"SEK"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","CreditDebitIndicator":"Credit","Type":"InterimAvailable","DateTime":"2021-08-24T16:25:12.786Z","Amount":{"Amount":"1872.61","Currency":"SEK"}}]},"Links":{"Self":"https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts/22372fe2-fb83-11eb-8fdb-ff271038e1b7/balances"},"Meta":{}}
+
+REQUEST 6
+GET https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Account":[{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","Currency":"SEK","AccountType":"Personal","AccountSubType":"CurrentAccount","Description":"PREMIUMKONTO","Account":[{"SchemeName":"UK.OBIE.IBAN","Identification":"SE1923000000023100231222","Name":"WICK JOHN"}]}]},"Links":{"Self":"https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts"},"Meta":{}}
+
+REQUEST 7
+GET https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts/22372fe2-fb83-11eb-8fdb-ff271038e1b7/transactions?toBookingDateTime=1992-04-09T00%3A00%3A00&fromBookingDateTime=1992-01-11T00%3A00%3A00
+
+RESPONSE 7
+403
+Content-Type: application/json
+
+{"Code":"403 Forbidden","Id":"8df7240f-51f2-4d5e-be3a-a3c326bda292","Message":"The request transaction interval [2021-05-26T00:00Z to 2021-08-24T00:00Z] is not inside the interval limits [2021-05-26T16:25:13.781Z to 2021-08-24T16:25:13.781Z] for this level of authentication [SCA: false]","Errors":[{"ErrorCode":"UK.OBIE.Reauthenticate","Message":"The request transaction interval [2021-05-26T00:00Z to 2021-08-24T00:00Z] is not inside the interval limits [2021-05-26T16:25:13.781Z to 2021-08-24T16:25:13.781Z] for this level of authentication [SCA: false]"}]}
+
+REQUEST 8
+GET https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts/22372fe2-fb83-11eb-8fdb-ff271038e1b7/transactions?toBookingDateTime=2021-08-24T16%3A25%3A13&fromBookingDateTime=2021-05-26T16%3A35%3A13
+
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210527232910014878","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-27T00:00:00Z","ValueDateTime":"2021-05-27T00:00:00Z","Amount":{"Amount":"100.00","Currency":"SEK"},"BankTransactionCode":{"Code":"IRCT","SubCode":"DMCT"},"ProprietaryBankTransactionCode":{"Code":"SWI"},"CreditorAccount":{"Name":"AB SVENSKA SPEL"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210527230650011486","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-27T00:00:00Z","ValueDateTime":"2021-05-27T00:00:00Z","Amount":{"Amount":"429.00","Currency":"SEK"},"BankTransactionCode":{"Code":"OTHR","SubCode":"OTHR"},"ProprietaryBankTransactionCode":{"Code":"AUT"},"CreditorAccount":{"Name":"DAGENS NYHET"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210527230650009919","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-27T00:00:00Z","ValueDateTime":"2021-05-27T00:00:00Z","Amount":{"Amount":"100.00","Currency":"SEK"},"BankTransactionCode":{"Code":"MDOP","SubCode":"CHRG"},"ProprietaryBankTransactionCode":{"Code":"BAV"},"CreditorAccount":{"Name":"ÅLANDSBANKEN ABP"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210527232900005431","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2021-05-27T00:00:00Z","ValueDateTime":"2021-05-27T00:00:00Z","Amount":{"Amount":"6000.00","Currency":"SEK"},"BankTransactionCode":{"Code":"RCDT","SubCode":"DMCT"},"ProprietaryBankTransactionCode":{"Code":"ÖVR"},"DebtorAccount":{"Name":"MONICA DOE"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210527232990003527","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-27T00:00:00Z","ValueDateTime":"2021-05-27T00:00:00Z","Amount":{"Amount":"504.80","Currency":"SEK"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"Indian Stories"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210527232990003463","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-27T00:00:00Z","ValueDateTime":"2021-05-27T00:00:00Z","Amount":{"Amount":"149.00","Currency":"SEK"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"SUSHI BAR SHINANO"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210527232990001909","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-27T00:00:00Z","ValueDateTime":"2021-05-27T00:00:00Z","Amount":{"Amount":"430.00","Currency":"SEK"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"GRONSAKEN AUBERGINE I"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210526230650006634","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-26T00:00:00Z","ValueDateTime":"2021-05-26T00:00:00Z","Amount":{"Amount":"5080.00","Currency":"SEK"},"BankTransactionCode":{"Code":"OTHR","SubCode":"OTHR"},"ProprietaryBankTransactionCode":{"Code":"AUT"},"CreditorAccount":{"Name":"IKANO BANK"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210526232990003144","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-26T00:00:00Z","ValueDateTime":"2021-05-26T00:00:00Z","Amount":{"Amount":"860.16","Currency":"SEK"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"INGO DJURHAMN"}},{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","TransactionId":"20210526232990002041","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-05-26T00:00:00Z","ValueDateTime":"2021-05-26T00:00:00Z","Amount":{"Amount":"40.00","Currency":"SEK"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"DJURO BRON"}}]},"Links":{"Self":"https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts/22372fe2-fb83-11eb-8fdb-ff271038e1b7/transactions"},"Meta":{}}
