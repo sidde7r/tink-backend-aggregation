@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.event.configuration;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.http.event.masking.keys.MaskKeysWithNum
 import se.tink.backend.aggregation.nxgen.http.event.masking.keys.RawBankDataKeyValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.MaskAllValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.RawBankDataFieldValueMaskingStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskDateValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DummyFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.RawBankDataFieldTypeDetectionStrategy;
 
@@ -24,7 +26,9 @@ public class RawBankDataEventCreationStrategies {
                 .keyMaskingStrategies(
                         Collections.singletonList(new MaskKeysWithNumericValuesStrategy()))
                 .valueMaskingStrategies(
-                        Collections.singletonList(new MaskAllValueMaskingStrategy()))
+                        Arrays.asList(
+                                new UnmaskDateValueMaskingStrategy(),
+                                new MaskAllValueMaskingStrategy()))
                 .fieldTypeDetectionStrategies(
                         Collections.singletonList(new DummyFieldTypeDetectionStrategy()))
                 .build();
