@@ -62,15 +62,6 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
                 List<FieldPathPart> fieldPath = fieldData.getFieldPath();
                 String fieldValue = fieldData.getFieldValue();
                 JsonNodeType type = fieldData.getFieldType();
-                String maskedFieldValue =
-                        maskFieldValue(
-                                fieldPath,
-                                fieldValue,
-                                rawBankDataEventCreationStrategies.getValueMaskingStrategies());
-                String maskedFieldPath =
-                        maskFieldKey(
-                                fieldPath,
-                                rawBankDataEventCreationStrategies.getKeyMaskingStrategies());
                 RawBankDataTrackerEventBankFieldType fieldType =
                         getFieldType(
                                 fieldPath,
@@ -78,6 +69,16 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
                                 type,
                                 rawBankDataEventCreationStrategies
                                         .getFieldTypeDetectionStrategies());
+                String maskedFieldValue =
+                        maskFieldValue(
+                                fieldPath,
+                                fieldValue,
+                                fieldType,
+                                rawBankDataEventCreationStrategies.getValueMaskingStrategies());
+                String maskedFieldPath =
+                        maskFieldKey(
+                                fieldPath,
+                                rawBankDataEventCreationStrategies.getKeyMaskingStrategies());
                 boolean isFieldMasked = !(maskedFieldValue.equals(fieldValue));
                 boolean isFieldSet = !(JsonNodeType.NULL.equals(type));
 
@@ -146,10 +147,11 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
     private static String maskFieldValue(
             List<FieldPathPart> fieldPathParts,
             String fieldValue,
+            RawBankDataTrackerEventBankFieldType fieldType,
             List<RawBankDataFieldValueMaskingStrategy> strategies) {
         for (RawBankDataFieldValueMaskingStrategy strategy : strategies) {
-            if (strategy.shouldMask(fieldPathParts, fieldValue)) {
-                return strategy.mask(fieldPathParts, fieldValue);
+            if (strategy.shouldMask(fieldPathParts, fieldValue, fieldType)) {
+                return strategy.mask(fieldPathParts, fieldValue, fieldType);
             }
         }
         return "MASKED_VALUE";
