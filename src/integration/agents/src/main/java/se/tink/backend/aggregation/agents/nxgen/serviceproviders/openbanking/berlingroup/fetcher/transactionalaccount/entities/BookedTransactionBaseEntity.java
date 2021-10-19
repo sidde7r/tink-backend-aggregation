@@ -11,6 +11,7 @@ public class BookedTransactionBaseEntity extends TransactionDetailsBaseEntity {
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
                 .setDescription(getTransactionDescription())
+                .setTransactionReference(entryReference)
                 .build();
     }
 }
