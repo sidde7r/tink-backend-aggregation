@@ -22,6 +22,7 @@ junit_test(
         "//third_party:lombok_libs",
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@com_google_api_grpc_proto_google_common_protos",
         "@com_tink_api_grpc//event_producer_service:event_producer_service_java_proto",
