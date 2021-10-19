@@ -1,0 +1,264 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "ES47 3190 1378 1376 5276 3362",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "doubleValue" : 0.0,
+            "unscaledValue" : 0,
+            "scale" : 2,
+            "exactValue" : 0.0
+        },
+        "currencyCode" : "EUR",
+        "bankId" : "ES4731901378137652763362",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "CUENTAS PERSONALES *3362",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://ES4731901378137652763362\"]",
+        "closed" : false,
+        "holderName" : "Dummyname Dummylastname",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Dummyname Dummylastname",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.0
+    } ],
+    "transactions" : [ {
+        "amount" : -28.02,
+        "date" : 1597658400000,
+        "description" : "Revolut**7332* PAGO CON TARJETA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 10.0,
+        "date" : 1562234400000,
+        "description" : "TRANSFERENCIA RECIBIDA Recarga",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -7.26,
+        "date" : 1562234400000,
+        "description" : "VALORES - ADMINISTRACION DE DEPOSITOS OTROS",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1.1,
+        "date" : 1560420000000,
+        "description" : "FARMACIA NETO DEL RIO C.B PAGO CON TARJETA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -4.8,
+        "date" : 1558692000000,
+        "description" : "FARMACIA NETO DEL RIO C.B PAGO CON TARJETA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1.1,
+        "date" : 1557482400000,
+        "description" : "FARMACIA CASINES PAGO CON TARJETA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -7.0,
+        "date" : 1555495200000,
+        "description" : "KEBAB ANDALUZ PAGO CON TARJETA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1.1,
+        "date" : 1555495200000,
+        "description" : "FARMACIA NETO DEL RIO C.B PAGO CON TARJETA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -20.0,
+        "date" : 1533722400000,
+        "description" : "DISPOSICION DE EFECTIVO EN CAJERO SERVIRED BBVA OFICINA Nº 6705",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 30.0,
+        "date" : 1532340000000,
+        "description" : "TRANSFERENCIA RECIBIDA Dinerito BBVA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -13.0,
+        "date" : 1532340000000,
+        "description" : "SABOR KEBAB PAGO CON TARJETA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -7.76,
+        "date" : 1531908000000,
+        "description" : "VALORES - CARGO POR COMPRA DE TITULOS",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -20.0,
+        "date" : 1531821600000,
+        "description" : "DISPOSICION DE EFECTIVO EN CAJERO SERVIRED BBVA OFICINA Nº 6705",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 40.0,
+        "date" : 1531821600000,
+        "description" : "TRANSFERENCIA RECIBIDA Dinerito",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 10.0,
+        "date" : 1531216800000,
+        "description" : "TRANSFERENCIA RECIBIDA Primer ingreso",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FIRST_NAME",
+            "value" : "dummyName"
+        }, {
+            "type" : "SURNAME",
+            "value" : "dummyLastName"
+        }, {
+            "type" : "SURNAME",
+            "value" : "RUIZ"
+        } ],
+        "dateOfBirth" : {
+            "year" : 1997,
+            "month" : "AUGUST",
+            "chronology" : {
+                "id" : "ISO",
+                "calendarType" : "iso8601"
+            },
+            "era" : "CE",
+            "monthValue" : 8,
+            "dayOfMonth" : 13,
+            "dayOfYear" : 225,
+            "dayOfWeek" : "WEDNESDAY",
+            "leapYear" : false
+        },
+        "nieNumber" : null,
+        "nifNumber" : "049093966Y",
+        "passportNumber" : null,
+        "otherDocumentNumber" : null
+    }
+}

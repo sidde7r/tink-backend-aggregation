@@ -1,0 +1,3971 @@
+REQUEST 1
+POST https://servicios.bbva.es/ASO/grantingTicketActions/V01/refreshGrantingTicket
+Accept: application/json,*/*
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+RESPONSE 1
+403
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+X-Frame-Options: sameorigin
+tsec: dummyTsec
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:07 GMT
+Connection: close
+Vary: Accept-Encoding
+
+{
+  "version": 1,
+  "severity": "FATAL",
+  "http-status": 403,
+  "error-code": "50",
+  "error-message": "No se ha encontrado tsec en la petición",
+  "consumer-request-id": "c1b80c67-5bb7-4c2c-ac9f-ea299a271b77",
+  "system-error-code": "forbidden",
+  "system-error-description": "No se ha encontrado tsec en la petición",
+  "system-error-cause": "com.grupobbva.sl.soa.core.exception.ServiceArchitectureException"
+}
+
+REQUEST 2
+POST https://servicios.bbva.es/ASO/TechArchitecture/grantingTickets/V02
+Accept: application/json
+Content-Type: application/json
+ConsumerID: 00000013
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+{
+  "authentication": {
+    "userID": "0019-01234567X",
+    "consumerID": "00000013",
+    "authenticationType": "02",
+    "authenticationData": [
+      {
+        "authenticationData": [
+          "123456"
+        ],
+        "idAuthenticationData": "password"
+      }
+    ]
+  }
+}
+
+RESPONSE 2 SET Checking
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+X-Frame-Options: sameorigin
+tsec: dummyTsec
+X-Content-Type-Options: nosniff
+Date: Mon, 27 Sep 2021 12:56:08 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+
+{
+  "authenticationData": [],
+  "authenticationState": "OK",
+  "user": {
+    "id": "dummyUserId",
+    "authenticationType": "02",
+    "alias": "049093966Y",
+    "role": "O",
+    "otherUserInfo": {
+      "MEDICOS_BARCELONA": "N",
+      "FILE_OPERATION": "N",
+      "ORIGIN_CX": "N",
+      "ORIGIN_UNNIM": "N"
+    },
+    "personalization": {
+      "channelCode": "04",
+      "personalizationCode": "T"
+    },
+    "person": {
+      "id": "dummyUserId"
+    },
+    "lastAccessDate": "2021-09-27T14:42:31.0+0200"
+  }
+}
+
+REQUEST 3 MATCH Checking
+GET https://servicios.bbva.es/ASO/financialDashBoard/V03?%2524customer.id=dummyUserId&%2524filter=%28showPending%3D%3Dtrue%29%3B%28hasSicav%3D%3Dfalse%29
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+RESPONSE 3
+200
+Content-Type: application/json; charset=UTF-8
+tsec: dummyTsec
+
+{
+  "positions": [
+    {
+      "contract": {
+        "account": {
+          "id": "ES01820020dummyIUCXXXXXXXXX",
+          "counterPart": "0020",
+          "country": "ES",
+          "bank": {
+            "id": "0182"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "9465"
+          },
+          "formats": {
+            "iban": "ES4731901378137652763362",
+            "bocf": "dummyBOCF",
+            "ccc": "dummyCCC",
+            "iuc": "dummyIUC"
+          },
+          "joinType": {
+            "id": "0",
+            "name": "UNIPERSONAL"
+          },
+          "currency": {
+            "id": "EUR"
+          },
+          "userCustomization": {
+            "favorite": false
+          },
+          "product": {
+            "id": "0CA0000079",
+            "name": "CUENTAS PERSONALES",
+            "description": "CUENTA JOVEN BBVA",
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00004",
+                "name": "CUENTAS EN EUROS Y DIVISAS"
+              },
+              {
+                "id": "00056",
+                "name": "CUENTAS PERSONALES"
+              }
+            ]
+          },
+          "participants": [
+            {
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              },
+              "orden": 1
+            }
+          ],
+          "sublevel": " ",
+          "currentBalance": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "availableBalance": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "currentBalanceLocalCurrency": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "availableBalanceLocalCurrency": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "dueDate": "9999-12-31T00:00:00.000+0100"
+        }
+      },
+      "isIncludedInMySituation": true,
+      "userAccessControl": {
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      },
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "balanceAgrupation": "Account"
+    }
+  ],
+  "familyBalances": [
+    {
+      "id": "Account",
+      "balance": {
+        "currency": {
+          "id": "EUR"
+        },
+        "amount": 0.00
+      }
+    }
+  ],
+  "assetBalance": {
+    "currency": {
+      "id": "EUR"
+    },
+    "amount": 0.00
+  },
+  "hasMoreData": false
+}
+
+REQUEST 4
+GET https://servicios.bbva.es/ASO/contracts/V01/ES01820020dummyIUCXXXXXXXXX/participants/
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+RESPONSE 4 SET Credit
+200
+Content-Type: application/json; charset=UTF-8
+tsec: dummyTsec
+
+{
+  "participants": [
+    {
+      "id": "dummyUserId",
+      "identityDocument": [
+        {
+          "type": {
+            "code": "1",
+            "name": "D.N.I. O N.I.F. DE PERSONA FISICA"
+          },
+          "number": "049093966Y"
+        }
+      ],
+      "name": "dummyName",
+      "type": "F",
+      "lastName": "dummyLastName",
+      "mothersLastName": "RUIZ",
+      "relationship": {
+        "type": {
+          "id": "TIT",
+          "name": "TITULAR"
+        },
+        "order": 1
+      },
+      "signature": {
+        "type": {
+          "id": "I",
+          "name": "INDISTINTA"
+        },
+        "isMandatary": false
+      },
+      "signatureContractDetail": {
+        "joinType": {
+          "id": " ",
+          "name": "NO APLICA"
+        },
+        "signaturesRequiredNumber": 0
+      }
+    }
+  ],
+  "hasMoreData": "N"
+}
+
+REQUEST 5 MATCH Credit
+GET https://servicios.bbva.es/ASO/financialDashBoard/V03?%2524customer.id=dummyUserId&%2524filter=%28showPending%3D%3Dtrue%29%3B%28hasSicav%3D%3Dfalse%29
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+RESPONSE 5 SET Loans
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+Referrer-Policy: ***
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: ***
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:10 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "positions": [
+    {
+      "contract": {
+        "account": {
+          "id": "ES01820020dummyIUCXXXXXXXXX",
+          "counterPart": "0020",
+          "country": "ES",
+          "bank": {
+            "id": "0182"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "9465"
+          },
+          "formats": {
+            "iban": "ES4731901378137652763362",
+            "bocf": "dummyBOCF",
+            "ccc": "dummyCCC",
+            "iuc": "dummyIUC"
+          },
+          "joinType": {
+            "id": "0",
+            "name": "UNIPERSONAL"
+          },
+          "currency": {
+            "id": "EUR"
+          },
+          "userCustomization": {
+            "favorite": false
+          },
+          "product": {
+            "id": "0CA0000079",
+            "name": "CUENTAS PERSONALES",
+            "description": "CUENTA JOVEN BBVA",
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00004",
+                "name": "CUENTAS EN EUROS Y DIVISAS"
+              },
+              {
+                "id": "00056",
+                "name": "CUENTAS PERSONALES"
+              }
+            ]
+          },
+          "participants": [
+            {
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              },
+              "orden": 1
+            }
+          ],
+          "sublevel": " ",
+          "currentBalance": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "availableBalance": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "currentBalanceLocalCurrency": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "availableBalanceLocalCurrency": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "dueDate": "9999-12-31T00:00:00.000+0100"
+        }
+      },
+      "isIncludedInMySituation": true,
+      "userAccessControl": {
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      },
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "balanceAgrupation": "Account"
+    }
+  ],
+  "familyBalances": [
+    {
+      "id": "Account",
+      "balance": {
+        "currency": {
+          "id": "EUR"
+        },
+        "amount": 0.00
+      }
+    }
+  ],
+  "assetBalance": {
+    "currency": {
+      "id": "EUR"
+    },
+    "amount": 0.00
+  },
+  "hasMoreData": false
+}
+
+REQUEST 6 MATCH Loans
+GET https://servicios.bbva.es/ASO/financialDashBoard/V03?%2524customer.id=dummyUserId&%2524filter=%28showPending%3D%3Dtrue%29%3B%28hasSicav%3D%3Dfalse%29
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+RESPONSE 6 SET Investments
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+Referrer-Policy: ***
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: ***
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:11 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "positions": [
+    {
+      "contract": {
+        "account": {
+          "id": "ES01820020dummyIUCXXXXXXXXX",
+          "counterPart": "0020",
+          "country": "ES",
+          "bank": {
+            "id": "0182"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "9465"
+          },
+          "formats": {
+            "iban": "ES4731901378137652763362",
+            "bocf": "dummyBOCF",
+            "ccc": "dummyCCC",
+            "iuc": "dummyIUC"
+          },
+          "joinType": {
+            "id": "0",
+            "name": "UNIPERSONAL"
+          },
+          "currency": {
+            "id": "EUR"
+          },
+          "userCustomization": {
+            "favorite": false
+          },
+          "product": {
+            "id": "0CA0000079",
+            "name": "CUENTAS PERSONALES",
+            "description": "CUENTA JOVEN BBVA",
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00004",
+                "name": "CUENTAS EN EUROS Y DIVISAS"
+              },
+              {
+                "id": "00056",
+                "name": "CUENTAS PERSONALES"
+              }
+            ]
+          },
+          "participants": [
+            {
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              },
+              "orden": 1
+            }
+          ],
+          "sublevel": " ",
+          "currentBalance": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "availableBalance": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "currentBalanceLocalCurrency": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "availableBalanceLocalCurrency": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "dueDate": "9999-12-31T00:00:00.000+0100"
+        }
+      },
+      "isIncludedInMySituation": true,
+      "userAccessControl": {
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      },
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "balanceAgrupation": "Account"
+    }
+  ],
+  "familyBalances": [
+    {
+      "id": "Account",
+      "balance": {
+        "currency": {
+          "id": "EUR"
+        },
+        "amount": 0.00
+      }
+    }
+  ],
+  "assetBalance": {
+    "currency": {
+      "id": "EUR"
+    },
+    "amount": 0.00
+  },
+  "hasMoreData": false
+}
+
+REQUEST 7 MATCH Investments
+GET https://servicios.bbva.es/ASO/financialDashBoard/V03?%2524customer.id=dummyUserId&%2524filter=%28showPending%3D%3Dtrue%29%3B%28hasSicav%3D%3Dfalse%29
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+RESPONSE 7
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+Referrer-Policy: ***
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: ***
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:11 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "positions": [
+    {
+      "contract": {
+        "account": {
+          "id": "ES01820020dummyIUCXXXXXXXXX",
+          "counterPart": "0020",
+          "country": "ES",
+          "bank": {
+            "id": "0182"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "9465"
+          },
+          "formats": {
+            "iban": "ES4731901378137652763362",
+            "bocf": "dummyBOCF",
+            "ccc": "dummyCCC",
+            "iuc": "dummyIUC"
+          },
+          "joinType": {
+            "id": "0",
+            "name": "UNIPERSONAL"
+          },
+          "currency": {
+            "id": "EUR"
+          },
+          "userCustomization": {
+            "favorite": false
+          },
+          "product": {
+            "id": "0CA0000079",
+            "name": "CUENTAS PERSONALES",
+            "description": "CUENTA JOVEN BBVA",
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00004",
+                "name": "CUENTAS EN EUROS Y DIVISAS"
+              },
+              {
+                "id": "00056",
+                "name": "CUENTAS PERSONALES"
+              }
+            ]
+          },
+          "participants": [
+            {
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              },
+              "orden": 1
+            }
+          ],
+          "sublevel": " ",
+          "currentBalance": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "availableBalance": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "currentBalanceLocalCurrency": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "availableBalanceLocalCurrency": {
+            "currency": {
+              "id": "EUR"
+            },
+            "amount": 0.00
+          },
+          "dueDate": "9999-12-31T00:00:00.000+0100"
+        }
+      },
+      "isIncludedInMySituation": true,
+      "userAccessControl": {
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      },
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "balanceAgrupation": "Account"
+    }
+  ],
+  "familyBalances": [
+    {
+      "id": "Account",
+      "balance": {
+        "currency": {
+          "id": "EUR"
+        },
+        "amount": 0.00
+      }
+    }
+  ],
+  "assetBalance": {
+    "currency": {
+      "id": "EUR"
+    },
+    "amount": 0.00
+  },
+  "hasMoreData": false
+}
+
+REQUEST 8
+GET https://servicios.bbva.es/ASO/contracts/V01/ES01820020dummyIUCXXXXXXXXX/inForceConditions
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+RESPONSE 8
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+Referrer-Policy: ***
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: ***
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:12 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "product": {
+    "name": "CUENTA JOVEN BBVA"
+  },
+  "openingDate": "1991-07-09",
+  "inForceConditions": {
+    "comissions": [
+      {
+        "id": "0001800125",
+        "priceType": {
+          "id": "EF",
+          "name": "EF"
+        },
+        "type": {
+          "id": "DB",
+          "name": "DB"
+        },
+        "exemptIndicator": false,
+        "sections": [
+          {
+            "commissionFormat": {
+              "id": "006",
+              "name": "006"
+            },
+            "commissionValueUnit": {
+              "id": "006",
+              "name": "006"
+            },
+            "commisionValue": "45.00"
+          }
+        ]
+      },
+      {
+        "id": "0001800041",
+        "priceType": {
+          "id": "IF",
+          "name": "IF"
+        },
+        "type": {
+          "id": "CA",
+          "name": "CA"
+        },
+        "exemptIndicator": false,
+        "sections": [
+          {
+            "commissionFormat": {
+              "id": "010",
+              "name": "010"
+            },
+            "commissionValueUnit": {
+              "id": "015",
+              "name": "015"
+            },
+            "commisionValue": "0"
+          }
+        ]
+      },
+      {
+        "id": "0001800127",
+        "priceType": {
+          "id": "IT",
+          "name": "IT"
+        },
+        "type": {
+          "id": "CM",
+          "name": "CM"
+        },
+        "exemptIndicator": false,
+        "sections": [
+          {
+            "commissionFormat": {
+              "id": "010",
+              "name": "010"
+            },
+            "sectionFormat": {
+              "id": "010",
+              "name": "010"
+            },
+            "commissionValueUnit": {
+              "id": "015",
+              "name": "015"
+            },
+            "sectionValueUnit": {
+              "id": "015",
+              "name": "015"
+            },
+            "commisionValue": "100.00",
+            "endValue": "9999999999999,99000",
+            "initialValue": "0,00000"
+          }
+        ]
+      },
+      {
+        "id": "0000100124",
+        "priceType": {
+          "id": "IF",
+          "name": "IF"
+        },
+        "type": {
+          "id": "GC",
+          "name": "GC"
+        },
+        "exemptIndicator": false,
+        "sections": [
+          {
+            "commissionFormat": {
+              "id": "010",
+              "name": "010"
+            },
+            "commissionValueUnit": {
+              "id": "015",
+              "name": "015"
+            },
+            "commisionValue": "3.15"
+          }
+        ]
+      },
+      {
+        "id": "0016000147",
+        "priceType": {
+          "id": "IT",
+          "name": "IT"
+        },
+        "type": {
+          "id": "RE",
+          "name": "RE"
+        },
+        "exemptIndicator": false,
+        "sections": [
+          {
+            "commissionFormat": {
+              "id": "010",
+              "name": "010"
+            },
+            "sectionFormat": {
+              "id": "010",
+              "name": "010"
+            },
+            "commissionValueUnit": {
+              "id": "015",
+              "name": "015"
+            },
+            "sectionValueUnit": {
+              "id": "015",
+              "name": "015"
+            },
+            "commisionValue": "0",
+            "endValue": "18,00000",
+            "initialValue": "0,00000"
+          },
+          {
+            "commissionFormat": {
+              "id": "010",
+              "name": "010"
+            },
+            "sectionFormat": {
+              "id": "010",
+              "name": "010"
+            },
+            "commissionValueUnit": {
+              "id": "015",
+              "name": "015"
+            },
+            "sectionValueUnit": {
+              "id": "015",
+              "name": "015"
+            },
+            "commisionValue": "30.00",
+            "endValue": "999999999999,99000",
+            "initialValue": "18,00001"
+          }
+        ]
+      }
+    ],
+    "franchiseAmount": {
+      "currency": {
+        "id": "EUR"
+      },
+      "amount": 0.0
+    },
+    "minimumBalance": {
+      "currency": {
+        "id": "EUR"
+      },
+      "amount": 0.0
+    },
+    "pgIndicator": true,
+    "creditInterest": {
+      "priceType": {
+        "id": "EF",
+        "name": "EF"
+      },
+      "viewIndicator": false,
+      "bonuses": [
+        {}
+      ],
+      "types": [
+        {
+          "tae": 0.000000,
+          "rate": 0.000000
+        }
+      ],
+      "globalTaeRate": 0.000000
+    },
+    "latePaymentInterest": {
+      "priceType": {
+        "id": "EF",
+        "name": "EF"
+      }
+    },
+    "debitInterest": {
+      "priceType": {
+        "id": "EF",
+        "name": "EF"
+      },
+      "exemptIndicator": false,
+      "bonuses": [
+        {}
+      ],
+      "types": [
+        {
+          "rate": 7.250000
+        }
+      ]
+    },
+    "exceededInterest": {},
+    "advancedPenalization": {},
+    "liquidationPeriod": {
+      "id": "TN",
+      "name": "TN"
+    },
+    "productCategory": {
+      "id": "CU"
+    }
+  }
+}
+
+REQUEST 9
+POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=0&pageSize=40
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+authenticationtype: 05
+
+{
+  "customer": {
+    "id": "dummyUserId"
+  },
+  "searchType": "SEARCH",
+  "accountContracts": [
+    {
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart" : null,
+        "country" : null,
+        "bank" : null,
+        "formats": null
+      },
+      "account": null
+    }
+  ],
+  "error": true,
+  "filter": {
+    "dates": {
+      "from": "1991-07-10T00:00",
+      "to": "1992-04-10T00:00"
+    },
+    "operationType": [
+      "BOTH"
+    ]
+  }
+}
+
+RESPONSE 9 SET Exception
+401
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+authenticationstate: dummyAuthState
+Referrer-Policy: ***
+authenticationdata: dummyAuthData
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: ***
+authenticationtype: 05
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+Content-Length: 309
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:13 GMT
+Connection: close
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "version": 1,
+  "severity": "FATAL",
+  "http-status": 401,
+  "error-code": "999",
+  "error-message": "Acceso denegado, cambio de estado progresando.",
+  "consumer-request-id": "03e4da7c-ff5a-44c1-9cba-c3e5c96259bc",
+  "system-error-code": "stateChangeGoOn",
+  "system-error-description": "Acceso denegado, cambio de estado progresando."
+}
+
+REQUEST 10 MATCH Exception
+POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=0&pageSize=40
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+authenticationtype: 05
+authenticationstate: dummyAuthState
+authenticationdata: dummyAuthData=13371337
+
+{
+  "customer": {
+    "id": "dummyUserId"
+  },
+  "searchType": "SEARCH",
+  "accountContracts": [
+    {
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart" : null,
+        "country" : null,
+        "bank" : null,
+        "formats": null
+      },
+      "account": null
+    }
+  ],
+  "error": true,
+  "filter": {
+    "dates": {
+      "from": "1991-07-10T00:00",
+      "to": "1992-04-10T00:00"
+    },
+    "operationType": [
+      "BOTH"
+    ]
+  }
+}
+
+RESPONSE 10 SET Page1
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+Referrer-Policy: ***
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: dummyTsec
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:47 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "accountTransactions": [
+    {
+      "id": "140000036826745711200817151836872692",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00339",
+        "name": "CARGO POR COMPRA CON TARJETA EN COMERCIOS"
+      },
+      "name": "4603321048028974 Revolut**7332*",
+      "branch": {
+        "id": "9465"
+      },
+      "extendedName": "PAGO CON TARJETA",
+      "origin": {
+        "detailSourceId": "TCTF",
+        "detailSourceKey": "200814000051948001     68023601",
+        "billCode": "0000000000",
+        "panCode": "4603321048028974",
+        "procedureCode": "0430",
+        "timeRMS": "15:18:36",
+        "dateRMS": "20-08-17"
+      },
+      "transactionDate": "2020-08-17T00:00:00.000+0200",
+      "valueDate": "2020-08-14T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 76.43
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -28.02
+      },
+      "scheme": {
+        "source": {
+          "name": "AUTOMATICO"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0016",
+          "name": "COMPRA CON TARJETA"
+        },
+        "subCategory": {
+          "id": "0017",
+          "name": "PAGO CON TARJETA"
+        },
+        "summaryType": {
+          "id": "T"
+        }
+      },
+      "extendedDate": {
+        "terminal": "",
+        "userCode": "KPSARO21",
+        "bankCode": "0182"
+      },
+      "humanCategory": {
+        "id": "7",
+        "name": "Compras"
+      },
+      "humanSubcategory": {
+        "id": "30",
+        "name": "Otras compras y servicios"
+      },
+      "humanConceptName": "Revolut**7332*",
+      "humanExtendedConceptName": "PAGO CON TARJETA",
+      "document": {
+        "rel": "CARGO POR COMPRA CON TARJETA EN COMERCIOS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2020-08-14%3A2020-08-17%3A00339%3AEUR%3A-28.02/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    }
+  ],
+  "accountFaceted": {},
+  "pagination": {
+    "total": 106,
+    "start": 0,
+    "page": 1,
+    "end": 40,
+    "nextPage": "/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey\u003d%257B%2522search_after%2522%253A%255B20200817%252C200817%252C151836%252C%2522200817151836872692%2522%255D%252C%2522currentBalancesPerIuc%2522%253A%257B%2522dummyIUC%2522%253A%257B%2522currentBalance%2522%253A%257B%2522currency%2522%253A%2522EUR%2522%252C%2522amount%2522%253A104.45%252C%2522type%2522%253A%2522NMC%2522%257D%252C%2522type%2522%253A%2522NMC%2522%257D%257D%252C%2522returnedRecords%2522%253A40%257D\u0026pageSize\u003d40",
+    "pageSize": 40,
+    "numPages": 3,
+    "firstPage": "/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey\u003d0\u0026pageSize\u003d40"
+  },
+  "totalResults": 106,
+  "hostResult": false
+}
+
+REQUEST 11 MATCH Page1
+POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=%257B%2522search_after%2522%253A%255B20200817%252C200817%252C151836%252C%2522200817151836872692%2522%255D%252C%2522currentBalancesPerIuc%2522%253A%257B%2522dummyIUC%2522%253A%257B%2522currentBalance%2522%253A%257B%2522currency%2522%253A%2522EUR%2522%252C%2522amount%2522%253A104.45%252C%2522type%2522%253A%2522NMC%2522%257D%252C%2522type%2522%253A%2522NMC%2522%257D%257D%252C%2522returnedRecords%2522%253A40%257D&pageSize=40
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+{
+  "customer": {
+    "id": "dummyUserId"
+  },
+  "searchType": "SEARCH",
+  "accountContracts": [
+    {
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart" : null,
+        "country" : null,
+        "bank" : null,
+        "formats": null
+      },
+      "account": null
+    }
+  ],
+  "error": true,
+  "filter": {
+    "dates": {
+      "from": "1991-07-10T00:00",
+      "to": "1992-04-10T00:00"
+    },
+    "operationType": [
+      "BOTH"
+    ]
+  }
+}
+
+RESPONSE 11 SET Page2
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+Referrer-Policy: ***
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: dummyTsec
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:48 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "accountTransactions": [
+    {
+      "id": "140000033243475109190704153114805089",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00007",
+        "name": "TRANSFERENCIAS"
+      },
+      "name": "Recarga",
+      "branch": {
+        "id": "9465"
+      },
+      "extendedName": "Recarga",
+      "origin": {
+        "detailSourceId": "PGGP",
+        "detailSourceKey": "0011018219073265192932",
+        "billCode": "0000000000",
+        "procedureCode": "0102",
+        "timeRMS": "15:31:14",
+        "dateRMS": "19-07-04"
+      },
+      "transactionDate": "2019-07-04T00:00:00.000+0200",
+      "valueDate": "2019-07-04T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 10.09
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": 10.0
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0002",
+          "name": "Abono"
+        },
+        "category": {
+          "id": "0147",
+          "name": "TRANSFERENCIAS INGRESOS"
+        },
+        "subCategory": {
+          "id": "0149",
+          "name": "TRANSFERENCIA RECIBIDA"
+        },
+        "summaryType": {}
+      },
+      "extendedDate": {
+        "terminal": "00",
+        "userCode": "IMMA999",
+        "bankCode": "0182"
+      },
+      "wireTransactionDetail": {
+        "id": "0011018219073265192932-RE-ES01820020dummyIUCXXXXXXXXX",
+        "status": "RE",
+        "transferDate": "2019-07-04T00:00:00.000+0200",
+        "valueDate": "2019-07-04T00:00:00.000+0200",
+        "grossWireTransferAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 10.0
+        },
+        "sender": {
+          "account": {
+            "id": "ES******************7974",
+            "bank": {
+              "name": "IBERCAJA BANCO, S.A.U.",
+              "countryId": "0724"
+            },
+            "formats": {
+              "iban": "ES******************7974"
+            },
+            "productName": "1"
+          },
+          "person": {
+            "address": "",
+            "id": {
+              "number": "CAZRES2ZXXX"
+            },
+            "name": "dummyName RUIZ-HENESTROSA RUIZ"
+          },
+          "creditedFunds": {
+            "amount": {
+              "currency": {
+                "id": "EUR",
+                "code": "EUR"
+              },
+              "amount": 10.0
+            },
+            "date": "2019-07-04T00:00:00.000+0200",
+            "commission": {
+              "currency": {},
+              "amount": 0.0
+            }
+          }
+        },
+        "receiver": {
+          "account": {
+            "id": "dummyCCC",
+            "bank": {
+              "name": "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+              "countryId": "0724"
+            },
+            "formats": {
+              "iban": "ES4731901378137652763362",
+              "ccc": "dummyCCC"
+            },
+            "productName": "0"
+          },
+          "person": {
+            "address": "",
+            "id": {
+              "number": "049093966Y",
+              "type": "01"
+            },
+            "name": "Carlos Jose Ruiz-Henestrosa Ruiz"
+          },
+          "debitedFunds": {
+            "amount": {
+              "currency": {
+                "id": "EUR",
+                "code": "EUR"
+              },
+              "amount": 10.0
+            },
+            "date": "2019-07-04T00:00:00.000+0200",
+            "commission": {
+              "currency": {},
+              "amount": 0.0
+            }
+          }
+        },
+        "periodicityInformation": {
+          "id": "0000000000",
+          "type": {
+            "id": "N"
+          },
+          "customizedPeriod": {
+            "amount": 0,
+            "timeUnit": {}
+          },
+          "state": {}
+        },
+        "description": "Recarga",
+        "channel": {
+          "id": "0100"
+        },
+        "postalExpensesAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.0
+        },
+        "indicators": {
+          "settlementIndicator": true,
+          "remittance": false,
+          "zeroAccount": false
+        },
+        "expensesType": {
+          "id": "SHA"
+        },
+        "fees": {
+          "swiftAmount": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          },
+          "commission": {
+            "currency": {}
+          }
+        },
+        "exchangeRate": 0.0,
+        "administrationExpenses": 0.0,
+        "intermediaryFeeAmount": 0.0,
+        "payment": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "purpose": {},
+        "remittanceCode": "000000000",
+        "isSettlementForfait": true,
+        "isRealPaymentDate": true,
+        "executionType": {
+          "id": "I"
+        },
+        "inmediatePayment": {
+          "isGPIIPayment": false
+        },
+        "ownReference": "0011018219073265192932",
+        "orderType": {
+          "id": "G",
+          "name": "TRANSFERENCIA INMEDIATA"
+        },
+        "isGroupedRemittanceOrders": true,
+        "totalFeesAmount": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "totalExpensesAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.0
+        },
+        "totalExpensesFeesAmount": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "feeAmount": {
+          "currency": {},
+          "amount": 0.0
+        }
+      },
+      "humanCategory": {
+        "id": "1",
+        "name": "Ingresos"
+      },
+      "humanSubcategory": {
+        "id": "51",
+        "name": "Transferencia recibida"
+      },
+      "humanConceptName": "TRANSFERENCIA RECIBIDA",
+      "humanExtendedConceptName": "Recarga",
+      "document": {
+        "rel": "TRANSFERENCIAS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2019-07-04%3A2019-07-04%3A00007%3AEUR%3A10.0/bankingVirtualMails?$filter\u003d(review\u003d\u003d0011018219073265192932)"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000033233862883190703220406960498",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00411",
+        "name": "VALORES - ADMINISTRACION DE DEPOSITOS"
+      },
+      "name": "018294650930000000178725400000",
+      "branch": {
+        "id": "9465"
+      },
+      "extendedName": "OTROS",
+      "origin": {
+        "detailSourceId": "TVPV",
+        "detailSourceKey": "4419174290835577",
+        "billCode": "0000000000",
+        "procedureCode": "0316",
+        "timeRMS": "22:04:06",
+        "dateRMS": "19-07-03"
+      },
+      "transactionDate": "2019-07-04T00:00:00.000+0200",
+      "valueDate": "2019-07-01T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.09
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -7.26
+      },
+      "scheme": {
+        "source": {
+          "name": "AUTOMATICO"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0049",
+          "name": "OPERACIONES DE VALORES"
+        },
+        "subCategory": {
+          "id": "0051",
+          "name": "OTROS"
+        },
+        "summaryType": {}
+      },
+      "extendedDate": {
+        "terminal": "",
+        "userCode": "KPGIBIMP",
+        "bankCode": "0182"
+      },
+      "humanCategory": {
+        "id": "5",
+        "name": "Banco y servicios financieros"
+      },
+      "humanSubcategory": {
+        "id": "22",
+        "name": "Dividendos y liquidaciones"
+      },
+      "humanConceptName": "VALORES - ADMINISTRACION DE DEPOSITOS",
+      "humanExtendedConceptName": "OTROS",
+      "document": {
+        "rel": "VALORES - ADMINISTRACION DE DEPOSITOS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2019-07-01%3A2019-07-04%3A00411%3AEUR%3A-7.26/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000033030599973190613154424104978",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00902",
+        "name": "PAGO CON TARJETA EN MEDICINA,FARMACIA Y SANIDAD"
+      },
+      "name": "4603321048028974 FARMACIA NETO DEL RIO C.BSEVILLA      ES",
+      "branch": {
+        "id": "0071"
+      },
+      "extendedName": "FARMACIA NETO DEL RIO C.BSEVILLA      ES",
+      "origin": {
+        "detailSourceId": "TPCT",
+        "detailSourceKey": "4603321048028974 FA645959190613174423",
+        "billCode": "0000000000",
+        "panCode": "4603321048028974",
+        "procedureCode": "0431",
+        "timeRMS": "15:44:24",
+        "dateRMS": "19-06-13"
+      },
+      "transactionDate": "2019-06-13T00:00:00.000+0200",
+      "valueDate": "2019-06-13T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 7.35
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -1.1
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0016",
+          "name": "COMPRA CON TARJETA"
+        },
+        "subCategory": {
+          "id": "0017",
+          "name": "PAGO CON TARJETA"
+        },
+        "summaryType": {
+          "id": "T"
+        }
+      },
+      "extendedDate": {
+        "terminal": "00",
+        "userCode": "TPCTM667",
+        "bankCode": "0182"
+      },
+      "cardTransactionDetail": {
+        "self": {
+          "id": "190613174423_645959_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+          "link": {
+            "rel": "getCardTransaction",
+            "href": "/cardTransactions/V01/190613174423_645959_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+            "method": "GET"
+          }
+        },
+        "purchaser": {
+          "id": "470182",
+          "reference": "74940009165067440000007"
+        },
+        "shop": {
+          "id": "118056977",
+          "name": "FARMACIA NETO DEL RIO C.B",
+          "businessActivity": {
+            "id": "5912",
+            "name": "FARMACIAS"
+          },
+          "activitySector": {
+            "id": "0002",
+            "name": "COMERCIO BASICO"
+          },
+          "activitySubsector": {
+            "id": "0003",
+            "name": "MINORISTAS"
+          },
+          "address": "SEVILLA",
+          "country": "ES"
+        },
+        "fees": {
+          "swiftAmount": {},
+          "commissionType": "0000",
+          "commission": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          }
+        },
+        "concept": {
+          "id": "0005",
+          "name": "FACTURA VENTA"
+        },
+        "contract": {
+          "productName": "PAGA AHORA BLUE BBVA"
+        },
+        "statementDate": "2019-06-01T00:00:00.000+0200",
+        "transactionDate": "2019-06-13T17:44:23.000+0200",
+        "financingData": {
+          "interestRate": 0.0,
+          "customizableIndicator": "NF"
+        },
+        "stillCustomizable": false
+      },
+      "humanCategory": {
+        "id": "13",
+        "name": "Salud"
+      },
+      "humanSubcategory": {
+        "id": "64",
+        "name": "Farmacias y herbolarios"
+      },
+      "humanConceptName": "FARMACIA NETO DEL RIO C.B",
+      "humanExtendedConceptName": "PAGO CON TARJETA",
+      "document": {
+        "rel": "PAGO CON TARJETA EN MEDICINA,FARMACIA Y SANIDAD",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2019-06-13%3A2019-06-13%3A00902%3AEUR%3A-1.1/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000032840321848190524082043730990",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00902",
+        "name": "PAGO CON TARJETA EN MEDICINA,FARMACIA Y SANIDAD"
+      },
+      "name": "4603321048028974 FARMACIA NETO DEL RIO C.BSEVILLA      ES",
+      "branch": {
+        "id": "0071"
+      },
+      "extendedName": "FARMACIA NETO DEL RIO C.BSEVILLA      ES",
+      "origin": {
+        "detailSourceId": "TPCT",
+        "detailSourceKey": "4603321048028974 FA441366190524102043",
+        "billCode": "0000000000",
+        "panCode": "4603321048028974",
+        "procedureCode": "0431",
+        "timeRMS": "08:20:43",
+        "dateRMS": "19-05-24"
+      },
+      "transactionDate": "2019-05-24T00:00:00.000+0200",
+      "valueDate": "2019-05-24T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 8.45
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -4.8
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0016",
+          "name": "COMPRA CON TARJETA"
+        },
+        "subCategory": {
+          "id": "0017",
+          "name": "PAGO CON TARJETA"
+        },
+        "summaryType": {
+          "id": "T"
+        }
+      },
+      "extendedDate": {
+        "terminal": "00",
+        "userCode": "TPCTM667",
+        "bankCode": "0182"
+      },
+      "cardTransactionDetail": {
+        "self": {
+          "id": "190524102043_441366_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+          "link": {
+            "rel": "getCardTransaction",
+            "href": "/cardTransactions/V01/190524102043_441366_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+            "method": "GET"
+          }
+        },
+        "purchaser": {
+          "id": "470182",
+          "reference": "74940009147089610000008"
+        },
+        "shop": {
+          "id": "118056977",
+          "name": "FARMACIA NETO DEL RIO C.B",
+          "businessActivity": {
+            "id": "5912",
+            "name": "FARMACIAS"
+          },
+          "activitySector": {
+            "id": "0002",
+            "name": "COMERCIO BASICO"
+          },
+          "activitySubsector": {
+            "id": "0003",
+            "name": "MINORISTAS"
+          },
+          "address": "SEVILLA",
+          "country": "ES"
+        },
+        "fees": {
+          "swiftAmount": {},
+          "commissionType": "0000",
+          "commission": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          }
+        },
+        "concept": {
+          "id": "0005",
+          "name": "FACTURA VENTA"
+        },
+        "contract": {
+          "productName": "PAGA AHORA BLUE BBVA"
+        },
+        "statementDate": "2019-05-01T00:00:00.000+0200",
+        "transactionDate": "2019-05-24T10:20:43.000+0200",
+        "financingData": {
+          "interestRate": 0.0,
+          "customizableIndicator": "NF"
+        },
+        "stillCustomizable": false
+      },
+      "humanCategory": {
+        "id": "13",
+        "name": "Salud"
+      },
+      "humanSubcategory": {
+        "id": "64",
+        "name": "Farmacias y herbolarios"
+      },
+      "humanConceptName": "FARMACIA NETO DEL RIO C.B",
+      "humanExtendedConceptName": "PAGO CON TARJETA",
+      "document": {
+        "rel": "PAGO CON TARJETA EN MEDICINA,FARMACIA Y SANIDAD",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2019-05-24%3A2019-05-24%3A00902%3AEUR%3A-4.8/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000032747974392190510170011006659",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00902",
+        "name": "PAGO CON TARJETA EN MEDICINA,FARMACIA Y SANIDAD"
+      },
+      "name": "4603321048028974 FARMACIA CASINES         PUERTO REAL  ES",
+      "branch": {
+        "id": "0071"
+      },
+      "extendedName": "FARMACIA CASINES         PUERTO REAL  ES",
+      "origin": {
+        "detailSourceId": "TPCT",
+        "detailSourceKey": "4603321048028974 FA128391190510190011",
+        "billCode": "0000000000",
+        "panCode": "4603321048028974",
+        "procedureCode": "0431",
+        "timeRMS": "17:00:11",
+        "dateRMS": "19-05-10"
+      },
+      "transactionDate": "2019-05-10T00:00:00.000+0200",
+      "valueDate": "2019-05-10T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 13.25
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -1.1
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0016",
+          "name": "COMPRA CON TARJETA"
+        },
+        "subCategory": {
+          "id": "0017",
+          "name": "PAGO CON TARJETA"
+        },
+        "summaryType": {
+          "id": "T"
+        }
+      },
+      "extendedDate": {
+        "terminal": "00",
+        "userCode": "TPCTM667",
+        "bankCode": "0182"
+      },
+      "cardTransactionDetail": {
+        "self": {
+          "id": "190510190011_128391_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+          "link": {
+            "rel": "getCardTransaction",
+            "href": "/cardTransactions/V01/190510190011_128391_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+            "method": "GET"
+          }
+        },
+        "purchaser": {
+          "id": "470182",
+          "reference": "74940009133041450000008"
+        },
+        "shop": {
+          "id": "332221928",
+          "name": "FARMACIA CASINES",
+          "businessActivity": {
+            "id": "5912",
+            "name": "FARMACIAS"
+          },
+          "activitySector": {
+            "id": "0002",
+            "name": "COMERCIO BASICO"
+          },
+          "activitySubsector": {
+            "id": "0003",
+            "name": "MINORISTAS"
+          },
+          "address": "PUERTO REAL",
+          "country": "ES"
+        },
+        "fees": {
+          "swiftAmount": {},
+          "commissionType": "0000",
+          "commission": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          }
+        },
+        "concept": {
+          "id": "0005",
+          "name": "FACTURA VENTA"
+        },
+        "contract": {
+          "productName": "PAGA AHORA BLUE BBVA"
+        },
+        "statementDate": "2019-05-01T00:00:00.000+0200",
+        "transactionDate": "2019-05-10T19:00:11.000+0200",
+        "financingData": {
+          "interestRate": 0.0,
+          "customizableIndicator": "NF"
+        },
+        "stillCustomizable": false
+      },
+      "humanCategory": {
+        "id": "13",
+        "name": "Salud"
+      },
+      "humanSubcategory": {
+        "id": "64",
+        "name": "Farmacias y herbolarios"
+      },
+      "humanConceptName": "FARMACIA CASINES",
+      "humanExtendedConceptName": "PAGO CON TARJETA",
+      "document": {
+        "rel": "PAGO CON TARJETA EN MEDICINA,FARMACIA Y SANIDAD",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2019-05-10%3A2019-05-10%3A00902%3AEUR%3A-1.1/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000032548109877190417123221250597",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00929",
+        "name": "PAGO CON TARJETA EN RESTAURANTES Y CAFETERIAS"
+      },
+      "name": "4603321048028974 KEBAB ANDALUZ            SEVILLA      ES",
+      "branch": {
+        "id": "0071"
+      },
+      "extendedName": "KEBAB ANDALUZ            SEVILLA      ES",
+      "origin": {
+        "detailSourceId": "TPCT",
+        "detailSourceKey": "4603321048028974 KE421927190417143221",
+        "billCode": "0000000000",
+        "panCode": "4603321048028974",
+        "procedureCode": "0431",
+        "timeRMS": "12:32:21",
+        "dateRMS": "19-04-17"
+      },
+      "transactionDate": "2019-04-17T00:00:00.000+0200",
+      "valueDate": "2019-04-17T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 14.35
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -7.0
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0016",
+          "name": "COMPRA CON TARJETA"
+        },
+        "subCategory": {
+          "id": "0017",
+          "name": "PAGO CON TARJETA"
+        },
+        "summaryType": {
+          "id": "T"
+        }
+      },
+      "extendedDate": {
+        "terminal": "00",
+        "userCode": "TPCTM667",
+        "bankCode": "0182"
+      },
+      "cardTransactionDetail": {
+        "self": {
+          "id": "190417143221_421927_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+          "link": {
+            "rel": "getCardTransaction",
+            "href": "/cardTransactions/V01/190417143221_421927_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+            "method": "GET"
+          }
+        },
+        "purchaser": {
+          "id": "472100",
+          "reference": "74509469107210014219278"
+        },
+        "shop": {
+          "id": "335120887",
+          "name": "KEBAB ANDALUZ",
+          "businessActivity": {
+            "id": "5812",
+            "name": "RESTAURANTE RESTO"
+          },
+          "activitySector": {
+            "id": "0008",
+            "name": "OCIO"
+          },
+          "activitySubsector": {
+            "id": "0007",
+            "name": "RESTAUR"
+          },
+          "address": "SEVILLA",
+          "country": "ES"
+        },
+        "fees": {
+          "swiftAmount": {},
+          "commissionType": "0000",
+          "commission": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          }
+        },
+        "concept": {
+          "id": "0005",
+          "name": "FACTURA VENTA"
+        },
+        "contract": {
+          "productName": "PAGA AHORA BLUE BBVA"
+        },
+        "statementDate": "2019-04-01T00:00:00.000+0200",
+        "transactionDate": "2019-04-17T14:32:21.000+0200",
+        "financingData": {
+          "interestRate": 0.0,
+          "customizableIndicator": "NF"
+        },
+        "stillCustomizable": false
+      },
+      "humanCategory": {
+        "id": "11",
+        "name": "Ocio"
+      },
+      "humanSubcategory": {
+        "id": "56",
+        "name": "Bares y restaurantes"
+      },
+      "humanConceptName": "KEBAB ANDALUZ",
+      "humanExtendedConceptName": "PAGO CON TARJETA",
+      "document": {
+        "rel": "PAGO CON TARJETA EN RESTAURANTES Y CAFETERIAS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2019-04-17%3A2019-04-17%3A00929%3AEUR%3A-7.0/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000032542586960190416190135233285",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00902",
+        "name": "PAGO CON TARJETA EN MEDICINA,FARMACIA Y SANIDAD"
+      },
+      "name": "4603321048028974 FARMACIA NETO DEL RIO C.BSEVILLA      ES",
+      "branch": {
+        "id": "0071"
+      },
+      "extendedName": "FARMACIA NETO DEL RIO C.BSEVILLA      ES",
+      "origin": {
+        "detailSourceId": "TPCT",
+        "detailSourceKey": "4603321048028974 FA963934190416210135",
+        "billCode": "0000000000",
+        "panCode": "4603321048028974",
+        "procedureCode": "0431",
+        "timeRMS": "19:01:35",
+        "dateRMS": "19-04-16"
+      },
+      "transactionDate": "2019-04-17T00:00:00.000+0200",
+      "valueDate": "2019-04-16T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 21.35
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -1.1
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0016",
+          "name": "COMPRA CON TARJETA"
+        },
+        "subCategory": {
+          "id": "0017",
+          "name": "PAGO CON TARJETA"
+        },
+        "summaryType": {
+          "id": "T"
+        }
+      },
+      "extendedDate": {
+        "terminal": "00",
+        "userCode": "TPCTM667",
+        "bankCode": "0182"
+      },
+      "cardTransactionDetail": {
+        "self": {
+          "id": "190416210135_963934_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+          "link": {
+            "rel": "getCardTransaction",
+            "href": "/cardTransactions/V01/190416210135_963934_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+            "method": "GET"
+          }
+        },
+        "purchaser": {
+          "id": "470182",
+          "reference": "74940009107087800000000"
+        },
+        "shop": {
+          "id": "118056977",
+          "name": "FARMACIA NETO DEL RIO C.B",
+          "businessActivity": {
+            "id": "5912",
+            "name": "FARMACIAS"
+          },
+          "activitySector": {
+            "id": "0002",
+            "name": "COMERCIO BASICO"
+          },
+          "activitySubsector": {
+            "id": "0003",
+            "name": "MINORISTAS"
+          },
+          "address": "SEVILLA",
+          "country": "ES"
+        },
+        "fees": {
+          "swiftAmount": {},
+          "commissionType": "0000",
+          "commission": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          }
+        },
+        "concept": {
+          "id": "0005",
+          "name": "FACTURA VENTA"
+        },
+        "contract": {
+          "productName": "PAGA AHORA BLUE BBVA"
+        },
+        "statementDate": "2019-04-01T00:00:00.000+0200",
+        "transactionDate": "2019-04-16T21:01:35.000+0200",
+        "financingData": {
+          "interestRate": 0.0,
+          "customizableIndicator": "NF"
+        },
+        "stillCustomizable": false
+      },
+      "humanCategory": {
+        "id": "13",
+        "name": "Salud"
+      },
+      "humanSubcategory": {
+        "id": "64",
+        "name": "Farmacias y herbolarios"
+      },
+      "humanConceptName": "FARMACIA NETO DEL RIO C.B",
+      "humanExtendedConceptName": "PAGO CON TARJETA",
+      "document": {
+        "rel": "PAGO CON TARJETA EN MEDICINA,FARMACIA Y SANIDAD",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2019-04-16%3A2019-04-17%3A00902%3AEUR%3A-1.1/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    }
+  ],
+  "accountFaceted": {},
+  "pagination": {
+    "start": 40,
+    "page": 2,
+    "end": 80,
+    "numPages": 3,
+    "pageSize": 40,
+    "total": 106,
+    "previousPage": "/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey\u003d0\u0026pageSize\u003d40",
+    "nextPage": "/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey\u003d%257B%2522search_after%2522%253A%255B20190417%252C190416%252C190135%252C%2522190416190135233285%2522%255D%252C%2522currentBalancesPerIuc%2522%253A%257B%2522dummyIUC%2522%253A%257B%2522currentBalance%2522%253A%257B%2522currency%2522%253A%2522EUR%2522%252C%2522amount%2522%253A22.45%252C%2522type%2522%253A%2522NMC%2522%257D%252C%2522type%2522%253A%2522NMC%2522%257D%257D%252C%2522returnedRecords%2522%253A80%257D\u0026pageSize\u003d40",
+    "firstPage": "/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey\u003d0\u0026pageSize\u003d40"
+  },
+  "totalResults": 106,
+  "hostResult": false
+}
+
+REQUEST 12 MATCH Page2
+POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=%257B%2522search_after%2522%253A%255B20190417%252C190416%252C190135%252C%2522190416190135233285%2522%255D%252C%2522currentBalancesPerIuc%2522%253A%257B%2522dummyIUC%2522%253A%257B%2522currentBalance%2522%253A%257B%2522currency%2522%253A%2522EUR%2522%252C%2522amount%2522%253A22.45%252C%2522type%2522%253A%2522NMC%2522%257D%252C%2522type%2522%253A%2522NMC%2522%257D%257D%252C%2522returnedRecords%2522%253A80%257D&pageSize=40
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+{
+  "customer": {
+    "id": "dummyUserId"
+  },
+  "searchType": "SEARCH",
+  "accountContracts": [
+    {
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart" : null,
+        "country" : null,
+        "bank" : null,
+        "formats": null
+      },
+      "account": null
+    }
+  ],
+  "error": true,
+  "filter": {
+    "dates": {
+      "from": "1991-07-10T00:00",
+      "to": "1992-04-10T00:00"
+    },
+    "operationType": [
+      "BOTH"
+    ]
+  }
+}
+
+RESPONSE 12
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+Referrer-Policy: ***
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: dummyTsec
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:49 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "accountTransactions": [
+    {
+      "id": "140000030432720811180807195625304431",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00124",
+        "name": "DISPOSICION DE EFECTIVO EN CAJERO"
+      },
+      "name": "2946502000634772 01826705 999",
+      "branch": {
+        "id": "6705"
+      },
+      "extendedName": "BBVA OFICINA Nº 6705",
+      "origin": {
+        "detailSourceId": "TPCT",
+        "detailSourceKey": "2946502000634772 01634772180807215624",
+        "billCode": "0000000000",
+        "procedureCode": "0431",
+        "timeRMS": "19:56:25",
+        "dateRMS": "18-08-07"
+      },
+      "transactionDate": "2018-08-08T00:00:00.000+0200",
+      "valueDate": "2018-08-07T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 19.24
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -20.0
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0021",
+          "name": "EFECTIVO"
+        },
+        "subCategory": {
+          "id": "0022",
+          "name": "DISPOSIC. DE EFECTIVO CAJERO/OFICINA"
+        },
+        "summaryType": {}
+      },
+      "extendedDate": {
+        "terminal": "C1",
+        "userCode": "TPCTM667",
+        "bankCode": "0182"
+      },
+      "humanCategory": {
+        "id": "9",
+        "name": "Efectivo y Pagos"
+      },
+      "humanSubcategory": {
+        "id": "35",
+        "name": "Disposición de efectivo"
+      },
+      "humanConceptName": "DISPOSICION DE EFECTIVO EN CAJERO SERVIRED",
+      "humanExtendedConceptName": "BBVA OFICINA Nº 6705",
+      "document": {
+        "rel": "DISPOSICION DE EFECTIVO EN CAJERO",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2018-08-07%3A2018-08-08%3A00124%3AEUR%3A-20.0/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000030280883920180721131718328129",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00007",
+        "name": "TRANSFERENCIAS"
+      },
+      "name": "Dinerito BBVA",
+      "branch": {
+        "id": "9465"
+      },
+      "extendedName": "Dinerito BBVA",
+      "origin": {
+        "detailSourceId": "PGGP",
+        "detailSourceKey": "0011018218071977647429",
+        "billCode": "0000000000",
+        "procedureCode": "0102",
+        "timeRMS": "13:17:18",
+        "dateRMS": "18-07-21"
+      },
+      "transactionDate": "2018-07-23T00:00:00.000+0200",
+      "valueDate": "2018-07-21T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 39.24
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": 30.0
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0002",
+          "name": "Abono"
+        },
+        "category": {
+          "id": "0147",
+          "name": "TRANSFERENCIAS INGRESOS"
+        },
+        "subCategory": {
+          "id": "0149",
+          "name": "TRANSFERENCIA RECIBIDA"
+        },
+        "summaryType": {}
+      },
+      "extendedDate": {
+        "terminal": "0",
+        "userCode": "IMMA999",
+        "bankCode": "0182"
+      },
+      "wireTransactionDetail": {
+        "id": "0011018218071977647429-RE-ES01820020dummyIUCXXXXXXXXX",
+        "status": "RE",
+        "transferDate": "2018-07-21T00:00:00.000+0200",
+        "valueDate": "2018-07-21T00:00:00.000+0200",
+        "grossWireTransferAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 30.0
+        },
+        "sender": {
+          "account": {
+            "id": "ES******************1417",
+            "bank": {
+              "name": "BANCO DE SABADELL, S.A.",
+              "countryId": "0724"
+            },
+            "formats": {
+              "iban": "ES******************1417"
+            },
+            "productName": "1"
+          },
+          "person": {
+            "address": "",
+            "name": "dummyName dummyLastName RUIZ"
+          },
+          "creditedFunds": {
+            "amount": {
+              "currency": {
+                "id": "EUR",
+                "code": "EUR"
+              },
+              "amount": 30.0
+            },
+            "date": "2018-07-21T00:00:00.000+0200",
+            "commission": {
+              "currency": {},
+              "amount": 0.0
+            }
+          }
+        },
+        "receiver": {
+          "account": {
+            "id": "dummyCCC",
+            "bank": {
+              "name": "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+              "countryId": "0724"
+            },
+            "formats": {
+              "iban": "ES4731901378137652763362",
+              "ccc": "dummyCCC"
+            },
+            "productName": "0"
+          },
+          "person": {
+            "address": "",
+            "id": {
+              "number": "049093966Y",
+              "type": "01"
+            },
+            "name": "Carlos Jose Ruiz-Henestrosa Ruiz"
+          },
+          "debitedFunds": {
+            "amount": {
+              "currency": {
+                "id": "EUR",
+                "code": "EUR"
+              },
+              "amount": 30.0
+            },
+            "date": "2018-07-21T00:00:00.000+0200",
+            "commission": {
+              "currency": {},
+              "amount": 0.0
+            }
+          }
+        },
+        "periodicityInformation": {
+          "id": "0000000000",
+          "type": {
+            "id": "N"
+          },
+          "customizedPeriod": {
+            "amount": 0,
+            "timeUnit": {}
+          },
+          "state": {}
+        },
+        "description": "Dinerito BBVA",
+        "channel": {
+          "id": "0100"
+        },
+        "postalExpensesAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.0
+        },
+        "indicators": {
+          "settlementIndicator": true,
+          "remittance": false,
+          "zeroAccount": false
+        },
+        "expensesType": {
+          "id": "SHA"
+        },
+        "fees": {
+          "swiftAmount": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          },
+          "commission": {
+            "currency": {}
+          }
+        },
+        "exchangeRate": 0.0,
+        "administrationExpenses": 0.0,
+        "intermediaryFeeAmount": 0.0,
+        "payment": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "purpose": {},
+        "remittanceCode": "000000000",
+        "executionType": {
+          "id": "I"
+        },
+        "ownReference": "0011018218071977647429",
+        "orderType": {
+          "id": "G",
+          "name": "TRANSFERENCIA INMEDIATA"
+        },
+        "totalFeesAmount": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "totalExpensesAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.0
+        },
+        "totalExpensesFeesAmount": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "feeAmount": {
+          "currency": {},
+          "amount": 0.0
+        }
+      },
+      "humanCategory": {
+        "id": "1",
+        "name": "Ingresos"
+      },
+      "humanSubcategory": {
+        "id": "51",
+        "name": "Transferencia recibida"
+      },
+      "humanConceptName": "TRANSFERENCIA RECIBIDA",
+      "humanExtendedConceptName": "Dinerito BBVA",
+      "document": {
+        "rel": "TRANSFERENCIAS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2018-07-21%3A2018-07-23%3A00007%3AEUR%3A30.0/bankingVirtualMails?$filter\u003d(review\u003d\u003d0011018218071977647429)"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000030280842066180721125220132342",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00929",
+        "name": "PAGO CON TARJETA EN RESTAURANTES Y CAFETERIAS"
+      },
+      "name": "4603321048028974 SABOR KEBAB",
+      "branch": {
+        "id": "0071"
+      },
+      "extendedName": "SABOR KEBAB",
+      "origin": {
+        "detailSourceId": "TPCT",
+        "detailSourceKey": "4603321048028974 SA438129180721145220",
+        "billCode": "0000000000",
+        "panCode": "4603321048028974",
+        "procedureCode": "0431",
+        "timeRMS": "12:52:20",
+        "dateRMS": "18-07-21"
+      },
+      "transactionDate": "2018-07-23T00:00:00.000+0200",
+      "valueDate": "2018-07-21T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 9.24
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -13.0
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0016",
+          "name": "COMPRA CON TARJETA"
+        },
+        "subCategory": {
+          "id": "0017",
+          "name": "PAGO CON TARJETA"
+        },
+        "summaryType": {
+          "id": "T"
+        }
+      },
+      "extendedDate": {
+        "terminal": "00",
+        "userCode": "TPCTM667",
+        "bankCode": "0182"
+      },
+      "cardTransactionDetail": {
+        "self": {
+          "id": "180721145220_438129_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+          "link": {
+            "rel": "getCardTransaction",
+            "href": "/cardTransactions/V01/180721145220_438129_000000_0600080470610101707964767a000406736b0772096a49000300067562050807_PT",
+            "method": "GET"
+          }
+        },
+        "purchaser": {
+          "id": "470182",
+          "reference": "74940008204037200000005"
+        },
+        "shop": {
+          "id": "344524665",
+          "name": "SABOR KEBAB",
+          "businessActivity": {
+            "id": "5814",
+            "name": "FAST FOOD (COMIDA RAPIDA)"
+          },
+          "activitySector": {
+            "id": "0008",
+            "name": "OCIO"
+          },
+          "activitySubsector": {
+            "id": "0004",
+            "name": "FASTFOOD"
+          },
+          "address": "PUERTO REAL",
+          "country": "ES"
+        },
+        "fees": {
+          "swiftAmount": {},
+          "commissionType": "0000",
+          "commission": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          }
+        },
+        "concept": {
+          "id": "0005",
+          "name": "FACTURA VENTA"
+        },
+        "contract": {
+          "productName": "PAGA AHORA BLUE BBVA"
+        },
+        "statementDate": "2018-07-01T00:00:00.000+0200",
+        "transactionDate": "2018-07-21T14:52:20.000+0200",
+        "financingData": {
+          "interestRate": 0.0,
+          "customizableIndicator": "NF"
+        },
+        "stillCustomizable": false
+      },
+      "humanCategory": {
+        "id": "11",
+        "name": "Ocio"
+      },
+      "humanSubcategory": {
+        "id": "56",
+        "name": "Bares y restaurantes"
+      },
+      "humanConceptName": "SABOR KEBAB",
+      "humanExtendedConceptName": "PAGO CON TARJETA",
+      "document": {
+        "rel": "PAGO CON TARJETA EN RESTAURANTES Y CAFETERIAS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2018-07-21%3A2018-07-23%3A00929%3AEUR%3A-13.0/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000030255229163180718092422982391",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00106",
+        "name": "VALORES - CARGO POR COMPRA DE TITULOS"
+      },
+      "name": "17872540-A.AUDAX RENOVABLES S",
+      "branch": {
+        "id": "9465"
+      },
+      "extendedName": "17872540-A.AUDAX RENOVABLES S",
+      "origin": {
+        "detailSourceId": "TVPV",
+        "billCode": "0000000000",
+        "procedureCode": "0316",
+        "timeRMS": "09:24:22",
+        "dateRMS": "18-07-18"
+      },
+      "transactionDate": "2018-07-18T00:00:00.000+0200",
+      "valueDate": "2018-07-18T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 22.24
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -7.76
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0049",
+          "name": "OPERACIONES DE VALORES"
+        },
+        "subCategory": {
+          "id": "0050",
+          "name": "COMPRA DE VALORES"
+        },
+        "summaryType": {}
+      },
+      "extendedDate": {
+        "terminal": "01",
+        "userCode": "TVPVO1MR",
+        "bankCode": "0182"
+      },
+      "humanCategory": {
+        "id": "2",
+        "name": "Ahorro, inversión y financiación"
+      },
+      "humanSubcategory": {
+        "id": "6",
+        "name": "Compra valores"
+      },
+      "humanConceptName": "VALORES - CARGO POR COMPRA DE TITULOS",
+      "humanExtendedConceptName": "",
+      "document": {
+        "rel": "VALORES - CARGO POR COMPRA DE TITULOS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2018-07-18%3A2018-07-18%3A00106%3AEUR%3A-7.76/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000030244360761180716212025803755",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00124",
+        "name": "DISPOSICION DE EFECTIVO EN CAJERO"
+      },
+      "name": "2946502000634772 01826705 999",
+      "branch": {
+        "id": "6705"
+      },
+      "extendedName": "BBVA OFICINA Nº 6705",
+      "origin": {
+        "detailSourceId": "TPCT",
+        "detailSourceKey": "2946502000634772 01634772180716232025",
+        "billCode": "0000000000",
+        "procedureCode": "0431",
+        "timeRMS": "21:20:25",
+        "dateRMS": "18-07-16"
+      },
+      "transactionDate": "2018-07-17T00:00:00.000+0200",
+      "valueDate": "2018-07-16T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 30.0
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": -20.0
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0001",
+          "name": "Cargo"
+        },
+        "category": {
+          "id": "0021",
+          "name": "EFECTIVO"
+        },
+        "subCategory": {
+          "id": "0022",
+          "name": "DISPOSIC. DE EFECTIVO CAJERO/OFICINA"
+        },
+        "summaryType": {}
+      },
+      "extendedDate": {
+        "terminal": "C1",
+        "userCode": "TPCTM667",
+        "bankCode": "0182"
+      },
+      "humanCategory": {
+        "id": "9",
+        "name": "Efectivo y Pagos"
+      },
+      "humanSubcategory": {
+        "id": "35",
+        "name": "Disposición de efectivo"
+      },
+      "humanConceptName": "DISPOSICION DE EFECTIVO EN CAJERO SERVIRED",
+      "humanExtendedConceptName": "BBVA OFICINA Nº 6705",
+      "document": {
+        "rel": "DISPOSICION DE EFECTIVO EN CAJERO",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2018-07-16%3A2018-07-17%3A00124%3AEUR%3A-20.0/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000030244360692180716211946088533",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00007",
+        "name": "TRANSFERENCIAS"
+      },
+      "name": "Dinerito",
+      "branch": {
+        "id": "9465"
+      },
+      "extendedName": "Dinerito",
+      "origin": {
+        "detailSourceId": "PGGP",
+        "detailSourceKey": "0011018218071975538433",
+        "billCode": "0000000000",
+        "procedureCode": "0102",
+        "timeRMS": "21:19:46",
+        "dateRMS": "18-07-16"
+      },
+      "transactionDate": "2018-07-17T00:00:00.000+0200",
+      "valueDate": "2018-07-16T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 50.0
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": 40.0
+      },
+      "scheme": {
+        "source": {
+          "name": "MANUAL"
+        },
+        "type": {
+          "id": "0002",
+          "name": "Abono"
+        },
+        "category": {
+          "id": "0147",
+          "name": "TRANSFERENCIAS INGRESOS"
+        },
+        "subCategory": {
+          "id": "0149",
+          "name": "TRANSFERENCIA RECIBIDA"
+        },
+        "summaryType": {}
+      },
+      "extendedDate": {
+        "terminal": "0",
+        "userCode": "IMMA999",
+        "bankCode": "0182"
+      },
+      "wireTransactionDetail": {
+        "id": "0011018218071975538433-RE-ES01820020dummyIUCXXXXXXXXX",
+        "status": "RE",
+        "transferDate": "2018-07-16T00:00:00.000+0200",
+        "valueDate": "2018-07-16T00:00:00.000+0200",
+        "grossWireTransferAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 40.0
+        },
+        "sender": {
+          "account": {
+            "id": "ES******************1417",
+            "bank": {
+              "name": "BANCO DE SABADELL, S.A.",
+              "countryId": "0724"
+            },
+            "formats": {
+              "iban": "ES******************1417"
+            },
+            "productName": "1"
+          },
+          "person": {
+            "address": "",
+            "name": "dummyName dummyLastName RUIZ"
+          },
+          "creditedFunds": {
+            "amount": {
+              "currency": {
+                "id": "EUR",
+                "code": "EUR"
+              },
+              "amount": 40.0
+            },
+            "date": "2018-07-16T00:00:00.000+0200",
+            "commission": {
+              "currency": {},
+              "amount": 0.0
+            }
+          }
+        },
+        "receiver": {
+          "account": {
+            "id": "dummyCCC",
+            "bank": {
+              "name": "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+              "countryId": "0724"
+            },
+            "formats": {
+              "iban": "ES4731901378137652763362",
+              "ccc": "dummyCCC"
+            },
+            "productName": "0"
+          },
+          "person": {
+            "address": "",
+            "id": {
+              "number": "049093966Y",
+              "type": "01"
+            },
+            "name": "Carlos Jose Ruiz-Henestrosa Ruiz"
+          },
+          "debitedFunds": {
+            "amount": {
+              "currency": {
+                "id": "EUR",
+                "code": "EUR"
+              },
+              "amount": 40.0
+            },
+            "date": "2018-07-16T00:00:00.000+0200",
+            "commission": {
+              "currency": {},
+              "amount": 0.0
+            }
+          }
+        },
+        "periodicityInformation": {
+          "id": "0000000000",
+          "type": {
+            "id": "N"
+          },
+          "customizedPeriod": {
+            "amount": 0,
+            "timeUnit": {}
+          },
+          "state": {}
+        },
+        "description": "Dinerito",
+        "channel": {
+          "id": "0100"
+        },
+        "postalExpensesAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.0
+        },
+        "indicators": {
+          "settlementIndicator": true,
+          "remittance": false,
+          "zeroAccount": false
+        },
+        "expensesType": {
+          "id": "SHA"
+        },
+        "fees": {
+          "swiftAmount": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          },
+          "commission": {
+            "currency": {}
+          }
+        },
+        "exchangeRate": 0.0,
+        "administrationExpenses": 0.0,
+        "intermediaryFeeAmount": 0.0,
+        "payment": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "purpose": {},
+        "remittanceCode": "000000000",
+        "executionType": {
+          "id": "I"
+        },
+        "ownReference": "0011018218071975538433",
+        "orderType": {
+          "id": "G",
+          "name": "TRANSFERENCIA INMEDIATA"
+        },
+        "totalFeesAmount": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "totalExpensesAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.0
+        },
+        "totalExpensesFeesAmount": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "feeAmount": {
+          "currency": {},
+          "amount": 0.0
+        }
+      },
+      "humanCategory": {
+        "id": "1",
+        "name": "Ingresos"
+      },
+      "humanSubcategory": {
+        "id": "51",
+        "name": "Transferencia recibida"
+      },
+      "humanConceptName": "TRANSFERENCIA RECIBIDA",
+      "humanExtendedConceptName": "Dinerito",
+      "document": {
+        "rel": "TRANSFERENCIAS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2018-07-16%3A2018-07-17%3A00007%3AEUR%3A40.0/bankingVirtualMails?$filter\u003d(review\u003d\u003d0011018218071975538433)"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    },
+    {
+      "id": "140000030194514844180710003943442518",
+      "contract": {
+        "id": "ES01820020dummyIUCXXXXXXXXX",
+        "counterPart": "0020",
+        "country": "ES",
+        "bank": {
+          "id": "0182"
+        },
+        "formats": {
+          "bocf": "dummyBOCF",
+          "iuc": "dummyIUC"
+        }
+      },
+      "concept": {
+        "id": "00007",
+        "name": "TRANSFERENCIAS"
+      },
+      "name": "Primer ingreso",
+      "branch": {
+        "id": "9465"
+      },
+      "extendedName": "Primer ingreso",
+      "origin": {
+        "detailSourceId": "SBTF",
+        "detailSourceKey": "2018191102602012651036830",
+        "billCode": "0000000000",
+        "procedureCode": "0508",
+        "timeRMS": "00:39:43",
+        "dateRMS": "18-07-10"
+      },
+      "transactionDate": "2018-07-10T00:00:00.000+0200",
+      "valueDate": "2018-07-10T00:00:00.000+0200",
+      "comments": [],
+      "attachments": [],
+      "balance": {
+        "accountingBalance": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 10.0
+        }
+      },
+      "amount": {
+        "currency": {
+          "id": "EUR",
+          "code": "EUR"
+        },
+        "amount": 10.0
+      },
+      "scheme": {
+        "source": {
+          "name": "AUTOMATICO"
+        },
+        "type": {
+          "id": "0002",
+          "name": "Abono"
+        },
+        "category": {
+          "id": "0147",
+          "name": "TRANSFERENCIAS INGRESOS"
+        },
+        "subCategory": {
+          "id": "0149",
+          "name": "TRANSFERENCIA RECIBIDA"
+        },
+        "summaryType": {}
+      },
+      "extendedDate": {
+        "terminal": "",
+        "userCode": "KPGIBIMP",
+        "bankCode": "0182"
+      },
+      "wireTransactionDetail": {
+        "id": "2018191102602012651036830-RE-ES01820020dummyIUCXXXXXXXXX",
+        "status": "RE",
+        "transferDate": "2018-07-10T00:00:00.000+0200",
+        "valueDate": "2018-07-10T00:00:00.000+0200",
+        "grossWireTransferAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 10.0
+        },
+        "sender": {
+          "account": {
+            "id": "ES******************7089",
+            "bank": {
+              "name": "OPEN BANK SANTANDER CONSUMER, S.A.",
+              "countryId": "0724"
+            },
+            "formats": {
+              "iban": "ES******************7089"
+            },
+            "productName": "1"
+          },
+          "person": {
+            "address": "",
+            "name": "dummyLastName RUIZ dummyName"
+          },
+          "creditedFunds": {
+            "amount": {
+              "currency": {
+                "id": "EUR",
+                "code": "EUR"
+              },
+              "amount": 10.0
+            },
+            "date": "0001-01-01T00:00:00.000+0100",
+            "commission": {
+              "currency": {},
+              "amount": 0.0
+            }
+          }
+        },
+        "receiver": {
+          "account": {
+            "id": "dummyCCC",
+            "bank": {
+              "name": "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+              "countryId": "0724"
+            },
+            "formats": {
+              "iban": "ES4731901378137652763362",
+              "ccc": "dummyCCC"
+            },
+            "productName": "0"
+          },
+          "person": {
+            "address": "",
+            "name": "Carlos Jose Ruiz-Henestrosa Ruiz"
+          },
+          "debitedFunds": {
+            "amount": {
+              "currency": {
+                "id": "EUR",
+                "code": "EUR"
+              },
+              "amount": 10.0
+            },
+            "date": "2018-07-10T00:00:00.000+0200",
+            "commission": {
+              "currency": {},
+              "amount": 0.0
+            }
+          }
+        },
+        "periodicityInformation": {
+          "id": "0000000000",
+          "type": {
+            "id": "N"
+          },
+          "customizedPeriod": {
+            "amount": 0,
+            "timeUnit": {}
+          },
+          "state": {}
+        },
+        "description": "Primer ingreso",
+        "channel": {
+          "id": "0215"
+        },
+        "postalExpensesAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.0
+        },
+        "indicators": {
+          "settlementIndicator": true,
+          "remittance": false,
+          "zeroAccount": false
+        },
+        "expensesType": {
+          "id": "SHA"
+        },
+        "fees": {
+          "swiftAmount": {
+            "currency": {
+              "id": "EUR",
+              "code": "EUR"
+            },
+            "amount": 0.0
+          },
+          "commission": {
+            "currency": {}
+          }
+        },
+        "exchangeRate": 0.0,
+        "administrationExpenses": 0.0,
+        "intermediaryFeeAmount": 0.0,
+        "payment": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "purpose": {},
+        "remittanceCode": "000000000",
+        "executionType": {
+          "id": "E"
+        },
+        "ownReference": "2018191102602012651036830",
+        "orderType": {
+          "id": "1",
+          "name": "TRANSFERENCIA SEPA"
+        },
+        "totalFeesAmount": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "totalExpensesAmount": {
+          "currency": {
+            "id": "EUR",
+            "code": "EUR"
+          },
+          "amount": 0.0
+        },
+        "totalExpensesFeesAmount": {
+          "currency": {},
+          "amount": 0.0
+        },
+        "feeAmount": {
+          "currency": {},
+          "amount": 0.0
+        }
+      },
+      "humanCategory": {
+        "id": "1",
+        "name": "Ingresos"
+      },
+      "humanSubcategory": {
+        "id": "51",
+        "name": "Transferencia recibida"
+      },
+      "humanConceptName": "TRANSFERENCIA RECIBIDA",
+      "humanExtendedConceptName": "Primer ingreso",
+      "document": {
+        "rel": "TRANSFERENCIAS",
+        "href": "/transactionVirtualMails/V01/ES01820020dummyIUCXXXXXXXXX%3A2018-07-10%3A2018-07-10%3A00007%3AEUR%3A10.0/bankingVirtualMails"
+      },
+      "financingData": {
+        "customizableIndicator": "NF"
+      }
+    }
+  ],
+  "accountFaceted": {},
+  "pagination": {
+    "start": 80,
+    "page": 3,
+    "pageSize": 40,
+    "end": 106,
+    "firstPage": "/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey\u003d0\u0026pageSize\u003d40",
+    "total": 106,
+    "previousPage": "/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey\u003d40\u0026pageSize\u003d40",
+    "numPages": 3
+  },
+  "totalResults": 106,
+  "hostResult": false
+}
+
+REQUEST 13
+GET https://servicios.bbva.es/ASO/contextualData/V02/dummyUserId
+Accept: application/json
+Content-Type: application/json
+Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+tsec: dummyTsec
+BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
+
+RESPONSE 13
+200
+Content-Type: application/json; charset=UTF-8
+Expires: -1
+Referrer-Policy: ***
+Content-Security-Policy: ***
+old-catalog: ***
+X-Frame-Options: sameorigin
+tsec: dummyTsec
+consumerrequestid: ***
+X-Content-Type-Options: nosniff
+ECS-Entry-Point-Zone: ***
+X-EdgeConnect-MidMile-RTT: ***
+X-EdgeConnect-Origin-MEX-Latency: ***
+Date: Mon, 27 Sep 2021 12:56:49 GMT
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+
+{
+  "customer": {
+    "type": {
+      "id": "F"
+    },
+    "identityDocument": [
+      {
+        "type": {
+          "id": "1"
+        },
+        "number": "049093966Y"
+      }
+    ],
+    "name": "dummyName",
+    "lastName": "dummyLastName",
+    "mothersLastName": "RUIZ",
+    "birthDate": "1997-08-13T00:00:00.000+0200",
+    "isCustomer": true,
+    "extendedData": {
+      "sex": "V",
+      "language": {
+        "id": "ES"
+      },
+      "prefix": {
+        "id": "0000",
+        "name": "SIN TRATAMIENTO"
+      }
+    },
+    "contactsInformation": [
+      {
+        "type": {
+          "id": "1",
+          "name": "MAIL"
+        },
+        "name": "RUIZH.CJ@GMAIL.COM",
+        "checked": true,
+        "status": "V"
+      },
+      {
+        "type": {
+          "id": "2",
+          "name": "CELLPHONE"
+        },
+        "name": "0034664277343",
+        "checked": true,
+        "status": "V"
+      }
+    ],
+    "classification": {
+      "segments": [
+        {
+          "name": "GB",
+          "value": "25"
+        }
+      ],
+      "isVIP": false,
+      "endOfRelationship": {
+        "id": "",
+        "name": "ES POSIBLE LA CONTRATACION"
+      }
+    },
+    "managementData": {
+      "hasFatcaCrsOperativeBlockage": false,
+      "hasRbaOperativeBlockage": false,
+      "IsIdentified": true
+    },
+    "economicData": "C",
+    "branch": {
+      "id": "9465"
+    },
+    "employeeData": {
+      "isEmployee": false
+    },
+    "productMarks": {
+      "hasPreGrantedLoan": {
+        "id": "N",
+        "name": "NO TIENE PRESTAMOS PRECONCEDIDOS"
+      },
+      "hasPendingTasks": false,
+      "hasIICs": false,
+      "hasCRMCampaigns": false,
+      "hasFinancedTransactions": false,
+      "hasPendingPurchase": false,
+      "hasReturnedCorrespondence": false
+    },
+    "multichannelPassport": {
+      "signed": {
+        "id": "S",
+        "name": "FIRMADO"
+      },
+      "attachedDocumentSigned": {
+        "id": "S",
+        "name": "FIRMADO"
+      }
+    },
+    "belongingBank": {
+      "id": "0000"
+    }
+  },
+  "manager": {
+    "contactInformation": [
+      {
+        "type": {
+          "id": "telefonoGestor"
+        },
+        "name": "919190227"
+      },
+      {
+        "type": {
+          "id": "telefonoGeneral"
+        },
+        "name": "900102801"
+      }
+    ],
+    "globalSegment": "JÓVENES"
+  },
+  "externalPlatformUsers": [
+    {
+      "userExternalId": "01091312G04841421D2020205",
+      "externalPlatformCode": "00000049"
+    },
+    {
+      "userExternalId": "51171320J82276210I2018263",
+      "externalPlatformCode": "00000074"
+    },
+    {
+      "userExternalId": "07750950I05305305I2019225",
+      "externalPlatformCode": "00000174"
+    },
+    {
+      "userExternalId": "62913400B35551151H2018284",
+      "externalPlatformCode": "00000176"
+    },
+    {
+      "userExternalId": "28184582H13605415A2020284",
+      "externalPlatformCode": "00000251"
+    },
+    {
+      "userExternalId": "65778594I17481913B2020295",
+      "externalPlatformCode": "00000277"
+    },
+    {
+      "userExternalId": "91762965B22662011G2018263",
+      "externalPlatformCode": "06190105"
+    },
+    {
+      "userExternalId": "91762965B70336707A2018263",
+      "externalPlatformCode": "06190176"
+    }
+  ],
+  "encryptedAlias": "8k1arSRbuoS6OsBbSskNlH0ciPO_-qDBf4ScTYFYe2k\u003d"
+}
