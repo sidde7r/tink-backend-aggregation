@@ -32,6 +32,8 @@ public class FinTecSystemsAgentPaymentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false)
+                        // This field is sometimes needed for testing sparda-west provider
+                        // .addCredentialField("blz-select", "36060591")
                         .setClusterId("oxford-preprod")
                         .setFinancialInstitutionId("fintecsystems")
                         .setAppId("tink");

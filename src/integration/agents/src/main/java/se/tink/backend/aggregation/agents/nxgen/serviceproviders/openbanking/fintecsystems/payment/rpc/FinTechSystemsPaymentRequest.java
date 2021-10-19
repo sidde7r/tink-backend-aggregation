@@ -23,4 +23,6 @@ public class FinTechSystemsPaymentRequest {
     String purpose;
 
     String senderBic;
+    String senderBankCode;
+    String senderCountryId;
 }
