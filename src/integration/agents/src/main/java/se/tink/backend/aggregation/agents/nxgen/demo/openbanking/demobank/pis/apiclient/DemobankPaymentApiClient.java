@@ -120,7 +120,8 @@ public abstract class DemobankPaymentApiClient {
                                 .parameter(PAYMENT_ID, paymentId))
                 .header(HttpHeaders.AUTHORIZATION, authToken)
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post();
     }
 
     public void saveLinksToStorage(String paymentId, LinksDto links) {
