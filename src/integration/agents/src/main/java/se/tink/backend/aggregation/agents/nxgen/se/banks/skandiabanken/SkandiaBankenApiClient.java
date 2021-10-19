@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
-import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
@@ -186,10 +185,10 @@ public class SkandiaBankenApiClient {
                 .get(FetchAccountTransactionsResponse.class);
     }
 
-    public void submitPayment(List<PaymentRequest> paymentRequest) {
+    public void submitPayment(PaymentRequest paymentRequest) {
         getRequestWithTokenAndCommonHeaders(Urls.UNAPPROVED_PAYMENTS)
                 .type(MediaType.APPLICATION_JSON)
-                .post(paymentRequest);
+                .post(new PaymentRequest[] {paymentRequest});
     }
 
     public FetchPaymentsResponse fetchUnapprovedPayments() {
@@ -197,11 +196,11 @@ public class SkandiaBankenApiClient {
                 .get(FetchPaymentsResponse.class);
     }
 
-    public PaymentInitSignResponse initSignPayment(List<String> encryptedPaymentId) {
+    public PaymentInitSignResponse initSignPayment(String encryptedPaymentId) {
         try {
             return getRequestWithTokenAndCommonHeaders(Urls.APPROVED_PAYMENTS)
                     .type(MediaType.APPLICATION_JSON)
-                    .post(PaymentInitSignResponse.class, encryptedPaymentId);
+                    .post(PaymentInitSignResponse.class, new String[] {encryptedPaymentId});
         } catch (HttpResponseException exception) {
             HttpResponse response = exception.getResponse();
             if (response.getStatus() == HttpStatus.SC_FORBIDDEN) {
@@ -212,11 +211,11 @@ public class SkandiaBankenApiClient {
     }
 
     public PaymentCompleteResponse completePayment(
-            List<String> encryptedPaymentId, String signReference) {
+            String encryptedPaymentId, String signReference) {
         return getRequestWithTokenAndCommonHeaders(Urls.APPROVED_PAYMENTS)
                 .header(HeaderKeys.SIGNING_REFERENCE, signReference)
                 .type(MediaType.APPLICATION_JSON)
-                .post(PaymentCompleteResponse.class, encryptedPaymentId);
+                .post(PaymentCompleteResponse.class, new String[] {encryptedPaymentId});
     }
 
     public BankIdStatus pollPaymentSignStatus(String signReference) {
@@ -226,7 +225,14 @@ public class SkandiaBankenApiClient {
                 .getBankIdStatus();
     }
 
-    public PaymentSourceAccountsResponse fetchPaymentSourceAccount() {
+    public void deleteUnapprovedPayment(String encryptedPaymentId) {
+        getRequestWithTokenAndCommonHeaders(
+                        Urls.DELETE_UNAPPROVED_PAYMENT.parameter(
+                                IdTags.ENCRYPTED_PAYMENT_ID, encryptedPaymentId))
+                .delete();
+    }
+
+    public PaymentSourceAccountsResponse fetchPaymentSourceAccounts() {
         return getRequestWithTokenAndCommonHeaders(Urls.PAYMENT_SOURCE_ACCOUNTS)
                 .get(PaymentSourceAccountsResponse.class);
     }

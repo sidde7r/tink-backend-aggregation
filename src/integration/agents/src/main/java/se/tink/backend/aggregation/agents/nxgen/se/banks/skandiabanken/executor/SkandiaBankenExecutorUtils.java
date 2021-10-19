@@ -12,7 +12,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SkandiaBankenExecutorUtils {
 
-    public static PaymentSourceAccount tryFindOwnAccount(
+    public static Optional<PaymentSourceAccount> tryFindOwnAccount(
             AccountIdentifier accountIdentifier, Collection<PaymentSourceAccount> accounts) {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .filter(
@@ -20,8 +20,7 @@ public class SkandiaBankenExecutorUtils {
                                 accountIdentifier
                                         .getIdentifier()
                                         .equals(account.getBankAccountNumber()))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
+                .findFirst();
     }
 
     public static String formatGiroNumber(Transfer transfer) {

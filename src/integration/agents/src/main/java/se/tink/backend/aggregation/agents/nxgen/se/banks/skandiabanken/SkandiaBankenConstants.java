@@ -84,6 +84,8 @@ public class SkandiaBankenConstants {
         public static final URL UNAPPROVED_PAYMENTS = BANKING_V2.concat("/Payments");
         public static final URL APPROVED_PAYMENTS = BANKING_V2.concat("/Payments/Approved");
         public static final URL POLL_SIGNING_PAYMENTS = SYSTEM_V2.concat("/Sign/{signReference}");
+        public static final URL DELETE_UNAPPROVED_PAYMENT =
+                BANKING_V2.concat("/Payments/{encryptedPaymentId}");
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -99,6 +101,7 @@ public class SkandiaBankenConstants {
         public static final String PART_ID = "partId";
         public static final String BATCH_SIZE = "batchSize";
         public static final String SIGN_REFERENCE = "signReference";
+        public static final String ENCRYPTED_PAYMENT_ID = "encryptedPaymentId";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -233,6 +236,28 @@ public class SkandiaBankenConstants {
         public static final int SE_BG_SHORT_OFFSET = 3;
         public static final int SE_BG_LONG_OFFSET = 4;
         public static final int SE_PG_OFFSET = 4;
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class TransferExceptionMessage {
+        public static final String SOURCE_NOT_FOUND =
+                "Transfer source account was not present in user's payment accounts.";
+        public static final String SUBMIT_PAYMENT_FAILED =
+                "An error occurred when submitting payment to the user's outbox.";
+        public static final String PAYMENT_NOT_FOUND =
+                "Could not find submitted payment in user's outbox.";
+        public static final String INIT_SIGN_FAILED =
+                "An error occurred when initiating signing of payment.";
+        public static final String NO_SIGN_REFERENCE = "Did not receive sign reference from bank.";
+        public static final String POLL_SIGN_STATUS_FAILED =
+                "An error occurred when polling payment signing status.";
+        public static final String SIGN_CANCELLED = "User cancelled signing of payment.";
+        public static final String UNKNOWN_SIGN_STATUS = "Unknown sign status received from bank.";
+        public static final String SIGN_TIMEOUT = "Signing of payment timed out.";
+        public static final String COMPLETE_PAYMENT_FAILED =
+                "An error occurred when completing the payment.";
+        public static final String PAYMENT_DELETE_FAILED =
+                "An error occurred when removing the payment from the user's outbox.";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
