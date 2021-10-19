@@ -21,7 +21,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
     @Inject
     public HandelsbankenAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.accountConverter = new HandelsbankenAccountConverter();
+        this.accountConverter = new HandelsbankenNlAccountConverter();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

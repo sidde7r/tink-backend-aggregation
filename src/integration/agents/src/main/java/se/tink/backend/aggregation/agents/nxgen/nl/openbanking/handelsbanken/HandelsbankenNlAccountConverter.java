@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
-public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountConverter {
+public class HandelsbankenNlAccountConverter implements HandelsbankenBaseAccountConverter {
 
     private final TypeMapper<TransactionalAccountType> accountTypes =
             TypeMapper.<TransactionalAccountType>builder()

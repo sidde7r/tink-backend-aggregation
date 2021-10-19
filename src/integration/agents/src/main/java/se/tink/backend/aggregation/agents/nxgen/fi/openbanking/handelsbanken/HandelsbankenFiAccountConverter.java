@@ -16,7 +16,7 @@ import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountConverter {
+public class HandelsbankenFiAccountConverter implements HandelsbankenBaseAccountConverter {
 
     private static final int IBAN_COUNTRY_CODE_AND_CHECKSUM_LENGTH = 4;
 

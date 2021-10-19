@@ -23,12 +23,12 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     private static final int MAX_FETCH_PERIOD_MONTHS = 12;
-    private final HandelsbankenAccountConverter accountConverter;
+    private final HandelsbankenFiAccountConverter accountConverter;
 
     @Inject
     public HandelsbankenAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        accountConverter = new HandelsbankenAccountConverter();
+        accountConverter = new HandelsbankenFiAccountConverter();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

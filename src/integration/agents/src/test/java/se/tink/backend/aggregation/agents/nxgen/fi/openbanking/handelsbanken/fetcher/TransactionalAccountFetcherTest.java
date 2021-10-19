@@ -4,7 +4,11 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.AggregationTransactionAsserts.assertThat;
-import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.ResponseTestData.*;
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.ResponseTestData.ACCOUNT_DETAILS_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.ResponseTestData.ACCOUNT_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.ResponseTestData.EMPTY_BALANCE_ACCOUNT_DETAILS_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.ResponseTestData.TRANSACTION_CREDITED_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.ResponseTestData.TRANSACTION_DEBITED_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.TransactionalAccountAsserts.assertThat;
 
 import java.math.BigDecimal;
@@ -15,7 +19,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.refresh.CheckingAccountRefreshException;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.HandelsbankenAccountConverter;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.HandelsbankenFiAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.HandelsbankenFiApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.HandelsbankenBaseTransactionalAccountFetcher;
@@ -42,7 +46,7 @@ public class TransactionalAccountFetcherTest {
         apiClient = mock(HandelsbankenFiApiClient.class);
         objectUnderTest =
                 new HandelsbankenBaseTransactionalAccountFetcher(
-                        apiClient, new HandelsbankenAccountConverter(), MAX_PERIOD_TRANSACTIONS);
+                        apiClient, new HandelsbankenFiAccountConverter(), MAX_PERIOD_TRANSACTIONS);
     }
 
     @Test

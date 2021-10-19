@@ -25,12 +25,12 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 public final class HandelsbankenSEBusinessAgent extends HandelsbankenBaseAgent
         implements RefreshTransferDestinationExecutor {
 
-    private final HandelsbankenAccountConverter accountConverter;
+    private final HandelsbankenSeBusinessAccountConverter accountConverter;
 
     @Inject
     public HandelsbankenSEBusinessAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.accountConverter = new HandelsbankenAccountConverter();
+        this.accountConverter = new HandelsbankenSeBusinessAccountConverter();
         client.addFilter(
                 new AddBusinessFilter(request.getCredentials().getField("psu-corporate-id")));
 

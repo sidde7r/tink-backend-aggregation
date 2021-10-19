@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
 
-public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountConverter {
+public class HandelsbankenSeAccountConverter implements HandelsbankenBaseAccountConverter {
 
     private final TransactionalAccountTypeMapper transactionalAccountTypeTypeMapper =
             TransactionalAccountTypeMapper.builder()

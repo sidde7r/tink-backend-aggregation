@@ -1,0 +1,221 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.handelsbanken.com/bb/gls5/oauth2/token/1.0
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&scope=AIS&client_id=DUMMY_CLIENT&psu_id_type=1
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"ACCESS_TOKEN_DUMMY","expires_in":1800,"token_type":"Bearer"}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://api.handelsbanken.com/openbanking/psd2/v1/consents
+Accept: application/json
+Content-Type: application/json
+
+{"access": "ALL_ACCOUNTS"}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Content-Type: application/json
+
+{
+  "consentId": "DUMMY_CONSENT",
+  "consentStatus": "RECEIVED",
+  "scaMethods": [
+    {
+      "_links": {
+        "authorization": [
+          {
+            "href": "https://secure.handelsbanken.com/bb/gls5/oauth2/authorize/1.0",
+            "name": "authorize_1.0",
+            "type": "application/x-www-form-urlencoded"
+          }
+        ]
+      },
+      "scaMethodType": "REDIRECT"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://api.handelsbanken.com/bb/gls5/oauth2/token/1.0
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&scope=AIS%3ADUMMY_CONSENT&client_id=DUMMY_CLIENT_ID&code=DUMMY_ACCESS_TOKEN2&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"DUMMY_ACCESS_TOKEN","expires_in":1800,"token_type":"Bearer","refresh_token":"DUMMY_REFRESH_TOKEN"}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json
+
+{
+  "accounts": [
+    {
+      "_links": {
+        "transactions": {
+          "href": "https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions"
+        }
+      },
+      "accountId": "acc1",
+      "accountType": "Fluffy",
+      "bban": "11740779",
+      "bic": "HANDGB22",
+      "clearingNumber": "405162",
+      "currency": "USD",
+      "iban": "GB24HAND40516211740779",
+      "ownerName": "Fluffy"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1?withBalance=true
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json
+
+{
+  "_links": {
+    "transactions": {
+      "href": "https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions"
+    }
+  },
+  "accountId": "acc1",
+  "accountType": "Fluffy",
+  "balances": [
+    {
+      "amount": {
+        "content": 90.09,
+        "currency": "GBP"
+      },
+      "balanceType": "AVAILABLE_AMOUNT"
+    },
+    {
+      "amount": {
+        "content": 90.09,
+        "currency": "GBP"
+      },
+      "balanceType": "CURRENT"
+    },
+    {
+      "amount": {
+        "content": 90.09,
+        "currency": "GBP"
+      },
+      "balanceType": "CLEARED"
+    }
+  ],
+  "bban": "11740779",
+  "bic": "HANDGB22",
+  "clearingNumber": "405162",
+  "currency": "GBP",
+  "iban": "GB24HAND40516211740779",
+  "ownerName": "Fluffy"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1992-01-12&dateTo=1992-04-10
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json
+
+{
+  "transactions": [
+    {
+      "valueDate": "1992-02-01",
+      "status": "Booked",
+      "amount": {
+        "currency": "GBP",
+        "content": 999.99
+      },
+      "remittanceInformation": "1234567",
+      "creditDebit": "Credited"
+   }
+  ]
+}
+
+-------
+REQUEST 7
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-10-14&dateTo=1992-01-11
+Accept: application/json
+Content-Type: application/json
+
+-----
+RESPONSE 7
+200
+Content-Type: application/json
+
+{"transactions": []}
+
+-------
+REQUEST 8
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-07-16&dateTo=1991-10-13
+Accept: application/json
+Content-Type: application/json
+
+-----
+RESPONSE 8
+200
+Content-Type: application/json
+
+{"transactions": []}
+
+-------
+REQUEST 9
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-04-17&dateTo=1991-07-15
+Accept: application/json
+Content-Type: application/json
+
+-----
+RESPONSE 9
+200
+Content-Type: application/json
+
+{"transactions": []}
+
+-------
+REQUEST 10
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-03-10&dateTo=1991-04-16
+Accept: application/json
+Content-Type: application/json
+
+-----
+RESPONSE 10
+200
+Content-Type: application/json
+
+{"transactions": []}
