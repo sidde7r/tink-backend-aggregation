@@ -147,11 +147,10 @@ public class RuralviaTransactionalAccountFetcher
                 .attr(ATTRIBUTE_TAG_VALUE);
     }
 
-    private boolean hasMoretransaction(String html) {
-        return !Jsoup.parse(html)
-                .getElementById("PAGINAR")
-                .select("a[onclick*=siguientes()]")
-                .isEmpty();
+    boolean hasMoretransaction(String html) {
+        return Optional.ofNullable(Jsoup.parse(html).getElementById("PAGINAR"))
+                .map(e -> !e.select("a[onclick*=siguientes()]").isEmpty())
+                .orElse(false);
     }
 
     @VisibleForTesting

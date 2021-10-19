@@ -4,10 +4,10 @@ junit_test(
     name = "ruralvia_unitTests",
     srcs = [
         "fetcher/RuralviaUtilsTest.java",
-        "fetcher/account/RuralviaTransactionalAccountFetcherTest.java",
         "fetcher/creditcard/RuralviaCreditCardFetcherTest.java",
         "fetcher/identitydata/RuralviaIdentityDataFetcherTest.java",
         "fetcher/loan/RuralviaLoanFetcherTest.java",
+        "fetcher/transactionalaccount/RuralviaTransactionalAccountFetcherTest.java",
         "rpc/GlobalPositionResponseTest.java",
     ],
     data = [
@@ -40,6 +40,7 @@ junit_test(
         "//src/libraries/serialization",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_google_guava_guava",
     ],
 )
