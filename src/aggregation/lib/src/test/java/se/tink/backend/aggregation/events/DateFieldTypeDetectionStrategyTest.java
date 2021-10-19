@@ -62,6 +62,26 @@ public class DateFieldTypeDetectionStrategyTest {
                                 JsonNodeType.STRING));
     }
 
+    @Test
+    public void validDateShouldBeDetected7() {
+        Assert.assertTrue(
+                new DateFieldTypeDetectionStrategy()
+                        .isTypeMatched(
+                                Collections.emptyList(),
+                                "2020-09-24T00:00:00.0000+02:00",
+                                JsonNodeType.STRING));
+    }
+
+    @Test
+    public void validDateShouldBeDetected8() {
+        Assert.assertTrue(
+                new DateFieldTypeDetectionStrategy()
+                        .isTypeMatched(
+                                Collections.emptyList(),
+                                "09-24-2020 00:00:00.0000+02:00",
+                                JsonNodeType.STRING));
+    }
+
     // Tests for invalid data
     @Test
     public void invalidDateShouldBeDetected1() {

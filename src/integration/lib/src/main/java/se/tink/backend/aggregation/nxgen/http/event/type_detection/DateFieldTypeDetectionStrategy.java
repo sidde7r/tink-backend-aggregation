@@ -24,7 +24,7 @@ public class DateFieldTypeDetectionStrategy implements RawBankDataFieldTypeDetec
     private static final List<String> TIMESTAMP_PATTERNS =
             Arrays.asList(
                     // (T or empty space)HH:MM:SS(.mmm...)[optional](Z or +dddd or +dd:dd)[optional]
-                    "(T| ){1}([0-1]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)((\\.\\d{1,8})){0,1}(Z|\\+\\d{4}|\\+\\d{2}:d{2}){0,1}",
+                    "(T| ){1}([0-1]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)((\\.\\d{1,8})){0,1}(Z|(\\+\\d{4})|(\\+\\d{2}:\\d{2})){0,1}",
                     // No timestamp
                     "");
 
