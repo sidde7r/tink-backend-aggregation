@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
+import java.time.ZoneId;
+import java.util.Locale;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +37,12 @@ public class SkandiaBankenConstants {
             }
             return null;
         }
+    }
+
+    @NoArgsConstructor
+    public static class DateFormatting {
+        public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
+        public static final Locale LOCALE = new Locale("sv", "SE");
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -207,6 +215,11 @@ public class SkandiaBankenConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class ErrorCodes {
+        public static final String INVALID_PAYMENT_DATE = "BAPPAY0107";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentStatus {
         public static final String APPROVED = "Approved";
     }
@@ -258,6 +271,8 @@ public class SkandiaBankenConstants {
                 "An error occurred when completing the payment.";
         public static final String PAYMENT_DELETE_FAILED =
                 "An error occurred when removing the payment from the user's outbox.";
+        public static final String INVALID_PAYMENT_DATE =
+                "Payment could not be submitted, date was rejected by bank.";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

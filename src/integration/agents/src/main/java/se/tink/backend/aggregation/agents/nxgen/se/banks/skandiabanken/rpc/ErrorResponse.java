@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.ErrorCodes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -21,5 +22,10 @@ public class ErrorResponse {
     @JsonIgnore
     public boolean isUnauthorized() {
         return statusMessage.equalsIgnoreCase("Unauthorized");
+    }
+
+    @JsonIgnore
+    public boolean isInvalidPaymentDate() {
+        return ErrorCodes.INVALID_PAYMENT_DATE.equalsIgnoreCase(errorCode);
     }
 }
