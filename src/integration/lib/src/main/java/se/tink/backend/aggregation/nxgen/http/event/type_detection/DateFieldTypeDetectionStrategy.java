@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.http.event.type_detection;
 
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -27,14 +28,22 @@ public class DateFieldTypeDetectionStrategy implements RawBankDataFieldTypeDetec
                     // No timestamp
                     "");
 
-    @Override
-    public boolean isTypeMatched(List<FieldPathPart> fieldPath, String value, JsonNodeType type) {
+    private static final List<Pattern> ALL_PATTERNS;
+
+    static {
+        ALL_PATTERNS = new ArrayList<>();
         for (String datePattern : DATE_PATTERNS) {
             for (String timeStampPattern : TIMESTAMP_PATTERNS) {
-                Pattern p = Pattern.compile(datePattern + timeStampPattern);
-                if (p.matcher(value).matches()) {
-                    return true;
-                }
+                ALL_PATTERNS.add(Pattern.compile(datePattern + timeStampPattern));
+            }
+        }
+    }
+
+    @Override
+    public boolean isTypeMatched(List<FieldPathPart> fieldPath, String value, JsonNodeType type) {
+        for (Pattern p : ALL_PATTERNS) {
+            if (p.matcher(value).matches()) {
+                return true;
             }
         }
         return false;
