@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -53,6 +54,7 @@ public class SkandiaBankenApiClient {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final LogMasker logMasker;
+    private final BankServiceInternalErrorFilter bankServiceInternalErrorFilter;
 
     private FetchAccountResponse cachedAccountsResponse;
 
@@ -65,6 +67,9 @@ public class SkandiaBankenApiClient {
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.logMasker = logMasker;
+
+        this.bankServiceInternalErrorFilter = new BankServiceInternalErrorFilter();
+        addBankServiceInternalErrorFilter();
     }
 
     public InitTokenResponse fetchInitAccessToken() {
@@ -328,5 +333,13 @@ public class SkandiaBankenApiClient {
                 .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
                 .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID);
+    }
+
+    public void addBankServiceInternalErrorFilter() {
+        httpClient.addFilter(bankServiceInternalErrorFilter);
+    }
+
+    public void removeBankServiceInternalErrorFilter() {
+        httpClient.removeFilter(bankServiceInternalErrorFilter);
     }
 }

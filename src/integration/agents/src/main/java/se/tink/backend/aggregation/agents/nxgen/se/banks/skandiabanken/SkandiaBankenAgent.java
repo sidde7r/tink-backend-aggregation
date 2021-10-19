@@ -44,7 +44,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
@@ -187,7 +186,6 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
                 new TimeoutRetryFilter(
                         TimeoutRetryConfig.NUM_TIMEOUT_RETRIES,
                         TimeoutRetryConfig.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new GatewayTimeoutFilter());
     }
 }

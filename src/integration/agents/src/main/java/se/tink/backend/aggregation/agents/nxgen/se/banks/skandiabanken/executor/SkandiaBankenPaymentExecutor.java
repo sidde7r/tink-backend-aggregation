@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
@@ -20,8 +22,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utilities.SkandiaBankenExecutorUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.entities.UpcomingPaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -41,6 +45,10 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
         Date paymentDate = getPaymentDate(transfer);
 
+        // Skandia can respond with 500 on bad input. Removing the filter that handles 500
+        // responses to not mistake it for bank side failures.
+        apiClient.removeBankServiceInternalErrorFilter();
+
         PaymentRequest paymentRequest =
                 PaymentRequest.createPaymentRequest(transfer, paymentDate, sourceAccount);
         submitPayment(paymentRequest);
@@ -52,6 +60,10 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
             deleteUnapprovedPayment(encryptedPaymentId);
             throw e;
         }
+
+        // Re-add filter after PIS flow, in case there's a refresh after we would want to
+        // handle 500 responses as bank side failures.
+        apiClient.addBankServiceInternalErrorFilter();
     }
 
     private Date getPaymentDate(Transfer transfer) {
@@ -80,10 +92,27 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         try {
             apiClient.submitPayment(paymentRequest);
         } catch (HttpResponseException e) {
+            throwIfInvalidDateError(e.getResponse());
+
             throw getTransferFailedException(
                     TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
                     EndUserMessage.TRANSFER_EXECUTE_FAILED,
                     InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private void throwIfInvalidDateError(HttpResponse response) {
+
+        if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isInvalidPaymentDate()) {
+                throw getTransferCancelledException(
+                        TransferExceptionMessage.INVALID_PAYMENT_DATE,
+                        EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,
+                        InternalStatus.INVALID_DUE_DATE);
+            }
         }
     }
 
