@@ -30,5 +30,6 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )

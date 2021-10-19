@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentRequestFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentResponseMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.creditcard.CmcicCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.creditcard.CmcicCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
@@ -110,7 +112,9 @@ public abstract class CmcicAgent extends NextGenerationAgent
                                 sessionStorage,
                                 agentConfiguration,
                                 supplementalInformationHelper,
-                                strongAuthenticationState)));
+                                strongAuthenticationState,
+                                new CmcicPaymentRequestFactory(),
+                                new CmcicPaymentResponseMapper())));
     }
 
     @Override
