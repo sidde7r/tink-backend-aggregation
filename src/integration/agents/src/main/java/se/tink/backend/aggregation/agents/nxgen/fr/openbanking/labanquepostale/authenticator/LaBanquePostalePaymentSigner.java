@@ -5,7 +5,6 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @Slf4j
 public class LaBanquePostalePaymentSigner {
@@ -27,22 +26,15 @@ public class LaBanquePostalePaymentSigner {
         this.paymentAuthorizationUrl = paymentAuthorizationUrl;
     }
 
-    public String getPsuAuthenticationFactor() {
+    public String getPsuAuthenticationFactor() throws PaymentRejectedException {
+        // Related to @SupplementaryDataEntity
+        if (psuAuthenticationFactor == null) {
+            throw new PaymentRejectedException();
+        }
         return psuAuthenticationFactor;
     }
 
-    public void setPsuAuthenticationFactorOrThrow(Map<String, String> callback)
-            throws PaymentAuthenticationException, PaymentRejectedException {
-        // Related to @SupplementaryDataEntity
-        if (!callback.containsKey(PSU_AUTHORIZATION_FACTOR_KEY)) {
-            if (callback.getOrDefault("error", "").equalsIgnoreCase("authentication_error")) {
-                throw new PaymentAuthenticationException(
-                        InternalStatus.PAYMENT_AUTHORIZATION_UNKNOWN_EXCEPTION);
-            } else {
-                callback.forEach((k, v) -> log.info(k + " : " + v));
-                throw new PaymentRejectedException();
-            }
-        }
+    public void setPsuAuthenticationFactor(Map<String, String> callback) {
         this.psuAuthenticationFactor = callback.get(PSU_AUTHORIZATION_FACTOR_KEY);
     }
 }

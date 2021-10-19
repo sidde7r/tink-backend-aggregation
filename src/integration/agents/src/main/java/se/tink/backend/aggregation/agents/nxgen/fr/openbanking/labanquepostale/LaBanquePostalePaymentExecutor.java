@@ -16,8 +16,8 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationEx
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.MinimumValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostalePaymentSigner;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.LbpPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditorAgentEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.RemittanceInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingErrorMapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -54,6 +55,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
 
     public static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
     public static final String CONFIRM_PAYMENT = "confirm_payment";
+    public static final String CHECK_STATUS = "check_status";
     public static final String PSU_AUTHORIZATION_FACTOR = "psu_authorization_factor";
     public static final String PSU_AUTHORIZATION_FACTOR_KEY = "psuAuthenticationFactor";
     private static final String STATE = "state";
@@ -121,8 +123,14 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
 
                 Map<String, String> queryParametersMap =
                         new CaseInsensitiveMap<>(openThirdPartyApp(new URL(authorizationUrl)));
-                laBanquePostalePaymentSigner.setPsuAuthenticationFactorOrThrow(queryParametersMap);
+                laBanquePostalePaymentSigner.setPsuAuthenticationFactor(queryParametersMap);
 
+                nextStep = CHECK_STATUS;
+                break;
+            case CHECK_STATUS:
+                payment =
+                        getAndVerifyStatus(paymentMultiStepRequest.getPayment().getUniqueId())
+                                .getPayment();
                 nextStep = CONFIRM_PAYMENT;
                 break;
             case CONFIRM_PAYMENT:
@@ -187,13 +195,28 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         }
     }
 
+    private PaymentResponse getAndVerifyStatus(String paymentId) throws PaymentException {
+
+        LbpPaymentResponse lbpPaymentResponse = apiClient.getPayment(paymentId);
+
+        PaymentResponse paymentResponse = lbpPaymentResponse.toTinkPaymentResponse();
+        PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
+
+        if (paymentStatus == PaymentStatus.REJECTED) {
+            throw FrOpenBankingErrorMapper.mapToError(
+                    lbpPaymentResponse.getStatusReasonInformation());
+        }
+
+        return paymentResponse;
+    }
+
     private PaymentResponse confirmAndVerifyStatus(String paymentId) throws PaymentException {
 
-        ConfirmPaymentResponse confirmPaymentResponse =
+        LbpPaymentResponse lbpPaymentResponse =
                 apiClient.confirmPayment(
                         paymentId, laBanquePostalePaymentSigner.getPsuAuthenticationFactor());
 
-        PaymentResponse paymentResponse = confirmPaymentResponse.toTinkPaymentResponse();
+        PaymentResponse paymentResponse = lbpPaymentResponse.toTinkPaymentResponse();
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
 
         if (paymentStatus == PaymentStatus.PENDING) {
@@ -201,9 +224,8 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         }
 
         if (paymentStatus != PaymentStatus.SIGNED) {
-            throw new PaymentRejectedException(
-                    "Unexpected payment status: " + paymentStatus,
-                    InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
+            throw FrOpenBankingErrorMapper.mapToError(
+                    lbpPaymentResponse.getStatusReasonInformation());
         }
 
         return paymentResponse;

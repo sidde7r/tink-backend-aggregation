@@ -68,7 +68,7 @@ public class LaBanquePostaleAgentPaymentTest {
                                 LaBanquePostaleAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withCreditor(new Creditor(creditorAccountIdentifier, "Creditor Name"))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.5000))
                 .withCurrency("EUR")

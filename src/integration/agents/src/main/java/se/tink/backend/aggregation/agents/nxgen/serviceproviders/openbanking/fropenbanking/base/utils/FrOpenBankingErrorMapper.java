@@ -42,7 +42,6 @@ public class FrOpenBankingErrorMapper {
                         InternalStatus.PAYMENT_VALIDATION_FAILED_NO_DESCRIPTION);
             case ErrorCodes.FRAUDULENT_ORIGINATED:
                 return PaymentRejectedException.fraudulentPaymentException();
-            case ErrorCodes.NOT_SPECIFIED_REASON_AGENT_GENERATED:
             case ErrorCodes.REGULATORY_REASON:
                 return PaymentRejectedException.rejectedDueToRegulatoryReasons();
             case ErrorCodes.NO_ANSWER_FROM_CUSTOMER:
@@ -54,6 +53,8 @@ public class FrOpenBankingErrorMapper {
             case ErrorCodes.INVALID_PARTY_ID:
                 return new PaymentValidationException(
                         "Payment type is invalid", InternalStatus.INVALID_PAYMENT_TYPE);
+            case ErrorCodes.NOT_SPECIFIED_REASON_AGENT_GENERATED:
+                return new PaymentRejectedException();
             default:
                 return new PaymentException(InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }

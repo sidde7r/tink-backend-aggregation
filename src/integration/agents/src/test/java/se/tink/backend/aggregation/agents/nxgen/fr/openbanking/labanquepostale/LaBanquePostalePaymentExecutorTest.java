@@ -19,14 +19,14 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.LbpPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.BeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditTransferTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditorAgentEntity;
@@ -286,7 +286,7 @@ public class LaBanquePostalePaymentExecutorTest {
 
         // then
         Assertions.assertThat(response.getStep())
-                .isEqualTo(LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT);
+                .isEqualTo(LaBanquePostalePaymentExecutor.CHECK_STATUS);
         verify(supplementalInformationHelper).openThirdPartyApp(any());
     }
 
@@ -322,8 +322,52 @@ public class LaBanquePostalePaymentExecutorTest {
 
         // then
         Assertions.assertThat(response.getStep())
-                .isEqualTo(LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT);
+                .isEqualTo(LaBanquePostalePaymentExecutor.CHECK_STATUS);
         verify(supplementalInformationHelper).openThirdPartyApp(any());
+    }
+
+    @Test
+    public void signShouldCheckPaymentStatusBeforeConfirmation() throws PaymentException {
+        // given
+        PaymentMultiStepRequest paymentRequest =
+                new PaymentMultiStepRequest(
+                        mock(Payment.class),
+                        sessionStorage,
+                        LaBanquePostalePaymentExecutor.CHECK_STATUS,
+                        Collections.emptyList());
+
+        when(apiClient.getPayment(null))
+                .thenReturn(new LbpPaymentResponse(getPaymentEntity("RCVD", null)));
+
+        // when
+        PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
+
+        // then
+        Assertions.assertThat(response.getStep())
+                .isEqualTo(LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT);
+        verify(apiClient).getPayment(null);
+    }
+
+    @Test
+    public void signShouldCheckPaymentStatusAndThrowExceptionBeforeConfirmation()
+            throws PaymentException {
+        // given
+        PaymentMultiStepRequest paymentRequest =
+                new PaymentMultiStepRequest(
+                        mock(Payment.class),
+                        sessionStorage,
+                        LaBanquePostalePaymentExecutor.CHECK_STATUS,
+                        Collections.emptyList());
+
+        when(apiClient.getPayment(null))
+                .thenReturn(new LbpPaymentResponse(getPaymentEntity("RJCT", "NOAS")));
+
+        // when
+        Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
+
+        // then
+        Assertions.assertThat(thrown).isInstanceOf(PaymentAuthorizationTimeOutException.class);
+        verify(apiClient).getPayment(null);
     }
 
     @Test
@@ -340,13 +384,11 @@ public class LaBanquePostalePaymentExecutorTest {
         Map<String, String> callback = new HashMap<>();
         callback.put("psuAuthenticationFactor", psuAuthorizationFactor);
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
-                .thenReturn(new ConfirmPaymentResponse(getPaymentEntity("ACSC")));
+                .thenReturn(new LbpPaymentResponse(getPaymentEntity("ACSC", null)));
         paymentExecutor
                 .getLaBanquePostalePaymentSigner()
                 .setPaymentAuthorizationUrl(AUTHORIZATION_URL);
-        paymentExecutor
-                .getLaBanquePostalePaymentSigner()
-                .setPsuAuthenticationFactorOrThrow(callback);
+        paymentExecutor.getLaBanquePostalePaymentSigner().setPsuAuthenticationFactor(callback);
 
         // when
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
@@ -358,8 +400,7 @@ public class LaBanquePostalePaymentExecutorTest {
     }
 
     @Test
-    public void signShouldThrowExceptionIfPaymentIsPending()
-            throws PaymentAuthenticationException, PaymentRejectedException {
+    public void signShouldThrowExceptionIfPaymentIsPending() {
         // given
         PaymentMultiStepRequest paymentRequest =
                 new PaymentMultiStepRequest(
@@ -373,13 +414,11 @@ public class LaBanquePostalePaymentExecutorTest {
         callback.put("psuAuthenticationFactor", psuAuthorizationFactor);
 
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
-                .thenReturn(new ConfirmPaymentResponse(getPaymentEntity("RCVD")));
+                .thenReturn(new LbpPaymentResponse(getPaymentEntity("RCVD", null)));
         paymentExecutor
                 .getLaBanquePostalePaymentSigner()
                 .setPaymentAuthorizationUrl(AUTHORIZATION_URL);
-        paymentExecutor
-                .getLaBanquePostalePaymentSigner()
-                .setPsuAuthenticationFactorOrThrow(callback);
+        paymentExecutor.getLaBanquePostalePaymentSigner().setPsuAuthenticationFactor(callback);
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
@@ -390,8 +429,7 @@ public class LaBanquePostalePaymentExecutorTest {
     }
 
     @Test
-    public void signShouldThrowExceptionIfPaymentIsRejected()
-            throws PaymentAuthenticationException, PaymentRejectedException {
+    public void signShouldThrowExceptionIfPaymentIsRejected() {
         // given
         PaymentMultiStepRequest paymentRequest =
                 new PaymentMultiStepRequest(
@@ -403,15 +441,13 @@ public class LaBanquePostalePaymentExecutorTest {
         String psuAuthorizationFactor = "psuAuthorizationFactor";
 
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
-                .thenReturn(new ConfirmPaymentResponse(getPaymentEntity("RJCT")));
+                .thenReturn(new LbpPaymentResponse(getPaymentEntity("RJCT", "MS03")));
         Map<String, String> callback = new HashMap<>();
         callback.put("psuAuthenticationFactor", psuAuthorizationFactor);
         paymentExecutor
                 .getLaBanquePostalePaymentSigner()
                 .setPaymentAuthorizationUrl(AUTHORIZATION_URL);
-        paymentExecutor
-                .getLaBanquePostalePaymentSigner()
-                .setPsuAuthenticationFactorOrThrow(callback);
+        paymentExecutor.getLaBanquePostalePaymentSigner().setPsuAuthenticationFactor(callback);
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
@@ -421,9 +457,10 @@ public class LaBanquePostalePaymentExecutorTest {
         verify(apiClient).confirmPayment(null, psuAuthorizationFactor);
     }
 
-    private PaymentEntity getPaymentEntity(String rjct) {
+    private PaymentEntity getPaymentEntity(String status, String errorCode) {
         return PaymentEntity.builder()
-                .paymentInformationStatus(rjct)
+                .paymentInformationStatus(status)
+                .statusReasonInformation(errorCode)
                 .beneficiary(
                         BeneficiaryEntity.builder()
                                 .creditorAccount(new AccountEntity("123456789"))
