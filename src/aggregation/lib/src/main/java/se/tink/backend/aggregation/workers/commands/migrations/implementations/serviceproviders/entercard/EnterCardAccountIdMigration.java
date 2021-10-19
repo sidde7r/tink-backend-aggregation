@@ -32,7 +32,8 @@ public class EnterCardAccountIdMigration extends AgentVersionMigration {
     }
 
     private boolean shouldChangeBankId(Account account) {
-        if (!account.getIdentifiers().isEmpty()) {
+        if (!account.getIdentifiers().isEmpty()
+                && account.getIdentifier(AccountIdentifierType.PAYMENT_CARD_NUMBER) != null) {
             return !account.getIdentifier(AccountIdentifierType.PAYMENT_CARD_NUMBER)
                     .getIdentifier()
                     .equals(account.getBankId());
