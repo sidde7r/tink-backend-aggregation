@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountTransactionResponse;
@@ -13,6 +14,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class NordeaTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final NordeaBaseApiClient apiClient;
@@ -47,9 +50,17 @@ public class NordeaTransactionFetcher implements TransactionDatePaginator<Transa
                                 nordeaConfiguration, skipPendingTransactions, transactionIdsSeen));
 
                 continuationKey = transactionsResponse.getContinuationKey();
-            } catch (Exception e) {
-                // if the continuation key crosses a certain value, banks sends an error response
-                continuationKey = null;
+            } catch (HttpResponseException e) {
+                HttpResponse response = e.getResponse();
+
+                // if the continuation key crosses a certain value(date) , bank sends a 502
+                // error response
+                if (response.getStatus() == HttpStatus.SC_BAD_GATEWAY) {
+                    continuationKey = null;
+                } else {
+                    throw new IllegalStateException(
+                            "Unknown error response received when fetching transactions", e);
+                }
             }
         } while (continuationKey != null);
 
