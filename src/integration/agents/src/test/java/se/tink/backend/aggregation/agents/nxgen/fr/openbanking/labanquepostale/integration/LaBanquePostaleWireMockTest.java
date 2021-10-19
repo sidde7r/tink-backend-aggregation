@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.utils.remittanceinformation.Remittance
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
@@ -91,11 +91,15 @@ public class LaBanquePostaleWireMockTest {
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.FR, "fr-labanquepostale-ob", wireMockFilePath)
-                        .withConfigurationFile(configuration)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-labanquepostale-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
+                        .withAgentTestModule(new LaBanquePostaleWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .withAgentModule(new LaBanquePostaleWireMockTestModule())
                         .build();
 
         final AgentContractEntity expected =
@@ -201,10 +205,10 @@ public class LaBanquePostaleWireMockTest {
     private Payment createRealDomesticPayment(
             PaymentScheme paymentScheme, LocalDate executionDate) {
         AccountIdentifier creditorAccountIdentifier =
-                AccountIdentifier.create(AccountIdentifierType.IBAN, "FR1420041010050500013M02606");
+                new IbanIdentifier("FR1420041010050500013M02606");
 
         AccountIdentifier debtorAccountIdentifier =
-                AccountIdentifier.create(AccountIdentifierType.IBAN, "FR1261401750597365134612940");
+                new IbanIdentifier("FR1261401750597365134612940");
 
         return new Payment.Builder()
                 .withCreditor(new Creditor(creditorAccountIdentifier, "Payment Creditor"))

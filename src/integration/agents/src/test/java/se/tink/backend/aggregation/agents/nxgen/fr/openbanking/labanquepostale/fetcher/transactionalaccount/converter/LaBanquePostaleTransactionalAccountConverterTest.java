@@ -11,34 +11,34 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepo
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleTestFixtures.NAME;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleTestFixtures.RESOURCE_ID;
 
-import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountIdentificationEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceAmountBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.CashAccountType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class LaBanquePostaleAccountConverterTest {
+public class LaBanquePostaleTransactionalAccountConverterTest {
 
-    private LaBanquePostaleAccountConverter laBanquePostaleAccountConverter;
+    private LaBanquePostaleTransactionalAccountConverter transactionalAccountConverter;
 
     @Before
     public void setUp() {
 
-        laBanquePostaleAccountConverter = new LaBanquePostaleAccountConverter();
+        transactionalAccountConverter = new LaBanquePostaleTransactionalAccountConverter();
     }
 
     @Test
@@ -53,27 +53,24 @@ public class LaBanquePostaleAccountConverterTest {
 
         when(accountEntity.getBalances()).thenReturn(balances);
 
-        final AccountResponse accountResponse = mock(AccountResponse.class);
-
-        when(accountResponse.getAccounts()).thenReturn(Collections.singletonList(accountEntity));
-
         // when
-        final List<TransactionalAccount> result =
-                laBanquePostaleAccountConverter.toTinkAccounts(accountResponse);
+
+        Optional<TransactionalAccount> accountOptional =
+                transactionalAccountConverter.toTransactionalAccount(accountEntity);
 
         // then
-        assertThat(result).hasSize(1);
-
-        final TransactionalAccount resultAccount = result.get(0);
-        assertThat(resultAccount.getType()).isEqualTo(AccountTypes.CHECKING);
-        assertThat(resultAccount.getExactBalance().getExactValue().toString())
+        assertThat(accountOptional).isNotEmpty();
+        TransactionalAccount account = accountOptional.get();
+        assertThat(account.getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(account.getExactBalance().getExactValue().toString())
                 .isEqualTo(clbdBalance.getBalanceAmount().toAmount().getExactValue().toString());
-        assertThat(resultAccount.getExactBalance().getCurrencyCode())
+        assertThat(account.getExactBalance().getCurrencyCode())
                 .isEqualTo(clbdBalance.getBalanceAmount().getCurrency());
-        assertThat(resultAccount.getApiIdentifier()).isEqualTo(RESOURCE_ID);
-        assertThat(resultAccount.getIdModule().getAccountName()).isEqualTo(NAME);
-        assertThat(resultAccount.getIdModule().getAccountNumber()).isEqualTo(IBAN);
-        assertThat(resultAccount.getIdModule().getUniqueId()).isEqualTo(IBAN);
+        assertThat(account.getApiIdentifier()).isEqualTo(RESOURCE_ID);
+        IdModule idModule = account.getIdModule();
+        assertThat(idModule.getAccountName()).isEqualTo(NAME);
+        assertThat(idModule.getAccountNumber()).isEqualTo(IBAN);
+        assertThat(idModule.getUniqueId()).isEqualTo(IBAN);
     }
 
     @Test
@@ -84,14 +81,10 @@ public class LaBanquePostaleAccountConverterTest {
 
         when(accountEntity.getBalances()).thenReturn(balances);
 
-        final AccountResponse accountResponse = mock(AccountResponse.class);
-
-        when(accountResponse.getAccounts()).thenReturn(ImmutableList.of(accountEntity));
-
         // when
         final Throwable thrown =
                 catchThrowable(
-                        () -> laBanquePostaleAccountConverter.toTinkAccounts(accountResponse));
+                        () -> transactionalAccountConverter.toTransactionalAccount(accountEntity));
 
         // then
         assertThat(thrown)
