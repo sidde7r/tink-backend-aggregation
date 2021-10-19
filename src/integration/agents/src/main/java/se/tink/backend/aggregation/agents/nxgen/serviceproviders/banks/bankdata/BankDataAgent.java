@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankDataConstants.Fetcher;
@@ -48,7 +47,6 @@ public abstract class BankDataAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
     private final NemIdIFrameControllerInitializer iFrameControllerInitializer;
@@ -212,12 +210,10 @@ public abstract class BankDataAgent extends NextGenerationAgent
         return investmentRefreshController.fetchInvestmentTransactions();
     }
 
-    @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
         return loanRefreshController.fetchLoanAccounts();
     }
 
-    @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
     }
