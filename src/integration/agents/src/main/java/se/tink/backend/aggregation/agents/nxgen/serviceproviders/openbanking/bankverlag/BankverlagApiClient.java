@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.QueryKeys;
@@ -59,14 +58,10 @@ public class BankverlagApiClient {
     }
 
     public ConsentResponse createConsent() {
-        LocalDate validUntil = localDateTimeSource.now().toLocalDate().plusDays(90);
         ConsentRequest consentRequest =
-                new ConsentRequest(
+                ConsentRequest.buildTypicalRecurring(
                         AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build(),
-                        true,
-                        validUntil.toString(),
-                        FormValues.FREQUENCY_PER_DAY,
-                        false);
+                        localDateTimeSource);
 
         return createRequest(Urls.CONSENT).post(ConsentResponse.class, consentRequest);
     }

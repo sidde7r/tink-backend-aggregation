@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator;
 
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -30,16 +29,7 @@ public final class FinecoBankAuthenticationHelper {
         AccessEntity accessEntity = AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build();
 
         ConsentRequest consentRequest =
-                new ConsentRequest(
-                        accessEntity,
-                        true,
-                        localDateTimeSource
-                                .now()
-                                .toLocalDate()
-                                .plus(90, ChronoUnit.DAYS)
-                                .toString(),
-                        4,
-                        false);
+                ConsentRequest.buildTypicalRecurring(accessEntity, localDateTimeSource);
 
         ConsentResponse consentResponse = apiClient.createConsent(consentRequest, state);
         storage.storeConsentId(consentResponse.getConsentId());

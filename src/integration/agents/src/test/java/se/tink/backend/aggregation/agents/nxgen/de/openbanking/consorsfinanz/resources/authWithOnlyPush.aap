@@ -5,7 +5,7 @@ X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-Address: 127.0.0.1
 X-Aggregator: Tink Testing
 
-{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false}
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-08","frequencyPerDay":4,"combinedServiceIndicator":false}
 
 RESPONSE 1
 201

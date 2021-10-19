@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen;
 
-import java.time.LocalDate;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.ToScope;
@@ -50,8 +49,7 @@ public class SparkasenConsentGenerator implements ConsentGenerator<ConsentReques
 
     @Override
     public ConsentRequest generate() {
-        LocalDate validUntil = localDateTimeSource.now().toLocalDate().plusDays(90);
         return ConsentRequest.buildTypicalRecurring(
-                scopeSupplier.get().createAccessEntity(), validUntil.toString());
+                scopeSupplier.get().createAccessEntity(), localDateTimeSource);
     }
 }

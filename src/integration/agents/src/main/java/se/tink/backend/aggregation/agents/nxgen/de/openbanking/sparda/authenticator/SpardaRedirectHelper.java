@@ -92,8 +92,7 @@ public class SpardaRedirectHelper implements OAuth2Authenticator {
 
     private ConsentRequest buildConsentRequest() {
         AccessEntity accessEntity = AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build();
-        return ConsentRequest.buildTypicalRecurring(
-                accessEntity, localDateTimeSource.now().toLocalDate().plusDays(90).toString());
+        return ConsentRequest.buildTypicalRecurring(accessEntity, localDateTimeSource);
     }
 
     private String generateCodeVerifier() {
