@@ -6,12 +6,12 @@ import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.Raw
 
 public interface RawBankDataFieldValueMaskingStrategy {
 
-    boolean shouldMask(
+    boolean shouldUseMaskingStrategy(
             List<FieldPathPart> fieldPathParts,
             String value,
             RawBankDataTrackerEventBankFieldType fieldType);
 
-    String mask(
+    String produceMaskedValue(
             List<FieldPathPart> fieldPathParts,
             String value,
             RawBankDataTrackerEventBankFieldType fieldType);

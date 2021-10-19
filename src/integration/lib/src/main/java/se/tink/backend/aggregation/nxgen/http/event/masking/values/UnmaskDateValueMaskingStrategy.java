@@ -6,15 +6,19 @@ import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.Raw
 
 public class UnmaskDateValueMaskingStrategy implements RawBankDataFieldValueMaskingStrategy {
 
-  @Override
-  public boolean shouldMask(List<FieldPathPart> fieldPathParts, String value,
-      RawBankDataTrackerEventBankFieldType fieldType) {
-    return RawBankDataTrackerEventBankFieldType.DATE.equals(fieldType);
-  }
+    @Override
+    public boolean shouldUseMaskingStrategy(
+            List<FieldPathPart> fieldPathParts,
+            String value,
+            RawBankDataTrackerEventBankFieldType fieldType) {
+        return RawBankDataTrackerEventBankFieldType.DATE.equals(fieldType);
+    }
 
-  @Override
-  public String mask(List<FieldPathPart> fieldPathParts, String value,
-      RawBankDataTrackerEventBankFieldType fieldType) {
-    return value;
-  }
+    @Override
+    public String produceMaskedValue(
+            List<FieldPathPart> fieldPathParts,
+            String value,
+            RawBankDataTrackerEventBankFieldType fieldType) {
+        return value;
+    }
 }

@@ -150,8 +150,8 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
             RawBankDataTrackerEventBankFieldType fieldType,
             List<RawBankDataFieldValueMaskingStrategy> strategies) {
         for (RawBankDataFieldValueMaskingStrategy strategy : strategies) {
-            if (strategy.shouldMask(fieldPathParts, fieldValue, fieldType)) {
-                return strategy.mask(fieldPathParts, fieldValue, fieldType);
+            if (strategy.shouldUseMaskingStrategy(fieldPathParts, fieldValue, fieldType)) {
+                return strategy.produceMaskedValue(fieldPathParts, fieldValue, fieldType);
             }
         }
         return "MASKED_VALUE";

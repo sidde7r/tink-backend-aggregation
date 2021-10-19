@@ -7,7 +7,7 @@ import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.Raw
 public class MaskAllValueMaskingStrategy implements RawBankDataFieldValueMaskingStrategy {
 
     @Override
-    public boolean shouldMask(
+    public boolean shouldUseMaskingStrategy(
             List<FieldPathPart> fieldPathParts,
             String value,
             RawBankDataTrackerEventBankFieldType fieldType) {
@@ -15,7 +15,7 @@ public class MaskAllValueMaskingStrategy implements RawBankDataFieldValueMasking
     }
 
     @Override
-    public String mask(
+    public String produceMaskedValue(
             List<FieldPathPart> fieldPathParts,
             String value,
             RawBankDataTrackerEventBankFieldType fieldType) {
