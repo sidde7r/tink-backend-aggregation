@@ -176,6 +176,8 @@ clients:
     aggregatorIdentifier: "RSI"
   es-rsi-testing-2:
     aggregatorIdentifier: "RSI"
+  es-rsi-production:
+    aggregatorIdentifier: "RSI"
   evobanco-testing:
     aggregatorIdentifier: "Evo Banco"
   fintonic-production:
@@ -198,6 +200,10 @@ clients:
     aggregatorIdentifier: "Ica Spara"
   icaspara-test:
     aggregatorIdentifier: "Ica Spara"
+  ir-anpost-test:
+    aggregatorIdentifier: "An Post"
+  ir-anpost-production:
+    aggregatorIdentifier: "An Post"
   it-bnp-bnl-testing:
     aggregatorIdentifier: "BNL Gruppo BNP Paribas"
   it-bnp-bnl-staging:
@@ -396,6 +402,10 @@ clients:
     aggregatorIdentifier: "Valle Sparebank"
   no-voss-veksel-og-landmandsbank:
     aggregatorIdentifier: "Voss Veksel- Og Landmandsbank"
+  pt-cgd-test:
+    aggregatorIdentifier: "CGD"
+  pt-cgd-production:
+    aggregatorIdentifier: "CGD"
   saxobank-production:
     aggregatorIdentifier: "SAXO Bank"
   saxobank-testing:
@@ -472,6 +482,8 @@ clients:
     aggregatorIdentifier: "Mi-Trust"
   xero-production:
     aggregatorIdentifier: "Xero"
+  uk-monese-production:
+    aggregatorIdentifier: "Monese"
   uk-openwrks-production:
     aggregatorIdentifier: "OpenWrks MyBudget"
 
