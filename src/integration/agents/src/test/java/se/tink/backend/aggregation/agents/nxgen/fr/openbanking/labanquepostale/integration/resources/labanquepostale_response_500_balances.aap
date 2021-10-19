@@ -1,0 +1,43 @@
+REQUEST 0
+POST https://oauth2.labanquepostale.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator : Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 0
+200
+Content-Type: application/json
+
+{"token_type":"bearer", "access_token":"DUMMY_ACCESS_TOKEN", "expires_in":3600, "consented_on":0, "scope":"aisp" }
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.labanquepostale.com/v1/accounts
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+X-Global-Transaction-ID: 196c55656126eef864115f83
+X-RateLimit-Limit: name=rate-limit,2000;
+X-RateLimit-Remaining: name=rate-limit,587;
+Content-Length: 445
+
+{"_links":{"self":{"href":"/v1/accounts"}},"accounts":[{"_links":{"balances":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/transactions"}},"resourceId":"DUMMY_RESOURCE_ID","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC"}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://api.labanquepostale.com/v1/accounts/DUMMY_RESOURCE_ID/balances
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+500
+Content-Type: application/json
+X-Global-Transaction-ID: 196c55656126eefe7223e531
+X-RateLimit-Limit: name=rate-limit,2000;
+X-RateLimit-Remaining: name=rate-limit,0;
+Content-Length: 373
+
+{"timestamp":"2021-10-12T21:30:47.679+0200","status":"500","message":"Une erreur technique est survenue","path":"/api/v1/accounts/2059168R029/balances"}

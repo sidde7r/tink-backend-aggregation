@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 
 import java.time.LocalDate;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -140,6 +141,61 @@ public class LaBanquePostaleWireMockTest {
 
         // then
         agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test(expected = BankServiceException.class)
+    public void testBankSideErrorHandlingBalances() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale/integration/resources/labanquepostale_response_500_balances.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-labanquepostale-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .withAgentTestModule(new LaBanquePostaleWireMockTestModule())
+                        .build();
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+    }
+
+    @Test
+    public void testBankSideErrorHandlingTransactions() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale/integration/resources/labanquepostale_response_500_transactions.aap";
+
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale/integration/resources/agent-contract-no-transactions.json";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-labanquepostale-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .withAgentTestModule(new LaBanquePostaleWireMockTestModule())
+                        .build();
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
     }
 
     private Payment createRealDomesticPayment(
