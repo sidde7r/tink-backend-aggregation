@@ -10,6 +10,7 @@ generate_codeowners(
         "//.buildkite:owners",
         ":charts_german_alerts",
         ":charts_italian_alerts",
+        ":docker_owners",
         "//src/integration/agents:austrian_providers_owners",
         "//src/integration/agents:belgian_providers_owners",
         "//src/integration/agents:french_providers_owners",
@@ -205,6 +206,17 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "docker_owners",
+    patterns = [
+        "/docker",
+    ],
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

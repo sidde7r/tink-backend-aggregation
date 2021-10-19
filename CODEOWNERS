@@ -6,6 +6,7 @@
 /.buildkite/ @tink-ab/engineering-productivity-maintainer
 /.charts/tink-backend-aggregation-agents/de @tink-ab/aggregation-nazguls-maintainer
 /.charts/tink-backend-aggregation-agents/it @tink-ab/aggregation-nazguls-maintainer
+/docker @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/ @tink-ab/aggregation-minion-maintainer
