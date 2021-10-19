@@ -12,6 +12,8 @@ public interface RandomValueGenerator {
 
     String generateRandomAlphanumeric(int size);
 
+    String generateRandomAlphanumeric(int size, String alphabet);
+
     int randomInt(int bound);
 
     int generateRandomNumberInRange(int minimum, int maximum);

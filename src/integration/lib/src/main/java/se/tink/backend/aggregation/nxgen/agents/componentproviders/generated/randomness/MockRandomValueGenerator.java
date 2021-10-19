@@ -40,9 +40,12 @@ public class MockRandomValueGenerator implements RandomValueGenerator {
 
     @Override
     public String generateRandomAlphanumeric(int size) {
-        char[] chars = new char[size];
-        Arrays.fill(chars, 'A');
-        return new String(chars);
+        return createConstantString(size, 'A');
+    }
+
+    @Override
+    public String generateRandomAlphanumeric(int size, String alphabet) {
+        return createConstantString(size, alphabet.charAt(0));
     }
 
     @Override
@@ -63,5 +66,11 @@ public class MockRandomValueGenerator implements RandomValueGenerator {
     @Override
     public String generateUuidWithTinkTag() {
         return getUUID().toString();
+    }
+
+    private String createConstantString(int size, char c) {
+        char[] chars = new char[size];
+        Arrays.fill(chars, c);
+        return new String(chars);
     }
 }
