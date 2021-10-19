@@ -9,7 +9,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jersey.core.util.StringKeyIgnoreCaseMultivaluedMap;
 import java.io.IOException;
+import javax.ws.rs.core.MultivaluedMap;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +48,8 @@ public class TescoConsentExpirationFilterTest {
                                         + "    \"Message\": \"Reauthentication required for request\"\n"
                                         + "}",
                                 Response.class);
+        MultivaluedMap<String, String> responseHeader = new StringKeyIgnoreCaseMultivaluedMap<>();
+        given(response.getHeaders()).willReturn(responseHeader);
         given(response.getStatus()).willReturn(403);
         given(response.getBody(Response.class)).willReturn(errorResponse);
 
@@ -71,6 +75,8 @@ public class TescoConsentExpirationFilterTest {
                                         + "    \"Message\": \"Reauthentication required for request\"\n"
                                         + "}",
                                 Response.class);
+        MultivaluedMap<String, String> responseHeader = new StringKeyIgnoreCaseMultivaluedMap<>();
+        given(response.getHeaders()).willReturn(responseHeader);
         given(response.getStatus()).willReturn(403);
         given(response.getBody(Response.class)).willReturn(errorResponse);
 
@@ -94,6 +100,8 @@ public class TescoConsentExpirationFilterTest {
                                         + "    \"Message\": \"Reauthentication required for request\"\n"
                                         + "}",
                                 Response.class);
+        MultivaluedMap<String, String> responseHeader = new StringKeyIgnoreCaseMultivaluedMap<>();
+        given(response.getHeaders()).willReturn(responseHeader);
         given(response.getStatus()).willReturn(not(eq(403)));
         given(response.getBody(Response.class)).willReturn(errorResponse);
 

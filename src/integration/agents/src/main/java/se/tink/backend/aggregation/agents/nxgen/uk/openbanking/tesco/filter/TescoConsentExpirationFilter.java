@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco.filter;
 
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.SessionKiller;
@@ -33,6 +35,12 @@ public class TescoConsentExpirationFilter extends Filter {
             throws HttpClientException, HttpResponseException {
 
         HttpResponse response = nextFilter(httpRequest);
+        if (!response.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE)) {
+            response.getHeaders()
+                    .putSingle(
+                            HttpHeaders.CONTENT_TYPE,
+                            String.valueOf(MediaType.APPLICATION_JSON_TYPE));
+        }
         if (is403(response) && hasConsentExpiredCode(response)) {
             SessionKiller.cleanUpAndExpireSession(
                     persistentStorage,
