@@ -15,6 +15,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createCallbackDataWithErrorAndDescription;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createCallbackDataWithErrorAndNoDescription;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createCallbackDataWithNoCode;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createCallbackDataWithServerError;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createCallbackDataWithTemporarilyUnavailable;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createClientInfo;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createCorrectCallbackData;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createStrongAuthenticationState;
@@ -26,12 +28,14 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationFailedByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -267,6 +271,54 @@ public class UkOpenBankingPaymentAuthenticatorTest {
                 .isExactlyInstanceOf(PaymentAuthorizationException.class)
                 .hasNoCause()
                 .hasMessageStartingWith("Payment was not authorised. Please try again.");
+
+        verifyThirdPartyAppWasOpened();
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenSupplementalResponseContainsServerError() {
+        // given
+        final Map<String, String> callbackData = createCallbackDataWithServerError();
+        when(supplementalInformationHelperMock.waitForSupplementalInformation(
+                        SUPPLEMENTAL_KEY, WAIT_FOR_MINUTES, TimeUnit.MINUTES))
+                .thenReturn(Optional.of(callbackData));
+
+        when(authenticationErrorMatcherMock.isKnownOpenIdError(anyString()))
+                .thenReturn(Boolean.FALSE);
+
+        // when
+        final Throwable thrown =
+                catchThrowable(() -> ukOpenBankingPaymentAuthenticator.authenticate(CONSENT_ID));
+
+        // then
+        assertThat(thrown)
+                .isInstanceOf(BankServiceException.class)
+                .hasNoCause()
+                .hasMessageStartingWith(OpenIdConstants.Errors.SERVER_ERROR);
+
+        verifyThirdPartyAppWasOpened();
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenSupplementalResponseContainsTemporarilyUnavailable() {
+        // given
+        final Map<String, String> callbackData = createCallbackDataWithTemporarilyUnavailable();
+        when(supplementalInformationHelperMock.waitForSupplementalInformation(
+                        SUPPLEMENTAL_KEY, WAIT_FOR_MINUTES, TimeUnit.MINUTES))
+                .thenReturn(Optional.of(callbackData));
+
+        when(authenticationErrorMatcherMock.isKnownOpenIdError(anyString()))
+                .thenReturn(Boolean.FALSE);
+
+        // when
+        final Throwable thrown =
+                catchThrowable(() -> ukOpenBankingPaymentAuthenticator.authenticate(CONSENT_ID));
+
+        // then
+        assertThat(thrown)
+                .isInstanceOf(BankServiceException.class)
+                .hasNoCause()
+                .hasMessageStartingWith(OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE);
 
         verifyThirdPartyAppWasOpened();
     }

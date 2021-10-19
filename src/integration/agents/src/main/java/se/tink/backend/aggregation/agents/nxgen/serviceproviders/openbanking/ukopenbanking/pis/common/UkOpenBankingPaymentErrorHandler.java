@@ -39,11 +39,8 @@ public class UkOpenBankingPaymentErrorHandler {
                 return new PaymentValidationException(
                         "Sender and recipient can not be the same.",
                         InternalStatus.INVALID_DESTINATION_ACCOUNT);
-
-                // not sure where this error can be found, this is a proactive measure for Stripe.
-                // Cleanup once we know.
-            } else if (body.isErrorCode(ErrorCode.DAILY_LIMIT_REACHED)
-                    || body.hasErrorCode(ErrorCode.DAILY_LIMIT_REACHED)) {
+            } else if (body.isErrorCode(ErrorCode.BARCLAYS_DAILY_LIMIT_REACHED)
+                    || body.hasErrorCode(ErrorCode.BARCLAYS_DAILY_LIMIT_REACHED)) {
                 return new PaymentRejectedException(
                         "Daily limit reached.", InternalStatus.TRANSFER_LIMIT_REACHED);
             } else if (body.getErrorMessages().stream()

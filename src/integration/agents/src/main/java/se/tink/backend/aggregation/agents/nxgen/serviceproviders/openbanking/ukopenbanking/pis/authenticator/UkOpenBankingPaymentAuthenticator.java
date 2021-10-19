@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -145,6 +146,10 @@ public class UkOpenBankingPaymentAuthenticator {
             throw BANK_SIDE_FAILURE.exception(errorDescription);
         } else if (OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE.equalsIgnoreCase(errorType)) {
             throw NO_BANK_SERVICE.exception(errorDescription);
+        } else if (UkOpenBankingPaymentConstants.ErrorCode.BARCLAYS_DAILY_LIMIT_REACHED
+                .equalsIgnoreCase(errorType)) {
+            throw new PaymentAuthorizationException(
+                    "Daily limit reached.", InternalStatus.TRANSFER_LIMIT_REACHED);
         }
         log.warn("Unknown errorType {} and errorDescription {}", errorType, errorDescription);
         throw new PaymentAuthorizationException(InternalStatus.PAYMENT_AUTHORIZATION_FAILED);

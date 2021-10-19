@@ -29,6 +29,6 @@ public class UkOpenBankingPaymentConstants {
 
     public static class ErrorCode {
 
-        public static final String DAILY_LIMIT_REACHED = "OBA52";
+        public static final String BARCLAYS_DAILY_LIMIT_REACHED = "OBA52";
     }
 }
