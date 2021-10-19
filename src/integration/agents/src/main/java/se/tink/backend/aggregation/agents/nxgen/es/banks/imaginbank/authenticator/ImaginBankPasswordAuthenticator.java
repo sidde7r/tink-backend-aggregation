@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticat
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.DefaultRequestParams;
@@ -32,6 +33,11 @@ public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
         // Also gets seed for password hashing.
         SessionResponse sessionResponse = apiClient.initializeSession(username);
         ImaginSessionResponse imaginSessionResponse = sessionResponse.getResImagin();
+
+        if (imaginSessionResponse == null) {
+            throw LoginError.NOT_SUPPORTED.exception(
+                    "Unsupported flow for userType = " + sessionResponse.getUserType());
+        }
 
         // Initialize password hasher with seed from initialization request.
         final String passwordHash =
