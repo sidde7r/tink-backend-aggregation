@@ -14,6 +14,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ScaApproach;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
@@ -79,11 +80,27 @@ public class DemobankPaymentMockBankIdSignerTest {
     }
 
     @Test
-    public void apiClientThrows() throws PaymentAuthorizationException {
+    public void apiClientThrowsWhenStartAuthorisation() throws PaymentAuthorizationException {
         // when
         when(authStorage.get(StorageKeys.OAUTH2_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(mockToken));
-        doThrow(HttpResponseException.class).when(apiClient).singleSignPayment();
+        doThrow(HttpResponseException.class)
+                .when(apiClient)
+                .startPaymentAuthorisation(ScaApproach.BANK_ID);
+
+        // then
+        exceptionRule.expect(PaymentAuthorizationException.class);
+        exceptionRule.expectMessage(PaymentAuthorizationException.DEFAULT_MESSAGE);
+
+        signer.sign();
+    }
+
+    @Test
+    public void apiClientThrowsWhenSigning() throws PaymentAuthorizationException {
+        // when
+        when(authStorage.get(StorageKeys.OAUTH2_TOKEN, OAuth2Token.class))
+                .thenReturn(Optional.of(mockToken));
+        doThrow(HttpResponseException.class).when(apiClient).signPayment();
 
         // then
         exceptionRule.expect(PaymentAuthorizationException.class);

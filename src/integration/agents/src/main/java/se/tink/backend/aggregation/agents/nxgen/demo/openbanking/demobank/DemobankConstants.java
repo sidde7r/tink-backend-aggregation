@@ -73,10 +73,6 @@ public class DemobankConstants {
         public static final URL PAYMENT_URL = new URL(BASE_URL + "/api/payment/v1");
         public static final URL SIGN_PAYMENT =
                 new URL(PAYMENT_URL + "/{payment_service_type}/sign/paymentId/{payment_id}");
-        public static final URL SINGLE_SIGN_PAYMENT =
-                new URL(
-                        PAYMENT_URL
-                                + "internal/{payment_service_type}/single-sign/paymentId/{payment_id}");
         public static final URL CREATE_PAYMENT =
                 new URL(PAYMENT_URL + "/payments/{payment_scheme}/create");
         public static final URL GET_PAYMENT = new URL(PAYMENT_URL + "payments/{payment_id}");
