@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.IOException;
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -153,11 +152,9 @@ public class CaixaFiltersWireMockTest {
     }
 
     @Test
-    @Parameters(method = "retryErrorsParams")
-    public void shouldRetryAndThrowExceptionOn400Or502Error(
-            String file, int httpStatusCode, String errorMessage) {
+    public void shouldRetryAndThrowBankServiceExceptionWhenBadRequestError() {
         // given
-        final String filePath = RESOURCE_PATH + file;
+        final String filePath = RESOURCE_PATH + "caixa_pt_400_error.aap";
         final AgentWireMockRefreshTest agentWireMockRefreshTest = buildAgentWireMockTest(filePath);
 
         // when
@@ -165,16 +162,24 @@ public class CaixaFiltersWireMockTest {
 
         // then
         assertThat(throwable)
-                .hasMessage(
-                        "Response statusCode: " + httpStatusCode + " with body: " + errorMessage)
-                .isInstanceOf(HttpResponseException.class);
+                .hasMessage("Http status: " + 400 + " Error body: " + BAD_REQUEST_MESSAGE)
+                .usingRecursiveComparison()
+                .isEqualTo(BankServiceError.BANK_SIDE_FAILURE.exception());
     }
 
-    private Object[] retryErrorsParams() {
-        return new Object[] {
-            new Object[] {"caixa_pt_400_error.aap", 400, BAD_REQUEST_MESSAGE},
-            new Object[] {"caixa_pt_502_error.aap", 502, BAD_GATEWAY_MESSAGE},
-        };
+    @Test
+    public void shouldRetryAndThrowExceptionWhenBadGatewayError() {
+        // given
+        final String filePath = RESOURCE_PATH + "caixa_pt_502_error.aap";
+        final AgentWireMockRefreshTest agentWireMockRefreshTest = buildAgentWireMockTest(filePath);
+
+        // when
+        Throwable throwable = catchThrowable(agentWireMockRefreshTest::executeRefresh);
+
+        // then
+        assertThat(throwable)
+                .hasMessage("Response statusCode: " + 502 + " with body: " + BAD_GATEWAY_MESSAGE)
+                .isInstanceOf(HttpResponseException.class);
     }
 
     private AgentWireMockRefreshTest buildAgentWireMockTest(String filePath) {
