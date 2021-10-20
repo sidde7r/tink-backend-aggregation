@@ -79,7 +79,7 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.DenyAlwaysRawBankDataEventCreationTriggerStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
@@ -164,6 +164,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private RawBankDataEventProducerInterceptor rawBankDataEventProducerInterceptor;
     private RawBankDataEventProducer rawBankDataEventProducer;
+    // Determines the percentage of operations for which we will emit raw bank data event for
+    // all HTTP traffic
+    private static final double RAW_BANK_DATA_EVENT_EMISSION_RATE = 0.01;
 
     private static class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
@@ -304,7 +307,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                             rawBankDataEventProducer,
                             rawBankDataEventAccumulator,
                             correlationId,
-                            new DenyAlwaysRawBankDataEventCreationTriggerStrategy());
+                            new RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy(
+                                    RAW_BANK_DATA_EVENT_EMISSION_RATE));
             addFilter(this.rawBankDataEventProducerInterceptor);
         }
     }
