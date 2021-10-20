@@ -56,6 +56,10 @@ public final class EnterCardConstants {
         public static final String ACCOUNT_NUMBER = "ACCOUNT_NUMBER";
     }
 
+    public static final class BodyParameter {
+        public static final boolean INCLUDE_CARD_MOVEMENTS = true;
+    }
+
     public static class QueryKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String REFRESH_TOKEN = "refresh_token";
@@ -71,9 +75,6 @@ public final class EnterCardConstants {
         public static final String CODE_VERIFIER = "codeVerifier";
         public static final String ACCOUNT_NUMBER = "accountNumber";
         public static final String SSN = "ssn";
-        public static final String INCLUDE_CARD_MOVEMENTS = "includeCardMovements";
-        public static final String START_AT_ROW_NUMBER = "startAtRowNum";
-        public static final String STOP_AFTER_ROW_NUMBER = "stopAfterRowNum";
     }
 
     public static class QueryValues {

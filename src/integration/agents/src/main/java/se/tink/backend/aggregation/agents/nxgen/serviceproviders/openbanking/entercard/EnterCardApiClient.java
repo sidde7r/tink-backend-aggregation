@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.BodyParameter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.QueryKeys;
@@ -89,11 +90,12 @@ public final class EnterCardApiClient {
     public CreditCardTransactionsResponse fetchCreditCardTransactions(
             CreditCardAccount account, TransactionKey key, String providerMarket) {
         return createRequestInSession(EnterCardConstants.Urls.TRANSACTIONS)
-                .queryParam(QueryKeys.INCLUDE_CARD_MOVEMENTS, QueryValues.TRUE)
-                .queryParam(QueryKeys.START_AT_ROW_NUMBER, String.valueOf(key.getStartAtRowNum()))
-                .queryParam(
-                        QueryKeys.STOP_AFTER_ROW_NUMBER, String.valueOf(key.getStopAfterRowNum()))
-                .body(new CreditCardTransactionsRequest(account.getApiIdentifier()))
+                .body(
+                        new CreditCardTransactionsRequest(
+                                account.getApiIdentifier(),
+                                key.getStartAtRowNum(),
+                                key.getStopAfterRowNum(),
+                                BodyParameter.INCLUDE_CARD_MOVEMENTS))
                 .post(CreditCardTransactionsResponse.class)
                 .setProviderMarket(providerMarket);
     }
