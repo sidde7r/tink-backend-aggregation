@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -80,10 +81,12 @@ public class CreatePaymentRequest {
         supplementaryData = new SupplementaryDataEntity(builder.redirectUrl);
     }
 
+    @JsonIgnore
     public boolean isInstantPaymentRequest() {
         return INST.equals(paymentTypeInformation.getLocalInstrument());
     }
 
+    @JsonIgnore
     public LocalDate getRequestedExecutionDateAsLocalDate() {
         return LocalDate.parse(requestedExecutionDate, DATE_TIME_FORMATTER);
     }
