@@ -18,7 +18,7 @@ public class AddBusinessFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
-        if (httpRequest.getUrl().get().equals(Urls.AUTHORIZATION.toString())) {
+        if (httpRequest.getUrl().get().equalsIgnoreCase(Urls.AUTHORIZATION.toString())) {
             httpRequest.getHeaders().add("PSU-Corporate-ID", businessId.replace("-", ""));
         }
 
