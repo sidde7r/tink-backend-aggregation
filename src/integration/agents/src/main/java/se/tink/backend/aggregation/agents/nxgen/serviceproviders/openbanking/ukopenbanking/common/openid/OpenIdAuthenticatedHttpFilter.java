@@ -50,7 +50,7 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
 
         String interactionId = randomValueGenerator.getUUID().toString();
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
-        headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
+        headers.putSingle(HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
         // Setting these 2 headers is optional according to the OpenID and OpenBanking specs.
         // If we set the timestamp then the actually accepted formats don't follow the
         // specifications.
