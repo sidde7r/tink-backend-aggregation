@@ -52,7 +52,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         PaymentRequest paymentRequest =
                 PaymentRequest.createPaymentRequest(transfer, paymentDate, sourceAccount);
         submitPayment(paymentRequest);
-        String encryptedPaymentId = getEncryptedPaymentIdFromBank(paymentRequest);
+        String encryptedPaymentId = getEncryptedPaymentIdFromBank(paymentRequest, paymentDate);
 
         try {
             signPayment(encryptedPaymentId);
@@ -154,15 +154,17 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                                         InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
     }
 
-    private String getEncryptedPaymentIdFromBank(PaymentRequest paymentRequest) {
+    private String getEncryptedPaymentIdFromBank(PaymentRequest paymentRequest, Date paymentDate) {
         FetchPaymentsResponse unapprovedPayments = apiClient.fetchUnapprovedPayments();
-        return findPayment(unapprovedPayments, paymentRequest).getEncryptedPaymentId();
+        return findPayment(unapprovedPayments, paymentRequest, paymentDate).getEncryptedPaymentId();
     }
 
     private UpcomingPaymentEntity findPayment(
-            FetchPaymentsResponse unapprovedPayments, PaymentRequest paymentRequest) {
+            FetchPaymentsResponse unapprovedPayments,
+            PaymentRequest paymentRequest,
+            Date paymentDate) {
         return unapprovedPayments.stream()
-                .filter(paymentEntity -> paymentEntity.isSamePayment(paymentRequest))
+                .filter(paymentEntity -> paymentEntity.isSamePayment(paymentRequest, paymentDate))
                 .findFirst()
                 .orElseThrow(
                         () ->
