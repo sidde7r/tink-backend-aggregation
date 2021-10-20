@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.integration;
 
 import java.time.LocalDate;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -77,6 +79,35 @@ public class LaBanquePostaleWireMockTest {
                         .buildWithLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    public void testSepaFailedPayment() throws Exception {
+
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale/integration/resources/labanquepostale_sepa_failed_log.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.FR, "fr-labanquepostale-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addCallbackData("psuAuthenticationFactor", "DUMMY_PSU_AUTH_CODE")
+                        .withHttpDebugTrace()
+                        .withPayment(
+                                createRealDomesticPayment(
+                                        PaymentScheme.SEPA_CREDIT_TRANSFER,
+                                        LocalDate.of(2021, 4, 20)))
+                        .withAgentModule(new LaBanquePostaleWireMockTestModule())
+                        .buildWithLogin(PaymentCommand.class);
+
+        Throwable thrown = Assertions.catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
     }
 
     @Test

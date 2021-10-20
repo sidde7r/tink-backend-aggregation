@@ -200,14 +200,14 @@ public class FrOpenBankingErrorMapperTest {
 
         // then
         assertEquals(
-                InternalStatus.INVALID_ACCOUNT_TYPE_COMBINATION.toString(),
+                InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION.toString(),
                 paymentException.getInternalStatus());
 
-        assertEquals("Rejected due to regulatory reasons.", paymentException.getMessage());
+        assertEquals("The payment was rejected by the bank.", paymentException.getMessage());
     }
 
     @Test
-    public void testPaymentRejectedNoDescriptionException() {
+    public void testPaymentRejectedNotHandledYet() {
 
         // when
         PaymentException paymentException = FrOpenBankingErrorMapper.mapToError("Something Else");

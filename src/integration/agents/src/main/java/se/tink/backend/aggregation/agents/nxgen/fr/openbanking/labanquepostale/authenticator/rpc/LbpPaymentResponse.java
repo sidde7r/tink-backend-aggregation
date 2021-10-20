@@ -18,7 +18,7 @@ import se.tink.libraries.payment.rpc.Payment;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonObject
-public class ConfirmPaymentResponse {
+public class LbpPaymentResponse {
 
     private PaymentEntity paymentRequest;
 
@@ -47,5 +47,9 @@ public class ConfirmPaymentResponse {
                         .withCurrency(amount.getCurrencyCode())
                         .withStatus(paymentRequest.getPaymentStatus())
                         .build());
+    }
+
+    public String getStatusReasonInformation() {
+        return paymentRequest.getStatusReasonInformation();
     }
 }

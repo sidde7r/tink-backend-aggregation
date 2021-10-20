@@ -19,8 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.L
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.LbpPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
@@ -89,15 +89,13 @@ public class LaBanquePostalePaymentApiClient {
                 + configuration.getProviderSpecificConfiguration().getClientSecret();
     }
 
-    public ConfirmPaymentResponse confirmPayment(String paymentId, String psuAuthorizationFactor) {
+    public LbpPaymentResponse confirmPayment(String paymentId, String psuAuthorizationFactor) {
         return buildRequestWithSignature(
                         createUrl(Urls.CONFIRM_PAYMENT)
                                 .parameter(IdTags.PAYMENT_ID, paymentId)
                                 .toString(),
                         "")
-                .post(
-                        ConfirmPaymentResponse.class,
-                        new ConfirmPaymentRequest(psuAuthorizationFactor));
+                .post(LbpPaymentResponse.class, new ConfirmPaymentRequest(psuAuthorizationFactor));
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
@@ -128,13 +126,13 @@ public class LaBanquePostalePaymentApiClient {
                                                 + authorizationUrl));
     }
 
-    public ConfirmPaymentResponse getPayment(String paymentId) {
+    public LbpPaymentResponse getPayment(String paymentId) {
         return buildRequestWithSignature(
                         createUrl(Urls.GET_PAYMENT)
                                 .parameter(IdTags.PAYMENT_ID, paymentId)
                                 .toString(),
                         "")
-                .get(ConfirmPaymentResponse.class);
+                .get(LbpPaymentResponse.class);
     }
 
     private URL createUrl(String path) {

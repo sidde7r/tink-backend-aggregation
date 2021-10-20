@@ -22,6 +22,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 public class PaymentEntity {
 
     private String paymentInformationStatus;
+    private String statusReasonInformation;
     private AccountEntity debtorAccount;
     private String resourceId;
     private BeneficiaryEntity beneficiary;
