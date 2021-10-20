@@ -12,6 +12,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/integration/models",
+        "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "@tink_backend//src/libraries/account_identifier",
