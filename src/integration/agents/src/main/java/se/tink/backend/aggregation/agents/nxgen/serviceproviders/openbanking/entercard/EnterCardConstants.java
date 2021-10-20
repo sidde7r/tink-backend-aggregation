@@ -123,4 +123,8 @@ public final class EnterCardConstants {
         public static final String MORE_GOLF = "GOLF";
         public static final String MERVARDE = "HANDELS";
     }
+
+    public static class OffsetConstants {
+        public static final int TRANSACTIONS_OFFSET_ALIGNMENT = 1;
+    }
 }

@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.OffsetConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities.MetadataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities.TransactionAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities.TransactionEntity;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
+@Slf4j
 @JsonObject
 public class CreditCardTransactionsResponse
         implements TransactionKeyPaginatorResponse<TransactionKey> {
@@ -36,15 +39,23 @@ public class CreditCardTransactionsResponse
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(
-                metadata.getOffset() * metadata.getResultCount() < metadata.getTotalCount());
+                metadata.getOffset()
+                                - OffsetConstants.TRANSACTIONS_OFFSET_ALIGNMENT
+                                + metadata.getResultCount()
+                        < metadata.getTotalCount());
+        // offset is number of transactions, not page
     }
 
     @Override
     public TransactionKey nextKey() {
         if (!canFetchMore().orElse(false)) {
+            log.error("There is no nextKey, so impossible to fetch new batch of transactions");
             return null; // This must be an exception
         }
-        return new TransactionKey(metadata.getOffset() * metadata.getResultCount());
+        return new TransactionKey(
+                metadata.getOffset()
+                        - OffsetConstants.TRANSACTIONS_OFFSET_ALIGNMENT
+                        + metadata.getResultCount());
     }
 
     public CreditCardTransactionsResponse setProviderMarket(String providerMarket) {
