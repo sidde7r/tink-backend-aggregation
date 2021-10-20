@@ -85,6 +85,28 @@ public class RefreshRequestDispatcherTest {
     }
 
     @Test
+    public void shouldUsePriorityQueueForRefreshIfQueueAvailableAndUserAbsent() throws Exception {
+        // given
+        RefreshRequestDispatcher dispatcher =
+                new RefreshRequestDispatcher(
+                        regularQueueProducer,
+                        priorityQueueProducer,
+                        agentWorker,
+                        agentWorkerCommandFactory,
+                        metricRegistry);
+        when(priorityQueueProducer.isAvailable()).thenReturn(true);
+        RefreshInformationRequest request = createRefreshInformationRequest(false);
+        request.setRefreshPriority(10);
+
+        // when
+        dispatcher.dispatchRefreshInformation(request, clientInfo);
+
+        // then
+        verify(regularQueueProducer, never()).send(any());
+        verify(priorityQueueProducer, times(1)).send(any());
+    }
+
+    @Test
     public void shouldPerformAutomaticRefreshIfQueueIsUnavailableAndUserAbsent() throws Exception {
         // given
         RefreshRequestDispatcher dispatcher =
