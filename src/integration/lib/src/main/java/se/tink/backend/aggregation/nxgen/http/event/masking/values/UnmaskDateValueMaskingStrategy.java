@@ -4,15 +4,21 @@ import java.util.List;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.pojo.FieldPathPart;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
 
-public interface RawBankDataFieldValueMaskingStrategy {
+public class UnmaskDateValueMaskingStrategy implements RawBankDataFieldValueMaskingStrategy {
 
-    boolean shouldUseMaskingStrategy(
+    @Override
+    public boolean shouldUseMaskingStrategy(
             List<FieldPathPart> fieldPathParts,
             String value,
-            RawBankDataTrackerEventBankFieldType fieldType);
+            RawBankDataTrackerEventBankFieldType fieldType) {
+        return RawBankDataTrackerEventBankFieldType.DATE.equals(fieldType);
+    }
 
-    String produceMaskedValue(
+    @Override
+    public String produceMaskedValue(
             List<FieldPathPart> fieldPathParts,
             String value,
-            RawBankDataTrackerEventBankFieldType fieldType);
+            RawBankDataTrackerEventBankFieldType fieldType) {
+        return value;
+    }
 }

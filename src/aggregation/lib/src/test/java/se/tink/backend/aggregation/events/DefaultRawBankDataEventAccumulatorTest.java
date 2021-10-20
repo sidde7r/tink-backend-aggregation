@@ -51,10 +51,10 @@ public class DefaultRawBankDataEventAccumulatorTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].valueDate")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.DATE)
                         .setIsFieldSet(true)
-                        .setIsFieldMasked(true)
-                        .setFieldValue("MASKED")
+                        .setIsFieldMasked(false)
+                        .setFieldValue("2021-05-18")
                         .setCount(2)
                         .build());
 
