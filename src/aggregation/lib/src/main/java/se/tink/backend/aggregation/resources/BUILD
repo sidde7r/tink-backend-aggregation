@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_library")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 java_library(
     name = "resources",
@@ -47,4 +48,12 @@ java_library(
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/counters",
         "@tink_backend//src/libraries/tracing/lib",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
