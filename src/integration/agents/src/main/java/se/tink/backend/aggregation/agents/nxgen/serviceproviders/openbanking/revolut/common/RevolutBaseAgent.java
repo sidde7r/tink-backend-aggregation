@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import lombok.extern.slf4j.Slf4j;
 import no.finn.unleash.UnleashContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common.filter.RevolutConsentAuthorisationErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
@@ -65,6 +66,7 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
         this.unleashClient = componentProvider.getUnleashClient();
         this.currentProviderName = request.getCredentials().getProviderName();
         this.currentAppId = componentProvider.getContext().getAppId();
+        client.addFilter(new RevolutConsentAuthorisationErrorFilter(persistentStorage));
     }
 
     @Override
