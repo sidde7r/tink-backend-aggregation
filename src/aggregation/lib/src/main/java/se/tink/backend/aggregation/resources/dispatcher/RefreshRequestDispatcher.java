@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerRefreshOperationCreatorWrapper;
-import se.tink.libraries.ab_test_group_calculation.ABTestingGroupCalculator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.core.MetricId;
@@ -25,7 +24,8 @@ public class RefreshRequestDispatcher {
     private static final Set<String> priorityAppIdsForTest =
             ImmutableSet.of(
                     "a68dd285648141f19a4268f0cd508f0c", // Piotr stg app
-                    "ef2d8c482ad54ec99811ec79f7207e66" // Piotr prod app
+                    "ef2d8c482ad54ec99811ec79f7207e66", // Piotr prod app
+                    "3c759efb06d04530bc365a338e4a0e7f" // Xero production
                     );
 
     private final QueueProducer regularQueueProducer;
@@ -70,9 +70,7 @@ public class RefreshRequestDispatcher {
 
     private QueueProducer getQueueProducer(
             final RefreshInformationRequest request, final ClientInfo clientInfo) {
-        if (clientInfo != null
-                && (priorityAppIdsForTest.contains(clientInfo.getAppId())
-                        || isTestXeroTraffic(request, clientInfo))) {
+        if (clientInfo != null && priorityAppIdsForTest.contains(clientInfo.getAppId())) {
             log.info(
                     "Selecting priority queue for refreshId: {}, credentialsId: {}, appId: {}",
                     request.getRefreshId(),
@@ -81,14 +79,6 @@ public class RefreshRequestDispatcher {
             return priorityQueueProducer;
         }
         return regularQueueProducer;
-    }
-
-    private boolean isTestXeroTraffic(
-            final RefreshInformationRequest request, final ClientInfo clientInfo) {
-        return clientInfo.getAppId().equals("3c759efb06d04530bc365a338e4a0e7f")
-                && ABTestingGroupCalculator.newMd5GroupCalculator()
-                        .isInTestGroupAllowZeroAndOneTestTraffic(
-                                0.6, request.getCredentials().getId());
     }
 
     private boolean isHighPrioRequest(CredentialsRequest request) {
