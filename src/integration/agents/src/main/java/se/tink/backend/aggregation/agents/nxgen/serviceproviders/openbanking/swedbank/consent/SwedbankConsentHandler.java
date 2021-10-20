@@ -111,9 +111,7 @@ public class SwedbankConsentHandler {
     private void handleAllAccountsConsentAccountFetchError(HttpResponseException e) {
         GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
 
-        if (errorResponse.isConsentInvalid()
-                || errorResponse.isResourceUnknown()
-                || errorResponse.isConsentExpired()) {
+        if (isConsentError(errorResponse)) {
             log.warn(
                     "Got consent error when fetching accounts with all accounts consent. "
                             + "This needs to be investigated.");
@@ -121,9 +119,19 @@ public class SwedbankConsentHandler {
             return;
         }
 
-        if (errorResponse.isKycError() || errorResponse.isMissingBankAgreement()) {
+        if (isKycOrAgreementError(errorResponse)) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                     EndUserMessage.MUST_UPDATE_AGREEMENT.getKey());
         }
+    }
+
+    private boolean isConsentError(GenericResponse errorResponse) {
+        return errorResponse.isConsentInvalid()
+                || errorResponse.isResourceUnknown()
+                || errorResponse.isConsentExpired();
+    }
+
+    private boolean isKycOrAgreementError(GenericResponse errorResponse) {
+        return errorResponse.isKycError() || errorResponse.isMissingBankAgreement();
     }
 }
