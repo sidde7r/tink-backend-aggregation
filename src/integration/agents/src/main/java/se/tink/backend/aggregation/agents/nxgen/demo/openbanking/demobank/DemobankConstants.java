@@ -145,6 +145,7 @@ public class DemobankConstants {
     @RequiredArgsConstructor
     public enum ScaApproach {
         REDIRECT("redirect"),
+        BANK_ID("bank_id"),
         OTP("otp");
 
         private final String approach;
