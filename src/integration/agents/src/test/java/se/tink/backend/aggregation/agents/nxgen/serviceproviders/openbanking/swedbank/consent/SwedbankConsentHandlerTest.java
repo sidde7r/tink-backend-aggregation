@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import javax.ws.rs.core.MediaType;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Test;
@@ -95,6 +96,7 @@ public class SwedbankConsentHandlerTest {
         GenericResponse genericResponse = mock(GenericResponse.class);
         when(genericResponse.isConsentInvalid()).thenReturn(true);
 
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
         when(httpResponse.getBody(GenericResponse.class)).thenReturn(genericResponse);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
         when(apiClient.fetchAccounts()).thenThrow(httpResponseException);
@@ -110,6 +112,7 @@ public class SwedbankConsentHandlerTest {
     @Test
     public void shouldThrowAuthorizationErrorIfInvalidKycWhenFetchingAccounts() {
         // given
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
         when(httpResponse.getBody(GenericResponse.class))
                 .thenReturn(GenericResponseTestData.INVALID_KYC);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
@@ -128,6 +131,7 @@ public class SwedbankConsentHandlerTest {
     @Test
     public void shouldThrowAuthorizationErrorIfMissingAgreementWhenFetchingAccounts() {
         // given
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
         when(httpResponse.getBody(GenericResponse.class))
                 .thenReturn(GenericResponseTestData.MISSING_BANK_AGREEMENT);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);

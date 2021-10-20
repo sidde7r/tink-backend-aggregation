@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.consent;
 
 import com.google.common.base.Strings;
+import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -109,7 +111,7 @@ public class SwedbankConsentHandler {
     }
 
     private void handleAllAccountsConsentAccountFetchError(HttpResponseException e) {
-        GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+        GenericResponse errorResponse = getGenericErrorResponseIfPresent(e);
 
         if (isConsentError(errorResponse)) {
             log.warn(
@@ -123,6 +125,19 @@ public class SwedbankConsentHandler {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                     EndUserMessage.MUST_UPDATE_AGREEMENT.getKey());
         }
+    }
+
+    private GenericResponse getGenericErrorResponseIfPresent(HttpResponseException e) {
+        HttpResponse httpResponse = e.getResponse();
+
+        if (MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
+            GenericResponse genericResponse = httpResponse.getBody(GenericResponse.class);
+            if (genericResponse != null) {
+                return genericResponse;
+            }
+        }
+
+        throw e;
     }
 
     private boolean isConsentError(GenericResponse errorResponse) {

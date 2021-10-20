@@ -42,6 +42,7 @@ junit_test(
         "//src/libraries/agent-storage",
         "//src/libraries/pair",
         "//src/libraries/serialization",
+        "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
