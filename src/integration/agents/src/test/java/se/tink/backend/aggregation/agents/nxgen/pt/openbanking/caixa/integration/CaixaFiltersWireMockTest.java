@@ -164,7 +164,6 @@ public class CaixaFiltersWireMockTest {
         // then
         assertThat(throwable)
                 .hasMessage("Http status: " + 400 + " Error body: " + BAD_REQUEST_MESSAGE)
-                .usingRecursiveComparison()
                 .isExactlyInstanceOf(BankServiceException.class);
     }
 
