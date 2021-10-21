@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.filters.FTSExceptionFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.FinTechSystemsPaymentExecutor;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -36,6 +37,7 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
                         .getAgentConfiguration(FinTecSystemsConfiguration.class)
                         .getProviderSpecificConfiguration();
         apiClient = constructApiClient();
+        client.addFilter(new FTSExceptionFilter());
     }
 
     protected FinTecSystemsApiClient constructApiClient() {

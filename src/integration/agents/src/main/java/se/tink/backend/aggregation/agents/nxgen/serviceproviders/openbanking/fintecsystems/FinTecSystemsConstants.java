@@ -41,4 +41,16 @@ public class FinTecSystemsConstants {
         public static final String REDIRECT_URL =
                 "https://api.tink.se/api/v1/credentials/third-party/callback";
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class ErrorMessages {
+        public static final String ERROR_MESSAGE_401 =
+                "Authentication failed API key missing or not valid";
+        public static final String ERROR_MESSAGE_403 = "Forbidden Access blocked";
+        public static final String ERROR_MESSAGE_404 =
+                "Product not enabled or Not found The requested object does not exist on the server";
+        public static final String ERROR_MESSAGE_422 =
+                "Validation failed Something is wrong with the user input";
+        public static final String ERROR_MESSAGE_500 = "An internal server problem occurred";
+    }
 }
