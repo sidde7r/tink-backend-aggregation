@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -59,7 +60,9 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         marketConfiguration,
                         componentProvider.getCredentialsRequest().getProvider().getMarket(),
                         getUserIp());
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        final LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(localDateTimeSource);
         creditCardRefreshController = getCreditCardRefreshController();
         client.addFilter(new TerminatedHandshakeRetryFilter());
     }
@@ -173,7 +176,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 userIp);
     }
 
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
@@ -183,6 +187,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         new TransactionDatePaginationController.Builder<>(
                                         new CrossKeyTransactionalAccountTransactionFetcher(
                                                 apiClient))
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
