@@ -1,8 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fintecsystems.mock;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.LastError.CLIENT_ABORTED;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.LastError.PINNED_IBAN_NOT_FOUND;
 
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationFailedByUserException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
@@ -39,6 +46,94 @@ public class FinTecSystemsMockAgentPaymentTest {
                         .buildWithoutLogin(PaymentCommand.class);
         // when // then
         assertThatCode(agentWireMockPaymentTest::executePayment).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testPaymentAuthorizationTimeoutError() throws Exception {
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fintecsystems/mock/resources/PaymentAuthorizationTimeoutError.aap";
+
+        Payment payment = createRealDomesticPayment().build();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.DE, "de-test-fintecsystems", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withPayment(payment)
+                        .buildWithoutLogin(PaymentCommand.class);
+        // when //then
+        assertThatExceptionOfType(PaymentAuthorizationTimeOutException.class)
+                .isThrownBy(agentWireMockPaymentTest::executePayment)
+                .withMessage(CLIENT_ABORTED.getCode());
+    }
+
+    @Test
+    public void testPaymentPaymentAuthenticationException() throws Exception {
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fintecsystems/mock/resources/PaymentAuthenticationException.aap";
+
+        Payment payment = createRealDomesticPayment().build();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.DE, "de-test-fintecsystems", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withPayment(payment)
+                        .buildWithoutLogin(PaymentCommand.class);
+        // when //then
+        assertThatExceptionOfType(PaymentAuthenticationException.class)
+                .isThrownBy(agentWireMockPaymentTest::executePayment)
+                .withMessage(PaymentAuthenticationException.DEFAULT_MESSAGE);
+    }
+
+    @Test
+    public void testPaymentAuthorizationFailedByUserException() throws Exception {
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fintecsystems/mock/resources/PaymentAuthorizationFailedByUserException.aap";
+
+        Payment payment = createRealDomesticPayment().build();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.DE, "de-test-fintecsystems", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withPayment(payment)
+                        .buildWithoutLogin(PaymentCommand.class);
+        // when //then
+        assertThatExceptionOfType(PaymentAuthorizationFailedByUserException.class)
+                .isThrownBy(agentWireMockPaymentTest::executePayment)
+                .withMessage(PaymentAuthorizationFailedByUserException.MESSAGE);
+    }
+
+    @Test
+    public void testPaymentValidationException() throws Exception {
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fintecsystems/mock/resources/PaymentValidationException.aap";
+
+        Payment payment = createRealDomesticPayment().build();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.DE, "de-test-fintecsystems", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withPayment(payment)
+                        .buildWithoutLogin(PaymentCommand.class);
+        // when //then
+        assertThatExceptionOfType(PaymentValidationException.class)
+                .isThrownBy(agentWireMockPaymentTest::executePayment)
+                .withMessage(PINNED_IBAN_NOT_FOUND.getCode());
     }
 
     private Payment.Builder createRealDomesticPayment() {
