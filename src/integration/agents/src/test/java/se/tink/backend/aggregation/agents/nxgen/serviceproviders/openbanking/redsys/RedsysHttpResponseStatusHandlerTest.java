@@ -28,7 +28,10 @@ public class RedsysHttpResponseStatusHandlerTest {
     }
 
     @Test
-    @Parameters({"{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"Internal Server Error\"}]}"})
+    @Parameters({
+        "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"Internal Server Error\"}]}",
+        "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"INTERNAL_SERVER_ERROR\",\"text\":\"An unexpected error has occurred\"}]}"
+    })
     public void shouldThrowBankTemporaryUnavailable(String body) {
         // given:
         Mockito.when(httpResponse.getStatus()).thenReturn(500);
