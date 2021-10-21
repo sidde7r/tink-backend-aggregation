@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.transaction;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -51,6 +52,85 @@ public class TransactionEntityTest {
     @Parameters(method = "declinedDummyTransactions")
     public void isDeclined(TransactionEntity transaction) {
         assertThat(transaction.isNotDeclined()).isFalse();
+    }
+
+    @Test
+    @Parameters(method = "getParameters")
+    public void shouldGetDescriptionWithProvidedEndToEndId(String endToEnd, String expectedResult) {
+        // given
+        TransactionEntity transactionEntity =
+                getTransactionEntityWithTransactionInformationEndToEnd(endToEnd);
+
+        // when
+        String result = transactionEntity.getDescription();
+
+        // then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void shouldGetDescriptionWithNotProvidedEndToEndId() {
+        // given
+        String information = "Some description";
+        TransactionEntity transactionEntity =
+                getTransactionEntityWithTransactionInformationWithoutEndToEnd(information);
+
+        // when
+        String result = transactionEntity.getDescription();
+
+        // then
+        assertEquals(information, result);
+    }
+
+    @Test
+    public void shouldGetDescriptionFromTransactionReference() {
+        // given
+        TransactionEntity transactionEntity = getTransactionEntityWithoutTransactionInformation();
+        String trxReference = transactionEntity.getTransactionReference();
+
+        // when
+        String result = transactionEntity.getDescription();
+
+        // then
+        assertEquals(trxReference, result);
+    }
+
+    private TransactionEntity getTransactionEntityWithTransactionInformationEndToEnd(
+            String information) {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"AccountId\": \"c21a68b3-17ce-4e5c-acb6-9ec411331467\",\n"
+                        + "    \"TransactionId\": \"ef3e6307-b67d-4a01-b66d-0a6370738819\",\n"
+                        + "    \"TransactionReference\": \"980156\",\n"
+                        + "    \"TransactionInformation\": \"ÖVERFÖRING\\nEndToEndID: "
+                        + information
+                        + "\"\n"
+                        + "}",
+                TransactionEntity.class);
+    }
+
+    private TransactionEntity getTransactionEntityWithTransactionInformationWithoutEndToEnd(
+            String information) {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"AccountId\": \"c21a68b3-17ce-4e5c-acb6-9ec411331467\",\n"
+                        + "    \"TransactionId\": \"ef3e6307-b67d-4a01-b66d-0a6370738819\",\n"
+                        + "    \"TransactionReference\": \"980156\",\n"
+                        + "    \"TransactionInformation\": \""
+                        + information
+                        + "\"\n"
+                        + "}",
+                TransactionEntity.class);
+    }
+
+    private TransactionEntity getTransactionEntityWithoutTransactionInformation() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"AccountId\": \"c21a68b3-17ce-4e5c-acb6-9ec411331467\",\n"
+                        + "    \"TransactionId\": \"ef3e6307-b67d-4a01-b66d-0a6370738819\",\n"
+                        + "    \"TransactionReference\": \"980156\"\n"
+                        + "}",
+                TransactionEntity.class);
     }
 
     @SuppressWarnings("unused")
@@ -121,6 +201,14 @@ public class TransactionEntityTest {
                 SerializationUtils.deserializeFromString(
                         BOOKED_DECLINED_TRX, TransactionEntity.class)
             }
+        };
+    }
+
+    private Object[] getParameters() {
+        return new Object[] {
+            new Object[] {"NOTPROVIDED", "ÖVERFÖRING"},
+            new Object[] {"NOT PROVIDED", "ÖVERFÖRING"},
+            new Object[] {"Some description", "ÖVERFÖRING\n: Some description"},
         };
     }
 }
