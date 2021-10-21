@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticati
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.SocieteGeneralePaymentExecutor;
@@ -32,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.e
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.StatusReasonInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.CreatePaymentRequestValidator;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -44,7 +48,6 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -58,10 +61,10 @@ public class SocieteGeneralePaymentExecutorTest {
 
     private SupplementalInformationHelper supplementalInformationHelper;
     private StrongAuthenticationState strongAuthenticationState;
+    private CreatePaymentRequestValidator createPaymentRequestValidator;
 
     private final String AUTHENTICATION_URL = "DUMMY_AUTHENTICATION_URL";
     private SocieteGeneralePaymentExecutor paymentExecutor;
-    private CountryDateHelper dateHelper;
 
     @Before
     public void init() {
@@ -69,7 +72,7 @@ public class SocieteGeneralePaymentExecutorTest {
         sessionStorage = mock(SessionStorage.class);
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         strongAuthenticationState = mock(StrongAuthenticationState.class);
-        dateHelper = mock(CountryDateHelper.class);
+        createPaymentRequestValidator = mock(CreatePaymentRequestValidator.class);
         paymentExecutor =
                 new SocieteGeneralePaymentExecutor(
                         apiClient,
@@ -77,7 +80,7 @@ public class SocieteGeneralePaymentExecutorTest {
                         sessionStorage,
                         supplementalInformationHelper,
                         strongAuthenticationState,
-                        dateHelper);
+                        createPaymentRequestValidator);
     }
 
     @Test
@@ -265,6 +268,23 @@ public class SocieteGeneralePaymentExecutorTest {
         // then
         Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
         verify(apiClient, times(1)).getPaymentStatus(any());
+    }
+
+    @Test(expected = PaymentValidationException.class)
+    public void shouldNotSendRequestIfValidationFails() throws PaymentException {
+        // given
+        PaymentRequest paymentRequest = createDomesticPayment();
+
+        willThrow(new PaymentValidationException("MESSAGE EXCEPTION"))
+                .willDoNothing()
+                .given(createPaymentRequestValidator)
+                .validate(any());
+
+        // when
+        paymentExecutor.create(paymentRequest);
+
+        // then
+        verifyNoInteractions(apiClient);
     }
 
     private PaymentRequest createDomesticPayment() {

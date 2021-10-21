@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.PaymentIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.PaymentTypeInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.SupplementaryDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.ValidatablePaymentRequest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -26,7 +27,7 @@ import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @Getter
 @JsonObject
-public class CreatePaymentRequest {
+public class CreatePaymentRequest implements ValidatablePaymentRequest {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
@@ -82,13 +83,15 @@ public class CreatePaymentRequest {
     }
 
     @JsonIgnore
-    public boolean isInstantPaymentRequest() {
-        return INST.equals(paymentTypeInformation.getLocalInstrument());
+    @Override
+    public String getLocalInstrument() {
+        return paymentTypeInformation.getLocalInstrument();
     }
 
     @JsonIgnore
+    @Override
     public LocalDate getRequestedExecutionDateAsLocalDate() {
-        return LocalDate.parse(requestedExecutionDate, DATE_TIME_FORMATTER);
+        return LocalDate.parse(getRequestedExecutionDate(), DATE_TIME_FORMATTER);
     }
 
     public static class Builder {
