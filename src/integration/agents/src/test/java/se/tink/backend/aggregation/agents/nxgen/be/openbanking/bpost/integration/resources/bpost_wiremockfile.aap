@@ -1,0 +1,363 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.psd2.bpostbank.be/berlingroup/v1/consents/DUMMY_CONSENT_ID/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 12 Oct 2021 10:55:58 GMT
+Date: Tue, 12 Oct 2021 10:55:58 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 27
+
+{"consentStatus" : "valid"}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://api.psd2.bpostbank.be/berlingroup/v1/consents/DUMMY_CONSENT_ID
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 12 Oct 2021 10:55:58 GMT
+Date: Tue, 12 Oct 2021 10:55:59 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 356
+
+{
+  "access" : {
+    "allPsd2" : "allAccounts"
+  },
+  "recurringIndicator" : true,
+  "validUntil" : "2022-01-09",
+  "frequencyPerDay" : 4,
+  "lastActionDate" : "2021-10-12",
+  "combinedServiceIndicator" : false,
+  "consentStatus" : "valid",
+  "_links" : {
+    "account" : {
+      "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api.psd2.bpostbank.be/berlingroup/v1/accounts
+Accept: application/json
+Content-Type: application/json
+Consent-Id: DUMMY_CONSENT_ID
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Tue, 12 Oct 2021 10:55:59 GMT
+Date: Tue, 12 Oct 2021 10:56:00 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 652
+
+{
+  "accounts" : [ {
+    "resourceId" : "DUMMY_RESOURCE_ID",
+    "name" : "DUMMY_NAME",
+    "currency" : "EUR",
+    "cashAccountType" : "CASH",
+    "iban" : "BE04199929816831",
+    "bban" : "DUMMY_BBAN",
+    "_links" : {
+      "account" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID"
+      },
+      "balances" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/balances"
+      },
+      "transactions" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions"
+      }
+    },
+    "product" : "product name"
+  } ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/balances
+Accept: application/json
+Content-Type: application/json
+Consent-Id: DUMMY_CONSENT_ID
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 12 Oct 2021 10:56:00 GMT
+Date: Tue, 12 Oct 2021 10:56:01 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 287
+
+{
+  "account" : {
+    "iban" : "BE04199929816831",
+    "bban" : "DUMMY_BBAN",
+    "currency" : "EUR"
+  },
+  "balances" : [ {
+    "balanceAmount" : {
+      "currency" : "EUR",
+      "amount" : -50.25
+    },
+    "referenceDate" : "2021-09-30",
+    "balanceType" : "closingBooked"
+  } ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+Consent-Id: DUMMY_CONSENT_ID
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 12 Oct 2021 10:56:01 GMT
+Date: Tue, 12 Oct 2021 10:56:02 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 3722
+
+{
+  "account" : {
+    "iban" : "BE04199929816831",
+    "bban" : "DUMMY_BBAN",
+    "currency" : "EUR"
+  },
+  "transactions" : {
+    "booked" : [ {
+      "transactionId" : "TRANSACTION_1",
+      "bookingDate" : "1992-01-13",
+      "valueDate" : "1992-01-14",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : -4.62
+      },
+      "creditorName" : "CREDITOR_NAME1",
+      "creditorAccount" : {
+        "iban" : "BE04199929816831"
+      },
+      "debtorAccount" : {
+        "iban" : "BE04199929816831"
+      },
+      "remittanceInformationUnstructured" : " REMITTANCE_1",
+      "bankTransactionCode" : "INDECO",
+      "_links" : {
+        "transactionDetails" : {
+          "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions/TRANSACTION_1"
+        }
+      }
+    }, {
+      "transactionId" : "TRANSACTION_2",
+      "bookingDate" : "1992-01-15",
+      "valueDate" : "1992-01-16",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : -20.00
+      },
+      "creditorName" : "CREDITOR_2",
+      "creditorAccount" : {
+        "iban" : "BE04199929816831"
+      },
+      "debtorAccount" : {
+        "iban" : "BE04199929816831"
+      },
+      "remittanceInformationUnstructured" : "REMITTANCE_2",
+      "bankTransactionCode" : "XXXXX",
+      "_links" : {
+        "transactionDetails" : {
+          "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions/TRANSACTION_2"
+        }
+      }
+    }, {
+      "transactionId" : "TRANSACTION_3",
+      "bookingDate" : "1992-01-17",
+      "valueDate" : "1992-01-18",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : -4.43
+      },
+      "creditorName" : "CREDITOR_3",
+      "creditorAccount" : {
+        "iban" : "BE92000461305223"
+      },
+      "debtorAccount" : {
+        "iban" : "BE92000461305223"
+      },
+      "remittanceInformationUnstructured" : "REMITTANCE_3",
+      "bankTransactionCode" : "INDECO",
+      "_links" : {
+        "transactionDetails" : {
+          "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions/TRANSACTION_3"
+        }
+      }
+    }, {
+      "transactionId" : "TRANSACTION_4",
+      "bookingDate" : "1992-01-19",
+      "valueDate" : "1992-01-20",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : -4.39
+      },
+      "creditorName" : "CREDITOR_4",
+      "creditorAccount" : {
+        "iban" : "BE92000461305223"
+      },
+      "debtorAccount" : {
+        "iban" : "BE92000461305223"
+      },
+      "remittanceInformationUnstructured" : "REMITTANCE_4",
+      "bankTransactionCode" : "INDECO",
+      "_links" : {
+        "transactionDetails" : {
+          "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions/TRANSACTION_4"
+        }
+      }
+    } ],
+    "pending" : [ ],
+    "_links" : {
+      "next" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=BOTH&&page=1"
+      },
+      "first" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=BOTH&page=0"
+      },
+      "last" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=BOTH&page=1"
+      },
+      "account" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID"
+      },
+      "balances" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/balances"
+      },
+      "transactions" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=BOTH&page=1
+Accept: application/json
+Content-Type: application/json
+Consent-Id: DUMMY_CONSENT_ID
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Tue, 12 Oct 2021 10:56:01 GMT
+Date: Tue, 12 Oct 2021 10:56:02 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 3722
+
+{
+  "account" : {
+    "iban" : "BE04199929816831",
+    "bban" : "DUMMY_BBAN",
+    "currency" : "EUR"
+  },
+  "transactions" : {
+    "booked" : [ {
+      "transactionId" : "TRANSACTION_5",
+      "bookingDate" : "1992-01-21",
+      "valueDate" : "1992-01-22",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : -32.12
+      },
+      "creditorName" : "CREDITOR_5",
+      "creditorAccount" : {
+        "iban" : "BE04199929816831"
+      },
+      "debtorAccount" : {
+        "iban" : "BE04199929816831"
+      },
+      "remittanceInformationUnstructured" : " REMITTANCE_5",
+      "bankTransactionCode" : "INDECO",
+      "_links" : {
+        "transactionDetails" : {
+          "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions/TRANSACTION_5"
+        }
+      }
+    }, {
+      "transactionId" : "TRANSACTION_6",
+      "bookingDate" : "1992-01-23",
+      "valueDate" : "1992-01-24",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : -312.12
+      },
+      "creditorName" : "CREDITOR_6",
+      "creditorAccount" : {
+        "iban" : "BE04199929816831"
+      },
+      "debtorAccount" : {
+        "iban" : "BE04199929816831"
+      },
+      "remittanceInformationUnstructured" : "REMITTANCE_6",
+      "bankTransactionCode" : "XXXXX",
+      "_links" : {
+        "transactionDetails" : {
+          "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions/TRANSACTION_6"
+        }
+      }
+    } ],
+    "pending" : [ ],
+    "_links" : {
+      "first" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=BOTH&page=0"
+      },
+      "last" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=BOTH&page=1"
+      },
+      "account" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID"
+      },
+      "balances" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/balances"
+      },
+      "transactions" : {
+        "href" : "https://api.psd2.bpostbank.be/berlingroup/v1/accounts/DUMMY_RESOURCE_ID/transactions"
+      }
+    }
+  }
+}
