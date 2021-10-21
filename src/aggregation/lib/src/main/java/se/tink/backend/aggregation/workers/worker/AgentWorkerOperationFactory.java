@@ -42,7 +42,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.AbnAmroSpecificCase;
 import se.tink.backend.aggregation.workers.commands.AccountSegmentRestrictionWorkerCommand;
@@ -126,7 +126,7 @@ public class AgentWorkerOperationFactory {
     private final AggregatorInfoProvider aggregatorInfoProvider;
     private final CuratorFramework coordinationClient;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
-    private final AgentDebugLogStorageHandler agentDebugLogStorageHandler;
+    private final AgentHttpLogsStorageHandler agentHttpLogsStorageHandler;
     private final CredentialsEventProducer credentialsEventProducer;
     private final DataTrackerEventProducer dataTrackerEventProducer;
     private final LoginAgentEventProducer loginAgentEventProducer;
@@ -160,7 +160,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperationFactory(
             CacheClient cacheClient,
             MetricRegistry metricRegistry,
-            AgentDebugLogStorageHandler agentDebugLogStorageHandler,
+            AgentHttpLogsStorageHandler agentHttpLogsStorageHandler,
             AgentWorkerOperationState agentWorkerOperationState,
             CircuitBreakerAgentWorkerCommandState circuitBreakerAgentWorkerCommandState,
             InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState,
@@ -204,7 +204,7 @@ public class AgentWorkerOperationFactory {
         this.reportMetricsAgentWorkerCommandState = reportProviderMetricsAgentWorkerCommandState;
 
         this.metricRegistry = metricRegistry;
-        this.agentDebugLogStorageHandler = agentDebugLogStorageHandler;
+        this.agentHttpLogsStorageHandler = agentHttpLogsStorageHandler;
         this.supplementalInformationController = supplementalInformationController;
         this.providerSessionCacheController = providerSessionCacheController;
         this.coordinationClient = coordinationClient;
@@ -490,7 +490,7 @@ public class AgentWorkerOperationFactory {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
@@ -630,7 +630,7 @@ public class AgentWorkerOperationFactory {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
 
@@ -875,7 +875,7 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new CreateLogMaskerWorkerCommand(context));
 
-        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
 
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
@@ -1070,7 +1070,7 @@ public class AgentWorkerOperationFactory {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
@@ -1149,7 +1149,7 @@ public class AgentWorkerOperationFactory {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -1440,7 +1440,7 @@ public class AgentWorkerOperationFactory {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
@@ -1565,7 +1565,7 @@ public class AgentWorkerOperationFactory {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
@@ -1722,7 +1722,7 @@ public class AgentWorkerOperationFactory {
                         cacheClient,
                         reportMetricsAgentWorkerCommandState,
                         tppSecretsServiceClient,
-                        agentDebugLogStorageHandler,
+                        agentHttpLogsStorageHandler,
                         instantiateAgentWorkerCommandState,
                         loginAgentWorkerCommandState,
                         loginAgentEventProducer,

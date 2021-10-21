@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class AgentDebugLogsCache {
+public class AgentHttpLogsCache {
 
-    private final AgentDebugLogsMasker debugLogsMasker;
+    private final AgentHttpLogsMasker httpLogsMasker;
     private final HttpAapLogger httpAapLogger;
     private final HttpJsonLogger httpJsonLogger;
 
@@ -24,7 +24,7 @@ public class AgentDebugLogsCache {
             String log =
                     Optional.ofNullable(httpAapLogger)
                             .flatMap(HttpAapLogger::tryGetLogContent)
-                            .map(debugLogsMasker::maskSensitiveOutputLog)
+                            .map(httpLogsMasker::maskSensitiveOutputLog)
                             .orElse(null);
             aapLogContent = OptionalLogContent.of(log);
         }
@@ -36,7 +36,7 @@ public class AgentDebugLogsCache {
             String log =
                     Optional.ofNullable(httpJsonLogger)
                             .flatMap(HttpJsonLogger::tryGetLogContent)
-                            .map(debugLogsMasker::maskSensitiveOutputLog)
+                            .map(httpLogsMasker::maskSensitiveOutputLog)
                             .orElse(null);
             jsonLogContent = OptionalLogContent.of(log);
         }

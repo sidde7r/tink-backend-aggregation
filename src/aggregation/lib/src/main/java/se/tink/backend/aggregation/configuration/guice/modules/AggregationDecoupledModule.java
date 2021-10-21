@@ -66,8 +66,8 @@ import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProv
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogLocalStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsLocalStorageHandler;
 import se.tink.backend.aggregation.workers.abort.DefaultRequestAbortHandler;
 import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
@@ -286,8 +286,8 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
         bind(InterProcessSemaphoreMutexFactory.class)
                 .to(InterProcessSemaphoreMutexFactoryStub.class);
-        bind(AgentDebugLogStorageHandler.class)
-                .to(AgentDebugLogLocalStorageHandler.class)
+        bind(AgentHttpLogsStorageHandler.class)
+                .to(AgentHttpLogsLocalStorageHandler.class)
                 .in(Scopes.SINGLETON);
         bind(new TypeLiteral<Predicate<Provider>>() {})
                 .annotatedWith(ShouldAddExtraCommands.class)

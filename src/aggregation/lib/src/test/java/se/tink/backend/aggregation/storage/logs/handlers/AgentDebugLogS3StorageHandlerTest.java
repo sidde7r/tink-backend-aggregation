@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
 
 @RunWith(JUnitParamsRunner.class)
 public class AgentDebugLogS3StorageHandlerTest {
@@ -31,7 +31,7 @@ public class AgentDebugLogS3StorageHandlerTest {
     private S3ClientFactory s3ClientFactory;
     private AmazonS3 s3Client;
 
-    private AgentDebugLogS3StorageHandler logStorageHandler;
+    private AgentHttpLogsS3StorageHandler logStorageHandler;
 
     @Before
     public void setup() {
@@ -46,7 +46,7 @@ public class AgentDebugLogS3StorageHandlerTest {
 
     private void recreateStorageHandler() {
         logStorageHandler =
-                new AgentDebugLogS3StorageHandler(s3StorageConfiguration, s3ClientFactory);
+                new AgentHttpLogsS3StorageHandler(s3StorageConfiguration, s3ClientFactory);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class AgentDebugLogS3StorageHandlerTest {
         recreateStorageHandler();
 
         // when
-        Throwable throwable = catchThrowable(() -> logStorageHandler.storeDebugLog("", "", bucket));
+        Throwable throwable = catchThrowable(() -> logStorageHandler.storeLog("", "", bucket));
 
         // then
         assertThat(throwable)
@@ -143,7 +143,7 @@ public class AgentDebugLogS3StorageHandlerTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                logStorageHandler.storeDebugLog(
+                                logStorageHandler.storeLog(
                                         "some content",
                                         blankFilePath,
                                         AgentDebugLogBucket.AAP_FORMAT_LOGS));
@@ -172,7 +172,7 @@ public class AgentDebugLogS3StorageHandlerTest {
 
         // when
         String storageDescription =
-                logStorageHandler.storeDebugLog("some content", "some/path/to/file.log", bucket);
+                logStorageHandler.storeLog("some content", "some/path/to/file.log", bucket);
 
         // then
         assertThat(storageDescription)
@@ -207,7 +207,7 @@ public class AgentDebugLogS3StorageHandlerTest {
 
         // when
         String storageDescription =
-                logStorageHandler.storeDebugLog(
+                logStorageHandler.storeLog(
                         "", "some/path/to/file123.log", AgentDebugLogBucket.AAP_FORMAT_LOGS);
 
         // then

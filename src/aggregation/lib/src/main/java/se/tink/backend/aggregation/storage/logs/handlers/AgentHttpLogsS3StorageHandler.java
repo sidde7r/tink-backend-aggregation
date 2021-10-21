@@ -11,11 +11,11 @@ import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
 
 @Slf4j
-public class AgentDebugLogS3StorageHandler implements AgentDebugLogStorageHandler {
+public class AgentHttpLogsS3StorageHandler implements AgentHttpLogsStorageHandler {
 
     private final S3StorageConfiguration s3StorageConfiguration;
     private final S3ClientFactory s3ClientFactory;
@@ -23,7 +23,7 @@ public class AgentDebugLogS3StorageHandler implements AgentDebugLogStorageHandle
     private AmazonS3 awsStorageClient;
 
     @Inject
-    public AgentDebugLogS3StorageHandler(
+    public AgentHttpLogsS3StorageHandler(
             S3StorageConfiguration s3StorageConfiguration, S3ClientFactory s3ClientFactory) {
         this.s3StorageConfiguration = s3StorageConfiguration;
         this.s3ClientFactory = s3ClientFactory;
@@ -50,7 +50,7 @@ public class AgentDebugLogS3StorageHandler implements AgentDebugLogStorageHandle
      *     types of errors.
      */
     @Override
-    public String storeDebugLog(String content, String filePath, AgentDebugLogBucket bucket) {
+    public String storeLog(String content, String filePath, AgentDebugLogBucket bucket) {
         if (!isEnabled()) {
             throw new IllegalStateException("Invalid attempt to use S3 storage - not enabled");
         }

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitivePayloadOnForceAuthenticateCommand;
@@ -76,7 +76,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             CacheClient cacheClient,
             ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState,
             TppSecretsServiceClient tppSecretsServiceClient,
-            AgentDebugLogStorageHandler agentDebugLogStorageHandler,
+            AgentHttpLogsStorageHandler agentHttpLogsStorageHandler,
             InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState,
             LoginAgentWorkerCommandState loginAgentWorkerCommandState,
             LoginAgentEventProducer loginAgentEventProducer,
@@ -156,7 +156,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
 

@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 
 @UtilityClass
-public class AgentDebugLogConstants {
+public class AgentHttpLogsConstants {
 
     public enum AgentDebugLogBucket {
         /** Bucket for typical logs in AAP format that we use for Wire Mocks. */

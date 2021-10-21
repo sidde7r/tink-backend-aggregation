@@ -12,11 +12,11 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.agentsservice.AggregationWorkerConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogsSaver;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogsSaverProvider;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaver;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaverProvider;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
 import se.tink.backend.aggregation.storage.logs.SaveLogsResult;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AapLogsCatalog;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentsLegalConstraintsProvider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
@@ -31,8 +31,8 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private final AgentWorkerCommandContext context;
-    private final AgentDebugLogStorageHandler logStorageHandler;
-    private final AgentDebugLogsSaverProvider logsSaverProvider;
+    private final AgentHttpLogsStorageHandler logsStorageHandler;
+    private final AgentHttpLogsSaverProvider logsSaverProvider;
     private final PaymentsLegalConstraintsProvider paymentsLegalConstraintsProvider;
     private final StringBuilder logResultsBuilder;
 
@@ -40,26 +40,26 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private final Credentials credentials;
     private final User user;
 
-    private AgentDebugLogsSaver agentDebugLogsSaver;
+    private AgentHttpLogsSaver logsSaver;
 
     public DebugAgentWorkerCommand(
-            AgentWorkerCommandContext context, AgentDebugLogStorageHandler logStorageHandler) {
+            AgentWorkerCommandContext context, AgentHttpLogsStorageHandler logsStorageHandler) {
         this(
                 context,
-                logStorageHandler,
-                new AgentDebugLogsSaverProvider(),
+                logsStorageHandler,
+                new AgentHttpLogsSaverProvider(),
                 new PaymentsLegalConstraintsProvider(),
                 new StringBuilder());
     }
 
     protected DebugAgentWorkerCommand(
             AgentWorkerCommandContext context,
-            AgentDebugLogStorageHandler logStorageHandler,
-            AgentDebugLogsSaverProvider logsSaverProvider,
+            AgentHttpLogsStorageHandler logsStorageHandler,
+            AgentHttpLogsSaverProvider logsSaverProvider,
             PaymentsLegalConstraintsProvider paymentsLegalConstraintsProvider,
             StringBuilder logResultsBuilder) {
         this.context = context;
-        this.logStorageHandler = logStorageHandler;
+        this.logsStorageHandler = logsStorageHandler;
         this.logsSaverProvider = logsSaverProvider;
         this.paymentsLegalConstraintsProvider = paymentsLegalConstraintsProvider;
         this.logResultsBuilder = logResultsBuilder;
@@ -80,7 +80,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     protected void doPostProcess() {
-        agentDebugLogsSaver = logsSaverProvider.createLogsSaver(context, logStorageHandler);
+        logsSaver = logsSaverProvider.createLogsSaver(context, logsStorageHandler);
         tryToSaveLogs();
         log.info(logResultsBuilder.toString());
     }
@@ -120,7 +120,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
         String transferId = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
 
-        SaveLogsResult aapLogsResult = agentDebugLogsSaver.saveAapLogs(AapLogsCatalog.DEFAULT);
+        SaveLogsResult aapLogsResult = logsSaver.saveAapLogs(AapLogsCatalog.DEFAULT);
         if (aapLogsResult.isSaved()) {
             logResultsBuilder
                     .append(
@@ -131,8 +131,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         }
 
         if (shouldStoreInLongTermStorageForPaymentsDisputes(context.getAppId())) {
-            SaveLogsResult ltsAapLogsResult =
-                    agentDebugLogsSaver.saveAapLogs(AapLogsCatalog.LTS_PAYMENTS);
+            SaveLogsResult ltsAapLogsResult = logsSaver.saveAapLogs(AapLogsCatalog.LTS_PAYMENTS);
             if (ltsAapLogsResult.isSaved()) {
                 logResultsBuilder
                         .append(
@@ -143,7 +142,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             }
         }
 
-        SaveLogsResult jsonLogsResult = agentDebugLogsSaver.saveJsonLogs();
+        SaveLogsResult jsonLogsResult = logsSaver.saveJsonLogs();
         if (jsonLogsResult.isSaved()) {
             logResultsBuilder
                     .append(format("%nFlushed transfer (%s) json logs: ", transferId))
@@ -174,14 +173,14 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             return;
         }
 
-        SaveLogsResult aapLogsResult = agentDebugLogsSaver.saveAapLogs(AapLogsCatalog.DEFAULT);
+        SaveLogsResult aapLogsResult = logsSaver.saveAapLogs(AapLogsCatalog.DEFAULT);
         if (aapLogsResult.isSaved()) {
             logResultsBuilder
                     .append("\nFlushed http logs: ")
                     .append(aapLogsResult.getStorageDescription());
         }
 
-        SaveLogsResult jsonLogsResult = agentDebugLogsSaver.saveJsonLogs();
+        SaveLogsResult jsonLogsResult = logsSaver.saveJsonLogs();
         if (jsonLogsResult.isSaved()) {
             logResultsBuilder
                     .append("\nFlushed http json logs: ")

@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class AgentDebugLogsMasker {
+public class AgentHttpLogsMasker {
 
     private final Credentials credentials;
     private final Provider provider;

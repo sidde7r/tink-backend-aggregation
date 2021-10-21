@@ -6,16 +6,16 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AapLogsCatalog;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class AgentDebugLogsSaver {
+public class AgentHttpLogsSaver {
 
-    private final AgentDebugLogStorageHandler logStorageHandler;
-    private final AgentDebugLogsCache logsCachingProvider;
+    private final AgentHttpLogsStorageHandler logsStorageHandler;
+    private final AgentHttpLogsCache logsCache;
     private final S3StoragePathsProvider s3StoragePathsProvider;
 
     /**
@@ -25,11 +25,11 @@ public class AgentDebugLogsSaver {
      * @return path to saved file
      */
     public SaveLogsResult saveAapLogs(AapLogsCatalog catalog) {
-        if (!logStorageHandler.isEnabled()) {
+        if (!logsStorageHandler.isEnabled()) {
             return SaveLogsResult.skipped(SaveLogsStatus.NO_AVAILABLE_STORAGE);
         }
 
-        Optional<String> maybeLogContent = logsCachingProvider.getAapLogContent();
+        Optional<String> maybeLogContent = logsCache.getAapLogContent();
         if (!maybeLogContent.isPresent()) {
             return SaveLogsResult.skipped(SaveLogsStatus.NO_LOGS);
         }
@@ -42,7 +42,7 @@ public class AgentDebugLogsSaver {
         try {
             String filePath = getAapLogFilePath(logContent, catalog);
             String storageDescription =
-                    logStorageHandler.storeDebugLog(
+                    logsStorageHandler.storeLog(
                             logContent, filePath, AgentDebugLogBucket.AAP_FORMAT_LOGS);
             return SaveLogsResult.saved(storageDescription);
 
@@ -68,11 +68,11 @@ public class AgentDebugLogsSaver {
      * @return path to saved file
      */
     public SaveLogsResult saveJsonLogs() {
-        if (!logStorageHandler.isEnabled()) {
+        if (!logsStorageHandler.isEnabled()) {
             return SaveLogsResult.skipped(SaveLogsStatus.NO_AVAILABLE_STORAGE);
         }
 
-        Optional<String> maybeJsonLogContent = logsCachingProvider.getJsonLogContent();
+        Optional<String> maybeJsonLogContent = logsCache.getJsonLogContent();
         if (!maybeJsonLogContent.isPresent()) {
             return SaveLogsResult.skipped(SaveLogsStatus.NO_LOGS);
         }
@@ -81,7 +81,7 @@ public class AgentDebugLogsSaver {
         String filePath = s3StoragePathsProvider.getJsonLogPath(jsonLogContent);
         try {
             String storagePath =
-                    logStorageHandler.storeDebugLog(
+                    logsStorageHandler.storeLog(
                             jsonLogContent, filePath, AgentDebugLogBucket.JSON_FORMAT_LOGS);
             return SaveLogsResult.saved(storagePath);
 

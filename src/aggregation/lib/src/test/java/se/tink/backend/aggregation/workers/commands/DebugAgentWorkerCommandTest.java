@@ -41,11 +41,11 @@ import se.tink.backend.aggregation.configuration.agentsservice.ExcludedDebugClus
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogsSaver;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogsSaverProvider;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaver;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaverProvider;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
 import se.tink.backend.aggregation.storage.logs.SaveLogsResult;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AapLogsCatalog;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentsLegalConstraintsProvider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
@@ -95,9 +95,9 @@ public class DebugAgentWorkerCommandTest {
     private static final UUID TRANSFER_ID = UUID.fromString("614fe246-5614-491d-ae2a-e88736fdac20");
 
     private AgentWorkerCommandContext context;
-    private AgentDebugLogStorageHandler agentDebugLogStorageHandler;
-    private AgentDebugLogsSaver agentDebugLogsSaver;
-    private AgentDebugLogsSaverProvider agentDebugLogsSaverProvider;
+    private AgentHttpLogsStorageHandler logsStorageHandler;
+    private AgentHttpLogsSaver logsSaver;
+    private AgentHttpLogsSaverProvider logsSaverProvider;
     private PaymentsLegalConstraintsProvider paymentsLegalConstraintsProvider;
     private StringBuilder logResultsBuilder;
 
@@ -105,20 +105,18 @@ public class DebugAgentWorkerCommandTest {
 
     private void resetTest() {
         context = mock(AgentWorkerCommandContext.class);
-        agentDebugLogStorageHandler = mock(AgentDebugLogStorageHandler.class);
+        logsStorageHandler = mock(AgentHttpLogsStorageHandler.class);
         logResultsBuilder = new StringBuilder();
 
-        agentDebugLogsSaver = mock(AgentDebugLogsSaver.class);
-        when(agentDebugLogsSaver.saveAapLogs(AapLogsCatalog.DEFAULT))
+        logsSaver = mock(AgentHttpLogsSaver.class);
+        when(logsSaver.saveAapLogs(AapLogsCatalog.DEFAULT))
                 .thenReturn(SaveLogsResult.saved(AAP_STORAGE_DESCRIPTION));
-        when(agentDebugLogsSaver.saveAapLogs(AapLogsCatalog.LTS_PAYMENTS))
+        when(logsSaver.saveAapLogs(AapLogsCatalog.LTS_PAYMENTS))
                 .thenReturn(SaveLogsResult.saved(AAP_LTS_STORAGE_DESCRIPTION));
-        when(agentDebugLogsSaver.saveJsonLogs())
-                .thenReturn(SaveLogsResult.saved(JSON_STORAGE_DESCRIPTION));
+        when(logsSaver.saveJsonLogs()).thenReturn(SaveLogsResult.saved(JSON_STORAGE_DESCRIPTION));
 
-        agentDebugLogsSaverProvider = mock(AgentDebugLogsSaverProvider.class);
-        when(agentDebugLogsSaverProvider.createLogsSaver(any(), any()))
-                .thenReturn(agentDebugLogsSaver);
+        logsSaverProvider = mock(AgentHttpLogsSaverProvider.class);
+        when(logsSaverProvider.createLogsSaver(any(), any())).thenReturn(logsSaver);
 
         Map<String, PaymentsLegalConstraints> legalConstraintsMap =
                 ImmutableMap.of(
@@ -139,8 +137,8 @@ public class DebugAgentWorkerCommandTest {
         command =
                 new DebugAgentWorkerCommand(
                         context,
-                        agentDebugLogStorageHandler,
-                        agentDebugLogsSaverProvider,
+                        logsStorageHandler,
+                        logsSaverProvider,
                         paymentsLegalConstraintsProvider,
                         logResultsBuilder);
     }
@@ -158,7 +156,7 @@ public class DebugAgentWorkerCommandTest {
                     command.doPostProcess();
 
                     // then
-                    verifyNoInteractions(agentDebugLogsSaver);
+                    verifyNoInteractions(logsSaver);
 
                     if (testCase.isTransferRequest()) {
                         assertThat(logResultsBuilder)
@@ -210,7 +208,7 @@ public class DebugAgentWorkerCommandTest {
                     command.doPostProcess();
 
                     // then
-                    verifyNoInteractions(agentDebugLogsSaver);
+                    verifyNoInteractions(logsSaver);
 
                     if (testCase.isTransferRequest()) {
                         assertThat(logResultsBuilder)
@@ -270,8 +268,8 @@ public class DebugAgentWorkerCommandTest {
                                                 + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://aap/storage"
                                                 + "\n"
                                                 + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
-                        verify(agentDebugLogsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
-                        verify(agentDebugLogsSaver).saveJsonLogs();
+                        verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                        verify(logsSaver).saveJsonLogs();
 
                     } else {
                         assertThat(logResultsBuilder)
@@ -282,7 +280,7 @@ public class DebugAgentWorkerCommandTest {
                                                 + "Skipping logs: should not log");
                     }
 
-                    verifyNoMoreInteractions(agentDebugLogsSaver);
+                    verifyNoMoreInteractions(logsSaver);
                 });
     }
 
@@ -358,9 +356,9 @@ public class DebugAgentWorkerCommandTest {
                                             + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
 
-                    verify(agentDebugLogsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
-                    verify(agentDebugLogsSaver).saveJsonLogs();
-                    verifyNoMoreInteractions(agentDebugLogsSaver);
+                    verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                    verify(logsSaver).saveJsonLogs();
+                    verifyNoMoreInteractions(logsSaver);
                 });
     }
 
@@ -409,10 +407,10 @@ public class DebugAgentWorkerCommandTest {
                                             + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
 
-                    verify(agentDebugLogsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
-                    verify(agentDebugLogsSaver).saveAapLogs(AapLogsCatalog.LTS_PAYMENTS);
-                    verify(agentDebugLogsSaver).saveJsonLogs();
-                    verifyNoMoreInteractions(agentDebugLogsSaver);
+                    verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                    verify(logsSaver).saveAapLogs(AapLogsCatalog.LTS_PAYMENTS);
+                    verify(logsSaver).saveJsonLogs();
+                    verifyNoMoreInteractions(logsSaver);
                 });
     }
 
@@ -458,8 +456,8 @@ public class DebugAgentWorkerCommandTest {
                                                 + "Flushed http logs: HTTP s3://aap/storage"
                                                 + "\n"
                                                 + "Flushed http json logs: HTTP s3://json/storage");
-                        verify(agentDebugLogsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
-                        verify(agentDebugLogsSaver).saveJsonLogs();
+                        verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                        verify(logsSaver).saveJsonLogs();
 
                     } else {
                         assertThat(logResultsBuilder)
@@ -469,7 +467,7 @@ public class DebugAgentWorkerCommandTest {
                                                 + "\n"
                                                 + "Skipping logs: should not log");
                     }
-                    verifyNoMoreInteractions(agentDebugLogsSaver);
+                    verifyNoMoreInteractions(logsSaver);
                 });
     }
 
@@ -541,9 +539,9 @@ public class DebugAgentWorkerCommandTest {
                                             + "\n"
                                             + "Flushed http json logs: HTTP s3://json/storage");
 
-                    verify(agentDebugLogsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
-                    verify(agentDebugLogsSaver).saveJsonLogs();
-                    verifyNoMoreInteractions(agentDebugLogsSaver);
+                    verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                    verify(logsSaver).saveJsonLogs();
+                    verifyNoMoreInteractions(logsSaver);
                 });
     }
 

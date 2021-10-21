@@ -10,16 +10,16 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AggregationWorkerConfiguration;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
 
 @Slf4j
-public class AgentDebugLogLocalStorageHandler implements AgentDebugLogStorageHandler {
+public class AgentHttpLogsLocalStorageHandler implements AgentHttpLogsStorageHandler {
 
     private final AgentsServiceConfiguration agentsServiceConfiguration;
 
     @Inject
-    public AgentDebugLogLocalStorageHandler(AgentsServiceConfiguration agentsServiceConfiguration) {
+    public AgentHttpLogsLocalStorageHandler(AgentsServiceConfiguration agentsServiceConfiguration) {
         this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
 
@@ -33,7 +33,7 @@ public class AgentDebugLogLocalStorageHandler implements AgentDebugLogStorageHan
     }
 
     @Override
-    public String storeDebugLog(String content, String filePath, AgentDebugLogBucket bucket)
+    public String storeLog(String content, String filePath, AgentDebugLogBucket bucket)
             throws IOException {
         if (!isEnabled()) {
             throw new IllegalStateException("Invalid attempt to use local storage - not enabled");

@@ -18,13 +18,13 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 
-public class AgentDebugLogsMaskerTest {
+public class AgentHttpLogsMaskerTest {
 
     private Credentials credentials;
     private Provider provider;
     private LogMasker logMasker;
 
-    private AgentDebugLogsMasker debugLogsMasker;
+    private AgentHttpLogsMasker debugLogsMasker;
 
     @Before
     public void setup() {
@@ -32,7 +32,7 @@ public class AgentDebugLogsMaskerTest {
         provider = mock(Provider.class);
         logMasker = mock(LogMasker.class);
 
-        debugLogsMasker = new AgentDebugLogsMasker(credentials, provider, logMasker);
+        debugLogsMasker = new AgentHttpLogsMasker(credentials, provider, logMasker);
     }
 
     @Test

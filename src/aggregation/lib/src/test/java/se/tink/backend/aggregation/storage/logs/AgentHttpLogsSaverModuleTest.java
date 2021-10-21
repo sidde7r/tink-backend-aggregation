@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.Answers;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 
-public class AgentDebugLogsSaverModuleTest {
+public class AgentHttpLogsSaverModuleTest {
 
     @Test
     public void should_inject_all_dependencies() {
@@ -19,14 +19,14 @@ public class AgentDebugLogsSaverModuleTest {
                 mock(AgentWorkerCommandContext.class, Answers.RETURNS_DEEP_STUBS);
         when(commandContext.getOperationName()).thenReturn("operationName");
         when(commandContext.getAppId()).thenReturn("appId");
-        AgentDebugLogStorageHandler logStorageHandler = mock(AgentDebugLogStorageHandler.class);
+        AgentHttpLogsStorageHandler logStorageHandler = mock(AgentHttpLogsStorageHandler.class);
 
-        AgentDebugLogsSaverModule module =
-                new AgentDebugLogsSaverModule(commandContext, logStorageHandler);
+        AgentHttpLogsSaverModule module =
+                new AgentHttpLogsSaverModule(commandContext, logStorageHandler);
         Injector injector = Guice.createInjector(module);
 
         // when
-        AgentDebugLogsSaver logsSaver = injector.getInstance(AgentDebugLogsSaver.class);
+        AgentHttpLogsSaver logsSaver = injector.getInstance(AgentHttpLogsSaver.class);
 
         // then
         assertThat(logsSaver).isNotNull();

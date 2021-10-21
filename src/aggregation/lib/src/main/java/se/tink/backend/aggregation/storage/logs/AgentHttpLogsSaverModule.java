@@ -14,10 +14,10 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 
 @RequiredArgsConstructor
-public class AgentDebugLogsSaverModule extends AbstractModule {
+public class AgentHttpLogsSaverModule extends AbstractModule {
 
     private final AgentWorkerCommandContext commandContext;
-    private final AgentDebugLogStorageHandler logStorageHandler;
+    private final AgentHttpLogsStorageHandler logsStorageHandler;
 
     @Override
     protected void configure() {
@@ -33,7 +33,7 @@ public class AgentDebugLogsSaverModule extends AbstractModule {
                 .to(commandContext.getOperationName());
         bindConstant().annotatedWith(Names.named("appId")).to(commandContext.getAppId());
 
-        bind(AgentDebugLogStorageHandler.class).toInstance(logStorageHandler);
+        bind(AgentHttpLogsStorageHandler.class).toInstance(logsStorageHandler);
 
         bind(LocalDateTimeSource.class).toInstance(new ActualLocalDateTimeSource());
     }

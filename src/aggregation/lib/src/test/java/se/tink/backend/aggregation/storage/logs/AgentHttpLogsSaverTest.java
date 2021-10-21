@@ -19,34 +19,32 @@ import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AapLogsCatalog;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
 
 @RunWith(JUnitParamsRunner.class)
-public class AgentDebugLogsSaverTest {
+public class AgentHttpLogsSaverTest {
 
-    private AgentDebugLogStorageHandler logStorageHandler;
-    private AgentDebugLogsCache logsCachingProvider;
+    private AgentHttpLogsStorageHandler logsStorageHandler;
+    private AgentHttpLogsCache logsCache;
     private S3StoragePathsProvider s3StoragePathsProvider;
 
-    private AgentDebugLogsSaver logsSaver;
+    private AgentHttpLogsSaver logsSaver;
 
     @Before
     public void setup() {
-        logStorageHandler = mock(AgentDebugLogStorageHandler.class);
-        logsCachingProvider = mock(AgentDebugLogsCache.class);
+        logsStorageHandler = mock(AgentHttpLogsStorageHandler.class);
+        logsCache = mock(AgentHttpLogsCache.class);
         s3StoragePathsProvider = mock(S3StoragePathsProvider.class);
 
-        logsSaver =
-                new AgentDebugLogsSaver(
-                        logStorageHandler, logsCachingProvider, s3StoragePathsProvider);
+        logsSaver = new AgentHttpLogsSaver(logsStorageHandler, logsCache, s3StoragePathsProvider);
     }
 
     @Test
     public void should_skip_saving_any_logs_if_storage_handler_is_not_enabled() {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(false);
+        when(logsStorageHandler.isEnabled()).thenReturn(false);
 
         // when
         List<SaveLogsResult> results =
@@ -63,16 +61,16 @@ public class AgentDebugLogsSaverTest {
                                 .status(SaveLogsStatus.NO_AVAILABLE_STORAGE)
                                 .build());
 
-        verify(logStorageHandler, times(3)).isEnabled();
-        verifyNoMoreInteractions(logStorageHandler);
+        verify(logsStorageHandler, times(3)).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
     @Parameters(method = "all_aap_logs_catalogs")
     public void should_skip_aap_logs_if_they_are_missing(AapLogsCatalog logsCatalog) {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(true);
-        when(logsCachingProvider.getAapLogContent()).thenReturn(Optional.empty());
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(logsCache.getAapLogContent()).thenReturn(Optional.empty());
 
         // when
         SaveLogsResult result = logsSaver.saveAapLogs(logsCatalog);
@@ -81,9 +79,9 @@ public class AgentDebugLogsSaverTest {
         assertThat(result)
                 .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGS).build());
 
-        verify(logsCachingProvider).getAapLogContent();
-        verify(logStorageHandler).isEnabled();
-        verifyNoMoreInteractions(logStorageHandler);
+        verify(logsCache).getAapLogContent();
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @SuppressWarnings("unused")
@@ -95,8 +93,8 @@ public class AgentDebugLogsSaverTest {
     @Parameters(method = "all_aap_logs_catalogs")
     public void should_skip_aap_logs_if_they_are_empty(AapLogsCatalog logsCatalog) {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(true);
-        when(logsCachingProvider.getAapLogContent()).thenReturn(Optional.of("     "));
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(logsCache.getAapLogContent()).thenReturn(Optional.of("     "));
 
         // when
         SaveLogsResult result = logsSaver.saveAapLogs(logsCatalog);
@@ -105,21 +103,20 @@ public class AgentDebugLogsSaverTest {
         assertThat(result)
                 .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.EMPTY_LOGS).build());
 
-        verify(logsCachingProvider).getAapLogContent();
-        verify(logStorageHandler).isEnabled();
-        verifyNoMoreInteractions(logStorageHandler);
+        verify(logsCache).getAapLogContent();
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
     @SneakyThrows
     public void should_save_not_empty_aap_logs_in_default_catalog() {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(true);
-        when(logStorageHandler.storeDebugLog(any(), any(), any()))
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenReturn("HTTP: s3://bucket/aap/file.log");
 
-        when(logsCachingProvider.getAapLogContent())
-                .thenReturn(Optional.of("not empty log content"));
+        when(logsCache.getAapLogContent()).thenReturn(Optional.of("not empty log content"));
         when(s3StoragePathsProvider.getAapLogDefaultPath(any())).thenReturn("aap/file.log");
 
         // when
@@ -133,27 +130,27 @@ public class AgentDebugLogsSaverTest {
                                 .storageDescription("HTTP: s3://bucket/aap/file.log")
                                 .build());
 
-        verify(logsCachingProvider).getAapLogContent();
+        verify(logsCache).getAapLogContent();
         verify(s3StoragePathsProvider).getAapLogDefaultPath("not empty log content");
 
-        verify(logStorageHandler).isEnabled();
-        verify(logStorageHandler)
-                .storeDebugLog(
+        verify(logsStorageHandler).isEnabled();
+        verify(logsStorageHandler)
+                .storeLog(
                         "not empty log content",
                         "aap/file.log",
                         AgentDebugLogBucket.AAP_FORMAT_LOGS);
-        verifyNoMoreInteractions(logStorageHandler);
+        verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
     @SneakyThrows
     public void should_save_not_empty_aap_logs_in_payments_lts_catalog() {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(true);
-        when(logStorageHandler.storeDebugLog(any(), any(), any()))
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenReturn("HTTP: s3://bucket/aap/lts/file.log");
 
-        when(logsCachingProvider.getAapLogContent()).thenReturn(Optional.of("not empty log 123"));
+        when(logsCache.getAapLogContent()).thenReturn(Optional.of("not empty log 123"));
         when(s3StoragePathsProvider.getAapLogsPaymentsLtsPath(any()))
                 .thenReturn("aap/lts/file.log");
 
@@ -168,16 +165,16 @@ public class AgentDebugLogsSaverTest {
                                 .storageDescription("HTTP: s3://bucket/aap/lts/file.log")
                                 .build());
 
-        verify(logsCachingProvider).getAapLogContent();
+        verify(logsCache).getAapLogContent();
         verify(s3StoragePathsProvider).getAapLogsPaymentsLtsPath("not empty log 123");
 
-        verify(logStorageHandler).isEnabled();
-        verify(logStorageHandler)
-                .storeDebugLog(
+        verify(logsStorageHandler).isEnabled();
+        verify(logsStorageHandler)
+                .storeLog(
                         "not empty log 123",
                         "aap/lts/file.log",
                         AgentDebugLogBucket.AAP_FORMAT_LOGS);
-        verifyNoMoreInteractions(logStorageHandler);
+        verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
@@ -185,10 +182,10 @@ public class AgentDebugLogsSaverTest {
     @Parameters(method = "all_aap_logs_catalogs")
     public void should_catch_exceptions_when_saving_aap_logs(AapLogsCatalog logsCatalog) {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(true);
-        when(logStorageHandler.storeDebugLog(any(), any(), any()))
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenThrow(new IOException("IO ERROR"));
-        when(logsCachingProvider.getAapLogContent()).thenReturn(Optional.of("not empty log"));
+        when(logsCache.getAapLogContent()).thenReturn(Optional.of("not empty log"));
 
         // when
         SaveLogsResult result = logsSaver.saveAapLogs(logsCatalog);
@@ -200,8 +197,8 @@ public class AgentDebugLogsSaverTest {
     @Test
     public void should_skip_json_logs_if_log_content_is_missing() {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(true);
-        when(logsCachingProvider.getJsonLogContent()).thenReturn(Optional.empty());
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(logsCache.getJsonLogContent()).thenReturn(Optional.empty());
 
         // when
         SaveLogsResult result = logsSaver.saveJsonLogs();
@@ -210,10 +207,10 @@ public class AgentDebugLogsSaverTest {
         assertThat(result)
                 .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGS).build());
 
-        verify(logsCachingProvider).getJsonLogContent();
+        verify(logsCache).getJsonLogContent();
 
-        verify(logStorageHandler).isEnabled();
-        verifyNoMoreInteractions(logStorageHandler);
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
@@ -221,11 +218,11 @@ public class AgentDebugLogsSaverTest {
     @Parameters(value = {"", "not empty json log content"})
     public void should_save_both_empty_and_not_empty_json_logs(String logContent) {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(true);
-        when(logStorageHandler.storeDebugLog(any(), any(), any()))
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenReturn("HTTP: s3://bucket/ais/json/file.json");
 
-        when(logsCachingProvider.getJsonLogContent()).thenReturn(Optional.of(logContent));
+        when(logsCache.getJsonLogContent()).thenReturn(Optional.of(logContent));
 
         when(s3StoragePathsProvider.getJsonLogPath(any())).thenReturn("ais/json/file.json");
 
@@ -240,25 +237,24 @@ public class AgentDebugLogsSaverTest {
                                 .storageDescription("HTTP: s3://bucket/ais/json/file.json")
                                 .build());
 
-        verify(logsCachingProvider).getJsonLogContent();
+        verify(logsCache).getJsonLogContent();
         verify(s3StoragePathsProvider).getJsonLogPath(logContent);
 
-        verify(logStorageHandler).isEnabled();
-        verify(logStorageHandler)
-                .storeDebugLog(
-                        logContent, "ais/json/file.json", AgentDebugLogBucket.JSON_FORMAT_LOGS);
-        verifyNoMoreInteractions(logStorageHandler);
+        verify(logsStorageHandler).isEnabled();
+        verify(logsStorageHandler)
+                .storeLog(logContent, "ais/json/file.json", AgentDebugLogBucket.JSON_FORMAT_LOGS);
+        verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
     @SneakyThrows
     public void should_catch_exceptions_when_saving_json_logs() {
         // given
-        when(logStorageHandler.isEnabled()).thenReturn(true);
-        when(logStorageHandler.storeDebugLog(any(), any(), any()))
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenThrow(new IOException("IO ERROR"));
 
-        when(logsCachingProvider.getJsonLogContent()).thenReturn(Optional.of("whatever"));
+        when(logsCache.getJsonLogContent()).thenReturn(Optional.of("whatever"));
 
         // when
         SaveLogsResult result = logsSaver.saveJsonLogs();

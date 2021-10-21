@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
-import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;
@@ -347,8 +347,8 @@ public final class AgentWorkerOperationFactoryTest {
             // AgentWorkerOperationFactory
             bind(CacheClient.class).toInstance(mock(CacheClient.class));
             bind(MetricRegistry.class).toInstance(mock(MetricRegistry.class));
-            bind(AgentDebugLogStorageHandler.class)
-                    .toInstance(mock(AgentDebugLogStorageHandler.class));
+            bind(AgentHttpLogsStorageHandler.class)
+                    .toInstance(mock(AgentHttpLogsStorageHandler.class));
             bind(new TypeLiteral<Predicate<Provider>>() {})
                     .annotatedWith(ShouldAddExtraCommands.class)
                     .toInstance(p -> false);
