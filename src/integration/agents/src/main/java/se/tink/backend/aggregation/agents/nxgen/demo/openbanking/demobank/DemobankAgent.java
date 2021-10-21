@@ -266,7 +266,7 @@ public final class DemobankAgent extends NextGenerationAgent
     }
 
     private boolean hasAppToAppAuthentication() {
-        return provider.getName().endsWith("-app-to-app");
+        return provider.getName().contains("-app-to-app");
     }
 
     private Authenticator constructApptToAppAuthenticator() {
