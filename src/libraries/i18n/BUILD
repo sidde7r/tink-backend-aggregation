@@ -9,6 +9,7 @@ java_library(
         "//po:i18n",
         "//third_party:com_google_inject_guice",
         "//third_party:com_googlecode_gettext_commons_gettext_commons",
+        "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
     ],

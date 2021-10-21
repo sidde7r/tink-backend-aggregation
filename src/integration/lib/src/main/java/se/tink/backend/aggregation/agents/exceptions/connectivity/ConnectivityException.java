@@ -8,23 +8,29 @@ import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.libraries.i18n.LocalizableKey;
 
+/**
+ * @deprecated temporary marketed as deprecated to not use it Not implemented to the end yet. Please
+ *     do not use it yet. There is no handling for this exception in the AggregationService, it will
+ *     translate to unknown/runtime exception and put credentials into TEMPORARY_ERROR state.
+ */
+@Deprecated
 public final class ConnectivityException extends RuntimeException {
 
-    private static final AccountInformationErrorDefaultMessageProvider
+    private static final AccountInformationErrorDefaultMessageMapper
             ACCOUNT_INFORMATION_ERROR_DEFAULT_MESSAGE_PROVIDER =
-                    new AccountInformationErrorDefaultMessageProvider();
-    private static final AuthorizationErrorDefaultMessageProvider
+                    new AccountInformationErrorDefaultMessageMapper();
+    private static final AuthorizationErrorDefaultMessageMapper
             AUTHORIZATION_ERROR_DEFAULT_MESSAGE_PROVIDER =
-                    new AuthorizationErrorDefaultMessageProvider();
-    private static final ProviderErrorDefaultMessageProvider
-            PROVIDER_ERROR_DEFAULT_MESSAGE_PROVIDER = new ProviderErrorDefaultMessageProvider();
-    private static final TinkSideErrorDefaultMessageProvider
-            TINK_SIDE_ERROR_DEFAULT_MESSAGE_PROVIDER = new TinkSideErrorDefaultMessageProvider();
-    private static final UserLoginErrorDefaultMessageProvider
-            USER_LOGIN_ERROR_DEFAULT_MESSAGE_PROVIDER = new UserLoginErrorDefaultMessageProvider();
+                    new AuthorizationErrorDefaultMessageMapper();
+    private static final ProviderErrorDefaultMessageMapper PROVIDER_ERROR_DEFAULT_MESSAGE_PROVIDER =
+            new ProviderErrorDefaultMessageMapper();
+    private static final TinkSideErrorDefaultMessageMapper
+            TINK_SIDE_ERROR_DEFAULT_MESSAGE_PROVIDER = new TinkSideErrorDefaultMessageMapper();
+    private static final UserLoginErrorDefaultMessageMapper
+            USER_LOGIN_ERROR_DEFAULT_MESSAGE_PROVIDER = new UserLoginErrorDefaultMessageMapper();
 
-    @Getter private final ConnectivityError error;
-    @With private final LocalizableKey userMessage;
+    private final ConnectivityError error;
+    @Getter private final LocalizableKey userMessage;
     @With private final Throwable cause;
     @With private final String internalMessage;
 
@@ -32,40 +38,44 @@ public final class ConnectivityException extends RuntimeException {
         this(
                 ConnectivityErrorType.ACCOUNT_INFORMATION_ERROR,
                 reason.name(),
-                ACCOUNT_INFORMATION_ERROR_DEFAULT_MESSAGE_PROVIDER.provide(reason));
+                ACCOUNT_INFORMATION_ERROR_DEFAULT_MESSAGE_PROVIDER.map(reason));
     }
 
     public ConnectivityException(ConnectivityErrorDetails.AuthorizationErrors reason) {
         this(
                 ConnectivityErrorType.AUTHORIZATION_ERROR,
                 reason.name(),
-                AUTHORIZATION_ERROR_DEFAULT_MESSAGE_PROVIDER.provide(reason));
+                AUTHORIZATION_ERROR_DEFAULT_MESSAGE_PROVIDER.map(reason));
     }
 
     public ConnectivityException(ConnectivityErrorDetails.ProviderErrors reason) {
         this(
                 ConnectivityErrorType.PROVIDER_ERROR,
                 reason.name(),
-                PROVIDER_ERROR_DEFAULT_MESSAGE_PROVIDER.provide(reason));
+                PROVIDER_ERROR_DEFAULT_MESSAGE_PROVIDER.map(reason));
     }
 
     public ConnectivityException(ConnectivityErrorDetails.TinkSideErrors reason) {
         this(
                 ConnectivityErrorType.TINK_SIDE_ERROR,
                 reason.name(),
-                TINK_SIDE_ERROR_DEFAULT_MESSAGE_PROVIDER.provide(reason));
+                TINK_SIDE_ERROR_DEFAULT_MESSAGE_PROVIDER.map(reason));
     }
 
     public ConnectivityException(ConnectivityErrorDetails.UserLoginErrors reason) {
         this(
                 ConnectivityErrorType.USER_LOGIN_ERROR,
                 reason.name(),
-                USER_LOGIN_ERROR_DEFAULT_MESSAGE_PROVIDER.provide(reason));
+                USER_LOGIN_ERROR_DEFAULT_MESSAGE_PROVIDER.map(reason));
     }
 
     private ConnectivityException(
             ConnectivityErrorType errorType, String reasonName, LocalizableKey userMessage) {
-        this(constructConnectivityError(errorType, reasonName, userMessage), null, null, null);
+        this(
+                constructConnectivityError(errorType, reasonName, userMessage),
+                userMessage,
+                null,
+                null);
     }
 
     private ConnectivityException(
@@ -78,6 +88,15 @@ public final class ConnectivityException extends RuntimeException {
         this.userMessage = userMessage;
         this.cause = cause;
         this.internalMessage = internalMessage;
+    }
+
+    public ConnectivityException withUserMessage(LocalizableKey userMessage) {
+        return new ConnectivityException(
+                constructConnectivityError(
+                        error.getType(), error.getDetails().getReason(), userMessage),
+                userMessage,
+                cause,
+                internalMessage);
     }
 
     private static String decideOnMessage(

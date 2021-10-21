@@ -9,12 +9,12 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.libraries.i18n.LocalizableKey;
 
-final class AuthorizationErrorDefaultMessageProvider
-        implements ConnectivityErrorDefaultMessageProvider<
+final class AuthorizationErrorDefaultMessageMapper
+        implements ConnectivityErrorDefaultMessageMapper<
                 ConnectivityErrorDetails.AuthorizationErrors> {
 
     private static final LocalizableKey DEFAULT_MESSAGE =
-            new LocalizableKey("Authorization error.");
+            new LocalizableKey("You are not authorized to use this service.");
 
     private static final ImmutableMap<ConnectivityErrorDetails.AuthorizationErrors, LocalizableKey>
             AUTHORIZATION_ERRORS_USER_MESSAGES_MAP =
@@ -23,23 +23,23 @@ final class AuthorizationErrorDefaultMessageProvider
                             .put(
                                     ACTION_NOT_PERMITTED,
                                     new LocalizableKey(
-                                            "You are not authorized to use this service."))
+                                            "You are not authorised to use this service. Please contact your bank."))
                             .put(
                                     SESSION_EXPIRED,
                                     new LocalizableKey(
-                                            "For safety reasons you have been logged out. Please login again to continue."))
+                                            "You have been logged out for security reasons. Please log in again."))
                             .put(
                                     USER_ACTION_REQUIRED_UNSIGNED_AGREEMENT,
                                     new LocalizableKey(
-                                            "You do not have access to mobile banking. Please contact your bank."))
+                                            "You can not log in. Please activate online banking in your bank app or contact your bank to resolve this issue."))
                             .put(
                                     USER_ACTION_REQUIRED,
                                     new LocalizableKey(
-                                            "Could not login to your bank. The access could be blocked. Please activate it in your bank app or contact your bank."))
+                                            "You can not log in. Please retry or contact your bank to resolve this issue."))
                             .build();
 
     @Override
-    public LocalizableKey provide(ConnectivityErrorDetails.AuthorizationErrors reason) {
+    public LocalizableKey map(ConnectivityErrorDetails.AuthorizationErrors reason) {
         return AUTHORIZATION_ERRORS_USER_MESSAGES_MAP.getOrDefault(reason, DEFAULT_MESSAGE);
     }
 }

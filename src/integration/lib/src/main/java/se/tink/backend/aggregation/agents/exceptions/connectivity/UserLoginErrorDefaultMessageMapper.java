@@ -13,12 +13,11 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.libraries.i18n.LocalizableKey;
 
-final class UserLoginErrorDefaultMessageProvider
-        implements ConnectivityErrorDefaultMessageProvider<
-                ConnectivityErrorDetails.UserLoginErrors> {
+final class UserLoginErrorDefaultMessageMapper
+        implements ConnectivityErrorDefaultMessageMapper<ConnectivityErrorDetails.UserLoginErrors> {
 
     private static final LocalizableKey DEFAULT_MESSAGE =
-            new LocalizableKey("Something went wrong during login process.");
+            new LocalizableKey("A temporary problem has occurred. Please retry later.");
 
     private static final ImmutableMap<ConnectivityErrorDetails.UserLoginErrors, LocalizableKey>
             USER_LOGIN_ERRORS_USER_MESSAGES_MAP =
@@ -26,38 +25,39 @@ final class UserLoginErrorDefaultMessageProvider
                             .put(
                                     THIRD_PARTY_AUTHENTICATION_UNAVAILABLE,
                                     new LocalizableKey(
-                                            "The bank service has temporarily failed; please try again later."))
+                                            "The authentication method can not be used. Please go back and choose another method or retry later."))
                             .put(
                                     STATIC_CREDENTIALS_INCORRECT,
                                     new LocalizableKey(
-                                            "Incorrect login credentials. Please try again."))
+                                            "You have entered the wrong user name or/and password. Please try to log in again."))
                             .put(
                                     DYNAMIC_CREDENTIALS_INCORRECT,
                                     new LocalizableKey(
-                                            "Incorrect challenge response. Please try again."))
+                                            "Your one-time password is incorrect. Please retry."))
                             .put(
                                     DYNAMIC_CREDENTIALS_FLOW_CANCELLED,
                                     new LocalizableKey(
-                                            "Authentication was cancelled. Please try again."))
+                                            "You have cancelled authentication. Please retry."))
                             .put(
                                     DYNAMIC_CREDENTIALS_FLOW_TIMEOUT,
-                                    new LocalizableKey("Authentication timed out."))
+                                    new LocalizableKey(
+                                            "Your connection has timed out. Please retry."))
                             .put(
                                     USER_NOT_A_CUSTOMER,
                                     new LocalizableKey(
-                                            "You don't have any commitments in the selected bank."))
+                                            "You can not log in. The bank you selected does not accept your choice. Please select another bank or contact your bank."))
                             .put(
                                     USER_CONCURRENT_LOGINS,
                                     new LocalizableKey(
-                                            "Another client is already trying to sign in."))
+                                            "You are already logged in. Please log out and retry."))
                             .put(
                                     USER_BLOCKED,
                                     new LocalizableKey(
-                                            "Could not login to your bank. The access could be blocked. Please activate it in your bank app or contact your bank."))
+                                            "You can not log in with your bank. Your account may be blocked from logging in. Please contact your bank."))
                             .build();
 
     @Override
-    public LocalizableKey provide(ConnectivityErrorDetails.UserLoginErrors reason) {
+    public LocalizableKey map(ConnectivityErrorDetails.UserLoginErrors reason) {
         return USER_LOGIN_ERRORS_USER_MESSAGES_MAP.getOrDefault(reason, DEFAULT_MESSAGE);
     }
 }

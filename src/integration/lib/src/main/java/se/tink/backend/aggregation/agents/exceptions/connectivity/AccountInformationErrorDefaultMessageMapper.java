@@ -1,17 +1,17 @@
 package se.tink.backend.aggregation.agents.exceptions.connectivity;
 
-import static se.tink.connectivity.errors.ConnectivityErrorDetails.AccountInformationErrors.NO_ACCOUNTS;
+import static se.tink.connectivity.errors.ConnectivityErrorDetails.AccountInformationErrors.NOT_ENOUGH_DATA_TO_PROVIDE_PRODUCT;
 
 import com.google.common.collect.ImmutableMap;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.libraries.i18n.LocalizableKey;
 
-final class AccountInformationErrorDefaultMessageProvider
-        implements ConnectivityErrorDefaultMessageProvider<
+final class AccountInformationErrorDefaultMessageMapper
+        implements ConnectivityErrorDefaultMessageMapper<
                 ConnectivityErrorDetails.AccountInformationErrors> {
 
     private static final LocalizableKey DEFAULT_MESSAGE =
-            new LocalizableKey("Could not retrieve information about an account.");
+            new LocalizableKey("Your bank account information is not available.");
 
     private static final ImmutableMap<
                     ConnectivityErrorDetails.AccountInformationErrors, LocalizableKey>
@@ -20,13 +20,13 @@ final class AccountInformationErrorDefaultMessageProvider
                             .<ConnectivityErrorDetails.AccountInformationErrors, LocalizableKey>
                                     builder()
                             .put(
-                                    NO_ACCOUNTS,
+                                    NOT_ENOUGH_DATA_TO_PROVIDE_PRODUCT,
                                     new LocalizableKey(
-                                            "You do not have any accounts available for online access."))
+                                            "There is not enough banking data to display your results."))
                             .build();
 
     @Override
-    public LocalizableKey provide(ConnectivityErrorDetails.AccountInformationErrors reason) {
+    public LocalizableKey map(ConnectivityErrorDetails.AccountInformationErrors reason) {
         return ACCOUNT_INFORMATION_ERRORS_USER_MESSAGES_MAP.getOrDefault(reason, DEFAULT_MESSAGE);
     }
 }
