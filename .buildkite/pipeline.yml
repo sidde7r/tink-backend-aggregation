@@ -3,7 +3,7 @@ steps:
   - name: ':junit: Test'
     branches: '!master'
     command: .buildkite/run-unit-tests.sh
-    timeout_in_minutes: 30
+    timeout_in_minutes: 45
     env:
       COMPOSE_HTTP_TIMEOUT: 300
     agents:
