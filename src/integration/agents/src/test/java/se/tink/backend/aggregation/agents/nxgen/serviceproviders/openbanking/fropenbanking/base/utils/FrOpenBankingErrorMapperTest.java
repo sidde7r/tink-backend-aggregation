@@ -44,7 +44,7 @@ public class FrOpenBankingErrorMapperTest {
 
         // then
         assertEquals(
-                InternalStatus.INVALID_ACCOUNT_TYPE_COMBINATION.toString(),
+                InternalStatus.INVALID_PAYMENT_TYPE.toString(),
                 paymentException.getInternalStatus());
         assertEquals("Transaction is forbidden.", paymentException.getMessage());
     }
@@ -140,7 +140,7 @@ public class FrOpenBankingErrorMapperTest {
 
         // then
         assertEquals(
-                InternalStatus.INVALID_ACCOUNT_TYPE_COMBINATION.toString(),
+                InternalStatus.PAYMENT_REGULATORY_REJECTED.toString(),
                 paymentException.getInternalStatus());
 
         assertEquals("Rejected due to regulatory reasons.", paymentException.getMessage());

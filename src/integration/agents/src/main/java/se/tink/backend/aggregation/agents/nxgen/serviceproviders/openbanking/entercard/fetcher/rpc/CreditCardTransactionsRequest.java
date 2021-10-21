@@ -10,4 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreditCardTransactionsRequest {
 
     private String accountNumber;
+    private long startAtRowNum;
+    private long stopAfterRowNum;
+    private boolean includeCardMovements;
 }

@@ -41,7 +41,6 @@ public class PaymentRejectedException extends PaymentException {
 
     public static PaymentRejectedException rejectedDueToRegulatoryReasons() {
         return new PaymentRejectedException(
-                REJECTED_DUE_TO_REGULATORY_REASONS,
-                InternalStatus.INVALID_ACCOUNT_TYPE_COMBINATION);
+                REJECTED_DUE_TO_REGULATORY_REASONS, InternalStatus.PAYMENT_REGULATORY_REJECTED);
     }
 }

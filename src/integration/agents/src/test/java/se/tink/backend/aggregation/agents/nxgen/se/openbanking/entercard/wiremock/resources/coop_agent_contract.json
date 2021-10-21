@@ -1,0 +1,3718 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "2244444******4444",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "scale" : 3,
+      "unscaledValue" : 29590730,
+      "exactValue" : 29590.73,
+      "doubleValue" : 29590.73
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 3,
+      "unscaledValue" : -409270,
+      "exactValue" : -409.27,
+      "doubleValue" : -409.27
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "4444000022444333",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 29590.73,
+    "balance" : -409.27
+  } ],
+  "transactions" : [ {
+    "amount" : -409.27,
+    "date" : 1634378400000,
+    "description" : "LIDL 134 / VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "968514464"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-10-19",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "LIDL 134 / VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 1446.05,
+    "date" : 1633082400000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "962463562"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-10-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 1420.42,
+    "date" : 1630490400000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "952246907"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1446.05,
+    "date" : 1629021600000,
+    "description" : "STORA COOP DANDERYD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "947180548"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-17",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP DANDERYD",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1312.42,
+    "date" : 1627898400000,
+    "description" : "STORA COOP ÖSTERSUND",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "942160698"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ÖSTERSUND",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 24225.77,
+    "date" : 1627639200000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "940582492"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -33.0,
+    "date" : 1625824800000,
+    "description" : "OKQ8",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "934532365"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-13",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OKQ8",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -75.0,
+    "date" : 1625738400000,
+    "description" : "JA EVENT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "933311880"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "JA EVENT",
+    "merchantCategoryCode" : "7991",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -516.82,
+    "date" : 1625392800000,
+    "description" : "ICA KVANTUM OSTERSUND",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "931458306"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM OSTERSUND",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1275.6,
+    "date" : 1625392800000,
+    "description" : "JULA AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "931446890"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "JULA AB",
+    "merchantCategoryCode" : "5251",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -49.95,
+    "date" : 1625392800000,
+    "description" : "BYGGMAX/1404",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "931429691"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "BYGGMAX/1404",
+    "merchantCategoryCode" : "5211",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 3959.31,
+    "date" : 1625133600000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "930044007"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -4995.2,
+    "date" : 1625047200000,
+    "description" : "HALLENS EL & BYGGMATER",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "930099188"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "HALLENS EL & BYGGMATER",
+    "merchantCategoryCode" : "5211",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -344.75,
+    "date" : 1624701600000,
+    "description" : "ICA SUPERMARKET KROKOM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "928550015"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA SUPERMARKET KROKOM",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1026.9,
+    "date" : 1624701600000,
+    "description" : "JULA AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "928520685"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "JULA AB",
+    "merchantCategoryCode" : "5251",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -259.0,
+    "date" : 1624442400000,
+    "description" : "OKQ8",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "928195526"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OKQ8",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -39.0,
+    "date" : 1624442400000,
+    "description" : "OKQ8",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "928195525"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OKQ8",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -26.0,
+    "date" : 1624442400000,
+    "description" : "OKQ8",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "928195524"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OKQ8",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1055.59,
+    "date" : 1624442400000,
+    "description" : "CIRCLE K NELDEN YTTERA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "927870090"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "CIRCLE K NELDEN YTTERA",
+    "merchantCategoryCode" : "5542",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -274.0,
+    "date" : 1624442400000,
+    "description" : "CIRCLE K NELDEN YTTERA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "927866623"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "CIRCLE K NELDEN YTTERA",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -447.0,
+    "date" : 1624010400000,
+    "description" : "Bastard Burgers Osters",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "926522157"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "Bastard Burgers Osters",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1120.8,
+    "date" : 1624010400000,
+    "description" : "SYSTEMBOLAGET ÖSTERSUN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "926305485"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "SYSTEMBOLAGET ÖSTERSUN",
+    "merchantCategoryCode" : "5921",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1639.0,
+    "date" : 1624010400000,
+    "description" : "NETONNET AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "926279864"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "NETONNET AB",
+    "merchantCategoryCode" : "5732",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -790.0,
+    "date" : 1624010400000,
+    "description" : "NETONNET AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "926279863"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "NETONNET AB",
+    "merchantCategoryCode" : "5732",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -2810.78,
+    "date" : 1624010400000,
+    "description" : "STORA COOP ÖSTERSUND",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "926223521"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ÖSTERSUND",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -148.9,
+    "date" : 1624010400000,
+    "description" : "JULA AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "926193041"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "JULA AB",
+    "merchantCategoryCode" : "5251",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -4380.0,
+    "date" : 1624010400000,
+    "description" : "JULA AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "926193040"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "JULA AB",
+    "merchantCategoryCode" : "5251",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -689.0,
+    "date" : 1624010400000,
+    "description" : "K-BYGG FRESKS,",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "926192125"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "K-BYGG FRESKS,",
+    "merchantCategoryCode" : "5200",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1078.08,
+    "date" : 1623578400000,
+    "description" : "OKQ8",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "924936047"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OKQ8",
+    "merchantCategoryCode" : "5542",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -45.0,
+    "date" : 1623578400000,
+    "description" : "OKQ8",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "924929864"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OKQ8",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1214.4,
+    "date" : 1623492000000,
+    "description" : "ICA NARA KARL ORS BUA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "924197281"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA NARA KARL ORS BUA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -944.69,
+    "date" : 1622455200000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "919731624"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1902.09,
+    "date" : 1621764000000,
+    "description" : "STORA COOP ARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "917205352"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1112.53,
+    "date" : 1620813600000,
+    "description" : "STORA COOP LJUSDAL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "913712297"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP LJUSDAL",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 474.02,
+    "date" : 1619776800000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "909470708"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-04-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -95.0,
+    "date" : 1617271200000,
+    "description" : "ÅRSAVGIFT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "900864881"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-04-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -292.8,
+    "date" : 1616842800000,
+    "description" : "JULA AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "899155275"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-29",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "JULA AB",
+    "merchantCategoryCode" : "5251",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -86.22,
+    "date" : 1616756400000,
+    "description" : "STORA COOP ARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "899028687"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-29",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 623.0,
+    "date" : 1612177200000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "882642725"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 6595.18,
+    "date" : 1609326000000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "873398927"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -138.0,
+    "date" : 1608462000000,
+    "description" : "AKADEMIBOKHANDE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "870815432"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "AKADEMIBOKHANDE",
+    "merchantCategoryCode" : "5942",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -119.0,
+    "date" : 1608462000000,
+    "description" : "LINDT & SPRUNGL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "870811845"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "LINDT & SPRUNGL",
+    "merchantCategoryCode" : "5441",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -189.0,
+    "date" : 1608462000000,
+    "description" : "LEKIA TÄBY CENT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "870810025"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "LEKIA TÄBY CENT",
+    "merchantCategoryCode" : "5945",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -49.0,
+    "date" : 1608462000000,
+    "description" : "7-ELEVEN 4218126",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "870770610"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "7-ELEVEN 4218126",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -30.0,
+    "date" : 1608462000000,
+    "description" : "7-ELEVEN 4218126",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "870770608"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "7-ELEVEN 4218126",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -98.0,
+    "date" : 1608375600000,
+    "description" : "SUBWAY VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "870530111"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "SUBWAY VALLENTUNA",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -431.65,
+    "date" : 1607166000000,
+    "description" : "STORA COOP ROTEBRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "865600061"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ROTEBRO",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -2673.01,
+    "date" : 1607079600000,
+    "description" : "STORA COOP ARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "865536748"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 3301.97,
+    "date" : 1606820400000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "864043272"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-12-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -462.0,
+    "date" : 1606474800000,
+    "description" : "STREETFOOD FRAN NORRBO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "863130870"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-11-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STREETFOOD FRAN NORRBO",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -493.15,
+    "date" : 1606042800000,
+    "description" : "STORA COOP HÄGGVIK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "861380514"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-11-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP HÄGGVIK",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -675.35,
+    "date" : 1605870000000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "860966549"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-11-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1860.02,
+    "date" : 1605351600000,
+    "description" : "STORA COOP ARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "858977599"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-11-16",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 2959.14,
+    "date" : 1604055600000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "853817829"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1789.07,
+    "date" : 1602928800000,
+    "description" : "STORA COOP ARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "849953261"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-19",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -137.65,
+    "date" : 1602410400000,
+    "description" : "ICA NARA KRAGSTA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "847992343"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA NARA KRAGSTA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -110.0,
+    "date" : 1602324000000,
+    "description" : "VALLENTUNA STENUGNSBAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "847780307"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "VALLENTUNA STENUGNSBAG",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -329.0,
+    "date" : 1602324000000,
+    "description" : "SYSTEMBOLAGET VALLENTU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "847743670"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "SYSTEMBOLAGET VALLENTU",
+    "merchantCategoryCode" : "5921",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -701.03,
+    "date" : 1602324000000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "847634782"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -235.22,
+    "date" : 1602064800000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "846987928"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1527.35,
+    "date" : 1601719200000,
+    "description" : "STORA COOP ARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "845292497"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -29.95,
+    "date" : 1601719200000,
+    "description" : "STORA COOP ARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "845292442"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "STORA COOP ARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 50.0,
+    "date" : 1601546400000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "844424011"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-10-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -845.0,
+    "date" : 1601028000000,
+    "description" : "SVENSKA ISHAVET AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "842647808"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-09-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "SVENSKA ISHAVET AB",
+    "merchantCategoryCode" : "5422",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -170.6,
+    "date" : 1600509600000,
+    "description" : "SYSTEMBOLAGET VALLENTU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "840892595"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-09-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "SYSTEMBOLAGET VALLENTU",
+    "merchantCategoryCode" : "5921",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -386.24,
+    "date" : 1600509600000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "840775642"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-09-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 326.22,
+    "date" : 1598954400000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "834629909"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-09-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -50.0,
+    "date" : 1598090400000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "831621097"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-08-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 1557.6,
+    "date" : 1596189600000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "823817274"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-31",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -326.22,
+    "date" : 1595239200000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "820641684"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-22",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 3205.09,
+    "date" : 1593597600000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "813623919"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -195.53,
+    "date" : 1592042400000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "808030704"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -702.17,
+    "date" : 1592042400000,
+    "description" : "COOP FORUM TÄBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "808014955"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TÄBY",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -659.9,
+    "date" : 1592042400000,
+    "description" : "K-RAUTA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "807973188"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "K-RAUTA",
+    "merchantCategoryCode" : "5200",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 6218.42,
+    "date" : 1591005600000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "803634111"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1853.63,
+    "date" : 1590832800000,
+    "description" : "COOP FORUM TÄBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "803128268"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TÄBY",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -35.0,
+    "date" : 1589623200000,
+    "description" : "Golf 4 Golfers",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "799152173"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "Golf 4 Golfers",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -35.0,
+    "date" : 1589623200000,
+    "description" : "Golf 4 Golfers",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "799152171"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "Golf 4 Golfers",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -393.55,
+    "date" : 1589450400000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "798728948"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -24.0,
+    "date" : 1589191200000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "797564754"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-13",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -144.7,
+    "date" : 1589018400000,
+    "description" : "COOP FORUM TÄBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "796827557"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TÄBY",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -719.21,
+    "date" : 1588845600000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "796545926"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -235.32,
+    "date" : 1588500000000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "795082197"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 7074.73,
+    "date" : 1588240800000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "793789563"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -2915.27,
+    "date" : 1588154400000,
+    "description" : "COOP FORUM TÄBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "793966540"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TÄBY",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -71.54,
+    "date" : 1587722400000,
+    "description" : "SAFE LAGOON PREMIUM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "792376804"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "SAFE LAGOON PREMIUM",
+    "merchantCategoryCode" : "5734",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -396.67,
+    "date" : 1587117600000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "790698986"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -2599.62,
+    "date" : 1586426400000,
+    "description" : "COOP FORUM TÄBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "788861634"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TÄBY",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -95.0,
+    "date" : 1585908000000,
+    "description" : "ÅRSAVGIFT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "786408816"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 3027.67,
+    "date" : 1585735200000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "785760784"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1572.41,
+    "date" : 1585393200000,
+    "description" : "COOP FORUM TÄBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "784539799"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TÄBY",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -133.75,
+    "date" : 1585306800000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "784590019"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -73.1,
+    "date" : 1585047600000,
+    "description" : "SAFE LAGOON PREMIUM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "783589987"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-25",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "SAFE LAGOON PREMIUM",
+    "merchantCategoryCode" : "5734",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1337.89,
+    "date" : 1584874800000,
+    "description" : "COOP FORUM TÄBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "783246650"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TÄBY",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -199.9,
+    "date" : 1584788400000,
+    "description" : "PANDURO HOBBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "782833555"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "PANDURO HOBBY",
+    "merchantCategoryCode" : "5945",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -3194.69,
+    "date" : 1584183600000,
+    "description" : "COOP FORUM TÄBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "780905616"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-16",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TÄBY",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -115.9,
+    "date" : 1583578800000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "778527156"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -352.09,
+    "date" : 1583406000000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "778170213"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -560.36,
+    "date" : 1583060400000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "776151930"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-02",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -63.85,
+    "date" : 1555927200000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "662454341"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -79.0,
+    "date" : 1555581600000,
+    "description" : "PREEM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "661535567"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "PREEM",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -181.59,
+    "date" : 1555495200000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "661161907"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -729.12,
+    "date" : 1555495200000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "661161906"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -85.0,
+    "date" : 1555322400000,
+    "description" : "FLYING SCOTSMAN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "660430425"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-16",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "FLYING SCOTSMAN",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -129.0,
+    "date" : 1555322400000,
+    "description" : "BISTRO CREME",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "660430037"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-16",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "BISTRO CREME",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -110.45,
+    "date" : 1555236000000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "660356864"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-16",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -536.4,
+    "date" : 1555236000000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "659943270"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -996.1,
+    "date" : 1555149600000,
+    "description" : "OKQ8",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "660492559"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-16",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OKQ8",
+    "merchantCategoryCode" : "5542",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -454.52,
+    "date" : 1554976800000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "658904476"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -120.0,
+    "date" : 1554890400000,
+    "description" : "Pong Buffe",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "658870188"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "Pong Buffe",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -109.0,
+    "date" : 1554717600000,
+    "description" : "RESTAURANG UNDERBAR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "657891117"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "RESTAURANG UNDERBAR",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -150.0,
+    "date" : 1554544800000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "657390074"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -529.1,
+    "date" : 1554544800000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "657390050"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -338.0,
+    "date" : 1554458400000,
+    "description" : "BISTRO CREME",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "656894915"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "BISTRO CREME",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -51.19,
+    "date" : 1554458400000,
+    "description" : "RÄNTA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "656698629"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 9.6,
+    "date" : 1554372000000,
+    "description" : "ÖVERFÖRING AV SALDO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "656288510"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -285.0,
+    "date" : 1554372000000,
+    "description" : "VALLENTUNA STENUGNSBAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "656197943"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "VALLENTUNA STENUGNSBAG",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -450.0,
+    "date" : 1554372000000,
+    "description" : "VALLENTUNA STENUGNSBAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "656197942"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "VALLENTUNA STENUGNSBAG",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -403.35,
+    "date" : 1554285600000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "655763395"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -95.0,
+    "date" : 1554285600000,
+    "description" : "ÅRSAVGIFT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "655647040"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -25.0,
+    "date" : 1553943600000,
+    "description" : "CIRCLE K VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "654599140"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "CIRCLE K VALLENTUNA",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -301.79,
+    "date" : 1553943600000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "654517292"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1039.15,
+    "date" : 1553943600000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "654517291"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-04-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -190.81,
+    "date" : 1553598000000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "653108504"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -105.0,
+    "date" : 1553598000000,
+    "description" : "VALLENTUNA STENUGNSBAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "652951255"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "VALLENTUNA STENUGNSBAG",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -699.0,
+    "date" : 1553598000000,
+    "description" : "HUND-CITY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "652836654"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "HUND-CITY",
+    "merchantCategoryCode" : "5999",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -135.0,
+    "date" : 1553511600000,
+    "description" : "MAMA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "652474676"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-26",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "MAMA",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 12762.0,
+    "date" : 1553511600000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "652352683"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-25",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -2960.03,
+    "date" : 1553338800000,
+    "description" : "COOP FORUM TABYARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "652033514"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-25",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TABYARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -63.5,
+    "date" : 1553079600000,
+    "description" : "COOP ARE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "651165206"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-22",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP ARE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -75.6,
+    "date" : 1552993200000,
+    "description" : "ICA SUPERMARKET JARPEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "650650169"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA SUPERMARKET JARPEN",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -448.2,
+    "date" : 1552820400000,
+    "description" : "OKQ8",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "650326943"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-19",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OKQ8",
+    "merchantCategoryCode" : "5541",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -521.11,
+    "date" : 1552820400000,
+    "description" : "COOP JARPEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "650162364"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-19",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP JARPEN",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -363.1,
+    "date" : 1552820400000,
+    "description" : "ICA SUPERMARKET JARPEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "650025274"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA SUPERMARKET JARPEN",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -232.54,
+    "date" : 1552647600000,
+    "description" : "COOP VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "649683933"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP VALLENTUNA",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -520.0,
+    "date" : 1552647600000,
+    "description" : "45:ANS RESTAURANG & PI",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "649448756"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "45:ANS RESTAURANG & PI",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -492.42,
+    "date" : 1552647600000,
+    "description" : "ICA NARA YTTERHOGDAL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "649408884"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA NARA YTTERHOGDAL",
+    "merchantCategoryCode" : "5499",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -105.0,
+    "date" : 1552474800000,
+    "description" : "VALLENTUNA STENUGNSBAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "648573380"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "VALLENTUNA STENUGNSBAG",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -41.0,
+    "date" : 1552474800000,
+    "description" : "PRESSBYRÅN 4150135",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "648553379"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "PRESSBYRÅN 4150135",
+    "merchantCategoryCode" : "5994",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -154.6,
+    "date" : 1552474800000,
+    "description" : "ICA KVANTUM VALLENTUNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "648491252"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "ICA KVANTUM VALLENTUNA",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1030.0,
+    "date" : 1552474800000,
+    "description" : "BLASIEHOLMEN RESTAURAN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "648444872"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "BLASIEHOLMEN RESTAURAN",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -200.0,
+    "date" : 1552302000000,
+    "description" : "V HUSLAKARGRP  PRAKTIK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "647983809"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "V HUSLAKARGRP  PRAKTIK",
+    "merchantCategoryCode" : "8099",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -117.0,
+    "date" : 1552215600000,
+    "description" : "OOB ARNINGE 175",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "647830779"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "OOB ARNINGE 175",
+    "merchantCategoryCode" : "5311",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1468.38,
+    "date" : 1552215600000,
+    "description" : "COOP FORUM TABYARNINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "647728715"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "COOP FORUM TABYARNINGE",
+    "merchantCategoryCode" : "5411",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -158.0,
+    "date" : 1552042800000,
+    "description" : "THE SOAP BAR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "647261617"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "THE SOAP BAR",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -146.0,
+    "date" : 1552042800000,
+    "description" : "THE SOAP BAR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "647261615"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "merchantName" : "THE SOAP BAR",
+    "merchantCategoryCode" : "5812",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -25.6,
+    "date" : 1552042800000,
+    "description" : "RÄNTA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "646741918"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -10284.31,
+    "date" : 1551351600000,
+    "description" : "ÖVERF. RÄNTEBÄRANDE SALDO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "645023316"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -2451.3,
+    "date" : 1551351600000,
+    "description" : "ÖVERFÖRING AV SALDO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "645023315"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-03-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Transaction",
+    "providerMarket" : "SE"
+  } ]
+}
+

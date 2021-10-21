@@ -26,4 +26,9 @@ public class UkOpenBankingPaymentConstants {
         public static final String PAYMENTS_IN_EUR_ARE_NOT_AVAILABLE =
                 "Domestic payments in EUR are not available";
     }
+
+    public static class ErrorCode {
+
+        public static final String BARCLAYS_DAILY_LIMIT_REACHED = "OBA52";
+    }
 }

@@ -346,6 +346,26 @@ public class UkOpenBankingPaymentTestFixtures {
                 STATE);
     }
 
+    public static Map<String, String> createCallbackDataWithServerError() {
+        return ImmutableMap.of(
+                OpenIdConstants.CallbackParams.ERROR,
+                OpenIdConstants.Errors.SERVER_ERROR,
+                OpenIdConstants.CallbackParams.ERROR_DESCRIPTION,
+                OpenIdConstants.Errors.SERVER_ERROR,
+                OpenIdConstants.Params.STATE,
+                STATE);
+    }
+
+    public static Map<String, String> createCallbackDataWithTemporarilyUnavailable() {
+        return ImmutableMap.of(
+                OpenIdConstants.CallbackParams.ERROR,
+                OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE,
+                OpenIdConstants.CallbackParams.ERROR_DESCRIPTION,
+                OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE,
+                OpenIdConstants.Params.STATE,
+                STATE);
+    }
+
     public static Payment createTodayPayment(Clock clockMock) {
         final LocalDate executionDate = LocalDate.now(clockMock);
 

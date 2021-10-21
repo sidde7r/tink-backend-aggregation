@@ -22,13 +22,13 @@ public class DemobankErrorHandler {
         if (errorResponse.isInvalidDebtor()) {
             throw new DebtorValidationException(
                     errorResponse.getErrorMessage(ErrorCodes.INVALID_DEBTOR_ACCOUNT),
-                    InternalStatus.INVALID_DESTINATION_ACCOUNT);
+                    InternalStatus.INVALID_SOURCE_ACCOUNT);
         }
 
         if (errorResponse.isInvalidCreditor()) {
             throw new CreditorValidationException(
                     errorResponse.getErrorMessage(ErrorCodes.INVALID_ACCOUNT),
-                    InternalStatus.INVALID_SOURCE_ACCOUNT);
+                    InternalStatus.INVALID_DESTINATION_ACCOUNT);
         }
 
         if (errorResponse.isBadRequest()) {

@@ -24,9 +24,9 @@ public class FrOpenBankingErrorMapper {
             case ErrorCodes.INCORRECT_ACCOUNT_NUMBER:
                 return PaymentValidationException.incorrectAccountNumber();
             case ErrorCodes.CLOSED_ACCOUNT_NUMBER:
-                return PaymentValidationException.accountIsClosed();
+                return DebtorValidationException.accountIsClosed();
             case ErrorCodes.BLOCKED_ACCOUNT:
-                return PaymentValidationException.accountIsBlocked();
+                return DebtorValidationException.accountIsBlocked();
             case ErrorCodes.TRANSACTION_FORBIDDEN:
                 return PaymentValidationException.transactionIsForbidden();
             case ErrorCodes.INVALID_NUMBER_OF_TRANSACTIONS:
