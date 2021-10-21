@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage.debug;
+package se.tink.backend.aggregation.storage.logs;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

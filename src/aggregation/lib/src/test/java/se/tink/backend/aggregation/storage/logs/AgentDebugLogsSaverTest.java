@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.debug;
+package se.tink.backend.aggregation.storage.logs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,14 +19,9 @@ import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsCache;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsSaver;
-import se.tink.backend.aggregation.storage.debug.SaveLogsResult;
-import se.tink.backend.aggregation.storage.debug.SaveLogsStatus;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogConstants.AapLogsCatalog;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
-import se.tink.backend.aggregation.storage.debug.handlers.S3StoragePathsProvider;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
 
 @RunWith(JUnitParamsRunner.class)
 public class AgentDebugLogsSaverTest {

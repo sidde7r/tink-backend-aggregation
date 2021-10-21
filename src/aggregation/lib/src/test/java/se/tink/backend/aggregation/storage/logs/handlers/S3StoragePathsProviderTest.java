@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.debug.handlers;
+package se.tink.backend.aggregation.storage.logs.handlers;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +18,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.storage.debug.handlers.S3StoragePathsProvider;
 
 @RunWith(JUnitParamsRunner.class)
 public class S3StoragePathsProviderTest {

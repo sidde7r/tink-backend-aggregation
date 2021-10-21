@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.storage.debug;
+package se.tink.backend.aggregation.storage.logs;
 
 import java.io.IOException;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
 
 /**
  * This class is responsible for the actual saving of logs to different types of storage, e.g. local

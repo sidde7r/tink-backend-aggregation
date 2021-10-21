@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage.debug.handlers;
+package se.tink.backend.aggregation.storage.logs.handlers;
 
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;

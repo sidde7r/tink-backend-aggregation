@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.debug.handlers;
+package se.tink.backend.aggregation.storage.logs.handlers;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,9 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogS3StorageHandler;
-import se.tink.backend.aggregation.storage.debug.handlers.S3ClientFactory;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
 
 @RunWith(JUnitParamsRunner.class)
 public class AgentDebugLogS3StorageHandlerTest {

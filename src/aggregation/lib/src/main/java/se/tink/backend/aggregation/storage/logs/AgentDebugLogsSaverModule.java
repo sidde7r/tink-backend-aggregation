@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage.debug;
+package se.tink.backend.aggregation.storage.logs;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;

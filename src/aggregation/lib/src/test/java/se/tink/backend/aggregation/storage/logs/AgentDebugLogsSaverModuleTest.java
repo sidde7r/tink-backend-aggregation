@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.debug;
+package se.tink.backend.aggregation.storage.logs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -8,9 +8,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.Test;
 import org.mockito.Answers;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsSaver;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsSaverModule;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 
 public class AgentDebugLogsSaverModuleTest {

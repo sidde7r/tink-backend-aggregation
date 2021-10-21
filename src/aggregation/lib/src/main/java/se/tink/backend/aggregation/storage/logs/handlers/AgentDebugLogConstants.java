@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage.debug.handlers;
+package se.tink.backend.aggregation.storage.logs.handlers;
 
 import lombok.experimental.UtilityClass;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;

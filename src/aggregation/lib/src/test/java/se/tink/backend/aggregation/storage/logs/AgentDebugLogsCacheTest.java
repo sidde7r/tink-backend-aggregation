@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.debug;
+package se.tink.backend.aggregation.storage.logs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,8 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsCache;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsMasker;
 
 public class AgentDebugLogsCacheTest {
 

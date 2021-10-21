@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;

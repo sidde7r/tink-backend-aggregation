@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitivePayloadOnForceAuthenticateCommand;

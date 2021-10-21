@@ -41,11 +41,11 @@ import se.tink.backend.aggregation.configuration.agentsservice.ExcludedDebugClus
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsSaver;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsSaverProvider;
-import se.tink.backend.aggregation.storage.debug.SaveLogsResult;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentDebugLogsSaver;
+import se.tink.backend.aggregation.storage.logs.AgentDebugLogsSaverProvider;
+import se.tink.backend.aggregation.storage.logs.SaveLogsResult;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AapLogsCatalog;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentsLegalConstraintsProvider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;

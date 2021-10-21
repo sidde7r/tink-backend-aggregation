@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage.debug.handlers;
+package se.tink.backend.aggregation.storage.logs.handlers;
 
 import com.google.inject.Inject;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AggregationWorkerConfiguration;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
 
 @Slf4j
 public class AgentDebugLogLocalStorageHandler implements AgentDebugLogStorageHandler {

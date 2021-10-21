@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage.debug.handlers;
+package se.tink.backend.aggregation.storage.logs.handlers;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;

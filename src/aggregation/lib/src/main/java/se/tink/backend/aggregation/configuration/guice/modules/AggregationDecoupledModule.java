@@ -66,8 +66,8 @@ import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProv
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogLocalStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogLocalStorageHandler;
 import se.tink.backend.aggregation.workers.abort.DefaultRequestAbortHandler;
 import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;

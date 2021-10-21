@@ -42,7 +42,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.logs.AgentDebugLogStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.AbnAmroSpecificCase;
 import se.tink.backend.aggregation.workers.commands.AccountSegmentRestrictionWorkerCommand;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage.debug;
+package se.tink.backend.aggregation.storage.logs;
 
 import com.google.inject.Inject;
 import java.io.IOException;
@@ -6,9 +6,9 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogConstants.AapLogsCatalog;
-import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
-import se.tink.backend.aggregation.storage.debug.handlers.S3StoragePathsProvider;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentDebugLogConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))

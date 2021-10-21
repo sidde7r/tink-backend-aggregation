@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.debug;
+package se.tink.backend.aggregation.storage.logs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,7 +17,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLogsMasker;
 
 public class AgentDebugLogsMaskerTest {
 

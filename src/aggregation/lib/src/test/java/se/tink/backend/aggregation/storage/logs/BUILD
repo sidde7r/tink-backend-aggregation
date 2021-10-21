@@ -1,11 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "debug",
+    name = "logs",
     srcs = glob(["**/*.java"]),
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/models/configuration",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/logs",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
