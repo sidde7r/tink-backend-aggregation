@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AuthSessionStorageHelper;
@@ -43,20 +42,19 @@ public class AvanzaTransactionalAccountFetcher
         String holderName = temporaryStorage.getOrDefault(StorageKeys.HOLDER_NAME, null);
 
         return authSessionStorage.getAuthSessions().stream()
-                .flatMap(getAccounts(holderName))
+                .flatMap(authSession -> fetchTransactionalAccounts(authSession, holderName))
                 .collect(Collectors.toList());
     }
 
-    private Function<String, Stream<? extends TransactionalAccount>> getAccounts(
-            String holderName) {
-        return authSession ->
-                apiClient.fetchAccounts(authSession).getAccounts().stream()
-                        .filter(AccountEntity::isTransactionalAccount)
-                        .map(AccountEntity::getAccountId)
-                        .map(accId -> apiClient.fetchAccountDetails(accId, authSession))
-                        .map(account -> account.toTinkAccount(holderName))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get);
+    private Stream<? extends TransactionalAccount> fetchTransactionalAccounts(
+            String authSession, String holderName) {
+        return apiClient.fetchAccounts(authSession).getAccounts().stream()
+                .filter(AccountEntity::isTransactionalAccount)
+                .map(AccountEntity::getAccountId)
+                .map(accId -> apiClient.fetchAccountDetails(accId, authSession))
+                .map(account -> account.toTinkAccount(holderName))
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 
     @Override
