@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 import webbrowser
+from urllib.parse import urlparse, parse_qs, unquote
 
 from cacheout import Cache
 from flask import Flask, jsonify, request, abort, Response, redirect
@@ -143,6 +144,15 @@ def thirdparty_callback():
     args = request.args or request.form
 
     state = args.get("state", None)
+
+    if not state:
+        # Parse params if double encoded
+        query_string = urlparse(request.url).query
+        decoded_query_params = parse_qs(unquote(query_string))
+        if len(decoded_query_params["state"]) == 1:
+            state = decoded_query_params["state"][0]
+            args = decoded_query_params
+
     if not state:
         if request.method == "POST":
             abort(400, "invalid request")
