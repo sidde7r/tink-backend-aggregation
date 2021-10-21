@@ -9,6 +9,7 @@ import junitparams.JUnitParamsRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.module.SibsWireMockTestModule;
@@ -164,7 +165,7 @@ public class CaixaFiltersWireMockTest {
         assertThat(throwable)
                 .hasMessage("Http status: " + 400 + " Error body: " + BAD_REQUEST_MESSAGE)
                 .usingRecursiveComparison()
-                .isEqualTo(BankServiceError.BANK_SIDE_FAILURE.exception());
+                .isExactlyInstanceOf(BankServiceException.class);
     }
 
     @Test
