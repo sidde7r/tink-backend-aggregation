@@ -1,0 +1,7 @@
+{
+  "consentId": "consentId",
+  "_links": {
+    "redirect": "https://sibs.redirect.pt/taf/pt/#/authorize?transaction-id=123456&psu-id=consentId&authorization-id=080a2b7e-4089-483c-97dc-78a8452101bb",
+    "self": "https://sibs.redirect.pt/v1/consents/consentId"
+  }
+}
