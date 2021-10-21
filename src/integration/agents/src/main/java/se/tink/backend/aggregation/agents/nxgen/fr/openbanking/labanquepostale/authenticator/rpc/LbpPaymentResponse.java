@@ -29,6 +29,12 @@ public class LbpPaymentResponse {
         ExactCurrencyAmount amount =
                 ExactCurrencyAmount.of(amountEntity.getAmount(), amountEntity.getCurrency());
 
+        Debtor debtor =
+                paymentRequest.getDebtorAccount() != null
+                        ? new Debtor(
+                                new IbanIdentifier(paymentRequest.getDebtorAccount().getIban()))
+                        : null;
+
         return new PaymentResponse(
                 new Payment.Builder()
                         .withCreditor(
@@ -38,10 +44,7 @@ public class LbpPaymentResponse {
                                                         .getBeneficiary()
                                                         .getCreditorAccount()
                                                         .getIban())))
-                        .withDebtor(
-                                new Debtor(
-                                        new IbanIdentifier(
-                                                paymentRequest.getDebtorAccount().getIban())))
+                        .withDebtor(debtor)
                         .withUniqueId(paymentRequest.getResourceId())
                         .withExactCurrencyAmount(amount)
                         .withCurrency(amount.getCurrencyCode())
