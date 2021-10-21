@@ -73,6 +73,7 @@ public class RequestedAccountsRestrictionWorkerCommandTest {
                         "oxford-production",
                         "",
                         "",
+                        "",
                         mock(AccountInformationServiceEventsProducer.class),
                         unleashClient,
                         mock(RequestStatusManager.class),

@@ -1,12 +1,18 @@
-package se.tink.backend.aggregation.nxgen.http.log.executor;
+package se.tink.backend.aggregation.nxgen.http.log.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.RequestLogEntry;
+import se.tink.backend.aggregation.nxgen.http.log.executor.ResponseLogEntry;
 
 /**
  * An adapter class that is used to be a bridge between logging executor and any model. Perform the
@@ -15,34 +21,41 @@ import org.apache.commons.io.output.StringBuilderWriter;
  * @param <T> Request entity
  * @param <S> Response entity
  */
+@Slf4j
 public abstract class LoggingAdapter<T, S> {
 
     private static final int MAX_SIZE = 500 * 1024;
     private static final String NOT_IMPLEMENTED = "Not implemented";
 
-    private final LoggingExecutor loggingExecutor;
+    private final List<LoggingExecutor> loggingExecutors;
 
-    public LoggingAdapter(LoggingExecutor loggingExecutor) {
-        this.loggingExecutor = loggingExecutor;
+    public LoggingAdapter(LoggingExecutor... loggingExecutors) {
+        this.loggingExecutors = Arrays.asList(loggingExecutors);
+    }
+
+    public LoggingAdapter(List<LoggingExecutor> loggingExecutors) {
+        this.loggingExecutors = loggingExecutors;
     }
 
     public void logRequest(T request) {
-        loggingExecutor.log(
+        RequestLogEntry requestLogEntry =
                 RequestLogEntry.builder()
                         .method(mapMethod(request))
                         .url(mapUrl(request))
                         .headers(mapRequestHeaders(request))
                         .body(mapRequestBody(request))
-                        .build());
+                        .build();
+        loggingExecutors.forEach(executor -> executor.log(requestLogEntry));
     }
 
     public void logResponse(S response) {
-        loggingExecutor.log(
+        ResponseLogEntry responseLogEntry =
                 ResponseLogEntry.builder()
                         .status(mapStatus(response))
                         .headers(mapResponseHeaders(response))
                         .body(mapResponseBody(response))
-                        .build());
+                        .build();
+        loggingExecutors.forEach(executor -> executor.log(responseLogEntry));
     }
 
     /**

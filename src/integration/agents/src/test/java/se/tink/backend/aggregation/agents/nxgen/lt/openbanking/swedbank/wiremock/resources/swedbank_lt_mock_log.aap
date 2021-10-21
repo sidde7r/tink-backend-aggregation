@@ -249,7 +249,7 @@ PSU-User-Agent: Tink
 PSU-IP-Port: 443
 X-Aggregator: Tink Testing
 
-RESPONSE 12 SET CONS_POLL_2
+RESPONSE 12
 200
 X-Rate-Limit-Limit: 80000
 X-Rate-Limit-Remaining: 73724
@@ -260,26 +260,7 @@ Content-Length: 25
 
 {"scaStatus":"finalised"}
 
-REQUEST 13 MATCH CONS_POLL_2
-GET https://psd2.api.swedbank.com/v3/consents/22222233-4444-4444-4444-223332255555/status?bic=HABALT22
-Accept: application/json
-PSU-IP-Address: 127.0.0.1
-PSU-User-Agent: Tink
-PSU-IP-Port: 443
-X-Aggregator: Tink Testing
-
-RESPONSE 13 SET ACC_3
-200
-X-Rate-Limit-Limit: 80000
-X-Rate-Limit-Remaining: 73723
-X-Rate-Limit-Reset: 2361
-Content-Type: application/json;charset=utf-8
-Server: Layer7-API-Gateway
-Content-Length: 25
-
-{"consentStatus":"valid"}
-
-REQUEST 14 MATCH ACC_3
+REQUEST 14
 GET https://psd2.api.swedbank.com/v3/accounts?bic=HABALT22&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1

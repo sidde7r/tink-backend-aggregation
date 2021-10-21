@@ -6,6 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/adapter",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/constants",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
         "//src/libraries/date",
@@ -17,6 +18,7 @@ java_library(
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_io_commons_io",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "@tink_backend//src/libraries/tracing/jersey",

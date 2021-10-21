@@ -4,7 +4,6 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.dropwizard.lifecycle.Managed;
-import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +46,9 @@ import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
@@ -108,8 +110,6 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
         this.setCorrelationId("dummy-correlationId");
         agentTestServerClient = AgentTestServerClient.getInstance();
-        LogMasker logMasker = new FakeLogMasker();
-        setLogMasker(logMasker);
         UnleashClientFactory unleashClientFactory =
                 new UnleashClientFactory(
                         new UnleashConfiguration()
@@ -124,6 +124,20 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
         setAgentTemporaryStorage(new AgentTemporaryStorageImpl());
         setRawBankDataEventAccumulator(new RawBankDataEventAccumulator());
+
+        LogMasker logMasker = new FakeLogMasker();
+        setLogMasker(logMasker);
+        HttpAapLogger.consoleOutputLogger().ifPresent(this::setHttpAapLogger);
+        setHttpJsonLogger(
+                new HttpJsonLogger(
+                        HttpJsonLogMetaEntity.builder()
+                                .agentName(provider.getClassName())
+                                .providerName(provider.getName())
+                                .appId(appId)
+                                .clusterId(clusterId)
+                                .credentialsId(credential.getId())
+                                .userId(credential.getId())
+                                .build()));
     }
 
     public AgentTestServerClient getAgentTestServerClient() {
@@ -161,11 +175,6 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
         return accountDataCache.getTransferDestinationPatternsToBeProcessed().values().stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public OutputStream getLogOutputStream() {
-        return System.out;
     }
 
     @Override

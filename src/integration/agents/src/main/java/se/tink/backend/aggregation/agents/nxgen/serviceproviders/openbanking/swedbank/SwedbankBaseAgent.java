@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Provider.AuthenticationFlow;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
@@ -12,8 +11,8 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.consent.SwedbankConsentHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankBankIdSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner;
@@ -30,14 +29,11 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
@@ -48,6 +44,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 RefreshTransferDestinationExecutor {
 
     private final SwedbankApiClient apiClient;
+    private final SwedbankConsentHandler consentHandler;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
@@ -75,9 +72,11 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         componentProvider,
                         marketConfiguration);
 
+        consentHandler = new SwedbankConsentHandler(apiClient, persistentStorage);
+
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient, persistentStorage, request.getProvider().getMarket());
+                        apiClient, request.getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
     }
@@ -99,54 +98,19 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        AuthenticationFlow authenticationFlow = request.getProvider().getAuthenticationFlow();
-
-        if (AuthenticationFlow.DECOUPLED.equals(authenticationFlow)) {
-            return constructDecoupledAppAuthenticator();
-        }
-
-        if (AuthenticationFlow.REDIRECT.equals(authenticationFlow)) {
-            return constructRedirectAuthenticator();
-        }
-
-        throw new NotImplementedException(
-                String.format(
-                        "Support for %s authentication flow has not been implemented.",
-                        authenticationFlow));
-    }
-
-    private Authenticator constructDecoupledAppAuthenticator() {
         BankIdAuthenticationController<String> bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalInformationController,
                         new SwedbankDecoupledAuthenticator(
                                 apiClient,
                                 supplementalInformationHelper,
-                                transactionalAccountFetcher,
-                                persistentStorage),
+                                persistentStorage,
+                                consentHandler),
                         persistentStorage,
                         request);
 
         return new AutoAuthenticationController(
                 request, context, bankIdAuthenticationController, bankIdAuthenticationController);
-    }
-
-    private Authenticator constructRedirectAuthenticator() {
-
-        OAuth2AuthenticationController oAuth2AuthenticationController =
-                new OAuth2AuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        new SwedbankRedirectAuthenticator(apiClient, persistentStorage),
-                        credentials,
-                        strongAuthenticationState);
-
-        return new AutoAuthenticationController(
-                request,
-                context,
-                new ThirdPartyAppAuthenticationController<>(
-                        oAuth2AuthenticationController, supplementalInformationHelper),
-                oAuth2AuthenticationController);
     }
 
     @Override

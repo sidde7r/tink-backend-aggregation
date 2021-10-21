@@ -75,7 +75,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
                         new LegacyTinkHttpClient(
                                 context.getAggregatorInfo(),
                                 context.getMetricRegistry(),
-                                context.getLogOutputStream(),
+                                context.getHttpAapLogger(),
                                 null,
                                 null,
                                 context.getLogMasker(),

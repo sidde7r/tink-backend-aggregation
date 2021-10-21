@@ -70,7 +70,7 @@ public class RuralviaAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new RuralviaAuthenticator(
-                apiClient, agentTemporaryStorage, context.getLogOutputStream());
+                apiClient, agentTemporaryStorage, context.getHttpAapLogger());
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(

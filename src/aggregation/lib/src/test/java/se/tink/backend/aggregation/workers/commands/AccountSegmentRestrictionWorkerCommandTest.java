@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,6 +43,7 @@ import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
@@ -73,6 +75,7 @@ public class AccountSegmentRestrictionWorkerCommandTest {
                                 .USE_ACCOUNT_SEGMENT_RESTRICTION_FEATURE_NAME))
                 .thenReturn(true);
 
+        RequestTracer.startTracing(Optional.of("requestId"));
         context =
                 new AgentWorkerCommandContext(
                         request,
@@ -84,6 +87,7 @@ public class AccountSegmentRestrictionWorkerCommandTest {
                         mock(ProviderSessionCacheController.class),
                         controllerWrapper,
                         "oxford-production",
+                        "",
                         "",
                         "",
                         mock(AccountInformationServiceEventsProducer.class),

@@ -124,21 +124,6 @@ Content-Length: 49
 
 {"consentId":"consentId","consentStatus":"valid"}
 
-REQUEST 8
-GET https://psd2.api.swedbank.com/v3/consents/consentId/status?bic=SWEDSESS
-Accept: application/json
-PSU-IP-Address: 127.0.0.1
-PSU-User-Agent: Tink
-X-Aggregator: Tink Testing
-
-RESPONSE 8
-200
-Content-Type: application/json;charset=utf-8
-Server: Layer7-API-Gateway
-Content-Length: 25
-
-{"consentStatus":"valid"}
-
 REQUEST 9
 GET https://psd2.api.swedbank.com/v3/accounts?bic=SWEDSESS&app-id=dummyClientId
 Accept: application/json

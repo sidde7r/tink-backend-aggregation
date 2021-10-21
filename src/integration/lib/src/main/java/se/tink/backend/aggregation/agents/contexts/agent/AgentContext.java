@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.contexts.agent;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.api.AggregatorInfo;
@@ -9,6 +7,8 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
@@ -16,7 +16,7 @@ import src.libraries.interaction_counter.InteractionCounter;
 import src.libraries.interaction_counter.local.LocalInteractionCounter;
 
 public abstract class AgentContext implements CompositeAgentContext {
-    protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
+
     protected boolean isTestContext = false;
     private boolean isWaitingOnConnectorTransactions = false;
     private AggregatorInfo aggregatorInfo;
@@ -24,7 +24,6 @@ public abstract class AgentContext implements CompositeAgentContext {
     private MetricRegistry metricRegistry;
     private String appId;
     private AgentConfigurationControllerable agentConfigurationController;
-    private LogMasker logMasker;
     private AgentsServiceConfiguration configuration;
     protected InteractionCounter supplementalInteractionCounter = new LocalInteractionCounter();
     private UnleashClient unleashClient;
@@ -32,6 +31,9 @@ public abstract class AgentContext implements CompositeAgentContext {
     private String providerId;
     protected RefreshSummary refreshSummary;
     protected AgentTemporaryStorage agentTemporaryStorage;
+    private LogMasker logMasker;
+    private HttpAapLogger httpAapLogger;
+    private HttpJsonLogger httpJsonLogger;
     protected RawBankDataEventAccumulator rawBankDataEventAccumulator;
     protected String correlationId;
 
@@ -75,11 +77,6 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public void setClusterId(String clusterId) {
         this.clusterId = clusterId;
-    }
-
-    @Override
-    public OutputStream getLogOutputStream() {
-        return logOutputStream;
     }
 
     @Override
@@ -134,16 +131,6 @@ public abstract class AgentContext implements CompositeAgentContext {
     }
 
     @Override
-    public LogMasker getLogMasker() {
-        return logMasker;
-    }
-
-    @Override
-    public void setLogMasker(LogMasker logMasker) {
-        this.logMasker = logMasker;
-    }
-
-    @Override
     public UnleashClient getUnleashClient() {
         return this.unleashClient;
     }
@@ -181,6 +168,36 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public void setAgentTemporaryStorage(AgentTemporaryStorage agentTemporaryStorage) {
         this.agentTemporaryStorage = agentTemporaryStorage;
+    }
+
+    @Override
+    public LogMasker getLogMasker() {
+        return logMasker;
+    }
+
+    @Override
+    public void setLogMasker(LogMasker logMasker) {
+        this.logMasker = logMasker;
+    }
+
+    @Override
+    public HttpAapLogger getHttpAapLogger() {
+        return httpAapLogger;
+    }
+
+    @Override
+    public void setHttpAapLogger(HttpAapLogger httpAapLogger) {
+        this.httpAapLogger = httpAapLogger;
+    }
+
+    @Override
+    public HttpJsonLogger getHttpJsonLogger() {
+        return httpJsonLogger;
+    }
+
+    @Override
+    public void setHttpJsonLogger(HttpJsonLogger httpJsonLogger) {
+        this.httpJsonLogger = httpJsonLogger;
     }
 
     @Override

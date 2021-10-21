@@ -1,9 +1,10 @@
-package se.tink.backend.aggregation.nxgen.http.legacy;
+package se.tink.backend.aggregation.nxgen.http.log.adapter;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.http.Header;
@@ -14,13 +15,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestWrapper;
 import org.apache.http.entity.BasicHttpEntity;
-import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 
-public class DefaultRequestLoggingAdapter extends LoggingAdapter<HttpRequest, HttpResponse> {
+/** Adapter able to map Apache request to common model */
+public class DefaultApacheRequestLoggingAdapter extends LoggingAdapter<HttpRequest, HttpResponse> {
 
-    public DefaultRequestLoggingAdapter(LoggingExecutor loggingExecutor) {
-        super(loggingExecutor);
+    public DefaultApacheRequestLoggingAdapter(List<LoggingExecutor> loggingExecutors) {
+        super(loggingExecutors);
     }
 
     @Override

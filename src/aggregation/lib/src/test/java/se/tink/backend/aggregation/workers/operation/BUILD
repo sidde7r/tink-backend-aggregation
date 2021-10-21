@@ -20,6 +20,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
         "//src/libraries/agent-storage",
         "//src/libraries/cache",
+        "//src/libraries/request_tracing",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_apache_zookeeper_zookeeper",

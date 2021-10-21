@@ -48,7 +48,7 @@ public final class CompositeAgentTest {
 
     private String printHttpDebugTrace() {
         final LogMasker logMasker = context.getLogMasker();
-        final String maskedLog = logMasker.mask(context.getLogOutputStream().toString());
+        final String maskedLog = logMasker.mask(context.getHttpAapLogger().toString());
 
         return "\n" + "===== HTTP DEBUG TRACE LOG =====\n" + maskedLog + "\n";
     }

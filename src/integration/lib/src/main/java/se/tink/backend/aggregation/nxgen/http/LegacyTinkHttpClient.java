@@ -17,9 +17,6 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
@@ -75,6 +72,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingScope;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
@@ -92,6 +90,7 @@ import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVeri
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
@@ -112,9 +111,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @Deprecated
 public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         implements TinkHttpClient {
-
-    private final LogMasker logMasker;
-    private final LoggingMode loggingMode;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -130,7 +126,10 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
-    private final OutputStream logOutputStream;
+    private final LogMasker logMasker;
+    private final LoggingMode loggingMode;
+    private final HttpAapLogger httpAapLogger;
+
     private final MetricRegistry metricRegistry;
     private final Provider provider;
 
@@ -242,7 +241,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     public LegacyTinkHttpClient(
             @Nullable AggregatorInfo aggregatorInfo,
             @Nullable MetricRegistry metricRegistry,
-            @Nullable OutputStream logOutPutStream,
+            @Nullable HttpAapLogger httpAapLogger,
             @Nullable SignatureKeyPair signatureKeyPair,
             @Nullable Provider provider,
             @Nullable LogMasker logMasker,
@@ -260,7 +259,6 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
                 new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
 
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
-        this.logOutputStream = logOutPutStream;
         this.aggregator =
                 Objects.nonNull(aggregatorInfo)
                         ? aggregatorInfo
@@ -269,6 +267,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         this.provider = provider;
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
+        this.httpAapLogger = httpAapLogger;
         this.executionTimeLoggingFilter =
                 new ExecutionTimeLoggingFilter(TimeMeasuredRequestExecutor::withRequest);
         // Add an initial redirect handler to fix any illegal location paths
@@ -391,16 +390,9 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         this.internalClient = new TinkApacheHttpClient4(httpHandler, this.internalClientConfig);
 
         // Add agent debug `LoggingFilter`, todo: move this into nxgen
-        try {
-            if (this.logOutputStream != null && this.logMasker != null) {
-                this.internalClient.addFilter(
-                        new LoggingFilter(
-                                new PrintStream(logOutputStream, true, "UTF-8"),
-                                logMasker,
-                                loggingMode));
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
+
+        if (this.httpAapLogger != null && this.logMasker != null) {
+            this.internalClient.addFilter(new LoggingFilter(httpAapLogger, logMasker, loggingMode));
         }
         if (this.metricRegistry != null && this.provider != null) {
             addFilter(new MetricFilter(this.metricRegistry, this.provider));
@@ -465,12 +457,21 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
     @Override
     public void disableAggregatorHeader() {
-        throw new NotImplementedException("Use NextGenHttpClient instead");
+        throw notImplementedInLegacyClientException();
     }
 
     @Override
     public void setLoggingStrategy(LoggingStrategy loggingStrategy) {
-        throw new NotImplementedException("Use NextGenHttpClient instead");
+        throw notImplementedInLegacyClientException();
+    }
+
+    @Override
+    public void setLoggingScopes(LoggingScope... loggingScopes) {
+        throw notImplementedInLegacyClientException();
+    }
+
+    private NotImplementedException notImplementedInLegacyClientException() {
+        return new NotImplementedException("Use NextGenHttpClient instead");
     }
 
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
@@ -651,6 +652,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         internalSslContextBuilder =
                 new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
     }
+
     /**
      * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use
      *     `QsealcSigner` if requesting signatures

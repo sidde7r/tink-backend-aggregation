@@ -60,7 +60,7 @@ public final class CSNAgent extends AbstractAgent implements DeprecatedRefreshEx
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         metricContext.getMetricRegistry(),
-                        context.getLogOutputStream(),
+                        context.getHttpAapLogger(),
                         signatureKeyPair,
                         request.getProvider(),
                         context.getLogMasker(),

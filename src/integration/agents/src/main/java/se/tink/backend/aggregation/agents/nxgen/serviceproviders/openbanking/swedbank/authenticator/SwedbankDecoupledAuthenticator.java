@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator;
 
 import com.google.common.base.Strings;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
@@ -21,7 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.consent.SwedbankConsentHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -34,8 +36,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SwedbankApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
     private final PersistentStorage persistentStorage;
+    private final SwedbankConsentHandler consentHandler;
     private String ssn;
     private String autoStartToken;
     private OAuth2Token accessToken;
@@ -86,20 +88,29 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
                 accessToken =
                         apiClient.exchangeCodeForToken(
                                 authenticationStatusResponse.getAuthorizationCode());
-                // Handle the case where the user has single engagement at Swedbank and selects
-                // Savingsbank provider by mistake
-                if (!apiClient.isSwedbank()) {
-                    persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
-                    if (transactionalAccountFetcher.isCrossLogin()) {
-                        throw LoginError.NOT_CUSTOMER.exception(
-                                SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
-                    }
-                }
+
+                // Setup consents and validate no cross login
+                completeAuthentication();
+
                 return BankIdStatus.DONE;
             case AuthStatus.FAILED:
                 return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
+        }
+    }
+
+    private void completeAuthentication() {
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
+
+        consentHandler.getAndStoreConsentForAllAccounts();
+        consentHandler.getAndStoreDetailedConsent();
+
+        // Handle the case where the user has single engagement at Swedbank and selects
+        // Savingsbank provider by mistake
+        if (!apiClient.isSwedbank() && hasSwedbankAccounts()) {
+            throw LoginError.NOT_CUSTOMER.exception(
+                    SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
         }
     }
 
@@ -152,6 +163,16 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         }
     }
 
+    private boolean hasSwedbankAccounts() {
+        List<AccountEntity> accountList = apiClient.fetchAccounts().getAccounts();
+
+        if (accountList.isEmpty()) {
+            return false;
+        }
+
+        return SwedbankConstants.BANK_IDS.get(0).equals(accountList.get(0).getBankId().trim());
+    }
+
     @Override
     public Optional<String> getAutostartToken() {
         return Optional.ofNullable(autoStartToken);
@@ -182,6 +203,11 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
             }
             throw e;
         }
+
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, token);
+
+        consentHandler.verifyValidConsentOrThrow();
+
         return Optional.ofNullable(token);
     }
 }

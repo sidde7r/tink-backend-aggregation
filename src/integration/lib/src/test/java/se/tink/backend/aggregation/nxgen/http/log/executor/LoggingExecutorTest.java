@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,19 +15,26 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLoggingExecutor;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoggingExecutorTest {
 
     private LoggingExecutor loggingExecutor;
 
-    private ByteArrayOutputStream byteArrayOutputStream;
+    private HttpAapLogger httpAapLogger;
 
     @Mock private LogMasker logMasker;
 
     @Before
     public void init() {
-        byteArrayOutputStream = new ByteArrayOutputStream();
+        httpAapLogger =
+                HttpAapLogger.inMemoryLogger()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not create in memory logger"));
         when(logMasker.mask(any()))
                 .thenAnswer((Answer<String>) invocation -> invocation.getArgument(0));
     }
@@ -35,18 +42,16 @@ public class LoggingExecutorTest {
     @Test
     public void shouldLogWhenLoggingMaskerCoversSecrets() {
         loggingExecutor =
-                new LoggingExecutor(
-                        byteArrayOutputStream,
-                        logMasker,
-                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
+                new HttpAapLoggingExecutor(
+                        httpAapLogger, logMasker, LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         loggingExecutor.log(exampleRequest());
         loggingExecutor.log(exampleResponse());
 
-        String result = byteArrayOutputStream.toString();
+        Optional<String> result = httpAapLogger.tryGetLogContent();
 
-        assertThat(result).isNotNull();
-        String[] lines = result.split("\n");
+        assertThat(result).isPresent();
+        String[] lines = result.get().split("\n");
         assertThat(lines[0]).isEqualTo("1 * Client out-bound request");
         assertThat(lines[1]).matches("1 \\* \\d{4}-\\d{2}-\\d{2}--\\d{2}:\\d{2}:\\d{2}.\\d{3}");
         assertThat(lines[2]).isEqualTo("1 > GET http://localhost/abc/def");
@@ -65,15 +70,13 @@ public class LoggingExecutorTest {
     @Test
     public void shouldNotLogWhenLoggingMaskerUnsure() {
         loggingExecutor =
-                new LoggingExecutor(
-                        byteArrayOutputStream,
-                        logMasker,
-                        LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS);
+                new HttpAapLoggingExecutor(
+                        httpAapLogger, logMasker, LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS);
 
         loggingExecutor.log(exampleRequest());
         loggingExecutor.log(exampleResponse());
 
-        String result = byteArrayOutputStream.toString();
+        String result = httpAapLogger.getLoggingOutputStream().toString();
 
         assertThat(result).isEmpty();
     }

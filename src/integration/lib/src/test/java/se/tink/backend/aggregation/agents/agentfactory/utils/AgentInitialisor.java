@@ -16,7 +16,6 @@ import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.setup.Environment;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,6 +38,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
@@ -134,7 +134,7 @@ public class AgentInitialisor {
         doReturn(false).when(context).isTestContext();
         doReturn(false).when(context).isWaitingOnConnectorTransactions();
         doReturn(AggregatorInfo.getAggregatorForTesting()).when(context).getAggregatorInfo();
-        doReturn(new ByteArrayOutputStream()).when(context).getLogOutputStream();
+        doReturn(HttpAapLogger.inMemoryLogger().orElse(null)).when(context).getHttpAapLogger();
         doReturn(mock(Catalog.class)).when(context).getCatalog();
         doReturn(mock(UnleashClient.class)).when(context).getUnleashClient();
         doReturn(mock(AgentTemporaryStorage.class)).when(context).getAgentTemporaryStorage();

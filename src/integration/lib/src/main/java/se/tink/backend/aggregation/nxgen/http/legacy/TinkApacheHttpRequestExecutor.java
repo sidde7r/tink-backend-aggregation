@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtBodyEntity;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtHeaderEntity;
+import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultApacheRequestLoggingAdapter;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
@@ -71,7 +72,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_PROVIDERID_HEADER = "X-Tink-QWAC-ProviderId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
-    private DefaultRequestLoggingAdapter requestLoggingAdapter;
+    private DefaultApacheRequestLoggingAdapter requestLoggingAdapter;
 
     private static final ImmutableSet<String> ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN =
             ImmutableSet.of(
@@ -139,7 +140,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         this.shouldUseEidasProxy = value;
     }
 
-    public void setRequestLoggingAdapter(DefaultRequestLoggingAdapter requestLoggingAdapter) {
+    public void setRequestLoggingAdapter(DefaultApacheRequestLoggingAdapter requestLoggingAdapter) {
         this.requestLoggingAdapter = requestLoggingAdapter;
     }
 

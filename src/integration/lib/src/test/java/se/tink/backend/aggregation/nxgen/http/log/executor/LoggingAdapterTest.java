@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.aggregation.nxgen.http.log.adapter.LoggingAdapter;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoggingAdapterTest {

@@ -10,8 +10,11 @@ import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentCon
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -107,10 +110,10 @@ public class SwedbankOBAgentWiremockTest {
     }
 
     @Test
-    public void testRefresh() throws Exception {
+    public void testFullAuthRefresh() throws Exception {
 
         // given
-        final String wireMockServerFilePath = RESOURCES_PATH + "/swedbank_ob_wiremock.aap";
+        final String wireMockServerFilePath = RESOURCES_PATH + "/swedbank_ob_fullauth_wiremock.aap";
         final String contractFilePath = RESOURCES_PATH + "/agent-contract.json";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
@@ -123,6 +126,42 @@ public class SwedbankOBAgentWiremockTest {
                         .withConfigFile(configuration)
                         .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testAutoAuthRefresh() throws Exception {
+
+        // given
+        final String wireMockServerFilePath = RESOURCES_PATH + "/swedbank_ob_autoauth_wiremock.aap";
+        final String contractFilePath = RESOURCES_PATH + "/agent-contract.json";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-swedbank-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addPersistentStorageData(
+                                SwedbankConstants.StorageKeys.CONSENT, "dummyConsentId")
+                        .addPersistentStorageData(
+                                PersistentStorageKeys.OAUTH_2_TOKEN,
+                                OAuth2Token.createBearer(
+                                        "dummyAccessToken", "dummyRefreshToken", 0))
                         .build();
 
         final AgentContractEntity expected =

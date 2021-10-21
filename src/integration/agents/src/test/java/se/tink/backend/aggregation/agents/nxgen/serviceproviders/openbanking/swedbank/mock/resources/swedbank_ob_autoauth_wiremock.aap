@@ -1,0 +1,107 @@
+
+REQUEST 1
+POST https://psd2.api.swedbank.com/psd2/token?bic=SWEDSESS
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=dummyClientId&client_secret=dummyClientSecret&redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&refresh_token=dummyRefreshToken&grant_type=refresh_token
+
+RESPONSE 1
+200
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token":"mockedAccessToken",
+  "token_type":"Bearer",
+  "expires_in":3600,
+  "refresh_token":"mockedRefreshToken",
+  "scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90 PSD2account_list"
+}
+
+REQUEST 2
+GET https://psd2.api.swedbank.com/v3/consents/dummyConsentId/status?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{"consentStatus":"valid"}
+
+REQUEST 3
+GET https://psd2.api.swedbank.com/v3/accounts?bic=SWEDSESS&app-id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+
+{"accounts":[{"resourceId":"bf6265426add55b6bed3d4f694bcad02","iban":"SE1230000815059436018123","bban":"8150-5,923 123 573-4","currency":"SEK","product":"Privatkonto","cashAccountType":"CACC","name":"Firstname Secondname Surname","bankId":"08999"}]}
+
+REQUEST 4
+GET https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/balances?bic=SWEDSESS
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+
+{"account":{"iban":"SE1230000815059436018123"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"SEK","amount":"5675.60"}},{"balanceType":"authorised","balanceAmount":{"currency":"SEK","amount":"5675.60"}}]}
+
+REQUEST 5
+GET https://psd2.api.swedbank.com/v3/accounts/41ef8ad8a4d9428f7ab6c500b11c6333/balances?bic=SWEDSESS
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+
+{"account":{"iban":"SE1230000815059436018123"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"SEK","amount":"0.00"}},{"balanceType":"authorised","balanceAmount":{"currency":"SEK","amount":"0.00"}}]}
+
+REQUEST 6
+POST https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/transactions?bic=SWEDSESS&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=both
+Accept: application/json
+
+RESPONSE 6
+210
+Content-Type: application/json;charset=utf-8
+
+{"account":{"iban":"SE1230000815059436018123"},"transactions":{}}
+
+REQUEST 7
+POST https://psd2.api.swedbank.com/v3/accounts/41ef8ad8a4d9428f7ab6c500b11c6333/transactions?bic=SWEDSESS&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=both
+Accept: application/json
+
+RESPONSE 7
+210
+Content-Type: application/json;charset=utf-8
+
+{"account":{"iban":"SE1230000815059436018123"},"transactions":{}}
+
+
+REQUEST 8
+POST https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/transactions?bic=SWEDSESS&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+210
+Content-Type: application/json;charset=utf-8
+
+{"_links":{"status":{"href":"**HASHED:Io**"},"download":{"href":"**HASHED:T/**"}},"statementId":"**HASHED:n4**","statementStatus":"**HASHED:Sj**"}
+
+REQUEST 17
+GET https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/transactions?bic=SWEDSESS&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 17
+210
+Content-Type: application/json;charset=utf-8
+
+{"_links":{"status":{"href":"**HASHED:Io**"},"download":{"href":"**HASHED:T/**"}},"statementId":"**HASHED:n4**","statementStatus":"**HASHED:Sj**"}

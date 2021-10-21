@@ -127,8 +127,7 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
         this.client = client;
     }
 
-    public ClientResponse handle(final ClientRequest cr) throws ClientHandlerException {
-
+    public ClientResponse handle(final ClientRequest cr) {
         final HttpUriRequest request = getUriHttpRequest(cr);
 
         writeOutBoundHeaders(cr.getHeaders(), request);

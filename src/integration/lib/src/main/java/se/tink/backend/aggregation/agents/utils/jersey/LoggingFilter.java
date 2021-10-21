@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
@@ -42,6 +42,7 @@ public class LoggingFilter extends ClientFilter {
 
     private static final String RESPONSE_PREFIX = "< ";
 
+    private final HttpAapLogger httpAapLogger;
     private final LogMasker logMasker;
     private final LoggingMode loggingMode;
 
@@ -96,8 +97,6 @@ public class LoggingFilter extends ClientFilter {
         }
     }
 
-    private final PrintStream loggingStream;
-
     private long _id = 0;
 
     // Max size that we log is 0,5MB
@@ -111,31 +110,30 @@ public class LoggingFilter extends ClientFilter {
      * the sensitive values in the provider. use {@link LogMaskerImpl#shouldLog(Provider)} if you
      * can.
      *
-     * @param loggingStream the print stream to log requests and responses.
+     * @param httpAapLogger logger able the save aap logs in correct place.
      * @param logMasker Masks values from logs.
      * @param loggingMode determines if logs should be outputted at all.
      */
-    public LoggingFilter(PrintStream loggingStream, LogMasker logMasker, LoggingMode loggingMode) {
-        this.loggingStream = loggingStream;
+    public LoggingFilter(
+            HttpAapLogger httpAapLogger, LogMasker logMasker, LoggingMode loggingMode) {
+        this.httpAapLogger = httpAapLogger;
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
     }
 
     public LoggingFilter(
-            PrintStream loggingStream,
+            HttpAapLogger httpAapLogger,
             LogMasker logMasker,
             boolean censorSensitiveHeaders,
             LoggingMode loggingMode) {
-        this.loggingStream = loggingStream;
+        this.httpAapLogger = httpAapLogger;
         this.censorSensitiveHeaders = censorSensitiveHeaders;
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
     }
 
     private void log(StringBuilder b) {
-        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
-            loggingStream.print(logMasker.mask(b.toString()));
-        }
+        httpAapLogger.log(b.toString(), logMasker, loggingMode);
     }
 
     private static String censorHeaderValue(String key, String value) {
