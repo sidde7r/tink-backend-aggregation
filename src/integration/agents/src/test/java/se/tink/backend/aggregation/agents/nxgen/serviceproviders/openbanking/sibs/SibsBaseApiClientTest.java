@@ -6,11 +6,14 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -24,6 +27,8 @@ public class SibsBaseApiClientTest {
 
     @Before
     public void setUp() {
+        AgentConfiguration<SibsConfiguration> agentConfiguration = mock(AgentConfiguration.class);
+        when(agentConfiguration.getRedirectUrl()).thenReturn("https://api.tink.com");
         SibsBaseApiClient apiSpy =
                 new SibsBaseApiClient(
                         tinkHttpClient,
@@ -31,7 +36,8 @@ public class SibsBaseApiClientTest {
                         ANY_STRING,
                         false,
                         "0.0.0.0",
-                        new ConstantLocalDateTimeSource());
+                        new ConstantLocalDateTimeSource(),
+                        agentConfiguration);
         sibsBaseApiClient = spy(apiSpy);
     }
 

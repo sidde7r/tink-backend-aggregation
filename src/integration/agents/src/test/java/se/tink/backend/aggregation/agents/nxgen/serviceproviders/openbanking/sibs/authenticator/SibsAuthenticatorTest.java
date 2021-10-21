@@ -3,13 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticatorTestFixtures.STRONG_AUTHENTICATION_STATE;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -21,60 +18,42 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.collections.Sets;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.agents.rpc.FinancialService;
 import se.tink.backend.agents.rpc.FinancialService.FinancialServiceSegment;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderReader;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.rpc.ConsentResponse;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
-import se.tink.libraries.credentials.service.RefreshScope;
-import se.tink.libraries.credentials.service.UserAvailability;
-import se.tink.libraries.user.rpc.User;
 
 @RunWith(JUnitParamsRunner.class)
 public class SibsAuthenticatorTest {
 
-    private static final String RESOURCES_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs/authenticator/resources/";
-    private static final String STRONG_AUTHENTICATION_STATE = "test_state";
-
-    private User user;
-    private Credentials credentials;
-    private Provider providerConfiguration;
-    private UserAvailability userAvailability;
     private SibsUserState sibsUserState;
     private SibsBaseApiClient sibsBaseApiClient;
     private CredentialsRequest credentialsRequest;
     private SibsAuthenticator sibsAuthenticator;
+    private SibsAuthenticatorTestFixtures authTestFixtures;
 
     @Before
     public void setup() throws IOException {
-        user = getSibsUser();
-        credentials = getSibsCredentials();
-        providerConfiguration = getProviderConfiguration();
-        userAvailability = getUserAvailability();
+        authTestFixtures = new SibsAuthenticatorTestFixtures();
         sibsUserState = new SibsUserState(new PersistentStorage());
         sibsBaseApiClient = mock(SibsBaseApiClient.class);
     }
 
     @Test
-    public void shouldAskUserForAccountSegmentBeforeAuthentication() {
+    public void shouldAskUserForAccountSegmentBeforeAuthentication() throws IOException {
         // given
-        credentialsRequest = getCredentialsRequestWithoutRefreshScope();
-        sibsAuthenticator = sibsAuthenticatorWith(credentialsRequest);
+        credentialsRequest = authTestFixtures.getCredentialsRequestWithoutRefreshScope();
+        sibsAuthenticator =
+                authTestFixtures.sibsAuthenticatorWith(
+                        credentialsRequest, sibsBaseApiClient, sibsUserState);
         // when
         SteppableAuthenticationResponse steppableAuthenticationResponse =
                 sibsAuthenticator.processAuthentication(
@@ -87,11 +66,14 @@ public class SibsAuthenticatorTest {
     @Test
     @Parameters(method = "specifiedFinancialScopes")
     public void shouldFinishAuthenticationWhenConsentIsAlreadyAcceptedAndScopesAreSpecified(
-            Set<FinancialServiceSegment> financialScope, boolean isBusinessAccountSegment) {
+            Set<FinancialServiceSegment> financialScope, boolean isBusinessAccountSegment)
+            throws IOException {
         // given
         consentIsAlreadyAcceptedInBank();
-        credentialsRequest = credentialsRequestWithScope(financialScope);
-        sibsAuthenticator = sibsAuthenticatorWith(credentialsRequest);
+        credentialsRequest = authTestFixtures.credentialsRequestWithScope(financialScope);
+        sibsAuthenticator =
+                authTestFixtures.sibsAuthenticatorWith(
+                        credentialsRequest, sibsBaseApiClient, sibsUserState);
         // when
         SteppableAuthenticationResponse steppableAuthenticationResponse =
                 sibsAuthenticator.processAuthentication(
@@ -106,10 +88,12 @@ public class SibsAuthenticatorTest {
     @Parameters(method = "notClearFinancialScopes")
     public void
             shouldAskUserForAccountSegmentBeforeAuthenticationWhenCredentialsRequestContainsNotClearScope(
-                    Set<FinancialServiceSegment> financialScope) {
+                    Set<FinancialServiceSegment> financialScope) throws IOException {
         // given
-        credentialsRequest = credentialsRequestWithScope(financialScope);
-        sibsAuthenticator = sibsAuthenticatorWith(credentialsRequest);
+        credentialsRequest = authTestFixtures.credentialsRequestWithScope(financialScope);
+        sibsAuthenticator =
+                authTestFixtures.sibsAuthenticatorWith(
+                        credentialsRequest, sibsBaseApiClient, sibsUserState);
         // when
         SteppableAuthenticationResponse steppableAuthenticationResponse =
                 sibsAuthenticator.processAuthentication(
@@ -126,8 +110,11 @@ public class SibsAuthenticatorTest {
         consentIsNotYetAcceptedInBank();
         bankResponsesCorrectlyOnCreateConsentRequest();
         credentialsRequest =
-                credentialsRequestWithScope(Sets.newSet(FinancialServiceSegment.PERSONAL));
-        sibsAuthenticator = sibsAuthenticatorWith(credentialsRequest);
+                authTestFixtures.credentialsRequestWithScope(
+                        Sets.newSet(FinancialServiceSegment.PERSONAL));
+        sibsAuthenticator =
+                authTestFixtures.sibsAuthenticatorWith(
+                        credentialsRequest, sibsBaseApiClient, sibsUserState);
         // when
         SteppableAuthenticationResponse steppableAuthenticationResponse =
                 sibsAuthenticator.processAuthentication(
@@ -138,12 +125,15 @@ public class SibsAuthenticatorTest {
     }
 
     @Test
-    public void shouldAuthenticateWhenReceivedRequestWithCallbackData() {
+    public void shouldAuthenticateWhenReceivedRequestWithCallbackData() throws IOException {
         // given
         consentIsAlreadyAcceptedInBank();
         credentialsRequest =
-                credentialsRequestWithScope(Sets.newSet(FinancialServiceSegment.PERSONAL));
-        sibsAuthenticator = sibsAuthenticatorWith(credentialsRequest);
+                authTestFixtures.credentialsRequestWithScope(
+                        Sets.newSet(FinancialServiceSegment.PERSONAL));
+        sibsAuthenticator =
+                authTestFixtures.sibsAuthenticatorWith(
+                        credentialsRequest, sibsBaseApiClient, sibsUserState);
         // when
         AuthenticationRequest authenticationRequestWithCallbackData =
                 new AuthenticationRequest(credentialsRequest.getCredentials());
@@ -225,71 +215,7 @@ public class SibsAuthenticatorTest {
                 .contains("accountSegment");
     }
 
-    private RefreshScope getRefreshScope(Set<FinancialServiceSegment> financialServiceSegment) {
-        RefreshScope refreshScope = new RefreshScope();
-        refreshScope.setFinancialServiceSegmentsIn(financialServiceSegment);
-        return refreshScope;
-    }
-
-    private SibsAuthenticator sibsAuthenticatorWith(CredentialsRequest credentialsRequest) {
-        return new SibsAuthenticator(
-                sibsBaseApiClient,
-                sibsUserState,
-                credentialsRequest,
-                new StrongAuthenticationState(STRONG_AUTHENTICATION_STATE),
-                new ConstantLocalDateTimeSource());
-    }
-
-    private CredentialsRequest getCredentialsRequestWithoutRefreshScope() {
-        return new ManualAuthenticateRequest(
-                user, providerConfiguration, credentials, userAvailability);
-    }
-
-    private CredentialsRequest credentialsRequestWithScope(
-            Set<FinancialService.FinancialServiceSegment> financialServiceSegment) {
-        RefreshScope refreshScope = getRefreshScope(financialServiceSegment);
-        ManualAuthenticateRequest credentialsRequest =
-                new ManualAuthenticateRequest(
-                        user, providerConfiguration, credentials, userAvailability);
-        credentialsRequest.setRefreshScope(refreshScope);
-        return credentialsRequest;
-    }
-
-    private UserAvailability getUserAvailability() {
-        UserAvailability userAvailability = new UserAvailability();
-        userAvailability.setUserPresent(true);
-        userAvailability.setUserAvailableForInteraction(true);
-        userAvailability.setOriginatingUserIp("127.0.0.1");
-        return userAvailability;
-    }
-
-    private Provider getProviderConfiguration() {
-        return new ProviderReader()
-                        .getProviderConfigurations(
-                                "external/tink_backend/src/provider_configuration/data/seeding")
-                        .stream()
-                        .findFirst()
-                        .get();
-    }
-
-    private Credentials getSibsCredentials() throws IOException {
-        return getFileContent("sibs_credentials_template.json", Credentials.class);
-    }
-
-    private User getSibsUser() throws IOException {
-        return getFileContent("sibs_user_template.json", User.class);
-    }
-
     private ConsentResponse getSibsConsentResponse() throws IOException {
-        return getFileContent("sibs_consent_response.json", ConsentResponse.class);
-    }
-
-    private <T> T getFileContent(String fileName, Class<T> className) throws IOException {
-        String consentResponse =
-                new String(
-                        Files.readAllBytes(Paths.get(RESOURCES_PATH + fileName)),
-                        StandardCharsets.UTF_8);
-
-        return new ObjectMapper().readValue(consentResponse, className);
+        return authTestFixtures.getFileContent("sibs_consent_response.json", ConsentResponse.class);
     }
 }
