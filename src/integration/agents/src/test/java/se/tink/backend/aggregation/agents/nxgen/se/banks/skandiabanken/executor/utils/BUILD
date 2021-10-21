@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "utilities",
+    name = "utils",
     srcs = glob(["*.java"]),
     data = [],
     visibility = ["//visibility:public"],

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utilities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
