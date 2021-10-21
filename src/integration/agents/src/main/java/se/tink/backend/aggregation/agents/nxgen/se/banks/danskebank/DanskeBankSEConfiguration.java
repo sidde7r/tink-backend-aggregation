@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
@@ -29,6 +30,18 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
             "MobileBank ios com danskebank.mobilebank3se 27385";
     private static final String USER_AGENT =
             "nyamobilbankendanskebank/2021.9 (com.danskebank.mobilebank3se; build:33212; iOS 14.6; SE)";
+
+    public static class BankIdStatus {
+        public static final String ALREADY_IN_PROGRESS = "already_in_progress";
+        public static final String CANCELLED = "cancelled";
+        public static final String NO_CLIENT = "no_client";
+        public static final String OK = "ok";
+        public static final String OUTSTANDING_TRANSACTION = "outstanding_transaction";
+        public static final String USER_CANCEL = "user_cancel";
+        public static final String USER_SIGN = "user_sign";
+        public static final String EXPIRED_TRANSACTION = "expired_transaction";
+        public static final String STARTED = "started";
+    }
 
     public String getProductSub() {
         return PRODUCT_SUB;
@@ -255,18 +268,6 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .build();
     }
 
-    public class BankIdStatus {
-        public static final String ALREADY_IN_PROGRESS = "already_in_progress";
-        public static final String CANCELLED = "cancelled";
-        public static final String NO_CLIENT = "no_client";
-        public static final String OK = "ok";
-        public static final String OUTSTANDING_TRANSACTION = "outstanding_transaction";
-        public static final String USER_CANCEL = "user_cancel";
-        public static final String USER_SIGN = "user_sign";
-        public static final String EXPIRED_TRANSACTION = "expired_transaction";
-        public static final String STARTED = "started";
-    }
-
     @Override
     public String getStepUpTokenKey() {
         return STEP_UP_TOKEN_KEY;
@@ -286,5 +287,37 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     public Optional<String> getBindDeviceSecuritySystem() {
         // No SecuritySystem on `bindDevice`.
         return Optional.empty();
+    }
+
+    @Override
+    public AccountCapabilities.Answer canExecuteExternalTransfer(String productCode) {
+        return DanskeBankSEConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(productCode)
+                .map(AccountCapabilities::getCanExecuteExternalTransfer)
+                .orElse(AccountCapabilities.Answer.UNKNOWN);
+    }
+
+    @Override
+    public AccountCapabilities.Answer canReceiveExternalTransfer(String productCode) {
+        return DanskeBankSEConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(productCode)
+                .map(AccountCapabilities::getCanReceiveExternalTransfer)
+                .orElse(AccountCapabilities.Answer.UNKNOWN);
+    }
+
+    @Override
+    public AccountCapabilities.Answer canPlaceFunds(String productCode) {
+        return DanskeBankSEConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(productCode)
+                .map(AccountCapabilities::getCanPlaceFunds)
+                .orElse(AccountCapabilities.Answer.UNKNOWN);
+    }
+
+    @Override
+    public AccountCapabilities.Answer canWithdrawCash(String productCode) {
+        return DanskeBankSEConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(productCode)
+                .map(AccountCapabilities::getCanWithdrawCash)
+                .orElse(AccountCapabilities.Answer.UNKNOWN);
     }
 }

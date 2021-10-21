@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank;
 
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+
 public class DanskeBankSEConstants {
 
     public static class TransferType {
@@ -25,4 +28,60 @@ public class DanskeBankSEConstants {
         public static final int DESTINATION_MESSAGE_MAX_LENGTH = 12;
         public static final String WHITE_LISTED_CHARACTER_STRING = ",._-?!/:()&`~";
     }
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES),
+                            "2A3",
+                            "2B4",
+                            "2B5",
+                            "2B7",
+                            "2B8",
+                            "2CY",
+                            "2EX",
+                            "3BG")
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES),
+                            "2AB",
+                            "2BA",
+                            "2BP",
+                            "2C2",
+                            "2DC",
+                            "2EH",
+                            "2SF",
+                            "3CA")
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.YES),
+                            "2DI")
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.NO),
+                            "2CF",
+                            "2DH")
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.NO),
+                            "3AC",
+                            "3BJ",
+                            "3BK")
+                    .build();
 }
