@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.TransferCommand;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -52,6 +53,39 @@ public class SkandiaBankenPaymentWiremockTest {
 
         agentWireMockPaymentTest.executePayment();
         Assert.assertTrue(true);
+    }
+
+    @Test
+    public void testCancelledBankGiroPayment() throws Exception {
+        Transfer transfer = new Transfer();
+        transfer.setSource(new SwedishIdentifier("91599999999"));
+        transfer.setDestination(new BankGiroIdentifier("9999999"));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1));
+        transfer.setType(TransferType.PAYMENT);
+        transfer.setSourceMessage("Tink source");
+        transfer.setDueDate(
+                Date.from(LocalDate.of(2021, 10, 30).atStartOfDay(DEFAULT_ZONE_ID).toInstant()));
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Some value");
+
+        transfer.setRemittanceInformation(remittanceInformation);
+
+        final String wiremockFilePath =
+                RESOURCE_PACKAGE + "skandiabanken-mock-pis-payment-cancelled.aap";
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE, "skandiabanken-ssn-bankid", wiremockFilePath)
+                        .addPersistentStorageData(
+                                OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, getToken())
+                        .withTransfer(transfer)
+                        .buildWithLogin(TransferCommand.class);
+
+        try {
+            agentWireMockPaymentTest.executePayment();
+        } catch (TransferExecutionException e) {
+            Assert.assertEquals("User cancelled signing of payment.", e.getMessage());
+        }
     }
 
     private String getToken() {
