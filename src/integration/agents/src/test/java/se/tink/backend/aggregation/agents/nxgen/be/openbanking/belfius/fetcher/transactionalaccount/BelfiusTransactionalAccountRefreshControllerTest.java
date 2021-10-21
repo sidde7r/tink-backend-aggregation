@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -25,8 +26,9 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusClientConfigurer;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -34,7 +36,6 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
@@ -64,36 +65,25 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
 
     private static final String RESOURCES_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius/resources/";
-    private static final String CONFIGURATION_FILE_PATH =
-            RESOURCES_PATH + "belfius_configuration.json";
-    private static final String ACCOUNTS_FILE_PATH = RESOURCES_PATH + "accounts_response.json";
-    private static final String ACCOUNTS_NO_OWNER_FILE_PATH =
-            RESOURCES_PATH + "accounts_response_no_owner.json";
-    private static final String TRANSACTIONS_LAST_PAGE_FILE_PATH =
-            RESOURCES_PATH + "transactions_response_last_page.json";
-    private static final String TRANSACTIONS_FIRST_PAGE_FILE_PATH =
-            RESOURCES_PATH + "transactions_response_first_page.json";
 
-    private static final String REDIRECT_URL = "https://api.tink.test";
     private static final String TEST_LOGICAL_ID = "SOME_LOGICAL_ID";
-    private static final OAuth2Token TEST_TOKEN =
-            OAuth2Token.create("bearer", "test_access_token", "test_refresh_token", 899);
     private static final String TEST_USER = "USER_NAME";
-    private static final String CURRENCY = "EUR";
     private static final int TEST_RETRY_SLEEP_MS = 100;
+    private static final int TEST_MAX_RETRIES_NUMBER = 1;
 
     private static final FetchAccountResponse FETCH_ACCOUNT_RESPONSE =
-            deserializeFromFile(ACCOUNTS_FILE_PATH, FetchAccountResponse.class);
+            deserializeFromFile(
+                    RESOURCES_PATH + "accounts_response.json", FetchAccountResponse.class);
     private static final FetchAccountResponse FETCH_ACCOUNT_WITHOUT_OWNER_RESPONSE =
-            deserializeFromFile(ACCOUNTS_NO_OWNER_FILE_PATH, FetchAccountResponse.class);
+            deserializeFromFile(
+                    RESOURCES_PATH + "accounts_response_no_owner.json", FetchAccountResponse.class);
     private static final String FIRST_PAGE_TRANSACTIONS_STRING =
-            readFileToString(TRANSACTIONS_FIRST_PAGE_FILE_PATH);
+            readFileToString(RESOURCES_PATH + "transactions_response_first_page.json");
     private static final String LAST_PAGE_TRANSACTIONS_STRING =
-            readFileToString(TRANSACTIONS_LAST_PAGE_FILE_PATH);
+            readFileToString(RESOURCES_PATH + "transactions_response_last_page.json");
 
     @Mock private MetricRefreshController metricRefreshController;
-    @Mock private MetricRefreshAction metricRefreshAction;
-    @Mock private Filter nextFilter;
+    @Mock private Filter callFilter;
     @Mock private HttpResponse response;
 
     private final TinkHttpClient client =
@@ -102,22 +92,22 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
                             LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                     .build();
     private final BelfiusConfiguration belfiusConfiguration =
-            deserializeFromFile(CONFIGURATION_FILE_PATH, BelfiusConfiguration.class);
+            deserializeFromFile(
+                    RESOURCES_PATH + "belfius_configuration.json", BelfiusConfiguration.class);
     private final PersistentStorage persistentStorage = new PersistentStorage();
-    private final RandomValueGenerator randomValueGenerator = new MockRandomValueGenerator();
     private final Provider provider = new Provider();
     private final User user = new User();
 
     private TransactionalAccountRefreshController refreshController;
 
     @Before
-    public void setup() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
 
         AgentConfiguration<BelfiusConfiguration> agentConfiguration =
                 new AgentConfiguration.Builder<BelfiusConfiguration>()
                         .setProviderSpecificConfiguration(belfiusConfiguration)
-                        .setRedirectUrl(REDIRECT_URL)
+                        .setRedirectUrl("https://api.tink.test")
                         .build();
 
         clientIsAuthenticated();
@@ -135,43 +125,45 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
                         new TransactionKeyWithInitDateFromFetcherController<>(
                                 new RefreshInformationRequest(), accountTransactionFetcher));
 
-        setDefaultMocks();
+        defaultMockConfiguration();
     }
 
     private void clientIsAuthenticated() {
         persistentStorage.put(StorageKeys.LOGICAL_ID, TEST_LOGICAL_ID);
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, TEST_TOKEN);
+        persistentStorage.put(
+                StorageKeys.OAUTH_TOKEN,
+                OAuth2Token.create("bearer", "test_access_token", "test_refresh_token", 899));
     }
 
     private void configureProvider() {
-        provider.setCurrency(CURRENCY);
+        provider.setCurrency("EUR");
         provider.setMarket("BE");
     }
 
     private BelfiusApiClient getConfiguredBelfiusApiClient(
             AgentConfiguration<BelfiusConfiguration> agentConfiguration) {
-        new BelfiusClientConfigurer()
-                .withRetrySleepMilliseconds(TEST_RETRY_SLEEP_MS)
-                .configure(client, persistentStorage);
-        client.addFilter(nextFilter);
+        new BelfiusClientConfigurator()
+                .configure(client, persistentStorage, TEST_RETRY_SLEEP_MS, TEST_MAX_RETRIES_NUMBER);
+        client.addFilter(callFilter);
 
-        return new BelfiusApiClient(client, agentConfiguration, randomValueGenerator);
+        return new BelfiusApiClient(client, agentConfiguration, new MockRandomValueGenerator());
     }
 
-    private void setDefaultMocks() {
-        given(metricRefreshController.buildAction(any(), any())).willReturn(metricRefreshAction);
-        given(nextFilter.handle(any())).willReturn(response);
+    private void defaultMockConfiguration() {
+        given(metricRefreshController.buildAction(any(), any()))
+                .willReturn(mock(MetricRefreshAction.class));
+        given(callFilter.handle(any())).willReturn(response);
         given(response.getStatus()).willReturn(200);
         given(response.getBody(FetchAccountResponse.class)).willReturn(FETCH_ACCOUNT_RESPONSE);
     }
 
     @Test
     public void shouldFetchAccounts() {
-        // given & when
+        // when
         FetchAccountsResponse result = refreshController.fetchCheckingAccounts();
 
         // then
-        assertResultEqualsExpected(result, getExpectedAccountsResponse(TEST_USER), "accounts.id");
+        assertEqualsIgnoringIds(result, getExpectedAccountsResponse(TEST_USER));
     }
 
     @Test
@@ -184,7 +176,7 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
         FetchAccountsResponse result = refreshController.fetchCheckingAccounts();
 
         // then
-        assertResultEqualsExpected(result, getExpectedAccountsResponse(null), "accounts.id");
+        assertEqualsIgnoringIds(result, getExpectedAccountsResponse(null));
     }
 
     @Test
@@ -196,10 +188,7 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
         FetchTransactionsResponse result = refreshController.fetchCheckingTransactions();
 
         // then
-        assertResultEqualsExpected(
-                result,
-                getExpectedTransactionsResponse(getLastPageTransactions()),
-                "transactions.id");
+        assertEqualsIgnoringIds(result, getExpectedTransactionsResponse(getLastPageTransactions()));
     }
 
     @Test
@@ -213,11 +202,10 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
         FetchTransactionsResponse result = refreshController.fetchCheckingTransactions();
 
         // then
-        assertResultEqualsExpected(
+        assertEqualsIgnoringIds(
                 result,
                 getExpectedTransactionsResponse(
-                        ListUtils.union(getFirstPageTransactions(), getLastPageTransactions())),
-                "transactions.id");
+                        ListUtils.union(getFirstPageTransactions(), getLastPageTransactions())));
     }
 
     @Test
@@ -228,8 +216,8 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
 
         // expect
         assertThatThrownBy(() -> refreshController.fetchCheckingAccounts())
-                .usingRecursiveComparison()
-                .isEqualTo(BankServiceError.NO_BANK_SERVICE.exception());
+                .isInstanceOf(BankServiceException.class)
+                .hasMessage("Http status: " + statusCode);
     }
 
     @Test
@@ -241,90 +229,83 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
 
         // expect
         assertThatThrownBy(() -> refreshController.fetchCheckingTransactions())
-                .usingRecursiveComparison()
-                .isEqualTo(BankServiceError.NO_BANK_SERVICE.exception());
+                .isInstanceOf(BankServiceException.class)
+                .hasMessage("Http status: " + statusCode);
 
         // and
-        assertResultEqualsExpected(result, getExpectedAccountsResponse(TEST_USER), "accounts.id");
+        assertEqualsIgnoringIds(result, getExpectedAccountsResponse(TEST_USER));
     }
 
     @Test
-    @Parameters(method = "successRetryErrorParams")
-    public void shouldRetryOnErrorsSuccessfully(RuntimeException thrown) {
+    @Parameters
+    public void shouldRetryOnErrorsSuccessfully(String message) {
         // given
-        given(nextFilter.handle(any())).willThrow(thrown).willReturn(response);
+        given(callFilter.handle(any()))
+                .willThrow(new HttpClientException(message, null))
+                .willReturn(response);
 
         // when
         FetchAccountsResponse result = refreshController.fetchCheckingAccounts();
 
         // then
-        assertResultEqualsExpected(result, getExpectedAccountsResponse(TEST_USER), "accounts.id");
+        assertEqualsIgnoringIds(result, getExpectedAccountsResponse(TEST_USER));
     }
 
-    private Object[] successRetryErrorParams() {
+    @SuppressWarnings("unused")
+    private Object[] parametersForShouldRetryOnErrorsSuccessfully() {
         return new Object[] {
-            new Object[] {new HttpClientException("Remote host terminated the handshake", null)},
-            new Object[] {new HttpClientException("connect timed out", null)},
-            new Object[] {new HttpClientException("connection reset", null)},
+            new Object[] {"Remote host terminated the handshake"},
+            new Object[] {"connect timed out"},
+            new Object[] {"connection reset"},
         };
     }
 
     @Test
     @Parameters(method = "failedRetryErrorParams")
-    public void shouldThrowAfterRetries(RuntimeException thrown, RuntimeException expected) {
+    public void shouldThrowAfterRetries(String message, RuntimeException expected) {
         // given
-        given(nextFilter.handle(any())).willThrow(thrown);
+        given(callFilter.handle(any())).willThrow(new HttpClientException(message, null));
 
         // expect
         assertThatThrownBy(() -> refreshController.fetchCheckingAccounts())
-                .usingRecursiveComparison()
-                .isEqualTo(expected);
-
-        // and
-        assertThatThrownBy(() -> refreshController.fetchCheckingTransactions())
-                .usingRecursiveComparison()
-                .isEqualTo(expected);
+                .isInstanceOf(expected.getClass())
+                .hasMessage(expected.getMessage());
     }
 
     @Test
     @Parameters(method = "failedRetryErrorParams")
     public void shouldThrowAfterRetriesWhileFetchingTransactions(
-            RuntimeException thrown, RuntimeException expected) {
+            String message, RuntimeException expected) {
         // given
         FetchAccountsResponse result = refreshController.fetchCheckingAccounts();
-        given(nextFilter.handle(any())).willThrow(thrown);
+        given(callFilter.handle(any())).willThrow(new HttpClientException(message, null));
 
         // expect
         assertThatThrownBy(() -> refreshController.fetchCheckingTransactions())
-                .usingRecursiveComparison()
-                .isEqualTo(expected);
+                .isInstanceOf(expected.getClass())
+                .hasMessage(expected.getMessage());
 
         // and
-        assertResultEqualsExpected(result, getExpectedAccountsResponse(TEST_USER), "accounts.id");
+        assertEqualsIgnoringIds(result, getExpectedAccountsResponse(TEST_USER));
     }
 
+    @SuppressWarnings("unused")
     private Object[] failedRetryErrorParams() {
         return new Object[] {
             new Object[] {
-                new HttpClientException("Remote host terminated the handshake", null),
+                "Remote host terminated the handshake",
                 new HttpClientException("Remote host terminated the handshake", null)
             },
-            new Object[] {
-                new HttpClientException("connect timed out", null),
-                BankServiceError.BANK_SIDE_FAILURE.exception()
-            },
-            new Object[] {
-                new HttpClientException("connection reset", null),
-                BankServiceError.BANK_SIDE_FAILURE.exception()
-            },
+            new Object[] {"connect timed out", BankServiceError.BANK_SIDE_FAILURE.exception()},
+            new Object[] {"connection reset", BankServiceError.BANK_SIDE_FAILURE.exception()},
         };
     }
 
-    private <T> void assertResultEqualsExpected(T result, T expected, String idField) {
+    private <T> void assertEqualsIgnoringIds(T result, T expected) {
         assertThat(result)
                 .usingRecursiveComparison()
                 // id field is randomly generated UUID
-                .ignoringFields(idField)
+                .ignoringFields("accounts.id", "transactions.id")
                 .isEqualTo(expected);
     }
 
@@ -362,13 +343,13 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
         return Arrays.asList(
                 Transaction.builder()
                         .setDescription("SEPA CREDIT TRANSFER from PSD2Company")
-                        .setAmount(ExactCurrencyAmount.of(12.25, CURRENCY))
+                        .setAmount(ExactCurrencyAmount.of(12.25, provider.getCurrency()))
                         .setDate(new Date(1596067200000L))
                         .build()
                         .toSystemTransaction(false),
                 Transaction.builder()
                         .setDescription("SEPA CREDIT TRANSFER to somewhere")
-                        .setAmount(ExactCurrencyAmount.of(-10, CURRENCY))
+                        .setAmount(ExactCurrencyAmount.of(-10, provider.getCurrency()))
                         .setDate(new Date(1596153600000L))
                         .build()
                         .toSystemTransaction(false));
@@ -378,7 +359,7 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
         return Collections.singletonList(
                 Transaction.builder()
                         .setDescription("SEPA CREDIT TRANSFER1")
-                        .setAmount(ExactCurrencyAmount.of(99.99, CURRENCY))
+                        .setAmount(ExactCurrencyAmount.of(99.99, provider.getCurrency()))
                         .setDate(new Date(1597449600000L))
                         .build()
                         .toSystemTransaction(false));

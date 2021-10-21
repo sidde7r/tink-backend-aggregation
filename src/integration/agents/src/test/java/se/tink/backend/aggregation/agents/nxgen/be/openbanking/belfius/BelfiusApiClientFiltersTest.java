@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class BelfiusApiClientFiltersTest {
 
     private static final int TEST_RETRY_SLEEP_MS = 100;
+    private static final int TEST_MAX_RETRIES_NUMBER = 1;
     private static final URL TEST_URL = new URL("https://belfius.be/test");
 
     @Mock private Filter nextFilter;
@@ -44,9 +45,8 @@ public class BelfiusApiClientFiltersTest {
     @Before
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        new BelfiusClientConfigurer()
-                .withRetrySleepMilliseconds(TEST_RETRY_SLEEP_MS)
-                .configure(client, persistentStorage);
+        new BelfiusClientConfigurator()
+                .configure(client, persistentStorage, TEST_RETRY_SLEEP_MS, TEST_MAX_RETRIES_NUMBER);
         client.addFilter(nextFilter);
     }
 
