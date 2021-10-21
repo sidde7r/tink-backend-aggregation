@@ -1,0 +1,26 @@
+{
+  "name": "firstName",
+  "logins":
+  [
+    {
+      "customerId": "2000004",
+      "username": "userName",
+      "accounts":
+      [
+        {
+          "accountName": "1000000",
+          "accountType": "Investeringssparkonto"
+        },
+        {
+          "accountName": "1000052",
+          "accountType": "Aktie- & fondkonto"
+        }
+      ],
+      "loginPath": "/_api/authentication/sessions/bankid/transactionId/2000004"
+    }
+  ],
+  "transactionId": "transactionId",
+  "recommendedTargetCustomers":
+  [],
+  "state": "STARTED"
+}

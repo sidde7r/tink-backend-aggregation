@@ -1,0 +1,91 @@
+{
+  "description": "Fonden investerar i aktier och raentepapper hemmahorande i eller utgivna av emmittenter hemmahorande i tillvaextmarknader. Fonden investerar i forsta hand i laender som ingar i MSCI Emerging Markets Gross TR index eller i JP Morgan EMBI Global Diversified index.",
+  "buyable": true,
+  "sellable": true,
+  "riskLevel": "HIGH",
+  "administrators": "dummyName surname, dummyName surname",
+  "hasInvestmentFees": true,
+  "domicile": "Luxemburg",
+  "risk": 6,
+  "isin": "LU0269904917",
+  "sharpeRatio": 0.51,
+  "standardDeviation": 17.57,
+  "startDate": "2007-01-19",
+  "tradingCurrency": "USD",
+  "managementFee": 1.50,
+  "prospectus": "http://doc.morningstar.com/document/bbc5805a5a53659281fe962b2f6ea229.msdoc/?clientid=avanza&key=3728b8f503435715",
+  "buyFee": 0.00,
+  "capital": 12183868019.33,
+  "normanAmount": 0.00,
+  "rating": 4,
+  "sellFee": 0.00,
+  "loanFactor": 70.00,
+  "name": "Schroder ISF Glb Em Mkt Opps A Acc USD",
+  "id": "70789",
+  "NAV": 162.78,
+  "NAVLastUpdated": "2020-07-20T00:00:00.000+0200",
+  "changeSinceOneDay": 0.18,
+  "changeSinceOneWeek": -2.26,
+  "changeSinceOneMonth": 0.55,
+  "changeSinceThreeMonths": 9.42,
+  "changeSinceSixMonths": -13.77,
+  "changeSinceTurnOfTheYear": -8.66,
+  "changeSinceOneYear": -1.39,
+  "changeSinceThreeYears": 23.95,
+  "changeSinceFiveYears": 45.29,
+  "changeSinceTenYears": 70.68,
+  "relatedFunds":
+  [
+    {
+      "changeSinceOneYear": 6.76,
+      "name": "GAM Star European Equity A EUR Acc",
+      "id": "644316"
+    },
+    {
+      "changeSinceOneYear": -5.28,
+      "name": "GAM Multistock EM Equity USD B",
+      "id": "650495"
+    },
+    {
+      "changeSinceOneYear": 0.14,
+      "name": "Amundi Fds Glbl Eq Cnsrv A USD C",
+      "id": "439855"
+    },
+    {
+      "changeSinceOneYear": -7.26,
+      "name": "Templeton Euroland A (Acc) EUR",
+      "id": "735"
+    },
+    {
+      "changeSinceOneYear": 5.42,
+      "name": "Stewart Investors Wldwd Sustbl A Acc GBP",
+      "id": "400485"
+    }
+  ],
+  "fundCompany":
+  {
+    "homePage": "",
+    "name": "Schroder"
+  },
+  "numberOfOwners": 34407,
+  "positions":
+  [
+    {
+      "accountName": "1000000",
+      "accountType": "Investeringssparkonto",
+      "accountId": "1000000",
+      "volume": 4.53,
+      "averageAcquiredPrice": 156.97945300,
+      "profitPercent": 3.69,
+      "acquiredValue": 711.11692209,
+      "profit": 26.27,
+      "value": 737.39
+    }
+  ],
+  "positionsTotalValue": 737.3900,
+  "numberOfPriceAlerts": 0,
+  "autoPortfolio": false,
+  "otherFees": "",
+  "subCategory": "Tillvaextmarknader",
+  "type": "Aktiefond"
+}
