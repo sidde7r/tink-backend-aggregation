@@ -56,6 +56,34 @@ public class SkandiaBankenPaymentWiremockTest {
     }
 
     @Test
+    public void testBankGiroPaymentWithExecutionDateEqualsNull() throws Exception {
+        Transfer transfer = new Transfer();
+        transfer.setSource(new SwedishIdentifier("91599999999"));
+        transfer.setDestination(new BankGiroIdentifier("9999999"));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1));
+        transfer.setType(TransferType.PAYMENT);
+        transfer.setSourceMessage("Tink source");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Some value");
+
+        transfer.setRemittanceInformation(remittanceInformation);
+
+        final String wiremockFilePath =
+                RESOURCE_PACKAGE + "skandiabanken-mock-pis-null-execution-date.aap";
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE, "skandiabanken-ssn-bankid", wiremockFilePath)
+                        .addPersistentStorageData(
+                                OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, getToken())
+                        .withTransfer(transfer)
+                        .buildWithLogin(TransferCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+        Assert.assertTrue(true);
+    }
+
+    @Test
     public void testCancelledBankGiroPayment() throws Exception {
         Transfer transfer = new Transfer();
         transfer.setSource(new SwedishIdentifier("91599999999"));
