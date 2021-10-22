@@ -120,10 +120,6 @@ Content-Type: application/json
             "categoryPurpose": "CASH"
         },
         "debtor": null,
-        "debtorAccount": {
-            "iban": "FR1261401750597365134612940",
-            "currency": "EUR"
-        },
         "debtorAgent": null,
         "beneficiary": {
             "creditorAgent": {
