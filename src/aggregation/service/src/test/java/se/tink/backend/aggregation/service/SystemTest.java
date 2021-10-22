@@ -45,6 +45,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -71,7 +72,7 @@ public class SystemTest {
 
     private static final Set<String> FINAL_REQUEST_STATUSES =
             ImmutableSet.of(
-                    RequestStatus.ABORTING_OPERATION_FAILED.name(),
+                    RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT.name(),
                     RequestStatus.ABORTING_OPERATION_SUCCEEDED.name());
 
     private static class AggregationDecoupled {
@@ -379,6 +380,70 @@ public class SystemTest {
                         expectedAccounts, givenAccounts));
     }
 
+    /*
+       The main purpose of this test is to reproduce the following error that we had for
+       DanskeBank agent when we tried to execute it in Java11 container:
+
+       The driver executable does not exist:
+       /usr/share/tink-backend-aggregation/external/chromedriver/file/chromedriver/chromedriver
+
+       This test manages to reproduce this issue. It will be ignored until a fix is deployed
+    */
+    @Test
+    @Ignore
+    public void getRefreshShouldUploadEntitiesForDanskeBank() throws Exception {
+        // given
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
+
+        AgentContractEntitiesJsonFileParser contractParser =
+                new AgentContractEntitiesJsonFileParser();
+        AgentContractEntity expectedBankEntities =
+                contractParser.parseContractOnBasisOfFile(
+                        "data/agents/se/danskebank/danskebank-agent-contract-for-system-test.json");
+
+        List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
+
+        String requestBodyForRefreshEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/se/danskebank/system_test_refresh_request_body.json");
+
+        // when
+        ResponseEntity<String> refreshEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/refresh",
+                                aggregationHost, aggregationPort),
+                        requestBodyForRefreshEndpoint);
+
+        /*String supplementalInformation = "{\"code\":\"DUMMY_AUTH_CODE\"}";
+        postSupplementalInformation(
+            aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);*/
+
+        List<?> givenAccounts =
+                parseAccounts(
+                        pollForAllCallbacksForAnEndpoint(
+                                fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
+
+        List<Map<String, Object>> givenTransactions =
+                parseTransactions(
+                        pollForAllCallbacksForAnEndpoint(
+                                fakeAggregationControllerDataEndpoint(),
+                                "updateTransactionsAsynchronously",
+                                50,
+                                1));
+
+        // then
+        Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransactions, givenTransactions));
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedAccounts, givenAccounts));
+    }
+
     @Test
     public void getTransferShouldExecuteAPaymentForBarclays() throws Exception {
         // given
@@ -589,7 +654,7 @@ public class SystemTest {
 
         // then
         assertEquals(
-                RequestStatus.ABORTING_OPERATION_FAILED.name(),
+                RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT.name(),
                 operationStatuses.get(operationStatuses.size() - 1));
         assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
         assertEquals(
