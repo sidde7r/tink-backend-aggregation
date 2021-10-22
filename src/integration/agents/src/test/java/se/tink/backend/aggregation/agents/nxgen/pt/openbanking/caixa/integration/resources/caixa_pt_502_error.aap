@@ -1,4 +1,4 @@
-# These are a made up error responses, as I couldn't find a log with 502 error from SIBS providers
+# These are made-up error responses, as I couldn't find a log with 502 error from SIBS providers
 
 REQUEST 1
 GET https://site1.sibsapimarket.com/sibs/apimarket/CGDPT/v1-0-3/consents/TEST_CONSENT/status
