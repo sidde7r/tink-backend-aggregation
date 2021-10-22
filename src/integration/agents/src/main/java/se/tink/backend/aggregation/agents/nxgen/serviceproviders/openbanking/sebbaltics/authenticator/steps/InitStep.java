@@ -98,10 +98,11 @@ public class InitStep implements AuthenticationStep {
                     break;
                 case AuthStatus.FAILED:
                     log.info("Authentication failed");
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
+                            "Authentication failed");
                 default:
                     log.warn(String.format("Unknown status (%s)", status));
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception("Unknown status");
             }
 
             Uninterruptibles.sleepUninterruptibly(
