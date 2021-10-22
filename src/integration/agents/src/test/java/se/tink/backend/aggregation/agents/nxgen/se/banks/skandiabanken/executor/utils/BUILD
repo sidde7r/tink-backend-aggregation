@@ -7,7 +7,10 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/skandiabanken",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/exceptions",
+        "//src/integration/transfer:rpc",
         "//src/libraries/date",
         "//third_party:org_assertj_assertj_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
