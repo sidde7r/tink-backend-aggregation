@@ -672,7 +672,7 @@ public class AggregationServiceResource implements AggregationService {
             case IMPOSSIBLE_TO_ABORT:
                 return Response.Status.ACCEPTED;
             case ABORTING_OPERATION_SUCCEEDED:
-            case ABORTING_OPERATION_FAILED:
+            case OPERATION_COMPLETED_WITHOUT_ABORT:
                 return Response.Status.OK;
             default:
                 throw new IllegalStateException("Unexpected request status: " + status);
