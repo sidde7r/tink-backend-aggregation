@@ -128,7 +128,8 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
                             produceIdentityDataEventForBigQuery();
                     identityDataEvent.ifPresent(events::add);
 
-                    List<Message> messages = dataTrackerEventProducer.toMessages(events);
+                    List<Message> messages =
+                            new ArrayList<>(dataTrackerEventProducer.toMessages(events));
                     List<Account> refreshedAccounts =
                             context.getCachedAccountsWithFeatures().stream()
                                     .map(p -> p.first)
