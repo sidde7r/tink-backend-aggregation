@@ -4,6 +4,7 @@ junit_test(
     name = "mock",
     srcs = glob(["*.java"]),
     data = [
+        "//data:agents",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank/mock/resources",
     ],
     visibility = ["//visibility:public"],

@@ -1,0 +1,105 @@
+{
+  "operationId": "35cde6bc-809c-4045-9260-b7ddc8d1ed62",
+  "manual": true,
+  "forceAuthenticate": false,
+  "refreshId": "dummyId",
+  "itemsToRefresh": [
+    "CHECKING_ACCOUNTS",
+    "CHECKING_TRANSACTIONS",
+    "SAVING_ACCOUNTS",
+    "SAVING_TRANSACTIONS",
+    "CREDITCARD_ACCOUNTS",
+    "CREDITCARD_TRANSACTIONS",
+    "LOAN_ACCOUNTS",
+    "LOAN_TRANSACTIONS",
+    "INVESTMENT_ACCOUNTS",
+    "INVESTMENT_TRANSACTIONS",
+    "TRANSFER_DESTINATIONS",
+    "LIST_BENEFICIARIES",
+    "IDENTITY_DATA"
+  ],
+  "create": false,
+  "callbackUri": "callbackUri",
+  "appUriId": "appUriId",
+  "userDeviceId": "userDeviceId",
+  "credentials": {
+    "debugUntil": 695260800,
+    "providerLatency": 0,
+    "id": "refresh-test-for-danskebank",
+    "nextUpdate": null,
+    "fields": {
+      "username": "199901011230"
+    },
+    "payload": "",
+    "providerName": "se-danskebank-bankid",
+    "sessionExpiryDate": null,
+    "status": "CREATED",
+    "statusPayload": "CREATED",
+    "statusPrompt": "",
+    "statusUpdated": "695260800",
+    "supplementalInformation": "",
+    "type": "MOBILE_BANKID",
+    "updated": "695260800",
+    "userId": "userId",
+    "market": "SE"
+  },
+  "userAvailability": {
+    "userAvailableForInteraction": true,
+    "userPresent": true
+  },
+  "provider": {
+    "accessType": "OTHER",
+    "agentSources": [
+      "AGGREGATION_SERVICE"
+    ],
+    "authenticationUserType": "PERSONAL",
+    "backgroundRefreshEnabled": false,
+    "backgroundRefreshMaxFrequency": 0,
+    "className": "nxgen.se.banks.danskebank.DanskeBankSEAgent",
+    "credentialsType": "MOBILE_BANKID",
+    "displayDescription": "Mobile BankID",
+    "displayName": "Danske Bank",
+    "fields": [
+      {
+        "description": "Social security number",
+        "hint": "YYYYMMDDNNNN",
+        "maxLength": 12,
+        "minLength": 12,
+        "name": "username",
+        "numeric": true,
+        "patternError": "Please supply a valid social security number."
+      }
+    ],
+    "financialInstitutionId": "564cdcaad29e45489fd66b8ed1b6d8cb",
+    "financialInstitutionName": "Danske Bank",
+    "financialServices": [
+      {
+        "segment": "PERSONAL"
+      }
+    ],
+    "imageUrls": {
+      "icon": "https://cdn.tink.se/provider-images/danskebank.png"
+    },
+    "multiFactor": true,
+    "name": "se-danskebank-bankid",
+    "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+    "popular": false,
+    "releaseStatus": "LIMITED_RELEASE",
+    "status": "ENABLED",
+    "transactional": true,
+    "type": "BANK",
+    "market": "SE",
+    "currency": "SEK"
+  },
+  "user": {
+    "flags": [],
+    "flagsSerialized": "[]",
+    "id": "userId",
+    "profile": {
+      "locale": "en_US"
+    },
+    "username": "username",
+    "debugUntil": 695260800
+  },
+  "accounts": []
+}
