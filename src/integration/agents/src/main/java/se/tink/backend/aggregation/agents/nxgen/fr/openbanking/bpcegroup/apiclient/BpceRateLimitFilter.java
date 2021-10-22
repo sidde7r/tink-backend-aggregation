@@ -12,8 +12,6 @@ public class BpceRateLimitFilter extends RateLimitFilter {
     @Override
     protected boolean isRateLimitResponse(HttpResponse response) {
         int statusCode = response.getStatus();
-        return statusCode == 429
-                || (statusCode == 403
-                        && response.getBody(BpceErrorResponse.class).isTooManyRequest());
+        return statusCode == 429;
     }
 }
