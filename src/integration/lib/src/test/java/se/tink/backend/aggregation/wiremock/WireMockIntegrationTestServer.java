@@ -32,8 +32,7 @@ public class WireMockIntegrationTestServer {
     private WireMockTestServer createWireMockServer(File fileInAapFormat) {
         return new WireMockTestServer(
                 ImmutableSet.of(
-                        new AapFileParser(
-                                new ResourceFileReader().read(fileInAapFormat.toString()))));
+                        new AapFileParser(ResourceFileReader.read(fileInAapFormat.toString()))));
     }
 
     private TinkHttpClient createTinkHttpClient() {

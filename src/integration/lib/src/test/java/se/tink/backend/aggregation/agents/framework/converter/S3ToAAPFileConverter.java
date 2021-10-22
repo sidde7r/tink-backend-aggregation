@@ -18,8 +18,7 @@ public class S3ToAAPFileConverter {
         String targetFile = args[1];
 
         List<String> content =
-                new S3LogFormatAdapter()
-                        .toMockFileFormat(new ResourceFileReader().read(resourceFile));
+                new S3LogFormatAdapter().toMockFileFormat(ResourceFileReader.read(resourceFile));
         String output = String.join("\n", content);
 
         File outputFile = new File(targetFile);

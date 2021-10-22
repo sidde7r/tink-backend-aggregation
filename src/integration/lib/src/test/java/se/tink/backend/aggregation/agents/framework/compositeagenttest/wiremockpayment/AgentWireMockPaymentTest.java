@@ -60,8 +60,7 @@ public final class AgentWireMockPaymentTest {
         server =
                 new WireMockTestServer(
                         ImmutableSet.of(
-                                new AapFileParser(
-                                        new ResourceFileReader().read(wireMockFilePath))));
+                                new AapFileParser(ResourceFileReader.read(wireMockFilePath))));
 
         /*
         TODO: For now null value for "supplementalInfoForCredentials" seem fine, let's wait

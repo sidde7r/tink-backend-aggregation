@@ -43,9 +43,8 @@ public class WireMockErrorDetectorTest {
                 new WireMockTestServer(
                         ImmutableSet.of(
                                 new AapFileParser(
-                                        new ResourceFileReader()
-                                                .read(
-                                                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/resources/test.aap"))));
+                                        ResourceFileReader.read(
+                                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/resources/test.aap"))));
 
         httpClient =
                 new IntegrationWireMockTestTinkHttpClient(

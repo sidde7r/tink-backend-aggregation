@@ -93,9 +93,8 @@ public class AapFileParserTest {
                                 HTTPResponse.faulty("MALFORMED_RESPONSE_CHUNK")));
 
         final String fileContent =
-                new ResourceFileReader()
-                        .read(
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/resources/test-refresh-traffic.aap");
+                ResourceFileReader.read(
+                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/resources/test-refresh-traffic.aap");
 
         AapFileParser parser = new AapFileParser(fileContent);
 

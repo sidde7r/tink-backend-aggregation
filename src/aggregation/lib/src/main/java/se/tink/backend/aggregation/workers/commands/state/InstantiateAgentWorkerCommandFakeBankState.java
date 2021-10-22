@@ -49,7 +49,7 @@ public class InstantiateAgentWorkerCommandFakeBankState
         this.credentialsId = credentialsId;
         ImmutableSet<RequestResponseParser> parsers =
                 fakeBankAapFileMapper.getAapFilePaths(providerName).stream()
-                        .map(filePath -> new AapFileParser(new ResourceFileReader().read(filePath)))
+                        .map(filePath -> new AapFileParser(ResourceFileReader.read(filePath)))
                         .collect(ImmutableSet.toImmutableSet());
 
         server = new WireMockTestServer(parsers);
