@@ -1,12 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.NWB_CURRENCY_ACCOUNT;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.RBS_CURRENCY_ACCOUNT;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER;
-
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
@@ -28,12 +21,18 @@ public class DefaultIdentifierMapper implements IdentifierMapper {
     private static final List<ExternalAccountIdentification4Code>
             ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS =
                     ImmutableList.of(
-                            SORT_CODE_ACCOUNT_NUMBER,
-                            IBAN,
-                            BBAN,
-                            SAVINGS_ROLL_NUMBER,
-                            NWB_CURRENCY_ACCOUNT,
-                            RBS_CURRENCY_ACCOUNT);
+                            ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
+                            ExternalAccountIdentification4Code.IBAN,
+                            ExternalAccountIdentification4Code.BBAN,
+                            ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER,
+                            ExternalAccountIdentification4Code.NWB_CURRENCY_ACCOUNT,
+                            ExternalAccountIdentification4Code.RBS_CURRENCY_ACCOUNT);
+
+    private static final List<ExternalAccountIdentification4Code>
+            ALLOWED_CREDIT_CARD_ACCOUNT_IDENTIFIERS =
+                    ImmutableList.of(
+                            ExternalAccountIdentification4Code.PAN,
+                            ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER);
 
     private static final GenericTypeMapper<
                     AccountIdentifierType, ExternalAccountIdentification4Code>
@@ -103,10 +102,15 @@ public class DefaultIdentifierMapper implements IdentifierMapper {
     @Override
     public AccountIdentifierEntity getCreditCardIdentifier(
             Collection<AccountIdentifierEntity> identifiers) {
-        return identifiers.stream()
-                .filter(i -> ExternalAccountIdentification4Code.PAN.equals(i.getIdentifierType()))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Missing PAN card identifier"));
+        return valueExtractor
+                .pickByValuePriority(
+                        identifiers,
+                        AccountIdentifierEntity::getIdentifierType,
+                        ALLOWED_CREDIT_CARD_ACCOUNT_IDENTIFIERS)
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Missing allowed credit card account identifiers like PAN or SortCode"));
     }
 
     @Override
