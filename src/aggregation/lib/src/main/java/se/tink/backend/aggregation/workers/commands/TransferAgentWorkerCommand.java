@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import static java.util.Optional.ofNullable;
-
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +20,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -125,11 +124,14 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         ExecutorResult executorResult =
                 paymentExecutionService.executePayment(agent, credentials, transferRequest);
         // work around for PAYM-663, to transfer payment response back to system
+
         Optional.ofNullable(executorResult.getPayment())
                 .ifPresent(
-                        payment ->
-                                updateSignableOperationTransfer(
-                                        payment, transferRequest, signableOperation));
+                        payment -> {
+                            updateSignableOperationTransfer(
+                                    payment, transferRequest, signableOperation);
+                            logStatus(payment);
+                        });
 
         metricAction.completed();
 
@@ -145,7 +147,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             Payment payment, TransferRequest transferRequest, SignableOperation signableOperation) {
         try {
             Transfer transfer = getTransfer(transferRequest, signableOperation);
-            ofNullable(payment.getDebtor())
+            Optional.ofNullable(payment.getDebtor())
                     .map(Debtor::getAccountIdentifier)
                     .ifPresent(
                             debtorId -> {
@@ -182,5 +184,13 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private static class MetricName {
         private static final String METRIC = "agent_transfer";
         private static final String EXECUTE_TRANSFER = "execute";
+    }
+
+    private void logStatus(Payment payment) {
+        String status =
+                Optional.ofNullable(payment.getStatus())
+                        .map(PaymentStatus::toString)
+                        .orElse("EMPTY STATUS");
+        log.info("Payment status: {}", status);
     }
 }
