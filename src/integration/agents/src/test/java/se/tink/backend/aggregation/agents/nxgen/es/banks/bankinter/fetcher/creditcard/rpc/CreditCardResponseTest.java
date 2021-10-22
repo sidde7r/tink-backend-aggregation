@@ -23,7 +23,7 @@ public class CreditCardResponseTest {
         assertEquals("************1234", account.getCardModule().getCardNumber());
         assertEquals("1234", account.getAccountNumber());
         assertEquals(BigDecimal.valueOf(-123.45), account.getExactBalance().getExactValue());
-        assertEquals("Fulano Pérez de Tal", account.getHolderName().toString());
+        assertEquals("Fulano Pérez De Tal", account.getHolderName().toString());
         assertEquals(
                 BigDecimal.valueOf(1337.42), account.getExactAvailableCredit().getExactValue());
         assertEquals(ACCOUNT_LINK, account.getApiIdentifier());

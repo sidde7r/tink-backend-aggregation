@@ -70,8 +70,7 @@ public class AccountResponse extends HtmlResponse {
     }
 
     protected ExactCurrencyAmount getBalance() {
-        final String balanceString =
-                jsoupDocument.select("div.saldoMov").select("p[class=cifra]").text();
+        final String balanceString = jsoupDocument.select("div.saldoMov").select("p.cifra").text();
         if (Strings.isNullOrEmpty(balanceString)) {
             throw new IllegalStateException("Did not find account balance.");
         }

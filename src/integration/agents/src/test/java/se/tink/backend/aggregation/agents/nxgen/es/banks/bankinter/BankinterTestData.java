@@ -9,8 +9,10 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
+@Ignore
 public class BankinterTestData {
     public static final String TEST_DATA_IBAN = "ES2201281337857486299388";
     private static final String TEST_DATA_PATH = "data/test/agents/es/bankinter/";

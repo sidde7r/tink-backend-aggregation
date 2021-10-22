@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebElement;
@@ -33,9 +34,11 @@ import se.tink.integration.webdriver.logger.HtmlLogger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BankinterAuthenticationClientTest {
+
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     @Mock private WebDriverWrapper driver;
+
     @Mock private HtmlLogger htmlLogger;
     @Mock private BankinterApiClient apiClient;
     @Mock private SupplementalInformationHelper supplementalInformationHelper;
@@ -54,6 +57,7 @@ public class BankinterAuthenticationClientTest {
         // given
         String loginPageUrl = "loginPageUrl";
         Navigation navigation = mock(Navigation.class);
+        when(driver.manage()).thenReturn(mock(WebDriver.Options.class));
         when(driver.navigate()).thenReturn(navigation);
         when(driver.findElement(By.id(LoginForm.FORM_ID))).thenReturn(mock(WebElement.class));
         when(driver.findElement(By.id(LoginForm.USERNAME_FIELD)))
@@ -76,6 +80,7 @@ public class BankinterAuthenticationClientTest {
     public void shouldThrowAttemptsLimitExceededExceptionWhenElementDoesNotExistsOnLoginPage() {
         // given
         Navigation navigation = mock(Navigation.class);
+        when(driver.manage()).thenReturn(mock(WebDriver.Options.class));
         when(driver.navigate()).thenReturn(navigation);
         when(driver.findElement(By.id(LoginForm.FORM_ID))).thenThrow(NoSuchElementException.class);
 
@@ -111,10 +116,6 @@ public class BankinterAuthenticationClientTest {
     @Test
     public void shouldThrowLoginExceptionWhenVerificationCodeDoNotProvide() {
         // given
-        when(driver.findElement(By.cssSelector(ScaForm.CODE_FIELD_SELECTOR)))
-                .thenReturn(mock(WebElement.class));
-        when(driver.findElement(By.cssSelector(ScaForm.SUBMIT_BUTTON_SELECTOR)))
-                .thenReturn(mock(WebElement.class));
         when(supplementalInformationHelper.waitForOtpInput())
                 .thenThrow(SupplementalInfoException.class);
 
@@ -142,7 +143,6 @@ public class BankinterAuthenticationClientTest {
 
         // then
         verify(apiClient, times(1)).storeLoginCookies(Collections.emptySet());
-        verify(driver, times(1)).quit();
     }
 
     @Test
