@@ -83,6 +83,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.nl.openbanking.ing.IngAgent", 0.03)
                     .put("nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent", 0.03)
                     .put("nxgen.uk.openbanking.nationwide.NationwideV31Agent", 0.05)
+                    .put("nxgen.uk.openbanking.revolut.RevolutV31Agent", 0.033)
                     .put("nxgen.uk.openbanking.santander.SantanderV31Agent", 0.033)
                     .put("nxgen.demo.openbanking.demobank.DemobankAgent", 2.)
                     .put("nxgen.fi.openbanking.spankki.SPankkiAgent", 0.025)
@@ -105,6 +106,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.pt.openbanking.novobancoacores.NovoBancoAcoresAgent", 0.025)
                     .put("nxgen.pt.openbanking.santander.SantanderAgent", 0.025)
                     .put("nxgen.pt.openbanking.unicre.UnicreAgent", 0.025)
+                    .put("nxgen.serviceproviders.openbanking.revolut.RevolutEEAAgent", 0.033)
                     .build();
 
     private final MetricRegistry metricRegistry;
