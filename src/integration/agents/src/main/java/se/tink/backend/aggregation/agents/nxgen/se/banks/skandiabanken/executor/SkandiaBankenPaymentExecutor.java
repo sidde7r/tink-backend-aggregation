@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.time.Clock;
 import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -32,11 +33,15 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
-    SkandiaBankenApiClient apiClient;
-    SupplementalInformationController supplementalInformationController;
+    final SkandiaBankenApiClient apiClient;
+    final SupplementalInformationController supplementalInformationController;
+
+    private static CountryDateHelper dateHelper =
+            new CountryDateHelper(
+                    DateFormatting.LOCALE, TimeZone.getTimeZone(DateFormatting.ZONE_ID));
 
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
@@ -67,9 +72,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     }
 
     private Date getPaymentDate(Transfer transfer) {
-        CountryDateHelper dateHelper =
-                new CountryDateHelper(
-                        DateFormatting.LOCALE, TimeZone.getTimeZone(DateFormatting.ZONE_ID));
         SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils(dateHelper);
         return dateUtils.getTransferDateForBgPg(transfer.getDueDate());
     }
@@ -246,5 +248,9 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                 .setEndUserMessage(endUserMessage)
                 .setInternalStatus(internalStatus.toString())
                 .build();
+    }
+
+    public static void setClockForTesting(Clock clock) {
+        dateHelper.setClock(clock);
     }
 }

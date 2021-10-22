@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.mock;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -8,6 +10,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.TransferCommand;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.SkandiaBankenPaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
@@ -27,6 +30,8 @@ public class SkandiaBankenPaymentWiremockTest {
 
     @Test
     public void testBankGiroPaymentWithFutureExecutionDate() throws Exception {
+        SkandiaBankenPaymentExecutor.setClockForTesting(fixedClock("2021-10-20T08:21:00.000Z"));
+
         Transfer transfer = new Transfer();
         transfer.setSource(new SwedishIdentifier("91599999999"));
         transfer.setDestination(new BankGiroIdentifier("9999999"));
@@ -57,6 +62,8 @@ public class SkandiaBankenPaymentWiremockTest {
 
     @Test
     public void testBankGiroPaymentWithExecutionDateEqualsNull() throws Exception {
+        SkandiaBankenPaymentExecutor.setClockForTesting(fixedClock("2021-10-22T10:20:00.000Z"));
+
         Transfer transfer = new Transfer();
         transfer.setSource(new SwedishIdentifier("91599999999"));
         transfer.setDestination(new BankGiroIdentifier("9999999"));
@@ -85,6 +92,8 @@ public class SkandiaBankenPaymentWiremockTest {
 
     @Test
     public void testCancelledBankGiroPayment() throws Exception {
+        SkandiaBankenPaymentExecutor.setClockForTesting(fixedClock("2021-10-20T08:21:00.000Z"));
+
         Transfer transfer = new Transfer();
         transfer.setSource(new SwedishIdentifier("91599999999"));
         transfer.setDestination(new BankGiroIdentifier("9999999"));
@@ -119,5 +128,9 @@ public class SkandiaBankenPaymentWiremockTest {
     private String getToken() {
         return SerializationUtils.serializeToString(
                 OAuth2Token.create("Bearer", "accessToken", "refreshToken", 900));
+    }
+
+    private Clock fixedClock(String moment) {
+        return Clock.fixed(Instant.parse(moment), DEFAULT_ZONE_ID);
     }
 }
