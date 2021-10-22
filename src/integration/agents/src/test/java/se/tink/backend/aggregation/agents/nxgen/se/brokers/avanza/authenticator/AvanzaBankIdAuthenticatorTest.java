@@ -38,30 +38,27 @@ public class AvanzaBankIdAuthenticatorTest {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/avanza/resources/";
 
-    AvanzaBankIdAuthenticator authenticator;
-    AvanzaApiClient apiClient;
-    AuthSessionStorageHelper authSessionStorage;
-    TemporaryStorage temporaryStorage;
-    List<SessionAccountPair> sessionAccountPairs;
+    private AvanzaBankIdAuthenticator authenticator;
+    private AvanzaApiClient apiClient;
+    private TemporaryStorage temporaryStorage;
+    private List<SessionAccountPair> sessionAccountPairs;
 
-    HttpRequest httpRequestMocked = mock(HttpRequest.class);
-    HttpResponse httpResponseMocked = mock(HttpResponse.class);
-    HttpResponseException exception =
-            new HttpResponseException(httpRequestMocked, httpResponseMocked);
-    ErrorResponse errorResponse = mock(ErrorResponse.class);
-    String authSessionValue;
+    private HttpResponseException exception =
+            new HttpResponseException(mock(HttpRequest.class), mock(HttpResponse.class));
+    private ErrorResponse errorResponse = mock(ErrorResponse.class);
 
     @Before
     public void setup() {
         SessionStorage sessionStorage = new SessionStorage();
         temporaryStorage = new TemporaryStorage();
-        this.authSessionStorage = mock(AuthSessionStorageHelper.class);
         this.apiClient = mock(AvanzaApiClient.class);
         this.authenticator =
                 new AvanzaBankIdAuthenticator(
-                        apiClient, authSessionStorage, temporaryStorage, sessionStorage);
-        sessionAccountPairs = getSessionAccountPairs();
-        String authSessionValue = "dummyStringValue";
+                        apiClient,
+                        mock(AuthSessionStorageHelper.class),
+                        temporaryStorage,
+                        sessionStorage);
+        sessionAccountPairs = getSessionAccountPairs("dummyStringValue");
     }
 
     @Test
@@ -172,18 +169,18 @@ public class AvanzaBankIdAuthenticatorTest {
     @Test
     public void shouldReturnListOfSessionAccountPairs() {
         // when
-        when(apiClient.fetchAccounts(authSessionValue)).thenReturn(getAccountsOverviewResponse());
+        when(apiClient.fetchAccounts("dummyStringValue")).thenReturn(getAccountsOverviewResponse());
 
         // then
         assertEquals(
                 sessionAccountPairs,
                 authenticator
                         .getSessionAccountPairs()
-                        .apply(authSessionValue)
+                        .apply("dummyStringValue")
                         .collect(Collectors.toList()));
     }
 
-    private List<SessionAccountPair> getSessionAccountPairs() {
+    private List<SessionAccountPair> getSessionAccountPairs(String authSessionValue) {
         sessionAccountPairs = new ArrayList<>();
         sessionAccountPairs.add(new SessionAccountPair(authSessionValue, "1000075"));
         sessionAccountPairs.add(new SessionAccountPair(authSessionValue, "1000011"));
@@ -193,13 +190,13 @@ public class AvanzaBankIdAuthenticatorTest {
 
     private AccountsOverviewResponse getAccountsOverviewResponse() {
         return SerializationUtils.deserializeFromString(
-                Paths.get(TEST_DATA_PATH, "accountoverviewresponse.json").toFile(),
+                Paths.get(TEST_DATA_PATH, "accountOverviewResponse.json").toFile(),
                 AccountsOverviewResponse.class);
     }
 
     private BankIdCollectResponse getBankIdCollectResponse() {
         return SerializationUtils.deserializeFromString(
-                Paths.get(TEST_DATA_PATH, "bankidcollectresponse.json").toFile(),
+                Paths.get(TEST_DATA_PATH, "bankidCollectResponse.json").toFile(),
                 BankIdCollectResponse.class);
     }
 
@@ -217,7 +214,7 @@ public class AvanzaBankIdAuthenticatorTest {
 
     private PensionDetailResponse getPensionDetailResponse() {
         return SerializationUtils.deserializeFromString(
-                Paths.get(TEST_DATA_PATH, "pensiondetailresponse.json").toFile(),
+                Paths.get(TEST_DATA_PATH, "pensionDetailResponse.json").toFile(),
                 PensionDetailResponse.class);
     }
 }

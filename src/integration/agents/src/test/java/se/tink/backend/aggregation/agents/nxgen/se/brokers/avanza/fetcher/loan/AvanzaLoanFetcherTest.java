@@ -16,17 +16,17 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AvanzaLoanFetcherTest {
 
-    AvanzaLoanFetcher loanFetcher;
-    AvanzaApiClient apiClient;
-    AuthSessionStorageHelper authSessionStorage;
-    TemporaryStorage temporaryStorage;
+    private AvanzaLoanFetcher loanFetcher;
+    private AvanzaApiClient apiClient;
 
     @Before
     public void setup() {
-        this.temporaryStorage = mock(TemporaryStorage.class);
-        this.authSessionStorage = mock(AuthSessionStorageHelper.class);
         this.apiClient = mock(AvanzaApiClient.class);
-        this.loanFetcher = new AvanzaLoanFetcher(apiClient, authSessionStorage, temporaryStorage);
+        this.loanFetcher =
+                new AvanzaLoanFetcher(
+                        apiClient,
+                        mock(AuthSessionStorageHelper.class),
+                        mock(TemporaryStorage.class));
     }
 
     @Test
