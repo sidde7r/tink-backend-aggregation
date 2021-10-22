@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.integration;
 
 import java.time.LocalDate;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -24,6 +27,7 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 
+@RunWith(JUnitParamsRunner.class)
 public class LaBanquePostaleWireMockTest {
 
     private static final String CONFIGURATION_PATH =
@@ -175,10 +179,15 @@ public class LaBanquePostaleWireMockTest {
     }
 
     @Test(expected = BankServiceException.class)
-    public void testBankSideErrorHandlingBalances() throws Exception {
+    @Parameters({
+        "labanquepostale_response_500_balances.aap",
+        "labanquepostale_response_500_balances2.aap"
+    })
+    public void testBankSideErrorHandlingBalances(String fileName) throws Exception {
         // given
         final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale/integration/resources/labanquepostale_response_500_balances.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale/integration/resources/"
+                        + fileName;
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
@@ -197,36 +206,6 @@ public class LaBanquePostaleWireMockTest {
 
         // when
         agentWireMockRefreshTest.executeRefresh();
-    }
-
-    @Test
-    public void testBankSideErrorHandlingTransactions() throws Exception {
-        // given
-        final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale/integration/resources/labanquepostale_response_500_transactions.aap";
-
-        final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale/integration/resources/agent-contract-no-transactions.json";
-
-        final AgentsServiceConfiguration configuration =
-                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
-
-        final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.nxBuilder()
-                        .withMarketCode(MarketCode.FR)
-                        .withProviderName("fr-labanquepostale-ob")
-                        .withWireMockFilePath(wireMockFilePath)
-                        .withConfigFile(configuration)
-                        .testFullAuthentication()
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .withAgentTestModule(new LaBanquePostaleWireMockTestModule())
-                        .build();
-
-        // when
-        agentWireMockRefreshTest.executeRefresh();
-
-        // then
     }
 
     private Payment createRealDomesticPayment(
