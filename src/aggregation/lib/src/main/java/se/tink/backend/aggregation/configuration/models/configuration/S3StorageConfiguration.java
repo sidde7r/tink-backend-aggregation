@@ -22,7 +22,7 @@ public class S3StorageConfiguration {
 
     @JsonProperty private String region;
 
-    @JsonProperty private String agentDebugBucketName;
+    @JsonProperty private String agentHttpAapLogsBucketName;
 
-    @JsonProperty private String httpJsonDebugBucketName;
+    @JsonProperty private String agentHttpJsonLogsBucketName;
 }

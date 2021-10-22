@@ -72,9 +72,9 @@ public class AgentDebugLogS3StorageHandlerTest {
         S3StorageConfiguration missingUrl = valid.toBuilder().url(null).build();
         S3StorageConfiguration missingRegion = valid.toBuilder().region(null).build();
         S3StorageConfiguration missingAapBucket =
-                valid.toBuilder().agentDebugBucketName(null).build();
+                valid.toBuilder().agentHttpAapLogsBucketName(null).build();
         S3StorageConfiguration missingJsonBucket =
-                valid.toBuilder().httpJsonDebugBucketName(null).build();
+                valid.toBuilder().agentHttpJsonLogsBucketName(null).build();
 
         return Stream.of(
                         null,
@@ -92,8 +92,8 @@ public class AgentDebugLogS3StorageHandlerTest {
                 .enabled(true)
                 .url("sample_url")
                 .region("sample_region")
-                .agentDebugBucketName(AAP_BUCKET_NAME)
-                .httpJsonDebugBucketName(JSON_BUCKET_NAME)
+                .agentHttpAapLogsBucketName(AAP_BUCKET_NAME)
+                .agentHttpJsonLogsBucketName(JSON_BUCKET_NAME)
                 .build();
     }
 

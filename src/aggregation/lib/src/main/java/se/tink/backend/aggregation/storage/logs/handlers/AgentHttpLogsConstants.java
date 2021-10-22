@@ -11,7 +11,7 @@ public class AgentHttpLogsConstants {
         AAP_FORMAT_LOGS {
             @Override
             public String getBucketName(S3StorageConfiguration storageConfiguration) {
-                return storageConfiguration.getAgentDebugBucketName();
+                return storageConfiguration.getAgentHttpAapLogsBucketName();
             }
         },
 
@@ -19,7 +19,7 @@ public class AgentHttpLogsConstants {
         JSON_FORMAT_LOGS {
             @Override
             public String getBucketName(S3StorageConfiguration storageConfiguration) {
-                return storageConfiguration.getHttpJsonDebugBucketName();
+                return storageConfiguration.getAgentHttpJsonLogsBucketName();
             }
         };
 
