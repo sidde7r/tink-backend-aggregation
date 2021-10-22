@@ -6,9 +6,10 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class ScaExpirationValidator {
 
+    public static final String LAST_SCA_TIME = "last_SCA_time";
+
     private final PersistentStorage persistentStorage;
     private final long limitInMinutes;
-    public static final String LAST_SCA_TIME = "last_SCA_time";
 
     public ScaExpirationValidator(PersistentStorage persistentStorage, long limitInMinutes) {
         if (limitInMinutes <= 0) {
@@ -17,6 +18,10 @@ public class ScaExpirationValidator {
         }
         this.persistentStorage = persistentStorage;
         this.limitInMinutes = limitInMinutes;
+    }
+
+    public ScaStatus evaluateStatus() {
+        return isScaExpired() ? ScaStatus.EXPIRED : ScaStatus.VALID;
     }
 
     public boolean isScaExpired() {
