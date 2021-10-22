@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @Getter
@@ -108,10 +107,10 @@ public class UpcomingPaymentEntity {
     }
 
     @JsonIgnore
-    public boolean isSamePayment(PaymentRequest payment) {
+    public boolean isSamePayment(PaymentRequest payment, Date paymentRequestDate) {
         return Objects.equals(BigDecimal.valueOf(amount).setScale(2), payment.getAmount())
-                && Objects.equals(getDateFormatted(), payment.getDate())
                 && Objects.equals(getRecipient().getRecipientNumber(), payment.getGiroNumber())
+                && hasSameDate(paymentRequestDate)
                 && hasSameReference(payment);
     }
 
@@ -122,8 +121,8 @@ public class UpcomingPaymentEntity {
     }
 
     @JsonIgnore
-    private String getDateFormatted() {
-        return new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(date);
+    public boolean hasSameDate(Date paymentRequestDate) {
+        return date.compareTo(paymentRequestDate) == 0;
     }
 
     @JsonIgnore

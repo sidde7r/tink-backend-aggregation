@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 public class RedsysHttpResponseStatusHandler extends DefaultResponseStatusHandler {
 
     private static final Set<String> BANK_TEMPORARY_UNAVAILABLE_ERROR_CODES =
-            Sets.newHashSet("Internal Server Error");
+            Sets.newHashSet("Internal Server Error", "INTERNAL_SERVER_ERROR");
 
     @Override
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
