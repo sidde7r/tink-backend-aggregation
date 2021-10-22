@@ -17,6 +17,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
@@ -40,12 +43,20 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
+import se.tink.libraries.credentials.service.AccountTransactionsRefreshScope;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.HasRefreshScope;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshScope;
+import se.tink.libraries.credentials.service.TransactionsRefreshScope;
 
 public class MonzoTransactionPaginatorTest {
 
     private static final String DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/resources/";
+
+    private final DelaySimulatingLocalDateTimeSource localDateTimeSource =
+            new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2021-09-02T00:00:00"));
 
     private MonzoTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
             paginator;
@@ -56,17 +67,33 @@ public class MonzoTransactionPaginatorTest {
 
     @Before
     public void init() {
-        DelaySimulatingLocalDateTimeSource localDateTimeSource =
-                new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2021-09-02T00:00:00"));
-
         ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
         when(ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(any()))
                 .thenReturn(String.format(ApiServices.ACCOUNT_TRANSACTIONS_REQUEST, "identifier1"));
 
         persistentStorage = mock(PersistentStorage.class);
-        request = mock(CredentialsRequest.class);
         apiClient = mock(UkOpenBankingApiClient.class);
+    }
 
+    public void setBeforeTestWithCertainDate() {
+        request = mock(CredentialsRequest.class);
+        paginator =
+                new MonzoTransactionPaginator(
+                        ukOpenBankingAisConfig,
+                        persistentStorage,
+                        apiClient,
+                        AccountTransactionsV31Response.class,
+                        (response, account) ->
+                                AccountTransactionsV31Response
+                                        .toAccountTransactionPaginationResponse(
+                                                (AccountTransactionsV31Response) response,
+                                                new MonzoTransactionMapper()),
+                        localDateTimeSource,
+                        request);
+    }
+
+    public void setBeforeTestWithRefreshScope() {
+        request = mock(RefreshInformationRequest.class);
         paginator =
                 new MonzoTransactionPaginator(
                         ukOpenBankingAisConfig,
@@ -86,6 +113,7 @@ public class MonzoTransactionPaginatorTest {
     public void shouldFetchOnePageOfTransactionsWhenThereIsNoKeyAndCertainDateIsNotPresent()
             throws IOException {
         // given
+        setBeforeTestWithCertainDate();
         final AccountTransactionsV31Response response =
                 loadSampleData("transactions.json", AccountTransactionsV31Response.class);
         when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
@@ -106,6 +134,7 @@ public class MonzoTransactionPaginatorTest {
     public void shouldFetchTransactionsWhenCertainDateIsAfterFromDateForManualRefresh()
             throws IOException {
         // given
+        setBeforeTestWithCertainDate();
         final Date youngCertainDate = new Date(1632913920000L); // 1632913920000L = 29-09-2021
         final AccountTransactionsV31Response response =
                 loadSampleData(
@@ -122,13 +151,14 @@ public class MonzoTransactionPaginatorTest {
                 .usingRecursiveComparison()
                 .isEqualTo(
                         new TransactionKeyPaginatorResponseImpl<String>(
-                                getExpectedTransactionsForCertainDate(), null));
+                                getExpectedTransactionsWithBookedDate(), null));
     }
 
     @Test
     public void shouldFetchTransactionsWhenCertainDateIsBeforeThanFromDateForManualRefresh()
             throws IOException {
         // given
+        setBeforeTestWithCertainDate();
         final Date oldCertainDate = new Date(1538219520000L); // 1538219520000L = 29-09-2018
         final AccountTransactionsV31Response response =
                 loadSampleData("transactions.json", AccountTransactionsV31Response.class);
@@ -144,6 +174,82 @@ public class MonzoTransactionPaginatorTest {
                 .isEqualTo(
                         new TransactionKeyPaginatorResponseImpl<String>(
                                 getExpectedLastPageTransactions(), null));
+    }
+
+    @Test
+    public void shouldFetchTransactionsWhenRefreshScopeIsEnabledForManualRefresh()
+            throws IOException {
+        // given
+        setBeforeTestWithRefreshScope();
+        final AccountTransactionsV31Response response =
+                loadSampleData(
+                        "transactions_certain_date.json", AccountTransactionsV31Response.class);
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
+        when(((HasRefreshScope) request).getRefreshScope()).thenReturn(createRefreshScope());
+
+        // when
+        TransactionKeyPaginatorResponse<String> result =
+                paginator.getTransactionsFor(createTestAccount(), null);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        new TransactionKeyPaginatorResponseImpl<String>(
+                                getExpectedTransactionsWithBookedDate(), null));
+    }
+
+    @Test
+    public void shouldFetchTransactionsWhenRefreshScopeIsEnabledWithAccountHistoryDate()
+            throws IOException {
+        // given
+        setBeforeTestWithRefreshScope();
+        final AccountTransactionsV31Response response =
+                loadSampleData(
+                        "transactions_certain_date.json", AccountTransactionsV31Response.class);
+        final LocalDate localDate = LocalDate.of(2021, 10, 1);
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
+        when(((HasRefreshScope) request).getRefreshScope())
+                .thenReturn(createRefreshScope(true, localDate));
+
+        // when
+        TransactionKeyPaginatorResponse<String> result =
+                paginator.getTransactionsFor(createTestAccount(), null);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        new TransactionKeyPaginatorResponseImpl<String>(
+                                getExpectedTransactionsWithBookedDate(), null));
+    }
+
+    private RefreshScope createRefreshScope() {
+        return createRefreshScope(false, null);
+    }
+
+    private RefreshScope createRefreshScope(boolean isAccountShouldBeAdded, LocalDate date) {
+        RefreshScope refreshScope = new RefreshScope();
+        refreshScope.setTransactions(createTransactionsRefreshScope(isAccountShouldBeAdded, date));
+        return refreshScope;
+    }
+
+    private TransactionsRefreshScope createTransactionsRefreshScope(
+            boolean isAccountShouldBeAdded, LocalDate bookedTransactionsDate) {
+        LocalDate defaultRefreshScopeDate = LocalDate.of(2020, 10, 2);
+        TransactionsRefreshScope transactionsRefreshScope = new TransactionsRefreshScope();
+        transactionsRefreshScope.setTransactionBookedDateGte(defaultRefreshScopeDate);
+
+        if (isAccountShouldBeAdded) {
+            AccountTransactionsRefreshScope account = new AccountTransactionsRefreshScope();
+            account.setAccountIdentifiers(
+                    Stream.of(new OtherIdentifier("id1").toString()).collect(Collectors.toSet()));
+            account.setTransactionBookedDateGte(bookedTransactionsDate);
+            Set<AccountTransactionsRefreshScope> accounts =
+                    Stream.of(account).collect(Collectors.toSet());
+            transactionsRefreshScope.setAccounts(accounts);
+        }
+        return transactionsRefreshScope;
     }
 
     private TransactionalAccount createTestAccount() {
@@ -199,7 +305,7 @@ public class MonzoTransactionPaginatorTest {
                                 .build());
     }
 
-    private Collection<Transaction> getExpectedTransactionsForCertainDate() {
+    private Collection<Transaction> getExpectedTransactionsWithBookedDate() {
         return Collections.singletonList(
                 (Transaction)
                         Transaction.builder()

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -74,7 +75,8 @@ public class MonzoTransactionPaginator<T, S extends Account>
 
         if (isTransactionHistoryProductEnabled(refreshScope)) {
             LocalDateTime historyTransactionsBooked =
-                    refreshScope.getTransactions().getTransactionBookedDateGte().atStartOfDay();
+                    getRefreshScopeTransactionDate(account, refreshScope);
+
             if (historyTransactionsBooked.isAfter(fromDate)) {
                 log.info(
                         "[MonzoTransactionPaginator] Refresh scope transaction history date is after proposed fromDate -> set refreshScopeTransactionHistoryDate as fromBookingDateTime to avoid fetching transaction which we already fetched in the past: fromDate is {} and refreshScopeTransactionHistoryDate is {}",
@@ -114,6 +116,19 @@ public class MonzoTransactionPaginator<T, S extends Account>
                 + ISO_OFFSET_DATE_TIME.format(fromDate);
     }
 
+    private LocalDateTime getRefreshScopeTransactionDate(S account, RefreshScope refreshScope) {
+        return refreshScope
+                .getTransactions()
+                .getTransactionBookedDateGteForAccountIdentifiers(account.getIdentifiers())
+                .map(LocalDate::atStartOfDay)
+                .orElseGet(
+                        () ->
+                                refreshScope
+                                        .getTransactions()
+                                        .getTransactionBookedDateGte()
+                                        .atStartOfDay());
+    }
+
     private Optional<LocalDateTime> getCertainDate(S account) {
         if (request.getAccounts().isEmpty()) {
             return Optional.empty();
@@ -130,11 +145,6 @@ public class MonzoTransactionPaginator<T, S extends Account>
         if (request instanceof HasRefreshScope) {
             return ((HasRefreshScope) request).getRefreshScope();
         }
-        log.debug(
-                "Request of type {} does not implement {}, pagination helper will always return that it needs another page",
-                request.getClass(),
-                HasRefreshScope.class);
-
         return null;
     }
 
