@@ -109,6 +109,7 @@ public class InitStep implements AuthenticationStep {
         }
 
         log.info(String.format("SmartId/ MobilId timed out internally, last status: %s", status));
+        throw ThirdPartyAppError.TIMED_OUT.exception();
     }
 
     public String verifyCredentialsNotNullOrEmpty(String credentials) throws LoginException {

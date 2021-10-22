@@ -131,5 +131,6 @@ public class CreateNewConsentStep implements AuthenticationStep {
         }
 
         log.info(String.format("Time out internally, last status: %s", status));
+        throw ThirdPartyAppError.TIMED_OUT.exception();
     }
 }
