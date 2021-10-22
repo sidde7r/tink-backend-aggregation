@@ -4,24 +4,24 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "GBP",
+      "exactValue" : 1125.49,
       "scale" : 2,
       "unscaledValue" : 112549,
-      "exactValue" : 1125.49,
       "doubleValue" : 1125.49
     },
     "currencyCode" : "GBP",
     "availableBalance" : {
       "currencyCode" : "GBP",
+      "exactValue" : 980.02,
       "scale" : 2,
       "unscaledValue" : 98002,
-      "exactValue" : 980.02,
       "doubleValue" : 980.02
     },
     "creditLimit" : {
       "currencyCode" : "GBP",
+      "exactValue" : 800.0,
       "scale" : 2,
       "unscaledValue" : 80000,
-      "exactValue" : 800.0,
       "doubleValue" : 800.0
     },
     "bankId" : "95030990152881",
@@ -52,7 +52,7 @@
   "transactions" : [ {
     "amount" : 1273.34,
     "date" : 1622196000000,
-    "description" : "5QG371916650\nEndToEndID: NOTPROVIDED",
+    "description" : "5QG371916650",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -82,7 +82,7 @@
   }, {
     "amount" : -4.31,
     "date" : 1622196000000,
-    "description" : "PAYPAL PAYMENT\nEndToEndID: NOTPROVIDED",
+    "description" : "PAYPAL PAYMENT",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -112,7 +112,7 @@
   }, {
     "amount" : -300.0,
     "date" : 1622196000000,
-    "description" : "Insurance cover rtn\nEndToEndID: Insurance cover rt",
+    "description" : "Insurance cover rtn\n: Insurance cover rt",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -142,7 +142,7 @@
   }, {
     "amount" : -50.0,
     "date" : 1622196000000,
-    "description" : "Golf lesson\nEndToEndID: Golf lesson",
+    "description" : "Golf lesson\n: Golf lesson",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -172,7 +172,7 @@
   }, {
     "amount" : -300.0,
     "date" : 1622196000000,
-    "description" : "June allowance\nEndToEndID: June allowance",
+    "description" : "June allowance\n: June allowance",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -202,7 +202,7 @@
   }, {
     "amount" : -115.0,
     "date" : 1622196000000,
-    "description" : "Dad £115\nEndToEndID: Marc £115",
+    "description" : "Dad £115\n: Marc £115",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -232,7 +232,7 @@
   }, {
     "amount" : -100.0,
     "date" : 1622196000000,
-    "description" : "Petrol June\nEndToEndID: Petrol June",
+    "description" : "Petrol June\n: Petrol June",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -262,7 +262,7 @@
   }, {
     "amount" : -200.0,
     "date" : 1622196000000,
-    "description" : "VCC £200\nEndToEndID: VCC £200",
+    "description" : "VCC £200\n: VCC £200",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -292,7 +292,7 @@
   }, {
     "amount" : -30.5,
     "date" : 1622541600000,
-    "description" : "H3G\nEndToEndID: NOTPROVIDED",
+    "description" : "H3G",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -322,7 +322,7 @@
   }, {
     "amount" : -206.6,
     "date" : 1622541600000,
-    "description" : "ALPHERA FINANCIA\nEndToEndID: NOTPROVIDED",
+    "description" : "ALPHERA FINANCIA",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },

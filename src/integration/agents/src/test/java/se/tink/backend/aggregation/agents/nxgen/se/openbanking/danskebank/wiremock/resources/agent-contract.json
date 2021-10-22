@@ -4,18 +4,18 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 816.1,
-      "unscaledValue" : 81610,
       "scale" : 2,
-      "exactValue" : 816.1
+      "unscaledValue" : 81610,
+      "exactValue" : 816.1,
+      "doubleValue" : 816.1
     },
     "currencyCode" : "SEK",
     "availableBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 816.1,
-      "unscaledValue" : 81610,
       "scale" : 2,
-      "exactValue" : 816.1
+      "unscaledValue" : 81610,
+      "exactValue" : 816.1,
+      "doubleValue" : 816.1
     },
     "bankId" : "37663899328",
     "excluded" : false,
@@ -46,18 +46,18 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 0.0,
-      "unscaledValue" : 0,
       "scale" : 2,
-      "exactValue" : 0.0
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
     },
     "currencyCode" : "SEK",
     "availableBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 0.0,
-      "unscaledValue" : 0,
       "scale" : 2,
-      "exactValue" : 0.0
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
     },
     "bankId" : "13985414317",
     "excluded" : false,
@@ -88,18 +88,18 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 0.0,
-      "unscaledValue" : 0,
       "scale" : 2,
-      "exactValue" : 0.0
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
     },
     "currencyCode" : "SEK",
     "availableBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 0.0,
-      "unscaledValue" : 0,
       "scale" : 2,
-      "exactValue" : 0.0
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
     },
     "bankId" : "87525497252",
     "excluded" : false,
@@ -130,18 +130,18 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 64486.67,
-      "unscaledValue" : 6448667,
       "scale" : 2,
-      "exactValue" : 64486.67
+      "unscaledValue" : 6448667,
+      "exactValue" : 64486.67,
+      "doubleValue" : 64486.67
     },
     "currencyCode" : "SEK",
     "availableBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 64486.67,
-      "unscaledValue" : 6448667,
       "scale" : 2,
-      "exactValue" : 64486.67
+      "unscaledValue" : 6448667,
+      "exactValue" : 64486.67,
+      "doubleValue" : 64486.67
     },
     "bankId" : "26975228331",
     "excluded" : false,
@@ -169,99 +169,9 @@
     "balance" : 64486.67
   } ],
   "transactions" : [ {
-    "amount" : 20338.88,
-    "date" : 1621850400000,
-    "description" : "L@N\nEndToEndID: NOTPROVIDED",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : {
-      "PROVIDER_GIVEN_TRANSACTION_ID" : "6d14cde1-44ec-4822-9193-ea3acf421d9f"
-    },
-    "mutability" : "MUTABLE",
-    "transactionDates" : [ {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-24",
-        "instant" : null
-      }
-    }, {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-25",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "942485",
-    "providerMarket" : "UK"
-  }, {
-    "amount" : -4400.0,
-    "date" : 1621936800000,
-    "description" : "ICA-kort Carl\nEndToEndID: NOTPROVIDED",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : {
-      "PROVIDER_GIVEN_TRANSACTION_ID" : "68539f58-3a23-4232-a00a-a73b9feaa7b5"
-    },
-    "mutability" : "MUTABLE",
-    "transactionDates" : [ {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-25",
-        "instant" : null
-      }
-    }, {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-25",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "3364077920",
-    "providerMarket" : "UK"
-  }, {
-    "amount" : -18.21,
-    "date" : 1627984800000,
-    "description" : "Till kortkonto\nEndToEndID: FRI Från Lönekonto",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : {
-      "PROVIDER_GIVEN_TRANSACTION_ID" : "c6f23675-068d-4f5a-be79-1901eda9d5bd"
-    },
-    "mutability" : "MUTABLE",
-    "transactionDates" : [ {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-08-03",
-        "instant" : null
-      }
-    }, {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-08-03",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "617L121581",
-    "providerMarket" : "UK"
-  }, {
     "amount" : 8700.0,
     "date" : 1622196000000,
-    "description" : "Från Lönekonto\nEndToEndID: FRI Från Lönekonto",
+    "description" : "Från Lönekonto\n: FRI Från Lönekonto",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -291,7 +201,7 @@
   }, {
     "amount" : -4346.06,
     "date" : 1622455200000,
-    "description" : "Lån: 1212-04-56208\nEndToEndID: NOTPROVIDED",
+    "description" : "Lån: 1212-04-56208",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -321,7 +231,7 @@
   }, {
     "amount" : -18.02,
     "date" : 1627984800000,
-    "description" : "Till kortkonto\nEndToEndID: FRI Från Danske Konto",
+    "description" : "Till kortkonto\n: FRI Från Danske Konto",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -349,9 +259,99 @@
     "transactionReference" : "708L121581",
     "providerMarket" : "UK"
   }, {
+    "amount" : 20338.88,
+    "date" : 1621850400000,
+    "description" : "L@N",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "6d14cde1-44ec-4822-9193-ea3acf421d9f"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "942485",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -4400.0,
+    "date" : 1621936800000,
+    "description" : "ICA-kort Carl",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "68539f58-3a23-4232-a00a-a73b9feaa7b5"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "3364077920",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -18.21,
+    "date" : 1627984800000,
+    "description" : "Till kortkonto\n: FRI Från Lönekonto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "c6f23675-068d-4f5a-be79-1901eda9d5bd"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "617L121581",
+    "providerMarket" : "UK"
+  }, {
     "amount" : 58393.29,
     "date" : 1598436000000,
-    "description" : "ÖVERFÖRING\nEndToEndID: NOTPROVIDED",
+    "description" : "ÖVERFÖRING",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -381,7 +381,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1601287200000,
-    "description" : "HSB\nEndToEndID: NOTPROVIDED",
+    "description" : "HSB",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -411,7 +411,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1629712800000,
-    "description" : "AUG HSB\nEndToEndID: NOTPROVIDED",
+    "description" : "AUG HSB",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -441,7 +441,7 @@
   }, {
     "amount" : 20.0,
     "date" : 1621764000000,
-    "description" : "Swish från SomeGuy\nSender name: SomeGuy\nSender no.: 46738336995\nTransaction ID:\nD6D2DD2EC53A42ADA68ECEFF6B1DA8A6\nReference number: 6434948985119586\nEndToEndID: NOT PROVIDED",
+    "description" : "Swish från SomeGuy\nSender name: SomeGuy\nSender no.: 46738336995\nTransaction ID:\nD6D2DD2EC53A42ADA68ECEFF6B1DA8A6\nReference number: 6434948985119586",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -471,7 +471,7 @@
   }, {
     "amount" : 1820.0,
     "date" : 1621850400000,
-    "description" : "FKASSA\nEndToEndID: NOTPROVIDED",
+    "description" : "FKASSA",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -501,7 +501,7 @@
   }, {
     "amount" : -30.0,
     "date" : 1621850400000,
-    "description" : "Swish till Some Guy\nRecipient Name: Some Guy\nRecipient no.: 46737460273\nTransaction ID:\n8965A81BA725423C866052AF8B23C2D5\nReference number: 6436162935099536\nEndToEndID: NOT PROVIDED",
+    "description" : "Swish till Some Guy\nRecipient Name: Some Guy\nRecipient no.: 46737460273\nTransaction ID:\n8965A81BA725423C866052AF8B23C2D5\nReference number: 6436162935099536",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },

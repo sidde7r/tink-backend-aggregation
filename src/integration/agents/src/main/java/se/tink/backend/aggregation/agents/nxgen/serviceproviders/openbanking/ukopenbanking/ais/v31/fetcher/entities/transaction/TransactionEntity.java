@@ -153,11 +153,21 @@ public class TransactionEntity {
     }
 
     public String getDescription() {
-        return Optional.ofNullable(transactionInformation).orElse(transactionReference);
+        return Optional.ofNullable(getTransactionInformation()).orElse(transactionReference);
     }
 
     private Boolean isDeclined() {
         return supplementaryData != null
                 && Optional.ofNullable(supplementaryData.getDeclined()).orElse(Boolean.FALSE);
+    }
+
+    // enriched getter with removing unnecessary marking of EndToEndID when it is not provided
+    private String getTransactionInformation() {
+        return transactionInformation != null
+                ? transactionInformation
+                        .replace("EndToEndID", "")
+                        .replace("\n: NOTPROVIDED", "")
+                        .replace("\n: NOT PROVIDED", "")
+                : null;
     }
 }

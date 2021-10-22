@@ -62,7 +62,7 @@ public interface TransactionMapper {
                 CreditCardTransaction.builder()
                         .setCreditAccount(account)
                         .setAmount(transactionEntity.getSignedAmount())
-                        .setDescription(transactionEntity.getTransactionInformation())
+                        .setDescription(transactionEntity.getDescription())
                         .setPending(transactionEntity.isPending())
                         .setDate(transactionEntity.getDateOfTransaction())
                         .setTransactionDates(transactionEntity.getTransactionDates())
