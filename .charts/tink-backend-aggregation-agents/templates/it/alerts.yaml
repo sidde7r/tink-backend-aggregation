@@ -173,9 +173,9 @@ spec:
 
     - alert: manual_login_error_rate_over_50%_due_to_bank_side_error_it
       expr: |
-        (count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="IT", outcome="unavailable", action="login-manual"}[1h]))
-        / count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="IT", action="login-manual"}[1h])) > 0.5 )
-        and (count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="IT", action="login-manual"}[1h])) > 5)
+        (sum by(provider, className) (increase (tink_agent_login_total{ environment="production",market="IT", outcome="unavailable", action="login-manual"}[1h]))
+        / sum by(provider, className) (increase (tink_agent_login_total{ environment="production",market="IT", action="login-manual"}[1h])) > 0.5 )
+        and (sum by(provider, className) (increase (tink_agent_login_total{ environment="production",market="IT", action="login-manual"}[1h])) > 5)
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -190,9 +190,9 @@ spec:
 
     - alert: auto_login_error_rate_over_50%_due_to_bank_side_error_it
       expr: |
-        (count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="IT", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
-        / count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="IT", action=~"login-auto|login-cron"}[1h])) > 0.5 )
-        and (count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="IT", action=~"login-auto|login-cron"}[1h])) > 5)
+        (sum by(provider, className, action) (increase (tink_agent_login_total{ environment="production",market="IT", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
+        / sum by(provider, className, action) (increase (tink_agent_login_total{ environment="production",market="IT", action=~"login-auto|login-cron"}[1h])) > 0.5 )
+        and (sum by(provider, className, action) (increase (tink_agent_login_total{ environment="production",market="IT", action=~"login-auto|login-cron"}[1h])) > 5)
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
