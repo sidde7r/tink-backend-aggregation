@@ -34,7 +34,7 @@ public class Comparor {
             return new ListDifferenceEntity(expected.size(), given.size());
         }
 
-        // To ensure that we are opearating on lists of maps
+        // To ensure that we are operating on lists of maps
         List<Map<String, Object>> expectedCopy = convertToMapList(expected);
         List<Map<String, Object>> givenCopy = convertToMapList(given);
 
