@@ -11,13 +11,13 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 
 public class AgentHttpLogsCacheTest {
 
     private AgentHttpLogsMasker httpLogsMasker;
     private HttpAapLogger httpAapLogger;
-    private HttpJsonLogger httpJsonLogger;
+    private JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
     private AgentHttpLogsCache httpLogsCache;
 
@@ -25,9 +25,10 @@ public class AgentHttpLogsCacheTest {
     public void setup() {
         httpLogsMasker = mock(AgentHttpLogsMasker.class);
         httpAapLogger = mock(HttpAapLogger.class);
-        httpJsonLogger = mock(HttpJsonLogger.class);
+        jsonHttpTrafficLogger = mock(JsonHttpTrafficLogger.class);
 
-        httpLogsCache = new AgentHttpLogsCache(httpLogsMasker, httpAapLogger, httpJsonLogger);
+        httpLogsCache =
+                new AgentHttpLogsCache(httpLogsMasker, httpAapLogger, jsonHttpTrafficLogger);
     }
 
     @Test
@@ -71,7 +72,8 @@ public class AgentHttpLogsCacheTest {
     @Test
     public void should_return_and_cache_masked_json_logs() {
         // given
-        when(httpJsonLogger.tryGetLogContent()).thenReturn(Optional.of("raw json log content"));
+        when(jsonHttpTrafficLogger.tryGetLogContent())
+                .thenReturn(Optional.of("raw json log content"));
         when(httpLogsMasker.maskSensitiveOutputLog(any())).thenReturn("masked json log content");
 
         // when
@@ -84,14 +86,14 @@ public class AgentHttpLogsCacheTest {
         assertThat(log2).hasValue("masked json log content");
         assertThat(log3).hasValue("masked json log content");
 
-        verify(httpJsonLogger, times(1)).tryGetLogContent();
+        verify(jsonHttpTrafficLogger, times(1)).tryGetLogContent();
         verify(httpLogsMasker, times(1)).maskSensitiveOutputLog("raw json log content");
     }
 
     @Test
     public void should_return_and_cache_empty_json_logs() {
         // given
-        when(httpJsonLogger.tryGetLogContent()).thenReturn(Optional.empty());
+        when(jsonHttpTrafficLogger.tryGetLogContent()).thenReturn(Optional.empty());
 
         // when
         Optional<String> log1 = httpLogsCache.getJsonLogContent();
@@ -103,6 +105,6 @@ public class AgentHttpLogsCacheTest {
         assertThat(log2).isEmpty();
         assertThat(log3).isEmpty();
 
-        verify(httpJsonLogger, times(1)).tryGetLogContent();
+        verify(jsonHttpTrafficLogger, times(1)).tryGetLogContent();
     }
 }

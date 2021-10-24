@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
@@ -73,8 +73,8 @@ public class AgentTestContext extends AgentContext {
         refreshSummary = new RefreshSummary();
 
         HttpAapLogger.consoleOutputLogger().ifPresent(this::setHttpAapLogger);
-        setHttpJsonLogger(
-                new HttpJsonLogger(
+        setJsonHttpTrafficLogger(
+                new JsonHttpTrafficLogger(
                         HttpJsonLogMetaEntity.builder()
                                 .providerName(credentials.getProviderName())
                                 .credentialsId(credentials.getId())

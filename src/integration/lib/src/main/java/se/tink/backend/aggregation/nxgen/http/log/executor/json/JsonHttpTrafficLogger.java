@@ -25,16 +25,16 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonL
  * Athena queries effectively.
  */
 @Slf4j
-public class HttpJsonLogger {
+public class JsonHttpTrafficLogger {
 
-    private static final LogTag LOG_TAG = LogTag.from("[HttpJsonLogger]");
+    private static final LogTag LOG_TAG = LogTag.from("[JsonHttpTrafficLogger]");
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final HttpJsonLogMetaEntity metaEntity;
     private final Map<String, HttpJsonLogRequestEntity> requests = new LinkedHashMap<>();
     private final Map<String, HttpJsonLogResponseEntity> responses = new LinkedHashMap<>();
 
-    public HttpJsonLogger(HttpJsonLogMetaEntity metaEntity) {
+    public JsonHttpTrafficLogger(HttpJsonLogMetaEntity metaEntity) {
         this.metaEntity = metaEntity;
     }
 

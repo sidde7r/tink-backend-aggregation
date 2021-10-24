@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.contexts;
 
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 
 public interface LoggingContext {
 
@@ -11,7 +11,7 @@ public interface LoggingContext {
     void setHttpAapLogger(HttpAapLogger httpAapLogger);
 
     /** @return HttpAapLogger or null if not configured */
-    HttpJsonLogger getHttpJsonLogger();
+    JsonHttpTrafficLogger getJsonHttpTrafficLogger();
 
-    void setHttpJsonLogger(HttpJsonLogger httpJsonLogger);
+    void setJsonHttpTrafficLogger(JsonHttpTrafficLogger jsonHttpTrafficLogger);
 }

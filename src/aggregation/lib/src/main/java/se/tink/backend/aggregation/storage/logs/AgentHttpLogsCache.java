@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
@@ -14,7 +14,7 @@ public class AgentHttpLogsCache {
 
     private final AgentHttpLogsMasker httpLogsMasker;
     private final HttpAapLogger httpAapLogger;
-    private final HttpJsonLogger httpJsonLogger;
+    private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
     private OptionalLogContent<String> aapLogContent;
     private OptionalLogContent<String> jsonLogContent;
@@ -34,8 +34,8 @@ public class AgentHttpLogsCache {
     public Optional<String> getJsonLogContent() {
         if (jsonLogContent == null) {
             String log =
-                    Optional.ofNullable(httpJsonLogger)
-                            .flatMap(HttpJsonLogger::tryGetLogContent)
+                    Optional.ofNullable(jsonHttpTrafficLogger)
+                            .flatMap(JsonHttpTrafficLogger::tryGetLogContent)
                             .map(httpLogsMasker::maskSensitiveOutputLog)
                             .orElse(null);
             jsonLogContent = OptionalLogContent.of(log);

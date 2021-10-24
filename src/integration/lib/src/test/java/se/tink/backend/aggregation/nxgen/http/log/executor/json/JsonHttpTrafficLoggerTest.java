@@ -26,9 +26,9 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonL
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogRequestEntity;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogResponseEntity;
 
-public class HttpJsonLoggerTest {
+public class JsonHttpTrafficLoggerTest {
 
-    private HttpJsonLogger jsonLogger;
+    private JsonHttpTrafficLogger jsonLogger;
 
     private static final HttpJsonLogMetaEntity META_ENTITY =
             HttpJsonLogMetaEntity.builder()
@@ -73,13 +73,13 @@ public class HttpJsonLoggerTest {
     @Test
     public void should_correctly_build_json_log() {
         // given
-        jsonLogger = new HttpJsonLogger(META_ENTITY);
+        jsonLogger = new JsonHttpTrafficLogger(META_ENTITY);
 
         // when
-        HttpJsonLogger.beforeHttpExchange();
+        JsonHttpTrafficLogger.beforeHttpExchange();
         jsonLogger.addRequestLog(THREAD_1_REQUEST_1);
         jsonLogger.addResponseLog(THREAD_1_RESPONSE_1);
-        HttpJsonLogger.afterHttpExchange();
+        JsonHttpTrafficLogger.afterHttpExchange();
 
         HttpJsonLog jsonLog = jsonLogger.buildLog();
 
@@ -100,7 +100,7 @@ public class HttpJsonLoggerTest {
     @Test
     public void should_skip_logs_if_exchange_was_not_initialized() {
         // given
-        jsonLogger = new HttpJsonLogger(META_ENTITY);
+        jsonLogger = new JsonHttpTrafficLogger(META_ENTITY);
 
         // when
         jsonLogger.addRequestLog(THREAD_1_REQUEST_1);
@@ -117,13 +117,13 @@ public class HttpJsonLoggerTest {
     @Test
     public void should_allow_response_to_come_before_request() {
         // given
-        jsonLogger = new HttpJsonLogger(META_ENTITY);
+        jsonLogger = new JsonHttpTrafficLogger(META_ENTITY);
 
         // when
-        HttpJsonLogger.beforeHttpExchange();
+        JsonHttpTrafficLogger.beforeHttpExchange();
         jsonLogger.addResponseLog(THREAD_1_RESPONSE_1);
         jsonLogger.addRequestLog(THREAD_1_REQUEST_1);
-        HttpJsonLogger.afterHttpExchange();
+        JsonHttpTrafficLogger.afterHttpExchange();
 
         HttpJsonLog jsonLog = jsonLogger.buildLog();
 
@@ -144,16 +144,16 @@ public class HttpJsonLoggerTest {
     @Test
     public void should_save_only_first_request_and_response_for_current_http_exchange() {
         // given
-        jsonLogger = new HttpJsonLogger(META_ENTITY);
+        jsonLogger = new JsonHttpTrafficLogger(META_ENTITY);
 
         // when
-        HttpJsonLogger.beforeHttpExchange();
+        JsonHttpTrafficLogger.beforeHttpExchange();
         jsonLogger.addRequestLog(THREAD_2_REQUEST_1);
         jsonLogger.addRequestLog(THREAD_2_REQUEST_1);
 
         jsonLogger.addResponseLog(THREAD_2_RESPONSE_1);
         jsonLogger.addResponseLog(THREAD_2_RESPONSE_2);
-        HttpJsonLogger.afterHttpExchange();
+        JsonHttpTrafficLogger.afterHttpExchange();
 
         HttpJsonLog jsonLog = jsonLogger.buildLog();
 
@@ -175,7 +175,7 @@ public class HttpJsonLoggerTest {
     @SneakyThrows
     public void should_match_request_response_pairs_coming_from_multiple_threads() {
         // given
-        jsonLogger = spy(new HttpJsonLogger(null));
+        jsonLogger = spy(new JsonHttpTrafficLogger(null));
 
         RequestsSynchronizer synchronizer = new RequestsSynchronizer();
 
@@ -185,13 +185,13 @@ public class HttpJsonLoggerTest {
                         .synchronizer(synchronizer)
                         .addJob(
                                 () -> {
-                                    HttpJsonLogger.beforeHttpExchange();
+                                    JsonHttpTrafficLogger.beforeHttpExchange();
                                     jsonLogger.addRequestLog(THREAD_1_REQUEST_1);
                                 })
                         .addJob(
                                 () -> {
                                     jsonLogger.addResponseLog(THREAD_1_RESPONSE_1);
-                                    HttpJsonLogger.afterHttpExchange();
+                                    JsonHttpTrafficLogger.afterHttpExchange();
                                 })
                         .build();
 
@@ -201,23 +201,23 @@ public class HttpJsonLoggerTest {
                         .synchronizer(synchronizer)
                         .addJob(
                                 () -> {
-                                    HttpJsonLogger.beforeHttpExchange();
+                                    JsonHttpTrafficLogger.beforeHttpExchange();
                                     jsonLogger.addRequestLog(THREAD_2_REQUEST_1);
                                 })
                         .addJob(
                                 () -> {
                                     jsonLogger.addResponseLog(THREAD_2_RESPONSE_1);
-                                    HttpJsonLogger.afterHttpExchange();
+                                    JsonHttpTrafficLogger.afterHttpExchange();
                                 })
                         .addJob(
                                 () -> {
-                                    HttpJsonLogger.beforeHttpExchange();
+                                    JsonHttpTrafficLogger.beforeHttpExchange();
                                     jsonLogger.addRequestLog(THREAD_2_REQUEST_2);
                                 })
                         .addJob(
                                 () -> {
                                     jsonLogger.addResponseLog(THREAD_2_RESPONSE_2);
-                                    HttpJsonLogger.afterHttpExchange();
+                                    JsonHttpTrafficLogger.afterHttpExchange();
                                 })
                         .build();
 

@@ -14,23 +14,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
-import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogRequestEntity;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogResponseEntity;
 
-public class HttpJsonLoggingExecutorTest {
+public class JsonHttpTrafficLoggingExecutorTest {
 
-    private HttpJsonLogger httpJsonLogger;
-    private HttpJsonLoggingExecutor jsonLoggingExecutor;
+    private JsonHttpTrafficLogger jsonHttpTrafficLogger;
+    private JsonHttpTrafficLoggingExecutor jsonLoggingExecutor;
 
     private static final List<String> NOT_SENSITIVE_HEADER_NAMES =
             new ArrayList<>(HttpLoggingConstants.NON_SENSITIVE_HEADER_FIELDS);
 
     @Before
     public void setup() {
-        httpJsonLogger = mock(HttpJsonLogger.class);
-        jsonLoggingExecutor = new HttpJsonLoggingExecutor(httpJsonLogger);
+        jsonHttpTrafficLogger = mock(JsonHttpTrafficLogger.class);
+        jsonLoggingExecutor = new JsonHttpTrafficLoggingExecutor(jsonHttpTrafficLogger);
     }
 
     @Test
@@ -59,8 +59,8 @@ public class HttpJsonLoggingExecutorTest {
         // then
         ArgumentCaptor<HttpJsonLogRequestEntity> jsonLogEntityCaptor =
                 forClass(HttpJsonLogRequestEntity.class);
-        verify(httpJsonLogger).addRequestLog(jsonLogEntityCaptor.capture());
-        verifyNoMoreInteractions(httpJsonLogger);
+        verify(jsonHttpTrafficLogger).addRequestLog(jsonLogEntityCaptor.capture());
+        verifyNoMoreInteractions(jsonHttpTrafficLogger);
 
         assertThat(jsonLogEntityCaptor.getValue())
                 .usingRecursiveComparison()
@@ -99,8 +99,8 @@ public class HttpJsonLoggingExecutorTest {
         // then
         ArgumentCaptor<HttpJsonLogResponseEntity> jsonLogEntityCaptor =
                 forClass(HttpJsonLogResponseEntity.class);
-        verify(httpJsonLogger).addResponseLog(jsonLogEntityCaptor.capture());
-        verifyNoMoreInteractions(httpJsonLogger);
+        verify(jsonHttpTrafficLogger).addResponseLog(jsonLogEntityCaptor.capture());
+        verifyNoMoreInteractions(jsonHttpTrafficLogger);
 
         assertThat(jsonLogEntityCaptor.getValue())
                 .usingRecursiveComparison()
