@@ -37,6 +37,7 @@ public class RandomValueGeneratorImplTest {
         assertThat(chars(alphabet)).contains(chars(randomString));
     }
 
+    @SuppressWarnings("unused")
     private Object[] parametersForShouldGenerateRandomAlphanumericBasedOnCustomAlphabet() {
         return new Object[] {
             new Object[] {
