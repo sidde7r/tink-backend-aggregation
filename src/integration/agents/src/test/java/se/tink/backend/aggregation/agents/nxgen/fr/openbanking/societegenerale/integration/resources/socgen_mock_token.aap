@@ -1,0 +1,12 @@
+REQUEST 1
+POST https://mtls.sg-signin.societegenerale.fr/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+X-Aggregator : Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":900,"state":"f2533843-785d-4499-b92f-61711101feed","scope":"aisp","refresh_token":"DUMMY_REFRESH_TOKEN"}

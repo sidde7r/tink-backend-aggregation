@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.
 
 import java.time.LocalDate;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -25,6 +26,8 @@ public class SocieteGeneraleWireMockTest {
     private static final String CONFIGURATION_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/societegenerale/integration/resources/configuration.yml";
 
+    private static final LocalDate TODAY = LocalDate.of(1992, 4, 10);
+
     @Test
     public void testSepaInstantPayment() throws Exception {
 
@@ -42,7 +45,32 @@ public class SocieteGeneraleWireMockTest {
                         .withHttpDebugTrace()
                         .withPayment(
                                 createRealDomesticPayment(
-                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER))
+                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, TODAY))
+                        .withAgentModule(new SocieteGeneraleWireMockTestModule())
+                        .buildWithLogin(PaymentCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test(expected = PaymentValidationException.class)
+    public void shouldThrowErrorIfInstantPaymentDateIsNotToday() throws Exception {
+
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/societegenerale/integration/resources/socgen_mock_token.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.FR, "fr-societegenerale-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .withHttpDebugTrace()
+                        .withPayment(
+                                createRealDomesticPayment(
+                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER,
+                                        LocalDate.of(2009, 1, 1)))
                         .withAgentModule(new SocieteGeneraleWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
@@ -64,7 +92,9 @@ public class SocieteGeneraleWireMockTest {
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .withHttpDebugTrace()
-                        .withPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER))
+                        .withPayment(
+                                createRealDomesticPayment(
+                                        PaymentScheme.SEPA_CREDIT_TRANSFER, TODAY))
                         .withAgentModule(new SocieteGeneraleWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
@@ -101,7 +131,8 @@ public class SocieteGeneraleWireMockTest {
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
-    private Payment createRealDomesticPayment(PaymentScheme paymentScheme) {
+    private Payment createRealDomesticPayment(
+            PaymentScheme paymentScheme, LocalDate executionDate) {
         AccountIdentifier creditorAccountIdentifier =
                 AccountIdentifier.create(AccountIdentifierType.IBAN, "FR1420041010050500013M02606");
 
@@ -116,7 +147,7 @@ public class SocieteGeneraleWireMockTest {
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
-                .withExecutionDate(LocalDate.of(2021, 1, 1))
+                .withExecutionDate(executionDate)
                 .withPaymentScheme(paymentScheme)
                 .build();
     }

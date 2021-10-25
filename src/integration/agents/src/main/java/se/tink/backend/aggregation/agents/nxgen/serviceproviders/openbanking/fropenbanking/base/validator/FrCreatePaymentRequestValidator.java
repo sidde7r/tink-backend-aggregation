@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fr
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
@@ -13,7 +12,7 @@ public class FrCreatePaymentRequestValidator implements CreatePaymentRequestVali
     private final LocalDateTimeSource localDateTimeSource;
 
     @Override
-    public void validate(CreatePaymentRequest request) throws PaymentValidationException {
+    public void validate(ValidatablePaymentRequest request) throws PaymentValidationException {
         LocalDate requestedExecutionDate = request.getRequestedExecutionDateAsLocalDate();
         if (request.isInstantPaymentRequest()
                 && !localDateTimeSource.now().toLocalDate().isEqual(requestedExecutionDate)) {

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.BeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.CreditTransferTransactionEntity;
@@ -8,10 +10,15 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.e
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PartyIdentificationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentTypeInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.SupplementaryDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.ValidatablePaymentRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CreatePaymentRequest {
+public class CreatePaymentRequest implements ValidatablePaymentRequest {
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
     private String paymentInformationId;
     private String creationDateTime;
     private int numberOfTransactions;
@@ -37,6 +44,18 @@ public class CreatePaymentRequest {
         this.requestedExecutionDate = builder.requestedExecutionDate;
         this.creditTransferTransaction = builder.creditTransferTransaction;
         this.supplementaryData = builder.supplementaryData;
+    }
+
+    @JsonIgnore
+    @Override
+    public String getLocalInstrument() {
+        return paymentTypeInformation.getLocalInstrument();
+    }
+
+    @JsonIgnore
+    @Override
+    public LocalDate getRequestedExecutionDateAsLocalDate() {
+        return LocalDate.parse(requestedExecutionDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     public static class Builder {

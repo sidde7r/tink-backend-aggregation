@@ -9,7 +9,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -36,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.f
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transfer.SocieteGeneraleTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.filters.SocieteGeneraleRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.FrCreatePaymentRequestValidator;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -54,7 +55,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.date.CountryDateHelper;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({
@@ -86,6 +86,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     private final SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
     private final AgentConfiguration<SocieteGeneraleConfiguration> agentConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Inject
     public SocieteGeneraleAgent(
@@ -93,6 +94,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
         super(componentProvider);
 
         agentConfiguration = getAgentConfiguration();
+        localDateTimeSource = componentProvider.getLocalDateTimeSource();
 
         final SocieteGeneraleConfiguration societeGeneraleConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
@@ -240,6 +242,6 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                                 sessionStorage,
                                 supplementalInformationHelper,
                                 strongAuthenticationState,
-                                new CountryDateHelper(Locale.FRANCE))));
+                                new FrCreatePaymentRequestValidator(localDateTimeSource))));
     }
 }
