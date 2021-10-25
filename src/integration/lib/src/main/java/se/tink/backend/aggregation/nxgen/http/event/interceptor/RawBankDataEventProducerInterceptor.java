@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.http.event.interceptor;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class RawBankDataEventProducerInterceptor extends Filter {
 
@@ -27,6 +29,7 @@ public class RawBankDataEventProducerInterceptor extends Filter {
     public RawBankDataEventProducerInterceptor(
             RawBankDataEventProducer rawBankDataEventProducer,
             RawBankDataEventAccumulator rawBankDataEventAccumulator,
+            Supplier<RefreshableItem> refreshableItemInProgressSupplier,
             String correlationId,
             RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy) {
         this.rawBankDataEventProducer = rawBankDataEventProducer;

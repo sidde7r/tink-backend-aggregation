@@ -39,6 +39,7 @@ import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.timers.Timer;
 
@@ -334,7 +335,10 @@ public class DefaultRawBankDataEventProducerTest {
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
                         .setRawBankDataEventEmissionComponents(
-                                eventProducer, eventAccumulator, givenCorrelationId)
+                                eventProducer,
+                                eventAccumulator,
+                                () -> RefreshableItem.CHECKING_ACCOUNTS,
+                                givenCorrelationId)
                         .build();
 
         client.overrideRawBankDataEventCreationStrategies(
@@ -473,7 +477,10 @@ public class DefaultRawBankDataEventProducerTest {
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
                         .setRawBankDataEventEmissionComponents(
-                                eventProducer, eventAccumulator, givenCorrelationId)
+                                eventProducer,
+                                eventAccumulator,
+                                () -> RefreshableItem.CHECKING_ACCOUNTS,
+                                givenCorrelationId)
                         .build();
 
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicPort();

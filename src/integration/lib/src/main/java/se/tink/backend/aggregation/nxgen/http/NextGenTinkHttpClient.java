@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
@@ -126,6 +127,7 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificates
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.VerifyHostname;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -179,6 +181,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private RawBankDataEventProducerInterceptor rawBankDataEventProducerInterceptor;
     private RawBankDataEventProducer rawBankDataEventProducer;
+    private final Supplier<RefreshableItem> refreshableItemInProgressSupplier;
     // Determines the percentage of operations for which we will emit raw bank data event for
     // all HTTP traffic
     private static final double RAW_BANK_DATA_EVENT_EMISSION_RATE = 0.01;
@@ -315,6 +318,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         addFilter(new SendRequestFilter());
 
         // Build raw bank data event emission interceptor
+        this.refreshableItemInProgressSupplier = builder.getRefreshableItemInProgressSupplier();
         this.rawBankDataEventProducer = builder.getRawBankDataEventProducer();
         RawBankDataEventAccumulator rawBankDataEventAccumulator =
                 builder.getRawBankDataEventAccumulator();
@@ -326,6 +330,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                     new RawBankDataEventProducerInterceptor(
                             rawBankDataEventProducer,
                             rawBankDataEventAccumulator,
+                            refreshableItemInProgressSupplier,
                             correlationId,
                             new RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy(
                                     RAW_BANK_DATA_EVENT_EMISSION_RATE));
@@ -366,6 +371,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private RawBankDataEventProducer rawBankDataEventProducer;
         private RawBankDataEventAccumulator rawBankDataEventAccumulator;
         private String correlationId;
+        private Supplier<RefreshableItem> refreshableItemInProgressSupplier;
 
         public Builder(LogMasker logMasker, LoggingMode loggingMode) {
             this.logMasker = logMasker;
@@ -379,9 +385,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         public Builder setRawBankDataEventEmissionComponents(
                 RawBankDataEventProducer rawBankDataEventProducer,
                 RawBankDataEventAccumulator rawBankDataEventAccumulator,
+                Supplier<RefreshableItem> refreshableItemInProgressSupplier,
                 String correlationId) {
             this.rawBankDataEventProducer = rawBankDataEventProducer;
             this.rawBankDataEventAccumulator = rawBankDataEventAccumulator;
+            this.refreshableItemInProgressSupplier = refreshableItemInProgressSupplier;
             this.correlationId = correlationId;
             return this;
         }

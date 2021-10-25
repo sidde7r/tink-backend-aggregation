@@ -35,6 +35,7 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
                                         RawBankDataEventCreationStrategies
                                                 .createDefaultConfiguration()),
                                 context.getRawBankDataEventAccumulator(),
+                                context::getCurrentRefreshableItemInProgress,
                                 context.getCorrelationId())
                         .build();
     }
