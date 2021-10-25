@@ -6,12 +6,12 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,32 +33,25 @@ public class WireMockTestServer {
 
     private final WireMockServer wireMockServer;
 
-    public WireMockTestServer(
-            ImmutableSet<RequestResponseParser> parsers, boolean wireMockServerLogsEnabled) {
-        WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicHttpsPort();
+    public WireMockTestServer(boolean logsEnabled) {
+        WireMockConfiguration configuration =
+                wireMockConfig()
+                        .dynamicPort()
+                        .dynamicHttpsPort()
+                        .notifier(logsEnabled ? new Slf4jNotifier(false) : null);
 
-        if (!wireMockServerLogsEnabled) {
-            config.notifier(null);
-        }
-
-        wireMockServer = new WireMockServer(config);
+        wireMockServer = new WireMockServer(configuration);
         wireMockServer.start();
-        Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
-        parsers.forEach(
-                parser ->
-                        registerRequestResponsePairs(
-                                parser.parseRequestResponsePairs(), registeredPairs));
     }
 
-    public WireMockTestServer(ImmutableSet<RequestResponseParser> parsers) {
+    public WireMockTestServer(Set<RequestResponseParser> parsers, boolean logsEnabled) {
+        this(logsEnabled);
+        loadRequestResponsePairs(parsers);
+    }
 
-        wireMockServer = new WireMockServer(wireMockConfig().dynamicPort().dynamicHttpsPort());
-        wireMockServer.start();
-        Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
-        parsers.forEach(
-                parser ->
-                        registerRequestResponsePairs(
-                                parser.parseRequestResponsePairs(), registeredPairs));
+    public WireMockTestServer(Set<RequestResponseParser> parsers) {
+        this(false);
+        loadRequestResponsePairs(parsers);
     }
 
     public int getHttpsPort() {
@@ -67,6 +60,14 @@ public class WireMockTestServer {
 
     public int getHttpPort() {
         return wireMockServer.port();
+    }
+
+    public void loadRequestResponsePairs(Set<RequestResponseParser> parsers) {
+        wireMockServer.resetAll();
+
+        parsers.stream()
+                .map(RequestResponseParser::parseRequestResponsePairs)
+                .forEach(this::registerRequestResponsePairs);
     }
 
     public void shutdown() {
@@ -154,9 +155,9 @@ public class WireMockTestServer {
         return errorMessage.toString();
     }
 
-    private void registerRequestResponsePairs(
-            Set<Pair<HTTPRequest, HTTPResponse>> pairs,
-            Map<HTTPRequest, HTTPResponse> registeredPairs) {
+    private void registerRequestResponsePairs(Set<Pair<HTTPRequest, HTTPResponse>> pairs) {
+        Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
+
         // By default, WireMock will use the most recently added matching stub to satisfy the
         // request. To prevent mismatches when several requests have the same URL but different
         // subsets of parameters, headers and/or state, more specific requests should be added after

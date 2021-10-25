@@ -7,7 +7,7 @@ import static se.tink.libraries.serialization.utils.SerializationUtils.deseriali
 
 import java.io.File;
 import java.nio.file.Paths;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,51 +17,37 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.BusinessMessageBulk;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.helper.FortisRandomTokenGenerator;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTestServer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FortisApiClientIntegrationTest {
 
-    @Mock private FortisRandomTokenGenerator randomTokenGenerator;
+    private static final WireMockIntegrationTestServer WIREMOCK_SERVER =
+            new WireMockIntegrationTestServer();
 
-    private WireMockIntegrationTestServer wireMockServer;
+    @Mock private FortisRandomTokenGenerator randomTokenGenerator;
 
     private FortisApiClient fortisApiClient;
 
     @Before
     public void setUp() {
-        when(randomTokenGenerator.generateCSRF()).thenReturn("randomly-generated-csrf-string");
+        initMocks();
+        initFortisApiHttpClient();
     }
 
-    @After
-    public void cleanUp() {
-        wireMockServer.shutdown();
+    @AfterClass
+    public static void cleanUpClass() {
+        WIREMOCK_SERVER.shutdown();
     }
 
-    private void initializeWireMockScenario(File scenarioAapFile) {
-        wireMockServer = new WireMockIntegrationTestServer(scenarioAapFile);
-
-        initializeFortisTinkHttpClient();
-    }
-
-    private void initializeFortisTinkHttpClient() {
-        fortisApiClient =
-                new FortisApiClient(
-                        wireMockServer.getTinkHttpClient(),
-                        "https://app.easybanking.bnpparibasfortis.be",
-                        "49FB001",
-                        randomTokenGenerator);
-
-        FortisAgent.configureHttpClient(wireMockServer.getTinkHttpClient());
-    }
-
-    /** Delete after introduction of Agent-level WireMock tests. */
+    /** Delete after introduction of Agent-level WireMock tests */
     @Test
     public void shouldFetchAccounts() {
 
         // given
-        initializeWireMockScenario(resource("fetch-accounts.aap"));
+        givenWireMockScenario(resource("fetch-accounts.aap"));
 
         // and
         AccountsResponse expectedAccountsResponse =
@@ -81,7 +67,7 @@ public class FortisApiClientIntegrationTest {
     public void shouldThrowOnFetchAccountsWithCertainPewCode() {
 
         // given
-        initializeWireMockScenario(resource("fetch-accounts-with-pew-code.aap"));
+        givenWireMockScenario(resource("fetch-accounts-with-pew-code.aap"));
 
         // expect
         assertThatThrownBy(() -> fortisApiClient.fetchAccounts())
@@ -92,7 +78,7 @@ public class FortisApiClientIntegrationTest {
     public void shouldFetchAccountsIgnoringUnknownPewCode() {
 
         // given
-        initializeWireMockScenario(resource("fetch-accounts-with-unknown-pew-code.aap"));
+        givenWireMockScenario(resource("fetch-accounts-with-unknown-pew-code.aap"));
 
         // and
         AccountsResponse expectedAccountsResponse =
@@ -117,7 +103,7 @@ public class FortisApiClientIntegrationTest {
     public void shouldThrowOnTooManyRequests() {
 
         // given
-        initializeWireMockScenario(resource("fetch-accounts-too-many-requests.aap"));
+        givenWireMockScenario(resource("fetch-accounts-too-many-requests.aap"));
 
         // expect
         assertThatThrownBy(() -> fortisApiClient.fetchAccounts())
@@ -128,11 +114,32 @@ public class FortisApiClientIntegrationTest {
     public void shouldThrowOnServerError() {
 
         // given
-        initializeWireMockScenario(resource("fetch-accounts-server-error.aap"));
+        givenWireMockScenario(resource("fetch-accounts-server-error.aap"));
 
         // expect
         assertThatThrownBy(() -> fortisApiClient.fetchAccounts())
                 .isExactlyInstanceOf(HttpResponseException.class);
+    }
+
+    private void initMocks() {
+        when(randomTokenGenerator.generateCSRF()).thenReturn("randomly-generated-csrf-string");
+    }
+
+    private void initFortisApiHttpClient() {
+        TinkHttpClient tinkHttpClient = WIREMOCK_SERVER.createTinkHttpClient();
+
+        fortisApiClient =
+                new FortisApiClient(
+                        tinkHttpClient,
+                        "https://app.easybanking.bnpparibasfortis.be",
+                        "49FB001",
+                        randomTokenGenerator);
+
+        FortisAgent.configureHttpClient(tinkHttpClient);
+    }
+
+    private void givenWireMockScenario(File aapFile) {
+        WIREMOCK_SERVER.loadScenario(aapFile);
     }
 
     private static File resource(String filename) {
