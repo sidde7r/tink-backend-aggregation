@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.event.interceptor;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class RawBankDataEventProducerInterceptor extends Filter {
     private final String correlationId;
 
     private RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy;
+    private final Supplier<RefreshableItem> refreshableItemInProgressSupplier;
 
     public RawBankDataEventProducerInterceptor(
             RawBankDataEventProducer rawBankDataEventProducer,
@@ -35,6 +37,7 @@ public class RawBankDataEventProducerInterceptor extends Filter {
         this.rawBankDataEventProducer = rawBankDataEventProducer;
         this.rawBankDataEventAccumulator = rawBankDataEventAccumulator;
         this.correlationId = correlationId;
+        this.refreshableItemInProgressSupplier = refreshableItemInProgressSupplier;
         this.rawBankDataEventCreationTriggerStrategy = rawBankDataEventCreationTriggerStrategy;
     }
 
@@ -47,6 +50,14 @@ public class RawBankDataEventProducerInterceptor extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
+
+        /*
+           If refreshableItemInProgressSupplier returns null, it means that we are in
+           authentication stage and for this stage we don't want to emit raw bank data events
+        */
+        if (Objects.isNull(refreshableItemInProgressSupplier.get())) {
+            return response;
+        }
 
         // Check if the decision strategy tells us to produce an event or not
         if (rawBankDataEventCreationTriggerStrategy.shouldTryProduceRawBankDataEvent()) {
@@ -66,7 +77,10 @@ public class RawBankDataEventProducerInterceptor extends Filter {
                 Optional<RawBankDataTrackerEvent> maybeEvent =
                         rawBankDataEventProducer.produceRawBankDataEvent(
                                 rawResponseString, correlationId);
-                maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
+                maybeEvent.ifPresent(
+                        event ->
+                                rawBankDataEventAccumulator.addEvent(
+                                        event, refreshableItemInProgressSupplier.get()));
             } catch (Exception e) {
                 LOGGER.warn(
                         "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event production");

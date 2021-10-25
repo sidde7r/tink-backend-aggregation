@@ -83,7 +83,7 @@ public class SEBWireMockRawBankDataEventEmissionTest {
         Assert.assertTrue(true);
         List<RawBankDataTrackerEvent> messageList =
                 agentWireMockPaymentTest.getEmittedRawBankDataEvents();
-        Assert.assertTrue(messageList.size() > 0);
+        Assert.assertEquals(0, messageList.size());
     }
 
     private Payment createMockedDomesticPGPayment() {
