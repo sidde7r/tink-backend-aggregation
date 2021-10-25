@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataE
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
 import src.libraries.interaction_counter.InteractionCounter;
@@ -36,6 +37,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     private HttpJsonLogger httpJsonLogger;
     protected RawBankDataEventAccumulator rawBankDataEventAccumulator;
     protected String correlationId;
+    private RefreshableItem refreshableItemInProgress;
 
     @Override
     public String getCorrelationId() {
@@ -209,5 +211,15 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public RawBankDataEventAccumulator getRawBankDataEventAccumulator() {
         return rawBankDataEventAccumulator;
+    }
+
+    @Override
+    public void setCurrentRefreshableItemInProgress(RefreshableItem refreshableItem) {
+        this.refreshableItemInProgress = refreshableItem;
+    }
+
+    @Override
+    public RefreshableItem getCurrentRefreshableItemInProgress() {
+        return this.refreshableItemInProgress;
     }
 }

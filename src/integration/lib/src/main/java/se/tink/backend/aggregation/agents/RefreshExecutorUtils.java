@@ -84,6 +84,7 @@ public final class RefreshExecutorUtils {
         }
         // Segregated refresh executor
         if (executorKlass.isAssignableFrom(agent.getAgentClass())) {
+            context.setCurrentRefreshableItemInProgress(item);
             switch (item) {
                 case CHECKING_ACCOUNTS:
                     refreshAndCacheCheckingAccounts(agent, context);
