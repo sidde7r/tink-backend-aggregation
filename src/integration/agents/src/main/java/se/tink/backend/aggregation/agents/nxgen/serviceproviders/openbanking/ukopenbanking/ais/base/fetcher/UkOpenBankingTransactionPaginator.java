@@ -187,10 +187,19 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         final OffsetDateTime startingDateForFetchingAsMuchAsPossible =
                 now.minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS);
 
+        log.info(
+                "dateOfLastTransactionFetching.isPresent(): "
+                        + dateOfLastTransactionFetching.isPresent());
         if (dateOfLastTransactionFetching.isPresent()
                 && dateOfLastTransactionFetching
                         .get()
                         .isAfter(startingDateForFetchingRecentTransactions)) {
+            log.info(
+                    "dateOfLastTransactionFetching ("
+                            + dateOfLastTransactionFetching.get()
+                            + ") isAfter startingDateForFetchingRecentTransactions ("
+                            + startingDateForFetchingRecentTransactions
+                            + ")");
             return startingDateForFetchingRecentTransactions;
         } else {
             return startingDateForFetchingAsMuchAsPossible;
