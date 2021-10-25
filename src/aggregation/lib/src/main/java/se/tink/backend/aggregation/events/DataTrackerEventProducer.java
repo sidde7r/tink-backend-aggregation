@@ -5,12 +5,14 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTrackerEvent;
 import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTrackerFieldInfo;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
@@ -56,6 +58,7 @@ public class DataTrackerEventProducer {
                         .setCorrelationId(correlationId)
                         .setAppId(appId)
                         .setClusterId(clusterId)
+                        .setTraceId(Optional.ofNullable(MDC.get("traceId")).orElse("N/A"))
                         .setUserId(userId);
 
         isFieldPopulated.forEach(

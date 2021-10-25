@@ -56,7 +56,7 @@ public final class DataTrackerEventProducerTest {
                 fields.keySet().stream().map(FieldDescriptor::getName).collect(Collectors.toSet());
 
         // then
-        assertEquals(7, fields.size());
+        assertEquals(8, fields.size());
         final String providerNameValue =
                 (String)
                         fields.entrySet().stream()
@@ -75,6 +75,7 @@ public final class DataTrackerEventProducerTest {
                                 "correlation_id",
                                 "provider_name",
                                 "app_id",
+                                "trace_id",
                                 "timestamp")));
 
         assertEquals("hoy", providerNameValue);

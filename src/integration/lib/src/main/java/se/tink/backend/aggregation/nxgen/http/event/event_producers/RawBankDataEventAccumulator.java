@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import org.slf4j.MDC;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
@@ -19,6 +21,7 @@ public class RawBankDataEventAccumulator {
                 RawBankDataTrackerEvent.newBuilder()
                         .setTimestamp(event.getTimestamp())
                         .setCorrelationId(event.getCorrelationId())
+                        .setTraceId(Optional.ofNullable(MDC.get("traceId")).orElse("N/A"))
                         .setRefreshableItem(mapFromRefreshableItem(refreshableItem));
 
         Map<RawBankDataTrackerEventBankField, Integer> fieldCount = new HashMap<>();
