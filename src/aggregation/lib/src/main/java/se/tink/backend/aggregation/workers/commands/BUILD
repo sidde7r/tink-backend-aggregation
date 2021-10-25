@@ -54,6 +54,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/summary/refresh",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/typeguesser/accountholder",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/psd2_payment_account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/psd2_payment_account/result",

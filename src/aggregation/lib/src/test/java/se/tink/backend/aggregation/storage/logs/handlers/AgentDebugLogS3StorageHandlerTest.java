@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.HttpLogType;
 
 @RunWith(JUnitParamsRunner.class)
 public class AgentDebugLogS3StorageHandlerTest {
@@ -113,14 +113,13 @@ public class AgentDebugLogS3StorageHandlerTest {
     @Test
     @Parameters(method = "all_logs_types")
     public void should_throw_exception_when_trying_to_use_disabled_storage(
-            AgentDebugLogBucket agentDebugLogBucket) {
+            HttpLogType httpLogType) {
         // given
         s3StorageConfiguration = validS3Configuration().toBuilder().enabled(false).build();
         recreateStorageHandler();
 
         // when
-        Throwable throwable =
-                catchThrowable(() -> logStorageHandler.storeLog("", "", agentDebugLogBucket));
+        Throwable throwable = catchThrowable(() -> logStorageHandler.storeLog("", "", httpLogType));
 
         // then
         assertThat(throwable)
@@ -130,7 +129,7 @@ public class AgentDebugLogS3StorageHandlerTest {
 
     @SuppressWarnings("unused")
     private static Object[] all_logs_types() {
-        return Stream.of(AgentDebugLogBucket.values()).toArray();
+        return Stream.of(HttpLogType.values()).toArray();
     }
 
     @Test
@@ -145,9 +144,7 @@ public class AgentDebugLogS3StorageHandlerTest {
                 catchThrowable(
                         () ->
                                 logStorageHandler.storeLog(
-                                        "some content",
-                                        blankFilePath,
-                                        AgentDebugLogBucket.RAW_FORMAT_LOGS));
+                                        "some content", blankFilePath, HttpLogType.RAW_FORMAT));
 
         // then
         assertThat(throwable)
@@ -164,7 +161,7 @@ public class AgentDebugLogS3StorageHandlerTest {
     @SneakyThrows
     @Parameters(method = "all_log_types_with_expected_bucket_name")
     public void should_store_logs_in_correct_bucket(
-            AgentDebugLogBucket agentDebugLogBucket, String expectedBucketName) {
+            HttpLogType httpLogType, String expectedBucketName) {
         // given
         s3StorageConfiguration = validS3Configuration();
         recreateStorageHandler();
@@ -173,8 +170,7 @@ public class AgentDebugLogS3StorageHandlerTest {
 
         // when
         String storageDescription =
-                logStorageHandler.storeLog(
-                        "some content", "some/path/to/file.log", agentDebugLogBucket);
+                logStorageHandler.storeLog("some content", "some/path/to/file.log", httpLogType);
 
         // then
         assertThat(storageDescription)
@@ -193,8 +189,8 @@ public class AgentDebugLogS3StorageHandlerTest {
     @SuppressWarnings("unused")
     private Object[] all_log_types_with_expected_bucket_name() {
         return new Object[] {
-            new Object[] {AgentDebugLogBucket.RAW_FORMAT_LOGS, RAW_BUCKET_NAME},
-            new Object[] {AgentDebugLogBucket.JSON_FORMAT_LOGS, JSON_BUCKET_NAME}
+            new Object[] {HttpLogType.RAW_FORMAT, RAW_BUCKET_NAME},
+            new Object[] {HttpLogType.JSON_FORMAT, JSON_BUCKET_NAME}
         };
     }
 
@@ -209,8 +205,7 @@ public class AgentDebugLogS3StorageHandlerTest {
 
         // when
         String storageDescription =
-                logStorageHandler.storeLog(
-                        "", "some/path/to/file123.log", AgentDebugLogBucket.RAW_FORMAT_LOGS);
+                logStorageHandler.storeLog("", "some/path/to/file123.log", HttpLogType.RAW_FORMAT);
 
         // then
         assertThat(storageDescription)

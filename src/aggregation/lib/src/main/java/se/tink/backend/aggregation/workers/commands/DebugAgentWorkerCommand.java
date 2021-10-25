@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AggregationWorkerConfiguration;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaver;
 import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaverProvider;
 import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
 import se.tink.backend.aggregation.storage.logs.SaveLogsResult;
+import se.tink.backend.aggregation.storage.logs.SaveLogsStatus;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentsLegalConstraintsProvider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -29,6 +31,8 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 @Slf4j
 public class DebugAgentWorkerCommand extends AgentWorkerCommand {
+
+    private static final LogTag LOG_TAG = LogTag.from("[DebugAgentWorkerCommand]");
 
     private final AgentWorkerCommandContext context;
     private final AgentHttpLogsStorageHandler logsStorageHandler;
@@ -97,11 +101,12 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         }
 
         if (isLoggingDisabledOnCluster()) {
-            logResultsBuilder.append("\nSkipping logs: disabled on cluster");
+            logResultsBuilder.append("\nSkipping all logs: disabled on cluster");
             return;
         }
         if (loggingMaskerMayNotCoverAllProvidersSecrets()) {
-            logResultsBuilder.append("\nSkipping logs: logging masker may not cover all secrets");
+            logResultsBuilder.append(
+                    "\nSkipping all logs: logging masker may not cover all secrets");
             return;
         }
 
@@ -114,7 +119,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private void handleLoggingForTransferRequest(TransferRequest transferRequest) {
         if (!shouldLogTransferRequest(transferRequest)) {
-            logResultsBuilder.append("\nSkipping logs: should not log");
+            logResultsBuilder.append("\nThis transfer request should not be logged");
             return;
         }
 
@@ -128,6 +133,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                                     "%nFlushed transfer (%s) debug log for further investigation: ",
                                     transferId))
                     .append(rawLogsResult.getStorageDescription());
+        } else {
+            logSkippingRawLogs(rawLogsResult.getStatus());
         }
 
         if (shouldStoreInLongTermStorageForPaymentsDisputes(context.getAppId())) {
@@ -140,6 +147,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                                         "%nFlushed transfer to long term storage for payments disputes (%s) debug log for further investigation: ",
                                         transferId))
                         .append(ltsRawLogsResult.getStorageDescription());
+            } else {
+                logSkippingRawLtsLogs(ltsRawLogsResult.getStatus());
             }
         }
 
@@ -148,6 +157,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             logResultsBuilder
                     .append(format("%nFlushed transfer (%s) json logs: ", transferId))
                     .append(jsonLogsResult.getStorageDescription());
+        } else {
+            logSkippingJsonLogs(jsonLogsResult.getStatus());
         }
     }
 
@@ -170,7 +181,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private void handleLoggingForCommonRequest() {
         if (!shouldLogCommonRequest()) {
-            logResultsBuilder.append("\nSkipping logs: should not log");
+            logResultsBuilder.append("\nThis request should not be logged");
             return;
         }
 
@@ -179,6 +190,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             logResultsBuilder
                     .append("\nFlushed http logs: ")
                     .append(rawLogsResult.getStorageDescription());
+        } else {
+            logSkippingRawLogs(rawLogsResult.getStatus());
         }
 
         SaveLogsResult jsonLogsResult = logsSaver.saveJsonLogs();
@@ -186,6 +199,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             logResultsBuilder
                     .append("\nFlushed http json logs: ")
                     .append(jsonLogsResult.getStorageDescription());
+        } else {
+            logSkippingJsonLogs(jsonLogsResult.getStatus());
         }
     }
 
@@ -225,5 +240,17 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                 .map(AgentsServiceConfiguration::getAggregationWorker)
                 .map(AggregationWorkerConfiguration::getDebugLogFrequencyPercent)
                 .orElse(0);
+    }
+
+    private static void logSkippingRawLogs(SaveLogsStatus status) {
+        log.warn("{} Skipping AAP http logs: {}", LOG_TAG, status);
+    }
+
+    private static void logSkippingRawLtsLogs(SaveLogsStatus status) {
+        log.warn("{} Skipping AAP LTS http logs: {}", LOG_TAG, status);
+    }
+
+    private static void logSkippingJsonLogs(SaveLogsStatus status) {
+        log.warn("{} Skipping JSON http logs: {}", LOG_TAG, status);
     }
 }

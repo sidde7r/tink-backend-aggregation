@@ -29,8 +29,8 @@ public class AgentHttpLogsMasker {
             }
         }
 
-        // If we have no masker, log nothing.
-        if (Objects.isNull(logMasker)) {
+        if (logMasker == null) {
+            log.warn("Log masker missing - returning empty logs");
             return "";
         }
         return logMasker.mask(logContent);

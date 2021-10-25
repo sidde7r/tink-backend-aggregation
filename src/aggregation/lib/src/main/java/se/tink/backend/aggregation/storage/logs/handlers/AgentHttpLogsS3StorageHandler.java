@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.HttpLogType;
 
 @Slf4j
 public class AgentHttpLogsS3StorageHandler implements AgentHttpLogsStorageHandler {
@@ -45,12 +45,12 @@ public class AgentHttpLogsS3StorageHandler implements AgentHttpLogsStorageHandle
     /**
      * @param content - content of S3 log object
      * @param filePath - S3 log object file name
-     * @param bucket - S3 bucket
+     * @param logType - http log type
      * @return On success, returns explanation of where log was stored. Otherwise, throws different
      *     types of errors.
      */
     @Override
-    public String storeLog(String content, String filePath, AgentDebugLogBucket bucket) {
+    public String storeLog(String content, String filePath, HttpLogType logType) {
         if (!isEnabled()) {
             throw new IllegalStateException("Invalid attempt to use S3 storage - not enabled");
         }
@@ -59,7 +59,7 @@ public class AgentHttpLogsS3StorageHandler implements AgentHttpLogsStorageHandle
                     "Invalid attempt to use S3 storage - object name not specified");
         }
 
-        String bucketName = bucket.getBucketName(s3StorageConfiguration);
+        String bucketName = logType.getBucketName(s3StorageConfiguration);
         putObjectInS3(content, filePath, bucketName);
         return String.format(
                 "AWS CLI: s3://%s/%s\n" + "AWS HTTP: %s",
@@ -101,19 +101,18 @@ public class AgentHttpLogsS3StorageHandler implements AgentHttpLogsStorageHandle
                     "Invalid S3 configuration - no configuration for connection");
         }
 
-        List<AgentDebugLogBucket> bucketsWithoutName =
-                Stream.of(AgentDebugLogBucket.values())
-                        .filter(
-                                bucket -> {
-                                    String bucketName =
-                                            bucket.getBucketName(s3StorageConfiguration);
-                                    return StringUtils.isBlank(bucketName);
-                                })
+        List<HttpLogType> logTypesWithoutBucketName =
+                Stream.of(HttpLogType.values())
+                        .filter(this::isLogTypeBucketNameMissing)
                         .collect(Collectors.toList());
-        if (!bucketsWithoutName.isEmpty()) {
+        if (!logTypesWithoutBucketName.isEmpty()) {
             throw new IllegalStateException(
-                    "Invalid S3 configuration - no configuration for buckets: "
-                            + bucketsWithoutName);
+                    "Invalid S3 configuration - no bucket name for log types: "
+                            + logTypesWithoutBucketName);
         }
+    }
+
+    private boolean isLogTypeBucketNameMissing(HttpLogType logType) {
+        return StringUtils.isBlank(logType.getBucketName(s3StorageConfiguration));
     }
 }

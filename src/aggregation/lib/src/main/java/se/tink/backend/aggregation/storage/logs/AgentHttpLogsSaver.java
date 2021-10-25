@@ -6,7 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.HttpLogType;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
 
@@ -26,29 +26,28 @@ public class AgentHttpLogsSaver {
      */
     public SaveLogsResult saveRawLogs(RawHttpLogsCatalog catalog) {
         if (!logsStorageHandler.isEnabled()) {
-            return SaveLogsResult.skipped(SaveLogsStatus.NO_AVAILABLE_STORAGE);
+            return SaveLogsResult.of(SaveLogsStatus.STORAGE_DISABLED);
         }
 
         Optional<String> maybeLogContent = logsCache.getRawLogContent();
         if (!maybeLogContent.isPresent()) {
-            return SaveLogsResult.skipped(SaveLogsStatus.NO_LOGS);
+            return SaveLogsResult.of(SaveLogsStatus.NO_LOGS);
         }
 
         String logContent = maybeLogContent.get();
         if (StringUtils.isBlank(logContent)) {
-            return SaveLogsResult.skipped(SaveLogsStatus.EMPTY_LOGS);
+            return SaveLogsResult.of(SaveLogsStatus.EMPTY_LOGS);
         }
 
         try {
             String filePath = getRawLogFilePath(logContent, catalog);
             String storageDescription =
-                    logsStorageHandler.storeLog(
-                            logContent, filePath, AgentDebugLogBucket.RAW_FORMAT_LOGS);
+                    logsStorageHandler.storeLog(logContent, filePath, HttpLogType.RAW_FORMAT);
             return SaveLogsResult.saved(storageDescription);
 
         } catch (IOException | RuntimeException e) {
             log.error("Could not store raw logs, catalog: {}", catalog);
-            return SaveLogsResult.skipped(SaveLogsStatus.ERROR);
+            return SaveLogsResult.of(SaveLogsStatus.ERROR);
         }
     }
 
@@ -69,25 +68,24 @@ public class AgentHttpLogsSaver {
      */
     public SaveLogsResult saveJsonLogs() {
         if (!logsStorageHandler.isEnabled()) {
-            return SaveLogsResult.skipped(SaveLogsStatus.NO_AVAILABLE_STORAGE);
+            return SaveLogsResult.of(SaveLogsStatus.STORAGE_DISABLED);
         }
 
         Optional<String> maybeJsonLogContent = logsCache.getJsonLogContent();
         if (!maybeJsonLogContent.isPresent()) {
-            return SaveLogsResult.skipped(SaveLogsStatus.NO_LOGS);
+            return SaveLogsResult.of(SaveLogsStatus.NO_LOGS);
         }
         String jsonLogContent = maybeJsonLogContent.get();
 
         String filePath = s3StoragePathsProvider.getJsonLogPath(jsonLogContent);
         try {
             String storagePath =
-                    logsStorageHandler.storeLog(
-                            jsonLogContent, filePath, AgentDebugLogBucket.JSON_FORMAT_LOGS);
+                    logsStorageHandler.storeLog(jsonLogContent, filePath, HttpLogType.JSON_FORMAT);
             return SaveLogsResult.saved(storagePath);
 
         } catch (IOException | RuntimeException e) {
             log.error("Could not store JSON logs", e);
-            return SaveLogsResult.skipped(SaveLogsStatus.ERROR);
+            return SaveLogsResult.of(SaveLogsStatus.ERROR);
         }
     }
 }

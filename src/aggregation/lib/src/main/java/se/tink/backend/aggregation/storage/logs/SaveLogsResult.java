@@ -25,11 +25,7 @@ public class SaveLogsResult {
                 .build();
     }
 
-    public static SaveLogsResult skipped() {
-        return SaveLogsResult.builder().status(SaveLogsStatus.SKIPPED).build();
-    }
-
-    public static SaveLogsResult skipped(SaveLogsStatus status) {
+    public static SaveLogsResult of(SaveLogsStatus status) {
         return SaveLogsResult.builder().status(status).build();
     }
 }

@@ -163,13 +163,13 @@ public class DebugAgentWorkerCommandTest {
                                 .hasToString(
                                         "Payment Credentials Status: TEMPORARY_ERROR"
                                                 + "\n"
-                                                + "Skipping logs: disabled on cluster");
+                                                + "Skipping all logs: disabled on cluster");
                     } else {
                         assertThat(logResultsBuilder)
                                 .hasToString(
                                         "Credential Status: TEMPORARY_ERROR"
                                                 + "\n"
-                                                + "Skipping logs: disabled on cluster");
+                                                + "Skipping all logs: disabled on cluster");
                     }
                 });
     }
@@ -215,13 +215,13 @@ public class DebugAgentWorkerCommandTest {
                                 .hasToString(
                                         "Payment Credentials Status: TEMPORARY_ERROR"
                                                 + "\n"
-                                                + "Skipping logs: logging masker may not cover all secrets");
+                                                + "Skipping all logs: logging masker may not cover all secrets");
                     } else {
                         assertThat(logResultsBuilder)
                                 .hasToString(
                                         "Credential Status: TEMPORARY_ERROR"
                                                 + "\n"
-                                                + "Skipping logs: logging masker may not cover all secrets");
+                                                + "Skipping all logs: logging masker may not cover all secrets");
                     }
                 });
     }
@@ -277,7 +277,7 @@ public class DebugAgentWorkerCommandTest {
                                         "Payment Credentials Status: "
                                                 + testCase.getCredentialsStatus()
                                                 + "\n"
-                                                + "Skipping logs: should not log");
+                                                + "This transfer request should not be logged");
                     }
 
                     verifyNoMoreInteractions(logsSaver);
@@ -465,7 +465,7 @@ public class DebugAgentWorkerCommandTest {
                                         "Credential Status: "
                                                 + testCase.getCredentialsStatus()
                                                 + "\n"
-                                                + "Skipping logs: should not log");
+                                                + "This request should not be logged");
                     }
                     verifyNoMoreInteractions(logsSaver);
                 });

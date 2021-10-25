@@ -19,7 +19,7 @@ import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.HttpLogType;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
 
@@ -57,9 +57,7 @@ public class AgentHttpLogsSaverTest {
         // then
         assertThat(results)
                 .containsOnly(
-                        SaveLogsResult.builder()
-                                .status(SaveLogsStatus.NO_AVAILABLE_STORAGE)
-                                .build());
+                        SaveLogsResult.builder().status(SaveLogsStatus.STORAGE_DISABLED).build());
 
         verify(logsStorageHandler, times(3)).isEnabled();
         verifyNoMoreInteractions(logsStorageHandler);
@@ -135,10 +133,7 @@ public class AgentHttpLogsSaverTest {
 
         verify(logsStorageHandler).isEnabled();
         verify(logsStorageHandler)
-                .storeLog(
-                        "not empty log content",
-                        "raw/file.log",
-                        AgentDebugLogBucket.RAW_FORMAT_LOGS);
+                .storeLog("not empty log content", "raw/file.log", HttpLogType.RAW_FORMAT);
         verifyNoMoreInteractions(logsStorageHandler);
     }
 
@@ -170,10 +165,7 @@ public class AgentHttpLogsSaverTest {
 
         verify(logsStorageHandler).isEnabled();
         verify(logsStorageHandler)
-                .storeLog(
-                        "not empty log 123",
-                        "raw/lts/file.log",
-                        AgentDebugLogBucket.RAW_FORMAT_LOGS);
+                .storeLog("not empty log 123", "raw/lts/file.log", HttpLogType.RAW_FORMAT);
         verifyNoMoreInteractions(logsStorageHandler);
     }
 
@@ -242,7 +234,7 @@ public class AgentHttpLogsSaverTest {
 
         verify(logsStorageHandler).isEnabled();
         verify(logsStorageHandler)
-                .storeLog(logContent, "ais/json/file.json", AgentDebugLogBucket.JSON_FORMAT_LOGS);
+                .storeLog(logContent, "ais/json/file.json", HttpLogType.JSON_FORMAT);
         verifyNoMoreInteractions(logsStorageHandler);
     }
 
