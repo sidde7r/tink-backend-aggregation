@@ -1,0 +1,46 @@
+REQUEST 1
+GET https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/consents/DUMMY_CONSENT_ID/status
+X-Aggregator: Tink Testing
+x-ibm-client-id: dummyClientId
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+X-Global-Transaction-ID: 48103bbd61103def3a2e886f
+Content-Length: 28
+
+{"transactionStatus":"ACTC"}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/accounts?withBalance=true
+Consent-ID: DUMMY_CONSENT_ID
+x-ibm-client-id: dummyClientId
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json
+X-Global-Transaction-ID: f2ed471261103df017cd59c7
+Content-Length: 359
+
+{"accountList": [{"id": "00000000000000000000000","iban": "00000000000000000000000","bban": "000000000000000000000","currency": "EUR","name": "000000000000000000000000","accountType": "CACC","bic": "TOTAPTPL","_links": {"viewBalances": "/BST/v1-0-3/accounts/00000000000000000000000/balances","viewTransactions": "/BST/v1-0-3/accounts/00000000000000000000000/transactions"}}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/accounts/00000000000000000000000/balances?psuInvolved=false
+Consent-ID: DUMMY_CONSENT_ID
+x-ibm-client-id: dummyClientId
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+429
+Content-Type: application/json
+X-Global-Transaction-ID: 48103bbd61103df13a2e894f
+Content-Length: 180
+
+{"transactionStatus": "RJCT","tppMessages": [{"category": "ERROR","code": "ACCESS_EXCEEDED","text": "The access on the account has been exceeding the consented multiplicity per day."}]}
