@@ -28,6 +28,7 @@ java_library(
         "//src/integration/models",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_inject_guice",
         "//third_party:com_nimbusds_nimbus_jose_jwt",
         "//third_party:com_sun_jersey_jersey_core",
