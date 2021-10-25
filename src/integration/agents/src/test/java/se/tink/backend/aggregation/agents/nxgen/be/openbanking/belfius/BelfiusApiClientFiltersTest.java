@@ -5,8 +5,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.MAX_RETRIES;
-import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -15,21 +13,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -37,13 +28,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @RunWith(JUnitParamsRunner.class)
 public class BelfiusApiClientFiltersTest {
 
+    private static final int TEST_RETRY_SLEEP_MS = 1;
+    private static final int TEST_MAX_RETRIES_NUMBER = 1;
     private static final URL TEST_URL = new URL("https://belfius.be/test");
 
     @Mock private Filter nextFilter;
-
-    @Spy
-    private final TerminatedHandshakeRetryFilter terminatedHandshakeRetryFilter =
-            new TerminatedHandshakeRetryFilter();
 
     private final PersistentStorage persistentStorage = new PersistentStorage();
 
@@ -56,53 +45,9 @@ public class BelfiusApiClientFiltersTest {
     @Before
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
-        client.addFilter(new ServerErrorFilter());
-        client.addFilter(new TimeoutFilter());
-        client.addFilter(new ConnectionTimeoutRetryFilter(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(terminatedHandshakeRetryFilter);
+        new BelfiusClientConfigurator()
+                .configure(client, persistentStorage, TEST_RETRY_SLEEP_MS, TEST_MAX_RETRIES_NUMBER);
         client.addFilter(nextFilter);
-        terminatedHandshakeRetryFilter.setNext(nextFilter);
-    }
-
-    /**
-     * This method is used to check if filters set for BelfiusApiClient's TinkHttpClient are the
-     * same as TinkHttpClient used in the test. In case of any change this method should fail, which
-     * will be a notification for a developer to adjust tests to a new behaviour.
-     */
-    @Test
-    @SuppressWarnings("unchecked")
-    public void shouldSetSameFiltersAsBelfiusApiClient() {
-        // given
-        NextGenTinkHttpClient belfiusHttpClient =
-                NextGenTinkHttpClient.builder(
-                                new FakeLogMasker(),
-                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
-                        .build();
-
-        // when
-        new BelfiusApiClient(
-                belfiusHttpClient,
-                mock(AgentConfiguration.class),
-                new MockRandomValueGenerator(),
-                persistentStorage);
-
-        // and
-        client.removeFilter(nextFilter);
-        terminatedHandshakeRetryFilter.setNext(null);
-
-        // then
-        assertThat(client)
-                .extracting("filters")
-                .usingRecursiveComparison()
-                .ignoringFields("mockitoInterceptor")
-                .isEqualTo(belfiusHttpClient.getFilters());
-
-        // and
-        assertThat(client.getResponseStatusHandler())
-                .usingRecursiveComparison()
-                .ignoringFields("mockitoInterceptor")
-                .isEqualTo(belfiusHttpClient.getResponseStatusHandler());
     }
 
     @Test
@@ -113,7 +58,7 @@ public class BelfiusApiClientFiltersTest {
         HttpClientException exception = new HttpClientException(exceptionMessage, null);
 
         // and
-        when(terminatedHandshakeRetryFilter.getNext().handle(any())).thenThrow(exception);
+        when(nextFilter.handle(any())).thenThrow(exception);
 
         // when
         Throwable throwable = catchThrowable(() -> client.request(TEST_URL).get(String.class));
@@ -144,7 +89,7 @@ public class BelfiusApiClientFiltersTest {
         when(response.getStatus()).thenReturn(status);
 
         // and
-        when(terminatedHandshakeRetryFilter.getNext().handle(any())).thenReturn(response);
+        when(nextFilter.handle(any())).thenReturn(response);
 
         // when
         Throwable throwable = catchThrowable(() -> client.request(TEST_URL).get(String.class));
@@ -168,7 +113,7 @@ public class BelfiusApiClientFiltersTest {
                         "{\"error_description\":\"User\\/System has deactivated the consent. Tpp has to start over with the api \\/consent-uris\",\"error_code\":\"20005\",\"error\":\"no_active_consent\"}");
 
         // and
-        when(terminatedHandshakeRetryFilter.getNext().handle(any())).thenReturn(response);
+        when(nextFilter.handle(any())).thenReturn(response);
 
         // when
         Throwable throwable = catchThrowable(() -> client.request(TEST_URL).get(String.class));

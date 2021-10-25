@@ -1,0 +1,16 @@
+{
+    "type": "DUMMY_NAME",
+    "iban": "BE39000000076000",
+    "currency": "EUR",
+    "balance": 789.01,
+    "multicurrency": false,
+    "other_compartments": [],
+    "_links": {
+        "self": {
+            "href": "/accounts/f2533843-785d-4499-b92f-61711101feed"
+        },
+        "transactions": {
+            "href": "/accounts/f2533843-785d-4499-b92f-61711101feed/transactions"
+        }
+    }
+}

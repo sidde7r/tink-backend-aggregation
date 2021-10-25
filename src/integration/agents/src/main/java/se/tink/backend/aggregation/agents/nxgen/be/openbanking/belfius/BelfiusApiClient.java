@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
-import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.MAX_RETRIES;
-import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
-
 import com.google.api.client.http.HttpStatusCodes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,14 +27,9 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.utils.json.JsonUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -51,21 +43,11 @@ public final class BelfiusApiClient {
     public BelfiusApiClient(
             TinkHttpClient client,
             AgentConfiguration<BelfiusConfiguration> agentConfiguration,
-            RandomValueGenerator randomValueGenerator,
-            PersistentStorage persistentStorage) {
+            RandomValueGenerator randomValueGenerator) {
         this.client = client;
-        configureClient(persistentStorage);
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.randomValueGenerator = randomValueGenerator;
-    }
-
-    private void configureClient(PersistentStorage persistentStorage) {
-        client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
-        client.addFilter(new ServerErrorFilter());
-        client.addFilter(new TimeoutFilter());
-        client.addFilter(new ConnectionTimeoutRetryFilter(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     private RequestBuilder createRequest(URL url) {

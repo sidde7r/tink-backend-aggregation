@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
+import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.MAX_RETRIES;
+import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
@@ -39,10 +41,9 @@ public final class BelfiusAgent extends NextGenerationAgent
                 getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
         this.apiClient =
                 new BelfiusApiClient(
-                        client,
-                        agentConfiguration,
-                        componentProvider.getRandomValueGenerator(),
-                        persistentStorage);
+                        client, agentConfiguration, componentProvider.getRandomValueGenerator());
+        new BelfiusClientConfigurator()
+                .configure(client, persistentStorage, MAX_RETRIES, RETRY_SLEEP_MILLISECONDS);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
