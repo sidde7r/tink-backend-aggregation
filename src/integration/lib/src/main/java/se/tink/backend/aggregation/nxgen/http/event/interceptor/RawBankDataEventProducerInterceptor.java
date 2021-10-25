@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.event.interceptor;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -57,6 +58,16 @@ public class RawBankDataEventProducerInterceptor extends Filter {
         */
         if (Objects.isNull(refreshableItemInProgressSupplier.get())) {
             return response;
+        }
+
+        // Log the content-types for all HTTP responses (this is to detect what response types
+        // we are facing)
+        try {
+            List<String> contentType = response.getHeaders().get("Content-Type");
+            LOGGER.info("[RESPONSE CONTENT TYPE] Detected content-type: " + contentType.toString());
+        } catch (Exception e) {
+            LOGGER.warn(
+                    "[RESPONSE CONTENT TYPE] Could not detect the content-type for HTTP response");
         }
 
         // Check if the decision strategy tells us to produce an event or not
