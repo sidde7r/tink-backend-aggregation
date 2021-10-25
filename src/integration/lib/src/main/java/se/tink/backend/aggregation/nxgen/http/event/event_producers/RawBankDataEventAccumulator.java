@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
@@ -12,6 +14,7 @@ import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.Raw
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RefreshableItems;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
+@Slf4j
 public class RawBankDataEventAccumulator {
 
     private final List<RawBankDataTrackerEvent> eventList = new ArrayList<>();
@@ -21,8 +24,16 @@ public class RawBankDataEventAccumulator {
                 RawBankDataTrackerEvent.newBuilder()
                         .setTimestamp(event.getTimestamp())
                         .setCorrelationId(event.getCorrelationId())
-                        .setTraceId(Optional.ofNullable(MDC.get("traceId")).orElse("N/A"))
-                        .setRefreshableItem(mapFromRefreshableItem(refreshableItem));
+                        .setTraceId(Optional.ofNullable(MDC.get("traceId")).orElse("N/A"));
+
+        if (Objects.nonNull(refreshableItem)) {
+            try {
+                RefreshableItems refreshableItems = mapFromRefreshableItem(refreshableItem);
+                builder = builder.setRefreshableItem(refreshableItems);
+            } catch (Exception e) {
+                log.warn("Could not set refreshable item field in the raw bank data event");
+            }
+        }
 
         Map<RawBankDataTrackerEventBankField, Integer> fieldCount = new HashMap<>();
         for (RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField field :
