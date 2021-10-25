@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.RetryAfterRetryFilter;
 
 public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
@@ -64,14 +64,13 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(localDateTimeSource);
         creditCardRefreshController = getCreditCardRefreshController();
-        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     private void configureHttpClient() {
         client.addFilter(
-                new RateLimitRetryFilter(
-                        CrosskeyBaseConstants.HttpClient.MAX_RETRIES_FOR_429,
-                        CrosskeyBaseConstants.HttpClient.MAX_RETRY_SLEEP_MILLIS_FOR_429));
+                new RetryAfterRetryFilter(
+                        CrosskeyBaseConstants.HttpClient.MAX_RETRIES_FOR_429_RETRY_AFTER_RESPONSE));
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     private String getUserIp() {
