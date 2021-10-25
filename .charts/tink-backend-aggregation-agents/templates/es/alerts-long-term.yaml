@@ -44,7 +44,7 @@ spec:
         priority: P1
         who: integration-toros
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12 hours
         tags: {{ .Values.tags }}
@@ -62,7 +62,7 @@ spec:
         priority: P3
         who: integration-toros
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }>) for the last 12 hours
         tags: {{ .Values.tags }}
@@ -202,17 +202,17 @@ spec:
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRate100%ES
       expr: |
         # Failed logins (due to third party app timeout) is 100%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[24h])) BY (className,provider)
-        # All login attempts the last 12 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[24h])) BY (className,provider) > 0.99
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[48h])) BY (className,provider)
+        # All login attempts the last 48 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[48h])) BY (className,provider) > 0.99
         # At least this many attempts.
-          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[24h])) by (className,provider) > 5
+          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[48h])) by (className,provider) > 5
       labels:
         severity: ping
         priority: P3
         who: integration-toros
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLink48h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12h. Please check if a redirect url is correct.
+        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 48h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}

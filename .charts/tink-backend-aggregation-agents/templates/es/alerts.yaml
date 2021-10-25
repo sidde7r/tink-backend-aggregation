@@ -42,7 +42,7 @@ spec:
         priority: P1
         who: integration-toros
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is 100% <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
@@ -77,7 +77,7 @@ spec:
         priority: P1
         who: integration-toros
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Refresh failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
@@ -96,7 +96,7 @@ spec:
         priority: P3
         who: integration-toros
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
@@ -113,7 +113,7 @@ spec:
         priority: P3
         who: integration-toros
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
