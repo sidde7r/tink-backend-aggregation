@@ -576,7 +576,7 @@ public final class AgentWireMockRefreshTest {
 
         @Override
         public RefreshOrAuthOnlyStep skipAuthentication() {
-            skipAuthentication = true;
+            this.skipAuthentication = true;
             return this;
         }
 
@@ -650,7 +650,7 @@ public final class AgentWireMockRefreshTest {
 
         @Override
         public BuildStep addPersistentStorageData(Map<String, String> values) {
-            persistentStorageData.putAll(values);
+            this.persistentStorageData.putAll(values);
             return this;
         }
 
