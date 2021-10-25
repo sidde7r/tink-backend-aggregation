@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @RunWith(JUnitParamsRunner.class)
 public class BelfiusApiClientFiltersTest {
 
-    private static final int TEST_RETRY_SLEEP_MS = 100;
+    private static final int TEST_RETRY_SLEEP_MS = 1;
     private static final int TEST_MAX_RETRIES_NUMBER = 1;
     private static final URL TEST_URL = new URL("https://belfius.be/test");
 

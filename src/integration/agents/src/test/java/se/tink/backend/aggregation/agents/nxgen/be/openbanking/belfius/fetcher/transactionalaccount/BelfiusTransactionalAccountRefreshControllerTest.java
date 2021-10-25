@@ -68,7 +68,7 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
 
     private static final String TEST_LOGICAL_ID = "SOME_LOGICAL_ID";
     private static final String TEST_USER = "USER_NAME";
-    private static final int TEST_RETRY_SLEEP_MS = 100;
+    private static final int TEST_RETRY_SLEEP_MS = 1;
     private static final int TEST_MAX_RETRIES_NUMBER = 1;
 
     private static final FetchAccountResponse FETCH_ACCOUNT_RESPONSE =
