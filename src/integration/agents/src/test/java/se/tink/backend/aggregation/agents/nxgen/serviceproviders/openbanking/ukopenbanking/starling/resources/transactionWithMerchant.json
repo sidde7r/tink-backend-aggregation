@@ -1,0 +1,30 @@
+{
+  "feedItems": [
+    {
+      "feedItemUid": "444c0674-b377-492f-af99-9cd770a58fba",
+      "categoryUid": "5d3c6070-1972-4f93-8f2a-44c0ccce5719",
+      "amount": {
+        "currency": "GBP",
+        "minorUnits": 1
+      },
+      "sourceAmount": {
+        "currency": "GBP",
+        "minorUnits": 1
+      },
+      "direction": "IN",
+      "updatedAt": "2020-08-01T02:47:28.170Z",
+      "transactionTime": "2020-07-31T23:00:00.000Z",
+      "settlementTime": "2020-07-31T23:00:00.000Z",
+      "source": "INTEREST_PAYMENT",
+      "sourceSubType": "DEPOSIT",
+      "status": "PENDING",
+      "counterPartyType": "MERCHANT",
+      "counterPartyUid": "45df1294-8bfc-4523-8fac-e5210ce5d72d",
+      "counterPartyName": "Market Cafe",
+      "reference": "July Interest Earned",
+      "country": "GB",
+      "spendingCategory": "INCOME",
+      "hasAttachment": false
+    }
+  ]
+}
