@@ -14,10 +14,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
+import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -37,11 +39,12 @@ public class SkandiaBankenPaymentWiremockTest {
         transfer.setDestination(new BankGiroIdentifier("9999999"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1));
         transfer.setType(TransferType.PAYMENT);
-        transfer.setSourceMessage("Tink source");
+        transfer.setSourceMessage("Some message");
         transfer.setDueDate(
                 Date.from(LocalDate.of(2021, 10, 30).atStartOfDay(DEFAULT_ZONE_ID).toInstant()));
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue("Some value");
+        remittanceInformation.setValue("Tink source");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
         transfer.setRemittanceInformation(remittanceInformation);
 
@@ -66,12 +69,13 @@ public class SkandiaBankenPaymentWiremockTest {
 
         Transfer transfer = new Transfer();
         transfer.setSource(new SwedishIdentifier("91599999999"));
-        transfer.setDestination(new BankGiroIdentifier("9999999"));
+        transfer.setDestination(new PlusGiroIdentifier("9999999"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1));
         transfer.setType(TransferType.PAYMENT);
         transfer.setSourceMessage("Tink source");
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue("Some value");
+        remittanceInformation.setValue("50099999999");
+        remittanceInformation.setType(RemittanceInformationType.OCR);
 
         transfer.setRemittanceInformation(remittanceInformation);
 
@@ -104,6 +108,7 @@ public class SkandiaBankenPaymentWiremockTest {
                 Date.from(LocalDate.of(2021, 10, 30).atStartOfDay(DEFAULT_ZONE_ID).toInstant()));
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("Some value");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
         transfer.setRemittanceInformation(remittanceInformation);
 
