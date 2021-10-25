@@ -45,8 +45,9 @@ public class FTSExceptionFilter extends Filter {
             log.error("Error from FTS code:422 and body:{}", body);
             throw new FTSException(body.getMessage());
         } catch (RuntimeException e) {
-            // Could not parse as ErrorResponse.class or some other error during it, skip trying.
+            // Could not parse as FTSErrorResponse.class
             log.error("error while parsing FTS error", e);
+            throw e;
         }
     }
 }
