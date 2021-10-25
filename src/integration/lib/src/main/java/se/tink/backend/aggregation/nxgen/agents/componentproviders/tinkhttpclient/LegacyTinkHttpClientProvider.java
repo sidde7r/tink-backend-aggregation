@@ -21,7 +21,7 @@ public final class LegacyTinkHttpClientProvider implements TinkHttpClientProvide
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
-                        context.getHttpAapLogger(),
+                        context.getRawHttpTrafficLogger(),
                         signatureKeyPair,
                         credentialsRequest.getProvider(),
                         context.getLogMasker(),

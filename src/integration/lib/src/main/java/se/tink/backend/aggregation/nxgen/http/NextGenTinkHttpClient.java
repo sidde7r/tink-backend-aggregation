@@ -108,10 +108,10 @@ import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecut
 import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultApacheRequestLoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultJerseyResponseLoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
@@ -154,7 +154,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final LoggingMode loggingMode;
     private LoggingStrategy loggingStrategy = LoggingStrategy.DEFAULT;
     private List<LoggingScope> loggingScopes = singletonList(LoggingScope.HTTP_AAP);
-    private final HttpAapLogger httpAapLogger;
+    private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
     private final MetricRegistry metricRegistry;
@@ -283,7 +283,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
 
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
-        this.httpAapLogger = builder.getHttpAapLogger();
+        this.rawHttpTrafficLogger = builder.getRawHttpTrafficLogger();
         this.jsonHttpTrafficLogger = builder.getJsonHttpTrafficLogger();
         this.aggregator =
                 Objects.nonNull(builder.getAggregatorInfo())
@@ -359,7 +359,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         private final LogMasker logMasker;
         private final LoggingMode loggingMode;
-        private HttpAapLogger httpAapLogger;
+        private RawHttpTrafficLogger rawHttpTrafficLogger;
         private JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
         private AggregatorInfo aggregatorInfo;
@@ -511,11 +511,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     private void setupDefaultLogging() {
-        if (httpAapLogger == null) {
+        if (rawHttpTrafficLogger == null) {
             log.warn("Could not create logging filter - AAP logger not configured");
             return;
         }
-        internalClient.addFilter(new LoggingFilter(httpAapLogger, logMasker, loggingMode));
+        internalClient.addFilter(new LoggingFilter(rawHttpTrafficLogger, logMasker, loggingMode));
     }
 
     private void setupExperimentalLogging() {
@@ -552,11 +552,12 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     private Optional<LoggingExecutor> createAppLoggingExecutor() {
-        if (httpAapLogger == null) {
+        if (rawHttpTrafficLogger == null) {
             log.warn("Could not create AAP logging executor - logger not configured");
             return Optional.empty();
         }
-        return Optional.of(new HttpAapLoggingExecutor(httpAapLogger, logMasker, loggingMode));
+        return Optional.of(
+                new RawHttpTrafficLoggingExecutor(rawHttpTrafficLogger, logMasker, loggingMode));
     }
 
     private Optional<LoggingExecutor> createJsonLoggingExecutor() {

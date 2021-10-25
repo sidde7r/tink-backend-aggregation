@@ -43,9 +43,9 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
@@ -160,7 +160,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.operationName = operationName;
 
-        HttpAapLogger.inMemoryLogger().ifPresent(this::setHttpAapLogger);
+        RawHttpTrafficLogger.inMemoryLogger().ifPresent(this::setRawHttpTrafficLogger);
         setJsonHttpTrafficLogger(
                 new JsonHttpTrafficLogger(
                         HttpJsonLogMetaEntity.builder()

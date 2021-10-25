@@ -56,7 +56,7 @@ public class SpAutoAuthenticatorTest extends NextGenerationAgentTest {
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
-                        context.getHttpAapLogger(),
+                        context.getRawHttpTrafficLogger(),
                         null,
                         null,
                         context.getLogMasker(),

@@ -164,7 +164,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         .setUseEidasProxy(
                                 context.getAgentConfigurationController().isOpenBankingAgent())
                         .setLogMasker(context.getLogMasker())
-                        .setHttpAapLogger(context.getHttpAapLogger())
+                        .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setAggregator(context.getAggregatorInfo())
                         .setPersistentStorage(persistentStorage)
                         .setSecretsConfiguration(

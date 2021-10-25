@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 
 public class LoggingFilterTest {
 
@@ -19,8 +19,8 @@ public class LoggingFilterTest {
     @Test
     public void whenSendingRequestWithFormBody_oneOfTheLogOutputLinesExactlyMatchesTheBody() {
 
-        HttpAapLogger httpAapLogger =
-                HttpAapLogger.inMemoryLogger()
+        RawHttpTrafficLogger rawHttpTrafficLogger =
+                RawHttpTrafficLogger.inMemoryLogger()
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -29,13 +29,13 @@ public class LoggingFilterTest {
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
                                 new LogMaskerImpl(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                        .setHttpAapLogger(httpAapLogger)
+                        .setRawHttpTrafficLogger(rawHttpTrafficLogger)
                         .build();
 
         client.request("http://127.0.0.1:8888/__admin").body("hoy").post();
 
         final List<String> lines =
-                httpAapLogger
+                rawHttpTrafficLogger
                         .tryGetLogContent()
                         .map(content -> content.split("\\r?\\n"))
                         .map(Arrays::asList)

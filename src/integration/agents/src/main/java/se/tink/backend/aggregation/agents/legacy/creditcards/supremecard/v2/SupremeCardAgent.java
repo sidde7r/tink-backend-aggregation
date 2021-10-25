@@ -72,7 +72,7 @@ public final class SupremeCardAgent extends AbstractAgent
     private SupremeCardApiAgent createApiAgent() {
         TinkApacheHttpClient4 client =
                 clientFactory.createClientWithRedirectHandler(
-                        context.getHttpAapLogger(), new NoRedirectStrategy());
+                        context.getRawHttpTrafficLogger(), new NoRedirectStrategy());
         client.addFilter(
                 new JerseyTimeoutRetryFilter(
                         TimeoutConfig.NUM_TIMEOUT_RETRIES,

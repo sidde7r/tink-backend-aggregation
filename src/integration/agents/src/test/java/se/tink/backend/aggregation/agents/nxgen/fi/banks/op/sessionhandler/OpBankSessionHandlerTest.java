@@ -41,7 +41,7 @@ public class OpBankSessionHandlerTest {
                         new LegacyTinkHttpClient(
                                 context.getAggregatorInfo(),
                                 context.getMetricRegistry(),
-                                context.getHttpAapLogger(),
+                                context.getRawHttpTrafficLogger(),
                                 null,
                                 null,
                                 context.getLogMasker(),

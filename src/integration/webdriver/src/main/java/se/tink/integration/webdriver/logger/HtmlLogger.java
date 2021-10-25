@@ -2,7 +2,7 @@ package se.tink.integration.webdriver.logger;
 
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebDriver;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 
 @RequiredArgsConstructor
 public class HtmlLogger {
@@ -11,7 +11,7 @@ public class HtmlLogger {
             "[%s] - [WEB DRIVER] %s\n\n REQUEST URL:\n%s\n\nRESPONSE HTML:\n\n %s";
 
     private final WebDriver webDriver;
-    private final HttpAapLogger httpAapLogger;
+    private final RawHttpTrafficLogger rawHttpTrafficLogger;
 
     public void info(String message) {
         log("INFO", message);
@@ -29,6 +29,6 @@ public class HtmlLogger {
                         message,
                         webDriver.getCurrentUrl(),
                         webDriver.getPageSource());
-        httpAapLogger.logRawUnsafe(logMessage + "\n");
+        rawHttpTrafficLogger.logRawUnsafe(logMessage + "\n");
     }
 }

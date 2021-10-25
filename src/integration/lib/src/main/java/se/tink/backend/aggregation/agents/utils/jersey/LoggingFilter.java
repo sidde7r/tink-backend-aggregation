@@ -23,7 +23,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
@@ -42,7 +42,7 @@ public class LoggingFilter extends ClientFilter {
 
     private static final String RESPONSE_PREFIX = "< ";
 
-    private final HttpAapLogger httpAapLogger;
+    private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final LogMasker logMasker;
     private final LoggingMode loggingMode;
 
@@ -109,30 +109,32 @@ public class LoggingFilter extends ClientFilter {
      * the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the logMasker handles
      * the sensitive values in the provider. use {@link LogMasker#shouldLog(Provider)}} if you can.
      *
-     * @param httpAapLogger logger able the save aap logs in correct place.
+     * @param rawHttpTrafficLogger logger able the save aap logs in correct place.
      * @param logMasker Masks values from logs.
      * @param loggingMode determines if logs should be outputted at all.
      */
     public LoggingFilter(
-            HttpAapLogger httpAapLogger, LogMasker logMasker, LoggingMode loggingMode) {
-        this.httpAapLogger = httpAapLogger;
+            RawHttpTrafficLogger rawHttpTrafficLogger,
+            LogMasker logMasker,
+            LoggingMode loggingMode) {
+        this.rawHttpTrafficLogger = rawHttpTrafficLogger;
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
     }
 
     public LoggingFilter(
-            HttpAapLogger httpAapLogger,
+            RawHttpTrafficLogger rawHttpTrafficLogger,
             LogMasker logMasker,
             boolean censorSensitiveHeaders,
             LoggingMode loggingMode) {
-        this.httpAapLogger = httpAapLogger;
+        this.rawHttpTrafficLogger = rawHttpTrafficLogger;
         this.censorSensitiveHeaders = censorSensitiveHeaders;
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
     }
 
     private void log(StringBuilder b) {
-        httpAapLogger.log(b.toString(), logMasker, loggingMode);
+        rawHttpTrafficLogger.log(b.toString(), logMasker, loggingMode);
     }
 
     private static String censorHeaderValue(String key, String value) {

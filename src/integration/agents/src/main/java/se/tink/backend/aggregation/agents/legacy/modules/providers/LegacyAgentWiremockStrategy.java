@@ -85,10 +85,10 @@ public class LegacyAgentWiremockStrategy implements LegacyAgentStrategyInterface
 
             client.setChunkedEncodingSize(null);
             try {
-                if (context.getHttpAapLogger() != null) {
+                if (context.getRawHttpTrafficLogger() != null) {
                     client.addFilter(
                             new LoggingFilter(
-                                    context.getHttpAapLogger(),
+                                    context.getRawHttpTrafficLogger(),
                                     context.getLogMasker(),
                                     context.getLogMasker().shouldLog(request.getProvider())));
                 }

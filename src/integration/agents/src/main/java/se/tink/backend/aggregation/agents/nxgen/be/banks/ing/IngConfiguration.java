@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -33,8 +33,8 @@ public class IngConfiguration {
         this.ingCryptoUtils = new IngCryptoUtils();
         this.ingStorage = new IngStorage(persistentStorage, sessionStorage, ingCryptoUtils);
         LoggingExecutor loggingExecutor =
-                new HttpAapLoggingExecutor(
-                        agentComponentProvider.getContext().getHttpAapLogger(),
+                new RawHttpTrafficLoggingExecutor(
+                        agentComponentProvider.getContext().getRawHttpTrafficLogger(),
                         agentComponentProvider.getContext().getLogMasker(),
                         agentComponentProvider
                                 .getContext()

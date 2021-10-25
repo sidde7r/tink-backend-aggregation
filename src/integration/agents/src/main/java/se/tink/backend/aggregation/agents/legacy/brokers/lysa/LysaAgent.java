@@ -47,7 +47,8 @@ public final class LysaAgent extends AbstractAgent implements RefreshInvestmentA
 
         client =
                 new LysaClient(
-                        clientFactory.createCustomClient(context.getHttpAapLogger(), clientConfig),
+                        clientFactory.createCustomClient(
+                                context.getRawHttpTrafficLogger(), clientConfig),
                         CommonHeaders.DEFAULT_USER_AGENT);
     }
 

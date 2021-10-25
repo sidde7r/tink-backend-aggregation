@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.ClientIdDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.ConsentIdDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.TokenDetector;
@@ -54,7 +54,7 @@ public class HttpApiClientBuilder {
     private EidasIdentity eidasIdentity;
     private boolean useEidasProxy;
     private LogMasker logMasker;
-    private HttpAapLogger httpAapLogger;
+    private RawHttpTrafficLogger rawHttpTrafficLogger;
     private PersistentStorage persistentStorage;
     private Map<String, Object> secretsConfiguration;
     private String userIp;
@@ -76,7 +76,8 @@ public class HttpApiClientBuilder {
                                         LoggingConfiguration.builder()
                                                 .maskingFunction(this.logMasker::mask)
                                                 .outputStream(
-                                                        this.httpAapLogger.getLoggingPrintStream())
+                                                        this.rawHttpTrafficLogger
+                                                                .getLoggingPrintStream())
                                                 .build())
                                 .build());
 

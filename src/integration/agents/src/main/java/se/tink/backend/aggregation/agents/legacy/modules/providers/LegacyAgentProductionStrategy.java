@@ -39,10 +39,10 @@ public class LegacyAgentProductionStrategy implements LegacyAgentStrategyInterfa
             client.setConnectTimeout(10000);
 
             try {
-                if (context.getHttpAapLogger() != null) {
+                if (context.getRawHttpTrafficLogger() != null) {
                     client.addFilter(
                             new LoggingFilter(
-                                    context.getHttpAapLogger(),
+                                    context.getRawHttpTrafficLogger(),
                                     context.getLogMasker(),
                                     context.getLogMasker().shouldLog(request.getProvider())));
                 }

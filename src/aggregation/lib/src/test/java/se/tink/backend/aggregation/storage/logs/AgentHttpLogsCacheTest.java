@@ -10,13 +10,13 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 
 public class AgentHttpLogsCacheTest {
 
     private AgentHttpLogsMasker httpLogsMasker;
-    private HttpAapLogger httpAapLogger;
+    private RawHttpTrafficLogger rawHttpTrafficLogger;
     private JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
     private AgentHttpLogsCache httpLogsCache;
@@ -24,17 +24,18 @@ public class AgentHttpLogsCacheTest {
     @Before
     public void setup() {
         httpLogsMasker = mock(AgentHttpLogsMasker.class);
-        httpAapLogger = mock(HttpAapLogger.class);
+        rawHttpTrafficLogger = mock(RawHttpTrafficLogger.class);
         jsonHttpTrafficLogger = mock(JsonHttpTrafficLogger.class);
 
         httpLogsCache =
-                new AgentHttpLogsCache(httpLogsMasker, httpAapLogger, jsonHttpTrafficLogger);
+                new AgentHttpLogsCache(httpLogsMasker, rawHttpTrafficLogger, jsonHttpTrafficLogger);
     }
 
     @Test
     public void should_return_and_cache_masked_aap_logs() {
         // given
-        when(httpAapLogger.tryGetLogContent()).thenReturn(Optional.of("raw aap log content"));
+        when(rawHttpTrafficLogger.tryGetLogContent())
+                .thenReturn(Optional.of("raw aap log content"));
         when(httpLogsMasker.maskSensitiveOutputLog(any())).thenReturn("masked aap log content");
 
         // when
@@ -47,14 +48,14 @@ public class AgentHttpLogsCacheTest {
         assertThat(log2).hasValue("masked aap log content");
         assertThat(log3).hasValue("masked aap log content");
 
-        verify(httpAapLogger, times(1)).tryGetLogContent();
+        verify(rawHttpTrafficLogger, times(1)).tryGetLogContent();
         verify(httpLogsMasker, times(1)).maskSensitiveOutputLog("raw aap log content");
     }
 
     @Test
     public void should_return_and_cache_empty_aap_logs() {
         // given
-        when(httpAapLogger.tryGetLogContent()).thenReturn(Optional.empty());
+        when(rawHttpTrafficLogger.tryGetLogContent()).thenReturn(Optional.empty());
 
         // when
         Optional<String> log1 = httpLogsCache.getAapLogContent();
@@ -66,7 +67,7 @@ public class AgentHttpLogsCacheTest {
         assertThat(log2).isEmpty();
         assertThat(log3).isEmpty();
 
-        verify(httpAapLogger, times(1)).tryGetLogContent();
+        verify(rawHttpTrafficLogger, times(1)).tryGetLogContent();
     }
 
     @Test

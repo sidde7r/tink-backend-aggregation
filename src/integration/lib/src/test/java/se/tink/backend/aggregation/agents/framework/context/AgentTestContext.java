@@ -28,9 +28,9 @@ import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account_data_cache.AccountData;
@@ -72,7 +72,7 @@ public class AgentTestContext extends AgentContext {
 
         refreshSummary = new RefreshSummary();
 
-        HttpAapLogger.consoleOutputLogger().ifPresent(this::setHttpAapLogger);
+        RawHttpTrafficLogger.consoleOutputLogger().ifPresent(this::setRawHttpTrafficLogger);
         setJsonHttpTrafficLogger(
                 new JsonHttpTrafficLogger(
                         HttpJsonLogMetaEntity.builder()

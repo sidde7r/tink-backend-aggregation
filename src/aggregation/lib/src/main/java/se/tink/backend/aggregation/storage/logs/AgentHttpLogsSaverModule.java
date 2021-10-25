@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class AgentHttpLogsSaverModule extends AbstractModule {
         bind(AgentsServiceConfiguration.class)
                 .toInstance(commandContext.getAgentsServiceConfiguration());
         bind(LogMasker.class).toInstance(commandContext.getLogMasker());
-        bind(HttpAapLogger.class).toInstance(commandContext.getHttpAapLogger());
+        bind(RawHttpTrafficLogger.class).toInstance(commandContext.getRawHttpTrafficLogger());
         bind(JsonHttpTrafficLogger.class).toInstance(commandContext.getJsonHttpTrafficLogger());
         bind(Credentials.class).toInstance(commandContext.getRequest().getCredentials());
         bind(Provider.class).toInstance(commandContext.getRequest().getProvider());

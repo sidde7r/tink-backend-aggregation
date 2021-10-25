@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlway
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
@@ -331,7 +331,7 @@ public class DefaultRawBankDataEventProducerTest {
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setAggregatorInfo(AggregatorInfo.getAggregatorForTesting())
                         .setMetricRegistry(metricRegistry)
-                        .setHttpAapLogger(mock(HttpAapLogger.class))
+                        .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
                         .setRawBankDataEventEmissionComponents(
@@ -473,7 +473,7 @@ public class DefaultRawBankDataEventProducerTest {
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setAggregatorInfo(AggregatorInfo.getAggregatorForTesting())
                         .setMetricRegistry(metricRegistry)
-                        .setHttpAapLogger(mock(HttpAapLogger.class))
+                        .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
                         .setRawBankDataEventEmissionComponents(

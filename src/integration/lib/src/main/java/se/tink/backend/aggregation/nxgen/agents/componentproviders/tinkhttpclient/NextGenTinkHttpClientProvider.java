@@ -25,7 +25,7 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
                                 context.getLogMasker().shouldLog(credentialsRequest.getProvider()))
                         .setAggregatorInfo(context.getAggregatorInfo())
                         .setMetricRegistry(context.getMetricRegistry())
-                        .setHttpAapLogger(context.getHttpAapLogger())
+                        .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setJsonHttpTrafficLogger(context.getJsonHttpTrafficLogger())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())

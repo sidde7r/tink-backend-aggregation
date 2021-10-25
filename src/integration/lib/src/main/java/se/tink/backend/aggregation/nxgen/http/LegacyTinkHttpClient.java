@@ -90,7 +90,7 @@ import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVeri
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecutor;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
@@ -128,7 +128,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
     private final LogMasker logMasker;
     private final LoggingMode loggingMode;
-    private final HttpAapLogger httpAapLogger;
+    private final RawHttpTrafficLogger rawHttpTrafficLogger;
 
     private final MetricRegistry metricRegistry;
     private final Provider provider;
@@ -241,7 +241,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     public LegacyTinkHttpClient(
             @Nullable AggregatorInfo aggregatorInfo,
             @Nullable MetricRegistry metricRegistry,
-            @Nullable HttpAapLogger httpAapLogger,
+            @Nullable RawHttpTrafficLogger rawHttpTrafficLogger,
             @Nullable SignatureKeyPair signatureKeyPair,
             @Nullable Provider provider,
             @Nullable LogMasker logMasker,
@@ -267,7 +267,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         this.provider = provider;
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
-        this.httpAapLogger = httpAapLogger;
+        this.rawHttpTrafficLogger = rawHttpTrafficLogger;
         this.executionTimeLoggingFilter =
                 new ExecutionTimeLoggingFilter(TimeMeasuredRequestExecutor::withRequest);
         // Add an initial redirect handler to fix any illegal location paths
@@ -391,8 +391,9 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
         // Add agent debug `LoggingFilter`, todo: move this into nxgen
 
-        if (this.httpAapLogger != null && this.logMasker != null) {
-            this.internalClient.addFilter(new LoggingFilter(httpAapLogger, logMasker, loggingMode));
+        if (this.rawHttpTrafficLogger != null && this.logMasker != null) {
+            this.internalClient.addFilter(
+                    new LoggingFilter(rawHttpTrafficLogger, logMasker, loggingMode));
         }
         if (this.metricRegistry != null && this.provider != null) {
             addFilter(new MetricFilter(this.metricRegistry, this.provider));

@@ -139,7 +139,7 @@ public final class NorwegianAgent extends AbstractAgent
                 new LegacyTinkHttpClient(
                         getAggregatorInfo(),
                         null,
-                        context.getHttpAapLogger(),
+                        context.getRawHttpTrafficLogger(),
                         signatureKeyPair,
                         request.getProvider(),
                         context.getLogMasker(),
