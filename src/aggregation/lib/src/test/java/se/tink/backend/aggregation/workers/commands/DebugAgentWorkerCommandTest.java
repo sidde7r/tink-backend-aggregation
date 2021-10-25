@@ -45,7 +45,7 @@ import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaver;
 import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaverProvider;
 import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
 import se.tink.backend.aggregation.storage.logs.SaveLogsResult;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentsLegalConstraintsProvider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
@@ -88,8 +88,8 @@ public class DebugAgentWorkerCommandTest {
     private static final String SAMPLE_APP_ID_WITH_TINK_LICENSE = "app_id_with_tink_license";
     private static final String SAMPLE_APP_ID_WITHOUT_TINK_LICENSE = "app_id_without_tink_license";
 
-    private static final String AAP_STORAGE_DESCRIPTION = "HTTP s3://aap/storage";
-    private static final String AAP_LTS_STORAGE_DESCRIPTION = "HTTP s3://aap/lts/storage";
+    private static final String RAW_STORAGE_DESCRIPTION = "HTTP s3://raw/storage";
+    private static final String RAW_LTS_STORAGE_DESCRIPTION = "HTTP s3://raw/lts/storage";
     private static final String JSON_STORAGE_DESCRIPTION = "HTTP s3://json/storage";
 
     private static final UUID TRANSFER_ID = UUID.fromString("614fe246-5614-491d-ae2a-e88736fdac20");
@@ -109,10 +109,10 @@ public class DebugAgentWorkerCommandTest {
         logResultsBuilder = new StringBuilder();
 
         logsSaver = mock(AgentHttpLogsSaver.class);
-        when(logsSaver.saveAapLogs(AapLogsCatalog.DEFAULT))
-                .thenReturn(SaveLogsResult.saved(AAP_STORAGE_DESCRIPTION));
-        when(logsSaver.saveAapLogs(AapLogsCatalog.LTS_PAYMENTS))
-                .thenReturn(SaveLogsResult.saved(AAP_LTS_STORAGE_DESCRIPTION));
+        when(logsSaver.saveRawLogs(RawHttpLogsCatalog.DEFAULT))
+                .thenReturn(SaveLogsResult.saved(RAW_STORAGE_DESCRIPTION));
+        when(logsSaver.saveRawLogs(RawHttpLogsCatalog.LTS_PAYMENTS))
+                .thenReturn(SaveLogsResult.saved(RAW_LTS_STORAGE_DESCRIPTION));
         when(logsSaver.saveJsonLogs()).thenReturn(SaveLogsResult.saved(JSON_STORAGE_DESCRIPTION));
 
         logsSaverProvider = mock(AgentHttpLogsSaverProvider.class);
@@ -265,10 +265,10 @@ public class DebugAgentWorkerCommandTest {
                                         "Payment Credentials Status: "
                                                 + testCase.getCredentialsStatus()
                                                 + "\n"
-                                                + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://aap/storage"
+                                                + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
                                                 + "\n"
                                                 + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
-                        verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                        verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                         verify(logsSaver).saveJsonLogs();
 
                     } else {
@@ -352,11 +352,11 @@ public class DebugAgentWorkerCommandTest {
                                     "Payment Credentials Status: "
                                             + testCase.getCredentialsStatus()
                                             + "\n"
-                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://aap/storage"
+                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
                                             + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
 
-                    verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                    verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                     verify(logsSaver).saveJsonLogs();
                     verifyNoMoreInteractions(logsSaver);
                 });
@@ -384,7 +384,7 @@ public class DebugAgentWorkerCommandTest {
     }
 
     @Test
-    public void should_log_transfers_in_aap_and_lts_catalogs_if_app_is_on_tinks_license() {
+    public void should_log_transfers_in_raw_and_lts_catalogs_if_app_is_on_tinks_license() {
         runTestCases(
                 testCasesForTransfersOnTinksLicense(),
                 testCase -> {
@@ -401,14 +401,14 @@ public class DebugAgentWorkerCommandTest {
                                     "Payment Credentials Status: "
                                             + testCase.getCredentialsStatus()
                                             + "\n"
-                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://aap/storage"
+                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
                                             + "\n"
-                                            + "Flushed transfer to long term storage for payments disputes (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://aap/lts/storage"
+                                            + "Flushed transfer to long term storage for payments disputes (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/lts/storage"
                                             + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
 
-                    verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
-                    verify(logsSaver).saveAapLogs(AapLogsCatalog.LTS_PAYMENTS);
+                    verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
+                    verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.LTS_PAYMENTS);
                     verify(logsSaver).saveJsonLogs();
                     verifyNoMoreInteractions(logsSaver);
                 });
@@ -453,10 +453,10 @@ public class DebugAgentWorkerCommandTest {
                                         "Credential Status: "
                                                 + testCase.getCredentialsStatus()
                                                 + "\n"
-                                                + "Flushed http logs: HTTP s3://aap/storage"
+                                                + "Flushed http logs: HTTP s3://raw/storage"
                                                 + "\n"
                                                 + "Flushed http json logs: HTTP s3://json/storage");
-                        verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                        verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                         verify(logsSaver).saveJsonLogs();
 
                     } else {
@@ -535,11 +535,11 @@ public class DebugAgentWorkerCommandTest {
                                     "Credential Status: "
                                             + testCase.getCredentialsStatus()
                                             + "\n"
-                                            + "Flushed http logs: HTTP s3://aap/storage"
+                                            + "Flushed http logs: HTTP s3://raw/storage"
                                             + "\n"
                                             + "Flushed http json logs: HTTP s3://json/storage");
 
-                    verify(logsSaver).saveAapLogs(AapLogsCatalog.DEFAULT);
+                    verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                     verify(logsSaver).saveJsonLogs();
                     verifyNoMoreInteractions(logsSaver);
                 });

@@ -6,8 +6,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AapLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
 
 @Slf4j
@@ -19,17 +19,17 @@ public class AgentHttpLogsSaver {
     private final S3StoragePathsProvider s3StoragePathsProvider;
 
     /**
-     * Store AAP logs
+     * Store raw logs
      *
      * @param catalog - catalog where logs should be stored
      * @return path to saved file
      */
-    public SaveLogsResult saveAapLogs(AapLogsCatalog catalog) {
+    public SaveLogsResult saveRawLogs(RawHttpLogsCatalog catalog) {
         if (!logsStorageHandler.isEnabled()) {
             return SaveLogsResult.skipped(SaveLogsStatus.NO_AVAILABLE_STORAGE);
         }
 
-        Optional<String> maybeLogContent = logsCache.getAapLogContent();
+        Optional<String> maybeLogContent = logsCache.getRawLogContent();
         if (!maybeLogContent.isPresent()) {
             return SaveLogsResult.skipped(SaveLogsStatus.NO_LOGS);
         }
@@ -40,26 +40,26 @@ public class AgentHttpLogsSaver {
         }
 
         try {
-            String filePath = getAapLogFilePath(logContent, catalog);
+            String filePath = getRawLogFilePath(logContent, catalog);
             String storageDescription =
                     logsStorageHandler.storeLog(
-                            logContent, filePath, AgentDebugLogBucket.AAP_FORMAT_LOGS);
+                            logContent, filePath, AgentDebugLogBucket.RAW_FORMAT_LOGS);
             return SaveLogsResult.saved(storageDescription);
 
         } catch (IOException | RuntimeException e) {
-            log.error("Could not store AAP logs, catalog: {}", catalog);
+            log.error("Could not store raw logs, catalog: {}", catalog);
             return SaveLogsResult.skipped(SaveLogsStatus.ERROR);
         }
     }
 
-    private String getAapLogFilePath(String cleanLogContent, AapLogsCatalog catalog) {
-        if (catalog == AapLogsCatalog.DEFAULT) {
-            return s3StoragePathsProvider.getAapLogDefaultPath(cleanLogContent);
+    private String getRawLogFilePath(String cleanLogContent, RawHttpLogsCatalog catalog) {
+        if (catalog == RawHttpLogsCatalog.DEFAULT) {
+            return s3StoragePathsProvider.getRawLogDefaultPath(cleanLogContent);
         }
-        if (catalog == AapLogsCatalog.LTS_PAYMENTS) {
-            return s3StoragePathsProvider.getAapLogsPaymentsLtsPath(cleanLogContent);
+        if (catalog == RawHttpLogsCatalog.LTS_PAYMENTS) {
+            return s3StoragePathsProvider.getRawLogsPaymentsLtsPath(cleanLogContent);
         }
-        throw new IllegalStateException("Unknown aap logs catalog: " + catalog);
+        throw new IllegalStateException("Unknown raw logs catalog: " + catalog);
     }
 
     /**

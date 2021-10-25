@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.
 @RunWith(JUnitParamsRunner.class)
 public class AgentDebugLogS3StorageHandlerTest {
 
-    private static final String AAP_BUCKET_NAME = "aap_bucket";
+    private static final String RAW_BUCKET_NAME = "raw_bucket";
     private static final String JSON_BUCKET_NAME = "json_bucket";
 
     private S3StorageConfiguration s3StorageConfiguration;
@@ -71,9 +71,9 @@ public class AgentDebugLogS3StorageHandlerTest {
         S3StorageConfiguration disabled = valid.toBuilder().enabled(false).build();
         S3StorageConfiguration missingUrl = valid.toBuilder().url(null).build();
         S3StorageConfiguration missingRegion = valid.toBuilder().region(null).build();
-        S3StorageConfiguration missingAapBucket =
-                valid.toBuilder().agentHttpAapLogsBucketName(null).build();
-        S3StorageConfiguration missingJsonBucket =
+        S3StorageConfiguration missingRawLogsBucket =
+                valid.toBuilder().agentHttpRawLogsBucketName(null).build();
+        S3StorageConfiguration missingJsonLogsBucket =
                 valid.toBuilder().agentHttpJsonLogsBucketName(null).build();
 
         return Stream.of(
@@ -81,8 +81,8 @@ public class AgentDebugLogS3StorageHandlerTest {
                         disabled,
                         missingUrl,
                         missingRegion,
-                        missingAapBucket,
-                        missingJsonBucket)
+                        missingRawLogsBucket,
+                        missingJsonLogsBucket)
                 .map(config -> new Object[] {config})
                 .toArray();
     }
@@ -92,7 +92,7 @@ public class AgentDebugLogS3StorageHandlerTest {
                 .enabled(true)
                 .url("sample_url")
                 .region("sample_region")
-                .agentHttpAapLogsBucketName(AAP_BUCKET_NAME)
+                .agentHttpRawLogsBucketName(RAW_BUCKET_NAME)
                 .agentHttpJsonLogsBucketName(JSON_BUCKET_NAME)
                 .build();
     }
@@ -111,15 +111,16 @@ public class AgentDebugLogS3StorageHandlerTest {
     }
 
     @Test
-    @Parameters(method = "all_buckets")
+    @Parameters(method = "all_logs_types")
     public void should_throw_exception_when_trying_to_use_disabled_storage(
-            AgentDebugLogBucket bucket) {
+            AgentDebugLogBucket agentDebugLogBucket) {
         // given
         s3StorageConfiguration = validS3Configuration().toBuilder().enabled(false).build();
         recreateStorageHandler();
 
         // when
-        Throwable throwable = catchThrowable(() -> logStorageHandler.storeLog("", "", bucket));
+        Throwable throwable =
+                catchThrowable(() -> logStorageHandler.storeLog("", "", agentDebugLogBucket));
 
         // then
         assertThat(throwable)
@@ -128,7 +129,7 @@ public class AgentDebugLogS3StorageHandlerTest {
     }
 
     @SuppressWarnings("unused")
-    private static Object[] all_buckets() {
+    private static Object[] all_logs_types() {
         return Stream.of(AgentDebugLogBucket.values()).toArray();
     }
 
@@ -146,7 +147,7 @@ public class AgentDebugLogS3StorageHandlerTest {
                                 logStorageHandler.storeLog(
                                         "some content",
                                         blankFilePath,
-                                        AgentDebugLogBucket.AAP_FORMAT_LOGS));
+                                        AgentDebugLogBucket.RAW_FORMAT_LOGS));
 
         // then
         assertThat(throwable)
@@ -161,9 +162,9 @@ public class AgentDebugLogS3StorageHandlerTest {
 
     @Test
     @SneakyThrows
-    @Parameters(method = "all_buckets_with_their_expected_configuration_name")
+    @Parameters(method = "all_log_types_with_expected_bucket_name")
     public void should_store_logs_in_correct_bucket(
-            AgentDebugLogBucket bucket, String expectedBucketName) {
+            AgentDebugLogBucket agentDebugLogBucket, String expectedBucketName) {
         // given
         s3StorageConfiguration = validS3Configuration();
         recreateStorageHandler();
@@ -172,7 +173,8 @@ public class AgentDebugLogS3StorageHandlerTest {
 
         // when
         String storageDescription =
-                logStorageHandler.storeLog("some content", "some/path/to/file.log", bucket);
+                logStorageHandler.storeLog(
+                        "some content", "some/path/to/file.log", agentDebugLogBucket);
 
         // then
         assertThat(storageDescription)
@@ -189,9 +191,9 @@ public class AgentDebugLogS3StorageHandlerTest {
     }
 
     @SuppressWarnings("unused")
-    private Object[] all_buckets_with_their_expected_configuration_name() {
+    private Object[] all_log_types_with_expected_bucket_name() {
         return new Object[] {
-            new Object[] {AgentDebugLogBucket.AAP_FORMAT_LOGS, AAP_BUCKET_NAME},
+            new Object[] {AgentDebugLogBucket.RAW_FORMAT_LOGS, RAW_BUCKET_NAME},
             new Object[] {AgentDebugLogBucket.JSON_FORMAT_LOGS, JSON_BUCKET_NAME}
         };
     }
@@ -208,7 +210,7 @@ public class AgentDebugLogS3StorageHandlerTest {
         // when
         String storageDescription =
                 logStorageHandler.storeLog(
-                        "", "some/path/to/file123.log", AgentDebugLogBucket.AAP_FORMAT_LOGS);
+                        "", "some/path/to/file123.log", AgentDebugLogBucket.RAW_FORMAT_LOGS);
 
         // then
         assertThat(storageDescription)
@@ -217,10 +219,10 @@ public class AgentDebugLogS3StorageHandlerTest {
                                 "AWS CLI: s3://%s/some/path/to/file123.log"
                                         + "\n"
                                         + "AWS HTTP: https://aws.com/some/path123",
-                                AAP_BUCKET_NAME));
+                                RAW_BUCKET_NAME));
 
-        verify(s3Client).putObject(AAP_BUCKET_NAME, "some/path/to/file123.log", "");
-        verify(s3Client).getUrl(AAP_BUCKET_NAME, "some/path/to/file123.log");
+        verify(s3Client).putObject(RAW_BUCKET_NAME, "some/path/to/file123.log", "");
+        verify(s3Client).getUrl(RAW_BUCKET_NAME, "some/path/to/file123.log");
         verifyNoMoreInteractions(s3Client);
     }
 }

@@ -51,20 +51,20 @@ public class S3StoragePathsProviderTest {
     }
 
     @Test
-    @Parameters(method = "test_cases_for_default_aap_logs_paths")
-    public void should_return_correct_default_aap_logs_path(TestCase testCase) {
+    @Parameters(method = "test_cases_for_default_raw_logs_paths")
+    public void should_return_correct_default_raw_logs_path(TestCase testCase) {
         // given
         createPathsProviderForTestCase(testCase);
 
         // when
-        String path = pathsProvider.getAapLogDefaultPath(testCase.getLogContent());
+        String path = pathsProvider.getRawLogDefaultPath(testCase.getLogContent());
 
         // then
         assertThat(path).isEqualTo(testCase.getExpectedPath());
     }
 
     @SuppressWarnings("unused")
-    private static Object[] test_cases_for_default_aap_logs_paths() {
+    private static Object[] test_cases_for_default_raw_logs_paths() {
         return Stream.of(
                         TestCase.builder()
                                 .credentialsId("credentialsId")
@@ -94,20 +94,20 @@ public class S3StoragePathsProviderTest {
     }
 
     @Test
-    @Parameters(method = "test_cases_for_payments_aap_logs_paths")
-    public void should_return_correct_payments_aap_logs_path(TestCase testCase) {
+    @Parameters(method = "test_cases_for_payments_raw_logs_paths")
+    public void should_return_correct_payments_raw_logs_path(TestCase testCase) {
         // given
         createPathsProviderForTestCase(testCase);
 
         // when
-        String path = pathsProvider.getAapLogsPaymentsLtsPath(testCase.getLogContent());
+        String path = pathsProvider.getRawLogsPaymentsLtsPath(testCase.getLogContent());
 
         // then
         assertThat(path).isEqualTo(testCase.getExpectedPath());
     }
 
     @SuppressWarnings("unused")
-    private static Object[] test_cases_for_payments_aap_logs_paths() {
+    private static Object[] test_cases_for_payments_raw_logs_paths() {
         return Stream.of(
                         TestCase.builder()
                                 .credentialsId("credentialsId")

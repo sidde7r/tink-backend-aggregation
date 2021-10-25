@@ -35,14 +35,14 @@ public class S3StoragePathsProvider {
 
     private static final String JSON_LOGS_MAIN_DIR = "bank-http-logs";
 
-    /** Prepare a default path for AAP logs */
-    public String getAapLogDefaultPath(String cleanLogContent) {
+    /** Prepare a default path for raw logs */
+    public String getRawLogDefaultPath(String cleanLogContent) {
         LocalDateTime now = localDateTimeSource.now();
         return getCommonLogFileName(cleanLogContent, now) + ".log";
     }
 
-    /** Prepare an LTS Payments' path for AAP logs */
-    public String getAapLogsPaymentsLtsPath(String cleanLogContent) {
+    /** Prepare an LTS Payments' path for raw logs */
+    public String getRawLogsPaymentsLtsPath(String cleanLogContent) {
         LocalDateTime now = localDateTimeSource.now();
         String catalog =
                 String.format(

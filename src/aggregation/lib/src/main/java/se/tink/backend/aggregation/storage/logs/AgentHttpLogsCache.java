@@ -16,19 +16,19 @@ public class AgentHttpLogsCache {
     private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
-    private OptionalLogContent<String> aapLogContent;
+    private OptionalLogContent<String> rawLogContent;
     private OptionalLogContent<String> jsonLogContent;
 
-    public Optional<String> getAapLogContent() {
-        if (aapLogContent == null) {
+    public Optional<String> getRawLogContent() {
+        if (rawLogContent == null) {
             String log =
                     Optional.ofNullable(rawHttpTrafficLogger)
                             .flatMap(RawHttpTrafficLogger::tryGetLogContent)
                             .map(httpLogsMasker::maskSensitiveOutputLog)
                             .orElse(null);
-            aapLogContent = OptionalLogContent.of(log);
+            rawLogContent = OptionalLogContent.of(log);
         }
-        return aapLogContent.getContent();
+        return rawLogContent.getContent();
     }
 
     public Optional<String> getJsonLogContent() {

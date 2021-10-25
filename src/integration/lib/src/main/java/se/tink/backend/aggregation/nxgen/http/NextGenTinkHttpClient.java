@@ -153,7 +153,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final LogMasker logMasker;
     private final LoggingMode loggingMode;
     private LoggingStrategy loggingStrategy = LoggingStrategy.DEFAULT;
-    private List<LoggingScope> loggingScopes = singletonList(LoggingScope.HTTP_AAP);
+    private List<LoggingScope> loggingScopes = singletonList(LoggingScope.HTTP_RAW);
     private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
@@ -541,7 +541,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     private Optional<LoggingExecutor> createLoggingExecutorForScope(LoggingScope loggingScope) {
-        if (loggingScope == LoggingScope.HTTP_AAP) {
+        if (loggingScope == LoggingScope.HTTP_RAW) {
             return createAppLoggingExecutor();
         }
         if (loggingScope == LoggingScope.HTTP_JSON) {

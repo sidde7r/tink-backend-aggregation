@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaver;
 import se.tink.backend.aggregation.storage.logs.AgentHttpLogsSaverProvider;
 import se.tink.backend.aggregation.storage.logs.AgentHttpLogsStorageHandler;
 import se.tink.backend.aggregation.storage.logs.SaveLogsResult;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AapLogsCatalog;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentsLegalConstraintsProvider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
@@ -120,25 +120,26 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
         String transferId = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
 
-        SaveLogsResult aapLogsResult = logsSaver.saveAapLogs(AapLogsCatalog.DEFAULT);
-        if (aapLogsResult.isSaved()) {
+        SaveLogsResult rawLogsResult = logsSaver.saveRawLogs(RawHttpLogsCatalog.DEFAULT);
+        if (rawLogsResult.isSaved()) {
             logResultsBuilder
                     .append(
                             format(
                                     "%nFlushed transfer (%s) debug log for further investigation: ",
                                     transferId))
-                    .append(aapLogsResult.getStorageDescription());
+                    .append(rawLogsResult.getStorageDescription());
         }
 
         if (shouldStoreInLongTermStorageForPaymentsDisputes(context.getAppId())) {
-            SaveLogsResult ltsAapLogsResult = logsSaver.saveAapLogs(AapLogsCatalog.LTS_PAYMENTS);
-            if (ltsAapLogsResult.isSaved()) {
+            SaveLogsResult ltsRawLogsResult =
+                    logsSaver.saveRawLogs(RawHttpLogsCatalog.LTS_PAYMENTS);
+            if (ltsRawLogsResult.isSaved()) {
                 logResultsBuilder
                         .append(
                                 format(
                                         "%nFlushed transfer to long term storage for payments disputes (%s) debug log for further investigation: ",
                                         transferId))
-                        .append(ltsAapLogsResult.getStorageDescription());
+                        .append(ltsRawLogsResult.getStorageDescription());
             }
         }
 
@@ -173,11 +174,11 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             return;
         }
 
-        SaveLogsResult aapLogsResult = logsSaver.saveAapLogs(AapLogsCatalog.DEFAULT);
-        if (aapLogsResult.isSaved()) {
+        SaveLogsResult rawLogsResult = logsSaver.saveRawLogs(RawHttpLogsCatalog.DEFAULT);
+        if (rawLogsResult.isSaved()) {
             logResultsBuilder
                     .append("\nFlushed http logs: ")
-                    .append(aapLogsResult.getStorageDescription());
+                    .append(rawLogsResult.getStorageDescription());
         }
 
         SaveLogsResult jsonLogsResult = logsSaver.saveJsonLogs();

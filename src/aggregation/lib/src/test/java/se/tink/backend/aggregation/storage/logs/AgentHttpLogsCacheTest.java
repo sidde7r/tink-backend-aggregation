@@ -32,35 +32,34 @@ public class AgentHttpLogsCacheTest {
     }
 
     @Test
-    public void should_return_and_cache_masked_aap_logs() {
+    public void should_return_and_cache_masked_raw_logs() {
         // given
-        when(rawHttpTrafficLogger.tryGetLogContent())
-                .thenReturn(Optional.of("raw aap log content"));
-        when(httpLogsMasker.maskSensitiveOutputLog(any())).thenReturn("masked aap log content");
+        when(rawHttpTrafficLogger.tryGetLogContent()).thenReturn(Optional.of("raw log content"));
+        when(httpLogsMasker.maskSensitiveOutputLog(any())).thenReturn("masked raw log content");
 
         // when
-        Optional<String> log1 = httpLogsCache.getAapLogContent();
-        Optional<String> log2 = httpLogsCache.getAapLogContent();
-        Optional<String> log3 = httpLogsCache.getAapLogContent();
+        Optional<String> log1 = httpLogsCache.getRawLogContent();
+        Optional<String> log2 = httpLogsCache.getRawLogContent();
+        Optional<String> log3 = httpLogsCache.getRawLogContent();
 
         // then
-        assertThat(log1).hasValue("masked aap log content");
-        assertThat(log2).hasValue("masked aap log content");
-        assertThat(log3).hasValue("masked aap log content");
+        assertThat(log1).hasValue("masked raw log content");
+        assertThat(log2).hasValue("masked raw log content");
+        assertThat(log3).hasValue("masked raw log content");
 
         verify(rawHttpTrafficLogger, times(1)).tryGetLogContent();
-        verify(httpLogsMasker, times(1)).maskSensitiveOutputLog("raw aap log content");
+        verify(httpLogsMasker, times(1)).maskSensitiveOutputLog("raw log content");
     }
 
     @Test
-    public void should_return_and_cache_empty_aap_logs() {
+    public void should_return_and_cache_empty_raw_logs() {
         // given
         when(rawHttpTrafficLogger.tryGetLogContent()).thenReturn(Optional.empty());
 
         // when
-        Optional<String> log1 = httpLogsCache.getAapLogContent();
-        Optional<String> log2 = httpLogsCache.getAapLogContent();
-        Optional<String> log3 = httpLogsCache.getAapLogContent();
+        Optional<String> log1 = httpLogsCache.getRawLogContent();
+        Optional<String> log2 = httpLogsCache.getRawLogContent();
+        Optional<String> log3 = httpLogsCache.getRawLogContent();
 
         // then
         assertThat(log1).isEmpty();
@@ -73,8 +72,7 @@ public class AgentHttpLogsCacheTest {
     @Test
     public void should_return_and_cache_masked_json_logs() {
         // given
-        when(jsonHttpTrafficLogger.tryGetLogContent())
-                .thenReturn(Optional.of("raw json log content"));
+        when(jsonHttpTrafficLogger.tryGetLogContent()).thenReturn(Optional.of("json log content"));
         when(httpLogsMasker.maskSensitiveOutputLog(any())).thenReturn("masked json log content");
 
         // when
@@ -88,7 +86,7 @@ public class AgentHttpLogsCacheTest {
         assertThat(log3).hasValue("masked json log content");
 
         verify(jsonHttpTrafficLogger, times(1)).tryGetLogContent();
-        verify(httpLogsMasker, times(1)).maskSensitiveOutputLog("raw json log content");
+        verify(httpLogsMasker, times(1)).maskSensitiveOutputLog("json log content");
     }
 
     @Test

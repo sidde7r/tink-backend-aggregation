@@ -19,8 +19,8 @@ import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AapLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.AgentDebugLogBucket;
+import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
 
 @RunWith(JUnitParamsRunner.class)
@@ -49,8 +49,8 @@ public class AgentHttpLogsSaverTest {
         // when
         List<SaveLogsResult> results =
                 Stream.of(
-                                logsSaver.saveAapLogs(AapLogsCatalog.DEFAULT),
-                                logsSaver.saveAapLogs(AapLogsCatalog.LTS_PAYMENTS),
+                                logsSaver.saveRawLogs(RawHttpLogsCatalog.DEFAULT),
+                                logsSaver.saveRawLogs(RawHttpLogsCatalog.LTS_PAYMENTS),
                                 logsSaver.saveJsonLogs())
                         .collect(Collectors.toList());
 
@@ -66,129 +66,129 @@ public class AgentHttpLogsSaverTest {
     }
 
     @Test
-    @Parameters(method = "all_aap_logs_catalogs")
-    public void should_skip_aap_logs_if_they_are_missing(AapLogsCatalog logsCatalog) {
+    @Parameters(method = "all_raw_logs_catalogs")
+    public void should_skip_raw_logs_if_they_are_missing(RawHttpLogsCatalog logsCatalog) {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
-        when(logsCache.getAapLogContent()).thenReturn(Optional.empty());
+        when(logsCache.getRawLogContent()).thenReturn(Optional.empty());
 
         // when
-        SaveLogsResult result = logsSaver.saveAapLogs(logsCatalog);
+        SaveLogsResult result = logsSaver.saveRawLogs(logsCatalog);
 
         // then
         assertThat(result)
                 .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGS).build());
 
-        verify(logsCache).getAapLogContent();
+        verify(logsCache).getRawLogContent();
         verify(logsStorageHandler).isEnabled();
         verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @SuppressWarnings("unused")
-    private static Object[] all_aap_logs_catalogs() {
-        return Stream.of(AapLogsCatalog.values()).toArray();
+    private static Object[] all_raw_logs_catalogs() {
+        return Stream.of(RawHttpLogsCatalog.values()).toArray();
     }
 
     @Test
-    @Parameters(method = "all_aap_logs_catalogs")
-    public void should_skip_aap_logs_if_they_are_empty(AapLogsCatalog logsCatalog) {
+    @Parameters(method = "all_raw_logs_catalogs")
+    public void should_skip_raw_logs_if_they_are_empty(RawHttpLogsCatalog logsCatalog) {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
-        when(logsCache.getAapLogContent()).thenReturn(Optional.of("     "));
+        when(logsCache.getRawLogContent()).thenReturn(Optional.of("     "));
 
         // when
-        SaveLogsResult result = logsSaver.saveAapLogs(logsCatalog);
+        SaveLogsResult result = logsSaver.saveRawLogs(logsCatalog);
 
         // then
         assertThat(result)
                 .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.EMPTY_LOGS).build());
 
-        verify(logsCache).getAapLogContent();
+        verify(logsCache).getRawLogContent();
         verify(logsStorageHandler).isEnabled();
         verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
     @SneakyThrows
-    public void should_save_not_empty_aap_logs_in_default_catalog() {
+    public void should_save_not_empty_raw_logs_in_default_catalog() {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
         when(logsStorageHandler.storeLog(any(), any(), any()))
-                .thenReturn("HTTP: s3://bucket/aap/file.log");
+                .thenReturn("HTTP: s3://bucket/raw/file.log");
 
-        when(logsCache.getAapLogContent()).thenReturn(Optional.of("not empty log content"));
-        when(s3StoragePathsProvider.getAapLogDefaultPath(any())).thenReturn("aap/file.log");
+        when(logsCache.getRawLogContent()).thenReturn(Optional.of("not empty log content"));
+        when(s3StoragePathsProvider.getRawLogDefaultPath(any())).thenReturn("raw/file.log");
 
         // when
-        SaveLogsResult result = logsSaver.saveAapLogs(AapLogsCatalog.DEFAULT);
+        SaveLogsResult result = logsSaver.saveRawLogs(RawHttpLogsCatalog.DEFAULT);
 
         // then
         assertThat(result)
                 .isEqualTo(
                         SaveLogsResult.builder()
                                 .status(SaveLogsStatus.SAVED)
-                                .storageDescription("HTTP: s3://bucket/aap/file.log")
+                                .storageDescription("HTTP: s3://bucket/raw/file.log")
                                 .build());
 
-        verify(logsCache).getAapLogContent();
-        verify(s3StoragePathsProvider).getAapLogDefaultPath("not empty log content");
+        verify(logsCache).getRawLogContent();
+        verify(s3StoragePathsProvider).getRawLogDefaultPath("not empty log content");
 
         verify(logsStorageHandler).isEnabled();
         verify(logsStorageHandler)
                 .storeLog(
                         "not empty log content",
-                        "aap/file.log",
-                        AgentDebugLogBucket.AAP_FORMAT_LOGS);
+                        "raw/file.log",
+                        AgentDebugLogBucket.RAW_FORMAT_LOGS);
         verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
     @SneakyThrows
-    public void should_save_not_empty_aap_logs_in_payments_lts_catalog() {
+    public void should_save_not_empty_raw_logs_in_payments_lts_catalog() {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
         when(logsStorageHandler.storeLog(any(), any(), any()))
-                .thenReturn("HTTP: s3://bucket/aap/lts/file.log");
+                .thenReturn("HTTP: s3://bucket/raw/lts/file.log");
 
-        when(logsCache.getAapLogContent()).thenReturn(Optional.of("not empty log 123"));
-        when(s3StoragePathsProvider.getAapLogsPaymentsLtsPath(any()))
-                .thenReturn("aap/lts/file.log");
+        when(logsCache.getRawLogContent()).thenReturn(Optional.of("not empty log 123"));
+        when(s3StoragePathsProvider.getRawLogsPaymentsLtsPath(any()))
+                .thenReturn("raw/lts/file.log");
 
         // when
-        SaveLogsResult result = logsSaver.saveAapLogs(AapLogsCatalog.LTS_PAYMENTS);
+        SaveLogsResult result = logsSaver.saveRawLogs(RawHttpLogsCatalog.LTS_PAYMENTS);
 
         // then
         assertThat(result)
                 .isEqualTo(
                         SaveLogsResult.builder()
                                 .status(SaveLogsStatus.SAVED)
-                                .storageDescription("HTTP: s3://bucket/aap/lts/file.log")
+                                .storageDescription("HTTP: s3://bucket/raw/lts/file.log")
                                 .build());
 
-        verify(logsCache).getAapLogContent();
-        verify(s3StoragePathsProvider).getAapLogsPaymentsLtsPath("not empty log 123");
+        verify(logsCache).getRawLogContent();
+        verify(s3StoragePathsProvider).getRawLogsPaymentsLtsPath("not empty log 123");
 
         verify(logsStorageHandler).isEnabled();
         verify(logsStorageHandler)
                 .storeLog(
                         "not empty log 123",
-                        "aap/lts/file.log",
-                        AgentDebugLogBucket.AAP_FORMAT_LOGS);
+                        "raw/lts/file.log",
+                        AgentDebugLogBucket.RAW_FORMAT_LOGS);
         verifyNoMoreInteractions(logsStorageHandler);
     }
 
     @Test
     @SneakyThrows
-    @Parameters(method = "all_aap_logs_catalogs")
-    public void should_catch_exceptions_when_saving_aap_logs(AapLogsCatalog logsCatalog) {
+    @Parameters(method = "all_raw_logs_catalogs")
+    public void should_catch_exceptions_when_saving_raw_logs(RawHttpLogsCatalog logsCatalog) {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
         when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenThrow(new IOException("IO ERROR"));
-        when(logsCache.getAapLogContent()).thenReturn(Optional.of("not empty log"));
+        when(logsCache.getRawLogContent()).thenReturn(Optional.of("not empty log"));
 
         // when
-        SaveLogsResult result = logsSaver.saveAapLogs(logsCatalog);
+        SaveLogsResult result = logsSaver.saveRawLogs(logsCatalog);
 
         // then
         assertThat(result).isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.ERROR).build());
