@@ -14,6 +14,7 @@ import org.junit.Test;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class DefaultRawBankDataEventAccumulatorTest {
 
@@ -62,7 +63,8 @@ public class DefaultRawBankDataEventAccumulatorTest {
         accumulator.addEvent(
                 defaultRawBankDataEventProducer
                         .produceRawBankDataEvent(givenResponseBody, "dummy-correlationId")
-                        .orElseThrow(() -> new IllegalStateException("No events produced")));
+                        .orElseThrow(() -> new IllegalStateException("No events produced")),
+                RefreshableItem.CHECKING_TRANSACTIONS);
 
         // then
         Assert.assertEquals(1, accumulator.getEventList().size());

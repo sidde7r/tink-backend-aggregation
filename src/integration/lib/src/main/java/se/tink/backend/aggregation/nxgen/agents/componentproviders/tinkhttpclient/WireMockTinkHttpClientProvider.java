@@ -37,6 +37,7 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                                         RawBankDataEventCreationStrategies
                                                 .createDefaultConfiguration()),
                                 context.getRawBankDataEventAccumulator(),
+                                context::getCurrentRefreshableItemInProgress,
                                 context.getCorrelationId())
                         .build();
 
