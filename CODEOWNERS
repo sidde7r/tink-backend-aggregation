@@ -3,6 +3,7 @@
 
 /aws_log_fetcher/ @tink-ab/aggregation-agent-platform-maintainer
 /.charts @tink-ab/aggregation-agent-platform-maintainer
+/.charts/tink-backend-aggregation-agents/templates/precomputations.yaml @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-thundercats-maintainer
 /.buildkite/ @tink-ab/engineering-productivity-maintainer
 /.charts/tink-backend-aggregation-agents/de @tink-ab/aggregation-nazguls-maintainer
 /.charts/tink-backend-aggregation-agents/it @tink-ab/aggregation-nazguls-maintainer

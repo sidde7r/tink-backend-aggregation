@@ -39,11 +39,11 @@ spec:
   # Precompute realtime banking metrics
   - record: ratio:tink_aggregation_market_success:delta5m
     expr: sum(increase(tink_aggregation_successful_market_total[5m])) by (market)
-        / sum(increase(tink_aggregation_total_market_total[5m])) by (market) > 0
+      / sum(increase(tink_aggregation_total_market_total[5m])) by (market) > 0
 
   - record: ratio:tink_aggregation_operation_success:delta5m
     expr: sum(increase(tink_aggregation_successful_operations_total[5m])) by (operation)
-       / sum(increase(tink_aggregation_total_operations_total[5m])) by (operation) > 0
+      / sum(increase(tink_aggregation_total_operations_total[5m])) by (operation) > 0
 
   - record: ratio:tink_aggregation_market_operation_success:delta5m
     expr: sum(increase(tink_aggregation_successful_market_operations_total[5m])) by (operation, market)
@@ -67,3 +67,7 @@ spec:
 
   - record: statistics:tink_aggregation_market_operation_success:delta5m:stddev1w
     expr: stddev_over_time((ratio:tink_aggregation_market_operation_success:delta5m > 0)[1w:])
+
+  # Precompute DE metrics
+  - record: sum:refreshes_DE:delta60m
+    expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))
