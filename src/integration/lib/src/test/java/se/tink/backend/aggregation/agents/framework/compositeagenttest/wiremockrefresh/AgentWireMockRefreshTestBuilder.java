@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.AgentWireMockRefreshTestNxBuilder;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -15,6 +16,13 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.enums.MarketCode;
 
+/**
+ * @deprecated Consider using {@link AgentWireMockRefreshTestNxBuilder
+ *     AgentWireMockRefreshTestNxBuilder} instead - it adds ability to test authentication flow
+ *     without data fetch. Most of new features are added to the new builder.
+ * @see AgentWireMockRefreshTestNxBuilder
+ * @see AgentWireMockRefreshTest
+ */
 @Deprecated
 public final class AgentWireMockRefreshTestBuilder {
 
