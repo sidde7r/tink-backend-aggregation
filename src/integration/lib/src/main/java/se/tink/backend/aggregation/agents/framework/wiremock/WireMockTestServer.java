@@ -46,12 +46,12 @@ public class WireMockTestServer {
 
     public WireMockTestServer(Set<RequestResponseParser> parsers, boolean logsEnabled) {
         this(logsEnabled);
-        loadRequestResponsePairs(parsers);
+        withRequestResponsePairs(parsers);
     }
 
     public WireMockTestServer(Set<RequestResponseParser> parsers) {
         this(false);
-        loadRequestResponsePairs(parsers);
+        withRequestResponsePairs(parsers);
     }
 
     public int getHttpsPort() {
@@ -62,12 +62,14 @@ public class WireMockTestServer {
         return wireMockServer.port();
     }
 
-    public void loadRequestResponsePairs(Set<RequestResponseParser> parsers) {
+    public WireMockTestServer withRequestResponsePairs(Set<RequestResponseParser> parsers) {
         wireMockServer.resetAll();
 
         parsers.stream()
                 .map(RequestResponseParser::parseRequestResponsePairs)
                 .forEach(this::registerRequestResponsePairs);
+
+        return this;
     }
 
     public void shutdown() {

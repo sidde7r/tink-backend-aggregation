@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.wiremock;
 
 import static se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
 
-import com.google.common.collect.ImmutableSet;
 import java.io.File;
+import java.util.Collections;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
@@ -30,7 +30,7 @@ public class WireMockIntegrationTestServer {
     }
 
     public void loadScenario(File aapFile) {
-        wireMockServer.loadRequestResponsePairs(singleAapFileParser(aapFile));
+        wireMockServer.withRequestResponsePairs(singleAapFileParser(aapFile));
     }
 
     public TinkHttpClient createTinkHttpClient() {
@@ -53,6 +53,6 @@ public class WireMockIntegrationTestServer {
     }
 
     private static Set<RequestResponseParser> singleAapFileParser(File aapFile) {
-        return ImmutableSet.of(aapFileParser(aapFile));
+        return Collections.singleton(aapFileParser(aapFile));
     }
 }

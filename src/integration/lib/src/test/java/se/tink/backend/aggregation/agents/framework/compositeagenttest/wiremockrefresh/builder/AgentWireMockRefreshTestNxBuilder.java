@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder;
 
+import static java.util.stream.Collectors.toSet;
 import static se.tink.backend.aggregation.agents.agentplatform.authentication.storage.UpgradingPersistentStorageService.MARKER;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.RefreshableItemStep;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.WireMockConfigurationStep;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -51,7 +54,9 @@ public final class AgentWireMockRefreshTestNxBuilder
 
     private String providerName;
 
-    private Set<String> wireMockFilePaths;
+    private WireMockTestServer wireMockServer;
+
+    private Set<File> wireMockFiles;
 
     private Map<String, String> credentialFields;
 
@@ -124,14 +129,20 @@ public final class AgentWireMockRefreshTestNxBuilder
     }
 
     @Override
+    public AgentsServiceConfigurationStep withWireMockServer(WireMockTestServer wireMockServer) {
+        this.wireMockServer = wireMockServer;
+        return this;
+    }
+
+    @Override
     public AgentsServiceConfigurationStep withWireMockFilePath(String wireMockFilePath) {
-        this.wireMockFilePaths = new HashSet<>(Collections.singleton(wireMockFilePath));
+        this.wireMockFiles = files(Collections.singleton(wireMockFilePath));
         return this;
     }
 
     @Override
     public AgentsServiceConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths) {
-        this.wireMockFilePaths = wireMockFilePaths;
+        this.wireMockFiles = files(wireMockFilePaths);
         return this;
     }
 
@@ -339,7 +350,8 @@ public final class AgentWireMockRefreshTestNxBuilder
         return new AgentWireMockRefreshTest(
                 marketCode,
                 providerName,
-                wireMockFilePaths,
+                wireMockServer,
+                wireMockFiles,
                 configuration,
                 credentialFields,
                 credentialPayload,
@@ -349,7 +361,7 @@ public final class AgentWireMockRefreshTestNxBuilder
                 cache,
                 agentTestModule,
                 refreshableItems,
-                listCommands(skipAuthentication),
+                commands(skipAuthentication),
                 httpDebugTraceEnabled,
                 dumpContentForContractFile,
                 requestFlagManual,
@@ -360,10 +372,13 @@ public final class AgentWireMockRefreshTestNxBuilder
                 userAvailability);
     }
 
-    private List<Class<? extends CompositeAgentTestCommand>> listCommands(
-            boolean skipAuthentication) {
+    private List<Class<? extends CompositeAgentTestCommand>> commands(boolean skipAuthentication) {
         return skipAuthentication
                 ? ImmutableList.of(RefreshCommand.class)
                 : ImmutableList.of(LoginCommand.class, RefreshCommand.class);
+    }
+
+    private static Set<File> files(Set<String> paths) {
+        return paths.stream().map(File::new).collect(toSet());
     }
 }

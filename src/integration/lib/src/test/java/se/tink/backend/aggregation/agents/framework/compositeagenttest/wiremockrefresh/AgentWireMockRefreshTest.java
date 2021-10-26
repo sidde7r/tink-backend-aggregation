@@ -1,16 +1,18 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.util.stream.Collectors.toSet;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
@@ -49,7 +51,7 @@ public final class AgentWireMockRefreshTest {
 
     private final CompositeAgentTest compositeAgentTest;
 
-    private final WireMockTestServer server;
+    private final WireMockTestServer wireMockTestServer;
 
     private final boolean dumpContentForContractFile;
 
@@ -58,7 +60,8 @@ public final class AgentWireMockRefreshTest {
     public AgentWireMockRefreshTest(
             MarketCode marketCode,
             String providerName,
-            Set<String> wireMockFilePaths,
+            WireMockTestServer wireMockTestServer,
+            Set<File> wireMockFiles,
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
             String credentialPayload,
@@ -78,15 +81,13 @@ public final class AgentWireMockRefreshTest {
             boolean forceAutoAuthentication,
             UserAvailability userAvailability) {
 
-        ImmutableSet<RequestResponseParser> parsers =
-                wireMockFilePaths.stream()
-                        .map(
-                                wireMockFilePath ->
-                                        new AapFileParser(
-                                                ResourceFileReader.read(wireMockFilePath)))
-                        .collect(toImmutableSet());
+        Set<RequestResponseParser> aapFileParsers = aapFileParsers(wireMockFiles);
 
-        server = new WireMockTestServer(parsers, wireMockServerLogsEnabled);
+        this.wireMockTestServer =
+                Optional.ofNullable(wireMockTestServer)
+                        .orElseGet(newWireMockServer(wireMockServerLogsEnabled))
+                        .withRequestResponsePairs(aapFileParsers);
+
         rawBankDataEventAccumulator = new RawBankDataEventAccumulator();
 
         final Set<Module> modules =
@@ -112,8 +113,8 @@ public final class AgentWireMockRefreshTest {
                                 userAvailability),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of(
-                                        "localhost:" + server.getHttpPort(),
-                                        "localhost:" + server.getHttpsPort()),
+                                        "localhost:" + this.wireMockTestServer.getHttpPort(),
+                                        "localhost:" + this.wireMockTestServer.getHttpsPort()),
                                 callbackData,
                                 agentTestModule,
                                 commandSequence));
@@ -131,9 +132,9 @@ public final class AgentWireMockRefreshTest {
     public void executeRefresh() throws Exception {
 
         compositeAgentTest.executeCommands();
-        if (server.hadEncounteredAnError()) {
+        if (wireMockTestServer.hadEncounteredAnError()) {
 
-            throw new RuntimeException(server.createErrorLogForFailedRequest());
+            throw new RuntimeException(wireMockTestServer.createErrorLogForFailedRequest());
         }
         if (dumpContentForContractFile) {
             ContractProducer contractProducer = new ContractProducer();
@@ -145,7 +146,7 @@ public final class AgentWireMockRefreshTest {
 
     /** @return The state of Wiremock server or Optional.empty() if state is not set */
     public Optional<String> getCurrentState() {
-        return server.getCurrentState();
+        return wireMockTestServer.getCurrentState();
     }
 
     public List<RawBankDataTrackerEvent> getEmittedRawBankDataEvents() {
@@ -199,5 +200,18 @@ public final class AgentWireMockRefreshTest {
     /** Next gen step builder which adds ability to test authentication flow without data fetch */
     public static MarketCodeStep nxBuilder() {
         return new AgentWireMockRefreshTestNxBuilder();
+    }
+
+    private static Supplier<WireMockTestServer> newWireMockServer(
+            boolean wireMockServerLogsEnabled) {
+        return () -> new WireMockTestServer(wireMockServerLogsEnabled);
+    }
+
+    private static RequestResponseParser aapFileParser(File aapFile) {
+        return new AapFileParser(ResourceFileReader.read(aapFile));
+    }
+
+    private static Set<RequestResponseParser> aapFileParsers(Set<File> aapFiles) {
+        return aapFiles.stream().map(AgentWireMockRefreshTest::aapFileParser).collect(toSet());
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder;
 
 import com.google.common.collect.ImmutableList;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public final class AgentWireMockRefreshTestBuilder {
 
     private final String providerName;
 
-    private final Set<String> wireMockFilePaths;
+    private final Set<File> wireMockFiles;
 
     private final Map<String, String> credentialFields;
 
@@ -64,7 +65,7 @@ public final class AgentWireMockRefreshTestBuilder {
             MarketCode market, String providerName, String wireMockFilePath) {
         this.market = market;
         this.providerName = providerName;
-        this.wireMockFilePaths = new HashSet<>(Collections.singleton(wireMockFilePath));
+        this.wireMockFiles = new HashSet<>(Collections.singleton(new File(wireMockFilePath)));
         this.configuration = new AgentsServiceConfiguration();
         this.credentialFields = new HashMap<>();
         this.callbackData = new HashMap<>();
@@ -219,7 +220,7 @@ public final class AgentWireMockRefreshTestBuilder {
      * @return This builder.
      */
     public AgentWireMockRefreshTestBuilder addAnotherWireMockFile(String wireMockFilePath) {
-        this.wireMockFilePaths.add(wireMockFilePath);
+        this.wireMockFiles.add(new File(wireMockFilePath));
         return this;
     }
 
@@ -274,7 +275,8 @@ public final class AgentWireMockRefreshTestBuilder {
         return new AgentWireMockRefreshTest(
                 market,
                 providerName,
-                wireMockFilePaths,
+                null,
+                wireMockFiles,
                 configuration,
                 credentialFields,
                 credentialPayload,
