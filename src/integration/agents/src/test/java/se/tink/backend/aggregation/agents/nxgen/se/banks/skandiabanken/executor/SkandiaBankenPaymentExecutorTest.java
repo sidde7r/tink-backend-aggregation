@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import agents_platform_agents_framework.org.springframework.test.util.ReflectionTestUtils;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -11,24 +14,28 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentSourceAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SkandiaBankenPaymentExecutorTest {
     private SkandiaBankenPaymentExecutor objectUnderTest;
+    private SkandiaBankenApiClient apiClient;
 
     @Before
     public void setUp() {
+        apiClient = mock(SkandiaBankenApiClient.class);
         objectUnderTest =
                 new SkandiaBankenPaymentExecutor(
-                        mock(SkandiaBankenApiClient.class),
-                        mock(SupplementalInformationController.class));
+                        apiClient, mock(SupplementalInformationController.class));
     }
 
     @Test
@@ -182,6 +189,42 @@ public class SkandiaBankenPaymentExecutorTest {
         assertNull(thrown);
     }
 
+    @Test
+    public void shouldThrowTransferExceptionWhenSourceAccountNotPresentInAvailableAccounts() {
+        // given
+        Transfer transfer = getTransferWithSource("91592222222");
+        when(apiClient.fetchPaymentSourceAccounts()).thenReturn(getPaymentSourceAccountsResponse());
+
+        // when
+        final ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "getPaymentSourceAccount", transfer);
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage("Transfer source account was not present in user's payment accounts.");
+    }
+
+    @Test
+    public void shouldFindSourceAccountWhenPresentInAvailableAccounts() {
+        // given
+        Transfer transfer = getTransferWithSource("91599999999");
+        PaymentSourceAccountsResponse paymentSourceAccountsResponse =
+                getPaymentSourceAccountsResponse();
+        when(apiClient.fetchPaymentSourceAccounts()).thenReturn(paymentSourceAccountsResponse);
+
+        // when
+        PaymentSourceAccount paymentSourceAccount =
+                ReflectionTestUtils.invokeMethod(
+                        objectUnderTest, "getPaymentSourceAccount", transfer);
+
+        // then
+        assertNotNull(paymentSourceAccount);
+        assertThat(paymentSourceAccount).isEqualTo(paymentSourceAccountsResponse.get(0));
+    }
+
     private Transfer getA2ATransfer() {
         Transfer transfer = new Transfer();
         transfer.setDestination(new SwedishIdentifier("91599999999"));
@@ -227,5 +270,50 @@ public class SkandiaBankenPaymentExecutorTest {
         transfer.setRemittanceInformation(remittanceInformation);
 
         return transfer;
+    }
+
+    private Transfer getTransferWithSource(String accountNumber) {
+        Transfer transfer = new Transfer();
+        transfer.setSource(new SwedishIdentifier(accountNumber));
+        return transfer;
+    }
+
+    private PaymentSourceAccountsResponse getPaymentSourceAccountsResponse() {
+        return SerializationUtils.deserializeFromString(
+                "[\n"
+                        + "  {\n"
+                        + "    \"BankAccountName\": \"\",\n"
+                        + "    \"BankAccountNumber\": \"91599999999\",\n"
+                        + "    \"EncryptedBankAccountNumber\": \"dummyEncryptedBankAccountNumber1\",\n"
+                        + "    \"BankAccountDisplayName\": \"Allt i Ett-konto\",\n"
+                        + "    \"BankAccountDisplayNumber\": \"9159-999.999-9\",\n"
+                        + "    \"DisposableAmount\": 8.0,\n"
+                        + "    \"Amount\": 8.0,\n"
+                        + "    \"TransferableAccountType\": 1,\n"
+                        + "    \"TransferableAccountTypeName\": \"BankAccount\",\n"
+                        + "    \"BankAccountTypeDisplayName\": \"Allt i Ett-konto\",\n"
+                        + "    \"BankAccountHolderFirstname\": \"Firstname\",\n"
+                        + "    \"BankAccountHolderSurname\": \"Lastname\",\n"
+                        + "    \"Position\": 1,\n"
+                        + "    \"BankAccountType\": 1\n"
+                        + "  },\n"
+                        + "  {\n"
+                        + "    \"BankAccountName\": \"\",\n"
+                        + "    \"BankAccountNumber\": \"91591111111\",\n"
+                        + "    \"EncryptedBankAccountNumber\": \"dummyEncryptedBankAccountNumber2\",\n"
+                        + "    \"BankAccountDisplayName\": \"Allt i Ett-konto\",\n"
+                        + "    \"BankAccountDisplayNumber\": \"9159-111.111-1\",\n"
+                        + "    \"DisposableAmount\": 100.0,\n"
+                        + "    \"Amount\": 100.0,\n"
+                        + "    \"TransferableAccountType\": 1,\n"
+                        + "    \"TransferableAccountTypeName\": \"BankAccount\",\n"
+                        + "    \"BankAccountTypeDisplayName\": \"Allt i Ett-konto\",\n"
+                        + "    \"BankAccountHolderFirstname\": \"Firstname\",\n"
+                        + "    \"BankAccountHolderSurname\": \"Lastname\",\n"
+                        + "    \"Position\": 1,\n"
+                        + "    \"BankAccountType\": 1\n"
+                        + "  }\n"
+                        + "]",
+                PaymentSourceAccountsResponse.class);
     }
 }
