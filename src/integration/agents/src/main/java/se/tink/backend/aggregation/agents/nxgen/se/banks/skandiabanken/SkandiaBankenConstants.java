@@ -212,6 +212,7 @@ public class SkandiaBankenConstants {
                 "Investment account number was not found";
         public static final String NOT_CUSTOMER =
                 "för att använda vår app behöver du ha ett bankkonto";
+        public static final String INVALID_OCR = "payments[0].OCRReference";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -259,6 +260,8 @@ public class SkandiaBankenConstants {
                 "Transfer source account was not present in user's payment accounts.";
         public static final String SUBMIT_PAYMENT_FAILED =
                 "An error occurred when submitting payment to the user's outbox.";
+        public static final String INVALID_OCR =
+                "Error could not be submitted to bank due to invalid OCR.";
         public static final String PAYMENT_NOT_FOUND =
                 "Could not find submitted payment in user's outbox.";
         public static final String INIT_SIGN_FAILED =

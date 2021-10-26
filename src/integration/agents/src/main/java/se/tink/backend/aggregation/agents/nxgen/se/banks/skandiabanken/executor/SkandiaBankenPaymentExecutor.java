@@ -131,6 +131,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
             apiClient.submitPayment(paymentRequest);
         } catch (HttpResponseException e) {
             throwIfInvalidDateError(e.getResponse());
+            throwIfInvalidOcrError(e.getResponse());
 
             throw getTransferFailedException(
                     TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
@@ -150,6 +151,21 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                         TransferExceptionMessage.INVALID_PAYMENT_DATE,
                         EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,
                         InternalStatus.INVALID_DUE_DATE);
+            }
+        }
+    }
+
+    private void throwIfInvalidOcrError(HttpResponse response) {
+
+        if (response.getStatus() == HttpStatus.SC_BAD_REQUEST
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isInvalidOcrError()) {
+                throw getTransferCancelledException(
+                        TransferExceptionMessage.INVALID_OCR,
+                        EndUserMessage.INVALID_OCR,
+                        InternalStatus.INVALID_DESTINATION_MESSAGE);
             }
         }
     }
