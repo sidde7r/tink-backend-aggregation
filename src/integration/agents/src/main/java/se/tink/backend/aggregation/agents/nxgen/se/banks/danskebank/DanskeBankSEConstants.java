@@ -29,6 +29,12 @@ public class DanskeBankSEConstants {
         public static final String WHITE_LISTED_CHARACTER_STRING = ",._-?!/:()&`~";
     }
 
+    public static class ResponseMessage {
+        public static final String MESSAGE_MISSING = "Meddelande till mottagaren skall fyllas i.";
+        public static final String EXCESS_AMOUNT = "Från-kontot saknar täckning.";
+        public static final String EXECUTION_DAY_INVALID = "Betalningen kan inte utföras i dag.";
+    }
+
     public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
             TypeMapper.<AccountCapabilities>builder()
                     .put(
