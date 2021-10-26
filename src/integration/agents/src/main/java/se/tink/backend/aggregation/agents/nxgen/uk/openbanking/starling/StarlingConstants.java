@@ -93,11 +93,6 @@ public class StarlingConstants {
         public static final String CONTENT = "Content-Type";
     }
 
-    public class TransactionDirections {
-
-        public static final String OUT = "OUT";
-    }
-
     public class ErrorCode {
         private ErrorCode() {}
 
