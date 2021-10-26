@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremock
 
 import java.util.Set;
 
-public interface WireMockFilePathsStep {
+public interface WireMockConfigurationStep {
 
     AgentsServiceConfigurationStep withWireMockFilePath(String wireMockFilePath);
 

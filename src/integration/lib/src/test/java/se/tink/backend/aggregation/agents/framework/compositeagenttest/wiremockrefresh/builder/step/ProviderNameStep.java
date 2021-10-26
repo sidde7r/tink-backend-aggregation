@@ -2,5 +2,5 @@ package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremock
 
 public interface ProviderNameStep {
 
-    WireMockFilePathsStep withProviderName(String providerName);
+    WireMockConfigurationStep withProviderName(String providerName);
 }

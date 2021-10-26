@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.ProviderNameStep;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.RefreshOrAuthOnlyStep;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.RefreshableItemStep;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.WireMockFilePathsStep;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.WireMockConfigurationStep;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
@@ -40,7 +40,7 @@ import se.tink.libraries.enums.MarketCode;
 public final class AgentWireMockRefreshTestNxBuilder
         implements MarketCodeStep,
                 ProviderNameStep,
-                WireMockFilePathsStep,
+                WireMockConfigurationStep,
                 AgentsServiceConfigurationStep,
                 RefreshOrAuthOnlyStep,
                 RefreshableItemStep,
@@ -118,7 +118,7 @@ public final class AgentWireMockRefreshTestNxBuilder
     }
 
     @Override
-    public WireMockFilePathsStep withProviderName(String providerName) {
+    public WireMockConfigurationStep withProviderName(String providerName) {
         this.providerName = providerName;
         return this;
     }
