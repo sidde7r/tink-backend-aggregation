@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.BankIdPolling;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.DateFormatting;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.PaymentTransfer;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TransferExceptionMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentInitSignResponse;
@@ -75,6 +76,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
     private void validateTransferOrThrow(Transfer transfer) {
         throwIfNotBgOrPgPayment(transfer);
+        throwIfAmountIsLessThanMinAmount(transfer);
     }
 
     private void throwIfNotBgOrPgPayment(Transfer transfer) {
@@ -83,6 +85,15 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                     TransferExceptionMessage.INVALID_PAYMENT_TYPE,
                     EndUserMessage.END_USER_WRONG_PAYMENT_TYPE,
                     InternalStatus.INVALID_PAYMENT_TYPE);
+        }
+    }
+
+    private void throwIfAmountIsLessThanMinAmount(Transfer transfer) {
+        if (transfer.getAmount().getValue() < PaymentTransfer.MIN_AMOUNT) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_MINIMUM_AMOUNT,
+                    EndUserMessage.INVALID_MINIMUM_AMOUNT,
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
     }
 

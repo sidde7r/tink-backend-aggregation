@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SkandiaBankenPaymentExecutorTest {
@@ -73,6 +74,53 @@ public class SkandiaBankenPaymentExecutorTest {
         assertNull(thrown);
     }
 
+    @Test
+    public void shouldThrowTransferExceptionWhenAmountIsLessThan1Sek() {
+        // when
+        final ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest,
+                                "throwIfAmountIsLessThanMinAmount",
+                                getLessThan1SekTransfer());
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage(
+                        "Minimum amount of payment is 1 SEK. This is a restriction set by the bank.");
+    }
+
+    @Test
+    public void shouldNotThrowTransferExceptionWhenAmountIs1Sek() {
+        // when
+        Throwable thrown =
+                catchThrowable(
+                        () ->
+                                ReflectionTestUtils.invokeMethod(
+                                        objectUnderTest,
+                                        "throwIfAmountIsLessThanMinAmount",
+                                        get1SekTransfer()));
+
+        // then
+        assertNull(thrown);
+    }
+
+    @Test
+    public void shouldNotThrowTransferExceptionWhenAmountIsGreaterThan1Sek() {
+        // when
+        Throwable thrown =
+                catchThrowable(
+                        () ->
+                                ReflectionTestUtils.invokeMethod(
+                                        objectUnderTest,
+                                        "throwIfAmountIsLessThanMinAmount",
+                                        getGreaterThan1SekTransfer()));
+
+        // then
+        assertNull(thrown);
+    }
+
     private Transfer getA2ATransfer() {
         Transfer transfer = new Transfer();
         transfer.setDestination(new SwedishIdentifier("91599999999"));
@@ -88,6 +136,24 @@ public class SkandiaBankenPaymentExecutorTest {
     private Transfer getPgTransfer() {
         Transfer transfer = new Transfer();
         transfer.setDestination(new PlusGiroIdentifier("9999999"));
+        return transfer;
+    }
+
+    private Transfer getLessThan1SekTransfer() {
+        Transfer transfer = new Transfer();
+        transfer.setAmount(ExactCurrencyAmount.inSEK(0.01));
+        return transfer;
+    }
+
+    private Transfer get1SekTransfer() {
+        Transfer transfer = new Transfer();
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.0));
+        return transfer;
+    }
+
+    private Transfer getGreaterThan1SekTransfer() {
+        Transfer transfer = new Transfer();
+        transfer.setAmount(ExactCurrencyAmount.inSEK(100.12));
         return transfer;
     }
 }
