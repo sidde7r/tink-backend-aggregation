@@ -6,12 +6,14 @@ import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.CreatePaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -20,6 +22,7 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
 
     private final TinkHttpClient client;
     private final BoursoramaConfiguration configuration;
+    private final CreatePaymentRequestValidator createPaymentRequestValidator;
 
     @Override
     public void fetchToken() {
@@ -27,7 +30,9 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
     }
 
     @Override
-    public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
+    public CreatePaymentResponse createPayment(CreatePaymentRequest request)
+            throws PaymentValidationException {
+        createPaymentRequestValidator.validate(request);
         return client.request(Urls.CREATE_PAYMENT)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)

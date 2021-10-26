@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TimeZone;
 import lombok.SneakyThrows;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -37,9 +38,10 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetche
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.identity.BoursoramaIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.BoursoramaTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentDatePolicy;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.FrCreatePaymentRequestValidator;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -60,6 +62,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.date.CountryDateHelper;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({
@@ -89,6 +92,7 @@ public final class BoursoramaAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final BoursoramaIdentityFetcher identityFetcher;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Inject
     public BoursoramaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -96,7 +100,7 @@ public final class BoursoramaAgent extends NextGenerationAgent
         super(componentProvider);
 
         AgentConfiguration<BoursoramaConfiguration> agentConfiguration = getAgentConfiguration();
-
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.apiClient =
                 constructApiClient(
                         qsealcSigner, agentConfiguration.getProviderSpecificConfiguration());
@@ -265,12 +269,15 @@ public final class BoursoramaAgent extends NextGenerationAgent
         FrOpenBankingPaymentExecutor paymentExecutor =
                 new FrOpenBankingPaymentExecutor(
                         new BoursoramaPaymentApiClient(
-                                client, agentConfiguration.getProviderSpecificConfiguration()),
+                                client,
+                                agentConfiguration.getProviderSpecificConfiguration(),
+                                new FrCreatePaymentRequestValidator(localDateTimeSource)),
                         agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new FrOpenBankingPaymentDatePolicy(),
+                        new BoursoramaPaymentDatePolicy(
+                                getCountryDateHelper(), localDateTimeSource),
                         new FrOpenBankingRequestValidator(provider.getName()));
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
@@ -284,5 +291,11 @@ public final class BoursoramaAgent extends NextGenerationAgent
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController, new BoursoramaTransferDestinationFetcher(apiClient));
+    }
+
+    private CountryDateHelper getCountryDateHelper() {
+        return new CountryDateHelper(
+                BoursoramaConstants.DEFAULT_LOCALE,
+                TimeZone.getTimeZone(BoursoramaConstants.DEFAULT_ZONE_ID));
     }
 }

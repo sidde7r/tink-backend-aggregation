@@ -1,7 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.integration;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.time.LocalDate;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -20,10 +26,13 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 
+@RunWith(JUnitParamsRunner.class)
 public class BoursoramaWireMockTest {
 
     private static final String CONFIGURATION_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/boursorama/integration/resources/configuration.yml";
+    private static final LocalDate TODAY = LocalDate.of(1992, 4, 10);
+    private static final LocalDate TWO_DAYS_AFTER_TODAY = TODAY.plusDays(2);
 
     @Test
     public void testSepaPayment() throws Exception {
@@ -40,7 +49,9 @@ public class BoursoramaWireMockTest {
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .withHttpDebugTrace()
-                        .withPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER))
+                        .withPayment(
+                                createRealDomesticPayment(
+                                        PaymentScheme.SEPA_CREDIT_TRANSFER, TWO_DAYS_AFTER_TODAY))
                         .withAgentModule(new BoursoramaWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
@@ -64,11 +75,40 @@ public class BoursoramaWireMockTest {
                         .withHttpDebugTrace()
                         .withPayment(
                                 createRealDomesticPayment(
-                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER))
+                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, TODAY))
                         .withAgentModule(new BoursoramaWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    @Parameters({"1992-04-08", "1992-04-12"})
+    public void shouldThrowOnSepaInstantPaymentIfDateNotToday(String executionDate)
+            throws Exception {
+
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/boursorama/integration/resources/boursorama_sepa_instant_invalid_date_log.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.FR, "fr-boursorama-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .withHttpDebugTrace()
+                        .withPayment(
+                                createRealDomesticPayment(
+                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER,
+                                        LocalDate.parse(executionDate)))
+                        .withAgentModule(new BoursoramaWireMockTestModule())
+                        .buildWithLogin(PaymentCommand.class);
+
+        Throwable exception = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        assertThat(exception).isExactlyInstanceOf(PaymentValidationException.class);
     }
 
     @Test
@@ -101,7 +141,8 @@ public class BoursoramaWireMockTest {
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
-    private Payment createRealDomesticPayment(PaymentScheme paymentScheme) {
+    private Payment createRealDomesticPayment(
+            PaymentScheme paymentScheme, LocalDate executionDate) {
         AccountIdentifier creditorAccountIdentifier =
                 AccountIdentifier.create(AccountIdentifierType.IBAN, "FR1420041010050500013M02606");
 
@@ -116,7 +157,7 @@ public class BoursoramaWireMockTest {
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
-                .withExecutionDate(LocalDate.of(2021, 4, 7))
+                .withExecutionDate(executionDate)
                 .withPaymentScheme(paymentScheme)
                 .build();
     }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
 
 import java.time.ZoneId;
+import java.util.Locale;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BoursoramaConstants {
@@ -9,6 +10,8 @@ public class BoursoramaConstants {
     public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
 
     public static final ZoneId ZONE_ID = ZoneId.of("CET");
+    public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Europe/Paris");
+    public static final Locale DEFAULT_LOCALE = new Locale("fr_FR", "FR");
     public static final String INSUFFICIENT_FUND_STATUS = "CUST";
 
     public static class Urls {
