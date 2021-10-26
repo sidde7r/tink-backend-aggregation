@@ -273,6 +273,8 @@ public class SkandiaBankenConstants {
                 "An error occurred when removing the payment from the user's outbox.";
         public static final String INVALID_PAYMENT_DATE =
                 "Payment could not be submitted, date was rejected by bank.";
+        public static final String INVALID_PAYMENT_TYPE =
+                "Provided payment type is not supported. Only PG and BG type is supported.";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

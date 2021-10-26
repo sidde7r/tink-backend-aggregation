@@ -46,6 +46,8 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
 
+        validateTransferOrThrow(transfer);
+
         PaymentSourceAccount sourceAccount = getPaymentSourceAccount(transfer);
 
         Date paymentDate = getPaymentDate(transfer);
@@ -69,6 +71,19 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         // Re-add filter after PIS flow, in case there's a refresh after we would want to
         // handle 500 responses as bank side failures.
         apiClient.addBankServiceInternalErrorFilter();
+    }
+
+    private void validateTransferOrThrow(Transfer transfer) {
+        throwIfNotBgOrPgPayment(transfer);
+    }
+
+    private void throwIfNotBgOrPgPayment(Transfer transfer) {
+        if (!transfer.getDestination().isGiroIdentifier()) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_PAYMENT_TYPE,
+                    EndUserMessage.END_USER_WRONG_PAYMENT_TYPE,
+                    InternalStatus.INVALID_PAYMENT_TYPE);
+        }
     }
 
     private Date getPaymentDate(Transfer transfer) {
