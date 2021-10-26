@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.storage.logs;
 
 import com.google.inject.Inject;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
@@ -14,8 +13,8 @@ public class AgentHttpLogsCache {
     private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
-    private final OptionalLogContent<String> rawLogContent = new OptionalLogContent<>();
-    private final OptionalLogContent<String> jsonLogContent = new OptionalLogContent<>();
+    private final LogContentCache rawLogContent = new LogContentCache();
+    private final LogContentCache jsonLogContent = new LogContentCache();
 
     @Inject
     public AgentHttpLogsCache(
@@ -55,22 +54,21 @@ public class AgentHttpLogsCache {
                 .orElse(null);
     }
 
-    @RequiredArgsConstructor
-    private static class OptionalLogContent<T> {
+    private static class LogContentCache {
 
         private boolean initialized;
-        private T content;
+        private String content;
 
         boolean isNotInitialized() {
             return !initialized;
         }
 
-        void initialize(T content) {
+        void initialize(String content) {
             this.content = content;
             this.initialized = true;
         }
 
-        Optional<T> getContent() {
+        Optional<String> getContent() {
             return Optional.ofNullable(content);
         }
     }

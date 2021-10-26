@@ -13,10 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.executor.HttpTrafficLogger;
 
 @Slf4j
 @RequiredArgsConstructor
-public class RawHttpTrafficLogger {
+public class RawHttpTrafficLogger implements HttpTrafficLogger {
 
     private static final LogTag LOG_TAG = LogTag.from("[RawHttpTrafficLogger]");
 
@@ -81,6 +82,12 @@ public class RawHttpTrafficLogger {
         loggingPrintStream.print(logContentWithoutSensitiveValues);
     }
 
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
     public Optional<String> tryGetLogContent() {
         try {
             return Optional.of(getLogContentInternal());

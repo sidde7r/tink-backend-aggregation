@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.nxgen.http;
 
-import static java.util.Collections.singletonList;
-
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -39,6 +37,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -81,7 +80,6 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
-import se.tink.backend.aggregation.nxgen.http.client.LoggingScope;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
@@ -153,7 +151,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final LogMasker logMasker;
     private final LoggingMode loggingMode;
     private LoggingStrategy loggingStrategy = LoggingStrategy.DEFAULT;
-    private List<LoggingScope> loggingScopes = singletonList(LoggingScope.HTTP_RAW);
     private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
@@ -520,8 +517,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private void setupExperimentalLogging() {
         List<LoggingExecutor> loggingExecutors =
-                loggingScopes.stream()
-                        .map(this::createLoggingExecutorForScope)
+                Stream.of(createAppLoggingExecutor(), createJsonLoggingExecutor())
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());
@@ -540,20 +536,13 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         internalClient.addFilter(new ResponseLoggingFilter(jerseyResponseLoggingAdapter));
     }
 
-    private Optional<LoggingExecutor> createLoggingExecutorForScope(LoggingScope loggingScope) {
-        if (loggingScope == LoggingScope.HTTP_RAW) {
-            return createAppLoggingExecutor();
-        }
-        if (loggingScope == LoggingScope.HTTP_JSON) {
-            return createJsonLoggingExecutor();
-        }
-        log.warn("Unexpected logging scope: {}", loggingScope);
-        return Optional.empty();
-    }
-
     private Optional<LoggingExecutor> createAppLoggingExecutor() {
         if (rawHttpTrafficLogger == null) {
-            log.warn("Could not create AAP logging executor - logger not configured");
+            log.warn("Could not create AAP logging executor - missing logger");
+            return Optional.empty();
+        }
+        if (!rawHttpTrafficLogger.isEnabled()) {
+            log.info("Could not create AAP logging executor - logger not enabled");
             return Optional.empty();
         }
         return Optional.of(
@@ -562,7 +551,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private Optional<LoggingExecutor> createJsonLoggingExecutor() {
         if (jsonHttpTrafficLogger == null) {
-            log.warn("Could not create JSON logging executor - logger not configured");
+            log.warn("Could not create JSON logging executor - missing logger");
+            return Optional.empty();
+        }
+        if (!jsonHttpTrafficLogger.isEnabled()) {
+            log.warn("Could not create JSON logging executor - logger not enabled");
             return Optional.empty();
         }
         return Optional.of(new JsonHttpTrafficLoggingExecutor(jsonHttpTrafficLogger));
@@ -634,11 +627,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     @Override
     public void setLoggingStrategy(LoggingStrategy loggingStrategy) {
         this.loggingStrategy = loggingStrategy;
-    }
-
-    @Override
-    public void setLoggingScopes(LoggingScope... loggingScopes) {
-        this.loggingScopes = ImmutableList.copyOf(loggingScopes);
     }
 
     @Override

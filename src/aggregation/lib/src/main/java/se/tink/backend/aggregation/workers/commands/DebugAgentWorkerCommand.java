@@ -243,11 +243,11 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     private static void logSkippingRawLogs(SaveLogsStatus status) {
-        log.warn("{} Skipping AAP http logs: {}", LOG_TAG, status);
+        log.warn("{} Skipping raw http logs: {}", LOG_TAG, status);
     }
 
     private static void logSkippingRawLtsLogs(SaveLogsStatus status) {
-        log.warn("{} Skipping AAP LTS http logs: {}", LOG_TAG, status);
+        log.warn("{} Skipping raw LTS http logs: {}", LOG_TAG, status);
     }
 
     private static void logSkippingJsonLogs(SaveLogsStatus status) {

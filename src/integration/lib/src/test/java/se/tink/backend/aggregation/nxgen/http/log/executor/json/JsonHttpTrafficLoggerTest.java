@@ -71,6 +71,18 @@ public class JsonHttpTrafficLoggerTest {
             responseEntity("thread2 response2");
 
     @Test
+    public void should_be_disabled_by_default() {
+        // given
+        jsonLogger = new JsonHttpTrafficLogger(META_ENTITY);
+
+        // when
+        boolean enabled = jsonLogger.isEnabled();
+
+        // then
+        assertThat(enabled).isFalse();
+    }
+
+    @Test
     public void should_correctly_build_json_log() {
         // given
         jsonLogger = new JsonHttpTrafficLogger(META_ENTITY);

@@ -44,6 +44,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/integration/models",

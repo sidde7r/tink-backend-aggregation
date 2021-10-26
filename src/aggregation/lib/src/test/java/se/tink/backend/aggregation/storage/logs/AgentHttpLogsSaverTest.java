@@ -19,6 +19,8 @@ import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.HttpLogType;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
@@ -30,6 +32,9 @@ public class AgentHttpLogsSaverTest {
     private AgentHttpLogsCache logsCache;
     private S3StoragePathsProvider s3StoragePathsProvider;
 
+    private RawHttpTrafficLogger rawHttpTrafficLogger;
+    private JsonHttpTrafficLogger jsonHttpTrafficLogger;
+
     private AgentHttpLogsSaver logsSaver;
 
     @Before
@@ -38,7 +43,20 @@ public class AgentHttpLogsSaverTest {
         logsCache = mock(AgentHttpLogsCache.class);
         s3StoragePathsProvider = mock(S3StoragePathsProvider.class);
 
-        logsSaver = new AgentHttpLogsSaver(logsStorageHandler, logsCache, s3StoragePathsProvider);
+        rawHttpTrafficLogger = mock(RawHttpTrafficLogger.class);
+        jsonHttpTrafficLogger = mock(JsonHttpTrafficLogger.class);
+
+        recreateLogsSaver();
+    }
+
+    private void recreateLogsSaver() {
+        logsSaver =
+                new AgentHttpLogsSaver(
+                        logsStorageHandler,
+                        logsCache,
+                        s3StoragePathsProvider,
+                        rawHttpTrafficLogger,
+                        jsonHttpTrafficLogger);
     }
 
     @Test
@@ -65,9 +83,53 @@ public class AgentHttpLogsSaverTest {
 
     @Test
     @Parameters(method = "all_raw_logs_catalogs")
+    public void should_skip_raw_logs_if_raw_logger_is_missing(RawHttpLogsCatalog logsCatalog) {
+        // given
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+
+        rawHttpTrafficLogger = null;
+        recreateLogsSaver();
+
+        // when
+        SaveLogsResult result = logsSaver.saveRawLogs(logsCatalog);
+
+        // then
+        assertThat(result)
+                .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGGER).build());
+
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
+    }
+
+    @Test
+    @Parameters(method = "all_raw_logs_catalogs")
+    public void should_skip_raw_logs_if_raw_logs_should_not_be_stored(
+            RawHttpLogsCatalog logsCatalog) {
+        // given
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(rawHttpTrafficLogger.isEnabled()).thenReturn(false);
+
+        // when
+        SaveLogsResult result = logsSaver.saveRawLogs(logsCatalog);
+
+        // then
+        assertThat(result)
+                .isEqualTo(
+                        SaveLogsResult.builder()
+                                .status(SaveLogsStatus.LOGS_SHOULD_NOT_BE_STORED)
+                                .build());
+
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
+        verify(rawHttpTrafficLogger).isEnabled();
+    }
+
+    @Test
+    @Parameters(method = "all_raw_logs_catalogs")
     public void should_skip_raw_logs_if_they_are_missing(RawHttpLogsCatalog logsCatalog) {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(rawHttpTrafficLogger.isEnabled()).thenReturn(true);
         when(logsCache.getRawLogContent()).thenReturn(Optional.empty());
 
         // when
@@ -77,9 +139,10 @@ public class AgentHttpLogsSaverTest {
         assertThat(result)
                 .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGS).build());
 
-        verify(logsCache).getRawLogContent();
         verify(logsStorageHandler).isEnabled();
         verifyNoMoreInteractions(logsStorageHandler);
+        verify(rawHttpTrafficLogger).isEnabled();
+        verify(logsCache).getRawLogContent();
     }
 
     @SuppressWarnings("unused")
@@ -92,6 +155,7 @@ public class AgentHttpLogsSaverTest {
     public void should_skip_raw_logs_if_they_are_empty(RawHttpLogsCatalog logsCatalog) {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(rawHttpTrafficLogger.isEnabled()).thenReturn(true);
         when(logsCache.getRawLogContent()).thenReturn(Optional.of("     "));
 
         // when
@@ -101,9 +165,10 @@ public class AgentHttpLogsSaverTest {
         assertThat(result)
                 .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.EMPTY_LOGS).build());
 
-        verify(logsCache).getRawLogContent();
         verify(logsStorageHandler).isEnabled();
         verifyNoMoreInteractions(logsStorageHandler);
+        verify(rawHttpTrafficLogger).isEnabled();
+        verify(logsCache).getRawLogContent();
     }
 
     @Test
@@ -111,6 +176,7 @@ public class AgentHttpLogsSaverTest {
     public void should_save_not_empty_raw_logs_in_default_catalog() {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(rawHttpTrafficLogger.isEnabled()).thenReturn(true);
         when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenReturn("HTTP: s3://bucket/raw/file.log");
 
@@ -128,6 +194,7 @@ public class AgentHttpLogsSaverTest {
                                 .storageDescription("HTTP: s3://bucket/raw/file.log")
                                 .build());
 
+        verify(rawHttpTrafficLogger).isEnabled();
         verify(logsCache).getRawLogContent();
         verify(s3StoragePathsProvider).getRawLogDefaultPath("not empty log content");
 
@@ -142,6 +209,7 @@ public class AgentHttpLogsSaverTest {
     public void should_save_not_empty_raw_logs_in_payments_lts_catalog() {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(rawHttpTrafficLogger.isEnabled()).thenReturn(true);
         when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenReturn("HTTP: s3://bucket/raw/lts/file.log");
 
@@ -160,6 +228,7 @@ public class AgentHttpLogsSaverTest {
                                 .storageDescription("HTTP: s3://bucket/raw/lts/file.log")
                                 .build());
 
+        verify(rawHttpTrafficLogger).isEnabled();
         verify(logsCache).getRawLogContent();
         verify(s3StoragePathsProvider).getRawLogsPaymentsLtsPath("not empty log 123");
 
@@ -175,6 +244,7 @@ public class AgentHttpLogsSaverTest {
     public void should_catch_exceptions_when_saving_raw_logs(RawHttpLogsCatalog logsCatalog) {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(rawHttpTrafficLogger.isEnabled()).thenReturn(true);
         when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenThrow(new IOException("IO ERROR"));
         when(logsCache.getRawLogContent()).thenReturn(Optional.of("not empty log"));
@@ -187,9 +257,50 @@ public class AgentHttpLogsSaverTest {
     }
 
     @Test
+    public void should_skip_json_logs_if_json_traffic_logger_is_missing() {
+        // given
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+
+        jsonHttpTrafficLogger = null;
+        recreateLogsSaver();
+
+        // when
+        SaveLogsResult result = logsSaver.saveJsonLogs();
+
+        // then
+        assertThat(result)
+                .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGGER).build());
+
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
+    }
+
+    @Test
+    public void should_skip_json_logs_if_json_logs_should_not_be_stored() {
+        // given
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(jsonHttpTrafficLogger.isEnabled()).thenReturn(false);
+
+        // when
+        SaveLogsResult result = logsSaver.saveJsonLogs();
+
+        // then
+        assertThat(result)
+                .isEqualTo(
+                        SaveLogsResult.builder()
+                                .status(SaveLogsStatus.LOGS_SHOULD_NOT_BE_STORED)
+                                .build());
+
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
+        verify(jsonHttpTrafficLogger).isEnabled();
+    }
+
+    @Test
     public void should_skip_json_logs_if_log_content_is_missing() {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(jsonHttpTrafficLogger.isEnabled()).thenReturn(true);
         when(logsCache.getJsonLogContent()).thenReturn(Optional.empty());
 
         // when
@@ -203,6 +314,7 @@ public class AgentHttpLogsSaverTest {
 
         verify(logsStorageHandler).isEnabled();
         verifyNoMoreInteractions(logsStorageHandler);
+        verify(jsonHttpTrafficLogger).isEnabled();
     }
 
     @Test
@@ -211,6 +323,7 @@ public class AgentHttpLogsSaverTest {
     public void should_save_both_empty_and_not_empty_json_logs(String logContent) {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(jsonHttpTrafficLogger.isEnabled()).thenReturn(true);
         when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenReturn("HTTP: s3://bucket/ais/json/file.json");
 
@@ -233,6 +346,7 @@ public class AgentHttpLogsSaverTest {
         verify(s3StoragePathsProvider).getJsonLogPath(logContent);
 
         verify(logsStorageHandler).isEnabled();
+        verify(jsonHttpTrafficLogger).isEnabled();
         verify(logsStorageHandler)
                 .storeLog(logContent, "ais/json/file.json", HttpLogType.JSON_FORMAT);
         verifyNoMoreInteractions(logsStorageHandler);
@@ -243,6 +357,7 @@ public class AgentHttpLogsSaverTest {
     public void should_catch_exceptions_when_saving_json_logs() {
         // given
         when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(jsonHttpTrafficLogger.isEnabled()).thenReturn(true);
         when(logsStorageHandler.storeLog(any(), any(), any()))
                 .thenThrow(new IOException("IO ERROR"));
 

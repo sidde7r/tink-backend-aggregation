@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.http.log.executor.HttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogExchangeEntity;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogRequestEntity;
@@ -25,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonL
  * Athena queries effectively.
  */
 @Slf4j
-public class JsonHttpTrafficLogger {
+public class JsonHttpTrafficLogger implements HttpTrafficLogger {
 
     private static final LogTag LOG_TAG = LogTag.from("[JsonHttpTrafficLogger]");
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -34,8 +35,19 @@ public class JsonHttpTrafficLogger {
     private final Map<String, HttpJsonLogRequestEntity> requests = new LinkedHashMap<>();
     private final Map<String, HttpJsonLogResponseEntity> responses = new LinkedHashMap<>();
 
+    private boolean enabled = false;
+
     public JsonHttpTrafficLogger(HttpJsonLogMetaEntity metaEntity) {
         this.metaEntity = metaEntity;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**
@@ -84,6 +96,7 @@ public class JsonHttpTrafficLogger {
         responses.put(currentExchangeId.get(), responseEntity);
     }
 
+    @Override
     public Optional<String> tryGetLogContent() {
         HttpJsonLog httpLog = buildLog();
         try {

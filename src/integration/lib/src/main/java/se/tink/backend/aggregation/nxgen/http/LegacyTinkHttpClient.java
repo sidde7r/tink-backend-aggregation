@@ -72,7 +72,6 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.client.LoggingScope;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
@@ -463,11 +462,6 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
     @Override
     public void setLoggingStrategy(LoggingStrategy loggingStrategy) {
-        throw notImplementedInLegacyClientException();
-    }
-
-    @Override
-    public void setLoggingScopes(LoggingScope... loggingScopes) {
         throw notImplementedInLegacyClientException();
     }
 

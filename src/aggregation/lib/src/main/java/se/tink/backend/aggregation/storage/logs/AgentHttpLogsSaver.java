@@ -6,6 +6,9 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.nxgen.http.log.executor.HttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.HttpLogType;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
@@ -18,6 +21,9 @@ public class AgentHttpLogsSaver {
     private final AgentHttpLogsCache logsCache;
     private final S3StoragePathsProvider s3StoragePathsProvider;
 
+    private final RawHttpTrafficLogger rawHttpTrafficLogger;
+    private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
+
     /**
      * Store raw logs
      *
@@ -25,8 +31,10 @@ public class AgentHttpLogsSaver {
      * @return path to saved file
      */
     public SaveLogsResult saveRawLogs(RawHttpLogsCatalog catalog) {
-        if (!logsStorageHandler.isEnabled()) {
-            return SaveLogsResult.of(SaveLogsStatus.STORAGE_DISABLED);
+        Optional<SaveLogsStatus> maybeShouldNotSaveLogsStatus =
+                checkForCommonReasonNotToSaveLogs(rawHttpTrafficLogger);
+        if (maybeShouldNotSaveLogsStatus.isPresent()) {
+            return SaveLogsResult.of(maybeShouldNotSaveLogsStatus.get());
         }
 
         Optional<String> maybeLogContent = logsCache.getRawLogContent();
@@ -46,7 +54,7 @@ public class AgentHttpLogsSaver {
             return SaveLogsResult.saved(storageDescription);
 
         } catch (IOException | RuntimeException e) {
-            log.error("Could not store raw logs, catalog: {}", catalog);
+            log.error("Could not store raw logs, catalog: {}", catalog, e);
             return SaveLogsResult.of(SaveLogsStatus.ERROR);
         }
     }
@@ -67,8 +75,10 @@ public class AgentHttpLogsSaver {
      * @return path to saved file
      */
     public SaveLogsResult saveJsonLogs() {
-        if (!logsStorageHandler.isEnabled()) {
-            return SaveLogsResult.of(SaveLogsStatus.STORAGE_DISABLED);
+        Optional<SaveLogsStatus> maybeShouldNotSaveLogsStatus =
+                checkForCommonReasonNotToSaveLogs(jsonHttpTrafficLogger);
+        if (maybeShouldNotSaveLogsStatus.isPresent()) {
+            return SaveLogsResult.of(maybeShouldNotSaveLogsStatus.get());
         }
 
         Optional<String> maybeJsonLogContent = logsCache.getJsonLogContent();
@@ -87,5 +97,25 @@ public class AgentHttpLogsSaver {
             log.error("Could not store JSON logs", e);
             return SaveLogsResult.of(SaveLogsStatus.ERROR);
         }
+    }
+
+    private Optional<SaveLogsStatus> checkForCommonReasonNotToSaveLogs(
+            HttpTrafficLogger trafficLogger) {
+        if (!logsStorageHandler.isEnabled()) {
+            return Optional.of(SaveLogsStatus.STORAGE_DISABLED);
+        }
+        if (trafficLogger == null) {
+            return Optional.of(SaveLogsStatus.NO_LOGGER);
+        }
+        if (shouldNotStoreLoggerTrafficInS3(trafficLogger)) {
+            return Optional.of(SaveLogsStatus.LOGS_SHOULD_NOT_BE_STORED);
+        }
+        return Optional.empty();
+    }
+
+    private boolean shouldNotStoreLoggerTrafficInS3(HttpTrafficLogger trafficLogger) {
+        boolean shouldStore =
+                Optional.ofNullable(trafficLogger).map(HttpTrafficLogger::isEnabled).orElse(false);
+        return !shouldStore;
     }
 }

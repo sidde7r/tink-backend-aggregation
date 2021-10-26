@@ -35,6 +35,6 @@ public final class FakeLogMasker implements LogMasker {
 
     @Override
     public LoggingMode shouldLog(Provider provider) {
-        return null;
+        return LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
     }
 }
