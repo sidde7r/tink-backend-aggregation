@@ -1,18 +1,24 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.utils;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static lombok.AccessLevel.PRIVATE;
+
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
-public class ResourceFileReader {
+@NoArgsConstructor(access = PRIVATE)
+public final class ResourceFileReader {
 
-    public String read(String filePath) {
-        try {
-            return new String(
-                    Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8.name());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @SneakyThrows
+    public static String read(String filePath) {
+        return read(Paths.get(filePath).toFile());
+    }
+
+    @SneakyThrows
+    public static String read(File file) {
+        return new String(Files.readAllBytes(file.toPath()), UTF_8.name());
     }
 }

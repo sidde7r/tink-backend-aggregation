@@ -128,9 +128,8 @@ public final class AggregationControllerAggregationClientTest {
                 new WireMockTestServer(
                         ImmutableSet.of(
                                 new AapFileParser(
-                                        new ResourceFileReader()
-                                                .read(
-                                                        "src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/resources/aggregation_controller_mock_traffic.aap"))));
+                                        ResourceFileReader.read(
+                                                "src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/resources/aggregation_controller_mock_traffic.aap"))));
 
         hostConfiguration = new HostConfiguration();
         hostConfiguration.setHost("http://localhost:" + server.getHttpPort());

@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.wiremock;
 
+import static se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
+
 import com.google.common.collect.ImmutableSet;
 import java.io.File;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -22,25 +25,17 @@ public class WireMockIntegrationTestServer {
 
     private final WireMockTestServer wireMockServer;
 
-    private final TinkHttpClient tinkHttpClient;
-
-    public WireMockIntegrationTestServer(File scenarioFile) {
-        wireMockServer = createWireMockServer(scenarioFile);
-        tinkHttpClient = createTinkHttpClient();
+    public WireMockIntegrationTestServer() {
+        wireMockServer = new WireMockTestServer(false);
     }
 
-    private WireMockTestServer createWireMockServer(File fileInAapFormat) {
-        return new WireMockTestServer(
-                ImmutableSet.of(
-                        new AapFileParser(
-                                new ResourceFileReader().read(fileInAapFormat.toString()))));
+    public void loadScenario(File aapFile) {
+        wireMockServer.loadRequestResponsePairs(singleAapFileParser(aapFile));
     }
 
-    private TinkHttpClient createTinkHttpClient() {
+    public TinkHttpClient createTinkHttpClient() {
         TinkHttpClient httpClient =
-                NextGenTinkHttpClient.builder(
-                                new FakeLogMasker(),
-                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                NextGenTinkHttpClient.builder(new FakeLogMasker(), LOGGING_MASKER_COVERS_SECRETS)
                         .build();
 
         httpClient.disableSslVerification();
@@ -49,11 +44,15 @@ public class WireMockIntegrationTestServer {
                 httpClient, String.format("localhost:%s", wireMockServer.getHttpPort()), "http");
     }
 
-    public TinkHttpClient getTinkHttpClient() {
-        return tinkHttpClient;
-    }
-
     public void shutdown() {
         wireMockServer.shutdown();
+    }
+
+    private static RequestResponseParser aapFileParser(File aapFile) {
+        return new AapFileParser(ResourceFileReader.read(aapFile));
+    }
+
+    private static Set<RequestResponseParser> singleAapFileParser(File aapFile) {
+        return ImmutableSet.of(aapFileParser(aapFile));
     }
 }

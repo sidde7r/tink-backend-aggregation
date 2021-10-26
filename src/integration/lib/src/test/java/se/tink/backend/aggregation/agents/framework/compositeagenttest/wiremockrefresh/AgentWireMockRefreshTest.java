@@ -87,7 +87,7 @@ public final class AgentWireMockRefreshTest {
                         .map(
                                 wireMockFilePath ->
                                         new AapFileParser(
-                                                new ResourceFileReader().read(wireMockFilePath)))
+                                                ResourceFileReader.read(wireMockFilePath)))
                         .collect(ImmutableSet.toImmutableSet());
 
         server = new WireMockTestServer(parsers, wireMockServerLogsEnabled);
