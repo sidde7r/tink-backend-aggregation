@@ -7,6 +7,7 @@ generate_codeowners(
     owners = [
         ":aws_log_fetcher_owners",
         ":charts_agent_platform",
+        ":charts_precomputations_for_alerts",
         "//.buildkite:owners",
         ":charts_german_alerts",
         ":charts_italian_alerts",
@@ -186,6 +187,17 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+)
+
+codeowners(
+    name = "charts_precomputations_for_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/precomputations.yaml",
+    ],
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
+        "@tink-ab/aggregation-thundercats-maintainer",
     ],
 )
 
