@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh;
 
-import static com.google.common.collect.ImmutableList.of;
 import static se.tink.backend.aggregation.agents.agentplatform.authentication.storage.UpgradingPersistentStorageService.MARKER;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -17,11 +17,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contractproducer.ContractProducer;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -48,13 +47,16 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.enums.MarketCode;
 
+@Slf4j
+@SuppressWarnings("java:S2187")
 public final class AgentWireMockRefreshTest {
 
-    private static final Logger log = LoggerFactory.getLogger(AgentWireMockRefreshTest.class);
-
     private final CompositeAgentTest compositeAgentTest;
+
     private final WireMockTestServer server;
+
     private final boolean dumpContentForContractFile;
+
     private final RawBankDataEventAccumulator rawBankDataEventAccumulator;
 
     private AgentWireMockRefreshTest(
@@ -442,7 +444,7 @@ public final class AgentWireMockRefreshTest {
                     cache,
                     agentTestModule,
                     refreshableItems,
-                    of(LoginCommand.class, RefreshCommand.class),
+                    ImmutableList.of(LoginCommand.class, RefreshCommand.class),
                     httpDebugTrace,
                     dumpContentForContractFile,
                     requestManual,
@@ -471,10 +473,10 @@ public final class AgentWireMockRefreshTest {
             implements MarketCodeStep,
                     ProviderNameStep,
                     WireMockFilePathsStep,
-                    ConfigurationStep,
+                    AgentsServiceConfigurationStep,
                     RefreshOrAuthOnlyStep,
                     RefreshableItemStep,
-                    FullOrAutoAuthenticationStep,
+                    AuthenticationConfigurationStep,
                     BuildStep {
         private MarketCode marketCode;
         private String providerName;
@@ -497,6 +499,7 @@ public final class AgentWireMockRefreshTest {
         private boolean requestFlagCreate;
         private boolean requestFlagUpdate;
         private boolean forceAutoAuthentication;
+        private boolean skipAuthentication = false;
         private UserAvailability userAvailability;
 
         private NxBuilder() {
@@ -530,26 +533,26 @@ public final class AgentWireMockRefreshTest {
         }
 
         @Override
-        public ConfigurationStep withWireMockFilePath(String wireMockFilePath) {
+        public AgentsServiceConfigurationStep withWireMockFilePath(String wireMockFilePath) {
             this.wireMockFilePaths = new HashSet<>(Collections.singleton(wireMockFilePath));
             return this;
         }
 
         @Override
-        public ConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths) {
+        public AgentsServiceConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths) {
             this.wireMockFilePaths = wireMockFilePaths;
             return this;
         }
 
         @Override
-        public FullOrAutoAuthenticationStep withConfigFile(
+        public AuthenticationConfigurationStep withConfigFile(
                 AgentsServiceConfiguration configuration) {
             this.configuration = configuration;
             return this;
         }
 
         @Override
-        public FullOrAutoAuthenticationStep withoutConfigFile() {
+        public AuthenticationConfigurationStep withoutConfigFile() {
             return this;
         }
 
@@ -568,6 +571,12 @@ public final class AgentWireMockRefreshTest {
             this.userAvailability.setUserPresent(false);
             this.userAvailability.setUserAvailableForInteraction(false);
             this.userAvailability.setOriginatingUserIp(null);
+            return this;
+        }
+
+        @Override
+        public RefreshOrAuthOnlyStep skipAuthentication() {
+            this.skipAuthentication = true;
             return this;
         }
 
@@ -641,7 +650,7 @@ public final class AgentWireMockRefreshTest {
 
         @Override
         public BuildStep addPersistentStorageData(Map<String, String> values) {
-            values.forEach(persistentStorageData::put);
+            this.persistentStorageData.putAll(values);
             return this;
         }
 
@@ -749,7 +758,7 @@ public final class AgentWireMockRefreshTest {
                     cache,
                     agentTestModule,
                     refreshableItems,
-                    of(LoginCommand.class, RefreshCommand.class),
+                    listCommands(skipAuthentication),
                     httpDebugTraceEnabled,
                     dumpContentForContractFile,
                     requestFlagManual,
@@ -758,6 +767,13 @@ public final class AgentWireMockRefreshTest {
                     wireMockServerLogsEnabled,
                     forceAutoAuthentication,
                     userAvailability);
+        }
+
+        private List<Class<? extends CompositeAgentTestCommand>> listCommands(
+                boolean skipAuthentication) {
+            return skipAuthentication
+                    ? ImmutableList.of(RefreshCommand.class)
+                    : ImmutableList.of(LoginCommand.class, RefreshCommand.class);
         }
     }
 
@@ -770,12 +786,12 @@ public final class AgentWireMockRefreshTest {
     }
 
     public interface WireMockFilePathsStep {
-        ConfigurationStep withWireMockFilePath(String wireMockFilePath);
+        AgentsServiceConfigurationStep withWireMockFilePath(String wireMockFilePath);
 
-        ConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths);
+        AgentsServiceConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths);
     }
 
-    public interface ConfigurationStep {
+    public interface AgentsServiceConfigurationStep {
 
         /**
          * Use specified AgentsServiceConfiguration for agent.
@@ -783,12 +799,12 @@ public final class AgentWireMockRefreshTest {
          * @param configuration
          * @return This builder.
          */
-        FullOrAutoAuthenticationStep withConfigFile(AgentsServiceConfiguration configuration);
+        AuthenticationConfigurationStep withConfigFile(AgentsServiceConfiguration configuration);
 
-        FullOrAutoAuthenticationStep withoutConfigFile();
+        AuthenticationConfigurationStep withoutConfigFile();
     }
 
-    public interface FullOrAutoAuthenticationStep {
+    public interface AuthenticationConfigurationStep {
 
         /**
          * This is only declaration about the authentication flow of the executed test. It does not
@@ -802,6 +818,12 @@ public final class AgentWireMockRefreshTest {
          * assure that auto authentication flow will be executed
          */
         RefreshOrAuthOnlyStep testAutoAuthentication();
+
+        /**
+         * Assures that authentication won't be executed. Test should be aware of that and properly
+         * mock authentication results.
+         */
+        RefreshOrAuthOnlyStep skipAuthentication();
     }
 
     public interface RefreshOrAuthOnlyStep {

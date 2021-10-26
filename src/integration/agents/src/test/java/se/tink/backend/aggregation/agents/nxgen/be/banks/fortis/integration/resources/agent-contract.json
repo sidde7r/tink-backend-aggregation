@@ -1,0 +1,78 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "BE54000000000000",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 1,
+      "unscaledValue" : 1000,
+      "doubleValue" : 100.0,
+      "exactValue" : 100.0
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "BE54000000000000",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "MONTY PYTHON",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://BE54000000000000?name=IBAN\"]",
+    "closed" : false,
+    "holderName" : "Monty Python",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Monty Python",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 100.0
+  } ],
+  "transactions" : [ {
+    "amount" : 0.59,
+    "date" : 39600000,
+    "description" : "BANKREFERENTIE : 0000000000000000\\r\\nVALUTADATUM : 01/01/1970 ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 400.0,
+    "date" : 39600000,
+    "description" : "IN CASH DEPOSIT\\r\\nMET KAART 0000 00XX XXXX X000 0 IN HET KANTOOR\\r\\nVALUTADATUM : 01/01/1970",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -200.0,
+    "date" : 39600000,
+    "description" : "BE00 0000 0000 0000\\r\\nBIC GEBABEBB VIA MOBILE BANKING MONTY PYTHON\\r\\nZONDER MEDEDELING\\r\\nVALUTADATUM : 01/01/1970",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  } ]
+}

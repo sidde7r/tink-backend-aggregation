@@ -38,6 +38,11 @@ public class RandomValueGeneratorImpl implements RandomValueGenerator {
     }
 
     @Override
+    public String generateRandomAlphanumeric(int size, String alphabet) {
+        return RandomUtils.generateRandomAlphanumericString(size, alphabet);
+    }
+
+    @Override
     public int randomInt(int bound) {
         return RandomUtils.randomInt(bound);
     }

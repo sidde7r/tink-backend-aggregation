@@ -52,8 +52,8 @@ public final class FortisAgent extends AgentPlatformAgent
         String baseUrl = payload[0];
         String distributorId = payload[1];
 
-        FortisRandomTokenGenerator fortisRandomTokenGenerator = new FortisRandomTokenGenerator();
-
+        FortisRandomTokenGenerator fortisRandomTokenGenerator =
+                new FortisRandomTokenGenerator(agentComponentProvider.getRandomValueGenerator());
         this.apiClient =
                 new FortisApiClient(client, baseUrl, distributorId, fortisRandomTokenGenerator);
 
