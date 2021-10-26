@@ -213,8 +213,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                                         .orElse(null)))
                 .withBeneficiary(beneficiary)
                 .withChargeBearer(SocieteGeneraleConstants.FormValues.CHARGE_BEARER_SLEV)
-                .withRequestedExecutionDate(
-                        SocieteGeneraleDateUtil.getExecutionDate(payment.getExecutionDate()))
+                .withRequestedExecutionDate(SocieteGeneraleDateUtil.getExecutionDate(payment))
                 .withCreditTransferTransaction(creditTransferTransaction)
                 .withSupplementaryData(supplementaryData)
                 .build();

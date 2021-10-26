@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -329,6 +330,16 @@ public class DanskeBankTransactionPaginatorTest {
 
         public DelaySimulatingLocalDateTimeSource(LocalDateTime currentTime) {
             this.currentTime = currentTime;
+        }
+
+        @Override
+        public LocalDateTime now(ZoneId zoneId) {
+            return null;
+        }
+
+        @Override
+        public Instant getInstant(ZoneId zoneId) {
+            return null;
         }
 
         @Override

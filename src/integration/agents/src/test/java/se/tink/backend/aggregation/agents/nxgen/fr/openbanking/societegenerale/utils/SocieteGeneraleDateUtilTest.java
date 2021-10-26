@@ -1,11 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils;
 
+import static org.mockito.BDDMockito.given;
+
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.mockito.Mockito;
+import se.tink.libraries.payment.rpc.Payment;
 
 public class SocieteGeneraleDateUtilTest {
 
@@ -21,8 +26,10 @@ public class SocieteGeneraleDateUtilTest {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 13, 10, 0, 0);
         SocieteGeneraleDateUtil.setClock(fixedClock(cal));
+        Payment payment = Mockito.mock(Payment.class);
+        given(payment.isSepaInstant()).willReturn(false);
 
-        Assertions.assertThat(SocieteGeneraleDateUtil.getExecutionDate(null))
+        Assertions.assertThat(SocieteGeneraleDateUtil.getExecutionDate(payment))
                 .contains("2016-02-15");
     }
 
@@ -31,8 +38,10 @@ public class SocieteGeneraleDateUtilTest {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 15, 10, 0, 0);
         SocieteGeneraleDateUtil.setClock(fixedClock(cal));
+        Payment payment = Mockito.mock(Payment.class);
+        given(payment.isSepaInstant()).willReturn(false);
 
-        Assertions.assertThat(SocieteGeneraleDateUtil.getExecutionDate(null))
+        Assertions.assertThat(SocieteGeneraleDateUtil.getExecutionDate(payment))
                 .contains("2016-02-15");
     }
 
@@ -41,8 +50,29 @@ public class SocieteGeneraleDateUtilTest {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 15, 17, 16, 0);
         SocieteGeneraleDateUtil.setClock(fixedClock(cal));
+        Payment payment = Mockito.mock(Payment.class);
+        given(payment.isSepaInstant()).willReturn(false);
 
-        Assertions.assertThat(SocieteGeneraleDateUtil.getExecutionDate(null))
+        Assertions.assertThat(SocieteGeneraleDateUtil.getExecutionDate(payment))
                 .contains("2016-02-16");
+    }
+
+    @Test
+    public void shouldReturnSameDateAsPaymentExecutionDate() {
+        // given
+        Calendar cal = Calendar.getInstance();
+        cal.set(2016, Calendar.FEBRUARY, 15, 17, 16, 0);
+        SocieteGeneraleDateUtil.setClock(fixedClock(cal));
+
+        LocalDate executionDate = LocalDate.of(2021, 1, 1);
+        Payment payment = Mockito.mock(Payment.class);
+        given(payment.isSepaInstant()).willReturn(true);
+        given(payment.getExecutionDate()).willReturn(executionDate);
+
+        // when
+        String result = SocieteGeneraleDateUtil.getExecutionDate(payment);
+
+        // then
+        Assertions.assertThat(result).contains("2021-01-01");
     }
 }

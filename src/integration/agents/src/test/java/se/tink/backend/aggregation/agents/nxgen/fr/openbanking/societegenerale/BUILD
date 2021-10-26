@@ -24,6 +24,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/payment:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",

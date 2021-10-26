@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -153,6 +154,16 @@ public class UkOpenBankingTransactionPaginatorTest {
 
         public DelaySimulatingLocalDateTimeSource(LocalDateTime currentTime) {
             this.currentTime = currentTime;
+        }
+
+        @Override
+        public LocalDateTime now(ZoneId zoneId) {
+            return null;
+        }
+
+        @Override
+        public Instant getInstant(ZoneId zoneId) {
+            return null;
         }
 
         @Override
