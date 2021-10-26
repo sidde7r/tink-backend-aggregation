@@ -128,6 +128,7 @@ java_library(
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
         "@tink_backend//src/libraries/payments_legal_constraints/src/main/java/se/tink/libraries/payments_legal_constraints",
         "@tink_backend//src/libraries/provider",
+        "@tink_backend//src/libraries/strings",
         "@tink_backend//src/libraries/unleash",
     ],
 )

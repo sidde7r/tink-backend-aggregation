@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.google.common.base.Strings;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -110,7 +111,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         for (Field providerField : context.getRequest().getProvider().getFields()) {
             String credentialFieldValue = credentials.getField(providerField.getName());
 
-            if (Objects.nonNull(credentialFieldValue)) {
+            if (!Strings.isNullOrEmpty(credentialFieldValue)) {
                 logContent =
                         logContent.replace(
                                 credentialFieldValue, "***" + providerField.getName() + "***");
