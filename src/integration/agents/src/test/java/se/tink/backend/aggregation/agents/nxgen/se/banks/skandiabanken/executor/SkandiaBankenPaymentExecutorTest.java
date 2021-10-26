@@ -32,6 +32,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -49,6 +50,21 @@ public class SkandiaBankenPaymentExecutorTest {
         objectUnderTest =
                 new SkandiaBankenPaymentExecutor(
                         apiClient, mock(SupplementalInformationController.class));
+    }
+
+    @Test
+    public void shouldPassValidationWhenTransferIsValid() {
+        // when
+        Throwable thrown =
+                catchThrowable(
+                        () ->
+                                ReflectionTestUtils.invokeMethod(
+                                        objectUnderTest,
+                                        "validateTransferOrThrow",
+                                        getValidTransfer()));
+
+        // then
+        assertNull(thrown);
     }
 
     @Test
@@ -287,6 +303,22 @@ public class SkandiaBankenPaymentExecutorTest {
         assertThatThrownBy(callable)
                 .isInstanceOf(TransferExecutionException.class)
                 .hasMessage("Payment could not be submitted, date was rejected by bank.");
+    }
+
+    private Transfer getValidTransfer() {
+        Transfer transfer = new Transfer();
+        transfer.setSource(new SwedishIdentifier("91599999999"));
+        transfer.setDestination(new BankGiroIdentifier("9999999"));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.0));
+        transfer.setType(TransferType.PAYMENT);
+
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Reference to recipient");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+
+        transfer.setRemittanceInformation(remittanceInformation);
+
+        return transfer;
     }
 
     private Transfer getA2ATransfer() {
