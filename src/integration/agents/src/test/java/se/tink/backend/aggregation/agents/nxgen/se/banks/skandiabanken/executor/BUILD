@@ -11,6 +11,7 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
+        "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",

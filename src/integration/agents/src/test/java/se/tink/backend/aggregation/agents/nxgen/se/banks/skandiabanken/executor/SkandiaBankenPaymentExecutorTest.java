@@ -16,6 +16,8 @@ import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SkandiaBankenPaymentExecutorTest {
@@ -121,6 +123,65 @@ public class SkandiaBankenPaymentExecutorTest {
         assertNull(thrown);
     }
 
+    @Test
+    public void shouldThrowTransferExceptionWhenUnstructuredRefIsLongerThan175Chars() {
+        // given
+        Transfer transfer =
+                getTransferWithUnstructuredRemittanceInformation(
+                        "asdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwerty");
+
+        // when
+        final ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "throwIfUnstructuredRefLongerThanMax", transfer);
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage(
+                        "Unstructured reference longer than 175 chars. Bank crops reference if longer, therefore we cancel the payment.");
+    }
+
+    @Test
+    public void shouldNotThrowTransferExceptionWhenUnstructuredRefIs175Chars() {
+        // given
+        Transfer transfer =
+                getTransferWithUnstructuredRemittanceInformation(
+                        "asdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfqwertyasdfq");
+
+        // when
+        Throwable thrown =
+                catchThrowable(
+                        () ->
+                                ReflectionTestUtils.invokeMethod(
+                                        objectUnderTest,
+                                        "throwIfUnstructuredRefLongerThanMax",
+                                        transfer));
+
+        // then
+        assertNull(thrown);
+    }
+
+    @Test
+    public void shouldNotThrowTransferExceptionWhenUnstructuredRefIsShorterThan175Chars() {
+        // given
+        Transfer transfer =
+                getTransferWithUnstructuredRemittanceInformation("asdfqwertyasdfqwerty");
+
+        // when
+        Throwable thrown =
+                catchThrowable(
+                        () ->
+                                ReflectionTestUtils.invokeMethod(
+                                        objectUnderTest,
+                                        "throwIfUnstructuredRefLongerThanMax",
+                                        transfer));
+
+        // then
+        assertNull(thrown);
+    }
+
     private Transfer getA2ATransfer() {
         Transfer transfer = new Transfer();
         transfer.setDestination(new SwedishIdentifier("91599999999"));
@@ -154,6 +215,17 @@ public class SkandiaBankenPaymentExecutorTest {
     private Transfer getGreaterThan1SekTransfer() {
         Transfer transfer = new Transfer();
         transfer.setAmount(ExactCurrencyAmount.inSEK(100.12));
+        return transfer;
+    }
+
+    private Transfer getTransferWithUnstructuredRemittanceInformation(String reference) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue(reference);
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+
+        Transfer transfer = new Transfer();
+        transfer.setRemittanceInformation(remittanceInformation);
+
         return transfer;
     }
 }

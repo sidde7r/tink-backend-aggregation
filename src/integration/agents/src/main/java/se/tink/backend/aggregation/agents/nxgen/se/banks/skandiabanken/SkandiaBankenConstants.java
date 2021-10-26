@@ -250,6 +250,7 @@ public class SkandiaBankenConstants {
         public static final int SE_BG_LONG_OFFSET = 4;
         public static final int SE_PG_OFFSET = 6;
         public static final double MIN_AMOUNT = 1.0;
+        public static final int UNSTRUCTURED_MAX_LENGTH = 175;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -278,6 +279,8 @@ public class SkandiaBankenConstants {
                 "Provided payment type is not supported. Only PG and BG type is supported.";
         public static final String INVALID_MINIMUM_AMOUNT =
                 "Minimum amount of payment is 1 SEK. This is a restriction set by the bank.";
+        public static final String INVALID_UNSTRUCTURED_LENGTH =
+                "Unstructured reference longer than 175 chars. Bank crops reference if longer, therefore we cancel the payment.";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

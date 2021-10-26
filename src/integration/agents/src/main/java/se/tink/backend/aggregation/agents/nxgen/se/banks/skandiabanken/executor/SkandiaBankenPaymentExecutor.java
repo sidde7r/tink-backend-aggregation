@@ -32,6 +32,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @RequiredArgsConstructor
@@ -77,6 +79,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     private void validateTransferOrThrow(Transfer transfer) {
         throwIfNotBgOrPgPayment(transfer);
         throwIfAmountIsLessThanMinAmount(transfer);
+        throwIfUnstructuredRefLongerThanMax(transfer);
     }
 
     private void throwIfNotBgOrPgPayment(Transfer transfer) {
@@ -95,6 +98,21 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                     EndUserMessage.INVALID_MINIMUM_AMOUNT,
                     InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
+    }
+
+    private void throwIfUnstructuredRefLongerThanMax(Transfer transfer) {
+        if (isUnstructuredRefAndLongerThanMax(transfer.getRemittanceInformation())) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_UNSTRUCTURED_LENGTH,
+                    EndUserMessage.INVALID_DESTINATION_MESSAGE,
+                    InternalStatus.INVALID_DESTINATION_MESSAGE);
+        }
+    }
+
+    private boolean isUnstructuredRefAndLongerThanMax(RemittanceInformation remittanceInformation) {
+        return remittanceInformation.isOfType(RemittanceInformationType.UNSTRUCTURED)
+                && remittanceInformation.getValue().length()
+                        > PaymentTransfer.UNSTRUCTURED_MAX_LENGTH;
     }
 
     private Date getPaymentDate(Transfer transfer) {
