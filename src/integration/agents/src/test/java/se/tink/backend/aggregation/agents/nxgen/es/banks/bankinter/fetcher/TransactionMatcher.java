@@ -6,9 +6,11 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Ignore
 public class TransactionMatcher extends TypeSafeMatcher<Transaction> {
     private final SimpleDateFormat TRANSACTION_DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 

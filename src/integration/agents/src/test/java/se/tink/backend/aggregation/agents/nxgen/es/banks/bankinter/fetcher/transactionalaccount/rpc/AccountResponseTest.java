@@ -13,17 +13,24 @@ public class AccountResponseTest {
 
     @Test
     public void testParsingAccountResponseWithCuentaAsName() {
-        testAccountResponse("3a.movimientos-cabecera-head-datos-detalle.xhtml");
+        testAccountResponse(
+                "3a.movimientos-cabecera-head-datos-detalle.xhtml",
+                "2.get_movimientos_cuenta_0.xhtml",
+                31337.42);
     }
 
     @Test
-    public void testParsingAccountResponseWithCompteAsName() {
-        testAccountResponse("3b.movimientos-cabecera-head-datos-detalle.xhtml");
+    public void testParsingAccountResponseWithNegativeAccountBalance() {
+        testAccountResponse(
+                "3b.movimientos-cabecera-head-datos-detalle.xhtml",
+                "2.get_movimientos_cuenta_0_negativeBalance.xhtml",
+                -31337.42);
     }
 
-    private void testAccountResponse(String jsfUpdateResponseFilename) {
+    private void testAccountResponse(
+            String jsfUpdateResponseFilename, String accountResponseFilename, double balance) {
         final AccountResponse accountResponse =
-                loadTestResponse("2.get_movimientos_cuenta_0.xhtml", AccountResponse.class);
+                loadTestResponse(accountResponseFilename, AccountResponse.class);
         final JsfUpdateResponse accountInfo =
                 loadTestResponse(jsfUpdateResponseFilename, JsfUpdateResponse.class);
 
@@ -43,6 +50,6 @@ public class AccountResponseTest {
         assertEquals("Cuenta nómina", account.getIdModule().getAccountName());
         assertEquals(AccountTypes.CHECKING, account.getType());
         // FIXME: account only holds the first holder name
-        assertEquals(31337.42, account.getExactBalance().getDoubleValue(), 0.001);
+        assertEquals(balance, account.getExactBalance().getDoubleValue(), 0.001);
     }
 }

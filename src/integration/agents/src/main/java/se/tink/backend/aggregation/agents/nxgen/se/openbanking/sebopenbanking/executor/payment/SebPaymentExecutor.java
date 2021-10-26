@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.AmountEntity;
@@ -68,8 +67,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
         CreatePaymentResponse createPaymentResponse = createPayment(paymentRequest, paymentProduct);
         PaymentStatus paymentStatus =
-                getPaymentStatusAfterCreatingPayment(
-                        paymentRequest, createPaymentResponse.getPaymentId(), paymentProduct);
+                getPaymentStatus(createPaymentResponse.getPaymentId(), paymentProduct);
 
         return createPaymentResponse.toTinkPaymentResponse(paymentProduct, type, paymentStatus);
     }
@@ -207,29 +205,6 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         }
 
         return apiClient.createPaymentInitiation(createPaymentRequest, paymentProduct);
-    }
-
-    private PaymentStatus getPaymentStatusAfterCreatingPayment(
-            PaymentRequest paymentRequest, String paymentId, String paymentProduct)
-            throws PaymentException {
-        getPaymentStatus(paymentId, paymentProduct);
-
-        try {
-            PaymentStatusResponse paymentStatusResponse =
-                    apiClient.getPaymentStatus(paymentId, paymentProduct);
-            return SebPaymentStatus.mapToTinkPaymentStatus(
-                    SebPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus()));
-        } catch (ReferenceValidationException exception) {
-            // Remove the retry when the customers move to RI.
-            // https://tinkab.atlassian.net/browse/PAY1-1216
-            paymentRequest
-                    .getPayment()
-                    .getRemittanceInformation()
-                    .setType(RemittanceInformationType.UNSTRUCTURED);
-            createPayment(paymentRequest, paymentProduct);
-        }
-
-        return getPaymentStatus(paymentId, paymentProduct);
     }
 
     private Signer getSigner() {
