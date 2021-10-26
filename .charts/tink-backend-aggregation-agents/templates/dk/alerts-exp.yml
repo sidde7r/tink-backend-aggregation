@@ -1,0 +1,186 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-dk-experimental
+  namespace: agents
+spec:
+  interval: 5m
+  rules:
+    # COUNTER VALUES WITH OFFSET ON OUTCOME
+    - record: sum:tink_agent_login_denmark:all:delta30m_with_offset_30m
+      expr: |
+        (sum by (className, action) ((last_over_time(tink_agent_login_total{market="DK"}[30m] offset 30m)) or
+            0 * (sum by (className, action) (last_over_time(tink_agent_login_total{market="DK"}[60m])
+            unless last_over_time(tink_agent_login_total{market="DK"}[30m] offset 30m)))))
+      labels:
+        name: "Value of counters for denmark for 30 minutes with 30 minutes shift for all outcomes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:unavailable:delta30m_with_offset_30m
+      expr: |
+        (sum by (className, action) ((last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[30m] offset 30m)) or
+            0 * (sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[60m])
+            unless last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[30m] offset 30m)))))
+      labels:
+        name: "Value of counters for denmark for 30 minutes with 30 minutes shift for all outcomes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:temporary_errors:delta30m_with_offset_30m
+      expr: |
+        (sum by (className, action) ((last_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)) or
+            0 * (sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[60m])
+            unless last_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)))))
+      labels:
+        name: "Value of counters for denmark for 30 minutes with 30 minutes shift for all outcomes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:all_errors:delta30m_with_offset_30m
+      expr: |
+        (sum by (className, action) ((last_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)) or
+            0 * (sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[60m])
+            unless last_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)))))
+      labels:
+        name: "Value of counters for denmark for 30 minutes with 30 minutes shift for all outcomes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+
+    ## COUNTER VALUES DEPENDING ON THE OUTCOME
+    - record: sum:tink_agent_login_denmark:all:delta60m
+      expr: |
+        sum by (className, action) (last_over_time(tink_agent_login_total{market="DK"}[60m]))
+      labels:
+        name: "Value of counters for denmark for last 60 minutes for all outcomes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:unavailable:delta60m
+      expr: |
+        sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[60m]))
+      labels:
+        name: "Value of counters for denmark for last 60 minutes for unavailable (bank error) outcome"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:temporary_errors:delta60m
+      expr: |
+        sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[60m]))
+      labels:
+        name: "Value of counters for denmark for last 60 minutes for temporary errors outcome"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:all_errors:delta60m
+      expr: |
+        sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[60m]))
+      labels:
+        name: "Value of counters for denmark for last 60 minutes for temporary errors outcome"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+
+    ## REAL NUMBER OF OCCURRENCES OF CERTAIN EVENTS
+    - record: sum:tink_agent_login_denmark:effectively_all:delta30m
+      expr: |
+        sum:tink_agent_login_denmark:all:delta60m - sum:tink_agent_login_denmark:all:delta30m_with_offset_30m
+      labels:
+        name: "Denmark all outcomes for all actions for all classNames in last 30 minutes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:effectively_all_unavailable:delta30m
+      expr: |
+        sum:tink_agent_login_denmark:unavailable:delta60m - sum:tink_agent_login_denmark:unavailable:delta30m_with_offset_30m
+      labels:
+        name: "Denmark unavailable outcomes for all actions for all classNames in last 30 minutes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:effectively_all_temporary_errors:delta30m
+      expr: |
+        sum:tink_agent_login_denmark:temporary_errors:delta60m - sum:tink_agent_login_denmark:temporary_errors:delta30m_with_offset_30m
+      labels:
+        name: "Denmark temporary error outcomes for all actions for all classNames in last 30 minutes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:effectively_all_errors:delta30m
+      expr: |
+        sum:tink_agent_login_denmark:all_errors:delta60m - sum:tink_agent_login_denmark:all_errors:delta30m_with_offset_30m
+      labels:
+        name: "Denmark temporary error outcomes for all actions for all classNames in last 30 minutes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+
+    ## Percentage of occurrence of specific type of event comparing to number of all events
+    - record: service_level:tink_agent_login_denmark:unavailable:delta30m
+      expr: |
+        (sum:tink_agent_login_denmark:effectively_all_unavailable:delta30m) / (sum:tink_agent_login_denmark:effectively_all:delta30m)
+      labels:
+        name: "Denmark percentage of unavailable (bank error) events"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: service_level:tink_agent_login_denmark:temporary_error:delta30m
+      expr: |
+        (sum:tink_agent_login_denmark:effectively_all_temporary_errors:delta30m) / (sum:tink_agent_login_denmark:effectively_all:delta30m)
+      labels:
+        name: "Denmark percentage of unavailable (bank error) events"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: service_level:tink_agent_login_denmark:unavailable:delta30m
+      expr: |
+        (sum:tink_agent_login_denmark:effectively_all_errors:delta30m) / (sum:tink_agent_login_denmark:effectively_all:delta30m)
+      labels:
+        name: "Denmark percentage of unavailable (bank error) events"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # Login Errors
+    #-------------------------------------------------------------------------------------------------------------------
+    - alert: LoginUnavailableErrorRateHigherThan20%
+      expr: |
+        service_level:tink_agent_login_denmark:unavailable:delta30m > 0.2
+          and sum:tink_agent_login_denmark:effectively_all:delta30m > 5
+      for: 15m
+      priority: P4
+      labels:
+        severity: ping
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+        summary: Login unavailable rate is higher than 20% for (<{ $labels.className }>) for the last 30m
+        tags: {{ .Values.tags }}
+    - alert: LoginTemporaryErrorsRateHigherThan10%
+      expr: |
+        service_level:tink_agent_login_denmark:temporary_errors:delta30m > 0.1
+          and sum:tink_agent_login_denmark:effectively_all:delta30m > 5
+      for: 15m
+      priority: P4
+      labels:
+        severity: ping
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+        summary: Login temporary errors rate is higher than 10% for (<{ $labels.className }>) for the last 30m
+        tags: {{ .Values.tags }}
+    - alert: LoginAllErrorsRateHigherThan90%
+      expr: |
+        service_level:tink_agent_login_denmark:temporary_errors:delta30m > 0.9
+          and sum:tink_agent_login_denmark:effectively_all:delta30m > 10
+      for: 15m
+      priority: P4
+      labels:
+        severity: ping
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+        summary: Login all errors rate is higher than 90% for (<{ $labels.className }>) for the last 30m
+        tags: {{ .Values.tags }}
