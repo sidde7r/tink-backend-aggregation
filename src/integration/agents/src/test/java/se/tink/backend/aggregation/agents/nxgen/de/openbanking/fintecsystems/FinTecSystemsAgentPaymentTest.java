@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fintecsystems;
 
 import java.time.LocalDate;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -75,5 +76,10 @@ public class FinTecSystemsAgentPaymentTest {
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation);
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }

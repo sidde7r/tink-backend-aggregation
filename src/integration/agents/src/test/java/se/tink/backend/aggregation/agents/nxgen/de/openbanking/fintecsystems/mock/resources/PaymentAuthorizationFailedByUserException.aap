@@ -1,0 +1,309 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.xs2a.com/v1/payments
+Authorization: Basic YXBpOlNvbWVEdW1teUtleQ==
+Accept: application/json
+Content-Type: application/json
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+{"amount":"1.0","currency_id":"EUR","recipient_holder":"Creditor Name","recipient_iban":"DE04888888880087654321","purpose":"ReferenceToCreditor","sender_bic":"TESTDE88XXX"}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Wed, 06 Oct 2021 09:38:46 GMT
+Referrer-Policy: ***
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: DENY
+Set-Cookie: ***
+Content-Type: application/json
+
+{
+
+    "wizard_session_key": "nYfc5kKfackPnrVEQomZHOqbGAR4OXEjE2QpDVGa",
+
+    "transaction": "13205-xp-516D-1ZCs"
+
+}
+
+
+
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://api.xs2a.com/v1/sessions/13205-xp-516D-1ZCs
+Authorization: Basic YXBpOlNvbWVEdW1teUtleQ==
+Accept: application/json
+Content-Type: application/json
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE2
+200
+Date: Wed, 06 Oct 2021 09:38:47 GMT
+Referrer-Policy: ***
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: DENY
+Set-Cookie: ***
+Content-Type: application/json
+
+{
+
+    "id": "ws_2hQoApwnKxfQXXkC",
+
+    "transaction": "13205-xp-516D-1ZCs",
+
+    "wizard_session_key": "nYfc5kKfackPnrVEQomZHOqbGAR4OXEjE2QpDVGa",
+
+    "product": "xs2a_pay",
+
+    "parameters": {
+
+        "recipient_holder": "Creditor Name",
+
+        "recipient_bic": "TESTDE88XXX",
+
+        "recipient_iban": "DE04888888880087654321",
+
+        "recipient_country_id": "DE",
+
+        "recipient_street": "",
+
+        "recipient_zip": "",
+
+        "recipient_city": "",
+
+        "sender_holder": "",
+
+        "sender_iban": "",
+
+        "sender_bic": "TESTDE88XXX",
+
+        "sender_country_id": "DE",
+
+        "amount": "1.0",
+
+        "currency_id": "EUR",
+
+        "purpose": "ReferenceToCreditor",
+
+        "metadata": null,
+
+        "recipient_bank_name": "Testbank",
+
+        "sender_bank_name": "",
+
+        "reconciliation_key": ""
+
+    },
+
+    "account": {
+
+        "bic": "TESTDE88XXX",
+
+        "bank_name": ""
+
+    },
+
+    "last_error": "client_not_started",
+
+    "testmode": true,
+
+    "finished": false,
+
+    "current_step": "WizardStartStep",
+
+    "created_at": "2021-10-06 11:38:46",
+
+    "object": "wizard_session"
+
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE2
+GET https://api.xs2a.com/v1/sessions/13205-xp-516D-1ZCs
+Authorization: Basic YXBpOlNvbWVEdW1teUtleQ==
+Accept: application/json
+Content-Type: application/json
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE3
+200
+Date: Wed, 06 Oct 2021 09:38:50 GMT
+Referrer-Policy: ***
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: DENY
+Set-Cookie: ***
+Content-Type: application/json
+
+{
+
+    "id": "ws_2hQoApwnKxfQXXkC",
+
+    "transaction": "13205-xp-516D-1ZCs",
+
+    "wizard_session_key": "nYfc5kKfackPnrVEQomZHOqbGAR4OXEjE2QpDVGa",
+
+    "product": "xs2a_pay",
+
+    "parameters": {
+
+        "recipient_holder": "Creditor Name",
+
+        "recipient_bic": "TESTDE88XXX",
+
+        "recipient_iban": "DE04888888880087654321",
+
+        "recipient_country_id": "DE",
+
+        "recipient_street": "",
+
+        "recipient_zip": "",
+
+        "recipient_city": "",
+
+        "sender_holder": "",
+
+        "sender_iban": "",
+
+        "sender_bic": "TESTDE88XXX",
+
+        "sender_country_id": "DE",
+
+        "amount": "1.0",
+
+        "currency_id": "EUR",
+
+        "purpose": "ReferenceToCreditor",
+
+        "metadata": null,
+
+        "recipient_bank_name": "Testbank",
+
+        "sender_bank_name": "",
+
+        "reconciliation_key": ""
+
+    },
+
+    "account": {
+
+        "bic": "TESTDE88XXX",
+
+        "bank_name": "Testbank"
+
+    },
+
+    "last_error": "",
+
+    "testmode": true,
+
+    "finished": false,
+
+    "current_step": "WizardLoginStep",
+
+    "created_at": "2021-10-06 11:38:46",
+
+    "object": "wizard_session"
+
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE3
+GET https://api.xs2a.com/v1/sessions/13205-xp-516D-1ZCs
+Authorization: Basic YXBpOlNvbWVEdW1teUtleQ==
+Accept: application/json
+Content-Type: application/json
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Wed, 06 Oct 2021 09:39:26 GMT
+Referrer-Policy: ***
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: DENY
+Set-Cookie: ***
+Content-Type: application/json
+
+{
+
+    "id": "ws_2hQoApwnKxfQXXkC",
+
+    "transaction": "13205-xp-516D-1ZCs",
+
+    "wizard_session_key": "nYfc5kKfackPnrVEQomZHOqbGAR4OXEjE2QpDVGa",
+
+    "product": "xs2a_pay",
+
+    "parameters": {
+
+        "recipient_holder": "Creditor Name",
+
+        "recipient_bic": "TESTDE88XXX",
+
+        "recipient_iban": "DE04888888880087654321",
+
+        "recipient_country_id": "DE",
+
+        "recipient_street": "",
+
+        "recipient_zip": "",
+
+        "recipient_city": "",
+
+        "sender_holder": "MUSTERMANN, HARTMUT",
+
+        "sender_iban": "DE62888888880012345678",
+
+        "sender_bic": "TESTDE88XXX",
+
+        "sender_country_id": "DE",
+
+        "amount": "1.0",
+
+        "currency_id": "EUR",
+
+        "purpose": "ReferenceToCreditor",
+
+        "metadata": null,
+
+        "recipient_bank_name": "Testbank",
+
+        "sender_bank_name": "",
+
+        "reconciliation_key": ""
+
+    },
+
+    "account": {
+
+        "bic": "TESTDE88XXX",
+
+        "bank_name": "Testbank"
+
+    },
+
+    "last_error": "consent_invalid",
+
+    "testmode": true,
+
+    "finished": true,
+
+    "current_step": "WizardFinishStep",
+
+    "created_at": "2021-10-06 11:38:46",
+
+    "object": "wizard_session"
+
+}
