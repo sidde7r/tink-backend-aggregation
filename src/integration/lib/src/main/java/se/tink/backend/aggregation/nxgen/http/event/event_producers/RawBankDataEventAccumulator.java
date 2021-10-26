@@ -11,7 +11,6 @@ import org.slf4j.MDC;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
-import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RefreshableItems;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 @Slf4j
@@ -28,8 +27,7 @@ public class RawBankDataEventAccumulator {
 
         if (Objects.nonNull(refreshableItem)) {
             try {
-                RefreshableItems refreshableItems = mapFromRefreshableItem(refreshableItem);
-                builder = builder.setRefreshableItem(refreshableItems);
+                builder = builder.setRefreshableItem(refreshableItem.name());
             } catch (Exception e) {
                 log.warn("Could not set refreshable item field in the raw bank data event");
             }
@@ -62,39 +60,5 @@ public class RawBankDataEventAccumulator {
 
     public List<RawBankDataTrackerEvent> getEventList() {
         return eventList;
-    }
-
-    private RefreshableItems mapFromRefreshableItem(RefreshableItem refreshableItem) {
-        switch (refreshableItem) {
-            case TRANSFER_DESTINATIONS:
-                return RefreshableItems.REFRESHABLE_ITEMS_TRANSFER_DESTINATIONS;
-            case CHECKING_ACCOUNTS:
-                return RefreshableItems.REFRESHABLE_ITEMS_CHECKING_ACCOUNTS;
-            case CHECKING_TRANSACTIONS:
-                return RefreshableItems.REFRESHABLE_ITEMS_CHECKING_TRANSACTIONS;
-            case SAVING_ACCOUNTS:
-                return RefreshableItems.REFRESHABLE_ITEMS_SAVING_ACCOUNTS;
-            case SAVING_TRANSACTIONS:
-                return RefreshableItems.REFRESHABLE_ITEMS_SAVING_TRANSACTIONS;
-            case CREDITCARD_ACCOUNTS:
-                return RefreshableItems.REFRESHABLE_ITEMS_CREDITCARD_ACCOUNTS;
-            case CREDITCARD_TRANSACTIONS:
-                return RefreshableItems.REFRESHABLE_ITEMS_CREDITCARD_TRANSACTIONS;
-            case LOAN_ACCOUNTS:
-                return RefreshableItems.REFRESHABLE_ITEMS_LOAN_ACCOUNTS;
-            case LOAN_TRANSACTIONS:
-                return RefreshableItems.REFRESHABLE_ITEMS_LOAN_TRANSACTIONS;
-            case INVESTMENT_ACCOUNTS:
-                return RefreshableItems.REFRESHABLE_ITEMS_INVESTMENT_ACCOUNTS;
-            case INVESTMENT_TRANSACTIONS:
-                return RefreshableItems.REFRESHABLE_ITEMS_INVESTMENT_TRANSACTIONS;
-            case IDENTITY_DATA:
-                return RefreshableItems.REFRESHABLE_ITEMS_IDENTITY_DATA;
-            case LIST_BENEFICIARIES:
-                return RefreshableItems.REFRESHABLE_ITEMS_LIST_BENEFICIARIES;
-            default:
-                throw new IllegalStateException(
-                        "Unknown refreshable item : " + refreshableItem.name());
-        }
     }
 }
