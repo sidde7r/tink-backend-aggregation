@@ -13,6 +13,7 @@ java_library(
         "//third_party:javax_validation_validation_api",
         "//third_party:lombok_plugin",
         "//third_party:org_hibernate_hibernate_validator",
+        "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:org_projectlombok_lombok",
         "@maven//:com_squareup_okhttp3_okhttp",
         "@maven//:com_squareup_okhttp3_okhttp_tls",
