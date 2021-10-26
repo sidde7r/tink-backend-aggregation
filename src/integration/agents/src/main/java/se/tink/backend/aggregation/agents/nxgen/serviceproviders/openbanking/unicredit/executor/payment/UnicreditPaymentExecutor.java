@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment;
 
-import static se.tink.libraries.payment.enums.PaymentStatus.CANCELLED;
-import static se.tink.libraries.payment.enums.PaymentStatus.PAID;
-import static se.tink.libraries.payment.enums.PaymentStatus.REJECTED;
-import static se.tink.libraries.payment.enums.PaymentStatus.SIGNED;
+import static se.tink.libraries.payment.enums.PaymentStatus.CREATED;
+import static se.tink.libraries.payment.enums.PaymentStatus.PENDING;
 import static se.tink.libraries.transfer.enums.RemittanceInformationType.UNSTRUCTURED;
 
 import com.github.rholder.retry.RetryException;
@@ -14,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -212,40 +210,42 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                 "Payment id={} sign status={}",
                 paymentMultiStepRequest.getPayment().getId(),
                 paymentStatus);
-        if (SIGNED.equals(paymentStatus) || PAID.equals(paymentStatus)) {
-            return new PaymentMultiStepResponse(
-                    paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
-        } else if (REJECTED.equals(paymentStatus)) {
-            throw new PaymentRejectedException("Payment rejected by Bank");
-        } else if (CANCELLED.equals(paymentStatus)) {
-            throw new PaymentCancelledException("Payment Cancelled by PSU");
-        } else {
 
-            // payment status= RCVD
-            log.error("Payment was not signed even after waiting for 9 min");
-            throw new PaymentAuthorizationException();
+        switch (paymentStatus) {
+            case SIGNED:
+            case PAID:
+                return new PaymentMultiStepResponse(
+                        paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
+            case PENDING:
+                paymentResponse.getPayment().setStatus(CREATED);
+                return new PaymentMultiStepResponse(
+                        paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
+            case CREATED:
+                throw new PaymentAuthorizationTimeOutException();
+            case REJECTED:
+                throw new PaymentRejectedException();
+            case CANCELLED:
+                throw new PaymentCancelledException();
+            default:
+                throw new PaymentException("Unexpected payment status!");
         }
     }
 
-    private PaymentResponse getPaymentStatus(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    private PaymentResponse getPaymentStatus(PaymentMultiStepRequest paymentMultiStepRequest) {
         PaymentResponse paymentResponse;
         try {
             paymentResponse =
                     unicreditApiClientRetryer.callUntilPaymentStatusIsNotPending(
                             () -> fetchPaymentWithId(paymentMultiStepRequest));
-        } catch (RetryException e) {
-            return assumePaymentWasInitializedCorrectly(paymentMultiStepRequest);
-        } catch (ExecutionException e) {
-            throw new PaymentException(e.getMessage(), e.getCause());
+        } catch (RetryException | ExecutionException e) {
+            return changeStatusToPending(paymentMultiStepRequest);
         }
         return paymentResponse;
     }
 
-    private PaymentResponse assumePaymentWasInitializedCorrectly(
-            PaymentMultiStepRequest paymentMultiStepRequest) {
+    private PaymentResponse changeStatusToPending(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
-        payment.setStatus(SIGNED);
+        payment.setStatus(PENDING);
         return new PaymentResponse(payment);
     }
 
