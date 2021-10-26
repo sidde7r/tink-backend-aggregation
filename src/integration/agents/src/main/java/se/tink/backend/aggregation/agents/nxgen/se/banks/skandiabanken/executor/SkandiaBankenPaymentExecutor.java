@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.time.Clock;
 import java.util.Collection;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,6 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.BankIdPolling;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.DateFormatting;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.PaymentTransfer;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TransferExceptionMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
@@ -29,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -41,10 +37,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
     final SkandiaBankenApiClient apiClient;
     final SupplementalInformationController supplementalInformationController;
-
-    private static CountryDateHelper dateHelper =
-            new CountryDateHelper(
-                    DateFormatting.LOCALE, TimeZone.getTimeZone(DateFormatting.ZONE_ID));
 
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
@@ -116,7 +108,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     }
 
     private Date getPaymentDate(Transfer transfer) {
-        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils(dateHelper);
+        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils();
         return dateUtils.getTransferDateForBgPg(transfer.getDueDate());
     }
 
@@ -292,9 +284,5 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                 .setEndUserMessage(endUserMessage)
                 .setInternalStatus(internalStatus.toString())
                 .build();
-    }
-
-    public static void setClockForTesting(Clock clock) {
-        dateHelper.setClock(clock);
     }
 }
