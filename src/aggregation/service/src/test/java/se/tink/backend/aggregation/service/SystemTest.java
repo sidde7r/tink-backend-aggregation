@@ -45,7 +45,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -382,15 +381,10 @@ public class SystemTest {
 
     /*
        The main purpose of this test is to reproduce the following error that we had for
-       DanskeBank agent when we tried to execute it in Java11 container:
-
-       The driver executable does not exist:
-       /usr/share/tink-backend-aggregation/external/chromedriver/file/chromedriver/chromedriver
-
-       This test manages to reproduce this issue. It will be ignored until a fix is deployed
+       DanskeBank agent when we tried to execute it in Java11 container and verify that it
+       is fixed.
     */
     @Test
-    @Ignore
     public void getRefreshShouldUploadEntitiesForDanskeBank() throws Exception {
         // given
         String aggregationHost = aggregationContainer.getContainerIpAddress();
