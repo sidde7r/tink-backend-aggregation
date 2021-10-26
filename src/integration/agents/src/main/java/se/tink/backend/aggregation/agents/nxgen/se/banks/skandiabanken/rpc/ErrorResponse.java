@@ -1,22 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.ErrorCodes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class ErrorResponse {
-    @JsonProperty("StatusCode")
     private int statusCode;
-
-    @JsonProperty("StatusMessage")
     private String statusMessage = "";
-
-    @JsonProperty("ErrorCode")
     private String errorCode = "";
-
-    @JsonProperty("ErrorMessage")
     private String errorMessage = "";
 
     @JsonIgnore
