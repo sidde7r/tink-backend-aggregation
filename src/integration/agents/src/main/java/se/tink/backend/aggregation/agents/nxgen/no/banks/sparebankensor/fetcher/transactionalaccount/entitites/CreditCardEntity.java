@@ -17,6 +17,7 @@ import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class CreditCardEntity {
     private String id;
     private String accountNumber;
