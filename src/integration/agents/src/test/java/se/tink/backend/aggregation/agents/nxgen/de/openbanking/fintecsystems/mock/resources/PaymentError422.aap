@@ -1,0 +1,41 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.xs2a.com/v1/payments
+Authorization: Basic YXBpOlNvbWVEdW1teUtleQ==
+Accept: application/json
+Content-Type: application/json
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+{"amount":"1.0","currency_id":"EUR","recipient_holder":"Creditor Name","recipient_iban":"DE04888888880087654321","purpose":"ReferenceToCreditor","sender_bic":"TESTDE88XXX"}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+422
+Date: Wed, 06 Oct 2021 09:38:46 GMT
+Referrer-Policy: ***
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: DENY
+Set-Cookie: ***
+Content-Type: application/json
+
+{
+    "code": 422,
+    "message": "Validation failed",
+    "error": {
+        "key": [
+            "aaa",
+            "bbb",
+            "ccc"
+        ],
+        "action": [
+            "action1",
+            "action2",
+            "action3"
+        ]
+    }
+}
+
+

@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.error.FTSException;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
@@ -134,6 +135,27 @@ public class FinTecSystemsMockAgentPaymentTest {
         assertThatExceptionOfType(PaymentValidationException.class)
                 .isThrownBy(agentWireMockPaymentTest::executePayment)
                 .withMessage(PINNED_IBAN_NOT_FOUND.getCode());
+    }
+
+    @Test
+    public void testPaymentErrorWithCode422() throws Exception {
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fintecsystems/mock/resources/PaymentError422.aap";
+
+        Payment payment = createRealDomesticPayment().build();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.DE, "de-test-fintecsystems", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withPayment(payment)
+                        .buildWithoutLogin(PaymentCommand.class);
+        // when //then
+        assertThatExceptionOfType(FTSException.class)
+                .isThrownBy(agentWireMockPaymentTest::executePayment);
     }
 
     private Payment.Builder createRealDomesticPayment() {
