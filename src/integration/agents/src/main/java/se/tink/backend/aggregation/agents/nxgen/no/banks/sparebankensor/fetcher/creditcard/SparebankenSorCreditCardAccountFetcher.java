@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher
 import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class SparebankenSorCreditCardAccountFetcher implements AccountFetcher<Cr
     public Collection<CreditCardAccount> fetchAccounts() {
         return Optional.ofNullable(apiClient.fetchCreditCards().getCreditCards())
                 .orElseGet(Collections::emptyList).stream()
+                .filter(creditCardEntity -> Objects.nonNull(creditCardEntity.getCards()))
                 .map(
                         creditCardEntity -> {
                             logCreditCardTransactions(creditCardEntity);
