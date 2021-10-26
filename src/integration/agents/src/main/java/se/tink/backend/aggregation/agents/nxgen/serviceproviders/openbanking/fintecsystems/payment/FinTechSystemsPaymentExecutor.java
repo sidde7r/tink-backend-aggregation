@@ -7,6 +7,7 @@ import static se.tink.libraries.payment.enums.PaymentStatus.SIGNED;
 
 import com.github.rholder.retry.RetryException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -53,6 +54,8 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     private final String redirectUrl;
     SessionStatusRetryer sessionStatusRetryer = new SessionStatusRetryer();
 
+    private static final long WAIT_FOR_MINUTES = 3L;
+
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         FinTechSystemsPaymentResponse finTechSystemsPaymentResponse =
@@ -65,6 +68,8 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     private void handleRedirect(URL wizardUrl) {
         log.info("callBackURL: " + getCallBackUrl());
         openThirdPartyApp(wizardUrl);
+        supplementalInformationHelper.waitForSupplementalInformation(
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 
     @Override
