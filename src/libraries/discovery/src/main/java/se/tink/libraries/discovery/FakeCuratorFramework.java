@@ -57,9 +57,13 @@ import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.server.quorum.flexible.QuorumVerifier;
 
+// Since this class is just a fake implementation for system tests we added this suppresser
+@SuppressWarnings("all")
 public class FakeCuratorFramework implements CuratorFramework, WatcherRemoveCuratorFramework {
 
-    ProtectACLCreateModeStatPathAndBytesable protectACLCreateModeStatPathAndBytesable =
+    private static final String PATH_CONSTANT = "/locks/aggregation/userId/bankid/locks";
+
+    ProtectACLCreateModeStatPathAndBytesable<String> protectACLCreateModeStatPathAndBytesable =
             new ProtectACLCreateModeStatPathAndBytesable<String>() {
                 @Override
                 public ACLCreateModeBackgroundPathAndBytesable<String> withProtection() {
@@ -67,12 +71,12 @@ public class FakeCuratorFramework implements CuratorFramework, WatcherRemoveCura
 
                         @Override
                         public String forPath(String s, byte[] bytes) throws Exception {
-                            return "/locks/aggregation/userId/bankid/locks" + s;
+                            return PATH_CONSTANT + s;
                         }
 
                         @Override
                         public String forPath(String s) throws Exception {
-                            return "/locks/aggregation/userId/bankid/locks" + s;
+                            return PATH_CONSTANT + s;
                         }
 
                         @Override
@@ -91,12 +95,12 @@ public class FakeCuratorFramework implements CuratorFramework, WatcherRemoveCura
                             return new ACLBackgroundPathAndBytesable<String>() {
                                 @Override
                                 public String forPath(String s, byte[] bytes) throws Exception {
-                                    return "/locks/aggregation/userId/bankid/locks" + s;
+                                    return PATH_CONSTANT + s;
                                 }
 
                                 @Override
                                 public String forPath(String s) throws Exception {
-                                    return "/locks/aggregation/userId/bankid/locks" + s;
+                                    return PATH_CONSTANT + s;
                                 }
 
                                 @Override
@@ -783,10 +787,14 @@ public class FakeCuratorFramework implements CuratorFramework, WatcherRemoveCura
     }
 
     @Override
-    public void sync(String s, Object o) {}
+    public void sync(String s, Object o) {
+        // NOOP
+    }
 
     @Override
-    public void createContainers(String s) throws Exception {}
+    public void createContainers(String s) throws Exception {
+        // NOOP
+    }
 
     @Override
     public SyncBuilder sync() {
@@ -839,7 +847,9 @@ public class FakeCuratorFramework implements CuratorFramework, WatcherRemoveCura
     }
 
     @Override
-    public void clearWatcherReferences(Watcher watcher) {}
+    public void clearWatcherReferences(Watcher watcher) {
+        // NOOP
+    }
 
     @Override
     public boolean blockUntilConnected(int i, TimeUnit timeUnit) throws InterruptedException {
@@ -847,7 +857,9 @@ public class FakeCuratorFramework implements CuratorFramework, WatcherRemoveCura
     }
 
     @Override
-    public void blockUntilConnected() throws InterruptedException {}
+    public void blockUntilConnected() throws InterruptedException {
+        // NOOP
+    }
 
     @Override
     public WatcherRemoveCuratorFramework newWatcherRemoveCuratorFramework() {
@@ -875,5 +887,7 @@ public class FakeCuratorFramework implements CuratorFramework, WatcherRemoveCura
     }
 
     @Override
-    public void removeWatchers() {}
+    public void removeWatchers() {
+        // NOOP
+    }
 }
