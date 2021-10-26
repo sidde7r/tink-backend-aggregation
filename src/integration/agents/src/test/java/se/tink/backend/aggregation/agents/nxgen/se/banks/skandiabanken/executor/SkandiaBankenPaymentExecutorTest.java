@@ -263,6 +263,32 @@ public class SkandiaBankenPaymentExecutorTest {
                 .hasMessage("Error could not be submitted to bank due to invalid OCR.");
     }
 
+    @Test
+    public void shouldThrowTransferExceptionWhenErrorResponseIsInvalidPaymentDate() {
+        // given
+        when(httpResponse.getStatus()).thenReturn(500);
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+
+        when(httpResponse.getBody(ErrorResponse.class))
+                .thenReturn(getInvalidPaymentDateErrorResponse());
+
+        PaymentRequest paymentRequest = mock(PaymentRequest.class);
+        doThrow(httpResponseException).when(apiClient).submitPayment(paymentRequest);
+
+        // when
+        ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "submitPayment", paymentRequest);
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage("Payment could not be submitted, date was rejected by bank.");
+    }
+
     private Transfer getA2ATransfer() {
         Transfer transfer = new Transfer();
         transfer.setDestination(new SwedishIdentifier("91599999999"));
@@ -369,6 +395,18 @@ public class SkandiaBankenPaymentExecutorTest {
                         + "  ],\n"
                         + "  \"ErrorCode\": \"HEMB0001\",\n"
                         + "  \"ErrorMessage\": \"Input validation failed.\"\n"
+                        + "}",
+                ErrorResponse.class);
+    }
+
+    private ErrorResponse getInvalidPaymentDateErrorResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "  \"StatusCode\": 500,\n"
+                        + "  \"StatusMessage\": \"InternalServerError\",\n"
+                        + "  \"Fields\": null,\n"
+                        + "  \"ErrorCode\": \"BAPPAY0107\",\n"
+                        + "  \"ErrorMessage\": \"We're experiencing technical difficulties at the moment. Please try again or contact Customer services.\"\n"
                         + "}",
                 ErrorResponse.class);
     }
