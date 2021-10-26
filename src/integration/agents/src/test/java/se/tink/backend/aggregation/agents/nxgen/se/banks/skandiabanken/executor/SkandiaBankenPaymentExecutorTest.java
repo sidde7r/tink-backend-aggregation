@@ -5,18 +5,27 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import agents_platform_agents_framework.org.springframework.test.util.ReflectionTestUtils;
+import javax.ws.rs.core.MediaType;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentSourceAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -26,9 +35,13 @@ import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SkandiaBankenPaymentExecutorTest {
     private SkandiaBankenPaymentExecutor objectUnderTest;
     private SkandiaBankenApiClient apiClient;
+
+    @Mock private HttpResponse httpResponse;
+    @Mock private HttpResponseException httpResponseException;
 
     @Before
     public void setUp() {
@@ -225,6 +238,31 @@ public class SkandiaBankenPaymentExecutorTest {
         assertThat(paymentSourceAccount).isEqualTo(paymentSourceAccountsResponse.get(0));
     }
 
+    @Test
+    public void shouldThrowTransferExceptionWhenErrorResponseIsInvalidOcr() {
+        // given
+        when(httpResponse.getStatus()).thenReturn(400);
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+
+        when(httpResponse.getBody(ErrorResponse.class)).thenReturn(getInvalidOcrErrorResponse());
+
+        PaymentRequest paymentRequest = mock(PaymentRequest.class);
+        doThrow(httpResponseException).when(apiClient).submitPayment(paymentRequest);
+
+        // when
+        ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "submitPayment", paymentRequest);
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage("Error could not be submitted to bank due to invalid OCR.");
+    }
+
     private Transfer getA2ATransfer() {
         Transfer transfer = new Transfer();
         transfer.setDestination(new SwedishIdentifier("91599999999"));
@@ -315,5 +353,23 @@ public class SkandiaBankenPaymentExecutorTest {
                         + "  }\n"
                         + "]",
                 PaymentSourceAccountsResponse.class);
+    }
+
+    private ErrorResponse getInvalidOcrErrorResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "  \"StatusCode\": 400,\n"
+                        + "  \"StatusMessage\": \"BadRequest\",\n"
+                        + "  \"Fields\": [\n"
+                        + "    {\n"
+                        + "      \"Code\": null,\n"
+                        + "      \"Field\": \"payments[0].OCRReference\",\n"
+                        + "      \"Message\": \"OCR is not valid.\"\n"
+                        + "    }\n"
+                        + "  ],\n"
+                        + "  \"ErrorCode\": \"HEMB0001\",\n"
+                        + "  \"ErrorMessage\": \"Input validation failed.\"\n"
+                        + "}",
+                ErrorResponse.class);
     }
 }
