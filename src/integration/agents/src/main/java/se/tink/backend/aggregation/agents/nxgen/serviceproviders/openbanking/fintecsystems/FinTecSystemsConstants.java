@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FinTecSystemsConstants {
 
+    public static final String INTEGRATION_NAME = "fintecsystems";
+
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class HeaderKeys {
         static final String X_REQUEST_ID = "X-Request-ID";

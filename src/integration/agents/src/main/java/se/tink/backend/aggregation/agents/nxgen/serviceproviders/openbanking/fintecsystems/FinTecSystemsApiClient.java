@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants.API_USER_NAME;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants.TEST_API_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.PathVariables.TRANSACTION_ID;
 
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Provider;
@@ -29,9 +27,9 @@ public class FinTecSystemsApiClient {
     private final TinkHttpClient client;
     private final RandomValueGenerator randomValueGenerator;
     private final Provider provider;
+    private final String apiKey;
 
     private RequestBuilder createRequest(URL url) {
-        String apiKey = Optional.ofNullable(providerConfiguration.getApiKey()).orElse(TEST_API_KEY);
         return client.request(url)
                 .addBasicAuth(API_USER_NAME, apiKey)
                 .accept(MediaType.APPLICATION_JSON)

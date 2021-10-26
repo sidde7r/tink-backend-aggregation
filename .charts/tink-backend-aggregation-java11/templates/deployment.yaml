@@ -297,6 +297,18 @@ spec:
               name: aggregation-secrets
               key: proxy-password-es
               optional: true
+        - name: FINTECSYSTEMS_TEST_APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: fintecsystems-test-apikey
+              optional: true
+        - name: FINTECSYSTEMS_PROD_APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: fintecsystems-prod-apikey
+              optional: true
 
       containers:
       - name: tink-backend-aggregation

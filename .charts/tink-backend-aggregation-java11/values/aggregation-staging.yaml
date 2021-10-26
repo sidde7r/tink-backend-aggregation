@@ -24,6 +24,7 @@ s3StorageConfiguration:
 agents:
   danskeBankDK: true
   revolutPasswordUK: true
+  fintecsystems: true
   jyskeBankDK: true
   becDK: true
   demoFinancialInstitution:
@@ -82,7 +83,7 @@ clients:
     aggregatorIdentifier: "BG refresh load test 10"
   bg-refresh-load-test-11:
     aggregatorIdentifier: "BG refresh load test 11"
-  
+
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 
 @AgentCapabilities({TRANSFERS})
 @AgentPisCapability(capabilities = SEPA_CREDIT_TRANSFER)
@@ -40,9 +41,20 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
         client.addFilter(new FTSExceptionFilter());
     }
 
-    protected FinTecSystemsApiClient constructApiClient() {
+    private FinTecSystemsApiClient constructApiClient() {
+        FinTecSystemsConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
+                                FinTecSystemsConstants.INTEGRATION_NAME,
+                                FinTecSystemsConfiguration.class);
+
+        String apiKey =
+                provider.getType() == ProviderTypes.TEST
+                        ? configuration.getTestApiKey()
+                        : configuration.getProdApiKey();
+
         return new FinTecSystemsApiClient(
-                providerConfiguration, client, randomValueGenerator, provider);
+                providerConfiguration, client, randomValueGenerator, provider, apiKey);
     }
 
     @Override

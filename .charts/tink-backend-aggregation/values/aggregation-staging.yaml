@@ -33,6 +33,7 @@ agents:
   danskeBankDK: true
   revolutPasswordUK: true
   jyskeBankDK: true
+  fintecsystems: true
   becDK: true
   demoFinancialInstitution:
     mobilebanking:
@@ -90,7 +91,7 @@ clients:
     aggregatorIdentifier: "BG refresh load test 10"
   bg-refresh-load-test-11:
     aggregatorIdentifier: "BG refresh load test 11"
-  
+
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"

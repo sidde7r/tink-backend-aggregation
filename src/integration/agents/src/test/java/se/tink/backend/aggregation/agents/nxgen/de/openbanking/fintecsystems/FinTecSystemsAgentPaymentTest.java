@@ -33,7 +33,7 @@ public class FinTecSystemsAgentPaymentTest {
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false)
                         .setClusterId("oxford-preprod")
-                        .setFinancialInstitutionId("508f1f5e1fb311ec96210242ac130002")
+                        .setFinancialInstitutionId("fintecsystems")
                         .setAppId("tink");
     }
 
