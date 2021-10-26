@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
 import java.util.List;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TimeoutRetryConfig;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.SkandiaBankenAuthenticator;
@@ -31,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transferdestination.SkandiaBankenTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.SkandiaBankenUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.session.SkandiaBankenSessionHandler;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -48,7 +52,21 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilte
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS})
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    SAVINGS_ACCOUNTS,
+    CREDIT_CARDS,
+    INVESTMENTS,
+    TRANSFERS,
+    PAYMENTS
+})
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SE_BG,
+            PisCapability.PIS_SE_PG,
+            PisCapability.PIS_FUTURE_DATE
+        },
+        markets = {"SE"})
 public final class SkandiaBankenAgent extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
