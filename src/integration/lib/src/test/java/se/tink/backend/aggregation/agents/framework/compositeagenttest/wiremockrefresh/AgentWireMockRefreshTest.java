@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.Comp
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentWiremockTestContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.AgentWireMockRefreshTestBuilder;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.AgentWireMockRefreshTestNxBuilder;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.MarketCodeStep;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.module.AgentFactoryWireMockModule;
@@ -39,8 +42,6 @@ import se.tink.libraries.enums.MarketCode;
 
 /**
  * It is recommended to use {@link AgentWireMockRefreshTest#nxBuilder()} method to create the object
- *
- * @see AgentWireMockRefreshTest
  */
 @Slf4j
 @SuppressWarnings("java:S2187")
@@ -83,7 +84,7 @@ public final class AgentWireMockRefreshTest {
                                 wireMockFilePath ->
                                         new AapFileParser(
                                                 ResourceFileReader.read(wireMockFilePath)))
-                        .collect(ImmutableSet.toImmutableSet());
+                        .collect(toImmutableSet());
 
         server = new WireMockTestServer(parsers, wireMockServerLogsEnabled);
         rawBankDataEventAccumulator = new RawBankDataEventAccumulator();

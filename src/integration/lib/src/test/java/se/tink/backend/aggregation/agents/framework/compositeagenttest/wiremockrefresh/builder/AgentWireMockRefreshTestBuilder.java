@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh;
+package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.AgentWireMockRefreshTestNxBuilder;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
