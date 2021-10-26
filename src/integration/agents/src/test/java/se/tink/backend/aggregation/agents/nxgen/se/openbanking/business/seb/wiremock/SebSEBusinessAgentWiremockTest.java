@@ -37,7 +37,6 @@ public class SebSEBusinessAgentWiremockTest {
                         .addRefreshableItems(RefreshableItem.SAVING_TRANSACTIONS)
                         .addCredentialField("psu-corporate-id", "111111-1111")
                         .addCredentialField("SSN", "111111111112")
-                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =
