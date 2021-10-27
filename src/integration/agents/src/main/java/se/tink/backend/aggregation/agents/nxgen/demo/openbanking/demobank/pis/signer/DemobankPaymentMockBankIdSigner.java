@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ScaApproach;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
@@ -32,7 +33,9 @@ public class DemobankPaymentMockBankIdSigner implements DemobankPaymentSigner {
 
             getAndStoreTokenFromAuthentication();
 
-            apiClient.singleSignPayment();
+            apiClient.startPaymentAuthorisation(ScaApproach.BANK_ID);
+
+            apiClient.signPayment();
 
         } catch (AuthenticationException | AuthorizationException e) {
             if (e.getError() instanceof BankIdError) {
