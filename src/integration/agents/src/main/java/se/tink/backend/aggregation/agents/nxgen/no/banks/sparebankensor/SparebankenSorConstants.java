@@ -128,7 +128,6 @@ public class SparebankenSorConstants {
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String TRANSACTIONS = "transactions";
         public static final String TEMPORARY_STORAGE_LINKS = "links";
-        public static final String TEMPORARY_STORAGE_CREDIT_CARD_LINKS = "ccLinks";
         public static final String EVRY_TOKEN = "evryToken";
     }
 

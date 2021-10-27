@@ -59,7 +59,7 @@ public class CreditCardEntity {
                 .addHolderName(owner.getName())
                 .setApiIdentifier(id)
                 .putInTemporaryStorage(
-                        SparebankenSorConstants.Storage.TEMPORARY_STORAGE_CREDIT_CARD_LINKS, links)
+                        SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)
                 .build();
     }
 
