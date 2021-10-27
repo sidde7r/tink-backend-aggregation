@@ -204,7 +204,7 @@ codeowners(
 codeowners(
     name = "charts_german_alerts",
     patterns = [
-        "/.charts/tink-backend-aggregation-agents/de",
+        "/.charts/tink-backend-aggregation-agents/templates/de",
     ],
     teams = [
         "@tink-ab/aggregation-nazguls-maintainer",
@@ -215,7 +215,7 @@ codeowners(
 codeowners(
     name = "charts_italian_alerts",
     patterns = [
-        "/.charts/tink-backend-aggregation-agents/it",
+        "/.charts/tink-backend-aggregation-agents/templates/it",
     ],
     teams = [
         "@tink-ab/aggregation-nazguls-maintainer",
