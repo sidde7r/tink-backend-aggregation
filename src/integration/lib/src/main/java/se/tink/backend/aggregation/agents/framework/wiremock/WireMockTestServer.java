@@ -33,6 +33,10 @@ public class WireMockTestServer {
 
     private final WireMockServer wireMockServer;
 
+    public WireMockTestServer() {
+        this(false);
+    }
+
     public WireMockTestServer(boolean logsEnabled) {
         WireMockConfiguration configuration =
                 wireMockConfig()

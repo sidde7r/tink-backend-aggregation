@@ -129,7 +129,7 @@ public final class AgentWireMockRefreshTestNxBuilder
     }
 
     @Override
-    public AgentsServiceConfigurationStep withWireMockServer(WireMockTestServer wireMockServer) {
+    public WireMockConfigurationStep withWireMockServer(WireMockTestServer wireMockServer) {
         this.wireMockServer = wireMockServer;
         return this;
     }

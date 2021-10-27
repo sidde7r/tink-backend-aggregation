@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 
 public interface WireMockConfigurationStep {
 
-    AgentsServiceConfigurationStep withWireMockServer(WireMockTestServer wireMockServer);
+    WireMockConfigurationStep withWireMockServer(WireMockTestServer wireMockServer);
 
     AgentsServiceConfigurationStep withWireMockFilePath(String wireMockFilePath);
 
