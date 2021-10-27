@@ -59,6 +59,7 @@ public final class HttpLoggingConstants {
                     "tpp-redirect-uri",
                     "tpp-request-id",
                     "tpp-signature-certificate",
+                    "tpp-x-request-id",
                     "transfer-encoding",
                     "user-agent",
                     "vary",
