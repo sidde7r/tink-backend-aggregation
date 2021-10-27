@@ -88,6 +88,11 @@ public class Account implements Cloneable {
     // se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper#fromAggregation
     private AccountSourceInfo sourceInfo;
 
+    @JsonIgnore
+    // Should not be mapped using
+    // se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper#fromAggregation
+    private Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances;
+
     private List<Balance> balances;
 
     public Account() {

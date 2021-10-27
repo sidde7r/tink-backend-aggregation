@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
@@ -97,11 +99,35 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
         BalanceBuilderStep builder =
                 BalanceModule.builder().withBalance(balanceMapper.getAccountBalance(balances));
 
+        try {
+            builder =
+                    builder.setGranularAccountBalances(
+                            balances.stream()
+                                    .collect(
+                                            Collectors.toMap(
+                                                    balance ->
+                                                            mapToAccountBalanceType(
+                                                                    balance.getType()),
+                                                    AccountBalanceEntity::getAmount)));
+        } catch (Exception e) {
+            log.warn("Could not put granular balances into the builder");
+        }
+
         balanceMapper.calculateAvailableCredit(balances).ifPresent(builder::setAvailableCredit);
         balanceMapper.calculateCreditLimit(balances).ifPresent(builder::setCreditLimit);
         balanceMapper.getAvailableBalance(balances).ifPresent(builder::setAvailableBalance);
 
         return builder.build();
+    }
+
+    // TODO (AAP-1566): For now AccountBalanceType is clone of
+    // UkOpenBankingApiDefinitions.AccountBalanceType
+    // so this mapping will work fine but in the future they might differ so an explicit mapping
+    // would
+    // be better
+    private AccountBalanceType mapToAccountBalanceType(
+            UkOpenBankingApiDefinitions.AccountBalanceType type) {
+        return AccountBalanceType.valueOf(type.name());
     }
 
     private String pickDisplayName(AccountEntity account, AccountIdentifierEntity identifier) {

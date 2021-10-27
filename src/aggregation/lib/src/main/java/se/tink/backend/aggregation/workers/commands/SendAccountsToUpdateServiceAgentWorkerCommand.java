@@ -42,6 +42,22 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
             MetricAction action =
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
+                // Add balance computation to here
+                /*
+                   Requirements to execute:
+
+                   1- Agent should tell us that we need to execute the computation
+                   by setting a flag in Context
+                   2- We should have list of transactions for account (if we don't have
+                   either the current balance is accurate or we cannot do any better so
+                   skipping is fine)
+                */
+                //
+            } catch (Exception e) {
+                log.warn("Couldn't execute the balance computation");
+            }
+
+            try {
                 log.info("Sending accounts to UpdateService");
 
                 context.sendAllCachedAccountsToUpdateService();

@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard;
 
 import com.google.common.base.Preconditions;
+import java.util.Map;
 import javax.annotation.Nonnull;
+import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class CreditCardModule {
@@ -10,12 +12,14 @@ public final class CreditCardModule {
     private final String cardAlias;
     private final ExactCurrencyAmount balance;
     private final ExactCurrencyAmount availableCredit;
+    private final Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances;
 
     private CreditCardModule(Builder builder) {
         this.cardAlias = builder.cardAlias;
         this.cardNumber = builder.cardNumber;
         this.balance = builder.balance;
         this.availableCredit = builder.availableCredit;
+        this.granularAccountBalances = builder.granularAccountBalances;
     }
 
     public static CardNumberStep<CardModuleBuildStep> builder() {
@@ -38,6 +42,10 @@ public final class CreditCardModule {
         return availableCredit;
     }
 
+    public Map<AccountBalanceType, ExactCurrencyAmount> getGranularAccountBalances() {
+        return granularAccountBalances;
+    }
+
     private static class Builder
             implements CardNumberStep<CardModuleBuildStep>,
                     CardBalanceStep<CardModuleBuildStep>,
@@ -48,6 +56,7 @@ public final class CreditCardModule {
         private String cardAlias;
         private ExactCurrencyAmount balance;
         private ExactCurrencyAmount availableCredit;
+        private Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances;
 
         @Override
         public CardBalanceStep<CardModuleBuildStep> withCardNumber(@Nonnull String cardNumber) {
@@ -66,6 +75,16 @@ public final class CreditCardModule {
                 @Nonnull ExactCurrencyAmount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
             this.balance = balance;
+            return this;
+        }
+
+        @Override
+        public CardCreditStep<CardModuleBuildStep> withGranularBalance(
+                @Nonnull ExactCurrencyAmount balance,
+                @Nonnull Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances) {
+            withBalance(balance);
+            Preconditions.checkNotNull(balance, "Granular balance must not be null.");
+            this.granularAccountBalances = granularAccountBalances;
             return this;
         }
 

@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.HolderIdentity;
@@ -58,6 +59,7 @@ public abstract class Account {
     protected String accountNumber;
     protected Set<AccountIdentifier> identifiers;
     protected String uniqueIdentifier;
+    protected Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances;
     // Unique identifier on the bank side, not to be confused with rpc Account.getBankId
     protected String apiIdentifier;
     protected TemporaryStorage temporaryStorage;
@@ -80,6 +82,7 @@ public abstract class Account {
                 balanceModule.getExactAvailableCredit().orElse(null));
         this.exactAvailableBalance = balanceModule.getExactAvailableBalance();
         this.exactCreditLimit = balanceModule.getExactCreditLimit();
+        this.granularAccountBalances = balanceModule.getGranularAccountBalances();
     }
     // Exists for interoperability only, do not ever use
     protected Account(
