@@ -14,10 +14,8 @@ public class DanskeBankSEWireMockAgentTest {
     @Test
     public void testRefresh() throws Exception {
         // given
-        final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank/mock/resources/se-danskebank-bankid-mock.aap";
-        final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank/mock/resources/danskebank-agent-contract.json";
+        final String wireMockFilePath = "data/agents/se/danskebank/se-danskebank-bankid-mock.aap";
+        final String contractFilePath = "data/agents/se/danskebank/danskebank-agent-contract.json";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(

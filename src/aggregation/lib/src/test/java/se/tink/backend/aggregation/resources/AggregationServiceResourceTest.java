@@ -92,7 +92,7 @@ public class AggregationServiceResourceTest {
         RequestAbortHandler requestAbortHandler = mock(RequestAbortHandler.class);
         String credentialsId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
         when(requestAbortHandler.handle(eq(credentialsId)))
-                .thenReturn(Optional.of(RequestStatus.ABORTING_OPERATION_FAILED));
+                .thenReturn(Optional.of(RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT));
         Injector injector = Guice.createInjector(new TestModule(requestAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);

@@ -26,6 +26,9 @@ public class AggregationDecoupledAapFileProvider implements AapFileProvider {
         providerToAapFile.put(
                 "it-unicredit-oauth2",
                 ImmutableSet.of("data/agents/it/unicredit/payment_mock_log.aap"));
+        providerToAapFile.put(
+                "se-danskebank-bankid",
+                ImmutableSet.of("data/agents/se/danskebank/se-danskebank-bankid-mock.aap"));
     }
 
     @Override

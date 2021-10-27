@@ -32,7 +32,7 @@ public class SetInitialAndFinalOperationStatusAgentWorkerCommand extends AgentWo
                 credentialsId,
                 (currentStatus -> {
                     if (currentStatus.equals(RequestStatus.IMPOSSIBLE_TO_ABORT)) {
-                        return RequestStatus.ABORTING_OPERATION_FAILED;
+                        return RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT;
                     } else if (currentStatus.equals(RequestStatus.ABORTING)) {
                         return RequestStatus.ABORTING_OPERATION_SUCCEEDED;
                     } else if (currentStatus.equals(RequestStatus.STARTED)
@@ -42,7 +42,7 @@ public class SetInitialAndFinalOperationStatusAgentWorkerCommand extends AgentWo
                                 currentStatus,
                                 Arrays.asList(
                                         RequestStatus.IMPOSSIBLE_TO_ABORT, RequestStatus.ABORTING));
-                        return RequestStatus.ABORTING_OPERATION_FAILED;
+                        return RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT;
                     } else {
                         log.error("Invalid status {}", currentStatus);
                         return currentStatus;

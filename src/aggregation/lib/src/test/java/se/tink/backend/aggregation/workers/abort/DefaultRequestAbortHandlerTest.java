@@ -43,7 +43,7 @@ public class DefaultRequestAbortHandlerTest {
         when(statusManager.getByCredentialsId(eq(credentialsId)))
                 .thenReturn(
                         Optional.of(RequestStatus.STARTED),
-                        Optional.of(RequestStatus.ABORTING_OPERATION_FAILED));
+                        Optional.of(RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT));
         when(statusManager.compareAndSetByCredentialsId(
                         eq(credentialsId),
                         eq(RequestStatus.STARTED),
@@ -55,7 +55,7 @@ public class DefaultRequestAbortHandlerTest {
 
         // then
         assertTrue(optionalStatus.isPresent());
-        assertEquals(RequestStatus.ABORTING_OPERATION_FAILED, optionalStatus.get());
+        assertEquals(RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT, optionalStatus.get());
     }
 
     @Test
@@ -63,14 +63,14 @@ public class DefaultRequestAbortHandlerTest {
         // given
         String credentialsId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
         when(statusManager.getByCredentialsId(eq(credentialsId)))
-                .thenReturn(Optional.of(RequestStatus.ABORTING_OPERATION_FAILED));
+                .thenReturn(Optional.of(RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT));
 
         // when
         Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(credentialsId);
 
         // then
         assertTrue(optionalStatus.isPresent());
-        assertEquals(RequestStatus.ABORTING_OPERATION_FAILED, optionalStatus.get());
+        assertEquals(RequestStatus.OPERATION_COMPLETED_WITHOUT_ABORT, optionalStatus.get());
     }
 
     @Test
