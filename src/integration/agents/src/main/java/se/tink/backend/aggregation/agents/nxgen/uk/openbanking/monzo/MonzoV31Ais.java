@@ -11,27 +11,27 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionPaginator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MonzoV31Ais extends UkOpenBankingV31Ais {
 
     private final PartyFetcher monzoPartyFetcher;
-    private final CredentialsRequest request;
+    private final TransactionPaginationHelper paginationHelper;
 
     public MonzoV31Ais(
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
             UkOpenBankingApiClient apiClient,
-            CredentialsRequest request) {
+            TransactionPaginationHelper paginationHelper) {
         super(aisConfig, persistentStorage, localDateTimeSource);
         this.monzoPartyFetcher = new PartyV31Fetcher(apiClient, aisConfig, persistentStorage);
-        this.request = request;
+        this.paginationHelper = paginationHelper;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
                                         .toAccountTransactionPaginationResponse(
                                                 response, new MonzoTransactionMapper()),
                         localDateTimeSource,
-                        request));
+                        paginationHelper));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
                                 AccountTransactionsV31Response.toCreditCardPaginationResponse(
                                         response, new MonzoTransactionMapper(), account),
                         localDateTimeSource,
-                        request));
+                        paginationHelper));
     }
 
     @Override

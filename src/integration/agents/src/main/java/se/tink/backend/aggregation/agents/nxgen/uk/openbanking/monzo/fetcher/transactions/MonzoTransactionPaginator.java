@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions;
 
-import java.time.LocalDate;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_OFFSET;
+
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -12,20 +11,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.HasRefreshScope;
-import se.tink.libraries.credentials.service.RefreshScope;
 
 @Slf4j
 public class MonzoTransactionPaginator<T, S extends Account>
         extends UkOpenBankingTransactionPaginator<T, S> {
 
-    private final CredentialsRequest request;
+    private final TransactionPaginationHelper paginationHelper;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
 
     public MonzoTransactionPaginator(
@@ -37,7 +34,7 @@ public class MonzoTransactionPaginator<T, S extends Account>
             Class<T> responseType,
             TransactionConverter<T, S> transactionConverter,
             LocalDateTimeSource localDateTimeSource,
-            CredentialsRequest request) {
+            TransactionPaginationHelper paginationHelper) {
         super(
                 componentProvider,
                 provider,
@@ -47,7 +44,7 @@ public class MonzoTransactionPaginator<T, S extends Account>
                 responseType,
                 transactionConverter,
                 localDateTimeSource);
-        this.request = request;
+        this.paginationHelper = paginationHelper;
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
     }
 
@@ -73,45 +70,27 @@ public class MonzoTransactionPaginator<T, S extends Account>
         if (key != null) {
             return key;
         }
-        // 23m or 89d ago
         LocalDateTime fromDate =
                 calculateFromBookingDate(account.getApiIdentifier()).toLocalDateTime();
 
-        RefreshScope refreshScope = initialiseRefreshScopeIfEnabled();
+        LocalDateTime historyTransactionDate =
+                paginationHelper
+                        .getTransactionDateLimit(account)
+                        .map(date -> date.toInstant().atOffset(DEFAULT_OFFSET).toLocalDateTime())
+                        .orElse(fromDate);
 
-        if (isTransactionHistoryProductEnabled(refreshScope)) {
-            LocalDateTime historyTransactionsBooked =
-                    getRefreshScopeTransactionDate(account, refreshScope);
-
-            if (historyTransactionsBooked.isAfter(fromDate)) {
-                log.info(
-                        "[MonzoTransactionPaginator] Refresh scope transaction history date is after proposed fromDate -> set refreshScopeTransactionHistoryDate as fromBookingDateTime to avoid fetching transaction which we already fetched in the past: fromDate is {} and refreshScopeTransactionHistoryDate is {}",
-                        fromDate,
-                        historyTransactionsBooked);
-                return createKeyRequest(account, historyTransactionsBooked);
-            }
-        } else {
-            // A date before which we are (fairly) certain that no changes to transactions
-            // will be made on the bank's side
-            Optional<LocalDateTime> certainDate = getCertainDate(account);
-
-            if (!certainDate.isPresent()) {
-                log.info(
-                        "[MonzoTransactionPaginator] No certainDate so this is first refresh ever made for this account -> fromDate is 23m ago: fromDate is {} and certainDate is null",
-                        fromDate);
-                return createKeyRequest(account, fromDate);
-            }
-
-            if (certainDate.get().isAfter(fromDate)) {
-                log.info(
-                        "[MonzoTransactionPaginator] Certain date is after proposed fromDate -> set certainDate as fromBookingDateTime to avoid fetching transaction which we already fetched in the past: fromDate is {} and certainDate is {}",
-                        fromDate,
-                        certainDate);
-                return createKeyRequest(account, certainDate.get());
-            }
+        if (historyTransactionDate.isAfter(fromDate)) {
+            log.info(
+                    "[MonzoTransactionPaginator] History transaction date is after proposed fromDate -> set historyTransactionDate as fromBookingDateTime to avoid fetching transactions which we already fetched in the past: fromDate is {} and historyTransactionDate is {}",
+                    fromDate,
+                    historyTransactionDate);
+            return createKeyRequest(account, historyTransactionDate);
         }
 
-        log.info("[MonzoTransactionPaginator] No need for adjustments or first login by user");
+        log.info(
+                "[MonzoTransactionPaginator] No need for adjustments or first login by user -> fromDate: {}, lastTransactionDate: {}",
+                fromDate,
+                historyTransactionDate);
         return createKeyRequest(account, fromDate);
     }
 
@@ -120,43 +99,5 @@ public class MonzoTransactionPaginator<T, S extends Account>
                         account.getApiIdentifier())
                 + FROM_BOOKING_DATE_TIME
                 + ISO_OFFSET_DATE_TIME.format(fromDate);
-    }
-
-    private LocalDateTime getRefreshScopeTransactionDate(S account, RefreshScope refreshScope) {
-        return refreshScope
-                .getTransactions()
-                .getTransactionBookedDateGteForAccountIdentifiers(account.getIdentifiers())
-                .map(LocalDate::atStartOfDay)
-                .orElseGet(
-                        () ->
-                                refreshScope
-                                        .getTransactions()
-                                        .getTransactionBookedDateGte()
-                                        .atStartOfDay());
-    }
-
-    private Optional<LocalDateTime> getCertainDate(S account) {
-        if (request.getAccounts().isEmpty()) {
-            return Optional.empty();
-        }
-        return request.getAccounts().stream()
-                .filter(a -> account.isUniqueIdentifierEqual(a.getBankId()))
-                .map(se.tink.backend.agents.rpc.Account::getCertainDate)
-                .filter(Objects::nonNull)
-                .map(d -> new java.sql.Timestamp(d.getTime()).toLocalDateTime())
-                .findFirst();
-    }
-
-    private RefreshScope initialiseRefreshScopeIfEnabled() {
-        if (request instanceof HasRefreshScope) {
-            return ((HasRefreshScope) request).getRefreshScope();
-        }
-        return null;
-    }
-
-    private boolean isTransactionHistoryProductEnabled(RefreshScope refreshScope) {
-        return refreshScope != null
-                && refreshScope.getTransactions() != null
-                && refreshScope.getTransactions().getTransactionBookedDateGte() != null;
     }
 }
