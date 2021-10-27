@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.inve
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +20,32 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InvestmentResponse extends HtmlResponse {
     final Map<String, String> dataValues;
-    static final DateTimeFormatter DATE_FORMAT =
-            DateTimeFormatter.ofPattern("dd MMM yy", new Locale("es", "ES"));
+
+    private static final Map<Long, String> MONTH_ABBREVIATIONS = new HashMap<>();
+    private static final DateTimeFormatter DATE_FORMAT;
+
+    static {
+        MONTH_ABBREVIATIONS.put(1L, "ene");
+        MONTH_ABBREVIATIONS.put(2L, "feb");
+        MONTH_ABBREVIATIONS.put(3L, "mar");
+        MONTH_ABBREVIATIONS.put(4L, "abr");
+        MONTH_ABBREVIATIONS.put(5L, "may");
+        MONTH_ABBREVIATIONS.put(6L, "jun");
+        MONTH_ABBREVIATIONS.put(7L, "jul");
+        MONTH_ABBREVIATIONS.put(8L, "ago");
+        MONTH_ABBREVIATIONS.put(9L, "sep");
+        MONTH_ABBREVIATIONS.put(10L, "oct");
+        MONTH_ABBREVIATIONS.put(11L, "nov");
+        MONTH_ABBREVIATIONS.put(12L, "dic");
+
+        DATE_FORMAT =
+                new DateTimeFormatterBuilder()
+                        .appendPattern("dd ")
+                        .appendText(ChronoField.MONTH_OF_YEAR, MONTH_ABBREVIATIONS)
+                        .appendPattern(" uu")
+                        .toFormatter()
+                        .withLocale(new Locale("es", "ES"));
+    }
 
     public InvestmentResponse(String body) {
         super(body);
