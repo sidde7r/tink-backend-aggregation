@@ -37,6 +37,8 @@ public class SparebankenSorAgentWireMockTest {
                         .addCredentialField(MOBILENUMBER.getFieldKey(), givenMobileNumber)
                         .addCallbackData("activationCode", "25818567")
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.CREDITCARD_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.CREDITCARD_TRANSACTIONS)
                         .withHttpDebugTrace()
                         .withRequestFlagCreate(true)
                         .withAgentModule(new SparebankenSorWireMockTestModule())
