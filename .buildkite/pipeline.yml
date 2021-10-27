@@ -14,6 +14,20 @@ steps:
         config: "docker/docker-compose.bazel.yml"
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
+  - name: ':junit: Test (Java 11)'
+    branches: '!master'
+    command: .buildkite/run-unit-tests-java11.sh
+    timeout_in_minutes: 45
+    env:
+      COMPOSE_HTTP_TIMEOUT: 300
+    agents:
+      queue: default
+    plugins:
+      docker-compose#v3.0.3:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
+    retry: { "automatic": [ { "exit_status": -1, "limit": 2 }, { "exit_status": 255, "limit": 2 } ] }
+
   - name: ":sonarqube: Sonarqube"
     if: |
       build.branch != 'master' && build.branch != 'staging'
