@@ -4,7 +4,6 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import java.util.Objects;
-import java.util.Optional;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -92,14 +91,6 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
                         .getName()
                         .orElse(identifier.getIdentifier(new DisplayAccountIdentifierFormatter())),
                 identifier.getBankName());
-    }
-
-    public Optional<AccountIdentifier> getAccountIdentifier() {
-        if (isMatchesMultiple()) {
-            return Optional.empty();
-        }
-
-        return Optional.ofNullable(AccountIdentifier.create(getType(), getPattern(), getName()));
     }
 
     @Override

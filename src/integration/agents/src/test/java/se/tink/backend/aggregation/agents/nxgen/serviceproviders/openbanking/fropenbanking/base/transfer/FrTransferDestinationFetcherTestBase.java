@@ -56,9 +56,20 @@ public abstract class FrTransferDestinationFetcherTestBase {
     protected static List<AccountIdentifier> getAccountIdentifiers(
             TransferDestinationsResponse transferDestinationsResponse, Account account) {
         return transferDestinationsResponse.getDestinations().get(account).stream()
-                .map(TransferDestinationPattern::getAccountIdentifier)
+                .map(FrTransferDestinationFetcherTestBase::getAccountIdentifier)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private static Optional<AccountIdentifier> getAccountIdentifier(
+            TransferDestinationPattern pattern) {
+        if (pattern.isMatchesMultiple()) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(
+                AccountIdentifier.create(
+                        pattern.getType(), pattern.getPattern(), pattern.getName()));
     }
 }
