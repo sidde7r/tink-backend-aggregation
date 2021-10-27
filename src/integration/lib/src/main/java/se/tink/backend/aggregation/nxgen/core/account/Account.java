@@ -226,7 +226,7 @@ public abstract class Account {
         account.setCreditLimit(this.exactCreditLimit);
         account.setCapabilities(this.capabilities);
         account.setSourceInfo(this.sourceInfo);
-
+        account.setGranularAccountBalances(this.granularAccountBalances);
         AccountHolder accountHolder = new AccountHolder();
         accountHolder.setType(
                 Optional.ofNullable(holderType).orElse(inferHolderType(provider)).toSystemType());

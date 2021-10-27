@@ -91,8 +91,12 @@ public class Account implements Cloneable {
     @JsonIgnore
     // Should not be mapped using
     // se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper#fromAggregation
+    // TODO (AAP-1566): Ask Core to ensure that we will not expose it to upstream system
+    // TODO (AAP-1566): For each balance we also need timestamp so convert it to
+    // Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>>
     private Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances;
 
+    // TODO (AAP-1566): Potentially removable, check
     private List<Balance> balances;
 
     public Account() {
@@ -610,6 +614,15 @@ public class Account implements Cloneable {
 
     public void setAccountExclusion(AccountExclusion accountExclusion) {
         this.accountExclusion = accountExclusion;
+    }
+
+    public Map<AccountBalanceType, ExactCurrencyAmount> getGranularAccountBalances() {
+        return granularAccountBalances;
+    }
+
+    public void setGranularAccountBalances(
+            Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances) {
+        this.granularAccountBalances = granularAccountBalances;
     }
 
     public String getCurrencyCode() {

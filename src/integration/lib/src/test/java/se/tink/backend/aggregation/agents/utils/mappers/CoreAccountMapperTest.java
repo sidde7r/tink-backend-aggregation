@@ -31,6 +31,11 @@ public class CoreAccountMapperTest {
                         mapper -> mapper.skip(se.tink.backend.agents.rpc.Account::setSourceInfo))
                 .addMappings(
                         mapper -> mapper.skip(se.tink.backend.agents.rpc.Account::setAccountHolder))
+                .addMappings(
+                        mapper ->
+                                mapper.skip(
+                                        se.tink.backend.agents.rpc.Account
+                                                ::setGranularAccountBalances))
                 .validate();
     }
 
