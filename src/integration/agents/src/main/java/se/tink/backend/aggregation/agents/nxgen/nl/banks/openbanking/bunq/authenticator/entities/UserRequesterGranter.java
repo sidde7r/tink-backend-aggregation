@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class UserRequesterGranter {
+
     @JsonProperty("display_name")
     private String displayName;
 

@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class UserApiKeyEntity {
-    private int id;
+
+    @Getter private int id;
     private String created;
     private String updated;
 
@@ -14,8 +16,4 @@ public class UserApiKeyEntity {
 
     @JsonProperty("granted_by_user")
     private GrantedByUserEntity grantedByUser;
-
-    public int getId() {
-        return id;
-    }
 }

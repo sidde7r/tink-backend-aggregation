@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ErrorResponse {
+
     @JsonProperty("Error")
     private List<ErrorEntity> errors;
 
