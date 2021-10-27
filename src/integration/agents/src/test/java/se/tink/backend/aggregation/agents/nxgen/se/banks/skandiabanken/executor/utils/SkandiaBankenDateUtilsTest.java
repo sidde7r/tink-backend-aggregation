@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class SkandiaBankenDateUtilsTest {
@@ -21,13 +20,11 @@ public class SkandiaBankenDateUtilsTest {
             new ThreadSafeDateFormat(
                     "yyyy-MM-dd'T'HH:mm:ss.SSSZ", LOCALE, TimeZone.getTimeZone(ZONE_ID));
 
-    private CountryDateHelper dateHelper;
     private SkandiaBankenDateUtils objectUnderTest;
 
     @Before
     public void setUp() {
-        dateHelper = new CountryDateHelper(LOCALE, TimeZone.getTimeZone(ZONE_ID));
-        objectUnderTest = new SkandiaBankenDateUtils(dateHelper);
+        objectUnderTest = new SkandiaBankenDateUtils();
     }
 
     @Test
@@ -80,7 +77,7 @@ public class SkandiaBankenDateUtilsTest {
         // given
         final long epochTimeStamp = 1637815500; // Thursday, 25 November 2021 04:45:00 UTC
         final Instant instant = Instant.ofEpochSecond(epochTimeStamp);
-        objectUnderTest.setClockForTesting(Clock.fixed(instant, ZONE_ID));
+        SkandiaBankenDateUtils.setClockForTesting(Clock.fixed(instant, ZONE_ID));
 
         // when
         final Date transferDate = objectUnderTest.getTransferDateForBgPg(null);
@@ -94,7 +91,7 @@ public class SkandiaBankenDateUtilsTest {
     public void shouldReturnNextBusinessDayAtMidnightIfBusinessDayAndAfterCutOff() {
         final long epochTimestamp = 1637837100; // Thursday, 25 November 2021 10:45:00 UTC
         final Instant instant = Instant.ofEpochSecond(epochTimestamp);
-        objectUnderTest.setClockForTesting(Clock.fixed(instant, ZONE_ID));
+        SkandiaBankenDateUtils.setClockForTesting(Clock.fixed(instant, ZONE_ID));
 
         // when
         final Date transferDate = objectUnderTest.getTransferDateForBgPg(null);
@@ -108,7 +105,7 @@ public class SkandiaBankenDateUtilsTest {
     public void shouldReturnNextBusinessDayAtMidnightIfNotBusinessDay() {
         final long epochTimeStamp = 1637989505; // Saturday, 27 November 2021 05:05:05 UTC
         final Instant instant = Instant.ofEpochSecond(epochTimeStamp);
-        objectUnderTest.setClockForTesting(Clock.fixed(instant, ZONE_ID));
+        SkandiaBankenDateUtils.setClockForTesting(Clock.fixed(instant, ZONE_ID));
 
         // when
         final Date transferDate = objectUnderTest.getTransferDateForBgPg(null);

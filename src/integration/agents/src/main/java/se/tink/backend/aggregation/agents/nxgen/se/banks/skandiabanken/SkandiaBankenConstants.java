@@ -212,6 +212,7 @@ public class SkandiaBankenConstants {
                 "Investment account number was not found";
         public static final String NOT_CUSTOMER =
                 "för att använda vår app behöver du ha ett bankkonto";
+        public static final String INVALID_OCR = "payments[0].OCRReference";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -249,6 +250,8 @@ public class SkandiaBankenConstants {
         public static final int SE_BG_SHORT_OFFSET = 3;
         public static final int SE_BG_LONG_OFFSET = 4;
         public static final int SE_PG_OFFSET = 6;
+        public static final double MIN_AMOUNT = 1.0;
+        public static final int UNSTRUCTURED_MAX_LENGTH = 175;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -257,6 +260,8 @@ public class SkandiaBankenConstants {
                 "Transfer source account was not present in user's payment accounts.";
         public static final String SUBMIT_PAYMENT_FAILED =
                 "An error occurred when submitting payment to the user's outbox.";
+        public static final String INVALID_OCR =
+                "Error could not be submitted to bank due to invalid OCR.";
         public static final String PAYMENT_NOT_FOUND =
                 "Could not find submitted payment in user's outbox.";
         public static final String INIT_SIGN_FAILED =
@@ -273,6 +278,12 @@ public class SkandiaBankenConstants {
                 "An error occurred when removing the payment from the user's outbox.";
         public static final String INVALID_PAYMENT_DATE =
                 "Payment could not be submitted, date was rejected by bank.";
+        public static final String INVALID_PAYMENT_TYPE =
+                "Provided payment type is not supported. Only PG and BG type is supported.";
+        public static final String INVALID_MINIMUM_AMOUNT =
+                "Minimum amount of payment is 1 SEK. This is a restriction set by the bank.";
+        public static final String INVALID_UNSTRUCTURED_LENGTH =
+                "Unstructured reference longer than 175 chars. Bank crops reference if longer, therefore we cancel the payment.";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

@@ -3,14 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor
 import java.time.Clock;
 import java.util.Calendar;
 import java.util.Date;
-import lombok.RequiredArgsConstructor;
+import java.util.TimeZone;
 import org.assertj.core.util.VisibleForTesting;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.DateFormatting;
 import se.tink.libraries.date.CountryDateHelper;
 
-@RequiredArgsConstructor
 public class SkandiaBankenDateUtils {
 
-    private final CountryDateHelper dateHelper;
+    private static final CountryDateHelper dateHelper =
+            new CountryDateHelper(
+                    DateFormatting.LOCALE, TimeZone.getTimeZone(DateFormatting.ZONE_ID));
 
     public Date getTransferDateForBgPg(Date providedDate) {
         Date date = dateHelper.getProvidedDateOrBestPossibleDate(providedDate, 9, 00);
@@ -33,7 +35,7 @@ public class SkandiaBankenDateUtils {
     }
 
     @VisibleForTesting
-    public void setClockForTesting(Clock clockForTesting) {
+    public static void setClockForTesting(Clock clockForTesting) {
         dateHelper.setClock(clockForTesting);
     }
 }

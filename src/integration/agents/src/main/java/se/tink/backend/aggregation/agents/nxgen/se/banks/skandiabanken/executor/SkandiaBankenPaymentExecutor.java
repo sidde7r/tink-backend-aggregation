@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.time.Clock;
 import java.util.Collection;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.BankIdPolling;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.DateFormatting;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.PaymentTransfer;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TransferExceptionMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentInitSignResponse;
@@ -28,9 +26,10 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @RequiredArgsConstructor
@@ -39,12 +38,10 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     final SkandiaBankenApiClient apiClient;
     final SupplementalInformationController supplementalInformationController;
 
-    private static CountryDateHelper dateHelper =
-            new CountryDateHelper(
-                    DateFormatting.LOCALE, TimeZone.getTimeZone(DateFormatting.ZONE_ID));
-
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
+
+        validateTransferOrThrow(transfer);
 
         PaymentSourceAccount sourceAccount = getPaymentSourceAccount(transfer);
 
@@ -71,8 +68,47 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         apiClient.addBankServiceInternalErrorFilter();
     }
 
+    private void validateTransferOrThrow(Transfer transfer) {
+        throwIfNotBgOrPgPayment(transfer);
+        throwIfAmountIsLessThanMinAmount(transfer);
+        throwIfUnstructuredRefLongerThanMax(transfer);
+    }
+
+    private void throwIfNotBgOrPgPayment(Transfer transfer) {
+        if (!transfer.getDestination().isGiroIdentifier()) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_PAYMENT_TYPE,
+                    EndUserMessage.END_USER_WRONG_PAYMENT_TYPE,
+                    InternalStatus.INVALID_PAYMENT_TYPE);
+        }
+    }
+
+    private void throwIfAmountIsLessThanMinAmount(Transfer transfer) {
+        if (transfer.getAmount().getValue() < PaymentTransfer.MIN_AMOUNT) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_MINIMUM_AMOUNT,
+                    EndUserMessage.INVALID_MINIMUM_AMOUNT,
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
+        }
+    }
+
+    private void throwIfUnstructuredRefLongerThanMax(Transfer transfer) {
+        if (isUnstructuredRefAndLongerThanMax(transfer.getRemittanceInformation())) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_UNSTRUCTURED_LENGTH,
+                    EndUserMessage.INVALID_DESTINATION_MESSAGE,
+                    InternalStatus.INVALID_DESTINATION_MESSAGE);
+        }
+    }
+
+    private boolean isUnstructuredRefAndLongerThanMax(RemittanceInformation remittanceInformation) {
+        return remittanceInformation.isOfType(RemittanceInformationType.UNSTRUCTURED)
+                && remittanceInformation.getValue().length()
+                        > PaymentTransfer.UNSTRUCTURED_MAX_LENGTH;
+    }
+
     private Date getPaymentDate(Transfer transfer) {
-        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils(dateHelper);
+        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils();
         return dateUtils.getTransferDateForBgPg(transfer.getDueDate());
     }
 
@@ -95,6 +131,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
             apiClient.submitPayment(paymentRequest);
         } catch (HttpResponseException e) {
             throwIfInvalidDateError(e.getResponse());
+            throwIfInvalidOcrError(e.getResponse());
 
             throw getTransferFailedException(
                     TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
@@ -114,6 +151,21 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                         TransferExceptionMessage.INVALID_PAYMENT_DATE,
                         EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,
                         InternalStatus.INVALID_DUE_DATE);
+            }
+        }
+    }
+
+    private void throwIfInvalidOcrError(HttpResponse response) {
+
+        if (response.getStatus() == HttpStatus.SC_BAD_REQUEST
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isInvalidOcrError()) {
+                throw getTransferCancelledException(
+                        TransferExceptionMessage.INVALID_OCR,
+                        EndUserMessage.INVALID_OCR,
+                        InternalStatus.INVALID_DESTINATION_MESSAGE);
             }
         }
     }
@@ -248,9 +300,5 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                 .setEndUserMessage(endUserMessage)
                 .setInternalStatus(internalStatus.toString())
                 .build();
-    }
-
-    public static void setClockForTesting(Clock clock) {
-        dateHelper.setClock(clock);
     }
 }
