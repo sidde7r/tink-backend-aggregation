@@ -188,7 +188,10 @@ public final class RabobankAgent
         TransactionDatePaginator<TransactionalAccount> transactionFetcher =
                 isSandbox()
                         ? new SandboxTransactionFetcher(apiClient)
-                        : new TransactionFetcher(apiClient, transactionDateLimit);
+                        : new TransactionFetcher(
+                                apiClient,
+                                transactionDateLimit,
+                                getUserIpInformation().isUserPresent());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
