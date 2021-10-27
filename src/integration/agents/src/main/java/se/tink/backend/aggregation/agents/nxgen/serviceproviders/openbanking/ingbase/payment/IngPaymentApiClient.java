@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -40,6 +41,8 @@ public class IngPaymentApiClient extends IngBaseApiClient {
             QsealcSigner proxySigner,
             CredentialsRequest credentialsRequest,
             StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            AgentComponentProvider agentComponentProvider) {
         super(
                 client,
                 persistentStorage,
@@ -47,6 +50,8 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                 providerSessionCacheController,
                 userAuthenticationData,
                 marketConfiguration,
+                proxySigner,
+                agentComponentProvider);
                 proxySigner,
                 credentialsRequest);
         this.strongAuthenticationState = strongAuthenticationState;

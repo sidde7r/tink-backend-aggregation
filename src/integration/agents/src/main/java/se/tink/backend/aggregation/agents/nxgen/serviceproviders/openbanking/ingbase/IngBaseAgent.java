@@ -89,8 +89,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         new IngUserAuthenticationData(
                                 shouldDoManualAuthentication(request), psuIpAddress),
                         this,
+                        request,
                         qsealcSigner,
-                        request);
+                        agentComponentProvider);
         paymentApiClient =
                 new IngPaymentApiClient(
                         client,
@@ -102,7 +103,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         this,
                         qsealcSigner,
                         request,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        agentComponentProvider);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
