@@ -53,10 +53,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
     public SessionResponse init(String ssn)
             throws BankIdException, BankServiceException, LoginException {
 
-        if (Strings.isNullOrEmpty(ssn)) {
-            logger.error("SSN was passed as empty or null!");
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
+        verifySsnOrThrow(ssn);
 
         try {
             TokenResponse tokenResponse =
@@ -83,6 +80,13 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
         }
     }
 
+    private void verifySsnOrThrow(String ssn) {
+        if (Strings.isNullOrEmpty(ssn)) {
+            logger.error("SSN was passed as empty or null!");
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+    }
+
     @Override
     public BankIdStatus collect(SessionResponse reference)
             throws AuthenticationException, AuthorizationException {
@@ -91,25 +95,13 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
                 apiClient.getDecoupled(new URL(reference.getLinks().getTokenEntity().getHref()));
 
         if (decoupledResponse.hasError()) {
-            switch (decoupledResponse.getError()) {
-                case (Errors.INTENT_EXPIRED):
-                case (Errors.MBID_ERROR):
-                case (Errors.MBID_MAX_POLLING):
-                    return BankIdStatus.TIMEOUT;
-                case (Errors.NOT_SHB_APPROVED):
-                    throw LoginError.NOT_CUSTOMER.exception();
-                case (Errors.BANKID_NOT_SHB_ACTIVATED):
-                    throw BankIdError.AUTHORIZATION_REQUIRED.exception(
-                            HandelsbankenBaseConstants.BankIdUserMessage.ACTIVATION_NEEDED);
-                default:
-                    logger.warn(
-                            String.format(
-                                    "BankID polling failed with error: %s",
-                                    decoupledResponse.getError()));
-                    return BankIdStatus.FAILED_UNKNOWN;
-            }
+            return convertCollectErrorToBankIdStatus(decoupledResponse.getError());
         }
 
+        return convertCollectResultToBankIdStatus(decoupledResponse);
+    }
+
+    private BankIdStatus convertCollectResultToBankIdStatus(DecoupledResponse decoupledResponse) {
         switch (decoupledResponse.getResult()) {
             case Status.IN_PROGRESS:
                 return BankIdStatus.WAITING;
@@ -119,6 +111,23 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
                 this.token = decoupledResponse.toOauthToken();
                 return BankIdStatus.DONE;
             default:
+                return BankIdStatus.FAILED_UNKNOWN;
+        }
+    }
+
+    private BankIdStatus convertCollectErrorToBankIdStatus(String error) {
+        switch (error) {
+            case (Errors.INTENT_EXPIRED):
+            case (Errors.MBID_ERROR):
+            case (Errors.MBID_MAX_POLLING):
+                return BankIdStatus.TIMEOUT;
+            case (Errors.NOT_SHB_APPROVED):
+                throw LoginError.NOT_CUSTOMER.exception();
+            case (Errors.BANKID_NOT_SHB_ACTIVATED):
+                throw BankIdError.AUTHORIZATION_REQUIRED.exception(
+                        HandelsbankenBaseConstants.BankIdUserMessage.ACTIVATION_NEEDED);
+            default:
+                logger.warn("BankID polling failed with error: {}", error);
                 return BankIdStatus.FAILED_UNKNOWN;
         }
     }

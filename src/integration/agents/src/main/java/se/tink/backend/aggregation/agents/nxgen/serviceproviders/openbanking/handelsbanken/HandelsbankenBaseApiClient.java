@@ -375,13 +375,18 @@ public class HandelsbankenBaseApiClient {
         try {
             return get(request, responseType);
         } catch (HttpResponseException hre) {
-            verifyKnowYourCustomer(hre);
-            verifyIsTokenNotActiveErrorOrThrow(hre);
-            refreshAndStoreOauthToken();
-            request.overrideHeader(HttpHeaders.AUTHORIZATION, getOauthToken().toAuthorizeHeader());
+            throwIfKycError(hre);
+
+            if (isAccessTokenExpired(hre.getResponse())) {
+                refreshAndStoreOauthToken();
+                request.overrideHeader(
+                        HttpHeaders.AUTHORIZATION, getOauthToken().toAuthorizeHeader());
+                // retry request with new token
+                return get(request, responseType);
+            }
+
+            throw hre;
         }
-        // retry request with new token
-        return get(request, responseType);
     }
 
     private <T> T get(RequestBuilder requestBuilder, Class<T> responseType) {
@@ -460,24 +465,18 @@ public class HandelsbankenBaseApiClient {
         persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
     }
 
-    private void verifyIsTokenNotActiveErrorOrThrow(HttpResponseException hre) {
-        HttpResponse response = hre.getResponse();
+    private boolean isAccessTokenExpired(HttpResponse response) {
 
-        if (!(response.getStatus() == HttpStatus.SC_UNAUTHORIZED)) {
-            // Unexpected exception, throw it.
-            throw hre;
+        if (response.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
+            return false;
         }
 
         HandelsbankenErrorResponse errorResponse =
                 response.getBody(HandelsbankenErrorResponse.class);
-
-        if (!errorResponse.isTokenNotActiveError()) {
-            // Unexpected error message, throw original exception.
-            throw hre;
-        }
+        return errorResponse.isTokenNotActiveError();
     }
 
-    private void verifyKnowYourCustomer(HttpResponseException hre) {
+    private void throwIfKycError(HttpResponseException hre) {
         if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                     HandelsbankenBaseConstants.UnacceptedTermsAndConditionsException
