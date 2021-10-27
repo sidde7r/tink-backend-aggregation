@@ -5,11 +5,13 @@ import java.net.URLClassLoader;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public final class ClassPathTest {
 
     @Test
+    @Ignore
     public void noConflictingVersionsOfGuava() {
         final String guava = "guava-\\d+\\.\\d+(-jre)?\\.jar";
 
