@@ -5,6 +5,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 public class SebConstants {
 
     public static class Urls {
+
+        public static final String PROVIDER_MARKET = "SE";
+
         public static final String BASE_AIS = "/tpp/ais/v7/identified2";
 
         // Urls for Checking accounts

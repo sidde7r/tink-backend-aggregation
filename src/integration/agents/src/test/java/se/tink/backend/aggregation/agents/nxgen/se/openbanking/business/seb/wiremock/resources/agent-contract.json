@@ -1,117 +1,152 @@
 {
-  "accounts" : [ {
-    "accountNumber" : "52800025221",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 10234,
-      "scale" : 2,
-      "exactValue" : 102.34,
-      "doubleValue" : 102.34
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "52800025221",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Berit Demosson",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"se://52800025221\"]",
-    "closed" : false,
-    "holderName" : "Berit Demosson",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "BUSINESS",
-      "identities" : [ {
-        "name" : "Berit Demosson",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 102.34
-  } ],
-  "transactions" : [ {
-    "amount" : -14886.36,
-    "date" : 1515927600000,
-    "description" : "Sofdog otbibzi ugbezec keohoih niwle vij kavgi zuta ovefbe re pajidkow ku aggaj era luikhu idaohfuz gelfogsuc cuncibhig.",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -14886.36,
-    "date" : 1515927600000,
-    "description" : "Kogajako peepge kucise mov vuw nubimza voaja ozijeep gofpidru re mezim faub ebege.",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -14886.36,
-    "date" : 1515927600000,
-    "description" : "Reb jokawzud keaka burajir kudag ti serkeh ir gidakwe fod cesip cosapuaru vifuk do zahlutho ari olunov do.",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -14886.36,
-    "date" : 1516014000000,
-    "description" : "ASG AB",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : true,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -14886.36,
-    "date" : 1516014000000,
-    "description" : "ASG AB",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : true,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -14886.36,
-    "date" : 1516014000000,
-    "description" : "ASG AB",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : true,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  } ]
+    "accounts": [
+        {
+            "accountNumber": "52800025221",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "scale": 2,
+                "unscaledValue": 10234,
+                "doubleValue": 102.34,
+                "exactValue": 102.34
+            },
+            "currencyCode": "SEK",
+            "bankId": "52800025221",
+            "excluded": false,
+            "favored": false,
+            "name": "Berit Demosson",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://52800025221\"]",
+            "closed": false,
+            "holderName": "Berit Demosson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "BUSINESS",
+                "identities": [
+                    {
+                        "name": "Berit Demosson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 102.34
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -14886.36,
+            "date": 1515927600000,
+            "description": "Sofdog otbibzi ugbezec keohoih niwle vij kavgi zuta ovefbe re pajidkow ku aggaj era luikhu idaohfuz gelfogsuc cuncibhig.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "Nzs4MDE3OTAwMDQ5Uzs7OzIwMTgtMDEtMTg7Ozs4MDE3OTAwMDQ5Uzs7"
+            },
+            "transactionDates": [],
+            "transactionReference": "Credit transfer",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -14886.36,
+            "date": 1515927600000,
+            "description": "Kogajako peepge kucise mov vuw nubimza voaja ozijeep gofpidru re mezim faub ebege.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "Nzs4MDE3OTAwMDQ5Uzs7OzIwMTgtMDEtMTg7Ozs4MDE3OTAwMDQ5Uzs7"
+            },
+            "transactionDates": [],
+            "transactionReference": "Credit transfer",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -14886.36,
+            "date": 1515927600000,
+            "description": "Reb jokawzud keaka burajir kudag ti serkeh ir gidakwe fod cesip cosapuaru vifuk do zahlutho ari olunov do.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "Nzs4MDE3OTAwMDQ5Uzs7OzIwMTgtMDEtMTg7Ozs4MDE3OTAwMDQ5Uzs7"
+            },
+            "transactionDates": [],
+            "transactionReference": "Credit transfer",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -14886.36,
+            "date": 1516014000000,
+            "description": "ASG AB",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "STONCM01190912125640077812"
+            },
+            "transactionDates": [],
+            "transactionReference": "1234700834517",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -14886.36,
+            "date": 1516014000000,
+            "description": "ASG AB",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "STONCM01190912125640077812"
+            },
+            "transactionDates": [],
+            "transactionReference": "1234700834517",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -14886.36,
+            "date": 1516014000000,
+            "description": "ASG AB",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "STONCM01190912125640077812"
+            },
+            "transactionDates": [],
+            "transactionReference": "1234700834517",
+            "providerMarket": "SE"
+        }
+    ]
 }

@@ -24,12 +24,15 @@ public class AmericanExpressAgentWireMockTest {
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "se-amex-ob", WIREMOCK_SERVER_FILEPATH)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-amex-ob")
+                        .withWireMockFilePath(WIREMOCK_SERVER_FILEPATH)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("authtoken", "dummyCode")
-                        .withConfigurationFile(configuration)
                         .build();
 
         final AgentContractEntity expected =

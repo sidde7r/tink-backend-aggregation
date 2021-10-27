@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.fetcher.transactionalaccount.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebConstants.Urls.PROVIDER_MARKET;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebSEBusinessApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -33,12 +36,18 @@ public class BookedEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction(SebSEBusinessApiClient apiClient) {
-        return Transaction.builder()
-                .setAmount(transactionAmount.getAmount())
-                .setDate(bookingDate)
-                .setDescription(getDescription(apiClient))
-                .setPending(false)
-                .build();
+        return (Transaction)
+                Transaction.builder()
+                        .setAmount(transactionAmount.getAmount())
+                        .setDate(bookingDate)
+                        .setDescription(getDescription(apiClient))
+                        .setPending(false)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                transactionId)
+                        .setTransactionReference(proprietaryBankTransactionCodeText)
+                        .setProviderMarket(PROVIDER_MARKET)
+                        .build();
     }
 
     @JsonIgnore
