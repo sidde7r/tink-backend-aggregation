@@ -7,6 +7,7 @@ java_library(
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/handelsbanken",
+        "//src/integration/amount",
         "//src/integration/credentials:service",
         "//src/integration/enums",
         "//src/integration/lib",
@@ -18,6 +19,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/libraries/mapper",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",

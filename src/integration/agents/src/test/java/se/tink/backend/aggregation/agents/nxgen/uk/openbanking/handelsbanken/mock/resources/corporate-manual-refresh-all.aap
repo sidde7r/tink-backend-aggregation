@@ -88,6 +88,21 @@ Content-Type: application/json
       "currency": "USD",
       "iban": "GB24HAND40516211740779",
       "ownerName": "Fluffy"
+    },
+    {
+      "_links": {
+        "transactions": {
+          "href": "https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions"
+        }
+      },
+      "accountId": "acc2",
+      "accountType": "CLIENT ACCOUNT DEPOSITS",
+      "bban": "84223103",
+      "bic": "HANDGB22",
+      "clearingNumber": "405162",
+      "currency": "GBP",
+      "iban": "GB97HAND40516284223103",
+      "ownerName": "FD"
     }
   ]
 }
@@ -144,12 +159,55 @@ Content-Type: application/json
 
 -----------------------------------------------------------------------------------
 REQUEST 6
-GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1992-01-12&dateTo=1992-04-10
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2?withBalance=true
 Accept: application/json
 Content-Type: application/json
 
 -----------------------------------------------------------------------------------
 RESPONSE 6
+200
+Content-Type: application/json
+
+{
+    "_links": {
+        "transactions": {
+            "href": "https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions"
+        }
+    },
+    "accountId": "acc2",
+    "accountType": "CLIENT ACCOUNT DEPOSITS",
+    "balances": [
+        {
+            "amount": {
+                "content": 13264.5,
+                "currency": "GBP"
+            },
+            "balanceType": "CURRENT"
+        },
+        {
+            "amount": {
+                "content": 13264.5,
+                "currency": "GBP"
+            },
+            "balanceType": "CLEARED"
+        }
+    ],
+    "bban": "84223103",
+    "bic": "HANDGB22",
+    "clearingNumber": "405162",
+    "currency": "GBP",
+    "iban": "GB97HAND40516284223103",
+    "ownerName": "FD"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1992-01-12&dateTo=1992-04-10
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
 200
 Content-Type: application/json
 
@@ -168,53 +226,131 @@ Content-Type: application/json
   ]
 }
 
--------
-REQUEST 7
+-----------------------------------------------------------------------------------
+REQUEST 8
 GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-10-14&dateTo=1992-01-11
 Accept: application/json
 Content-Type: application/json
 
------
-RESPONSE 7
-200
-Content-Type: application/json
-
-{"transactions": []}
-
--------
-REQUEST 8
-GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-07-16&dateTo=1991-10-13
-Accept: application/json
-Content-Type: application/json
-
------
+-----------------------------------------------------------------------------------
 RESPONSE 8
 200
 Content-Type: application/json
 
 {"transactions": []}
 
--------
+-----------------------------------------------------------------------------------
 REQUEST 9
-GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-04-17&dateTo=1991-07-15
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-07-16&dateTo=1991-10-13
 Accept: application/json
 Content-Type: application/json
 
------
+-----------------------------------------------------------------------------------
 RESPONSE 9
 200
 Content-Type: application/json
 
 {"transactions": []}
 
--------
+-----------------------------------------------------------------------------------
 REQUEST 10
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-04-17&dateTo=1991-07-15
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Content-Type: application/json
+
+{"transactions": []}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
 GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-03-10&dateTo=1991-04-16
 Accept: application/json
 Content-Type: application/json
 
------
-RESPONSE 10
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Content-Type: application/json
+
+{"transactions": []}
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions?dateFrom=1992-01-12&dateTo=1992-04-10
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Content-Type: application/json
+
+{
+  "transactions": [
+    {
+      "valueDate": "1992-02-01",
+      "status": "Booked",
+      "amount": {
+        "currency": "GBP",
+        "content": 999.99
+      },
+      "remittanceInformation": "1234567",
+      "creditDebit": "Credited"
+   }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions?dateFrom=1991-10-14&dateTo=1992-01-11
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Content-Type: application/json
+
+{"transactions": []}
+
+-----------------------------------------------------------------------------------
+REQUEST 14
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions?dateFrom=1991-07-16&dateTo=1991-10-13
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 14
+200
+Content-Type: application/json
+
+{"transactions": []}
+
+-----------------------------------------------------------------------------------
+REQUEST 15
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions?dateFrom=1991-04-17&dateTo=1991-07-15
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 15
+200
+Content-Type: application/json
+
+{"transactions": []}
+
+-----------------------------------------------------------------------------------
+REQUEST 16
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions?dateFrom=1991-03-10&dateTo=1991-04-16
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 16
 200
 Content-Type: application/json
 
