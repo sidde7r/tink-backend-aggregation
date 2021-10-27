@@ -9,8 +9,24 @@ generate_codeowners(
         ":charts_agent_platform",
         ":charts_precomputations_for_alerts",
         "//.buildkite:owners",
+        ":charts_austrian_alerts",
+        ":charts_belgian_alerts",
         ":charts_german_alerts",
+        ":charts_danish_alerts",
+        ":charts_estonian_alerts",
+        ":charts_spanish_alerts",
+        ":charts_finnish_alerts",
+        ":charts_french_alerts",
+        ":charts_british_alerts",
+        ":charts_irish_alerts",
         ":charts_italian_alerts",
+        ":charts_lithuanian_alerts",
+        ":charts_latvian_alerts",
+        ":charts_dutch_alerts",
+        ":charts_norwegian_alerts",
+        ":charts_polish_alerts",
+        ":charts_portuguese_alerts",
+        ":charts_swedish_alerts",
         ":docker_owners",
         "//src/integration/agents:austrian_providers_owners",
         "//src/integration/agents:belgian_providers_owners",
@@ -202,6 +218,28 @@ codeowners(
 )
 
 codeowners(
+    name = "charts_austrian_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/at",
+    ],
+    teams = [
+        "@tink-ab/aggregation-penguins-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_belgian_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/be",
+    ],
+    teams = [
+        "@tink-ab/aggregation-minion-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "charts_german_alerts",
     patterns = [
         "/.charts/tink-backend-aggregation-agents/templates/de",
@@ -213,12 +251,166 @@ codeowners(
 )
 
 codeowners(
+    name = "charts_danish_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/dk",
+    ],
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_estonian_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/ee",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_spanish_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/es",
+    ],
+    teams = [
+        "@tink-ab/aggregation-toros-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_finnish_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/fi",
+    ],
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_french_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/fr",
+    ],
+    teams = [
+        "@tink-ab/aggregation-penguins-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_british_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/gb",
+    ],
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_irish_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/ie",
+    ],
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "charts_italian_alerts",
     patterns = [
         "/.charts/tink-backend-aggregation-agents/templates/it",
     ],
     teams = [
         "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_lithuanian_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/lt",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_latvian_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/lv",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_dutch_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/nl",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_norwegian_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/no",
+    ],
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_polish_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/pl",
+    ],
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_portuguese_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/pt",
+    ],
+    teams = [
+        "@tink-ab/aggregation-minion-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_swedish_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/templates/se",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
