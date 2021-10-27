@@ -9,9 +9,9 @@ spec:
     # COUNTER VALUES WITH OFFSET ON OUTCOME
     - record: sum:tink_agent_login_denmark:all:delta30m_with_offset_30m
       expr: |
-        (sum by (className, action) ((last_over_time(tink_agent_login_total{market="DK"}[30m] offset 30m)) or
-            0 * (sum by (className, action) (last_over_time(tink_agent_login_total{market="DK"}[60m])
-            unless last_over_time(tink_agent_login_total{market="DK"}[30m] offset 30m)))))
+        (sum by (className, action) ((max_over_time(tink_agent_login_total{market="DK"}[30m] offset 30m)) or
+            0 * (sum by (className, action) (max_over_time(tink_agent_login_total{market="DK"}[60m])
+            unless max_over_time(tink_agent_login_total{market="DK"}[30m] offset 30m)))))
       labels:
         name: "Value of counters for denmark for 30 minutes with 30 minutes shift for all outcomes"
         service: aggregation
@@ -19,9 +19,9 @@ spec:
         product: "aggregation"
     - record: sum:tink_agent_login_denmark:unavailable:delta30m_with_offset_30m
       expr: |
-        (sum by (className, action) ((last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[30m] offset 30m)) or
-            0 * (sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[60m])
-            unless last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[30m] offset 30m)))))
+        (sum by (className, action) ((max_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[30m] offset 30m)) or
+            0 * (sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[60m])
+            unless max_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[30m] offset 30m)))))
       labels:
         name: "Value of counters for denmark for 30 minutes with 30 minutes shift for all outcomes"
         service: aggregation
@@ -29,9 +29,9 @@ spec:
         product: "aggregation"
     - record: sum:tink_agent_login_denmark:temporary_errors:delta30m_with_offset_30m
       expr: |
-        (sum by (className, action) ((last_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)) or
-            0 * (sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[60m])
-            unless last_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)))))
+        (sum by (className, action) ((max_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)) or
+            0 * (sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[60m])
+            unless max_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)))))
       labels:
         name: "Value of counters for denmark for 30 minutes with 30 minutes shift for all outcomes"
         service: aggregation
@@ -39,9 +39,9 @@ spec:
         product: "aggregation"
     - record: sum:tink_agent_login_denmark:all_errors:delta30m_with_offset_30m
       expr: |
-        (sum by (className, action) ((last_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)) or
-            0 * (sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[60m])
-            unless last_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)))))
+        (sum by (className, action) ((max_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)) or
+            0 * (sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[60m])
+            unless max_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)))))
       labels:
         name: "Value of counters for denmark for 30 minutes with 30 minutes shift for all outcomes"
         service: aggregation
@@ -51,23 +51,7 @@ spec:
     ## COUNTER VALUES DEPENDING ON THE OUTCOME
     - record: sum:tink_agent_login_denmark:all:delta60m
       expr: |
-        sum by (className, action) (last_over_time(tink_agent_login_total{market="DK"}[60m]))
-      labels:
-        name: "Value of counters for denmark for last 60 minutes for all outcomes"
-        service: aggregation
-        owner: teletubbies
-        product: "aggregation"
-    - record: sum:tink_agent_login_denmark:all_max:delta60m
-      expr: |
         sum by (className, action) (max_over_time(tink_agent_login_total{market="DK"}[60m]))
-      labels:
-        name: "Value of counters for denmark for last 60 minutes for all outcomes"
-        service: aggregation
-        owner: teletubbies
-        product: "aggregation"
-    - record: sum:tink_agent_login_denmark:all_raw:delta
-      expr: |
-        sum by (className, action) (tink_agent_login_total{market="DK"})
       labels:
         name: "Value of counters for denmark for last 60 minutes for all outcomes"
         service: aggregation
@@ -75,7 +59,7 @@ spec:
         product: "aggregation"
     - record: sum:tink_agent_login_denmark:unavailable:delta60m
       expr: |
-        sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[60m]))
+        sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[60m]))
       labels:
         name: "Value of counters for denmark for last 60 minutes for unavailable (bank error) outcome"
         service: aggregation
@@ -83,7 +67,7 @@ spec:
         product: "aggregation"
     - record: sum:tink_agent_login_denmark:temporary_errors:delta60m
       expr: |
-        sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[60m]))
+        sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[60m]))
       labels:
         name: "Value of counters for denmark for last 60 minutes for temporary errors outcome"
         service: aggregation
@@ -91,7 +75,7 @@ spec:
         product: "aggregation"
     - record: sum:tink_agent_login_denmark:all_errors:delta60m
       expr: |
-        sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[60m]))
+        sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[60m]))
       labels:
         name: "Value of counters for denmark for last 60 minutes for temporary errors outcome"
         service: aggregation
