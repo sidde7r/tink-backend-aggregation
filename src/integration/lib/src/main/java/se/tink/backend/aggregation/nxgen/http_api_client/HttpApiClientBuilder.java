@@ -132,7 +132,7 @@ public class HttpApiClientBuilder {
                         redirectUrl -> client.addVariable(VariableKey.REDIRECT_URI, redirectUrl));
 
         Optional.ofNullable(secretsConfiguration.get(AgentConfigurationController.QSEALC_KEY))
-                .ifPresent(qsealc -> client.addVariable(VariableKey.SIGNATURE_PUBLIC_KEY, qsealc));
+                .ifPresent(qsealc -> client.addVariable(VariableKey.SIGNATURE_CERTIFICATE, qsealc));
 
         Optional.ofNullable(secretsConfiguration.get("apiKey"))
                 .ifPresent(apiKey -> client.addVariable(VariableKey.API_KEY, apiKey));
