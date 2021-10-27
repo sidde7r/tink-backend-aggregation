@@ -11,6 +11,7 @@ import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -275,7 +276,7 @@ public final class AgentWireMockRefreshTestBuilder {
         return new AgentWireMockRefreshTest(
                 market,
                 providerName,
-                null,
+                new WireMockTestServer(true),
                 wireMockFiles,
                 configuration,
                 credentialFields,
@@ -292,7 +293,6 @@ public final class AgentWireMockRefreshTestBuilder {
                 requestManual,
                 requestCreate,
                 requestUpdate,
-                true,
                 false,
                 prepareUserAvailability());
     }

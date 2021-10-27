@@ -77,7 +77,6 @@ public final class AgentWireMockRefreshTest {
             boolean requestFlagManual,
             boolean requestFlagCreate,
             boolean requestFlagUpdate,
-            boolean wireMockServerLogsEnabled,
             boolean forceAutoAuthentication,
             UserAvailability userAvailability) {
 
@@ -85,7 +84,7 @@ public final class AgentWireMockRefreshTest {
 
         this.wireMockTestServer =
                 Optional.ofNullable(wireMockTestServer)
-                        .orElseGet(newWireMockServer(wireMockServerLogsEnabled))
+                        .orElseGet(newWireMockServer())
                         .withRequestResponsePairs(aapFileParsers);
 
         rawBankDataEventAccumulator = new RawBankDataEventAccumulator();
@@ -202,9 +201,8 @@ public final class AgentWireMockRefreshTest {
         return new AgentWireMockRefreshTestNxBuilder();
     }
 
-    private static Supplier<WireMockTestServer> newWireMockServer(
-            boolean wireMockServerLogsEnabled) {
-        return () -> new WireMockTestServer(wireMockServerLogsEnabled);
+    private static Supplier<WireMockTestServer> newWireMockServer() {
+        return () -> new WireMockTestServer(false);
     }
 
     private static RequestResponseParser aapFileParser(File aapFile) {

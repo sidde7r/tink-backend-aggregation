@@ -82,8 +82,6 @@ public final class AgentWireMockRefreshTestNxBuilder
 
     private boolean httpDebugTraceEnabled;
 
-    private boolean wireMockServerLogsEnabled;
-
     private boolean dumpContentForContractFile;
 
     private boolean requestFlagManual;
@@ -107,7 +105,6 @@ public final class AgentWireMockRefreshTestNxBuilder
         this.cache = new HashMap<>();
         this.refreshableItems = new HashSet<>();
         this.httpDebugTraceEnabled = false;
-        this.wireMockServerLogsEnabled = false;
         this.dumpContentForContractFile = false;
         this.requestFlagManual = true;
         this.requestFlagCreate = false;
@@ -340,12 +337,6 @@ public final class AgentWireMockRefreshTestNxBuilder
     }
 
     @Override
-    public BuildStep enableWireMockServerLogs() {
-        this.wireMockServerLogsEnabled = true;
-        return this;
-    }
-
-    @Override
     public AgentWireMockRefreshTest build() {
         return new AgentWireMockRefreshTest(
                 marketCode,
@@ -367,7 +358,6 @@ public final class AgentWireMockRefreshTestNxBuilder
                 requestFlagManual,
                 requestFlagCreate,
                 requestFlagUpdate,
-                wireMockServerLogsEnabled,
                 forceAutoAuthentication,
                 userAvailability);
     }

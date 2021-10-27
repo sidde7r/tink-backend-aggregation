@@ -73,9 +73,6 @@ public interface BuildStep {
     /** Enable printing of http debug trace */
     BuildStep enableHttpDebugTrace();
 
-    /** Enable printing of wire mock server logs */
-    BuildStep enableWireMockServerLogs();
-
     /**
      * Enable printing of processed data from .aap file (response body mapped to tink model) Output
      * can be used to fill contract json file
