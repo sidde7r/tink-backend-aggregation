@@ -1,10 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class BunqConstants {
 
     private BunqConstants() {}
+
+    public static final class Cluster {
+        public static final ImmutableList<String> LEEDS =
+                ImmutableList.of("leeds-staging", "leeds-production");
+    }
 
     public static final class Urls {
         public static final URL TOKEN_EXCHANGE = new URL("https://api.oauth.bunq.com/v1/token");
@@ -35,9 +41,12 @@ public final class BunqConstants {
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
+        public static final String INVALID_CREDENTIALS =
+                "User credentials are incorrect. Incorrect API key or IP address.";
     }
 
     public static class Token {
+        public static final String BEARER = "bearer";
         public static final long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 90 * 24 * 60 * 60L;
     }
 }

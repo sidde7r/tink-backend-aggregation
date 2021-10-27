@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authe
 
 import java.lang.invoke.MethodHandles;
 import java.security.KeyPair;
-import org.apache.http.HttpStatus;
-import org.assertj.core.util.Strings;
+import java.util.Objects;
+import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -125,15 +126,15 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                         agentConfiguration.getClientId(),
                         agentConfiguration.getClientSecret());
 
-        if (!"bearer".equals(tokenExchangeResponse.getTokenType())) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception(
-                    "Token is not of bearer type"
-                            + (Strings.isNullOrEmpty(tokenExchangeResponse.getTokenType())
-                                    ? "."
-                                    : ": " + tokenExchangeResponse.getTokenType()));
-        }
+        throwBankServiceError(tokenExchangeResponse.getTokenType());
 
         return tokenExchangeResponse.toTinkToken();
+    }
+
+    private void throwBankServiceError(final String tokenType) {
+        if (!BunqConstants.Token.BEARER.equals(tokenType)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Invalid token type: " + tokenType);
+        }
     }
 
     @Override
@@ -201,10 +202,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
 
             // By request from ABN they don't want us throw SESSION_EXPIRED for credentials stuck in
             // temp error. This will most likely be removed when they've decided what to do.
-            if ("leeds-production".equalsIgnoreCase(clusterId)
-                    || "leeds-staging".equalsIgnoreCase(clusterId)) {
-                throw e;
-            }
+            throwIfClusterIsLeeds(e);
 
             // From Bunq documentation: "When using a standard API Key the DeviceServer and
             // Installation that are created in this process are bound to the IP address they are
@@ -213,17 +211,31 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
             // This error happens because we did not use the wildcard option when registering the
             // device. Credentials created before the change to use wildcard needs to be put in
             // AUTH_ERROR so that we trigger a new SCA and re-register the device with the wildcard.
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-                if (errorResponse != null && errorResponse.isIncorrectApiKeyOrIpAddressError()) {
-                    // Needs to be cleared for the requests before the SCA to work
-                    sessionStorage.remove(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN);
-
-                    throw SessionError.SESSION_EXPIRED.exception();
-                }
-            }
-
+            throwSessionError(e.getResponse());
             // re-throw unhandled exception
+            throw e;
+        }
+    }
+
+    private void throwSessionError(HttpResponse response) {
+        checkErrorResponseBodyType(response);
+        ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+        if (!Objects.isNull(errorResponse) && errorResponse.isIncorrectApiKeyOrIpAddressError()) {
+            // Needs to be cleared for the requests before the SCA to work
+            sessionStorage.remove(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN);
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private static void checkErrorResponseBodyType(HttpResponse httpResponse) {
+        if (!MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Invalid error response format : " + httpResponse.getBody(String.class));
+        }
+    }
+
+    private void throwIfClusterIsLeeds(HttpResponseException e) {
+        if (BunqConstants.Cluster.LEEDS.stream().anyMatch(c -> c.equals(clusterId))) {
             throw e;
         }
     }

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authe
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.entities.ErrorEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -18,7 +19,7 @@ public class ErrorResponse {
 
         // This will be used to decide if we should throw SESSION_EXPIRED. Comparing against the
         // exact error description since it's very important that we don't get it wrong.
-        return "User credentials are incorrect. Incorrect API key or IP address."
-                .equalsIgnoreCase(errors.get(0).getErrorDescription());
+        return BunqConstants.ErrorMessages.INVALID_CREDENTIALS.equalsIgnoreCase(
+                errors.get(0).getErrorDescription());
     }
 }
