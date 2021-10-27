@@ -57,6 +57,22 @@ spec:
         service: aggregation
         owner: teletubbies
         product: "aggregation"
+    - record: sum:tink_agent_login_denmark:all_max:delta60m
+      expr: |
+        sum by (className, action) (max_over_time(tink_agent_login_total{market="DK"}[60m]))
+      labels:
+        name: "Value of counters for denmark for last 60 minutes for all outcomes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
+    - record: sum:tink_agent_login_denmark:all_raw:delta
+      expr: |
+        sum by (className, action) (tink_agent_login_total{market="DK"})
+      labels:
+        name: "Value of counters for denmark for last 60 minutes for all outcomes"
+        service: aggregation
+        owner: teletubbies
+        product: "aggregation"
     - record: sum:tink_agent_login_denmark:unavailable:delta60m
       expr: |
         sum by (className, action) (last_over_time(tink_agent_login_total{market="DK", outcome="unavailable"}[60m]))
@@ -133,11 +149,11 @@ spec:
         service: aggregation
         owner: teletubbies
         product: "aggregation"
-    - record: service_level:tink_agent_login_denmark:unavailable:delta30m
+    - record: service_level:tink_agent_login_denmark:all_errors:delta30m
       expr: |
         (sum:tink_agent_login_denmark:effectively_all_errors:delta30m) / (sum:tink_agent_login_denmark:effectively_all:delta30m)
       labels:
-        name: "Denmark percentage of unavailable (bank error) events"
+        name: "Denmark percentage of all errors events"
         service: aggregation
         owner: teletubbies
         product: "aggregation"
