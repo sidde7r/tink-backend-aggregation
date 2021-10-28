@@ -46,9 +46,9 @@ import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
@@ -127,9 +127,9 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
 
         LogMasker logMasker = new FakeLogMasker();
         setLogMasker(logMasker);
-        HttpAapLogger.consoleOutputLogger().ifPresent(this::setHttpAapLogger);
-        setHttpJsonLogger(
-                new HttpJsonLogger(
+        RawHttpTrafficLogger.consoleOutputLogger().ifPresent(this::setRawHttpTrafficLogger);
+        setJsonHttpTrafficLogger(
+                new JsonHttpTrafficLogger(
                         HttpJsonLogMetaEntity.builder()
                                 .agentName(provider.getClassName())
                                 .providerName(provider.getName())

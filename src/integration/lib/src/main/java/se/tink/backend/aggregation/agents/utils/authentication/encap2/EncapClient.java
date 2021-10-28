@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.SamlRe
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapSoapUtils;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -41,11 +40,11 @@ public class EncapClient {
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
-                        context.getHttpAapLogger(),
+                        context.getRawHttpTrafficLogger(),
                         signatureKeyPair,
                         request.getProvider(),
                         context.getLogMasker(),
-                        LogMaskerImpl.shouldLog(request.getProvider()));
+                        context.getLogMasker().shouldLog(request.getProvider()));
 
         // Encap does not like it when we send our signature header.
         this.httpClient.disableSignatureRequestHeader();

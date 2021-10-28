@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -33,8 +33,8 @@ public abstract class AgentContext implements CompositeAgentContext {
     protected RefreshSummary refreshSummary;
     protected AgentTemporaryStorage agentTemporaryStorage;
     private LogMasker logMasker;
-    private HttpAapLogger httpAapLogger;
-    private HttpJsonLogger httpJsonLogger;
+    private RawHttpTrafficLogger rawHttpTrafficLogger;
+    private JsonHttpTrafficLogger jsonHttpTrafficLogger;
     protected RawBankDataEventAccumulator rawBankDataEventAccumulator;
     protected String correlationId;
     private RefreshableItem refreshableItemInProgress;
@@ -183,23 +183,23 @@ public abstract class AgentContext implements CompositeAgentContext {
     }
 
     @Override
-    public HttpAapLogger getHttpAapLogger() {
-        return httpAapLogger;
+    public RawHttpTrafficLogger getRawHttpTrafficLogger() {
+        return rawHttpTrafficLogger;
     }
 
     @Override
-    public void setHttpAapLogger(HttpAapLogger httpAapLogger) {
-        this.httpAapLogger = httpAapLogger;
+    public void setRawHttpTrafficLogger(RawHttpTrafficLogger rawHttpTrafficLogger) {
+        this.rawHttpTrafficLogger = rawHttpTrafficLogger;
     }
 
     @Override
-    public HttpJsonLogger getHttpJsonLogger() {
-        return httpJsonLogger;
+    public JsonHttpTrafficLogger getJsonHttpTrafficLogger() {
+        return jsonHttpTrafficLogger;
     }
 
     @Override
-    public void setHttpJsonLogger(HttpJsonLogger httpJsonLogger) {
-        this.httpJsonLogger = httpJsonLogger;
+    public void setJsonHttpTrafficLogger(JsonHttpTrafficLogger jsonHttpTrafficLogger) {
+        this.jsonHttpTrafficLogger = jsonHttpTrafficLogger;
     }
 
     @Override

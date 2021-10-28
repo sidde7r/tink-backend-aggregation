@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.configuration.SdcConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
@@ -68,8 +69,7 @@ public class SdcApiClientTest {
     public void setup() {
         TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMaskerImpl(),
-                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                                new LogMaskerImpl(), LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
 
         persistentStorage = mock(PersistentStorage.class);

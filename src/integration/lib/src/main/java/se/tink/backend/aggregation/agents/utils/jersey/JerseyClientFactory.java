@@ -18,8 +18,8 @@ import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.TextUtils;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.net.client.factory.AbstractJerseyClientFactory;
 import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
@@ -44,48 +44,49 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         this.loggingMode = loggingMode;
     }
 
-    public Client createBasicClient(HttpAapLogger httpAapLogger) {
+    public Client createBasicClient(RawHttpTrafficLogger rawHttpTrafficLogger) {
 
         Client client = createBasicClient();
-        addLoggingFilter(httpAapLogger, client);
+        addLoggingFilter(rawHttpTrafficLogger, client);
 
         return client;
     }
 
-    public TinkApacheHttpClient4 createCustomClient(HttpAapLogger httpAapLogger) {
-        return createCustomClient(httpAapLogger, new DefaultApacheHttpClient4Config());
+    public TinkApacheHttpClient4 createCustomClient(RawHttpTrafficLogger rawHttpTrafficLogger) {
+        return createCustomClient(rawHttpTrafficLogger, new DefaultApacheHttpClient4Config());
     }
 
     public TinkApacheHttpClient4 createCustomClient(
-            HttpAapLogger httpAapLogger, ApacheHttpClient4Config clientConfig) {
+            RawHttpTrafficLogger rawHttpTrafficLogger, ApacheHttpClient4Config clientConfig) {
 
         TinkApacheHttpClient4 client = createCustomClient(clientConfig);
-        addLoggingFilter(httpAapLogger, client);
+        addLoggingFilter(rawHttpTrafficLogger, client);
 
         return client;
     }
 
-    public ApacheHttpClient4 createCookieClient(HttpAapLogger httpAapLogger) {
+    public ApacheHttpClient4 createCookieClient(RawHttpTrafficLogger rawHttpTrafficLogger) {
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
 
-        return createCookieClient(httpAapLogger, clientConfig);
+        return createCookieClient(rawHttpTrafficLogger, clientConfig);
     }
 
     public ApacheHttpClient4 createCookieClient(
-            HttpAapLogger httpAapLogger, ApacheHttpClient4Config clientConfig) {
+            RawHttpTrafficLogger rawHttpTrafficLogger, ApacheHttpClient4Config clientConfig) {
 
         ApacheHttpClient4 client = createCookieClient(clientConfig);
-        addLoggingFilter(httpAapLogger, client);
+        addLoggingFilter(rawHttpTrafficLogger, client);
 
         return client;
     }
 
-    public TinkApacheHttpClient4 createClientWithRedirectHandler(HttpAapLogger httpAapLogger) {
-        return createClientWithRedirectHandler(httpAapLogger, createRedirectStrategy());
+    public TinkApacheHttpClient4 createClientWithRedirectHandler(
+            RawHttpTrafficLogger rawHttpTrafficLogger) {
+        return createClientWithRedirectHandler(rawHttpTrafficLogger, createRedirectStrategy());
     }
 
     public TinkApacheHttpClient4 createClientWithRedirectHandler(
-            HttpAapLogger httpAapLogger, RedirectStrategy redirectStrategy) {
+            RawHttpTrafficLogger rawHttpTrafficLogger, RedirectStrategy redirectStrategy) {
         BasicCookieStore cookieStore = new BasicCookieStore();
         RequestConfig requestConfig = RequestConfig.custom().build();
 
@@ -102,7 +103,7 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         TinkApacheHttpClient4 tinkJerseyClient =
                 new TinkApacheHttpClient4(tinkJerseyApacheHttpsClientHandler);
 
-        tinkJerseyClient.addFilter(new LoggingFilter(httpAapLogger, logMasker, loggingMode));
+        tinkJerseyClient.addFilter(new LoggingFilter(rawHttpTrafficLogger, logMasker, loggingMode));
 
         tinkJerseyClient.setChunkedEncodingSize(null);
         return tinkJerseyClient;
@@ -134,9 +135,9 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         };
     }
 
-    public void addLoggingFilter(HttpAapLogger httpAapLogger, Client client) {
-        if (httpAapLogger != null) {
-            client.addFilter(new LoggingFilter(httpAapLogger, logMasker, loggingMode));
+    public void addLoggingFilter(RawHttpTrafficLogger rawHttpTrafficLogger, Client client) {
+        if (rawHttpTrafficLogger != null) {
+            client.addFilter(new LoggingFilter(rawHttpTrafficLogger, logMasker, loggingMode));
         }
     }
 }

@@ -6,6 +6,7 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_reactivex_rxjava3_rxjava",

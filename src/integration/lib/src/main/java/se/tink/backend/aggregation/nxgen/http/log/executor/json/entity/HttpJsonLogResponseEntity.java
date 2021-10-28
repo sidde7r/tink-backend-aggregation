@@ -4,9 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDateTime;
 import java.util.Map;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.json.serializers.LocalDateTimeSerializer;
 
+@Getter
+@EqualsAndHashCode
 @JsonObject
 @Builder
 public class HttpJsonLogResponseEntity {

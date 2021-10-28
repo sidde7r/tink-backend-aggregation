@@ -107,7 +107,7 @@ public final class IcsAgent extends AbstractAgent implements RefreshCreditCardAc
             this.ibSubscriptionClient =
                     new IBSubscriptionClient(
                             clientFactory,
-                            context.getHttpAapLogger(),
+                            context.getRawHttpTrafficLogger(),
                             abnAmroConfiguration,
                             metricRegistry);
         } catch (Exception e) {

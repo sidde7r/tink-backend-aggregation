@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.nxgen.http.log.executor.aap;
+package se.tink.backend.aggregation.nxgen.http.log.executor.raw;
 
 import java.util.Date;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.RequestLogEntry;
@@ -17,15 +17,15 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
  * by different adapters to preserve requests numeration
  */
 @RequiredArgsConstructor
-public class HttpAapLoggingExecutor implements LoggingExecutor {
+public class RawHttpTrafficLoggingExecutor implements LoggingExecutor {
 
     private static final String NOTIFICATION_PREFIX = "* ";
     private static final String REQUEST_PREFIX = "> ";
     private static final String RESPONSE_PREFIX = "< ";
 
-    private final HttpAapLogger httpAapLogger;
+    private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final LogMasker logMasker;
-    private final LogMaskerImpl.LoggingMode loggingMode;
+    private final LoggingMode loggingMode;
 
     private long requestId = 0;
 
@@ -49,7 +49,7 @@ public class HttpAapLoggingExecutor implements LoggingExecutor {
         b.append(response.getBody());
         b.append("\n");
 
-        httpAapLogger.log(b.toString(), logMasker, loggingMode);
+        rawHttpTrafficLogger.log(b.toString(), logMasker, loggingMode);
     }
 
     private void printResponseLine(StringBuilder b, long id, ResponseLogEntry response) {
@@ -86,7 +86,7 @@ public class HttpAapLoggingExecutor implements LoggingExecutor {
             b.append("\n");
         }
 
-        httpAapLogger.log(b.toString(), logMasker, loggingMode);
+        rawHttpTrafficLogger.log(b.toString(), logMasker, loggingMode);
     }
 
     private void printRequestLine(StringBuilder b, long id, RequestLogEntry request) {

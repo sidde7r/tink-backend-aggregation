@@ -17,7 +17,7 @@ public class HttpDebugTraceCommand implements CompositeAgentTestCommand {
     @Override
     public void execute() throws Exception {
         final LogMasker logMasker = context.getLogMasker();
-        final String maskedLog = logMasker.mask(context.getHttpAapLogger().toString());
+        final String maskedLog = logMasker.mask(context.getRawHttpTrafficLogger().toString());
 
         System.out.println();
         System.out.println("===== HTTP DEBUG TRACE LOG =====");

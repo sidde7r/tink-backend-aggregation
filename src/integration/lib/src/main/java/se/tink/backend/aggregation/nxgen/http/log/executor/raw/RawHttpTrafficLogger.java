@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.log.executor.aap;
+package se.tink.backend.aggregation.nxgen.http.log.executor.raw;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,35 +12,36 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.executor.HttpTrafficLogger;
 
 @Slf4j
 @RequiredArgsConstructor
-public class HttpAapLogger {
+public class RawHttpTrafficLogger implements HttpTrafficLogger {
 
-    private static final LogTag LOG_TAG = LogTag.from("[HttpAapLogger]");
+    private static final LogTag LOG_TAG = LogTag.from("[RawHttpTrafficLogger]");
 
     @Getter private final OutputStream loggingOutputStream;
     @Getter private final PrintStream loggingPrintStream;
 
-    public static Optional<HttpAapLogger> consoleOutputLogger() {
+    public static Optional<RawHttpTrafficLogger> consoleOutputLogger() {
         try {
             OutputStream outputStream = System.out;
             PrintStream printStream = createPrintStream(outputStream);
 
-            return Optional.of(new HttpAapLogger(outputStream, printStream));
+            return Optional.of(new RawHttpTrafficLogger(outputStream, printStream));
         } catch (Exception e) {
             log.error("{} Could not construct LoggingExecutor", LOG_TAG, e);
             return Optional.empty();
         }
     }
 
-    public static Optional<HttpAapLogger> inMemoryLogger() {
+    public static Optional<RawHttpTrafficLogger> inMemoryLogger() {
         try {
             OutputStream outputStream = new ByteArrayOutputStream();
             PrintStream printStream = createPrintStream(outputStream);
 
-            return Optional.of(new HttpAapLogger(outputStream, printStream));
+            return Optional.of(new RawHttpTrafficLogger(outputStream, printStream));
         } catch (Exception e) {
             log.error("{} Could not construct LoggingExecutor", LOG_TAG, e);
             return Optional.empty();
@@ -55,7 +56,7 @@ public class HttpAapLogger {
     /**
      * Use this method to safely store HTTP traffic
      *
-     * @param logContent - content of HTTP request/response in AAP format
+     * @param logContent - content of HTTP request/response
      * @param logMasker - log masker to mask sensitive values
      * @param loggingMode - logging mode
      */
@@ -69,11 +70,11 @@ public class HttpAapLogger {
      * UNSAFE
      *
      * <p>Do NOT use unless you're sure you don't have to mask the log content. This method exists
-     * to allow logging some additional things, not necessarily http traffic in AAP format, e.g.
-     * HTML content of screen scraped websites.
+     * to allow logging some additional things, not necessarily http traffic in "AAP like" format,
+     * e.g. HTML content of screen scraped websites.
      *
      * <p>NOTE: In future, when we will need to log additional stuff, it would be better to prepare
-     * a separate logger to avoid mixing AAP logs with some other arbitrary data.
+     * a separate logger to avoid mixing raw ("AAP like logs") with some other arbitrary data.
      *
      * @param logContentWithoutSensitiveValues - content of the log that has no sensitive values
      */
@@ -81,12 +82,18 @@ public class HttpAapLogger {
         loggingPrintStream.print(logContentWithoutSensitiveValues);
     }
 
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
     public Optional<String> tryGetLogContent() {
         try {
             return Optional.of(getLogContentInternal());
 
         } catch (IOException | RuntimeException e) {
-            log.error("{} Could not read AAP logs", LOG_TAG, e);
+            log.error("{} Could not read raw http logs", LOG_TAG, e);
         }
         return Optional.empty();
     }

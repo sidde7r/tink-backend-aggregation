@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.body.
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -35,8 +35,7 @@ public class WireMockErrorDetectorTest {
         // given
         NextGenTinkHttpClient nextGenhttpClient =
                 NextGenTinkHttpClient.builder(
-                                new FakeLogMasker(),
-                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                                new FakeLogMasker(), LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
 
         server =

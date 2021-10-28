@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
@@ -11,6 +12,9 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**
@@ -73,5 +77,15 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
 
     public LogMasker getLogMasker() {
         return logMasker;
+    }
+
+    /**
+     * Note that HTTP JSON logs will be empty unless you use {@link NextGenTinkHttpClient} with
+     * {@link LoggingStrategy#EXPERIMENTAL} (or when you use {@link JsonHttpTrafficLogger} directly
+     * in your own logging solution).
+     */
+    public void setJsonHttpTrafficLogsEnabled(boolean enabled) {
+        Optional.ofNullable(context.getJsonHttpTrafficLogger())
+                .ifPresent(logger -> logger.setEnabled(enabled));
     }
 }

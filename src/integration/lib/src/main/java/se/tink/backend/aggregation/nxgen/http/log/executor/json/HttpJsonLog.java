@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.http.log.executor.json;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogExchangeEntity;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
@@ -13,5 +14,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonL
 public class HttpJsonLog {
 
     private final HttpJsonLogMetaEntity meta;
+
+    @Singular("addHttp")
     private final List<HttpJsonLogExchangeEntity> http;
 }

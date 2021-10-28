@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -75,7 +75,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
                         new LegacyTinkHttpClient(
                                 context.getAggregatorInfo(),
                                 context.getMetricRegistry(),
-                                context.getHttpAapLogger(),
+                                context.getRawHttpTrafficLogger(),
                                 null,
                                 null,
                                 context.getLogMasker(),

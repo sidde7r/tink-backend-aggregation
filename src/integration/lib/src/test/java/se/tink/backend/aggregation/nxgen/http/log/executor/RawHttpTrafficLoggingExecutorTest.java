@@ -14,23 +14,23 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLoggingExecutor;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLoggingExecutor;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LoggingExecutorTest {
+public class RawHttpTrafficLoggingExecutorTest {
 
     private LoggingExecutor loggingExecutor;
 
-    private HttpAapLogger httpAapLogger;
+    private RawHttpTrafficLogger rawHttpTrafficLogger;
 
     @Mock private LogMasker logMasker;
 
     @Before
     public void init() {
-        httpAapLogger =
-                HttpAapLogger.inMemoryLogger()
+        rawHttpTrafficLogger =
+                RawHttpTrafficLogger.inMemoryLogger()
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -42,13 +42,13 @@ public class LoggingExecutorTest {
     @Test
     public void shouldLogWhenLoggingMaskerCoversSecrets() {
         loggingExecutor =
-                new HttpAapLoggingExecutor(
-                        httpAapLogger, logMasker, LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
+                new RawHttpTrafficLoggingExecutor(
+                        rawHttpTrafficLogger, logMasker, LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         loggingExecutor.log(exampleRequest());
         loggingExecutor.log(exampleResponse());
 
-        Optional<String> result = httpAapLogger.tryGetLogContent();
+        Optional<String> result = rawHttpTrafficLogger.tryGetLogContent();
 
         assertThat(result).isPresent();
         String[] lines = result.get().split("\n");
@@ -70,13 +70,15 @@ public class LoggingExecutorTest {
     @Test
     public void shouldNotLogWhenLoggingMaskerUnsure() {
         loggingExecutor =
-                new HttpAapLoggingExecutor(
-                        httpAapLogger, logMasker, LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS);
+                new RawHttpTrafficLoggingExecutor(
+                        rawHttpTrafficLogger,
+                        logMasker,
+                        LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS);
 
         loggingExecutor.log(exampleRequest());
         loggingExecutor.log(exampleResponse());
 
-        String result = httpAapLogger.getLoggingOutputStream().toString();
+        String result = rawHttpTrafficLogger.getLoggingOutputStream().toString();
 
         assertThat(result).isEmpty();
     }

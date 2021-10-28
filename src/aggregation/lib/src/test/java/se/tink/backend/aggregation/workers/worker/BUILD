@@ -11,7 +11,7 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/events",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/logs",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/concurrency",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",

@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConsta
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
@@ -41,11 +41,11 @@ public class RuralviaAuthenticator implements Authenticator {
     public RuralviaAuthenticator(
             RuralviaApiClient apiClient,
             AgentTemporaryStorage agentTemporaryStorage,
-            HttpAapLogger httpAapLogger) {
+            RawHttpTrafficLogger rawHttpTrafficLogger) {
         this.apiClient = apiClient;
         this.agentTemporaryStorage = agentTemporaryStorage;
         this.driver = createDriver(agentTemporaryStorage);
-        this.htmlLogger = new HtmlLogger(driver, httpAapLogger);
+        this.htmlLogger = new HtmlLogger(driver, rawHttpTrafficLogger);
     }
 
     @Override

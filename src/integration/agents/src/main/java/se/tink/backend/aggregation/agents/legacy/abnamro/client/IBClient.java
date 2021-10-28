@@ -5,7 +5,7 @@ import com.sun.jersey.api.client.WebResource.Builder;
 import javax.ws.rs.core.NewCookie;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
@@ -21,13 +21,13 @@ public class IBClient extends Client {
     protected IBClient(
             Class<? extends Client> cls,
             JerseyClientFactory clientFactory,
-            HttpAapLogger httpAapLogger,
+            RawHttpTrafficLogger rawHttpTrafficLogger,
             AbnAmroConfiguration abnAmroConfiguration,
             MetricRegistry metricRegistry) {
         super(
                 cls,
                 clientFactory,
-                httpAapLogger,
+                rawHttpTrafficLogger,
                 abnAmroConfiguration.getTrustStoreConfiguration(),
                 abnAmroConfiguration.getInternetBankingConfiguration().getHost());
 

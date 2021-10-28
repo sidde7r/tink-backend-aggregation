@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
@@ -15,6 +18,9 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.endpoints.dropwizard.EndpointsConfiguration;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AgentsServiceConfiguration {
     @JsonProperty private AbnAmroConfiguration abnAmroStaging = new AbnAmroConfiguration();

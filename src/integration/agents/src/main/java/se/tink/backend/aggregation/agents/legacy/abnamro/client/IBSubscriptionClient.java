@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroInternetBankingConfiguration;
-import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
@@ -36,13 +36,13 @@ public class IBSubscriptionClient extends IBClient {
 
     public IBSubscriptionClient(
             JerseyClientFactory clientFactory,
-            HttpAapLogger httpAapLogger,
+            RawHttpTrafficLogger rawHttpTrafficLogger,
             AbnAmroConfiguration abnAmroConfiguration,
             MetricRegistry metricRegistry) {
         super(
                 IBSubscriptionClient.class,
                 clientFactory,
-                httpAapLogger,
+                rawHttpTrafficLogger,
                 abnAmroConfiguration,
                 metricRegistry);
 

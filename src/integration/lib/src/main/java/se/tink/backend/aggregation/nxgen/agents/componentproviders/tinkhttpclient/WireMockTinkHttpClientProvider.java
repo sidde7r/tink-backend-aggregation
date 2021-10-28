@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclie
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -26,10 +25,10 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
         final TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
                                 context.getLogMasker(),
-                                LogMaskerImpl.shouldLog(credentialsRequest.getProvider()))
+                                context.getLogMasker().shouldLog(credentialsRequest.getProvider()))
                         .setAggregatorInfo(context.getAggregatorInfo())
                         .setMetricRegistry(context.getMetricRegistry())
-                        .setHttpAapLogger(context.getHttpAapLogger())
+                        .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
                         .setRawBankDataEventEmissionComponents(

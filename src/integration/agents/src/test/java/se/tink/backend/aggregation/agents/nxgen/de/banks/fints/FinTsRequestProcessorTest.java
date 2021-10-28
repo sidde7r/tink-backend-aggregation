@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.FinTsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.SegmentType;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.TanAnswerProvider;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -115,8 +116,7 @@ public class FinTsRequestProcessorTest {
             FinTsDialogContext context, FinTsConfiguration configuration) {
         TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMaskerImpl(),
-                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                                new LogMaskerImpl(), LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
 
         FinTsRequestSender sender = new FinTsRequestSender(httpClient, configuration.getEndpoint());

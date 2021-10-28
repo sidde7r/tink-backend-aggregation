@@ -27,7 +27,8 @@ s3StorageConfiguration:
   enabled: True
   url: "https://s3.eu-west-1.amazonaws.com"
   region: "eu-west-1"
-  agentDebugBucketName: "aggregation-staging-agent-debug-20180917063035423800000001"
+  agentHttpRawLogsBucketName: "aggregation-staging-agent-debug-20180917063035423800000001"
+  agentHttpJsonLogsBucketName: "agent-integration-http-json-logs-aggregation-production"
 
 agents:
   danskeBankDK: true

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclie
 
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -22,11 +21,11 @@ public final class LegacyTinkHttpClientProvider implements TinkHttpClientProvide
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
-                        context.getHttpAapLogger(),
+                        context.getRawHttpTrafficLogger(),
                         signatureKeyPair,
                         credentialsRequest.getProvider(),
                         context.getLogMasker(),
-                        LogMaskerImpl.shouldLog(credentialsRequest.getProvider()));
+                        context.getLogMasker().shouldLog(credentialsRequest.getProvider()));
     }
 
     @Override

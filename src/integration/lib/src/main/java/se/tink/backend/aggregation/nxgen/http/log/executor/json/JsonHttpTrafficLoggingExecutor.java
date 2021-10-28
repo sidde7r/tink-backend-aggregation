@@ -13,9 +13,9 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonL
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogResponseEntity;
 
 @RequiredArgsConstructor
-public class HttpJsonLoggingExecutor implements LoggingExecutor {
+public class JsonHttpTrafficLoggingExecutor implements LoggingExecutor {
 
-    private final HttpJsonLogger httpJsonLogger;
+    private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
     @Override
     public void log(RequestLogEntry entry) {
@@ -27,7 +27,7 @@ public class HttpJsonLoggingExecutor implements LoggingExecutor {
                         .body(entry.getBody())
                         .headers(maskSensitiveHeaders(entry.getHeaders()))
                         .build();
-        httpJsonLogger.addRequestLog(requestEntity);
+        jsonHttpTrafficLogger.addRequestLog(requestEntity);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class HttpJsonLoggingExecutor implements LoggingExecutor {
                         .body(entry.getBody())
                         .headers(maskSensitiveHeaders(entry.getHeaders()))
                         .build();
-        httpJsonLogger.addResponseLog(requestEntity);
+        jsonHttpTrafficLogger.addResponseLog(requestEntity);
     }
 
     private static Map<String, String> maskSensitiveHeaders(Map<String, String> headers) {

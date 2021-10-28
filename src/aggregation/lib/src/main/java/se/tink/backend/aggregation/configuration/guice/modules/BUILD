@@ -26,7 +26,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/repositories",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/logs",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/abort",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands/state/configuration",

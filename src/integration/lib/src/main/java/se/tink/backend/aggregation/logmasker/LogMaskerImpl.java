@@ -49,16 +49,6 @@ public class LogMaskerImpl implements LogMasker {
         this.whitelistedValues.addAll(agentWhitelistedValues);
         masker.removeValuesToMask(whitelistedValues);
     }
-    /**
-     * This enumeration decides if logging should be done or not. NOTE: Only pass
-     * LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the masker will handle your
-     * secrets. If that is not the case, you pass the other one. Or use {@link #shouldLog(Provider)}
-     * instead.
-     */
-    public enum LoggingMode {
-        LOGGING_MASKER_COVERS_SECRETS,
-        UNSURE_IF_MASKER_COVERS_SECRETS
-    }
 
     private boolean shouldMask(Pattern sensitiveValue) {
 
@@ -97,7 +87,8 @@ public class LogMaskerImpl implements LogMasker {
         new Base64DecodedMaskerValuesProvider(newSensitiveValues), this::shouldMask);*/
     }
 
-    public static LoggingMode shouldLog(Provider provider) {
+    @Override
+    public LoggingMode shouldLog(Provider provider) {
         if (!MARKETS_MASKER_COVERS_SECRETS_FOR.contains(provider.getMarket().toLowerCase())) {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }

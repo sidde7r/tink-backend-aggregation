@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.wiremock;
 
-import static se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
+import static se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
 
 import com.google.common.collect.ImmutableSet;
 import java.io.File;

@@ -62,7 +62,6 @@ import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -140,11 +139,11 @@ public final class NorwegianAgent extends AbstractAgent
                 new LegacyTinkHttpClient(
                         getAggregatorInfo(),
                         null,
-                        context.getHttpAapLogger(),
+                        context.getRawHttpTrafficLogger(),
                         signatureKeyPair,
                         request.getProvider(),
                         context.getLogMasker(),
-                        LogMaskerImpl.shouldLog(request.getProvider()));
+                        context.getLogMasker().shouldLog(request.getProvider()));
     }
 
     @Override

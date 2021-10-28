@@ -19,7 +19,6 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.http.client.LoggingScope;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
@@ -156,11 +155,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     @Override
     public void setLoggingStrategy(LoggingStrategy loggingStrategy) {
         tinkHttpClient.setLoggingStrategy(loggingStrategy);
-    }
-
-    @Override
-    public void setLoggingScopes(LoggingScope... loggingScopes) {
-        tinkHttpClient.setLoggingScopes(loggingScopes);
     }
 
     @Override

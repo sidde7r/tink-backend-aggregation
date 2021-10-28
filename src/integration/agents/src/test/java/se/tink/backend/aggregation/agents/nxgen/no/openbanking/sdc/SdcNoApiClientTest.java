@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.configuration.SdcConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -40,8 +41,7 @@ public class SdcNoApiClientTest {
     public void setup() {
         TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMaskerImpl(),
-                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                                new LogMaskerImpl(), LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
 
         persistentStorage = mock(PersistentStorage.class);
