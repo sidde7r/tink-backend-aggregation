@@ -68,50 +68,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         apiClient.addBankServiceInternalErrorFilter();
     }
 
-    private void validateTransferOrThrow(Transfer transfer) {
-        throwIfNotBgOrPgPayment(transfer);
-        throwIfAmountIsLessThanMinAmount(transfer);
-        throwIfUnstructuredRefLongerThanMax(transfer);
-    }
-
-    private void throwIfNotBgOrPgPayment(Transfer transfer) {
-        if (!transfer.getDestination().isGiroIdentifier()) {
-            throw getTransferCancelledException(
-                    TransferExceptionMessage.INVALID_PAYMENT_TYPE,
-                    EndUserMessage.END_USER_WRONG_PAYMENT_TYPE,
-                    InternalStatus.INVALID_PAYMENT_TYPE);
-        }
-    }
-
-    private void throwIfAmountIsLessThanMinAmount(Transfer transfer) {
-        if (transfer.getAmount().getValue() < PaymentTransfer.MIN_AMOUNT) {
-            throw getTransferCancelledException(
-                    TransferExceptionMessage.INVALID_MINIMUM_AMOUNT,
-                    EndUserMessage.INVALID_MINIMUM_AMOUNT,
-                    InternalStatus.INVALID_MINIMUM_AMOUNT);
-        }
-    }
-
-    private void throwIfUnstructuredRefLongerThanMax(Transfer transfer) {
-        if (isUnstructuredRefAndLongerThanMax(transfer.getRemittanceInformation())) {
-            throw getTransferCancelledException(
-                    TransferExceptionMessage.INVALID_UNSTRUCTURED_LENGTH,
-                    EndUserMessage.INVALID_DESTINATION_MESSAGE,
-                    InternalStatus.INVALID_DESTINATION_MESSAGE);
-        }
-    }
-
-    private boolean isUnstructuredRefAndLongerThanMax(RemittanceInformation remittanceInformation) {
-        return remittanceInformation.isOfType(RemittanceInformationType.UNSTRUCTURED)
-                && remittanceInformation.getValue().length()
-                        > PaymentTransfer.UNSTRUCTURED_MAX_LENGTH;
-    }
-
-    private Date getPaymentDate(Transfer transfer) {
-        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils();
-        return dateUtils.getTransferDateForBgPg(transfer.getDueDate());
-    }
-
     private PaymentSourceAccount getPaymentSourceAccount(Transfer transfer) {
         Collection<PaymentSourceAccount> paymentSourceAccounts =
                 apiClient.fetchPaymentSourceAccounts();
@@ -137,36 +93,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                     TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
                     EndUserMessage.TRANSFER_EXECUTE_FAILED,
                     InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
-        }
-    }
-
-    private void throwIfInvalidDateError(HttpResponse response) {
-
-        if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
-            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-
-            if (errorResponse.isInvalidPaymentDate()) {
-                throw getTransferCancelledException(
-                        TransferExceptionMessage.INVALID_PAYMENT_DATE,
-                        EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,
-                        InternalStatus.INVALID_DUE_DATE);
-            }
-        }
-    }
-
-    private void throwIfInvalidOcrError(HttpResponse response) {
-
-        if (response.getStatus() == HttpStatus.SC_BAD_REQUEST
-                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
-            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-
-            if (errorResponse.isInvalidOcrError()) {
-                throw getTransferCancelledException(
-                        TransferExceptionMessage.INVALID_OCR,
-                        EndUserMessage.INVALID_OCR,
-                        InternalStatus.INVALID_DESTINATION_MESSAGE);
-            }
         }
     }
 
@@ -281,6 +207,80 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                     TransferExceptionMessage.PAYMENT_DELETE_FAILED,
                     EndUserMessage.SIGN_AND_REMOVAL_FAILED,
                     InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private Date getPaymentDate(Transfer transfer) {
+        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils();
+        return dateUtils.getTransferDateForBgPg(transfer.getDueDate());
+    }
+
+    private void validateTransferOrThrow(Transfer transfer) {
+        throwIfNotBgOrPgPayment(transfer);
+        throwIfAmountIsLessThanMinAmount(transfer);
+        throwIfUnstructuredRefLongerThanMax(transfer);
+    }
+
+    private void throwIfNotBgOrPgPayment(Transfer transfer) {
+        if (!transfer.getDestination().isGiroIdentifier()) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_PAYMENT_TYPE,
+                    EndUserMessage.END_USER_WRONG_PAYMENT_TYPE,
+                    InternalStatus.INVALID_PAYMENT_TYPE);
+        }
+    }
+
+    private void throwIfAmountIsLessThanMinAmount(Transfer transfer) {
+        if (transfer.getAmount().getValue() < PaymentTransfer.MIN_AMOUNT) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_MINIMUM_AMOUNT,
+                    EndUserMessage.INVALID_MINIMUM_AMOUNT,
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
+        }
+    }
+
+    private void throwIfUnstructuredRefLongerThanMax(Transfer transfer) {
+        if (isUnstructuredRefAndLongerThanMax(transfer.getRemittanceInformation())) {
+            throw getTransferCancelledException(
+                    TransferExceptionMessage.INVALID_UNSTRUCTURED_LENGTH,
+                    EndUserMessage.INVALID_DESTINATION_MESSAGE,
+                    InternalStatus.INVALID_DESTINATION_MESSAGE);
+        }
+    }
+
+    private boolean isUnstructuredRefAndLongerThanMax(RemittanceInformation remittanceInformation) {
+        return remittanceInformation.isOfType(RemittanceInformationType.UNSTRUCTURED)
+                && remittanceInformation.getValue().length()
+                        > PaymentTransfer.UNSTRUCTURED_MAX_LENGTH;
+    }
+
+    private void throwIfInvalidDateError(HttpResponse response) {
+
+        if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isInvalidPaymentDate()) {
+                throw getTransferCancelledException(
+                        TransferExceptionMessage.INVALID_PAYMENT_DATE,
+                        EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,
+                        InternalStatus.INVALID_DUE_DATE);
+            }
+        }
+    }
+
+    private void throwIfInvalidOcrError(HttpResponse response) {
+
+        if (response.getStatus() == HttpStatus.SC_BAD_REQUEST
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isInvalidOcrError()) {
+                throw getTransferCancelledException(
+                        TransferExceptionMessage.INVALID_OCR,
+                        EndUserMessage.INVALID_OCR,
+                        InternalStatus.INVALID_DESTINATION_MESSAGE);
+            }
         }
     }
 
