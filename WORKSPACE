@@ -74,7 +74,7 @@ http_archive(
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "06f3cc1c3ff34da37bef9f98d76fc27c8fff18e1",
+    commit = "2c9ed128fa39e394311caa12fb7d90ee936d5395",
     remote = "git@github.com:tink-ab/tink-grpc.git",
     shallow_since = "1613035073 +0000",
 )
