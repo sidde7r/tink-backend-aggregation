@@ -1,0 +1,41 @@
+{
+  "accountType": "AvtalsPension",
+  "insured":
+  {
+    "name": "Firstname Surname",
+    "insuranceCustomerId": "11223344",
+    "type": "PERSON"
+  },
+  "policyOwner":
+  {
+    "name": "Company AB",
+    "insuranceCustomerId": "1234567",
+    "type": "COMPANY"
+  },
+  "startDate": "2018-09-30",
+  "managementForm": "ACCOUNT_INSURANCE",
+  "repaymentProtection":
+  {
+    "has": true
+  },
+  "beneficiaries":
+  {
+    "text":
+    [
+      "Maka/make/registrerad partner/sambo eller, om sådan saknas, barn."
+    ],
+    "type": "STANDARD",
+    "beneficiaries":
+    [],
+    "choice": "PARTNER"
+  },
+  "companyOwnedDetails":
+  {
+    "directPension": false,
+    "pawned": false
+  },
+  "paymentPlan":
+  {
+    "status": "NO_ACTIVE_PLAN"
+  }
+}

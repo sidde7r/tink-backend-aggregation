@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.loan;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AuthSessionStorageHelper;
@@ -33,18 +33,18 @@ public class AvanzaLoanFetcher implements AccountFetcher<LoanAccount> {
         String holderName = temporaryStorage.getOrDefault(StorageKeys.HOLDER_NAME, null);
 
         return authSessionStorage.getAuthSessions().stream()
-                .flatMap(getAccounts(holderName))
+                .flatMap(authSession -> fetchLoanAccounts(authSession, holderName))
                 .collect(Collectors.toList());
     }
 
-    private Function<String, Stream<? extends LoanAccount>> getAccounts(String holderName) {
-        return authSession ->
-                apiClient.fetchAccounts(authSession).getAccounts().stream()
-                        .filter(AccountEntity::isLoanAccount)
-                        .map(AccountEntity::getAccountId)
-                        .map(accId -> apiClient.fetchAccountDetails(accId, authSession))
-                        .map(account -> account.toLoanAccount(holderName))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get);
+    @VisibleForTesting
+    Stream<? extends LoanAccount> fetchLoanAccounts(String authSession, String holderName) {
+        return apiClient.fetchAccounts(authSession).getAccounts().stream()
+                .filter(AccountEntity::isLoanAccount)
+                .map(AccountEntity::getAccountId)
+                .map(accId -> apiClient.fetchAccountDetails(accId, authSession))
+                .map(account -> account.toLoanAccount(holderName))
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 }
