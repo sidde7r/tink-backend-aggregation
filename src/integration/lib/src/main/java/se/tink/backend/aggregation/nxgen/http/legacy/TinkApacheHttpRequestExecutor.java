@@ -71,6 +71,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_CERTID_HEADER = "X-Tink-QWAC-CertId";
     private static final String EIDAS_PROVIDERID_HEADER = "X-Tink-QWAC-ProviderId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
+    private static final String TAG_APP_ID = "app_id";
+    private static final String TAG_CERT_ID = "cert_id";
+    private static final String TAG_PROVIDER_ID = "provider_id";
 
     private DefaultApacheRequestLoggingAdapter requestLoggingAdapter;
 
@@ -385,8 +388,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             scope = tracer.activateSpan(span);
             RequestLine requestLine = request.getRequestLine();
             Tags.SPAN_KIND.set(span, Tags.SPAN_KIND_CLIENT);
-            Tags.HTTP_METHOD.set(span, requestLine.getUri());
-            Tags.HTTP_URL.set(span, requestLine.getMethod());
+            Tags.HTTP_METHOD.set(span, requestLine.getMethod());
+            span.setTag(TAG_APP_ID, eidasIdentity.getAppId());
+            span.setTag(TAG_CERT_ID, eidasIdentity.getCertId());
+            span.setTag(TAG_PROVIDER_ID, eidasIdentity.getProviderId());
 
             tracer.inject(
                     span.context(),
