@@ -1200,6 +1200,28 @@ X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
     }
 ]
 
+-----------------------------------------------------------------------------------
+REQUEST 42
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Recipients/Payments/UZ3OmimsbcwYVwRy3qdrTYBrcY67chQrpN0kVaOQ-oKVL8l35OI9GfhJXtGTRDkZyZfYi2OQ1oht1pdqUPbyKw
+
+-----------------------------------------------------------------------------------
+RESPONSE 42
+200
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Powered-By: ASP.NET
+Date: Wed, 20 Oct 2021 08:21:12 GMT
+X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
+
+[
+  {
+    "EncryptedRecipientId": "21Ru8WwMUTRoXlC1n1Pz6mefuEjF8tnkQ1ShBsJmsavBOeaUs1HGR8BF_yM7sjnYSmxH6uc3LMxzA3BLhs5rEt2PN4TcXjuXKvWNUNES330",
+    "GiroNumber": "999999-9",
+    "Name": "Recipient name"
+  }
+]
 
 -----------------------------------------------------------------------------------
 REQUEST 13

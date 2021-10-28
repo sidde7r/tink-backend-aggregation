@@ -194,10 +194,10 @@ public class OpenIdAuthenticationController
 
         } catch (HttpResponseException e) {
 
-            log.error("Refresh failed: {}", e.getResponse().getBody(String.class));
+            log.error("Access token refresh failed: {}", e.getResponse().getBody(String.class));
             // This will "fix" the invalid_grant error temporarily while waiting for more log
             // data. It might also filter some other errors.
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw LoginError.DEFAULT_MESSAGE.exception();
         }
 
         log.info(

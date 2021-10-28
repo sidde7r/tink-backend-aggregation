@@ -15,8 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.PaymentTransfer;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TransferExceptionMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentInitSignResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.AddRecipientRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.InitSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.SavedRecipientsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utils.SkandiaBankenDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utils.SkandiaBankenExecutorUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.entities.UpcomingPaymentEntity;
@@ -45,6 +47,10 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
         PaymentSourceAccount sourceAccount = getPaymentSourceAccount(transfer);
 
+        if (!isSavedRecipient(sourceAccount, transfer)) {
+            addRecipient(transfer, sourceAccount);
+        }
+
         Date paymentDate = getPaymentDate(transfer);
 
         // Skandia can respond with 500 on bad input. Removing the filter that handles 500
@@ -66,6 +72,218 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         // Re-add filter after PIS flow, in case there's a refresh after we would want to
         // handle 500 responses as bank side failures.
         apiClient.addBankServiceInternalErrorFilter();
+    }
+
+    private PaymentSourceAccount getPaymentSourceAccount(Transfer transfer) {
+        Collection<PaymentSourceAccount> paymentSourceAccounts =
+                apiClient.fetchPaymentSourceAccounts();
+
+        return SkandiaBankenExecutorUtils.tryFindOwnAccount(
+                        transfer.getSource(), paymentSourceAccounts)
+                .orElseThrow(
+                        () ->
+                                getTransferCancelledException(
+                                        TransferExceptionMessage.SOURCE_NOT_FOUND,
+                                        EndUserMessage.SOURCE_NOT_FOUND,
+                                        InternalStatus.INVALID_SOURCE_ACCOUNT));
+    }
+
+    private void addRecipient(Transfer transfer, PaymentSourceAccount sourceAccount) {
+        AddRecipientRequest addRecipientRequest =
+                AddRecipientRequest.createAddRecipientRequest(transfer, sourceAccount);
+
+        InitSignResponse initSignResponse = initSignAddRecipient(addRecipientRequest);
+
+        String signReference =
+                getSignReferenceOrThrow(initSignResponse, EndUserMessage.NEW_RECIPIENT_FAILED);
+
+        supplementalInformationController.openMobileBankIdAsync(null);
+
+        pollSignStatus(signReference);
+
+        completeAddRecipient(addRecipientRequest, signReference);
+
+        // Verify that new recipient has been added to list of saved recipients
+        if (!isSavedRecipient(sourceAccount, transfer)) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.ADD_NEW_RECIPIENT_FAILED,
+                    EndUserMessage.NEW_RECIPIENT_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private InitSignResponse initSignAddRecipient(AddRecipientRequest addRecipientRequest) {
+        try {
+            return apiClient.initSignAddRecipient(addRecipientRequest);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.ADD_NEW_RECIPIENT_FAILED,
+                    EndUserMessage.NEW_RECIPIENT_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private void completeAddRecipient(
+            AddRecipientRequest addRecipientRequest, String signReference) {
+        try {
+            apiClient.completeAddRecipient(addRecipientRequest, signReference);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.ADD_NEW_RECIPIENT_FAILED,
+                    EndUserMessage.NEW_RECIPIENT_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private void submitPayment(PaymentRequest paymentRequest) {
+        try {
+            apiClient.submitPayment(paymentRequest);
+        } catch (HttpResponseException e) {
+            throwIfInvalidDateError(e.getResponse());
+            throwIfInvalidOcrError(e.getResponse());
+
+            throw getTransferFailedException(
+                    TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
+                    EndUserMessage.TRANSFER_EXECUTE_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private void signPayment(String encryptedPaymentId) {
+        String signReference = initPaymentSigning(encryptedPaymentId);
+
+        supplementalInformationController.openMobileBankIdAsync(null);
+
+        pollSignStatus(signReference);
+
+        try {
+            apiClient.completePayment(encryptedPaymentId, signReference);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.COMPLETE_PAYMENT_FAILED,
+                    EndUserMessage.TRANSFER_CONFIRM_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private String initPaymentSigning(String encryptedPaymentId) {
+        InitSignResponse initSignResponse;
+        try {
+            initSignResponse = apiClient.initSignPayment(encryptedPaymentId);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.INIT_SIGN_FAILED,
+                    EndUserMessage.SIGN_TRANSFER_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+
+        return getSignReferenceOrThrow(initSignResponse, EndUserMessage.SIGN_TRANSFER_FAILED);
+    }
+
+    private String getEncryptedPaymentIdFromBank(PaymentRequest paymentRequest, Date paymentDate) {
+        FetchPaymentsResponse unapprovedPayments = apiClient.fetchUnapprovedPayments();
+        return findPayment(unapprovedPayments, paymentRequest, paymentDate).getEncryptedPaymentId();
+    }
+
+    private UpcomingPaymentEntity findPayment(
+            FetchPaymentsResponse unapprovedPayments,
+            PaymentRequest paymentRequest,
+            Date paymentDate) {
+        return unapprovedPayments.stream()
+                .filter(paymentEntity -> paymentEntity.isSamePayment(paymentRequest, paymentDate))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                getTransferFailedException(
+                                        TransferExceptionMessage.PAYMENT_NOT_FOUND,
+                                        EndUserMessage.TRANSFER_EXECUTE_FAILED,
+                                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
+    }
+
+    public void pollSignStatus(String signReference) {
+        BankIdStatus status;
+
+        Uninterruptibles.sleepUninterruptibly(BankIdPolling.INITIAL_SLEEP, TimeUnit.MILLISECONDS);
+        for (int i = 0; i < BankIdPolling.MAX_ATTEMPTS; i++) {
+            status = getSignStatus(signReference);
+
+            switch (status) {
+                case DONE:
+                    return;
+                case WAITING:
+                    break;
+                case CANCELLED:
+                    throw getTransferCancelledException(
+                            TransferExceptionMessage.SIGN_CANCELLED,
+                            EndUserMessage.BANKID_CANCELLED,
+                            InternalStatus.BANKID_CANCELLED);
+                default:
+                    throw getTransferFailedException(
+                            TransferExceptionMessage.UNKNOWN_SIGN_STATUS,
+                            EndUserMessage.BANKID_TRANSFER_FAILED,
+                            InternalStatus.BANKID_UNKNOWN_EXCEPTION);
+            }
+
+            Uninterruptibles.sleepUninterruptibly(
+                    BankIdPolling.SLEEP_BETWEEN_POLLS, TimeUnit.MILLISECONDS);
+        }
+
+        throw getTransferCancelledException(
+                TransferExceptionMessage.SIGN_TIMEOUT,
+                EndUserMessage.BANKID_NO_RESPONSE,
+                InternalStatus.BANKID_NO_RESPONSE);
+    }
+
+    private BankIdStatus getSignStatus(String signReference) {
+        try {
+            return apiClient.pollSignStatus(signReference);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.POLL_SIGN_STATUS_FAILED,
+                    EndUserMessage.BANKID_TRANSFER_FAILED,
+                    InternalStatus.BANKID_UNKNOWN_EXCEPTION);
+        }
+    }
+
+    private void deleteUnapprovedPayment(String encryptedPaymentId) {
+        try {
+            apiClient.deleteUnapprovedPayment(encryptedPaymentId);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.PAYMENT_DELETE_FAILED,
+                    EndUserMessage.SIGN_AND_REMOVAL_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private boolean isSavedRecipient(PaymentSourceAccount sourceAccount, Transfer transfer) {
+
+        SavedRecipientsResponse savedRecipients =
+                apiClient.fetchSavedRecipients(sourceAccount.getEncryptedBankAccountNumber());
+
+        String transferGiroNumber = SkandiaBankenExecutorUtils.formatGiroNumber(transfer);
+
+        return savedRecipients.stream()
+                .anyMatch(
+                        recipientEntity ->
+                                transferGiroNumber.equals(recipientEntity.getGiroNumber()));
+    }
+
+    private String getSignReferenceOrThrow(
+            InitSignResponse initSignResponse, EndUserMessage failCaseEndUserMessage) {
+        return initSignResponse
+                .getSignReference()
+                .orElseThrow(
+                        () ->
+                                getTransferFailedException(
+                                        TransferExceptionMessage.NO_SIGN_REFERENCE,
+                                        failCaseEndUserMessage,
+                                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
+    }
+
+    private Date getPaymentDate(Transfer transfer) {
+        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils();
+        return dateUtils.getTransferDateForBgPg(transfer.getDueDate());
     }
 
     private void validateTransferOrThrow(Transfer transfer) {
@@ -107,39 +325,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                         > PaymentTransfer.UNSTRUCTURED_MAX_LENGTH;
     }
 
-    private Date getPaymentDate(Transfer transfer) {
-        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils();
-        return dateUtils.getTransferDateForBgPg(transfer.getDueDate());
-    }
-
-    private PaymentSourceAccount getPaymentSourceAccount(Transfer transfer) {
-        Collection<PaymentSourceAccount> paymentSourceAccounts =
-                apiClient.fetchPaymentSourceAccounts();
-
-        return SkandiaBankenExecutorUtils.tryFindOwnAccount(
-                        transfer.getSource(), paymentSourceAccounts)
-                .orElseThrow(
-                        () ->
-                                getTransferCancelledException(
-                                        TransferExceptionMessage.SOURCE_NOT_FOUND,
-                                        EndUserMessage.SOURCE_NOT_FOUND,
-                                        InternalStatus.INVALID_SOURCE_ACCOUNT));
-    }
-
-    private void submitPayment(PaymentRequest paymentRequest) {
-        try {
-            apiClient.submitPayment(paymentRequest);
-        } catch (HttpResponseException e) {
-            throwIfInvalidDateError(e.getResponse());
-            throwIfInvalidOcrError(e.getResponse());
-
-            throw getTransferFailedException(
-                    TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
-                    EndUserMessage.TRANSFER_EXECUTE_FAILED,
-                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
-        }
-    }
-
     private void throwIfInvalidDateError(HttpResponse response) {
 
         if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
@@ -167,120 +352,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                         EndUserMessage.INVALID_OCR,
                         InternalStatus.INVALID_DESTINATION_MESSAGE);
             }
-        }
-    }
-
-    private void signPayment(String encryptedPaymentId) {
-        String signReference = initPaymentSigning(encryptedPaymentId);
-
-        supplementalInformationController.openMobileBankIdAsync(null);
-
-        poll(signReference);
-
-        try {
-            apiClient.completePayment(encryptedPaymentId, signReference);
-        } catch (HttpResponseException e) {
-            throw getTransferFailedException(
-                    TransferExceptionMessage.COMPLETE_PAYMENT_FAILED,
-                    EndUserMessage.TRANSFER_CONFIRM_FAILED,
-                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
-        }
-    }
-
-    private String initPaymentSigning(String encryptedPaymentId) {
-        PaymentInitSignResponse initSignResponse;
-        try {
-            initSignResponse = apiClient.initSignPayment(encryptedPaymentId);
-        } catch (HttpResponseException e) {
-            throw getTransferFailedException(
-                    TransferExceptionMessage.INIT_SIGN_FAILED,
-                    EndUserMessage.SIGN_TRANSFER_FAILED,
-                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
-        }
-
-        return initSignResponse
-                .getSignReference()
-                .orElseThrow(
-                        () ->
-                                getTransferFailedException(
-                                        TransferExceptionMessage.NO_SIGN_REFERENCE,
-                                        EndUserMessage.SIGN_TRANSFER_FAILED,
-                                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
-    }
-
-    private String getEncryptedPaymentIdFromBank(PaymentRequest paymentRequest, Date paymentDate) {
-        FetchPaymentsResponse unapprovedPayments = apiClient.fetchUnapprovedPayments();
-        return findPayment(unapprovedPayments, paymentRequest, paymentDate).getEncryptedPaymentId();
-    }
-
-    private UpcomingPaymentEntity findPayment(
-            FetchPaymentsResponse unapprovedPayments,
-            PaymentRequest paymentRequest,
-            Date paymentDate) {
-        return unapprovedPayments.stream()
-                .filter(paymentEntity -> paymentEntity.isSamePayment(paymentRequest, paymentDate))
-                .findFirst()
-                .orElseThrow(
-                        () ->
-                                getTransferFailedException(
-                                        TransferExceptionMessage.PAYMENT_NOT_FOUND,
-                                        EndUserMessage.TRANSFER_EXECUTE_FAILED,
-                                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
-    }
-
-    public void poll(String signReference) {
-        BankIdStatus status;
-
-        Uninterruptibles.sleepUninterruptibly(BankIdPolling.INITIAL_SLEEP, TimeUnit.MILLISECONDS);
-        for (int i = 0; i < BankIdPolling.MAX_ATTEMPTS; i++) {
-            status = getPaymentSignStatus(signReference);
-
-            switch (status) {
-                case DONE:
-                    return;
-                case WAITING:
-                    break;
-                case CANCELLED:
-                    throw getTransferCancelledException(
-                            TransferExceptionMessage.SIGN_CANCELLED,
-                            EndUserMessage.BANKID_CANCELLED,
-                            InternalStatus.BANKID_CANCELLED);
-                default:
-                    throw getTransferFailedException(
-                            TransferExceptionMessage.UNKNOWN_SIGN_STATUS,
-                            EndUserMessage.BANKID_TRANSFER_FAILED,
-                            InternalStatus.BANKID_UNKNOWN_EXCEPTION);
-            }
-
-            Uninterruptibles.sleepUninterruptibly(
-                    BankIdPolling.SLEEP_BETWEEN_POLLS, TimeUnit.MILLISECONDS);
-        }
-
-        throw getTransferCancelledException(
-                TransferExceptionMessage.SIGN_TIMEOUT,
-                EndUserMessage.BANKID_NO_RESPONSE,
-                InternalStatus.BANKID_NO_RESPONSE);
-    }
-
-    private BankIdStatus getPaymentSignStatus(String signReference) {
-        try {
-            return apiClient.pollPaymentSignStatus(signReference);
-        } catch (HttpResponseException e) {
-            throw getTransferFailedException(
-                    TransferExceptionMessage.POLL_SIGN_STATUS_FAILED,
-                    EndUserMessage.BANKID_TRANSFER_FAILED,
-                    InternalStatus.BANKID_UNKNOWN_EXCEPTION);
-        }
-    }
-
-    private void deleteUnapprovedPayment(String encryptedPaymentId) {
-        try {
-            apiClient.deleteUnapprovedPayment(encryptedPaymentId);
-        } catch (HttpResponseException e) {
-            throw getTransferFailedException(
-                    TransferExceptionMessage.PAYMENT_DELETE_FAILED,
-                    EndUserMessage.SIGN_AND_REMOVAL_FAILED,
-                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
     }
 
