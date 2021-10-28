@@ -62,7 +62,7 @@ public class CapitalOneApiClient extends UkOpenBankingApiClient {
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
-    private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
+    protected TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
         String scope =
                 wellKnownConfiguration

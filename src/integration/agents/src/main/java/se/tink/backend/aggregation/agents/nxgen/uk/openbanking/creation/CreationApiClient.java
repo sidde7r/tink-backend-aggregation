@@ -81,7 +81,7 @@ public class CreationApiClient extends UkOpenBankingApiClient {
         return overrideRefreshExpiresInIfNeeded(tokenResponse).toAccessToken();
     }
 
-    private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
+    protected TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
         String scope =

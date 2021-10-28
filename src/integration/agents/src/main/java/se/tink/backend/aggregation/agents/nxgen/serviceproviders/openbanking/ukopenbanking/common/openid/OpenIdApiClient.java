@@ -138,7 +138,7 @@ public class OpenIdApiClient {
         }
     }
 
-    private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
+    protected TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
         // Token request does not use OpenId scope
@@ -164,11 +164,7 @@ public class OpenIdApiClient {
     protected RequestBuilder createTokenRequest() {
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
-        RequestBuilder requestBuilder =
-                httpClient
-                        .request(wellKnownConfiguration.getTokenEndpoint())
-                        .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .accept(MediaType.APPLICATION_JSON_TYPE);
+        RequestBuilder requestBuilder = createBasicTokenRequest(wellKnownConfiguration);
 
         TokenEndpointAuthMethod authMethod =
                 determineTokenEndpointAuthMethod(providerConfiguration, wellKnownConfiguration);
@@ -305,5 +301,12 @@ public class OpenIdApiClient {
 
         cachedJwkPublicKeys = jsonWebKeySet.getAllKeysMap();
         return Optional.ofNullable(cachedJwkPublicKeys);
+    }
+
+    protected RequestBuilder createBasicTokenRequest(WellKnownResponse wellKnownConfiguration) {
+        return httpClient
+                .request(wellKnownConfiguration.getTokenEndpoint())
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 }
