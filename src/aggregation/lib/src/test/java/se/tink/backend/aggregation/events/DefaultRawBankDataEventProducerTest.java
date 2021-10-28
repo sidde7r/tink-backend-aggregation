@@ -97,7 +97,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("dummy_value")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -105,7 +105,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("weird.field")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -121,7 +121,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("iban")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.IBAN)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -129,7 +129,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("bban")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.BBAN)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -137,7 +137,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionId")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -161,7 +161,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].weird.field")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -169,7 +169,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].weird[]Field")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -177,7 +177,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionAmount.amount")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -185,7 +185,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionAmount.currency")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -193,7 +193,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[]._links.transactionDetails.href")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -201,7 +201,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionId")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -225,7 +225,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionAmount.amount")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -233,7 +233,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionAmount.currency")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -241,7 +241,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[]._links.transactionDetails.href")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -249,7 +249,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.pending[].transactionAmount.amount")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -257,7 +257,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.pending[].transactionAmount.currency")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -273,7 +273,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.pending[].descriptiveText")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -281,7 +281,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.pending[].pendingType")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -289,7 +289,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("_links.account.href")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -379,7 +379,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields1.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("keyA")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -388,7 +388,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields1.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("keyB")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -398,7 +398,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields2.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("keyC")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
@@ -407,7 +407,7 @@ public class DefaultRawBankDataEventProducerTest {
         expectedFields2.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("keyD")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")

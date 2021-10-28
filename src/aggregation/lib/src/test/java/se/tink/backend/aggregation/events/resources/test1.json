@@ -1,8 +1,8 @@
 {
   "dummy_value": "null",
   "dummy_null_value": null,
-  "iban": "IBAN_VALUE",
-  "bban": "BBAN_VALUE",
+  "iban": "FR7630004033750000835128353",
+  "bban": "12000000033333333333",
   "weird.field": "abc",
   "transactions":
   {

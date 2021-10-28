@@ -43,7 +43,7 @@ public class DefaultRawBankDataEventAccumulatorTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionId")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")

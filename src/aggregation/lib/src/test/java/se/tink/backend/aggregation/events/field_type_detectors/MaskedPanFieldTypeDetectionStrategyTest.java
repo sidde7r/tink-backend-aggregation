@@ -45,4 +45,9 @@ public class MaskedPanFieldTypeDetectionStrategyTest {
     public void shouldDetectIfFieldIsNotAMaskedPanField2() {
         assertFalse(sut.isTypeMatched(Collections.emptyList(), "dummy-value", JsonNodeType.STRING));
     }
+
+    @Test
+    public void shouldDetectIfFieldIsNotAMaskedPanField3() {
+        assertFalse(sut.isTypeMatched(Collections.emptyList(), "2021-05-18", JsonNodeType.STRING));
+    }
 }

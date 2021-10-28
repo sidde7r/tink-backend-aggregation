@@ -13,6 +13,14 @@ import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskDateVal
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DateFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DummyFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.RawBankDataFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.BbanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.BooleanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.DoubleFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.IbanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.IntegerFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.MaskedPanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.SortCodeFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.StringFieldTypeDetectionStrategy;
 
 @Builder
 @Getter
@@ -31,8 +39,17 @@ public class RawBankDataEventCreationStrategies {
                                 new UnmaskDateValueMaskingStrategy(),
                                 new MaskAllValueMaskingStrategy()))
                 .fieldTypeDetectionStrategies(
+                        // order is important!
                         Arrays.asList(
+                                new BooleanFieldTypeDetectionStrategy(),
+                                new IbanFieldTypeDetectionStrategy(),
+                                new SortCodeFieldTypeDetectionStrategy(),
+                                new BbanFieldTypeDetectionStrategy(),
+                                new IntegerFieldTypeDetectionStrategy(),
+                                new DoubleFieldTypeDetectionStrategy(),
                                 new DateFieldTypeDetectionStrategy(),
+                                new MaskedPanFieldTypeDetectionStrategy(),
+                                new StringFieldTypeDetectionStrategy(),
                                 new DummyFieldTypeDetectionStrategy()))
                 .build();
     }
