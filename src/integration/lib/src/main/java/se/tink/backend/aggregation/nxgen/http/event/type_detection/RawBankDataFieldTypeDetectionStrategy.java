@@ -23,4 +23,16 @@ public interface RawBankDataFieldTypeDetectionStrategy {
         }
         return true;
     }
+
+    static boolean isStringADouble(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
 }
