@@ -328,6 +328,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                             rawBankDataEventAccumulator,
                             refreshableItemInProgressSupplier,
                             correlationId,
+                            Optional.ofNullable(this.provider.getName()).orElse("Unknown"),
                             new RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy(
                                     RAW_BANK_DATA_EVENT_EMISSION_RATE));
             addFilter(this.rawBankDataEventProducerInterceptor);

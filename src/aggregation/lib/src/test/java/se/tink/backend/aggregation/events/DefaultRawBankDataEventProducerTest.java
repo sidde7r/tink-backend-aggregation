@@ -57,7 +57,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        givenResponseBody, "dummy-correlationId");
+                        givenResponseBody, "dummy-correlationId", "dummy-providerName");
 
         // then
         Assert.assertTrue(event.isPresent());
@@ -75,7 +75,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        givenResponseBody, "dummy-correlationId");
+                        givenResponseBody, "dummy-correlationId", "dummy-providerName");
 
         // then
         Assert.assertFalse(event.isPresent());
@@ -298,7 +298,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        givenResponseBody, "dummy-correlationId");
+                        givenResponseBody, "dummy-correlationId", "dummy-providerName");
 
         // then
         Assert.assertTrue(event.isPresent());

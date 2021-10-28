@@ -34,7 +34,7 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
 
     @Override
     public Optional<RawBankDataTrackerEvent> produceRawBankDataEvent(
-            String responseBody, String correlationId) {
+            String responseBody, String correlationId, String providerName) {
         // Try to parse the response body as JSON, if it fails we will silently ignore it
         // and stop trying to emit event
         JsonNode node;
@@ -52,7 +52,8 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
             RawBankDataTrackerEvent.Builder eventBuilder =
                     RawBankDataTrackerEvent.newBuilder()
                             .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
-                            .setCorrelationId(correlationId);
+                            .setCorrelationId(correlationId)
+                            .setProviderName(providerName);
 
             // Flatten the JSON response body
             List<FieldData> fieldDataList = new ArrayList<>();

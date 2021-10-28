@@ -62,7 +62,8 @@ public class DefaultRawBankDataEventAccumulatorTest {
         // when
         accumulator.addEvent(
                 defaultRawBankDataEventProducer
-                        .produceRawBankDataEvent(givenResponseBody, "dummy-correlationId")
+                        .produceRawBankDataEvent(
+                                givenResponseBody, "dummy-correlationId", "dummy-providerName")
                         .orElseThrow(() -> new IllegalStateException("No events produced")),
                 RefreshableItem.CHECKING_TRANSACTIONS);
 

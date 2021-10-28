@@ -25,6 +25,7 @@ public class RawBankDataEventProducerInterceptor extends Filter {
     private final RawBankDataEventProducer rawBankDataEventProducer;
     private final RawBankDataEventAccumulator rawBankDataEventAccumulator;
     private final String correlationId;
+    private final String providerName;
 
     private RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy;
     private final Supplier<RefreshableItem> refreshableItemInProgressSupplier;
@@ -34,10 +35,12 @@ public class RawBankDataEventProducerInterceptor extends Filter {
             RawBankDataEventAccumulator rawBankDataEventAccumulator,
             Supplier<RefreshableItem> refreshableItemInProgressSupplier,
             String correlationId,
+            String providerName,
             RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy) {
         this.rawBankDataEventProducer = rawBankDataEventProducer;
         this.rawBankDataEventAccumulator = rawBankDataEventAccumulator;
         this.correlationId = correlationId;
+        this.providerName = providerName;
         this.refreshableItemInProgressSupplier = refreshableItemInProgressSupplier;
         this.rawBankDataEventCreationTriggerStrategy = rawBankDataEventCreationTriggerStrategy;
     }
@@ -87,7 +90,7 @@ public class RawBankDataEventProducerInterceptor extends Filter {
                 response.getInternalResponse().getEntityInputStream().reset();
                 Optional<RawBankDataTrackerEvent> maybeEvent =
                         rawBankDataEventProducer.produceRawBankDataEvent(
-                                rawResponseString, correlationId);
+                                rawResponseString, correlationId, providerName);
                 maybeEvent.ifPresent(
                         event ->
                                 rawBankDataEventAccumulator.addEvent(
