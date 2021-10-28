@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -8,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionPaginator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -34,9 +36,13 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
 
     @Override
     public TransactionPaginator<TransactionalAccount> makeAccountTransactionPaginatorController(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient,
+            AgentComponentProvider componentProvider,
+            Provider provider) {
         return new TransactionKeyPaginationController<>(
                 new MonzoTransactionPaginator<>(
+                        componentProvider,
+                        provider,
                         ukOpenBankingAisConfig,
                         persistentStorage,
                         apiClient,
@@ -51,9 +57,13 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
 
     @Override
     public TransactionPaginator<CreditCardAccount> makeCreditCardTransactionPaginatorController(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient,
+            AgentComponentProvider componentProvider,
+            Provider provider) {
         return new TransactionKeyPaginationController<>(
                 new MonzoTransactionPaginator<>(
+                        componentProvider,
+                        provider,
                         ukOpenBankingAisConfig,
                         persistentStorage,
                         apiClient,

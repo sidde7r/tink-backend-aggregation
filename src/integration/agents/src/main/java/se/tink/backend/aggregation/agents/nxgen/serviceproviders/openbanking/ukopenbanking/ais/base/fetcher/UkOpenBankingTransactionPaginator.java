@@ -7,9 +7,12 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import no.finn.unleash.UnleashContext;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -17,6 +20,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
 /**
  * Generic transaction paginator for ukob.
@@ -44,6 +50,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
     private String lastAccount;
     private int paginationCount;
+    private UnleashClient unleashClient;
+    private Toggle toggle;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final PersistentStorage persistentStorage;
     protected final LocalDateTimeSource localDateTimeSource;
@@ -56,6 +64,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
      *     TransactionConverter#toPaginatorResponse(Object, Account)}
      */
     public UkOpenBankingTransactionPaginator(
+            AgentComponentProvider componentProvider,
+            Provider provider,
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
             UkOpenBankingApiClient apiClient,
@@ -68,6 +78,19 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.persistentStorage = persistentStorage;
         this.localDateTimeSource = localDateTimeSource;
+        unleashClient = componentProvider.getUnleashClient();
+        toggle =
+                Toggle.of("UK_SET_MAX_ALLOWED_NUMBER_OF_MONTHS_TO_24")
+                        .context(
+                                UnleashContext.builder()
+                                        .addProperty(
+                                                Constants.Context.PROVIDER_NAME.getValue(),
+                                                provider.getName())
+                                        .addProperty(
+                                                Constants.Context.APP_ID.getValue(),
+                                                componentProvider.getContext().getAppId())
+                                        .build())
+                        .build();
     }
 
     @Override
@@ -184,8 +207,9 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         final OffsetDateTime now = localDateTimeSource.now().atOffset(DEFAULT_OFFSET);
         final OffsetDateTime startingDateForFetchingRecentTransactions =
                 now.minusDays(DEFAULT_MAX_ALLOWED_DAYS);
+
         final OffsetDateTime startingDateForFetchingAsMuchAsPossible =
-                now.minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS);
+                calculateBiggestStartingDateForFetching(now);
 
         if (dateOfLastTransactionFetching.isPresent()
                 && dateOfLastTransactionFetching
@@ -195,5 +219,20 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         } else {
             return startingDateForFetchingAsMuchAsPossible;
         }
+    }
+
+    private OffsetDateTime calculateBiggestStartingDateForFetching(OffsetDateTime now) {
+        OffsetDateTime startingDateForFetchingAsMuchAsPossible;
+        boolean is24Months = unleashClient.isToggleEnable(toggle);
+        if (is24Months) {
+            startingDateForFetchingAsMuchAsPossible = now.minusMonths(24);
+        } else {
+            startingDateForFetchingAsMuchAsPossible =
+                    now.minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS);
+        }
+        log.info(
+                "[UK Transaction Paginator] Fetching transactions since "
+                        + startingDateForFetchingAsMuchAsPossible);
+        return startingDateForFetchingAsMuchAsPossible;
     }
 }

@@ -22,7 +22,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -30,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionPaginator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -49,11 +55,18 @@ import se.tink.libraries.credentials.service.HasRefreshScope;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.credentials.service.TransactionsRefreshScope;
+import se.tink.libraries.unleash.UnleashClient;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MonzoTransactionPaginatorTest {
 
     private static final String DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/resources/";
+
+    @Mock private AgentComponentProvider componentProvider;
+    @Mock private UnleashClient unleashClient;
+    @Mock private CompositeAgentContext context;
+    @Mock private Provider provider;
 
     private final DelaySimulatingLocalDateTimeSource localDateTimeSource =
             new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2021-09-02T00:00:00"));
@@ -70,6 +83,10 @@ public class MonzoTransactionPaginatorTest {
         ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
         when(ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(any()))
                 .thenReturn(String.format(ApiServices.ACCOUNT_TRANSACTIONS_REQUEST, "identifier1"));
+        when(componentProvider.getContext()).thenReturn(context);
+        when(context.getAppId()).thenReturn("mockedAppId");
+        when(componentProvider.getUnleashClient()).thenReturn(unleashClient);
+        when(provider.getName()).thenReturn("providerName");
 
         persistentStorage = mock(PersistentStorage.class);
         apiClient = mock(UkOpenBankingApiClient.class);
@@ -79,6 +96,8 @@ public class MonzoTransactionPaginatorTest {
         request = mock(CredentialsRequest.class);
         paginator =
                 new MonzoTransactionPaginator(
+                        componentProvider,
+                        provider,
                         ukOpenBankingAisConfig,
                         persistentStorage,
                         apiClient,
@@ -96,6 +115,8 @@ public class MonzoTransactionPaginatorTest {
         request = mock(RefreshInformationRequest.class);
         paginator =
                 new MonzoTransactionPaginator(
+                        componentProvider,
+                        provider,
                         ukOpenBankingAisConfig,
                         persistentStorage,
                         apiClient,

@@ -116,7 +116,7 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
-RESPONSE 5
+RESPONSE 5 SET ACCOUNTS_1
 200
 Content-Type: application/json;charset=utf-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -163,7 +163,7 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
-RESPONSE 6
+RESPONSE 6 SET ACCOUNT_BALANCES
 200
 Content-Type: application/json;charset=utf-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -225,7 +225,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 8
+REQUEST 8 MATCH ACCOUNTS_1
 GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts
 Accept: application/json
 x-fapi-financial-id: 0015800000jfAW1AAM
@@ -233,7 +233,7 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
-RESPONSE 8
+RESPONSE 8 SET ACCOUNTS_2
 200
 Content-Type: application/json;charset=utf-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -273,7 +273,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
 REQUEST 9
-GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/10000000000004167681/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/10000000000004167681/transactions
 Accept: application/json
 x-fapi-financial-id: 0015800000jfAW1AAM
 Authorization: Bearer DUMMY_ACCESS_TOKEN
@@ -418,7 +418,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
 REQUEST 10
-GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/10000000000004123217/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/10000000000004123217/transactions
 Accept: application/json
 x-fapi-financial-id: 0015800000jfAW1AAM
 Authorization: Bearer DUMMY_ACCESS_TOKEN
