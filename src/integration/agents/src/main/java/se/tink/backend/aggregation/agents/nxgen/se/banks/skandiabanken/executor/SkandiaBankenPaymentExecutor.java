@@ -15,8 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.PaymentTransfer;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TransferExceptionMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.AddRecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.InitSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.SavedRecipientsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utils.SkandiaBankenDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utils.SkandiaBankenExecutorUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.entities.UpcomingPaymentEntity;
@@ -44,6 +46,10 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         validateTransferOrThrow(transfer);
 
         PaymentSourceAccount sourceAccount = getPaymentSourceAccount(transfer);
+
+        if (!isSavedRecipient(sourceAccount, transfer)) {
+            addRecipient(transfer, sourceAccount);
+        }
 
         Date paymentDate = getPaymentDate(transfer);
 
@@ -80,6 +86,53 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                                         TransferExceptionMessage.SOURCE_NOT_FOUND,
                                         EndUserMessage.SOURCE_NOT_FOUND,
                                         InternalStatus.INVALID_SOURCE_ACCOUNT));
+    }
+
+    private void addRecipient(Transfer transfer, PaymentSourceAccount sourceAccount) {
+        AddRecipientRequest addRecipientRequest =
+                AddRecipientRequest.createAddRecipientRequest(transfer, sourceAccount);
+
+        InitSignResponse initSignResponse = initSignAddRecipient(addRecipientRequest);
+
+        String signReference =
+                getSignReferenceOrThrow(initSignResponse, EndUserMessage.NEW_RECIPIENT_FAILED);
+
+        supplementalInformationController.openMobileBankIdAsync(null);
+
+        pollSignStatus(signReference);
+
+        completeAddRecipient(addRecipientRequest, signReference);
+
+        // Verify that new recipient has been added to list of saved recipients
+        if (!isSavedRecipient(sourceAccount, transfer)) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.ADD_NEW_RECIPIENT_FAILED,
+                    EndUserMessage.NEW_RECIPIENT_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private InitSignResponse initSignAddRecipient(AddRecipientRequest addRecipientRequest) {
+        try {
+            return apiClient.initSignAddRecipient(addRecipientRequest);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.ADD_NEW_RECIPIENT_FAILED,
+                    EndUserMessage.NEW_RECIPIENT_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
+    private void completeAddRecipient(
+            AddRecipientRequest addRecipientRequest, String signReference) {
+        try {
+            apiClient.completeAddRecipient(addRecipientRequest, signReference);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.ADD_NEW_RECIPIENT_FAILED,
+                    EndUserMessage.NEW_RECIPIENT_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
     }
 
     private void submitPayment(PaymentRequest paymentRequest) {
@@ -124,14 +177,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                     InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
 
-        return initSignResponse
-                .getSignReference()
-                .orElseThrow(
-                        () ->
-                                getTransferFailedException(
-                                        TransferExceptionMessage.NO_SIGN_REFERENCE,
-                                        EndUserMessage.SIGN_TRANSFER_FAILED,
-                                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
+        return getSignReferenceOrThrow(initSignResponse, EndUserMessage.SIGN_TRANSFER_FAILED);
     }
 
     private String getEncryptedPaymentIdFromBank(PaymentRequest paymentRequest, Date paymentDate) {
@@ -208,6 +254,31 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                     EndUserMessage.SIGN_AND_REMOVAL_FAILED,
                     InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
+    }
+
+    private boolean isSavedRecipient(PaymentSourceAccount sourceAccount, Transfer transfer) {
+
+        SavedRecipientsResponse savedRecipients =
+                apiClient.fetchSavedRecipients(sourceAccount.getEncryptedBankAccountNumber());
+
+        String transferGiroNumber = SkandiaBankenExecutorUtils.formatGiroNumber(transfer);
+
+        return savedRecipients.stream()
+                .anyMatch(
+                        recipientEntity ->
+                                transferGiroNumber.equals(recipientEntity.getGiroNumber()));
+    }
+
+    private String getSignReferenceOrThrow(
+            InitSignResponse initSignResponse, EndUserMessage failCaseEndUserMessage) {
+        return initSignResponse
+                .getSignReference()
+                .orElseThrow(
+                        () ->
+                                getTransferFailedException(
+                                        TransferExceptionMessage.NO_SIGN_REFERENCE,
+                                        failCaseEndUserMessage,
+                                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
     }
 
     private Date getPaymentDate(Transfer transfer) {

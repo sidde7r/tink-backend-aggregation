@@ -89,6 +89,9 @@ public class SkandiaBankenConstants {
 
         public static final URL PAYMENT_SOURCE_ACCOUNTS =
                 BANKING_V2.concat("/Payments/AvailableAccounts");
+        public static final URL PAYMENT_RECIPIENTS = BANKING_V2.concat("/Recipients/Payments");
+        public static final URL FETCH_RECIPIENTS =
+                BANKING_V2.concat("/Recipients/Payments/{accountId}");
         public static final URL UNAPPROVED_PAYMENTS = BANKING_V2.concat("/Payments");
         public static final URL APPROVED_PAYMENTS = BANKING_V2.concat("/Payments/Approved");
         public static final URL FETCH_SIGN_STATUS = SYSTEM_V2.concat("/Sign/{signReference}");
@@ -284,6 +287,7 @@ public class SkandiaBankenConstants {
                 "Minimum amount of payment is 1 SEK. This is a restriction set by the bank.";
         public static final String INVALID_UNSTRUCTURED_LENGTH =
                 "Unstructured reference longer than 175 chars. Bank crops reference if longer, therefore we cancel the payment.";
+        public static final String ADD_NEW_RECIPIENT_FAILED = "Adding of new recipient failed.";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
