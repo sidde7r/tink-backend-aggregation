@@ -21,4 +21,9 @@ public class IntegerFieldTypeDetectionStrategyTest {
     public void shouldDetectIfFieldIsAnNonIntegerField1() {
         assertFalse(sut.isTypeMatched(Collections.emptyList(), "1234ab", JsonNodeType.STRING));
     }
+
+    @Test
+    public void shouldDetectIfFieldIsAnNonIntegerField2() {
+        assertFalse(sut.isTypeMatched(Collections.emptyList(), "2.0", JsonNodeType.STRING));
+    }
 }
