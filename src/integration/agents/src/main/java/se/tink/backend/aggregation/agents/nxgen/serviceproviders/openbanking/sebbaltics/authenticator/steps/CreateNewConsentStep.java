@@ -111,19 +111,22 @@ public class CreateNewConsentStep implements AuthenticationStep {
                     break;
                 case ConsentStatus.REJECTED:
                     log.info("Consent rejected");
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
+                            "Consent rejected by user");
                 case ConsentStatus.REVOKED_BY_PSU:
                     log.info("Consent revoked by PSU");
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
+                            "Consent revoked by PSU");
                 case ConsentStatus.EXPIRED:
                     log.info("Consent expired");
-                    throw ThirdPartyAppError.TIMED_OUT.exception();
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception("Consent expired");
                 case ConsentStatus.TERMINATED_BY_TPP:
                     log.info("Consent terminated by TPP");
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
+                            "Consent terminated by TPP");
                 default:
                     log.warn(String.format("Unknown status (%s)", status));
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception("Unknown status");
             }
 
             Uninterruptibles.sleepUninterruptibly(
@@ -131,5 +134,6 @@ public class CreateNewConsentStep implements AuthenticationStep {
         }
 
         log.info(String.format("Time out internally, last status: %s", status));
+        throw ThirdPartyAppError.TIMED_OUT.exception();
     }
 }

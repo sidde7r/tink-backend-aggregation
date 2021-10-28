@@ -288,6 +288,8 @@ public class SkandiaBankenConstants {
         public static final String INVALID_UNSTRUCTURED_LENGTH =
                 "Unstructured reference longer than 175 chars. Bank crops reference if longer, therefore we cancel the payment.";
         public static final String ADD_NEW_RECIPIENT_FAILED = "Adding of new recipient failed.";
+        public static final String A2A_NOT_SUPPORTED =
+                "A2a (bank transfer) is not supported by agent.";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
