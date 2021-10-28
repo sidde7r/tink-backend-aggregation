@@ -1,0 +1,138 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled?bic=SWEDSESS
+Accept: application/json
+Content-Type: application/json
+
+{"authenticationMethodId": "MOBILE_ID", "clientID": "dummyId", "psuData": {"bankID": "08999"}, "redirectUri": "https://api.tink.se/api/v1/credentials/third-party/callback", "scope": "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+ASPSP-SCA-Approach: ***
+X-Rate-Limit-Limit: 100000
+X-Rate-Limit-Remaining: 81893
+X-Rate-Limit-Reset: 2417
+Content-Type: application/json;charset=utf-8
+Set-Cookie: ***
+Content-Length: 483
+
+{"authorizeId" : "32d2ee27-8c0a-47cb-a755-9b82fd49fb05", "chosenScaMethod" : {"authenticationType" : "Mobile BankID", "authenticationMethodId" : "MOBILE_ID"}, "challengeData": { "autoStartToken": "91488fc1-3994-4dff-9cb2-5ef7388d83f2" }, "psuMessage" : "Loging via Tink_org", "_links": {"scaStatus": {"href": "/psd2/v4/authorize-decoupled/authorize/32d2ee27-8c0a-47cb-a755-9b82fd49fb05"} } }
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/32d2ee27-8c0a-47cb-a755-9b82fd49fb05?bic=SWEDSESS&client_id=dummyId
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET AUTH
+200
+X-Rate-Limit-Limit: 100000
+X-Rate-Limit-Remaining: 81858
+X-Rate-Limit-Reset: 2415
+Content-Type: application/json;charset=utf-8
+Content-Length: 24
+
+{"scaStatus": "started"}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH AUTH
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/32d2ee27-8c0a-47cb-a755-9b82fd49fb05?bic=SWEDSESS&client_id=dummyId
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+Content-Length: 87
+
+{"scaStatus": "finalised", "authorizationCode": "e379ffa9-1178-42b1-8053-d14618e11979"}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://psd2.api.swedbank.com/psd2/token?bic=SWEDSESS&code=e379ffa9-1178-42b1-8053-d14618e11979&grant_type=authorization_code&client_secret=dummySecret&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=dummyId
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+Content-Length: 265
+
+{"access_token":"6212d815-2288-4837-b945-0a2d7a4b643c", "token_type":"Bearer", "expires_in":3600, "refresh_token":"c86a6852-2d5f-4dbb-9b99-e5512c864da3", "scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+POST https://psd2.api.swedbank.com/v3/consents?bic=SWEDSESS&app-id=dummyId
+Accept: application/json
+TPP-Redirect-URI: https://api.tink.se/api/v1/credentials/third-party/callback
+Content-Type: application/json
+
+{"recurringIndicator": false, "validUntil": "1992-07-09", "frequencyPerDay": 4, "combinedServiceIndicator": false, "access": {"availableAccounts": "allAccounts"} }
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+201
+Content-Type: application/json;charset=utf-8
+Content-Length: 79
+
+{"consentId": "6885094f-0193-44bf-bbf2-e79492169f05", "consentStatus": "valid"}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+POST https://psd2.api.swedbank.com/v3/consents?bic=SWEDSESS&app-id=dummyId
+Accept: application/json
+Content-Type: application/json
+TPP-Redirect-URI: https://api.tink.se/api/v1/credentials/third-party/callback
+TPP-Nok-Redirect-URI: https://api.tink.se/api/v1/credentials/third-party/callback
+
+{"recurringIndicator": true, "validUntil": "1992-07-09", "frequencyPerDay": 4, "combinedServiceIndicator": false, "access": {"accounts": [{"iban": "SE4550000000058398257466"}, {"iban": "SE4550000000058398257466"} ], "transactions": [{"iban": "SE4550000000058398257466"}, {"iban": "SE4550000000058398257466"} ], "balances": [{"iban": "SE4550000000058398257466"}, {"iban": "SE4550000000058398257466"} ], "transactionsOver90Days": [{"iban": "SE4550000000058398257466"}, {"iban": "SE4550000000058398257466"} ] } }
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+201
+Content-Type: application/json;charset=utf-8
+Content-Length: 79
+
+{"consentId": "6885094f-0193-44bf-bbf2-e79492169f05", "consentStatus": "valid"}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+GET https://psd2.api.swedbank.com/v3/accounts?bic=SWEDSESS&app-id=dummyId
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Content-Type: application/json;charset=utf-8
+Content-Length: 809
+
+{"accounts": [{"resourceId": "ea4cb27a809ce23379df511bd7d2c3c2", "iban": "SE4550000000058398257466", "bban": "1234-9,123 747 504-9", "currency": "SEK", "product": "Företagskonto", "cashAccountType": "CACC", "bankId": "08999", "_links": {"balances": {"href": "/v3/accounts/ea4cb27a809ce23379df511bd7d2c3c2/balances"}, "transactions": {"href": "/v3/accounts/ea4cb27a809ce23379df511bd7d2c3c2/transactions"} } }, {"resourceId": "a7157bd6c0375171222482802ed6c0e", "iban": "SE4550000000058398257466", "bban": "1234-9,123 747 521-3", "currency": "SEK", "product": "Placeringskonto ftg", "cashAccountType": "CACC", "bankId": "08999", "_links": {"balances": {"href": "/v3/accounts/a7157bd6c0375171222482802ed6c0e/balances"}, "transactions": {"href": "/v3/accounts/a7157bd6c0375171222482802ed6c0e/transactions"} } } ] }
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+GET https://psd2.api.swedbank.com/v3/accounts/ea4cb27a809ce23379df511bd7d2c3c2/balances?bic=SWEDSESS
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Content-Type: application/json;charset=utf-8
+Content-Length: 251
+
+{"account": {"iban": "SE4550000000058398257466"}, "balances": [{"balanceType": "interimAvailable", "balanceAmount": {"currency": "SEK", "amount": "-38.00"} }, {"balanceType": "authorised", "balanceAmount": {"currency": "SEK", "amount": "-38.00"} } ] }
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://psd2.api.swedbank.com/v3/accounts/a7157bd6c0375171222482802ed6c0e/balances?bic=SWEDSESS
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Content-Type: application/json;charset=utf-8
+Content-Length: 247
+
+{"account": {"iban": "SE4550000000058398257466"}, "balances": [{"balanceType": "interimAvailable", "balanceAmount": {"currency": "SEK", "amount": "3.00"} }, {"balanceType": "authorised", "balanceAmount": {"currency": "SEK", "amount": "3.00"} } ] }
