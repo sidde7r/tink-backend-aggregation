@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator.ISO_OFFSET_DATE_TIME;
+
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +40,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
 public class UkOpenBankingApiClient extends OpenIdApiClient {
+
+    private static final String FROM_BOOKING_DATE_TIME_KEY = "fromBookingDateTime";
+    private static final String TO_BOOKING_DATE_TIME_KEY = "toBookingDateTime";
 
     private final PersistentStorage persistentStorage;
     private final UkOpenBankingAisConfig aisConfig;
@@ -144,6 +150,27 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T fetchAccountBalance(String accountId, Class<T> responseType) {
         return createAisRequest(aisConfig.getAccountBalanceRequestURL(accountId)).get(responseType);
+    }
+
+    public <T> T fetchAccountTransactions(
+            String accountId,
+            OffsetDateTime fromBookingDateTime,
+            OffsetDateTime toBookingDateTime,
+            Class<T> responseType) {
+
+        URL url =
+                aisConfig
+                        .getApiBaseURL()
+                        .concatWithSeparator(
+                                aisConfig.getInitialTransactionsPaginationKey(accountId))
+                        .queryParam(
+                                FROM_BOOKING_DATE_TIME_KEY,
+                                ISO_OFFSET_DATE_TIME.format(fromBookingDateTime))
+                        .queryParam(
+                                TO_BOOKING_DATE_TIME_KEY,
+                                ISO_OFFSET_DATE_TIME.format(toBookingDateTime));
+
+        return createAisRequest(url).get(responseType);
     }
 
     public <T> T fetchAccountTransactions(String paginationKey, Class<T> responseType) {

@@ -30,6 +30,7 @@ public class ScaExpirationValidatorTest {
 
         // expected
         Assertions.assertThat(validator.isScaExpired()).isFalse();
+        Assertions.assertThat(validator.evaluateStatus()).isEqualTo(ScaStatus.VALID);
     }
 
     @Test
@@ -40,5 +41,6 @@ public class ScaExpirationValidatorTest {
 
         // expected
         Assertions.assertThat(validator.isScaExpired()).isTrue();
+        Assertions.assertThat(validator.evaluateStatus()).isEqualTo(ScaStatus.EXPIRED);
     }
 }
