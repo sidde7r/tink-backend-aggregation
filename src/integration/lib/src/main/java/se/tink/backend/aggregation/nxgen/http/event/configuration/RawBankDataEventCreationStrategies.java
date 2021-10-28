@@ -7,8 +7,10 @@ import lombok.Builder;
 import lombok.Getter;
 import se.tink.backend.aggregation.nxgen.http.event.masking.keys.MaskKeysWithNumericValuesStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.keys.RawBankDataKeyValueMaskingStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.masking.values.GenericMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.MaskAllValuesMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.RawBankDataFieldValueMaskingStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskBooleanValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskDateValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DateFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DummyFieldTypeDetectionStrategy;
@@ -36,7 +38,10 @@ public class RawBankDataEventCreationStrategies {
                         Collections.singletonList(new MaskKeysWithNumericValuesStrategy()))
                 .valueMaskingStrategies(
                         Arrays.asList(
+                                // order is important!
                                 new UnmaskDateValueMaskingStrategy(),
+                                new UnmaskBooleanValueMaskingStrategy(),
+                                new GenericMaskingStrategy(),
                                 new MaskAllValuesMaskingStrategy()))
                 .fieldTypeDetectionStrategies(
                         // order is important!
