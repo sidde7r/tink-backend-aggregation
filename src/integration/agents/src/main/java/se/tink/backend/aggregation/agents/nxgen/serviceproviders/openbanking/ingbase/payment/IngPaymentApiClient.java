@@ -34,7 +34,6 @@ public class IngPaymentApiClient extends IngBaseApiClient {
     public IngPaymentApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            String market,
             ProviderSessionCacheController providerSessionCacheController,
             IngUserAuthenticationData userAuthenticationData,
             MarketConfiguration marketConfiguration,
@@ -46,7 +45,6 @@ public class IngPaymentApiClient extends IngBaseApiClient {
         super(
                 client,
                 persistentStorage,
-                market,
                 providerSessionCacheController,
                 userAuthenticationData,
                 marketConfiguration,

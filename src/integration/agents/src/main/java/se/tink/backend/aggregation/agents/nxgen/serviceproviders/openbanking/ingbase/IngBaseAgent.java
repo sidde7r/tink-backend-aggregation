@@ -66,6 +66,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     private final IngPaymentApiClient paymentApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
+    /*
+       ING in their documentation use country code in lowercase, however their API treat
+       lowercase as wrong country code and returns error that it's malformed
+   */
+    private final String marketCodeUpperCase = request.getProvider().getMarket().toUpperCase();
+
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         configureHttpClient(client);
@@ -74,17 +80,11 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         .getCredentialsRequest()
                         .getUserAvailability()
                         .getOriginatingUserIpOrDefault();
-        /*
-            ING in their documentation use country code in lowercase, however their API treat
-            lowercase as wrong country code and returns error that it's malformed
-        */
-        String marketInUppercase = request.getProvider().getMarket().toUpperCase();
 
         apiClient =
                 new IngBaseApiClient(
                         client,
                         persistentStorage,
-                        marketInUppercase,
                         providerSessionCacheController,
                         new IngUserAuthenticationData(
                                 shouldDoManualAuthentication(request), psuIpAddress),
@@ -96,7 +96,6 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 new IngPaymentApiClient(
                         client,
                         persistentStorage,
-                        marketInUppercase,
                         providerSessionCacheController,
                         new IngUserAuthenticationData(
                                 shouldDoManualAuthentication(request), psuIpAddress),
@@ -233,6 +232,11 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public LocalDate earliestTransactionHistoryDate() {
         return null;
+    }
+
+    @Override
+    public String marketCode() {
+        return marketCodeUpperCase;
     }
 
     protected LocalDate getTransactionsFromDate() {

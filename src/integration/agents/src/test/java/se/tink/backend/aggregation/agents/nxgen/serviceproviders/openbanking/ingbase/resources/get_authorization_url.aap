@@ -1,0 +1,62 @@
+REQUEST 1
+POST /oauth2/token
+Accept: application/json
+Digest: SHA-256=w0mymuL8aCrbJmmabs1pytZhon8lQucTuJMUtuKr+uw=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Authorization: Signature keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="null"
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+
+RESPONSE 1
+200
+Date: Mon, 11 Oct 2021 21:31:55 GMT
+Date: Mon, 11 Oct 2021 21:31:56 GMT
+Content-Type: application/json
+X-Frame-Options: deny
+X-Content-Type-Options: nosniff
+Expires: 0
+X-ING-Response-ID: f4a5fc2a-e944-484a-895c-f0b095dd1072
+Content-Security-Policy: ***
+Content-Length: 3492
+
+{
+  "access_token": "access_token",
+  "expires_in": 905,
+  "scope": "granting",
+  "token_type": "bearer",
+  "keys": [
+    {
+      "kty": "RSA",
+      "n": "3l3rdz4hyJkMx5ChddZmQft6_YsRfBkyA2ftXy1cOcqSm6Wtywt1ztVYATFHBOaX_tr7C5LXtMcghjoRbUfUHoy-egpC2B4wZ45YxWbBvLtG6QyCQH8kqLqjeGzDgpnJfDuhZP8i0lXPZwkWpF8J9XuB0DgVDrDXiS0wPB_I4mCW9s4ZMOdMA7aJMN2qhGo4DJqTn2aPjnzyx1OaeiRZC6YiyLU9QJJpWanFk69bZRu9Lpox8j4y5O2TW8bDmkKb0P_WXZVcSYgkX0Ed9Da0jCBl9cbqXdp7Ww4B8f8y9oBgK58VHlPvaufORw8IyaJ4Q6WezsHSq_Dmp2WFbV4z_qNS-ZpEGGdpkPtaYODTXU1p_3gTmNGBuAN0jLE9DaQZJswKj9-oBJifpHbOMnv2f__jBdjNvtDxe_LJPMj1B6XUetqoq8k9fU_XiHxz3mSBvzRqf-d-fD_evr4i_nxqEvsT_5D1nGvts8XQaSPehtlpFTym35KR83qoo04VPkdV",
+      "e": "AQAB",
+      "use": "sig",
+      "alg": "RS256",
+      "x5t": "26e5d9329369bf1e5d3198cb4f4da45c9de040cf"
+    }
+  ],
+  "client_id": "0440f53f-93e0-4ebf-95a6-64cfd2d52a90"
+}
+
+REQUEST 2
+GET https://api.ing.com/oauth2/authorization-server-url?redirect_uri=https://non.existing.address.com&scope=payment-accounts:transactions:view+payment-accounts:balances:view&country_code=AA
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="some-client-id",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="null"
+Authorization: Bearer access_token
+
+RESPONSE 2
+200
+Date: Mon, 11 Oct 2021 21:31:56 GMT
+Date: Mon, 11 Oct 2021 21:31:56 GMT
+Content-Type: application/json;charset=utf-8
+X-ING-ReqID: a5f16518-9e80-4721-bc45-7a90055a3a9e
+X-ING-Response-ID: 56a731bb-16e0-44c6-844e-a6e7c5f1c61d
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 117
+
+{"location":"https://myaccount.ing.com/granting/c7f84aa4a9cc9811fb697a786b5d7e7b949d17e155e6b9ff24f8b0fb959c8c90/BE"}

@@ -60,7 +60,7 @@ public class IngBaseApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private final String market;
+    private final String marketCode;
     private final ProviderSessionCacheController providerSessionCacheController;
     private final IngUserAuthenticationData userAuthenticationData;
     private final MarketConfiguration marketConfiguration;
@@ -76,21 +76,20 @@ public class IngBaseApiClient {
     public IngBaseApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            String market,
             ProviderSessionCacheController providerSessionCacheController,
             IngUserAuthenticationData userAuthenticationData,
             MarketConfiguration marketConfiguration,
             QsealcSigner proxySigner,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider agentComponentProvider) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.market = market;
         this.providerSessionCacheController = providerSessionCacheController;
         this.userAuthenticationData = userAuthenticationData;
         this.marketConfiguration = marketConfiguration;
+        this.marketCode = marketConfiguration.marketCode();
         this.proxySigner = proxySigner;
-        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
+        this.localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
     }
 
     public void setConfiguration(AgentConfiguration<IngBaseConfiguration> agentConfiguration)
@@ -216,8 +215,8 @@ public class IngBaseApiClient {
         persistentStorage.put(StorageKeys.TOKEN, accessToken);
     }
 
-    public String getMarket() {
-        return market;
+    public String getMarketCode() {
+        return marketCode;
     }
 
     protected TokenResponse getApplicationAccessToken() {
@@ -374,18 +373,20 @@ public class IngBaseApiClient {
 
     private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {
 
-        final String reqPath =
-                new URL(Urls.OAUTH)
-                        .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                        .queryParam(
-                                QueryKeys.SCOPE,
-                                QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
-                        .queryParam(QueryKeys.COUNTRY_CODE, market)
-                        .toString();
+        final String reqPath = createUrlForAuthorization().toString();
 
         return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(tokenResponse.toTinkToken())
                 .get(AuthorizationUrl.class);
+    }
+
+    private URL createUrlForAuthorization() {
+        return new URL(Urls.OAUTH)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
+                .queryParam(
+                        QueryKeys.SCOPE,
+                        QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
+                .queryParam(QueryKeys.COUNTRY_CODE, marketCode);
     }
 
     private String getAuthorization(
