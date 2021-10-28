@@ -23,9 +23,7 @@ public class AddBusinessFilter extends Filter {
                 .getUrl()
                 .get()
                 .contains(SwedbankConstants.Urls.AUTHORIZATION_DECOUPLED.toString())) {
-            httpRequest
-                    .getHeaders()
-                    .add(Field.Key.CORPORATE_ID.getFieldKey().toUpperCase(), businessId);
+            httpRequest.getHeaders().add(Field.Key.CORPORATE_ID.getFieldKey(), businessId);
         }
         return nextFilter(httpRequest);
     }
