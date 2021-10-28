@@ -4,7 +4,7 @@ import java.util.List;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.pojo.FieldPathPart;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
 
-public class MaskAllValueMaskingStrategy implements RawBankDataFieldValueMaskingStrategy {
+public class MaskAllValuesMaskingStrategy implements RawBankDataFieldValueMaskingStrategy {
 
     @Override
     public boolean shouldUseMaskingStrategy(
