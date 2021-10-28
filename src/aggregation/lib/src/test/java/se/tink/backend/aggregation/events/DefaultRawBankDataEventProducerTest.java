@@ -124,7 +124,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.IBAN)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLDDDDDDDDDDDDDDDDDDDDDDDDD")
+                        .setFieldValue("LLddddddddddddddddddddddddd")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -132,7 +132,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.BBAN)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("DDDDDDDDDDDDDDDDDDDD")
+                        .setFieldValue("dddddddddddddddddddd")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -180,7 +180,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("-DDD.DD")
+                        .setFieldValue("-ddd.dd")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -196,7 +196,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLLLD")
+                        .setFieldValue("LLLLd")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -204,7 +204,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLD")
+                        .setFieldValue("LLd")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -228,7 +228,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("-DDD.D")
+                        .setFieldValue("-ddd.d")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -244,7 +244,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLLLD")
+                        .setFieldValue("LLLLd")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -252,7 +252,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("DDD.D")
+                        .setFieldValue("ddd.d")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -292,7 +292,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLLLD")
+                        .setFieldValue("LLLLd")
                         .build());
 
         // when
@@ -382,7 +382,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLLLLD")
+                        .setFieldValue("LLLLLd")
                         .setCount(1)
                         .build());
         expectedFields1.add(
@@ -391,7 +391,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLLLLD")
+                        .setFieldValue("LLLLLd")
                         .setCount(1)
                         .build());
 
@@ -401,7 +401,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLLLLD")
+                        .setFieldValue("LLLLLd")
                         .setCount(1)
                         .build());
         expectedFields2.add(
@@ -410,7 +410,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLLLLD")
+                        .setFieldValue("LLLLLd")
                         .setCount(1)
                         .build());
 

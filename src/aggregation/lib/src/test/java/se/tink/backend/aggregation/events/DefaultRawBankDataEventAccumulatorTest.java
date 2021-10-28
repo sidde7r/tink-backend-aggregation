@@ -46,7 +46,7 @@ public class DefaultRawBankDataEventAccumulatorTest {
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("LLD")
+                        .setFieldValue("LLd")
                         .setCount(2)
                         .build());
         expectedFields.add(

@@ -16,7 +16,7 @@ public class GenericMaskingStrategy implements RawBankDataFieldValueMaskingStrat
      1- If length of field is bigger or equal to 20 characters just output "<LONG_STRING>"
      2- Otherwise, go through each character in the string:
          a) If character is among ALLOWED_CHARACTERS_FOR_UNMASK then keep it as it is
-         b) If it is a number, replace it with "D"
+         b) If it is a number, replace it with "d"
          c) Otherwise replace it with "L"
     */
 
@@ -43,13 +43,18 @@ public class GenericMaskingStrategy implements RawBankDataFieldValueMaskingStrat
             List<FieldPathPart> fieldPathParts,
             String value,
             RawBankDataTrackerEventBankFieldType fieldType) {
+
+        if (value.length() >= 30) {
+            return "LONG_TEXT";
+        }
+
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
             if (ALLOWED_CHARACTERS_FOR_UNMASK.contains(c)) {
                 builder.append(c);
             } else if (Character.isDigit(c)) {
-                builder.append("D");
+                builder.append("d");
             } else {
                 builder.append("L");
             }
