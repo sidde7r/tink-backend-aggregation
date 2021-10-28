@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class PaymentInitSignResponse {
+public class InitSignResponse {
 
     private String errorCode;
     private String errorMessage;

@@ -91,7 +91,7 @@ public class SkandiaBankenConstants {
                 BANKING_V2.concat("/Payments/AvailableAccounts");
         public static final URL UNAPPROVED_PAYMENTS = BANKING_V2.concat("/Payments");
         public static final URL APPROVED_PAYMENTS = BANKING_V2.concat("/Payments/Approved");
-        public static final URL POLL_SIGNING_PAYMENTS = SYSTEM_V2.concat("/Sign/{signReference}");
+        public static final URL FETCH_SIGN_STATUS = SYSTEM_V2.concat("/Sign/{signReference}");
         public static final URL DELETE_UNAPPROVED_PAYMENT =
                 BANKING_V2.concat("/Payments/{encryptedPaymentId}");
     }

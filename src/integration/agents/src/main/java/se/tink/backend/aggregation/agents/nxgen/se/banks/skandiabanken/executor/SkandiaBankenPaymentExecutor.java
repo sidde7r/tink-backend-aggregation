@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.PaymentTransfer;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TransferExceptionMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentInitSignResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.InitSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utils.SkandiaBankenDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utils.SkandiaBankenExecutorUtils;
@@ -175,7 +175,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
         supplementalInformationController.openMobileBankIdAsync(null);
 
-        poll(signReference);
+        pollSignStatus(signReference);
 
         try {
             apiClient.completePayment(encryptedPaymentId, signReference);
@@ -188,7 +188,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     }
 
     private String initPaymentSigning(String encryptedPaymentId) {
-        PaymentInitSignResponse initSignResponse;
+        InitSignResponse initSignResponse;
         try {
             initSignResponse = apiClient.initSignPayment(encryptedPaymentId);
         } catch (HttpResponseException e) {
@@ -228,12 +228,12 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                                         InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
     }
 
-    public void poll(String signReference) {
+    public void pollSignStatus(String signReference) {
         BankIdStatus status;
 
         Uninterruptibles.sleepUninterruptibly(BankIdPolling.INITIAL_SLEEP, TimeUnit.MILLISECONDS);
         for (int i = 0; i < BankIdPolling.MAX_ATTEMPTS; i++) {
-            status = getPaymentSignStatus(signReference);
+            status = getSignStatus(signReference);
 
             switch (status) {
                 case DONE:
@@ -262,9 +262,9 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                 InternalStatus.BANKID_NO_RESPONSE);
     }
 
-    private BankIdStatus getPaymentSignStatus(String signReference) {
+    private BankIdStatus getSignStatus(String signReference) {
         try {
-            return apiClient.pollPaymentSignStatus(signReference);
+            return apiClient.pollSignStatus(signReference);
         } catch (HttpResponseException e) {
             throw getTransferFailedException(
                     TransferExceptionMessage.POLL_SIGN_STATUS_FAILED,
