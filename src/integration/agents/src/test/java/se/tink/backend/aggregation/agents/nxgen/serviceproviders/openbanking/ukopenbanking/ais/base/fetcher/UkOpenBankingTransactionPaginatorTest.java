@@ -12,11 +12,18 @@ import java.time.LocalDateTime;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -28,8 +35,15 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.unleash.UnleashClient;
 
+@RunWith(MockitoJUnitRunner.class)
 public class UkOpenBankingTransactionPaginatorTest {
+
+    @Mock AgentComponentProvider componentProvider;
+    @Mock UnleashClient unleashClient;
+    @Mock CompositeAgentContext context;
+    @Mock Provider provider;
 
     private static final TransactionalAccount TRANSACTIONAL_ACCOUNT =
             TransactionalAccount.nxBuilder()
@@ -59,6 +73,10 @@ public class UkOpenBankingTransactionPaginatorTest {
         UkOpenBankingAisConfig ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
         when(ukOpenBankingAisConfig.getInitialTransactionsPaginationKey("BI123"))
                 .thenReturn("/some/path");
+        when(componentProvider.getContext()).thenReturn(context);
+        when(context.getAppId()).thenReturn("mockedAppId");
+        when(componentProvider.getUnleashClient()).thenReturn(unleashClient);
+        when(provider.getName()).thenReturn("providerName");
 
         DelaySimulatingLocalDateTimeSource localDateTimeSource =
                 new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2020-06-02T00:00:00"));
@@ -77,6 +95,8 @@ public class UkOpenBankingTransactionPaginatorTest {
 
         paginator =
                 new UkOpenBankingTransactionPaginator<>(
+                        componentProvider,
+                        provider,
                         ukOpenBankingAisConfig,
                         persistentStorage,
                         apiClient,
@@ -89,6 +109,7 @@ public class UkOpenBankingTransactionPaginatorTest {
 
     @Test
     public void testRequestTimeProperlySaved() {
+        when(unleashClient.isToggleEnable(Mockito.any())).thenReturn(false);
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.CHECKING)
@@ -120,6 +141,7 @@ public class UkOpenBankingTransactionPaginatorTest {
 
     @Test
     public void testFetchTransactionsForShortPeriod() {
+        when(unleashClient.isToggleEnable(Mockito.any())).thenReturn(false);
         when(persistentStorage.get("fetchedTxUntil:BI123")).thenReturn("2020-06-02T10:10:10");
 
         paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null);
@@ -145,6 +167,34 @@ public class UkOpenBankingTransactionPaginatorTest {
         // then
         Assertions.assertThatCode(() -> paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    public void getTransactionsForShouldFetch24MonthsInstead23WhenUnleashIsActive() {
+        when(unleashClient.isToggleEnable(Mockito.any())).thenReturn(true);
+
+        TransactionalAccount account =
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(123.45)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier("UN123")
+                                        .withAccountNumber("UN123")
+                                        .withAccountName("AN123")
+                                        .addIdentifier(new OtherIdentifier("ID123"))
+                                        .build())
+                        .setApiIdentifier("BI123")
+                        .build()
+                        .orElse(null);
+
+        paginator.getTransactionsFor(account, null);
+
+        verify(apiClient)
+                .fetchAccountTransactions(
+                        eq("/some/path?fromBookingDateTime=2018-06-02T00:00:00Z"), // 24 months
+                        eq(AccountTransactionsV31Response.class));
     }
 
     private static class DelaySimulatingLocalDateTimeSource implements LocalDateTimeSource {

@@ -1,12 +1,20 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.capitalone;
+package se.tink.backend.aggregation.agents.nxgen.ie.openbanking.permanenttsb;
 
-import java.util.Collections;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.TinkJwt;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.WellKnownResponse;
@@ -14,11 +22,15 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class CapitalOneApiClient extends UkOpenBankingApiClient {
+public class PermanentTsbApiClient extends UkOpenBankingApiClient {
 
-    public CapitalOneApiClient(
+    private final UkOpenBankingAisConfig aisConfig;
+    private final String qsealPem;
+
+    public PermanentTsbApiClient(
             TinkHttpClient httpClient,
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
@@ -27,7 +39,8 @@ public class CapitalOneApiClient extends UkOpenBankingApiClient {
             RandomValueGenerator randomValueGenerator,
             PersistentStorage persistentStorage,
             UkOpenBankingAisConfig aisConfig,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider componentProvider,
+            String qsealcPem) {
         super(
                 httpClient,
                 signer,
@@ -38,63 +51,44 @@ public class CapitalOneApiClient extends UkOpenBankingApiClient {
                 persistentStorage,
                 aisConfig,
                 componentProvider);
+        this.aisConfig = aisConfig;
+        this.qsealPem = qsealcPem;
     }
 
     @Override
     public OAuth2Token requestClientCredentials(ClientMode scope) {
         TokenRequestForm postData = createTokenRequestForm("client_credentials", scope);
+        postData.put("client_assertion", buildSignedClientAssertion());
 
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
     @Override
-    public OAuth2Token exchangeAccessCode(String code) {
-        TokenRequestForm postData = createTokenRequestFormWithoutScope().withCode(code);
-
-        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
+    protected RequestBuilder createBasicTokenRequest(WellKnownResponse wellKnownConfiguration) {
+        return httpClient
+                .request(wellKnownConfiguration.getTokenEndpoint())
+                .header(
+                        "tpp-signature-certificate",
+                        Base64.getEncoder().encodeToString(qsealPem.getBytes()))
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken, ClientMode scope) {
-        TokenRequestForm postData =
-                createTokenRequestForm("refresh_token", scope).withRefreshToken(refreshToken);
-
-        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
+    protected RequestBuilder createConsentRequest(AccountPermissionRequest permissionRequest) {
+        return createAisRequest(aisConfig.createConsentRequestURL())
+                .queryParam("transactionFromDateTime", LocalDate.now().minusYears(10).toString())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .body(permissionRequest);
     }
 
-    protected TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
-        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
-        String scope =
-                wellKnownConfiguration
-                        .verifyAndGetScopes(Collections.singletonList(mode.getValue()))
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Provider does not support the mandatory scopes."));
-        String audience = wellKnownConfiguration.getIssuer();
+    private String buildSignedClientAssertion() {
+        Instant issuedAt = Instant.now();
+        Instant expiresAt = issuedAt.plusSeconds(TimeUnit.MINUTES.toSeconds(10));
 
-        return new TokenRequestForm()
-                .withGrantType(grantType)
-                .withScope(scope)
-                .withPrivateKeyJwt(
-                        signer,
-                        wellKnownConfiguration,
-                        providerConfiguration,
-                        audience) // Overriding JWT default audience with issuer
-                .withRedirectUri(redirectUrl);
-    }
-
-    private TokenRequestForm createTokenRequestFormWithoutScope() {
-        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
-        String audience = wellKnownConfiguration.getIssuer();
-
-        return new TokenRequestForm()
-                .withGrantType("authorization_code")
-                .withPrivateKeyJwt(
-                        signer,
-                        wellKnownConfiguration,
-                        providerConfiguration,
-                        audience) // Overriding JWT default audience with issuer
-                .withRedirectUri(redirectUrl);
+        return TinkJwt.create()
+                .withJWTId(UUID.randomUUID().toString())
+                .withExpiresAt(expiresAt)
+                .signAttached(Algorithm.PS256, signer);
     }
 }

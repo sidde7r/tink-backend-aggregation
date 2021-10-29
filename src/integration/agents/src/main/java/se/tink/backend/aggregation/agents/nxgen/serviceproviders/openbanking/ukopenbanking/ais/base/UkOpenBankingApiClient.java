@@ -202,10 +202,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                         .generate();
 
         AccountPermissionResponse accountPermissionResponse =
-                createAisRequest(aisConfig.createConsentRequestURL())
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .body(permissionRequest)
-                        .post(AccountPermissionResponse.class);
+                createConsentRequest(permissionRequest).post(AccountPermissionResponse.class);
 
         String consentId = accountPermissionResponse.getConsentId();
         saveIntentId(consentId);
@@ -219,7 +216,20 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .get(AccountPermissionResponse.class);
     }
 
-    public void saveIntentId(String intentId) {
+    protected RequestBuilder createAisRequest(URL url) {
+        return httpClient
+                .request(url)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .addFilter(getAisAuthFilter());
+    }
+
+    protected RequestBuilder createConsentRequest(AccountPermissionRequest permissionRequest) {
+        return createAisRequest(aisConfig.createConsentRequestURL())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .body(permissionRequest);
+    }
+
+    private void saveIntentId(String intentId) {
         persistentStorage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, intentId);
     }
@@ -227,12 +237,5 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private void saveConsentCreationDate(Instant creationDate) {
         persistentStorage.put(
                 PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE, creationDate);
-    }
-
-    private RequestBuilder createAisRequest(URL url) {
-        return httpClient
-                .request(url)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .addFilter(getAisAuthFilter());
     }
 }

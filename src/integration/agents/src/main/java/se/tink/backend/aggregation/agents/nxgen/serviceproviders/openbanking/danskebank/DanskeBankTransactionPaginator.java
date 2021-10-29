@@ -7,11 +7,13 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.TransactionConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -35,6 +37,8 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     DanskeBankTransactionPaginator(
+            AgentComponentProvider componentProvider,
+            Provider provider,
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
             UkOpenBankingApiClient apiClient,
@@ -42,6 +46,8 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
             TransactionConverter<T, S> transactionConverter,
             LocalDateTimeSource localDateTimeSource) {
         super(
+                componentProvider,
+                provider,
                 ukOpenBankingAisConfig,
                 persistentStorage,
                 apiClient,

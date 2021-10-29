@@ -262,7 +262,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 getTransactionalAccountFetcher(),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        ais.makeAccountTransactionPaginatorController(apiClient),
+                        ais.makeAccountTransactionPaginatorController(
+                                apiClient, componentProvider, provider),
                         ais.makeUpcomingTransactionFetcher(apiClient).orElse(null)));
     }
 
@@ -285,7 +286,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 ais.makeCreditCardAccountFetcher(apiClient, fetcherInstrumentation),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        ais.makeCreditCardTransactionPaginatorController(apiClient)));
+                        ais.makeCreditCardTransactionPaginatorController(
+                                apiClient, componentProvider, provider)));
     }
 
     @Override

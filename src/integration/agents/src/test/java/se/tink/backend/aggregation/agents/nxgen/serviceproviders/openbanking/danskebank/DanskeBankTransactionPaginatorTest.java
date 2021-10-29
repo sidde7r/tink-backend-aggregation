@@ -19,12 +19,18 @@ import java.util.List;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -39,8 +45,15 @@ import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.unleash.UnleashClient;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DanskeBankTransactionPaginatorTest {
+
+    @Mock private AgentComponentProvider componentProvider;
+    @Mock private UnleashClient unleashClient;
+    @Mock private CompositeAgentContext context;
+    @Mock private Provider provider;
 
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/danskebank/resources";
@@ -62,6 +75,10 @@ public class DanskeBankTransactionPaginatorTest {
         UkOpenBankingAisConfig ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
         when(ukOpenBankingAisConfig.getInitialTransactionsPaginationKey("BI123"))
                 .thenReturn("/some/path");
+        when(componentProvider.getContext()).thenReturn(context);
+        when(context.getAppId()).thenReturn("mockedAppId");
+        when(componentProvider.getUnleashClient()).thenReturn(unleashClient);
+        when(provider.getName()).thenReturn("providerName");
 
         DelaySimulatingLocalDateTimeSource localDateTimeSource =
                 new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2020-06-02T00:00:00"));
@@ -80,6 +97,8 @@ public class DanskeBankTransactionPaginatorTest {
 
         paginator =
                 new DanskeBankTransactionPaginator<>(
+                        componentProvider,
+                        provider,
                         ukOpenBankingAisConfig,
                         persistentStorage,
                         apiClient,

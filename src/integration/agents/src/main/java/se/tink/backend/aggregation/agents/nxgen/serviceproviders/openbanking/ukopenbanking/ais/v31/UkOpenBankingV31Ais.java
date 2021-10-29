@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.base.Preconditions;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingUpcomingTransactionFetcher;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
@@ -92,9 +94,13 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     @Override
     public TransactionPaginator<TransactionalAccount> makeAccountTransactionPaginatorController(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient,
+            AgentComponentProvider componentProvider,
+            Provider provider) {
         return new TransactionKeyPaginationController<>(
                 new UkOpenBankingTransactionPaginator<>(
+                        componentProvider,
+                        provider,
                         ukOpenBankingAisConfig,
                         persistentStorage,
                         apiClient,
@@ -129,9 +135,13 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     @Override
     public TransactionPaginator<CreditCardAccount> makeCreditCardTransactionPaginatorController(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient,
+            AgentComponentProvider componentProvider,
+            Provider provider) {
         return new TransactionKeyPaginationController<>(
                 new UkOpenBankingTransactionPaginator<>(
+                        componentProvider,
+                        provider,
                         ukOpenBankingAisConfig,
                         persistentStorage,
                         apiClient,

@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.TransactionConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -27,6 +29,8 @@ public class MonzoTransactionPaginator<T, S extends Account>
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
 
     public MonzoTransactionPaginator(
+            AgentComponentProvider componentProvider,
+            Provider provider,
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
             UkOpenBankingApiClient apiClient,
@@ -35,6 +39,8 @@ public class MonzoTransactionPaginator<T, S extends Account>
             LocalDateTimeSource localDateTimeSource,
             CredentialsRequest request) {
         super(
+                componentProvider,
+                provider,
                 ukOpenBankingAisConfig,
                 persistentStorage,
                 apiClient,
