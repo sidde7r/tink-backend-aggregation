@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -29,9 +28,7 @@ public class TransactionEntity {
     public Transaction toBookedTinkTransaction() {
         Builder builder =
                 Transaction.builder()
-                        .setDescription(
-                                Optional.of(remittanceInformationUnstructuredArray.get(0))
-                                        .orElse(""))
+                        .setDescription(getDescription())
                         .setDate(bookingDate.withZoneSameInstant(ZONE_ID).toLocalDate())
                         .setAmount(transactionAmount.toAmount())
                         .setPending(false)
@@ -43,6 +40,10 @@ public class TransactionEntity {
                         .setProviderMarket(SkandiaConstants.PROVIDER_MARKET);
 
         return (Transaction) builder.build();
+    }
+
+    private String getDescription() {
+        return remittanceInformationUnstructuredArray.stream().findFirst().orElse("");
     }
 
     private TransactionDates getTinkTransactionDates() {
