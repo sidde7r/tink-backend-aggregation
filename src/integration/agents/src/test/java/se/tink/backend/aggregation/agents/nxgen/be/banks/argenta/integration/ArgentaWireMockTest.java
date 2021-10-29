@@ -7,11 +7,14 @@ import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
 @RunWith(JUnitParamsRunner.class)
 public class ArgentaWireMockTest {
+
+    private static final WireMockTestServer WIREMOCK_TEST_SERVER = new WireMockTestServer();
 
     private static final String RESOURCES_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/argenta/integration/resources/";
@@ -27,6 +30,7 @@ public class ArgentaWireMockTest {
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.BE)
                         .withProviderName("be-argenta-cardreader")
+                        .withWireMockServer(WIREMOCK_TEST_SERVER)
                         .withWireMockFilePath(wireMockFilePath)
                         .withoutConfigFile()
                         .testFullAuthentication()
@@ -55,6 +59,7 @@ public class ArgentaWireMockTest {
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.BE)
                         .withProviderName("be-argenta-cardreader")
+                        .withWireMockServer(WIREMOCK_TEST_SERVER)
                         .withWireMockFilePath(wireMockFilePath)
                         .withoutConfigFile()
                         .testFullAuthentication()
@@ -64,7 +69,8 @@ public class ArgentaWireMockTest {
                         .addCredentialField("username", "67031234567890001")
                         .build();
 
-        final AgentContractEntity expected =
+        // and
+        AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
                         .parseContractOnBasisOfFile(AGENT_CONTRACT_FILE_PATH);
 
@@ -85,6 +91,7 @@ public class ArgentaWireMockTest {
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.BE)
                         .withProviderName("be-argenta-cardreader")
+                        .withWireMockServer(WIREMOCK_TEST_SERVER)
                         .withWireMockFilePath(wireMockFilePath)
                         .withoutConfigFile()
                         .testAutoAuthentication()

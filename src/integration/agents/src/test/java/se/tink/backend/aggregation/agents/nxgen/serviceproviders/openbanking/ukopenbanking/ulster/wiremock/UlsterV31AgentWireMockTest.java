@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -17,6 +18,8 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UlsterV31AgentWireMockTest {
+
+    private static final WireMockTestServer WIREMOCK_TEST_SERVER = new WireMockTestServer(true);
 
     private static final String PROVIDER_NAME = "uk-ulster-oauth2";
 
@@ -53,6 +56,7 @@ public class UlsterV31AgentWireMockTest {
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.UK)
                         .withProviderName(PROVIDER_NAME)
+                        .withWireMockServer(WIREMOCK_TEST_SERVER)
                         .withWireMockFilePath(FULL_AUTH_TRAFFIC)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testFullAuthentication()
@@ -75,6 +79,7 @@ public class UlsterV31AgentWireMockTest {
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.UK)
                         .withProviderName(PROVIDER_NAME)
+                        .withWireMockServer(WIREMOCK_TEST_SERVER)
                         .withWireMockFilePath(AUTO_AUTH_FETCH_DATA_TRAFFIC)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testAutoAuthentication()
@@ -101,6 +106,7 @@ public class UlsterV31AgentWireMockTest {
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.UK)
                         .withProviderName(PROVIDER_NAME)
+                        .withWireMockServer(WIREMOCK_TEST_SERVER)
                         .withWireMockFilePath(REFRESH_TOKEN_TRAFFIC)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testAutoAuthentication()
@@ -121,6 +127,7 @@ public class UlsterV31AgentWireMockTest {
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.UK)
                         .withProviderName(PROVIDER_NAME)
+                        .withWireMockServer(WIREMOCK_TEST_SERVER)
                         .withWireMockFilePath(AUTO_AUTH_CONSENT_ID_STORED_REVOKED_TRAFFIC)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testAutoAuthentication()
@@ -128,7 +135,6 @@ public class UlsterV31AgentWireMockTest {
                         .addPersistentStorageData(AIS_ACCOUNT_CONSENT_ID, DUMMY_CONSENT_ID)
                         .enableHttpDebugTrace()
                         .enableDataDumpForContractFile()
-                        .enableWireMockServerLogs()
                         .build();
 
         // expected
