@@ -27,7 +27,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @RequiredArgsConstructor
-public abstract class FrTransferDestinationFetcher implements TransferDestinationFetcher {
+public class FrTransferDestinationFetcher implements TransferDestinationFetcher {
 
     protected final FrAispApiClient apiClient;
 
