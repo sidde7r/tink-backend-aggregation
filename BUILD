@@ -41,6 +41,8 @@ generate_codeowners(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26:owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs:owners",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs:owners",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock:owners",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock:owners",
         "//src/integration/agents:danish_providers_owners",
         "//src/integration/agents:demobank_providers_owners",
         "//src/integration/agents:finnish_providers_owners",

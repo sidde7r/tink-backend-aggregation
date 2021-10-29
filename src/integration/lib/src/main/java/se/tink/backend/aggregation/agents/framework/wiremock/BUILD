@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
@@ -34,4 +35,12 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_projectlombok_lombok",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
