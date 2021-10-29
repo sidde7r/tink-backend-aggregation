@@ -370,7 +370,7 @@ public class SkandiaBankenConstants {
     public static final GenericTypeMapper<BankIdStatus, String> PAYMENT_SIGN_STATUS_MAPPER =
             GenericTypeMapper.<BankIdStatus, String>genericBuilder()
                     .put(BankIdStatus.DONE, "complete")
-                    .put(BankIdStatus.WAITING, "usersigning")
+                    .put(BankIdStatus.WAITING, "usersigning", "waiting")
                     .put(BankIdStatus.CANCELLED, "usercancelled")
                     .setDefaultTranslationValue(BankIdStatus.FAILED_UNKNOWN)
                     .build();
