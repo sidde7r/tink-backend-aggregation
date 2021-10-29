@@ -6381,7 +6381,7 @@ agentsServiceConfiguration:
         eidasQwac: Tink
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     eb277281d8c54966921af83b4559b644:
-      tink: {}
+      tink: { }
     eb5410db30e548569d3ad9fd48aaa417:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
@@ -6900,6 +6900,15 @@ agentsServiceConfiguration:
         clientId: PSDSE-FINA-44059
         psuIpAddress: 127.0.0.1
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    fintecsystems:
+      testApiKey: dummyTestKey
+      prodApiKey: dummyProdKey
+      tink:
+        testApiKey: dummyTestKey
+        prodApiKey: dummyProdKey
+    508f1f5e1fb311ec96210242ac130002:
+      testApiKey: dummyTestKey
+      prodApiKey: dummyProdKey
     fints:
       regNumber: dummyId
     granitbank:

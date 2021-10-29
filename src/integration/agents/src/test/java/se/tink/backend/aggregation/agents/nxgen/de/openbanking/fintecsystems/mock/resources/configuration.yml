@@ -1,9 +1,14 @@
 agentsServiceConfiguration:
   integrations:
+    # This all is odd, but it is this way to make the agent work in wiremock setup.
+    # Some part of startup procedure requires the first part, the other the second.
+    fintecsystems:
+      testApiKey: SomeDummyKey
+      prodApiKey: SomeDummyKey
     508f1f5e1fb311ec96210242ac130002:
       tink:
-        clusterId: oxford-preprod
-        apiKey: SomeDummyKey
+        testApiKey: SomeDummyKey
+        prodApiKey: SomeDummyKey
   eidasProxy:
     host: https://eidas-proxy.staging.aggregation.tink.network
     localEidasDev: true

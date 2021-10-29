@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants.API_USER_NAME;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants.TEST_API_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.PathVariables.TRANSACTION_ID;
 
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.agents.rpc.Provider;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPayment;
@@ -25,13 +23,13 @@ import se.tink.libraries.payment.rpc.Payment;
 @RequiredArgsConstructor
 public class FinTecSystemsApiClient {
 
-    private final FinTecSystemsConfiguration providerConfiguration;
     private final TinkHttpClient client;
     private final RandomValueGenerator randomValueGenerator;
-    private final Provider provider;
+    private final String apiKey;
+    private final String blz;
+    private final String market;
 
     private RequestBuilder createRequest(URL url) {
-        String apiKey = Optional.ofNullable(providerConfiguration.getApiKey()).orElse(TEST_API_KEY);
         return client.request(url)
                 .addBasicAuth(API_USER_NAME, apiKey)
                 .accept(MediaType.APPLICATION_JSON)
@@ -61,7 +59,19 @@ public class FinTecSystemsApiClient {
                     ((IbanIdentifier) payment.getCreditor().getAccountIdentifier()).getIban());
         }
         finTechSystemsPaymentRequest.setPurpose(payment.getRemittanceInformation().getValue());
-        finTechSystemsPaymentRequest.setSenderBic(provider.getPayload());
+
+        // This if structure is temporary, just to make it work without updating the hash of
+        // tink-backend.
+        // The 'blz' comes from payload, which at current commit hash has 'bic' in it instead.
+        // We need to send it in a different field
+        // Delete this if and leave just else body when hash is updated with providers with blz
+        // codes.
+        if (StringUtils.isAlphanumeric(blz)) {
+            finTechSystemsPaymentRequest.setSenderBic(blz);
+        } else {
+            finTechSystemsPaymentRequest.setSenderCountryId(market);
+            finTechSystemsPaymentRequest.setSenderBankCode(blz);
+        }
         return finTechSystemsPaymentRequest;
     }
 

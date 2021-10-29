@@ -228,6 +228,12 @@ data:
             psuIpAddress: "0.0.0.0"
         {{- end }}
 
+        {{- if $agentsConfig.fintecsystems }}
+        fintecsystems:
+          testApiKey: "FINTECSYSTEMS_TEST_APIKEY"
+          prodApiKey: "FINTECSYSTEMS_PROD_APIKEY"
+        {{- end }}
+
       abnAmro:
 
       {{- if $agentsConfig.abnAmro }}

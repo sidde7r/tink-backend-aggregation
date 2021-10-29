@@ -17,6 +17,7 @@ s3StorageConfiguration:
 agents:
   danskeBankDK: true
   revolutPasswordUK: true
+  fintecsystems: true
   jyskeBankDK: true
   becDK: true
   demoFinancialInstitution:

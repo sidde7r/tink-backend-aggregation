@@ -6,8 +6,11 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisC
 
 import com.google.inject.Inject;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.filters.FTSExceptionFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.FinTechSystemsPaymentExecutor;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -17,9 +20,11 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 
 @AgentCapabilities({TRANSFERS})
 @AgentPisCapability(capabilities = SEPA_CREDIT_TRANSFER)
+@Slf4j
 public class FinTecSystemsAgent extends NextGenerationAgent {
     protected AgentComponentProvider componentProvider;
     protected RandomValueGenerator randomValueGenerator;
@@ -40,9 +45,42 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
         client.addFilter(new FTSExceptionFilter());
     }
 
-    protected FinTecSystemsApiClient constructApiClient() {
+    private FinTecSystemsApiClient constructApiClient() {
+        FinTecSystemsConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
+                                FinTecSystemsConstants.INTEGRATION_NAME,
+                                FinTecSystemsConfiguration.class);
+
+        // This defaulting to hardcoded test api key is, ideally, temporary.
+        // It is only in place to make sure the agent in test setting keeps working while we try to
+        // get the secrets deployed to secure solution work.
+        String apiKey;
+        if (provider.getType() == ProviderTypes.TEST) {
+            apiKey = configuration.getTestApiKey();
+            if (StringUtils.isEmpty(apiKey)) {
+                log.warn("Test apiKey not found in secrets! Defaulting to one defined in code.");
+                apiKey = Constants.TEST_API_KEY;
+            } else {
+                log.info("Using test apiKey defined in secrets! " + apiKey.length());
+            }
+        } else {
+            apiKey = configuration.getProdApiKey();
+            if (StringUtils.isEmpty(apiKey)) {
+                throw new IllegalStateException("Empty prod apiKey in secrets! Cannot continue!");
+            }
+        }
+
+        String blz;
+        if (provider.getPayload() != null) {
+            blz = provider.getPayload();
+        } else {
+            // One provider of this agent supports multiple blzs.
+            blz = credentials.getField("blz-select");
+        }
+
         return new FinTecSystemsApiClient(
-                providerConfiguration, client, randomValueGenerator, provider);
+                client, randomValueGenerator, apiKey, blz, provider.getMarket());
     }
 
     @Override
