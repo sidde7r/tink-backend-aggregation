@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -86,9 +85,6 @@ public class IngBaseApiClientIntegrationTest {
 
         // given
         givenScenario("get_authorization_url.aap");
-
-        // and
-        given(marketConfiguration.marketCode()).willReturn(marketCode);
 
         // when
         URL authorisationUrl = baseApiClient.getAuthorizeUrl("my_test_state");

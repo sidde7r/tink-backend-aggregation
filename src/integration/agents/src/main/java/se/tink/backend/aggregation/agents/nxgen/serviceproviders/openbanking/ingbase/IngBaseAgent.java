@@ -67,9 +67,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     /*
-       ING in their documentation use country code in lowercase, however their API treat
-       lowercase as wrong country code and returns error that it's malformed
-   */
+        ING in their documentation use country code in lowercase, however their API treat
+        lowercase as wrong country code and returns error that it's malformed
+    */
     private final String marketCodeUpperCase = request.getProvider().getMarket().toUpperCase();
 
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
