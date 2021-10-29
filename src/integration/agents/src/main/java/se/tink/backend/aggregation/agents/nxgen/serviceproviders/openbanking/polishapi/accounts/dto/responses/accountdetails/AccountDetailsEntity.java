@@ -62,7 +62,7 @@ public class AccountDetailsEntity {
 
     private String accountNameClient;
 
-    private AuxDataEntity auxDataEntity;
+    private AuxDataEntity auxData;
 
     @JsonIgnore @Setter
     /**
@@ -115,8 +115,8 @@ public class AccountDetailsEntity {
     }
 
     private String getUserName() {
-        if (auxDataEntity != null) {
-            return auxDataEntity.getUser();
+        if (auxData != null) {
+            return auxData.getUser();
         }
         if (nameAddress != null) {
             return nameAddress.getOwnerName();
@@ -127,7 +127,7 @@ public class AccountDetailsEntity {
     private Party.Role getRole() {
         // based on the information from bank if they do not expose information - that can be either
         // owner or authorised user.
-        if (auxDataEntity != null) {
+        if (auxData != null) {
             return getTinkRoleFromAuxDataEntity();
         } else if (CollectionUtils.isEmpty(psuRelations)) {
             return Party.Role.UNKNOWN;
@@ -137,7 +137,7 @@ public class AccountDetailsEntity {
     }
 
     private Party.Role getTinkRoleFromAuxDataEntity() {
-        if (Objects.equals(auxDataEntity.getOwner(), auxDataEntity.getUser())) {
+        if (Objects.equals(auxData.getOwner(), auxData.getUser())) {
             return Party.Role.HOLDER;
         }
         return Party.Role.AUTHORIZED_USER;
@@ -191,9 +191,9 @@ public class AccountDetailsEntity {
     }
 
     private ExactCurrencyAmount getAvailableCredit() {
-        if (auxDataEntity != null) {
+        if (auxData != null) {
             // only santander returns that data
-            return ExactCurrencyAmount.of(auxDataEntity.getLimit(), currency);
+            return ExactCurrencyAmount.of(auxData.getLimit(), currency);
         }
         return ExactCurrencyAmount.zero(currency);
     }
