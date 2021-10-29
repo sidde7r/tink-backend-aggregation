@@ -40,7 +40,7 @@ public final class DanskeBankSEAgentTest {
     @Test
     public void testRefreshWithBankId() throws Exception {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-danskebank-bankid")
+                new AgentIntegrationTest.Builder("se", "danskebank-bankid")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
