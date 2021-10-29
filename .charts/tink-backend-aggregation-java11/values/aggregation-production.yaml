@@ -29,7 +29,7 @@ s3StorageConfiguration:
   url: "https://s3.eu-west-1.amazonaws.com"
   region: "eu-west-1"
   agentHttpRawLogsBucketName: "aggregation-production-agent-debug-20180918120109492100000001"
-  agentHttpJsonLogsBucketName: "agent-integration-http-json-logs-aggregation-production"
+  agentHttpJsonLogsBucketName: "tink-integration-bank-debug-log-aggregation-production"
 
 agents:
   demoFinancialInstitution:
