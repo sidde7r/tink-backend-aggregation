@@ -52,4 +52,12 @@ public class AccountEntity {
     public String getAccountNumber() {
         return accountId.getIban();
     }
+
+    public boolean isCreditCard() {
+        return CashAccountType.CARD.equals(cashAccountType);
+    }
+
+    public boolean isTransactionalAccount() {
+        return CashAccountType.CACC.equals(cashAccountType);
+    }
 }

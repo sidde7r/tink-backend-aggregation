@@ -24,14 +24,13 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.a
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.card.LaBanquePostaleCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.card.LaBanquePostaleCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.identity.LaBanquePostaleIdentityDataFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.LaBanquePostaleAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.LaBanquePostaleTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.converter.LaBanquePostaleAccountConverter;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transaction.LaBanquePostaleTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.LaBanquePostaleTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.converter.LaBanquePostaleTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transfer.LaBanquePostaleTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -46,7 +45,10 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
@@ -68,7 +70,9 @@ public final class LaBanquePostaleAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final LaBanquePostalePaymentApiClient paymentApiClient;
     private final CreditCardRefreshController creditCardRefreshController;
-    private AgentConfiguration<LaBanquePostaleConfiguration> agentConfiguration;
+    private final AgentConfiguration<LaBanquePostaleConfiguration> agentConfiguration;
+    private final LaBanquePostaleTransactionalAccountConverter transactionalAccountConverter;
+    private final LaBanquePostaleCreditCardConverter creditCardConverter;
     private final LogMasker logMasker;
 
     @Inject
@@ -85,13 +89,14 @@ public final class LaBanquePostaleAgent
 
         this.qsealcSigner = qsealcSigner;
         this.apiClient = createApiClient();
+        this.transactionalAccountConverter = new LaBanquePostaleTransactionalAccountConverter();
+        this.creditCardConverter = new LaBanquePostaleCreditCardConverter();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.identityDataFetcher = new LaBanquePostaleIdentityDataFetcher(this.apiClient);
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
         this.paymentApiClient =
                 new LaBanquePostalePaymentApiClient(
                         client, sessionStorage, agentConfiguration, qsealcSigner);
-
         this.creditCardRefreshController = constructCardController();
     }
 
@@ -103,6 +108,27 @@ public final class LaBanquePostaleAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return identityDataFetcher.response();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        LaBanquePostalePaymentExecutor paymentExecutor =
+                new LaBanquePostalePaymentExecutor(
+                        paymentApiClient,
+                        agentConfiguration.getRedirectUrl(),
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     @Override
@@ -142,37 +168,21 @@ public final class LaBanquePostaleAgent
     }
 
     @Override
-    protected BerlinGroupAccountFetcher getAccountFetcher() {
-        LaBanquePostaleAccountConverter laBanquePostaleAccountConverter =
-                new LaBanquePostaleAccountConverter();
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
 
-        return new LaBanquePostaleAccountFetcher(apiClient, laBanquePostaleAccountConverter);
-    }
+        LaBanquePostaleTransactionalAccountFetcher accountFetcher =
+                new LaBanquePostaleTransactionalAccountFetcher(
+                        apiClient, transactionalAccountConverter);
+        LaBanquePostaleTransactionFetcher<TransactionalAccount> transactionFetcher =
+                new LaBanquePostaleTransactionFetcher<>(apiClient);
 
-    @Override
-    protected BerlinGroupTransactionFetcher getTransactionFetcher() {
-        return new LaBanquePostaleTransactionFetcher(apiClient);
-    }
-
-    @Override
-    public Optional<PaymentController> constructPaymentController() {
-        LaBanquePostalePaymentExecutor paymentExecutor =
-                new LaBanquePostalePaymentExecutor(
-                        paymentApiClient,
-                        agentConfiguration.getRedirectUrl(),
-                        strongAuthenticationState,
-                        supplementalInformationHelper);
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
-    }
-
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        return identityDataFetcher.response();
-    }
-
-    @Override
-    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
-        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
@@ -181,9 +191,11 @@ public final class LaBanquePostaleAgent
     }
 
     private CreditCardRefreshController constructCardController() {
-
         LaBanquePostaleCardFetcher laBanquePostaleCardFetcher =
-                new LaBanquePostaleCardFetcher(apiClient);
+                new LaBanquePostaleCardFetcher(apiClient, creditCardConverter);
+
+        LaBanquePostaleTransactionFetcher<CreditCardAccount> transactionFetcher =
+                new LaBanquePostaleTransactionFetcher<>(apiClient);
 
         return new CreditCardRefreshController(
                 metricRefreshController,
@@ -191,6 +203,6 @@ public final class LaBanquePostaleAgent
                 laBanquePostaleCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(laBanquePostaleCardFetcher)));
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 }

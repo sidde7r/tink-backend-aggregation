@@ -1,41 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.card;
 
-import com.google.common.base.Strings;
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.converter.LaBanquePostaleCreditCardConverter;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.base.LaBanquePostaleBaseAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class LaBanquePostaleCardFetcher
-        implements AccountFetcher<CreditCardAccount>,
-                TransactionKeyPaginator<CreditCardAccount, String> {
+        extends LaBanquePostaleBaseAccountFetcher<CreditCardAccount> {
 
-    private final LaBanquePostaleApiClient laBanquePostaleApiClient;
+    private final LaBanquePostaleCreditCardConverter laBanquePostaleCreditCardConverter;
 
-    public LaBanquePostaleCardFetcher(LaBanquePostaleApiClient laBanquePostaleApiClient) {
-        this.laBanquePostaleApiClient = laBanquePostaleApiClient;
+    public LaBanquePostaleCardFetcher(
+            LaBanquePostaleApiClient apiClient,
+            LaBanquePostaleCreditCardConverter laBanquePostaleCreditCardConverter) {
+        super(apiClient);
+        this.laBanquePostaleCreditCardConverter = laBanquePostaleCreditCardConverter;
     }
 
     @Override
-    public Collection<CreditCardAccount> fetchAccounts() {
-        return laBanquePostaleApiClient.fetchAccounts().getAccounts().stream()
-                .filter(LaBanquePostaleCreditCardConverter::isCreditCard)
-                .map(LaBanquePostaleCreditCardConverter::toTinkCreditCard)
-                .collect(Collectors.toList());
+    protected boolean accountTypeFilterCondition(AccountEntity accountEntity) {
+        return accountEntity.isCreditCard();
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            CreditCardAccount account, String key) {
-        String url =
-                Strings.isNullOrEmpty(key)
-                        ? String.format(Urls.FETCH_TRANSACTIONS, account.getApiIdentifier())
-                        : key;
-        return laBanquePostaleApiClient.fetchTransactionsLaBanquePostal(url);
+    protected Optional<CreditCardAccount> map(AccountEntity accountEntity) {
+        return Optional.of(laBanquePostaleCreditCardConverter.toTinkCreditCard(accountEntity));
     }
 }

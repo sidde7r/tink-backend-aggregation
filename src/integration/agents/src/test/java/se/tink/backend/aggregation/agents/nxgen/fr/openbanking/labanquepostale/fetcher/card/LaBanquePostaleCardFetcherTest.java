@@ -19,7 +19,9 @@ public class LaBanquePostaleCardFetcherTest {
     @Before
     public void before() {
         laBanquePostaleApiClient = mock(LaBanquePostaleApiClient.class);
-        objectUnderTest = new LaBanquePostaleCardFetcher(laBanquePostaleApiClient);
+        objectUnderTest =
+                new LaBanquePostaleCardFetcher(
+                        laBanquePostaleApiClient, new LaBanquePostaleCreditCardConverter());
     }
 
     @Test
