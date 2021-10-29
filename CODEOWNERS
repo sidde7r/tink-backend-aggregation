@@ -42,6 +42,8 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs/ @tink-ab/aggregation-minion-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs/ @tink-ab/aggregation-minion-maintainer
+/src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/ @tink-ab/aggregation-agent-platform-maintainer
+/src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/ @tink-ab/aggregation-coreagg-maintainer

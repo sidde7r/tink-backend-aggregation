@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
@@ -32,4 +33,12 @@ junit_test(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
