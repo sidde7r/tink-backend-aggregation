@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia;
 
+import static se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.HttpHeaders.SHOULD_SENT_X_SIGNATURE_HEADER;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
@@ -67,7 +68,8 @@ public final class AktiaAgent extends NextGenerationAgent
                         persistentStorage,
                         new AktiaEncapConfiguration(),
                         AktiaConstants.DEVICE_PROFILE,
-                        client);
+                        client,
+                        SHOULD_SENT_X_SIGNATURE_HEADER);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();

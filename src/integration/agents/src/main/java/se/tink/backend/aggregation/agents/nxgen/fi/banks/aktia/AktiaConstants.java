@@ -19,6 +19,8 @@ public class AktiaConstants {
 
         public static final String USER_AGENT =
                 "MobileBank/2.10.0 (com.aktia.mobilebank; build 267; iOS 12.4.0)";
+
+        static final boolean SHOULD_SENT_X_SIGNATURE_HEADER = false;
     }
 
     public static class Oauth2Scopes {

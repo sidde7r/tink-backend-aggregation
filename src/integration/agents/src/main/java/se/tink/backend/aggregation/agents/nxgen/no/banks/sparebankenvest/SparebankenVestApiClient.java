@@ -32,7 +32,6 @@ public class SparebankenVestApiClient {
 
     public SparebankenVestApiClient(TinkHttpClient client) {
         this.client = client;
-        this.client.disableSignatureRequestHeader();
     }
 
     public void initLogin() {

@@ -22,9 +22,12 @@ public final class MockEncapClientProvider implements EncapClientProvider {
             PersistentStorage persistentStorage,
             EncapConfiguration configuration,
             DeviceProfile deviceProfile,
-            TinkHttpClient httpClient) {
+            TinkHttpClient httpClient,
+            boolean shouldSendXSignatureHeader) {
         if (encapClient == null) {
-            httpClient.disableSignatureRequestHeader();
+            if (!shouldSendXSignatureHeader) {
+                httpClient.disableSignatureRequestHeader();
+            }
             MockEncapStorage storage = new MockEncapStorage(persistentStorage);
 
             // I do not like the solution below - all the values should be injected.

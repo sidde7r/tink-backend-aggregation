@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -22,7 +24,9 @@ public abstract class AbstractRetryFilter extends Filter {
     protected static final Logger log =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    @Getter(AccessLevel.PROTECTED)
     private final int maxNumRetries;
+
     private final long retrySleepMilliseconds;
 
     /**

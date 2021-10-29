@@ -191,6 +191,7 @@ public class HandelsbankenNOConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Header {
         static final String EVRY_TOKEN = "X-EVRY-CLIENT-ACCESSTOKEN";
+        static final boolean SHOULD_SENT_X_SIGNATURE_HEADER = false;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
