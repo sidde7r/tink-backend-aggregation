@@ -75,6 +75,7 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ie/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ie/ @tink-ab/aggregation-fluffy-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/polishapi/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/revolut/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/revolut/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/danskebank/ @tink-ab/aggregation-fluffy-maintainer
