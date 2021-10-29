@@ -25,6 +25,7 @@
 /.charts/tink-backend-aggregation-agents/templates/se @tink-ab/aggregation-thundercats-maintainer
 /docker @tink-ab/aggregation-agent-platform-maintainer
 WORKSPACE @tink-ab/aggregation-agent-platform-maintainer
+BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/ @tink-ab/aggregation-minion-maintainer
