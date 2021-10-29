@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
@@ -62,17 +63,19 @@ public class AgreementsListEntity {
     @JsonProperty("DatosTarjeta")
     private CardDataEntityGlobalPositionResponse cardData;
 
-    public boolean isCard() {
-        return cardData != null;
+    public boolean isCreditCard() {
+        return cardData != null && creditCardCondition();
     }
 
-    private String getAccountTypeKey() {
-        return accountType + "#" + aliasbe;
+    private boolean creditCardCondition() {
+        return new BigDecimal(cardData.getCardCreditLimit()).compareTo(BigDecimal.ZERO) > 0
+                || new BigDecimal(cardData.getCreditCardDayATMLimit()).compareTo(BigDecimal.ZERO)
+                        > 0;
     }
 
     public Optional<TransactionalAccount> toTinkAccount(String holderName) {
         return EvoBancoConstants.ACCOUNT_TYPE_MAPPER
-                .translate(getAccountTypeKey())
+                .translate(aliasbe)
                 .flatMap(
                         type ->
                                 TransactionalAccount.nxBuilder()
