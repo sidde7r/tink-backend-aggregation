@@ -32,7 +32,8 @@ public final class BarclaycardV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(BarclaysConstants.ORGANISATION_ID)
                         .withApiBaseURL(BarclaysConstants.AIS_API_URL)
                         .withWellKnownURL(BarclaysConstants.BARCLAYCARD_PERSONAL_WELL_KNOWN_URL)
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(
+                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .build();
     }
 
