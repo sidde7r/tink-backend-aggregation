@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Headers.SHOULD_SENT_X_SIGNATURE_HEADER;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
@@ -76,7 +77,8 @@ public final class SparebankenSorAgent extends NextGenerationAgent
                         persistentStorage,
                         new SparebankenSorEncapConfiguration(),
                         SparebankenSorConstants.DEVICE_PROFILE,
-                        client);
+                        client,
+                        SHOULD_SENT_X_SIGNATURE_HEADER);
 
         SparebankenSorLoanFetcher loanFetcher = new SparebankenSorLoanFetcher(apiClient);
         loanRefreshController =

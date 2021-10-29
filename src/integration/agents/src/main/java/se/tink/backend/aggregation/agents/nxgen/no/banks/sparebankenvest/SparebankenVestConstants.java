@@ -141,6 +141,7 @@ public class SparebankenVestConstants {
 
         static final String APPLICATION_JSON = "application/json";
         static final String APPLICATION_FORM_URL_ENCODED = "application/x-www-form-urlencoded";
+        static final boolean SHOULD_SENT_X_SIGNATURE_HEADER = true;
     }
 
     public static final class Cookies {

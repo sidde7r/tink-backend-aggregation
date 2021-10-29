@@ -63,6 +63,7 @@ public class SparebankenSorConstants {
         public static final String NAME_ORIGIN = "Origin";
         public static final String NAME_REQUESTED_WITH = "X-Requested-With";
         public static final String VALUE_REQUESTED_WITH = "XMLHttpRequest";
+        static final boolean SHOULD_SENT_X_SIGNATURE_HEADER = false;
     }
 
     public enum StaticUrlValuePairs {

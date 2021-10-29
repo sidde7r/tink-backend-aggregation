@@ -11,5 +11,6 @@ public interface EncapClientProvider {
             PersistentStorage persistentStorage,
             EncapConfiguration configuration,
             DeviceProfile deviceProfile,
-            TinkHttpClient httpClient);
+            TinkHttpClient httpClient,
+            boolean shouldSendXSignatureHeader);
 }

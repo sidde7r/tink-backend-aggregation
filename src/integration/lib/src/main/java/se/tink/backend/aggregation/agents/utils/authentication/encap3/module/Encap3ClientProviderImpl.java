@@ -19,16 +19,18 @@ public final class Encap3ClientProviderImpl implements EncapClientProvider {
             PersistentStorage persistentStorage,
             EncapConfiguration configuration,
             DeviceProfile deviceProfile,
-            TinkHttpClient httpClient) {
+            TinkHttpClient httpClient,
+            boolean shouldSendXSignatureHeader) {
         if (encapClient == null) {
-            httpClient.disableSignatureRequestHeader();
+            if (!shouldSendXSignatureHeader) {
+                httpClient.disableSignatureRequestHeader();
+            }
             EncapStorage storage = new EncapStorage(persistentStorage);
             EncapSoapUtils soapUtils = new EncapSoapUtils(configuration, storage);
             EncapMessageUtils messageUtils =
                     new BaseEncapMessageUtils(configuration, storage, httpClient, deviceProfile);
             encapClient = new EncapClient(storage, soapUtils, messageUtils);
         }
-
         return encapClient;
     }
 }
