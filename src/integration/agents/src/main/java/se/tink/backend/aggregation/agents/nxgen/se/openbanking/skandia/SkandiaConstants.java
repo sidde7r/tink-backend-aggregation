@@ -100,9 +100,9 @@ public final class SkandiaConstants {
     public static class ApiServices {
         public static final String AUTHORIZE = "/authorization.oauth2";
         public static final String TOKEN = "/token.oauth2";
-        public static final String GET_ACCOUNTS = "/v1/accounts";
-        public static final String GET_TRANSACTIONS = "/v1/accounts/{accountId}/transactions";
-        public static final String GET_BALANCES = "/v1/accounts/{accountId}/balances";
+        public static final String GET_ACCOUNTS = "/ais/v2/accounts";
+        public static final String GET_TRANSACTIONS = "/ais/v2/accounts/{accountId}/transactions";
+        public static final String GET_BALANCES = "/ais/v2/accounts/{accountId}/balances";
         public static final String CREATE_PAYMENT = "/pis/v2/payments/{paymentProduct}";
         public static final String GET_PAYMENT = "/pis/v2/payments/{paymentProduct}/{paymentId}";
         public static final String GET_PAYMENT_STATUS =
