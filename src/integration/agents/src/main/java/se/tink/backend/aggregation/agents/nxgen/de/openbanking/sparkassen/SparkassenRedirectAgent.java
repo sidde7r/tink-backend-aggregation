@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import java.security.cert.CertificateException;
 import java.util.EnumSet;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkasenConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenScope;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenRedirectHelper;
@@ -46,7 +46,7 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
                 sparkassenStorage,
                 randomValueGenerator,
                 null,
-                new SparkasenConsentGenerator(
+                new SparkassenConsentGenerator(
                         componentProvider.getCredentialsRequest(),
                         localDateTimeSource,
                         EnumSet.allOf(SparkassenScope.class)));

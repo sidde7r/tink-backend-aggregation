@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class SparkasenConsentGenerator implements ConsentGenerator<ConsentRequest> {
+public class SparkassenConsentGenerator implements ConsentGenerator<ConsentRequest> {
 
     private static final ToScope<RefreshableItem, SparkassenScope> ITEM_TO_SCOPE =
             item -> {
@@ -20,7 +20,6 @@ public class SparkasenConsentGenerator implements ConsentGenerator<ConsentReques
                     case CREDITCARD_ACCOUNTS:
                     case LOAN_ACCOUNTS:
                     case INVESTMENT_ACCOUNTS:
-                        return SparkassenScope.ACCOUNTS;
                     case CHECKING_TRANSACTIONS:
                     case SAVING_TRANSACTIONS:
                     case CREDITCARD_TRANSACTIONS:
@@ -37,7 +36,7 @@ public class SparkasenConsentGenerator implements ConsentGenerator<ConsentReques
     private final WeightedScopeSupplier<RefreshableItem, SparkassenScope> scopeSupplier;
     private final LocalDateTimeSource localDateTimeSource;
 
-    public SparkasenConsentGenerator(
+    public SparkassenConsentGenerator(
             CredentialsRequest request,
             LocalDateTimeSource localDateTimeSource,
             Set<SparkassenScope> availableScopes) {

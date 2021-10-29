@@ -28,6 +28,7 @@ generate_codeowners(
         ":charts_portuguese_alerts",
         ":charts_swedish_alerts",
         ":docker_owners",
+        ":workspace_and_root_build",
         "//src/integration/agents:austrian_providers_owners",
         "//src/integration/agents:belgian_providers_owners",
         "//src/integration/agents:french_providers_owners",
@@ -191,6 +192,17 @@ sh_test(
 codeowners(
     name = "aws_log_fetcher_owners",
     pattern = "/aws_log_fetcher/",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+)
+
+codeowners(
+    name = "workspace_and_root_build",
+    patterns = [
+        "WORKSPACE",
+        "BUILD",
+    ],
     teams = [
         "@tink-ab/aggregation-agent-platform-maintainer",
     ],
