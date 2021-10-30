@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.integration;
 
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.integration.module.IngAgentWireMockTestModule;
@@ -34,7 +35,6 @@ public class IngAgentWireMockTest {
                         .build();
 
         // then
-        Assertions.assertThatCode(agentWireMockRefreshTest::executeRefresh)
-                .doesNotThrowAnyException();
+        assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 }
