@@ -1,0 +1,348 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST /oauth2/token
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="cAtEZbQkBLNsUlEAWry4B7UoMqgJKoMm1BO8CzsDvMo0nCELvqLoCnAqFvB+QrqPQOp7wT/HfyavVaSFMWxHQvO87iRKHaXHLn8yOH8ySSfwFvVWRl7NDXVU1tUX4Ps8J5yqAavaeDYibZC2hb33FFUZYn/EBuwMcgeBAJfZN0d7C71AEmPw2SlH1V92qCoPScUvrNxwjp/WSMeLB6EKp/9vqVDzHpvBE+jOnbyTOIvd+sSqX6nvKb15hnicmR41t16FU2GIEjpaZBp77HYMHPdeUvF+R0L1ijjV4u8+K1+sRReCVWuglAP06Wy7LBQsUl3zIYJVua2LH7GQpIv7Ig=="
+Authorization: Bearer access_token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=refresh_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 02 Nov 2021 10:16:49 GMT
+Date: Tue, 02 Nov 2021 10:16:49 GMT
+Content-Type: application/json;charset=utf-8
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="n6VHBE7jC4GVcF1h7jBXVBYEAb8rbb58iZiZvcb7AnaQlNTeARa+dVZF94KsNpB98RQuT7ofNqFvR896giBl2fnMejmVvQ6Z54qXH1ILMk0RiXRJESweDSjnSEfqNxs5zMmSOADM8/J+qTPu4JmvBbQ1tGW66KoiVVSI9XmQCnebQyYA8oo3bXGAqm1mBJJVXQWIoydNe8H6zptCUx+i7YNMBFUjFiCMU+JobGgPszAVe6HH/qG1VV/zcVXVcS+V8KKKsDFo36GxzRXhJOpFi3+lbM30qsrjRcS5DOlkFiYc6GInwTfwa1pNgycSr7gbU7JmqzaVroxuLmZtQwD8L/VH2Cx7VeRlVW9r//1S5YPPbZzVheFZ2DunsGEqdJWf6iHZ2UReNaTDJiaYrKFnEIc5XxmGfCwrHhDFvS5OfdSlqbC0wRSq/Uts5jnkAz+JQEWwfmnKCYSrnMlcMO1hbE/iRwnyoYXWeaYM5pnheFO8AYpXihIqYh1YpEq2/hUU"
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: deny
+Content-Security-Policy: ***
+Content-Length: 3582
+
+{
+  "access_token": "access_token",
+  "token_type": "token_type",
+  "expires_in": 900,
+  "scope": "payment-accounts:transactions:view payment-accounts:balances:view"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET /v3/accounts
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 02 Nov 2021 10:16:49 GMT
+Date: Tue, 02 Nov 2021 10:16:49 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: d78ad10e-b972-448d-aa1a-7b81dadb996d
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="KQiaxh+MCaQfbCLGwv2d4SKxdL87Gn5GWQehLsP5KszQdQcmQG+yVwZFgxrpTcye1nXTIxk+c1LftAb+NaFRn5xag0PNYTHtxx2BJNPoE46IrYUCqyicT/d4w3hwPPDP89u64idU+1MPTsK+6rjgWssI5ESW1EaxttLhwky/x/jyopwF6woA5+2JCLvbb4HEGWOwAOm6FmDZG16GrjWrAJ4OkpsUninXEEgtJ4MW9io1mF1FK2TSq0h5lbr05VpyHIzB42nH+z7kTxdvjwiJpHEBCuUZjUvDFOfTM2/g/giJd75XghNLX8nNULaGOwv/HXlje2O6KyYJQwXxwzQar0FPY2uHLjoEp7r1Acr9gPnepQdaz9otRpSkzqfH4ymHQhT/2HGqzwhTuUH5RN3SH0chssYXrqDomhHJBD4PCZ2Lad/RRnilVAmtCi4k8xHhBuuO36TSDOCU54plwOCsKyExObjb9QnCuwwksAW/qR019ATCPiBwvFKtZYzGCLLt"
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 490
+
+{
+  "accounts": [
+    {
+      "resourceId": "resource_1",
+      "iban": "BE54000000000000",
+      "maskedPan": "",
+      "name": "Test Man",
+      "currency": "EUR",
+      "product": "ING Lion Account",
+      "_links": {
+        "balances": {
+          "href": "/v3/accounts/resource_1/balances?currency\u003dEUR"
+        },
+        "transactions": {
+          "href": "/v2/accounts/resource_1/transactions?currency\u003dEUR"
+        }
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET /v3/accounts/resource_1/balances?currency=EUR
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Tue, 02 Nov 2021 10:16:50 GMT
+Date: Tue, 02 Nov 2021 10:16:50 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: f2d19eb3-fd98-4e8d-89c8-c63961a616df
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="VsAidUSDAAanju63H0lVvAI75y8+RwBFp2Az9VIxo4671yyZhpZpkgLxJd943WHeLAsvKLr2vsIYWtdOSJqCreLUygHizdZ0s9Qy7bVh6jEWx7wx6d70bEX8XfEymSXWDiiYyhT0IVita/mwybF7QZhgwQUFNDfUCo5/N0Puf/d87XwV5oWq/tj9CJH08iHEpqXDKSW4D+3kB92Mfm5f9bPZFyLEysPDNGMGvHXxs8/uD3NNuPnHYPhwmsQRHre7phxFN7nRhs1aQSuwKedINA5GkcwTYoFrM4YMBXVGkhp10F4ZPusE1/Rutckfbz2K+V2fhPxbqf04NvjZTW3MnCESWJqczkA9nE2/xYn3dOBlntnXhMm1KFiqWua4FMHxlW7ukWBm5EOUViCsN7VD8pGXkvw2qv8XRsOASwC7oxiwzHqTJmpzrbAWAX2ib6kXvYQv2U1QqgBbJzGAU4IjP+Gj/dk0gbpvV0GduVzO2D54ju456McWVPRbNdS02wrN"
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 275
+
+{
+  "account": {
+    "iban": "BE54000000000000",
+    "maskedPan": "",
+    "currency": "EUR"
+  },
+  "balances": [
+    {
+      "balanceType": "expected",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 222.71
+      }
+    },
+    {
+      "balanceType": "interimBooked",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 222.71
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET /v2/accounts/resource_1/transactions?currency=EUR&dateFrom=1992-01-12&dateTo=1992-04-10&&limit=50
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 02 Nov 2021 10:16:50 GMT
+Date: Tue, 02 Nov 2021 10:16:50 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 1cdbc735-cb7e-4174-a43e-389893d362b7
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="SeWZmECplk2LVgqs6I5UDMr9RnMcj7shhQZOLqN+tA4n1CImNF3a9p/CmYKhVG7iccKn97FISefTWNzKmgPBQ9onrLwpcIq8XK91a16DL0POk2sTLDg+R1eEHGAcJ8Gw4fLT5GWunZzqILS5YgvOSD+Sb85AN8ah36CVOf53GIc9jvfJJsVksHRokVTcvngzpUNDw1mmYbufdKpNxp7uG0Wdvegrjl2hy4GQobO9QhviH31Q4nCcLnKmDjKrll3IK6Hn2tPNykFHDJKRcpxQbtD9waW/3FTjL39aHqr6PQj5WYTh8xfGZfqpUukYVaywsr6LipN9FrZNLP+u06i8SCSA8DIBlCcUKK82pV6yX2oKWIxckW7sV7ZQdf/NJpZlvakpMYciZzJYMYZJMQBi1SWFrWTCtgu7FfK0BXWi2IRQbe6DxPt/+Txe9Y/shsm4NvD0i7EdpJDXdbu/TTuACOX0yuYSPybxsym6mUwwcFWmm29XRqTf8GfLPpKbDADp"
+X-ING-AIS-TRANSACTION-VALIDITY-PERIOD: ***
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "iban": "BE54000000000000",
+    "currency": "EUR"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "transaction_!",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-11-01",
+        "valueDate": "2021-10-31",
+        "executionDateTime": "2021-10-30T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -1200
+        },
+        "creditorAccount": {
+          "iban": "BE54000000000000",
+          "bban": "10000000000"
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "Virement instantané en euro-test"
+      },
+      {
+        "transactionId": "transaction_2",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-11-01",
+        "valueDate": "2021-10-31",
+        "executionDateTime": "2021-10-30T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 0
+        },
+        "debtorAccount": {},
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "Décompte de frais-test"
+      },
+      {
+        "transactionId": "transaction_3",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-29",
+        "valueDate": "2021-10-29",
+        "executionDateTime": "2021-10-28T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -26.85
+        },
+        "creditorAccount": {
+          "iban": "",
+          "bban": ""
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "Paiement Bancontact - test"
+      }
+    ],
+    "pending": [],
+    "info": [],
+    "_links": {
+      "next": {
+        "href": "/v2/accounts/resource_1/transactions?next\u003dnq6LdvS9Is89muEGNw2AYTgfYMWCog6S2z0wTKJSOp4hx7Wkvx9P78BcedDoEbcbKe-YPcjmHVksWGUJX9c2maenNuobSwVCNZC8rS5JalRCFxxsFDhgzqqxuV91w2rzvWVrW6gC6G4N4poTod81RaJi6PGs9TnZXKr9gmV7DSwslT9-ZEsx-aznNoIMqA7wrnF_2F3v6Wnrjlt8zHjW6fOqXQxsIBhqoLeNo6BCIZgfRtGMvza2VKW21bF5UTnS2M5_jowajSCzhozBrGspxmiahRt_tsCZibjuSfy31HQd34gMw1id"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET /v2/accounts/resource_1/transactions?next=nq6LdvS9Is89muEGNw2AYTgfYMWCog6S2z0wTKJSOp4hx7Wkvx9P78BcedDoEbcbKe-YPcjmHVksWGUJX9c2maenNuobSwVCNZC8rS5JalRCFxxsFDhgzqqxuV91w2rzvWVrW6gC6G4N4poTod81RaJi6PGs9TnZXKr9gmV7DSwslT9-ZEsx-aznNoIMqA7wrnF_2F3v6Wnrjlt8zHjW6fOqXQxsIBhqoLeNo6BCIZgfRtGMvza2VKW21bF5UTnS2M5_jowajSCzhozBrGspxmiahRt_tsCZibjuSfy31HQd34gMw1id
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 02 Nov 2021 10:16:50 GMT
+Date: Tue, 02 Nov 2021 10:16:50 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 581ec045-3bc9-45a7-b411-a9df5b81c8f4
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="1umroStC5V7nvQMmDgeA3ZQhqJh/wtTe30lAwQl9L1lYRP8z2eiWSlkovITH+ihbaZcSXT5JXRvD0b0dXSAlX7AUDyqhzfHAijr2enDb9jER2hLpmMbBzZROQOFrGBjDU/ypVqO9gUX1sJGqbUQhq4Dx2t5Pe7B3KYuAnoyzGpuUXE4/7b/JpT4l11MZ0A59WoJ90Ug6gLrEXhRlkKYAd/WyE6KGEZqlyNRfKFZbq7oyNwNUHztBB+ceYBGlsJ06My2scWu+sUDbuU/udBgxg8ySPIOhlkhd+WIW6SZBNReuaURys1z7NAdsB5N+vohne6QyD3ftvdyNqx1Nz2BYP4oaaR+UUyQ8wfZzRJmzvbUWEYxepqoxZ6+sMpJcr0q/AJ75cO+8P8PbwTT+RA9M/9YCn+bp6I2rEdNunfQuPf0hYgOdTsGNvtdhvdSeefkIB1NoGsFwqpnoZY2yID54bw2g7MRf4G4bxMH7J49b0O5+ffTE1/rk8PkA4zsE6WQC"
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "iban": "BE54000000000000",
+    "currency": "EUR"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "transaction_3",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-06",
+        "valueDate": "2021-10-06",
+        "executionDateTime": "2021-10-05T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -42.85
+        },
+        "creditorAccount": {
+          "iban": "",
+          "bban": ""
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "Paiement Bancontact-testing desc"
+      },
+      {
+        "transactionId": "transaction_4",
+        "endToEndId": "NOT PROVIDED",
+        "bookingDate": "2021-10-06",
+        "valueDate": "2021-10-06",
+        "executionDateTime": "2021-10-05T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 50
+        },
+        "debtorName": "Unnamed Debtor",
+        "debtorAccount": {
+          "iban": "BE54000000000000",
+          "bban": "100000000000",
+          "bic": "BBRUBEBB"
+        },
+        "transactionType": "European Payment"
+      },
+      {
+        "transactionId": "transaction_5",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-05",
+        "valueDate": "2021-10-04",
+        "executionDateTime": "2021-10-03T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -68.66
+        },
+        "creditorAccount": {
+          "iban": "",
+          "bban": ""
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "Paiement carburant Bancontact - testing"
+      },
+      {
+        "transactionId": "transaction_6",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-04",
+        "valueDate": "2021-10-04",
+        "executionDateTime": "2021-10-03T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -141.63
+        },
+        "creditorAccount": {
+          "iban": "BE54000000000000",
+          "bban": "100000000000"
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "Virement en euros (SEPA) - test"
+      },
+      {
+        "transactionId": "transaction_7",
+        "endToEndId": "NOT PROVIDED",
+        "bookingDate": "2021-10-04",
+        "valueDate": "2021-10-04",
+        "executionDateTime": "2021-10-03T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 200
+        },
+        "debtorName": "Unnamed Debtor",
+        "debtorAccount": {
+          "iban": "BE54000000000000",
+          "bban": "100000000000",
+          "bic": "BBRUBEBB"
+        },
+        "transactionType": "European Payment"
+      }
+    ],
+        "pending": [],
+        "info": []
+      }
+    }
+  }
+}

@@ -26,6 +26,10 @@ public interface LocalDateTimeSource {
     @Deprecated
     Instant getInstant();
 
+    default long getSystemCurrentTimeMillis() {
+        return System.currentTimeMillis();
+    }
+
     LocalDateTime now(ZoneId zoneId);
 
     Instant getInstant(ZoneId zoneId);

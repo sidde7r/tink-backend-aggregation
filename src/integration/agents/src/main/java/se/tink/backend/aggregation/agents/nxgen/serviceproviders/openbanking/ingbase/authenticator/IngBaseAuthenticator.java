@@ -42,7 +42,9 @@ public final class IngBaseAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
         final OAuth2Token token = client.getToken(code);
-        persistentStorage.put(StorageKeys.AUTHENTICATION_TIME, System.currentTimeMillis());
+        persistentStorage.put(
+                StorageKeys.AUTHENTICATION_TIME,
+                client.getLocalDateTimeSource().getSystemCurrentTimeMillis());
         return token;
     }
 

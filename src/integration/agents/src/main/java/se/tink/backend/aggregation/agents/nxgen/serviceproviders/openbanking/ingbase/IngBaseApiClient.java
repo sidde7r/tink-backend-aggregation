@@ -349,6 +349,10 @@ public class IngBaseApiClient {
         return randomValueGenerator.getUUID().toString();
     }
 
+    public LocalDateTimeSource getLocalDateTimeSource() {
+        return localDateTimeSource;
+    }
+
     private TokenResponse fetchToken(final String payload) {
         return new CertificateIsRevokedExceptionRequestRepeater(this, payload).execute();
     }

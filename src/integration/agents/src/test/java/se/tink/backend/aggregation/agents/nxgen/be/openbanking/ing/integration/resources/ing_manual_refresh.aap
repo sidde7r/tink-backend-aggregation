@@ -1,0 +1,350 @@
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.ing.com/v3/accounts
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Sat, 23 Oct 2021 18:57:28 GMT
+Date: Sat, 23 Oct 2021 18:57:28 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: e5b36238-d8bf-4b7b-b89f-d7ca028e35e5
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="EnAnnQZpeJhdVvwvP3Dxw+OnJGZj2fB3aAn9j8o4CCxt/YK62jzdoV81hVfSrZ3mafBG1gG6M54tHtHDmFtR1dN2OGsTJP8lTjn+gHxUXldxqNYOkKKvVX/+f1Fcdo9JuSU4mHcCH3ehCqrtIn19cRwd1ck3/bYXu42BfigadYWGJikm2hViiyJ4UQ3Y+zNt4qPsnAfBrITmfSzvxM7mHYbakUUTd9AYv3bynNitu8OZYv+2pUlmb4tBUdw/GxRxed0KHo1i8DQsCnaz/fzo/KnTHnqNXYMcj8rOoJmlEARnTW/scM9ipqOyVz1jKBzPHAJbffqjb2sc7cgQ7W+7vv4So3cKM2FSa7uX1K4AadC2B+Xx+1yMYze/OXYMlAdLCXWe5U6ItzvBFFOQFWqa82JOvSl8ocC2ZPuP9XEkxIppMktRR2bSpfnBOqyrasEBgKLP//QH2UXJtWByr9olUEKPPhORF91r8iDccZ8uVB4WqcLVJ92qXkBYQspFohrw"
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 390
+
+{
+  "accounts": [
+    {
+      "resourceId": "resource_id",
+      "iban": "BE54000000000000",
+      "maskedPan": "",
+      "name": "TestFirstName TestSurname",
+      "currency": "EUR",
+      "product": "ING Lion Account",
+      "_links": {
+        "balances": {
+          "href": "/v3/accounts/resource_id/balances?currency\u003dEUR"
+        },
+        "transactions": {
+          "href": "/v2/accounts/resource_id/transactions?currency\u003dEUR"
+        }
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://api.ing.com/v3/accounts/resource_id/balances?currency=EUR
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Sat, 23 Oct 2021 18:57:28 GMT
+Date: Sat, 23 Oct 2021 18:57:29 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 22696e94-ec6c-4e82-a176-0fd3479989f6
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="aYovI1ND85uaBA5AipO8K1hkKjj0G9PR7DemI8WNzgILVoEOs9AJ3eB9DWSnVtmWeLTXLzGd2G+y86f2H5VvAksBGJoVnvIFETpNDjp5xtxfOvO1FUcthwOWpgAJlVs2iAeAtXLCT32bMHDt9TqTfDPo9QcSvnTPdnMg/3Kv3SPTg/nzpEc/lNUKSRARFc/7gKBYIjqJmGtYFfzcA06UcCtfg6G2Pg+8/b/ax+XR0YXPi28FtVlyExRO0+KbTCJyx+CdBKgwFFIOrOd9vTvmCNq1nGwPIWKIjwLqoozfXujOlmH0gx22KL68E79RDjfZBgr/BCovBmWOYVrqqjM/Pd05IYf+15WUP9tARfDouj1bP7WKOv5BzfWDlHsqE+Q4I57i6tVbv4dwrnI0b78ZVSRhWS7So5ayvhvUQaPkghpp1INsB99gB6FpT3S6wl3MmgSIxn80CFilnCmcMRr3A+toOxa6MtJcBaoFm1nVRtJ8zqKngP+Vd1gud0DwDqjz"
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 270
+
+{
+  "account": {
+    "iban": "BE54000000000000",
+    "maskedPan": "",
+    "currency": "EUR"
+  },
+  "balances": [
+    {
+      "balanceType": "expected",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 0.05
+      }
+    },
+    {
+      "balanceType": "interimBooked",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 0.05
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET /v2/accounts/resource_id/transactions?currency=EUR&dateFrom=1992-01-12&dateTo=1992-04-10&limit=50
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Sat, 23 Oct 2021 18:57:29 GMT
+Date: Sat, 23 Oct 2021 18:57:29 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: e855d157-f782-4c1a-85fb-0b622a765ae9
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="RkFLRV9TSUdOQVRVUkUK"
+X-ING-AIS-TRANSACTION-VALIDITY-PERIOD: ***
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "iban": "BE54000000000000",
+    "currency": "EUR"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "transactionId_1",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-08",
+        "valueDate": "2021-10-08",
+        "executionDateTime": "2021-10-07T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -3
+        },
+        "creditorAccount": {
+          "iban": "",
+          "bban": ""
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "transaction description test"
+      },
+      {
+        "transactionId": "transactionId_2",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-08",
+        "valueDate": "2021-10-08",
+        "executionDateTime": "2021-10-07T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 3
+        },
+        "debtorName": "Mysterious Debtor",
+        "debtorAccount": {
+          "iban": "BE54000000000001",
+          "bban": "100000000001",
+          "bic": "GKCCBEBBXXX"
+        },
+        "transactionType": "Other"
+      },
+      {
+        "transactionId": "transactionId_3",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-07",
+        "valueDate": "2021-10-07",
+        "executionDateTime": "2021-10-06T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -2.75
+        },
+        "creditorAccount": {
+          "iban": "",
+          "bban": ""
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "transaction description test 12345"
+      },
+      {
+        "transactionId": "transactionId_4",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-07",
+        "valueDate": "2021-10-07",
+        "executionDateTime": "2021-10-06T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 0.75
+        },
+        "debtorName": "Mysterious Debtor",
+        "debtorAccount": {
+          "iban": "BE54000000000000",
+          "bban": "200000000002",
+          "bic": "GKCCBEBBXXX"
+        },
+        "transactionType": "Other"
+      },
+      {
+        "transactionId": "transactionId_5",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-06",
+        "valueDate": "2021-10-06",
+        "executionDateTime": "2021-10-05T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -2.6
+        },
+        "creditorAccount": {
+          "iban": "",
+          "bban": ""
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "transaction description test AABCDEFG"
+      },
+      {
+        "transactionId": "transactionId_6",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-06",
+        "valueDate": "2021-10-06",
+        "executionDateTime": "2021-10-05T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 3.6
+        },
+        "debtorName": "Mysterious Debtor",
+        "debtorAccount": {
+          "iban": "BE54000000000000",
+          "bban": "200000000002",
+          "bic": "GKCCBEBBXXX"
+        },
+        "transactionType": "Other"
+      },
+      {
+        "transactionId": "transactionId_7",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-04",
+        "valueDate": "2021-10-04",
+        "executionDateTime": "2021-10-03T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -0.95
+        },
+        "creditorAccount": {
+          "iban": "",
+          "bban": ""
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "very strange transaction description - testing"
+      },
+      {
+        "transactionId": "transactionId_8",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-04",
+        "valueDate": "2021-10-04",
+        "executionDateTime": "2021-10-03T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 2
+        },
+        "debtorName": "Mysterious Debtor",
+        "debtorAccount": {
+          "iban": "BE54000000000000",
+          "bban": "200000000002",
+          "bic": "GKCCBEBBXXX"
+        },
+        "transactionType": "Other"
+      },
+      {
+        "transactionId": "2021000079",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-10-01",
+        "valueDate": "2021-09-30",
+        "executionDateTime": "2021-09-29T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 0
+        },
+        "debtorAccount": {},
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "fish and chips"
+      },
+      {
+        "transactionId": "transactionId_9",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-09-23",
+        "valueDate": "2021-09-22",
+        "executionDateTime": "2021-09-21T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -7
+        },
+        "creditorAccount": {
+          "iban": "BE54000000000001",
+          "bban": "200000000000"
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "tomek tomek doing shopping"
+      },
+      {
+        "transactionId": "transactionId_10",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-09-22",
+        "valueDate": "2021-09-22",
+        "executionDateTime": "2021-09-21T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 7
+        },
+        "debtorName": "Mysterious Debtor",
+        "debtorAccount": {
+          "iban": "BE54000000000000",
+          "bban": "200000000002",
+          "bic": "GKCCBEBBXXX"
+        },
+        "transactionType": "Other"
+      },
+      {
+        "transactionId": "transactionId_11",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-09-17",
+        "valueDate": "2021-09-17",
+        "executionDateTime": "2021-09-16T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -15.5
+        },
+        "creditorAccount": {
+          "iban": "BE54000000000001",
+          "bban": "200000000000"
+        },
+        "transactionType": "Other",
+        "remittanceInformationUnstructured": "test - transaction description"
+      },
+      {
+        "transactionId": "transactionId_12",
+        "endToEndId": "NOTPROVIDED",
+        "bookingDate": "2021-09-17",
+        "valueDate": "2021-09-17",
+        "executionDateTime": "2021-09-16T22:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": 15.5
+        }
+        }
+    ],
+    "pending": [],
+    "info": []
+  }
+}
