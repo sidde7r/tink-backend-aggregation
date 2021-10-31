@@ -15,8 +15,10 @@ import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.HolderRole;
+import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -81,10 +83,32 @@ public class AccountEntity implements GeneralAccountEntity {
         AccountHolder accountHolder = getTinkAccountHolder();
         account.setAccountHolder(accountHolder);
         account.setHolderName(getFirstHolder(accountHolder.getIdentities()).orElse(null));
-
         account.setSourceInfo(createAccountSourceInfo());
+        account.setCapabilities(getAccountCapabilities(productType));
 
         return Optional.of(account);
+    }
+
+    public TransfersEntity getTransfers() {
+        return transfers;
+    }
+
+    @Override
+    public AccountIdentifier generalGetAccountIdentifier() {
+        return new SwedishIdentifier(accountNumber);
+    }
+
+    @Override
+    public String generalGetBank() {
+        if (generalGetAccountIdentifier().isValid()) {
+            return generalGetAccountIdentifier().to(SwedishIdentifier.class).getBankName();
+        }
+        return null;
+    }
+
+    @Override
+    public String generalGetName() {
+        return accountaName;
     }
 
     private AccountSourceInfo createAccountSourceInfo() {
@@ -120,25 +144,14 @@ public class AccountEntity implements GeneralAccountEntity {
         return HolderRole.OTHER;
     }
 
-    public TransfersEntity getTransfers() {
-        return transfers;
-    }
-
-    @Override
-    public AccountIdentifier generalGetAccountIdentifier() {
-        return new SwedishIdentifier(accountNumber);
-    }
-
-    @Override
-    public String generalGetBank() {
-        if (generalGetAccountIdentifier().isValid()) {
-            return generalGetAccountIdentifier().to(SwedishIdentifier.class).getBankName();
-        }
-        return null;
-    }
-
-    @Override
-    public String generalGetName() {
-        return accountaName;
+    public static AccountCapabilities getAccountCapabilities(String type) {
+        return SBABConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(type)
+                .orElse(
+                        new AccountCapabilities(
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN));
     }
 }
