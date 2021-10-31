@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentRe
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -31,6 +33,34 @@ public class LFUtils {
 
     private static final Pattern MONTHS_BOUND = Pattern.compile("(\\d+) MÅNADER");
     private static final Pattern YEARS_BOUND = Pattern.compile("(\\d+) ÅR");
+
+    static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES),
+                            "CHECKING",
+                            "CreditPrivate",
+                            "VISA",
+                            "DEBIT")
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES),
+                            "SAVINGS")
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.NO),
+                            "UNKNOWN")
+                    .build();
 
     /**
      * List of banks that should not have clearing included when doing transfers ...based on
@@ -156,13 +186,24 @@ public class LFUtils {
         return false;
     }
 
-    private static long flattenDate(long date) {
-        return DateUtils.flattenTime(new Date(date)).getTime();
+    public static AccountCapabilities getAccountCapabilities(String type) {
+        return ACCOUNT_CAPABILITIES_MAPPER
+                .translate(type)
+                .orElse(
+                        new AccountCapabilities(
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN));
     }
 
     public static boolean isValidOCR(String message) {
         GiroMessageValidator giroValidator =
                 GiroMessageValidator.create(OcrValidationConfiguration.hardOcrVariableLength());
         return giroValidator.validate(message).getValidOcr().isPresent();
+    }
+
+    private static long flattenDate(long date) {
+        return DateUtils.flattenTime(new Date(date)).getTime();
     }
 }

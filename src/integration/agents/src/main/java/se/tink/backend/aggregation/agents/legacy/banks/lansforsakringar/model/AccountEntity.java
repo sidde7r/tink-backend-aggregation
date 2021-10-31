@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
@@ -198,7 +199,7 @@ public class AccountEntity implements GeneralAccountEntity {
         }
 
         account.setSourceInfo(createAccountSourceInfo());
-
+        account.setCapabilities(LFUtils.getAccountCapabilities(type));
         return account;
     }
 
