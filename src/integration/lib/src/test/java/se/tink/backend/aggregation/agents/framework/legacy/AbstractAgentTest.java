@@ -333,6 +333,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                 RefreshExecutorUtils.executeSegregatedRefresher(agent, item, testContext);
             }
         }
+        agent.postProcess(testContext.getAccountDataCache());
     }
 
     protected void testAgent(String username, String password) throws Exception {

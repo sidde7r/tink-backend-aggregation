@@ -54,6 +54,7 @@ public final class RefreshCommand implements CompositeAgentTestCommand {
                                     RefreshExecutorUtils.executeSegregatedRefresher(
                                             agent, item, context));
         }
+        agent.postProcess(context.getAccountDataCache());
 
         summary.updateStatus(RefreshStatus.FETCHING_COMPLETED);
         log.info("[REFRESH SUMMARY]\n" + summary.toJson());

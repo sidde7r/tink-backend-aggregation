@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
@@ -89,6 +91,9 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
+import se.tink.libraries.account_data_cache.AccountData;
+import se.tink.libraries.account_data_cache.AccountDataCache;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -525,5 +530,45 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     private static void configureMdcPropagation() {
         RxJavaPlugins.setScheduleHandler(RunnableMdcWrapper::wrap);
+    }
+
+    @Override
+    public void postProcess(AccountDataCache cache) {
+        // TODO (AAP-1566): Call a component instead of implementing th
+        // code here. Decide where to put this new component
+        try {
+            // TODO (AAP-1566): Example implementation, check it and implement properly
+            for (AccountData account : cache.getFilteredAccountData()) {
+                boolean doWeAlreadyHaveBookedBalance =
+                        account.getAccount().getGranularAccountBalances().keySet().stream()
+                                .anyMatch(k -> k.name().toLowerCase().contains("booked"));
+                if (!doWeAlreadyHaveBookedBalance && account.getTransactions().size() > 0) {
+                    // TODO (AAP-1566): Do we also need timestamp for each granular balance to know
+                    // for which time
+                    // we have this granular balance?
+                    // Example code for getting granular balances
+                    // Map<AccountBalanceType, ExactCurrencyAmount> granularBalances =
+                    //        account.getAccount().getGranularAccountBalances();
+                    log.info(
+                            "[BOOKED BALANCE AUTO COMPUTATION] Computation started for an account");
+                    ExactCurrencyAmount computedBookedBalance =
+                            ExactCurrencyAmount.of(
+                                    account.getAccount().getAvailableBalance().getExactValue(),
+                                    account.getAccount().getAvailableBalance().getCurrencyCode());
+                    List<Transaction> pendingTransactions =
+                            account.getTransactions().stream()
+                                    .filter(Transaction::isPending)
+                                    .collect(Collectors.toList());
+                    for (Transaction transaction : pendingTransactions) {
+                        computedBookedBalance.subtract(transaction.getTransactionAmount());
+                    }
+                    account.getAccount().setExactBalance(computedBookedBalance);
+                    // TODO (AAP-1566): Check if we should also call
+                    // account.getAccount().setBalance(...);
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Couldn't execute the balance computation");
+        }
     }
 }
