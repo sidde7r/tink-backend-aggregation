@@ -1,11 +1,16 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
 import com.google.common.collect.ImmutableSet;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
+import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.HolderIdentity;
+import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.FieldEntry;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.libraries.account.AccountIdentifier;
@@ -36,7 +41,6 @@ public class AccountTrackingSerializerTest {
         account.setName(SECRET_VALUE);
         account.setBankId(SECRET_VALUE);
         account.setHolderName(SECRET_VALUE);
-
         List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
         Assert.assertTrue(
@@ -45,7 +49,36 @@ public class AccountTrackingSerializerTest {
     }
 
     @Test
-    public void ensureAccountType_isTracked_andIncludedInKey() {
+    public void ensureAccountHoldersAreTracked() {
+
+        ImmutableSet<String> secretFieldKeys =
+                ImmutableSet.<String>builder()
+                        .add(
+                                "Account<null>.accountHolder<BUSINESS>.identities<AUTHORIZED_USER>.name",
+                                "Account<null>.accountHolder<BUSINESS>.identities",
+                                "Account<null>.accountHolder<BUSINESS>.accountId",
+                                "Account<null>.accountHolder")
+                        .build();
+
+        Account account = new Account();
+        AccountHolder accountHolder = new AccountHolder();
+        List<HolderIdentity> identities = new ArrayList<>();
+        HolderIdentity holderIdentity = new HolderIdentity();
+        holderIdentity.setName("dummy-name");
+        holderIdentity.setRole(HolderRole.AUTHORIZED_USER);
+        accountHolder.setAccountId("dummy-accountId");
+        accountHolder.setType(AccountHolderType.BUSINESS);
+        identities.add(holderIdentity);
+        accountHolder.setIdentities(identities);
+        account.setAccountHolder(accountHolder);
+
+        List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
+
+        Assert.assertTrue(TrackingSerializationTestHelper.isAllUnlisted(secretFieldKeys, entries));
+    }
+
+    @Test
+    public void ensureAccountType_isTracked() {
 
         Account account = new Account();
         account.setType(AccountTypes.CHECKING);
@@ -53,9 +86,9 @@ public class AccountTrackingSerializerTest {
         List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
         Assert.assertTrue(
-                "Failed: has entry 'Account<CHECKING>.type' with value == CHECKING",
+                "Failed: has entry 'Account<CHECKING>.type' with value == VALUE_NOT_LISTED",
                 TrackingSerializationTestHelper.hasFieldWithValue(
-                        "Account<CHECKING>.type", AccountTypes.CHECKING.toString(), entries));
+                        "Account<CHECKING>.type", VALUE_NOT_LISTED, entries));
     }
 
     @Test

@@ -15,7 +15,7 @@ public class TrackingSerializationTestHelper {
 
         return entries.stream()
                 .filter(e -> expectedUnlistedFieldNames.contains(e.getName()))
-                .allMatch(e -> Builder.VALUE_NOT_LISTED.equals(e.getValue()));
+                .anyMatch(e -> Builder.VALUE_NOT_LISTED.equals(e.getValue()));
     }
 
     static boolean hasFieldWithValue(
