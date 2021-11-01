@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.PaymentsConfirmedResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AccountEntity;
@@ -36,12 +36,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class SwedbankDefaultTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, LinkEntity>,
                 UpcomingTransactionFetcher<TransactionalAccount> {
-    private static final Logger log =
-            LoggerFactory.getLogger(SwedbankDefaultTransactionalAccountFetcher.class);
 
     private final SwedbankDefaultApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -69,39 +68,10 @@ public class SwedbankDefaultTransactionalAccountFetcher
             EngagementOverviewResponse engagementOverviewResponse =
                     bankProfile.getEngagementOverViewResponse();
 
+            accounts.addAll(getTransactionAccounts(bankProfile, engagementOverviewResponse));
             accounts.addAll(
-                    engagementOverviewResponse.getTransactionAccounts().stream()
-                            .filter(account -> !account.isInvestmentAccount())
-                            .map(
-                                    account ->
-                                            account.toTransactionalAccount(
-                                                    bankProfile,
-                                                    getEngagementTransactionsResponse(account)))
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList()));
-            accounts.addAll(
-                    engagementOverviewResponse.getTransactionDisposalAccounts().stream()
-                            .filter(account -> !account.isInvestmentAccount())
-                            .map(
-                                    account ->
-                                            account.toTransactionalAccount(
-                                                    bankProfile,
-                                                    getEngagementTransactionsResponse(account)))
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList()));
-            accounts.addAll(
-                    engagementOverviewResponse.getSavingAccounts().stream()
-                            .filter(account -> !account.isInvestmentAccount())
-                            .map(
-                                    account ->
-                                            account.toTransactionalAccount(
-                                                    bankProfile,
-                                                    getEngagementTransactionsResponse(account)))
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList()));
+                    getTransactionDisposalAccounts(bankProfile, engagementOverviewResponse));
+            accounts.addAll(getSavingAccounts(bankProfile, engagementOverviewResponse));
         }
 
         if (apiClient.getBankProfiles().size() > 1) {
@@ -109,6 +79,45 @@ public class SwedbankDefaultTransactionalAccountFetcher
         }
 
         return accounts;
+    }
+
+    private List<TransactionalAccount> getSavingAccounts(
+            BankProfile bankProfile, EngagementOverviewResponse engagementOverviewResponse) {
+        return engagementOverviewResponse.getSavingAccounts().stream()
+                .filter(account -> !account.isInvestmentAccount())
+                .map(
+                        account ->
+                                account.toTransactionalAccount(
+                                        bankProfile, getEngagementTransactionsResponse(account)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private List<TransactionalAccount> getTransactionDisposalAccounts(
+            BankProfile bankProfile, EngagementOverviewResponse engagementOverviewResponse) {
+        return engagementOverviewResponse.getTransactionDisposalAccounts().stream()
+                .filter(account -> !account.isInvestmentAccount())
+                .map(
+                        account ->
+                                account.toTransactionalAccount(
+                                        bankProfile, getEngagementTransactionsResponse(account)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private List<TransactionalAccount> getTransactionAccounts(
+            BankProfile bankProfile, EngagementOverviewResponse engagementOverviewResponse) {
+        return engagementOverviewResponse.getTransactionAccounts().stream()
+                .filter(account -> !account.isInvestmentAccount())
+                .map(
+                        account ->
+                                account.toTransactionalAccount(
+                                        bankProfile, getEngagementTransactionsResponse(account)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     private EngagementTransactionsResponse getEngagementTransactionsResponse(
@@ -131,10 +140,10 @@ public class SwedbankDefaultTransactionalAccountFetcher
                                         SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
                                 .orElse(null);
 
-                String bankProfileId = "N/A";
-                if (bankProfile != null && bankProfile.getBank() != null) {
-                    bankProfileId = bankProfile.getBank().getBankId();
-                }
+                String bankProfileId =
+                        isBankProfileBankPresent(bankProfile)
+                                ? bankProfile.getBank().getBankId()
+                                : "N/A";
 
                 log.info(
                         String.format(
@@ -146,13 +155,16 @@ public class SwedbankDefaultTransactionalAccountFetcher
         }
     }
 
+    private boolean isBankProfileBankPresent(BankProfile bankProfile) {
+        return bankProfile != null && bankProfile.getBank() != null;
+    }
+
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
             TransactionalAccount account) {
-        BankProfile bankProfile =
-                account.getFromTemporaryStorage(
-                                SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
-                        .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
+
+        BankProfile bankProfile = getBankProfileFromStorage(account);
+
         apiClient.selectProfile(bankProfile);
 
         Optional<PaymentsConfirmedResponse> paymentsConfirmedResponse =
@@ -171,10 +183,9 @@ public class SwedbankDefaultTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(
             TransactionalAccount account, LinkEntity key) {
-        BankProfile bankProfile =
-                account.getFromTemporaryStorage(
-                                SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
-                        .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
+
+        BankProfile bankProfile = getBankProfileFromStorage(account);
+
         apiClient.selectProfile(bankProfile);
 
         if (key != null) {
@@ -207,6 +218,12 @@ public class SwedbankDefaultTransactionalAccountFetcher
         transactionKeyPaginatorResponse.setTransactions(transactions);
 
         return transactionKeyPaginatorResponse;
+    }
+
+    private BankProfile getBankProfileFromStorage(TransactionalAccount account) {
+        return account.getFromTemporaryStorage(
+                        SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.NO_BANK_ID));
     }
 
     protected EngagementTransactionsResponse fetchTransactions(
@@ -260,10 +277,10 @@ public class SwedbankDefaultTransactionalAccountFetcher
         }
 
         // fetch all transaction ids we have seen for this account
-        Set<String> fetchedTransactionIds = getfetchedTransactionsIds(account.getAccountNumber());
+        Set<String> fetchedTransactionIds = getFetchedTransactionsIds(account.getAccountNumber());
         Set<String> newPseudoKeys = new HashSet<>();
         // fetch all pseudo keys we have seen for this account
-        Set<String> fetchedPseudoKeys = getfetchedPseudoKeys(account.getAccountNumber());
+        Set<String> fetchedPseudoKeys = getFetchedPseudoKeys(account.getAccountNumber());
 
         List<TransactionEntity> filteredTransactions =
                 rawResponse.getTransactions().stream()
@@ -287,7 +304,7 @@ public class SwedbankDefaultTransactionalAccountFetcher
     }
 
     // fetch cached transaction ids
-    private Set<String> getfetchedTransactionsIds(String accountNumber) {
+    private Set<String> getFetchedTransactionsIds(String accountNumber) {
         if (!transactionIdsSeen.containsKey(accountNumber)) {
             transactionIdsSeen.clear();
             transactionIdsSeen.put(accountNumber, new HashSet<>());
@@ -297,7 +314,7 @@ public class SwedbankDefaultTransactionalAccountFetcher
     }
 
     // fetch cached pseudo keys
-    private Set<String> getfetchedPseudoKeys(String accountNumber) {
+    private Set<String> getFetchedPseudoKeys(String accountNumber) {
         if (!pseudoKeysSeen.containsKey(accountNumber)) {
             pseudoKeysSeen.clear();
             pseudoKeysSeen.put(accountNumber, new HashSet<>());
@@ -338,8 +355,6 @@ public class SwedbankDefaultTransactionalAccountFetcher
         String key = transaction.getPseudoKey();
         newKeys.add(key);
 
-        boolean isNewKey = !seenKeys.contains(key);
-
-        return isNewKey;
+        return !seenKeys.contains(key);
     }
 }

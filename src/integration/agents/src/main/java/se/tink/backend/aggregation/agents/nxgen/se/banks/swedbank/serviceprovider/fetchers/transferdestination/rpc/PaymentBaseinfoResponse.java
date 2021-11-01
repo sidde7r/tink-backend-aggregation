@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage.ACCOUNT_ID_NOT_NULL;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage.ACCOUNT_ID_NOT_VALID;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
@@ -8,10 +11,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.Builder;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBasePredicates;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PayeeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
@@ -21,6 +27,7 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
+@Getter
 public class PaymentBaseinfoResponse {
     @JsonIgnore
     private static final AccountIdentifierFormatter DEFAULT_FORMAT =
@@ -32,30 +39,6 @@ public class PaymentBaseinfoResponse {
     private AllowedLinksEntity addPayeeStatus;
     private List<TransactionAccountGroupEntity> transactionAccountGroups;
     private InternationalRecipientsEntity internationalRecipients;
-
-    public PaymentDestinationsEntity getPayment() {
-        return payment;
-    }
-
-    public TransferDestinationsEntity getTransfer() {
-        return transfer;
-    }
-
-    public AllowedLinksEntity getAddRecipientStatus() {
-        return addRecipientStatus;
-    }
-
-    public AllowedLinksEntity getAddPayeeStatus() {
-        return addPayeeStatus;
-    }
-
-    public List<TransactionAccountGroupEntity> getTransactionAccountGroups() {
-        return transactionAccountGroups;
-    }
-
-    public InternationalRecipientsEntity getInternationalRecipients() {
-        return internationalRecipients;
-    }
 
     @JsonIgnore
     public List<? extends GeneralAccountEntity> getPaymentDestinations() {
@@ -98,9 +81,7 @@ public class PaymentBaseinfoResponse {
     @JsonIgnore
     public Optional<TransferDestinationAccountEntity> getSourceAccount(
             AccountIdentifier accountIdentifier) {
-        Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
-        Preconditions.checkState(
-                accountIdentifier.isValid(), "The account identifier must be valid.");
+        validateAccountIdentifier(accountIdentifier);
 
         return Optional.ofNullable(transactionAccountGroups).orElseGet(Collections::emptyList)
                 .stream()
@@ -122,54 +103,42 @@ public class PaymentBaseinfoResponse {
         transferDestinationAccountEntity.getScopes().stream()
                 .filter(SwedbankBaseConstants.TransferScope.TRANSFER_FROM::equalsIgnoreCase)
                 .findAny()
-                .orElseThrow(
-                        () ->
-                                TransferExecutionException.builder(
-                                                SignableOperationStatuses.CANCELLED)
-                                        .setEndUserMessage(
-                                                TransferExecutionException.EndUserMessage
-                                                        .INVALID_SOURCE)
-                                        .setMessage(
-                                                SwedbankBaseConstants.ErrorMessage
-                                                        .SOURCE_NOT_TRANSFER_CAPABLE)
-                                        .setInternalStatus(
-                                                InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
-                                        .build());
+                .orElseThrow(() -> getCancelledTransferExceptionBuilder().build());
 
         String transferDestinationAccountId = transferDestinationAccountEntity.getId();
 
         if (transferDestinationAccountId == null) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
-                    .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
-                    .build();
+            throw getFailedTransferExceptionBuilder().build();
         }
 
         return transferDestinationAccountId;
     }
 
     @JsonIgnore
+    private Builder getFailedTransferExceptionBuilder() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
+                .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
+                .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString());
+    }
+
+    @JsonIgnore
+    private Builder getCancelledTransferExceptionBuilder() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
+                .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_TRANSFER_CAPABLE)
+                .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString());
+    }
+
+    @JsonIgnore
     public Optional<String> getTransferDestinationAccountId(AccountIdentifier accountIdentifier) {
-        Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
-        Preconditions.checkState(
-                accountIdentifier.isValid(), "The account identifier must be valid.");
+        validateAccountIdentifier(accountIdentifier);
 
         Optional<ExternalRecipientEntity> accountEntity =
-                Optional.ofNullable(transfer).map(TransferDestinationsEntity::getExternalRecipients)
-                        .orElseGet(Collections::emptyList).stream()
-                        .filter(SwedbankBasePredicates.filterExternalRecipients(accountIdentifier))
-                        .findFirst();
+                getExternalRecipientAccount(accountIdentifier);
 
         Optional<TransferDestinationAccountEntity> internalAccountEntity =
-                Optional.ofNullable(transactionAccountGroups).orElseGet(Collections::emptyList)
-                        .stream()
-                        .map(TransactionAccountGroupEntity::getAccounts)
-                        .flatMap(Collection::stream)
-                        .filter(
-                                SwedbankBasePredicates.filterTransferDestinationAccounts(
-                                        accountIdentifier))
-                        .findFirst();
+                getInternalAccount(accountIdentifier);
 
         if (!accountEntity.isPresent() && !internalAccountEntity.isPresent()) {
             return Optional.empty();
@@ -186,10 +155,34 @@ public class PaymentBaseinfoResponse {
     }
 
     @JsonIgnore
+    private void validateAccountIdentifier(AccountIdentifier accountIdentifier) {
+        Preconditions.checkNotNull(accountIdentifier, ACCOUNT_ID_NOT_NULL);
+        Preconditions.checkState(accountIdentifier.isValid(), ACCOUNT_ID_NOT_VALID);
+    }
+
+    @JsonIgnore
+    private Optional<TransferDestinationAccountEntity> getInternalAccount(
+            AccountIdentifier accountIdentifier) {
+        return Optional.ofNullable(transactionAccountGroups).orElseGet(Collections::emptyList)
+                .stream()
+                .map(TransactionAccountGroupEntity::getAccounts)
+                .flatMap(Collection::stream)
+                .filter(SwedbankBasePredicates.filterTransferDestinationAccounts(accountIdentifier))
+                .findFirst();
+    }
+
+    @JsonIgnore
+    private Optional<ExternalRecipientEntity> getExternalRecipientAccount(
+            AccountIdentifier accountIdentifier) {
+        return Optional.ofNullable(transfer).map(TransferDestinationsEntity::getExternalRecipients)
+                .orElseGet(Collections::emptyList).stream()
+                .filter(SwedbankBasePredicates.filterExternalRecipients(accountIdentifier))
+                .findFirst();
+    }
+
+    @JsonIgnore
     public Optional<String> getPaymentDestinationAccountId(AccountIdentifier accountIdentifier) {
-        Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
-        Preconditions.checkState(
-                accountIdentifier.isValid(), "The account identifier must be valid.");
+        validateAccountIdentifier(accountIdentifier);
 
         Optional<PayeeEntity> payeeEntity =
                 Optional.ofNullable(payment).map(PaymentDestinationsEntity::getPayees)
@@ -197,11 +190,7 @@ public class PaymentBaseinfoResponse {
                         .filter(SwedbankBasePredicates.filterPayees(accountIdentifier))
                         .findFirst();
 
-        if (!payeeEntity.isPresent()) {
-            return Optional.empty();
-        }
-
-        return Optional.ofNullable(payeeEntity.get().getId());
+        return payeeEntity.map(AbstractAccountEntity::getId);
     }
 
     @JsonIgnore

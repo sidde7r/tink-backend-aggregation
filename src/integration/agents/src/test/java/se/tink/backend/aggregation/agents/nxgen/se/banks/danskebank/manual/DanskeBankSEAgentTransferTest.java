@@ -21,7 +21,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public final class DanskeBankSEAgentTransferTest {
     final AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("SE", "se-danskebank-bankid")
+            new AgentIntegrationTest.Builder("SE", "danskebank-bankid")
                     .loadCredentialsBefore(true)
                     .saveCredentialsAfter(true)
                     .expectLoggedIn(true);

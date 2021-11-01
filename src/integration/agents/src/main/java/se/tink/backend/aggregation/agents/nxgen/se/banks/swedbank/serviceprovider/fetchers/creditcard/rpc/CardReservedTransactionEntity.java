@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.rpc;
 
-import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -11,9 +10,8 @@ public class CardReservedTransactionEntity extends CardTransactionEntity {
 
     public Optional<CreditCardTransaction> toTinkCreditCardTransaction(
             CreditCardAccount creditCardAccount, String defaultCurrency) {
-        Preconditions.checkArgument(
-                creditCardAccount != null, "Credit card account cannot be null.");
-        Preconditions.checkArgument(defaultCurrency != null, "Default currency cannot be null.");
+
+        validateCreditCardAndCurrency(creditCardAccount, defaultCurrency);
 
         if (getLocalAmount() == null) {
             return Optional.empty();

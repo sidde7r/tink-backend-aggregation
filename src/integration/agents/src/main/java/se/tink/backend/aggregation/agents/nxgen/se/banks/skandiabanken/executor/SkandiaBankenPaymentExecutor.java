@@ -37,8 +37,10 @@ import se.tink.libraries.transfer.rpc.Transfer;
 @RequiredArgsConstructor
 public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
-    final SkandiaBankenApiClient apiClient;
-    final SupplementalInformationController supplementalInformationController;
+    private final SkandiaBankenApiClient apiClient;
+    private final SupplementalInformationController supplementalInformationController;
+
+    private SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils();
 
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
@@ -51,7 +53,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
             addRecipient(transfer, sourceAccount);
         }
 
-        Date paymentDate = getPaymentDate(transfer);
+        Date paymentDate = dateUtils.getTransferDateForBgPg(transfer.getDueDate());
 
         // Skandia can respond with 500 on bad input. Removing the filter that handles 500
         // responses to not mistake it for bank side failures.
@@ -59,7 +61,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
         PaymentRequest paymentRequest =
                 PaymentRequest.createPaymentRequest(transfer, paymentDate, sourceAccount);
-        submitPayment(paymentRequest);
+        submitPayment(paymentRequest, paymentDate);
         String encryptedPaymentId = getEncryptedPaymentIdFromBank(paymentRequest, paymentDate);
 
         try {
@@ -135,11 +137,11 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         }
     }
 
-    private void submitPayment(PaymentRequest paymentRequest) {
+    private void submitPayment(PaymentRequest paymentRequest, Date paymentDate) {
         try {
             apiClient.submitPayment(paymentRequest);
         } catch (HttpResponseException e) {
-            throwIfInvalidDateError(e.getResponse());
+            throwIfInvalidDateError(paymentDate, e.getResponse());
             throwIfInvalidOcrError(e.getResponse());
 
             throw getTransferFailedException(
@@ -281,11 +283,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                                         InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
     }
 
-    private Date getPaymentDate(Transfer transfer) {
-        SkandiaBankenDateUtils dateUtils = new SkandiaBankenDateUtils();
-        return dateUtils.getTransferDateForBgPg(transfer.getDueDate());
-    }
-
     private void validateTransferOrThrow(Transfer transfer) {
         throwIfNotBgOrPgPayment(transfer);
         throwIfAmountIsLessThanMinAmount(transfer);
@@ -325,13 +322,14 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                         > PaymentTransfer.UNSTRUCTURED_MAX_LENGTH;
     }
 
-    private void throwIfInvalidDateError(HttpResponse response) {
+    private void throwIfInvalidDateError(Date paymentDate, HttpResponse response) {
 
         if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
                 && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
 
-            if (errorResponse.isInvalidPaymentDate()) {
+            if (errorResponse.isGenericPaymentError()
+                    && dateUtils.isAfterCutOffWithPaymentDateBeforeCutOff(paymentDate)) {
                 throw getTransferCancelledException(
                         TransferExceptionMessage.INVALID_PAYMENT_DATE,
                         EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,

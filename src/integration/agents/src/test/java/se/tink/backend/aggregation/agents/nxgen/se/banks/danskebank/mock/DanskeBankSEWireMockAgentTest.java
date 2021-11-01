@@ -19,7 +19,7 @@ public class DanskeBankSEWireMockAgentTest {
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "se-danskebank-bankid", wireMockFilePath)
+                                MarketCode.SE, "danskebank-bankid", wireMockFilePath)
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), PSU)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)

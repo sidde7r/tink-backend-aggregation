@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
@@ -55,7 +56,8 @@ public class SwedbankBaseConstants {
         PROFILE("/v5/profile/");
 
         public static final String IDENTIFICATION = "/v5/identification";
-        private String path;
+
+        @Getter private final String path;
 
         Url(String path) {
             this.path = path;
@@ -63,10 +65,6 @@ public class SwedbankBaseConstants {
 
         public URL get(String host) {
             return new URL(createUrlWithHost(host, path));
-        }
-
-        public String getPath() {
-            return path;
         }
 
         private static String createUrlWithHost(String host, String path) {
@@ -105,11 +103,8 @@ public class SwedbankBaseConstants {
 
         Base64 base64 = new Base64(100, null, true);
 
-        return new String(base64.encode((apiKey + ":" + deviceId).getBytes(Charsets.US_ASCII)));
-    }
-
-    public static class Headers {
-        public static final String AUTHORIZATION_KEY = "Authorization";
+        return new String(
+                base64.encode((apiKey + ":" + deviceId).getBytes(StandardCharsets.US_ASCII)));
     }
 
     public static class StorageKey {
@@ -287,14 +282,10 @@ public class SwedbankBaseConstants {
         INDIVIDUAL_SAVINGS_PENSION("INDIVIDUAL_SAVINGS_PENSION"),
         UNKNOWN("");
 
-        private String accountType;
+        @Getter private final String accountType;
 
         InvestmentAccountType(String accountType) {
             this.accountType = accountType;
-        }
-
-        public String getAccountType() {
-            return accountType;
         }
 
         public static InvestmentAccountType fromAccountType(String accountType) {
@@ -319,14 +310,10 @@ public class SwedbankBaseConstants {
         INTERRUPTED("CANCELLED_BY_NEW_INIT_AUTHENTICATION"),
         UNKNOWN("");
 
-        private String statusCode;
+        @Getter private final String statusCode;
 
         BankIdResponseStatus(String statusCode) {
             this.statusCode = statusCode;
-        }
-
-        public String getStatusCode() {
-            return statusCode;
         }
 
         public static BankIdResponseStatus fromStatusCode(String statusCode) {
@@ -345,14 +332,10 @@ public class SwedbankBaseConstants {
         UNAUTHORIZED("UNAUTHORIZED"),
         UNKNOWN("");
 
-        private String authRequirement;
+        @Getter private final String authRequirement;
 
         Authorization(String authRequirement) {
             this.authRequirement = authRequirement;
-        }
-
-        public String getAuthRequirement() {
-            return authRequirement;
         }
 
         public static Authorization fromAuthorizationString(String authorization) {
@@ -376,21 +359,17 @@ public class SwedbankBaseConstants {
         HEAD("HEAD"),
         UNKNOWN("");
 
-        private String verb;
+        @Getter private final String verb;
 
         LinkMethod(String verb) {
             this.verb = verb;
-        }
-
-        public String getVerb() {
-            return verb;
         }
 
         public static LinkMethod fromVerb(String verb) {
             String auth = Optional.ofNullable(verb).orElse("");
 
             return Arrays.stream(LinkMethod.values())
-                    .filter(linkMethod -> linkMethod.getVerb().equalsIgnoreCase(verb))
+                    .filter(linkMethod -> linkMethod.getVerb().equalsIgnoreCase(auth))
                     .findFirst()
                     .orElse(LinkMethod.UNKNOWN);
         }
@@ -416,14 +395,10 @@ public class SwedbankBaseConstants {
         REGISTER_PAYEE("PaymentRegisterPayee"),
         REGISTER_EXTERNAL_TRANSFER_RECIPIENT("PaymentRegisterExternalRecipient");
 
-        private String key;
+        @Getter private final String key;
 
         MenuItemKey(String key) {
             this.key = key;
-        }
-
-        public String getKey() {
-            return key;
         }
     }
 
@@ -475,6 +450,14 @@ public class SwedbankBaseConstants {
         public static final String REACHED_HOUR_REQUESTS_LIMIT = "Reached hour requests limit";
         public static final String REACHED_PARALLEL_REQUESTS_LIMIT =
                 "Reached parallel requests limit";
+        public static final String ACCOUNT_ID_NOT_NULL = "The account identifier cannot be null.";
+        public static final String ACCOUNT_ID_NOT_VALID = "The account identifier must be valid.";
+        public static final String NO_BANK_ID = "No bank profile specified";
+        public static final String NO_CREDIT_CARD = "No credit card response available";
+        public static final String NO_CREDIT_CARD_ACCOUNT = "Credit card account cannot be null.";
+        public static final String DEFAULT_CURRENCY_NULL = "Default currency cannot be null";
+        public static final String NO_LINKS_FOUND =
+                "No confirm transfer link found. Transfer failed.";
     }
 
     public static class UserMessage {

@@ -21,11 +21,7 @@ public class LoanAccountEntity extends AccountEntity {
             return Optional.empty();
         }
 
-        LoanDetails loanDetails =
-                LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
-                        .setLoanNumber(accountNumber)
-                        .setNextDayOfTermsChange(nextDayOfTermsChange)
-                        .build();
+        LoanDetails loanDetails = getLoanDetails(nextDayOfTermsChange);
 
         return Optional.of(
                 LoanAccount.builder(
@@ -37,6 +33,13 @@ public class LoanAccountEntity extends AccountEntity {
                         .setName(name)
                         .sourceInfo(createAccountSourceInfo())
                         .build());
+    }
+
+    private LoanDetails getLoanDetails(Date nextDayOfTermsChange) {
+        return LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
+                .setLoanNumber(accountNumber)
+                .setNextDayOfTermsChange(nextDayOfTermsChange)
+                .build();
     }
 
     @JsonIgnore

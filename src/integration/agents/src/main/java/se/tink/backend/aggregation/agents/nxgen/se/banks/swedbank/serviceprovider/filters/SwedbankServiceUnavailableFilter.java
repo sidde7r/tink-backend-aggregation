@@ -24,16 +24,24 @@ public class SwedbankServiceUnavailableFilter extends Filter {
             // Swedbank return the content type in as
             // Content-Type: : application/json;charset=UTF-8
             // The additional ":" makes parsing the response fail
+            addContentTypeHeader(response);
 
-            response.getHeaders().remove(HttpHeaders.CONTENT_TYPE);
-            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-            if (Try.of(() -> response.getBody(ErrorResponse.class))
-                    .map(e -> e.hasErrorCode(BankErrorMessage.SERVICE_UNAVAILABLE))
-                    .getOrElse(Boolean.FALSE)) {
+            if (isBankServiceUnavailable(response)) {
                 throw BankServiceError.NO_BANK_SERVICE.exception();
             }
         }
 
         return response;
+    }
+
+    private Boolean isBankServiceUnavailable(HttpResponse response) {
+        return Try.of(() -> response.getBody(ErrorResponse.class))
+                .map(e -> e.hasErrorCode(BankErrorMessage.SERVICE_UNAVAILABLE))
+                .getOrElse(Boolean.FALSE);
+    }
+
+    private void addContentTypeHeader(HttpResponse response) {
+        response.getHeaders().remove(HttpHeaders.CONTENT_TYPE);
+        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     }
 }

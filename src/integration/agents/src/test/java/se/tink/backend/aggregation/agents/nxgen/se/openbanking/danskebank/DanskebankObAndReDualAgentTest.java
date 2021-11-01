@@ -35,7 +35,7 @@ public class DanskebankObAndReDualAgentTest {
                                 .saveCredentialsAfter(true)
                                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                                 .build(),
-                        new AgentIntegrationTest.Builder("se", "se-danskebank-bankid")
+                        new AgentIntegrationTest.Builder("se", "danskebank-bankid")
                                 .addCredentialField(
                                         Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                                 .expectLoggedIn(false)

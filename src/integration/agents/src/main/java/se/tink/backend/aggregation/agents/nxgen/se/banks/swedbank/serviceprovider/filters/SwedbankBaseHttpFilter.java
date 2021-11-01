@@ -21,15 +21,24 @@ public class SwedbankBaseHttpFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        final MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
-        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
-        headers.add(HttpHeaders.AUTHORIZATION, authorization);
 
-        if (Objects.equals(HttpMethod.POST, httpRequest.getMethod())
-                || Objects.equals(HttpMethod.PUT, httpRequest.getMethod())) {
+        addHeaders(httpRequest);
+
+        if (isMethodPostOrPut(httpRequest)) {
             httpRequest.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
         }
 
         return nextFilter(httpRequest);
+    }
+
+    private boolean isMethodPostOrPut(HttpRequest httpRequest) {
+        return Objects.equals(HttpMethod.POST, httpRequest.getMethod())
+                || Objects.equals(HttpMethod.PUT, httpRequest.getMethod());
+    }
+
+    private void addHeaders(HttpRequest httpRequest) {
+        final MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.add(HttpHeaders.AUTHORIZATION, authorization);
     }
 }
