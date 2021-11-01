@@ -120,6 +120,14 @@ public class DefaultRawBankDataEventProducerTest {
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
+                        .setFieldPath("status")
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
+                        .setIsFieldSet(true)
+                        .setIsFieldMasked(false)
+                        .setFieldValue("NOT_POSSIBLE")
+                        .build());
+        expectedFields.add(
+                RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("iban")
                         .setFieldType(RawBankDataTrackerEventBankFieldType.IBAN)
                         .setIsFieldSet(true)

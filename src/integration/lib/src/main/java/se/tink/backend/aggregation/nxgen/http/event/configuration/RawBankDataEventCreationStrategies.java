@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.http.event.masking.values.MaskAllValues
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.RawBankDataFieldValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskBooleanValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskDateValueMaskingStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskEnumsStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DateFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DummyFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.RawBankDataFieldTypeDetectionStrategy;
@@ -39,6 +40,7 @@ public class RawBankDataEventCreationStrategies {
                 .valueMaskingStrategies(
                         Arrays.asList(
                                 // order is important!
+                                new UnmaskEnumsStrategy(),
                                 new UnmaskDateValueMaskingStrategy(),
                                 new UnmaskBooleanValueMaskingStrategy(),
                                 new GenericMaskingStrategy(),
