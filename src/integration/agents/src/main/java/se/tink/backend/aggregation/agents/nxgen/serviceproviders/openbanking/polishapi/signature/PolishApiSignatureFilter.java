@@ -50,8 +50,8 @@ public class PolishApiSignatureFilter extends Filter {
         String jwsHeader =
                 PolishApiJwsSignatureProvider.createJwsHeader(signer, configuration, jwsSignature);
 
-        httpRequest.getHeaders().add(X_JWS_SIGNATURE, jwsHeader);
-        httpRequest.getHeaders().add(JWS_SIGNATURE, jwsHeader);
+        httpRequest.getHeaders().putSingle(X_JWS_SIGNATURE, jwsHeader);
+        httpRequest.getHeaders().putSingle(JWS_SIGNATURE, jwsHeader);
         return nextFilter(httpRequest);
     }
 
