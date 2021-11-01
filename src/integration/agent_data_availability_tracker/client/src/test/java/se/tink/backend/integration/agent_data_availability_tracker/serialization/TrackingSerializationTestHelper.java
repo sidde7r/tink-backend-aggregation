@@ -10,12 +10,12 @@ import se.tink.backend.integration.agent_data_availability_tracker.common.serial
 @Ignore
 public class TrackingSerializationTestHelper {
 
-    static boolean isAllUnlisted(
-            final ImmutableSet<String> expectedUnlistedFieldNames, final List<FieldEntry> entries) {
+    static boolean allFieldsAreTracked(
+            final ImmutableSet<String> expectedFieldNames, final List<FieldEntry> entries) {
 
         return entries.stream()
-                .filter(e -> expectedUnlistedFieldNames.contains(e.getName()))
-                .allMatch(e -> Builder.VALUE_NOT_LISTED.equals(e.getValue()));
+                .filter(e -> expectedFieldNames.contains(e.getName()))
+                .anyMatch(e -> Builder.VALUE_NOT_LISTED.equals(e.getValue()));
     }
 
     static boolean hasFieldWithValue(

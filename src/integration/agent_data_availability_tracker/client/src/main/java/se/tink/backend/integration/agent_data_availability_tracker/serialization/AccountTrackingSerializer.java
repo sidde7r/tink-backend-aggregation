@@ -1,25 +1,74 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.function.Function;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Balance;
 import se.tink.backend.agents.rpc.BalanceType;
+import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class AccountTrackingSerializer extends TrackingMapSerializer {
 
+    private static final Map<String, Function<Account, String>> FIELD_VALUE_EXTRACTOR =
+            new HashMap<>();
+
+    static {
+        FIELD_VALUE_EXTRACTOR.put("accountNumber", Account::getAccountNumber);
+        FIELD_VALUE_EXTRACTOR.put("bankId", Account::getBankId);
+        FIELD_VALUE_EXTRACTOR.put("name", Account::getName);
+        FIELD_VALUE_EXTRACTOR.put("holderName", Account::getHolderName);
+        FIELD_VALUE_EXTRACTOR.put("balance", account -> account.getNullableBalance().toString());
+        FIELD_VALUE_EXTRACTOR.put(
+                "availableCredit", account -> account.getNullableAvailableCredit().toString());
+        FIELD_VALUE_EXTRACTOR.put("type", account -> account.getType().name());
+
+        for (AccountIdentifierType type : AccountIdentifierType.values()) {
+            FIELD_VALUE_EXTRACTOR.put(
+                    "identifiers." + type.toString(),
+                    account ->
+                            account.getIdentifiers().stream()
+                                    .filter(identifier -> type.equals(identifier.getType()))
+                                    .findFirst()
+                                    .get()
+                                    .getIdentifier());
+        }
+
+        for (BalanceType type : BalanceType.values()) {
+            FIELD_VALUE_EXTRACTOR.put(
+                    "balances." + type.toString(),
+                    account ->
+                            String.valueOf(
+                                    account.getBalances().stream()
+                                            .filter(b -> b.getType() == type)
+                                            .findFirst()
+                                            .get()
+                                            .getAmount()
+                                            .getDoubleValue()));
+        }
+
+        FIELD_VALUE_EXTRACTOR.put(
+                "exactBalance.value",
+                account -> String.valueOf(account.getExactBalance().getDoubleValue()));
+        FIELD_VALUE_EXTRACTOR.put(
+                "exactBalance.currency", account -> account.getExactBalance().getCurrencyCode());
+
+        FIELD_VALUE_EXTRACTOR.put(
+                "availableBalance.value",
+                account -> String.valueOf(account.getAvailableBalance().getDoubleValue()));
+        FIELD_VALUE_EXTRACTOR.put(
+                "availableBalance.currency",
+                account -> account.getAvailableBalance().getCurrencyCode());
+        FIELD_VALUE_EXTRACTOR.put(
+                "accountHolder", account -> account.getAccountHolder().toString());
+    }
+
     private static final String ACCOUNT_ENTITY_NAME = "Account";
     private final Account account;
     private final Integer numberOfTransactions;
-
-    public AccountTrackingSerializer(Account account) {
-        this(account, null);
-    }
 
     public AccountTrackingSerializer(Account account, Integer numberOfTransactions) {
         super(String.format(ACCOUNT_ENTITY_NAME + "<%s>", account.getType()));
@@ -30,107 +79,41 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
     @Override
     protected TrackingList populateTrackingMap(TrackingList.Builder listBuilder) {
 
-        /*
-           We are not tracking the following Account fields (some of them should never be tracked):
-
-           private AccountExclusion accountExclusion;
-           private ExactCurrencyAmount exactAvailableCredit;
-           private String currencyCode;
-           private ExactCurrencyAmount availableBalance;
-           private ExactCurrencyAmount creditLimit;
-           private Date certainDate;
-           private String credentialsId;
-           private boolean excluded;
-           private boolean favored;
-           private String id;
-           private double ownership;
-           private String payload;
-           private String userId;
-           private boolean userModifiedExcluded;
-           private boolean userModifiedName;
-           private boolean userModifiedType;
-           private List<TransferDestination> transferDestinations;
-           private AccountDetails details;
-           private boolean closed;
-           private AccountHolder accountHolder;
-           private String financialInstitutionId;
-        */
-
-        listBuilder
-                .putRedacted("accountNumber", account.getAccountNumber())
-                .putRedacted("bankId", account.getBankId())
-                .putRedacted("name", account.getName())
-                .putRedacted("holderName", account.getHolderName())
-                .putRedacted("balance", account.getNullableBalance())
-                .putRedacted("availableCredit", account.getNullableAvailableCredit())
-                .putListed("type", account.getType());
-
-        if (Objects.nonNull(this.numberOfTransactions)) {
-            listBuilder.putListed("numberOfTransactions", Integer.toString(numberOfTransactions));
-        } else {
-            listBuilder.putNull("numberOfTransactions");
-        }
-
-        for (AccountIdentifierType type : AccountIdentifierType.values()) {
-            Optional<AccountIdentifier> maybeAccountIdentifier =
-                    account.getIdentifiers().stream()
-                            .filter(identifier -> type.equals(identifier.getType()))
-                            .findFirst();
-            String key = "identifiers." + type.toString();
-            if (maybeAccountIdentifier.isPresent()) {
-                listBuilder.putRedacted(key, maybeAccountIdentifier.get().getIdentifier());
-            } else {
-                listBuilder.putNull(key);
-            }
-        }
-
-        // Looping over all possible values here to set null on all non-existing
-        for (BalanceType type : BalanceType.values()) {
-            String key = "balances." + type.toString();
-            Optional<Balance> balance = getBalance(account.getBalances(), type);
-
-            if (!balance.isPresent()) {
-                listBuilder.putNull(key);
-                continue;
-            }
-
-            listBuilder.putRedacted(key, balance.get().getAmount().getDoubleValue());
-        }
-
-        if (Objects.nonNull(account.getExactBalance())
-                && Objects.nonNull(account.getExactBalance().getExactValue())
-                && Objects.nonNull(account.getExactBalance().getCurrencyCode())) {
-            listBuilder.putRedacted(
-                    "exactBalance.value", account.getExactBalance().getDoubleValue());
-            listBuilder.putRedacted(
-                    "exactBalance.currency", account.getExactBalance().getCurrencyCode());
-        } else {
-            listBuilder.putNull("exactBalance.value");
-            listBuilder.putNull("exactBalance.currency");
-        }
-
-        if (Objects.nonNull(account.getAvailableBalance())
-                && Objects.nonNull(account.getAvailableBalance().getExactValue())
-                && Objects.nonNull(account.getAvailableBalance().getCurrencyCode())) {
-            listBuilder.putRedacted(
-                    "availableBalance.value", account.getAvailableBalance().getDoubleValue());
-            listBuilder.putRedacted(
-                    "availableBalance.currency", account.getAvailableBalance().getCurrencyCode());
-        } else {
-            listBuilder.putNull("availableBalance.value");
-            listBuilder.putNull("availableBalance.currency");
-        }
+        addFields(listBuilder);
+        listBuilder.putListed("numberOfTransactions", Integer.toString(numberOfTransactions));
 
         // Accounts without flags are currently valid, so we do not track this as null if empty.
         account.getFlags().forEach(value -> listBuilder.putListed("flags", value));
 
+        if (Objects.nonNull(account.getAccountHolder())) {
+            String key = "accountHolder<" + account.getAccountHolder().getType().name() + ">";
+            listBuilder.putRedacted(key + ".accountId", account.getAccountHolder().getAccountId());
+            listBuilder.putRedacted(
+                    key + ".identities", account.getAccountHolder().getIdentities().toString());
+            for (HolderIdentity holderIdentity : account.getAccountHolder().getIdentities()) {
+                String holderIdentityKey =
+                        key + ".identities<" + holderIdentity.getRole().name() + ">";
+                listBuilder.putRedacted(holderIdentityKey + ".name", holderIdentity.getName());
+            }
+        }
+
         return listBuilder.build();
     }
 
-    private Optional<Balance> getBalance(List<Balance> balances, BalanceType type) {
-        if (balances == null) {
-            return Optional.empty();
+    private void addFields(TrackingList.Builder listBuilder) {
+        for (Map.Entry<String, Function<Account, String>> entry :
+                FIELD_VALUE_EXTRACTOR.entrySet()) {
+            String fieldName = entry.getKey();
+            try {
+                String fieldValue = entry.getValue().apply(account);
+                if (Objects.nonNull(fieldValue) && fieldValue.length() > 0) {
+                    listBuilder.putRedacted(fieldName, fieldValue);
+                } else {
+                    listBuilder.putNull(fieldName);
+                }
+            } catch (Exception e) {
+                listBuilder.putNull(fieldName);
+            }
         }
-        return balances.stream().filter(b -> b.getType() == type).findFirst();
     }
 }

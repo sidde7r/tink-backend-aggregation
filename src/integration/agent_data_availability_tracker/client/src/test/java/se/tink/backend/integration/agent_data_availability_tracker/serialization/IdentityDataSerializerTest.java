@@ -28,6 +28,6 @@ public class IdentityDataSerializerTest {
 
         Assert.assertTrue(
                 "Failed: all entries in secretFieldKeys set is unlisted",
-                TrackingSerializationTestHelper.isAllUnlisted(secretFieldKeys, entries));
+                TrackingSerializationTestHelper.allFieldsAreTracked(secretFieldKeys, entries));
     }
 }
