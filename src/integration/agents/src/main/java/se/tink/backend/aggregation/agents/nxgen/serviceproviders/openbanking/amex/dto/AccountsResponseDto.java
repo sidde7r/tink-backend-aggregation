@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -30,6 +33,10 @@ public class AccountsResponseDto {
 
     public CreditCardAccount toCreditCardAccount(
             List<BalanceDto> balances, StatementPeriodsDto statementPeriods) {
+        if (Strings.isNullOrEmpty(identifiers.getAccountKey())) {
+            log.warn("Account Key missing!");
+        }
+
         final String pan = identifiers.getDisplayAccountNumber();
         final String uniqueId =
                 AmericanExpressUtils.formatAccountId(identifiers.getDisplayAccountNumber());
