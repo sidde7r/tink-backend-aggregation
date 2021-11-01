@@ -89,7 +89,12 @@ public class UnmaskEnumsStrategy implements RawBankDataFieldValueMaskingStrategy
                             "OpeningAvailable",
                             "OpeningBooked",
                             "OpeningCleared",
-                            "PreviouslyClosedBooked"));
+                            "PreviouslyClosedBooked",
+                            "Available",
+                            "Credit",
+                            "Emergency",
+                            "Pre-Agreed",
+                            "Temporary"));
 
     @Override
     public boolean shouldUseMaskingStrategy(
