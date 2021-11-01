@@ -45,7 +45,7 @@ public class AccountTrackingSerializerTest {
 
         Assert.assertTrue(
                 "Failed: all entries in secretFieldKeys set is unlisted",
-                TrackingSerializationTestHelper.isAllUnlisted(secretFieldKeys, entries));
+                TrackingSerializationTestHelper.allFieldsAreTracked(secretFieldKeys, entries));
     }
 
     @Test
@@ -74,7 +74,8 @@ public class AccountTrackingSerializerTest {
 
         List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
-        Assert.assertTrue(TrackingSerializationTestHelper.isAllUnlisted(secretFieldKeys, entries));
+        Assert.assertTrue(
+                TrackingSerializationTestHelper.allFieldsAreTracked(secretFieldKeys, entries));
     }
 
     @Test
@@ -165,6 +166,6 @@ public class AccountTrackingSerializerTest {
 
         Assert.assertTrue(
                 "Failed: all entries in secretFieldKeys set is unlisted",
-                TrackingSerializationTestHelper.isAllUnlisted(unlistedFieldKeys, entries));
+                TrackingSerializationTestHelper.allFieldsAreTracked(unlistedFieldKeys, entries));
     }
 }

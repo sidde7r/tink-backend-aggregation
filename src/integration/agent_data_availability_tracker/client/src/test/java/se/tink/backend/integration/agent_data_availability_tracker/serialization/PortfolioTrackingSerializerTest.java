@@ -40,7 +40,7 @@ public class PortfolioTrackingSerializerTest {
 
         Assert.assertTrue(
                 "Failed: all secret entries are unlisted",
-                TrackingSerializationTestHelper.isAllUnlisted(secretFieldKeys, entries));
+                TrackingSerializationTestHelper.allFieldsAreTracked(secretFieldKeys, entries));
     }
 
     @Test
@@ -76,6 +76,6 @@ public class PortfolioTrackingSerializerTest {
 
         Assert.assertTrue(
                 "Failed: values of numerics are unlisted",
-                TrackingSerializationTestHelper.isAllUnlisted(innumerableFieldKeys, entries));
+                TrackingSerializationTestHelper.allFieldsAreTracked(innumerableFieldKeys, entries));
     }
 }

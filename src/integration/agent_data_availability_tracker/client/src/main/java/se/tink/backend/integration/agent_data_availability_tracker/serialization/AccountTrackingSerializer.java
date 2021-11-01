@@ -101,16 +101,18 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
     }
 
     private void addFields(TrackingList.Builder listBuilder) {
-        for (String key : FIELD_VALUE_EXTRACTOR.keySet()) {
+        for (Map.Entry<String, Function<Account, String>> entry :
+                FIELD_VALUE_EXTRACTOR.entrySet()) {
+            String fieldName = entry.getKey();
             try {
-                String value = FIELD_VALUE_EXTRACTOR.get(key).apply(account);
-                if (Objects.nonNull(value) && value.length() > 0) {
-                    listBuilder.putRedacted(key, value);
+                String fieldValue = entry.getValue().apply(account);
+                if (Objects.nonNull(fieldValue) && fieldValue.length() > 0) {
+                    listBuilder.putRedacted(fieldName, fieldValue);
                 } else {
-                    listBuilder.putNull(key);
+                    listBuilder.putNull(fieldName);
                 }
             } catch (Exception e) {
-                listBuilder.putNull(key);
+                listBuilder.putNull(fieldName);
             }
         }
     }

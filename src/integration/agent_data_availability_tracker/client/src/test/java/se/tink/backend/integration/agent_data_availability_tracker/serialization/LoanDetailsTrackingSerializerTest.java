@@ -37,6 +37,6 @@ public class LoanDetailsTrackingSerializerTest {
 
         Assert.assertTrue(
                 "Failed: all secret fields are unlisted",
-                TrackingSerializationTestHelper.isAllUnlisted(secretFieldKeys, entries));
+                TrackingSerializationTestHelper.allFieldsAreTracked(secretFieldKeys, entries));
     }
 }
