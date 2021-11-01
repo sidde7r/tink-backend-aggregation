@@ -17,13 +17,13 @@ import se.tink.backend.aggregation.nxgen.http.event.type_detection.DateFieldType
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DummyFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.RawBankDataFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.BbanFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.BooleanFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.DoubleFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.BooleanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.DoubleFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.IbanFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.IntegerFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.IntegerFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.MaskedPanFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.SortCodeFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.StringFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.StringFieldTypeDetectionStrategy;
 
 @Builder
 @Getter

@@ -6,7 +6,7 @@ import static junit.framework.TestCase.assertTrue;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.util.Collections;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.BooleanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.BooleanFieldTypeDetectionStrategy;
 
 public class BooleanFieldTypeDetectionStrategyTest {
 
