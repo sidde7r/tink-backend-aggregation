@@ -41,6 +41,7 @@ public class CardTranscationEntity {
                 .build();
     }
 
+    // Defaulting to merchant name since it is more descriptive than the field "description"
     public String getDescription() {
         return Objects.nonNull(merchant) ? merchant.getName() : description;
     }
