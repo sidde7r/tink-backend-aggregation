@@ -16,7 +16,7 @@ public class BbanFieldTypeDetectionStrategy implements RawBankDataFieldTypeDetec
         boolean isNumeric =
                 JsonNodeType.NUMBER.equals(type)
                         || (JsonNodeType.STRING.equals(type)
-                                && RawBankDataFieldTypeDetectionStrategy.isStringANumber(value));
+                                && RawBankDataFieldTypeDetectionStrategy.isStringAnInteger(value));
         return isBbanNameAppearsInFieldPath && isNumeric;
     }
 

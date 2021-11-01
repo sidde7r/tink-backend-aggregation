@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.nxgen.http.event.masking.values;
 import static se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType.*;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.pojo.FieldPathPart;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
 
@@ -20,22 +22,27 @@ public class GenericMaskingStrategy implements RawBankDataFieldValueMaskingStrat
          c) Otherwise replace it with "L"
     */
 
-    private static final List<RawBankDataTrackerEventBankFieldType> ACCOUNT_IDENTIFIER_FIELD_TYPES =
-            Arrays.asList(IBAN, BBAN, SORT_CODE, PAYMENT_ACCOUNT_NUMBER, MASKED_PAN);
+    private static final Set<RawBankDataTrackerEventBankFieldType> FIELD_TYPES_FOR_STRATEGY =
+            new HashSet<>(
+                    Arrays.asList(
+                            IBAN,
+                            BBAN,
+                            SORT_CODE,
+                            PAYMENT_ACCOUNT_NUMBER,
+                            MASKED_PAN,
+                            STRING,
+                            DOUBLE,
+                            INTEGER));
 
-    private static final List<RawBankDataTrackerEventBankFieldType> ALLOWED_FIELDS_FOR_STRATEGY =
-            Arrays.asList(STRING, DOUBLE, INTEGER);
-
-    private static final List<Character> ALLOWED_CHARACTERS_FOR_UNMASK =
-            Arrays.asList('*', '-', '_', '.', ',', ' ');
+    private static final Set<Character> ALLOWED_CHARACTERS_FOR_UNMASK =
+            new HashSet<>(Arrays.asList('*', '-', '_', '.', ',', ' '));
 
     @Override
     public boolean shouldUseMaskingStrategy(
             List<FieldPathPart> fieldPathParts,
             String value,
             RawBankDataTrackerEventBankFieldType fieldType) {
-        return ALLOWED_FIELDS_FOR_STRATEGY.contains(fieldType)
-                || ACCOUNT_IDENTIFIER_FIELD_TYPES.contains(fieldType);
+        return FIELD_TYPES_FOR_STRATEGY.contains(fieldType);
     }
 
     @Override

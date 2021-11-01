@@ -12,7 +12,7 @@ public interface RawBankDataFieldTypeDetectionStrategy {
     RawBankDataTrackerEventBankFieldType getType(
             List<FieldPathPart> fieldPath, String value, JsonNodeType type);
 
-    static boolean isStringANumber(String str) {
+    static boolean isStringAnInteger(String str) {
         if (str == null) {
             return false;
         }

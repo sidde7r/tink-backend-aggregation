@@ -13,17 +13,17 @@ import se.tink.backend.aggregation.nxgen.http.event.masking.values.RawBankDataFi
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskBooleanValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskDateValueMaskingStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.masking.values.UnmaskEnumsStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.DateFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.DummyFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.RawBankDataFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.BbanFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.BooleanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.DateFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.DoubleFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.IbanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.DummyFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.IntegerFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.RawBankDataFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.StringFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.BbanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.IbanFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.MaskedPanFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.SortCodeFieldTypeDetectionStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.StringFieldTypeDetectionStrategy;
 
 @Builder
 @Getter
