@@ -23,7 +23,8 @@ public class RawBankDataEventAccumulator {
                 RawBankDataTrackerEvent.newBuilder()
                         .setTimestamp(event.getTimestamp())
                         .setCorrelationId(event.getCorrelationId())
-                        .setTraceId(Optional.ofNullable(MDC.get("traceId")).orElse("N/A"));
+                        .setTraceId(Optional.ofNullable(MDC.get("traceId")).orElse("N/A"))
+                        .setProviderName(event.getProviderName());
 
         if (Objects.nonNull(refreshableItem)) {
             try {
