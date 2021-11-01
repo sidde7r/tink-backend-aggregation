@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import java.net.URI;
+import java.util.function.Function;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.ErrorText;
@@ -13,8 +15,9 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 public class IdentityDataClient extends SBABClient implements IdentityDataFetcher {
 
-    public IdentityDataClient(Client client, Credentials credentials, String userAgent) {
-        super(client, credentials, userAgent);
+    public IdentityDataClient(
+            Client client, Function<String, URI> uriFunction, Credentials credentials) {
+        super(client, uriFunction, credentials);
     }
 
     @Override

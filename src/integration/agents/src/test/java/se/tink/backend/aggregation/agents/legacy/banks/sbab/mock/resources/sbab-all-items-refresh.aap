@@ -1,0 +1,1181 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+Content-Type: application/json
+Accept: application/json
+
+{
+  "operationName": "AuthStatusPollQuery",
+  "variables": {
+    "filter": {}
+  },
+  "query": "query AuthStatusPollQuery {\n  user {\n    id\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1 SET AUTH_STATUS1
+401
+Date: Wed, 25 Aug 2021 13:23:34 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "msg": "Unauthorized"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2 MATCH AUTH_STATUS1
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+Content-Type: application/json
+Accept: application/json
+
+{
+  "operationName": "AuthStatusPollQuery",
+  "variables": {
+    "filter": {}
+  },
+  "query": "query AuthStatusPollQuery {\n  user {\n    id\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+401
+Date: Wed, 25 Aug 2021 13:23:34 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "msg": "Unauthorized"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://secure.sbab.se/ib-login/api/v1/initiate?dep=privat&auth_mech=PW_MBID&auth_device=SAME&rev=702864000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Wed, 25 Aug 2021 13:23:35 GMT
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "pending_authorization_code": "ac5f751e-101f-451c-8846-4fd5b81ddfd9",
+  "autostart_token": "1d077c6b-3320-418b-a85c-fe1041d25455"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://secure.sbab.se/ib-login/api/v1/pending?code=ac5f751e-101f-451c-8846-4fd5b81ddfd9
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET COLLECT1
+200
+Date: Wed, 25 Aug 2021 13:23:36 GMT
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "status": "CONTINUE",
+  "message": "Försöker starta din BankID-app.",
+  "redirect": null
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH COLLECT1
+GET https://secure.sbab.se/ib-login/api/v1/pending?code=ac5f751e-101f-451c-8846-4fd5b81ddfd9
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET COLLECT2
+200
+Date: Wed, 25 Aug 2021 13:23:42 GMT
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "status": "ONGOING",
+  "message": "Skriv in din säkerhetskod i BankIDappen och välj Legitimera eller Skriv under.",
+  "redirect": null
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH COLLECT2
+GET https://secure.sbab.se/ib-login/api/v1/pending?code=ac5f751e-101f-451c-8846-4fd5b81ddfd9
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Wed, 25 Aug 2021 13:23:45 GMT
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "status": "SUCCESS",
+  "message": "authorization_completed",
+  "redirect": null
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://secure.sbab.se/beta?rev=1621409868887
+Accept: text/html
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Wed, 25 Aug 2021 13:23:45 GMT
+Content-Type: text/html; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+<!doctype html><html lang="sv"><head><meta charset="UTF-8"><title>SBAB</title><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><meta http-equiv="Content-Language" content="sv"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=10,user-scalable=yes"><meta name="format-detection" content="telephone=no"><base href="/"/><meta name="theme-color" content="#FF6633"><script nonce="GDNnf03nceHOfn79fn3e9K3sdfa">window.FEAT_TOGGLE_ON = "true";
+
+        window.csrfToken = "qwerty-abcdeZ5Tb2dlhYiSmXiV5mzFxs4";
+
+        window.FEAT_TOGGLE_OVERRIDES = "";
+
+        window.BROWSERSLIST_REGEX = "%2F((CPU%5B%20%2B%5DOS%7CiPhone%5B%20%2B%5DOS%7CCPU%5B%20%2B%5DiPhone%7CCPU%20IPhone%20OS)%5B%20%2B%5D%2B(10%5B_.%5D3%7C10%5B_.%5D(%5B4-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B1-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5B_.%5D%5Cd%2B%7C12%5B_.%5D2%7C12%5B_.%5D(%5B3-9%5D%7C%5Cd%7B2%2C%7D)%7C12%5B_.%5D4%7C12%5B_.%5D(%5B5-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B3-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5B_.%5D%5Cd%2B%7C13%5B_.%5D3%7C13%5B_.%5D(%5B4-9%5D%7C%5Cd%7B2%2C%7D)%7C13%5B_.%5D7%7C13%5B_.%5D(%5B8-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B4-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5B_.%5D%5Cd%2B%7C14%5B_.%5D0%7C14%5B_.%5D(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C14%5B_.%5D4%7C14%5B_.%5D(%5B5-9%5D%7C%5Cd%7B2%2C%7D)%7C14%5B_.%5D7%7C14%5B_.%5D(%5B8-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B5-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5B_.%5D%5Cd%2B)(%3F%3A%5B_.%5D%5Cd%2B)%3F)%7C(CFNetwork%5C%2F8.*%20Darwin%5C%2F16%5C.5%5C.%5Cd%2B)%7C(CFNetwork%5C%2F8.*%20Darwin%5C%2F16%5C.6%5C.%5Cd%2B)%7C(CFNetwork%5C%2F8.*%20Darwin%5C%2F16%5C.7%5C.%5Cd%2B)%7C(Opera%20Mini(%3F%3A%5C%2Fatt)%3F%5C%2F%3F(%5Cd%2B)%3F(%3F%3A%5C.%5Cd%2B)%3F(%3F%3A%5C.%5Cd%2B)%3F)%7C(Opera%5C%2F.%2BOpera%20Mobi.%2BVersion%5C%2F(64%5C.0%7C64%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(6%5B5-9%5D%7C%5B7-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B))%7C(Opera%5C%2F(64%5C.0%7C64%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(6%5B5-9%5D%7C%5B7-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B).%2BOpera%20Mobi)%7C(Opera%20Mobi.%2BOpera(%3F%3A%5C%2F%7C%5Cs%2B)(64%5C.0%7C64%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(6%5B5-9%5D%7C%5B7-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B))%7C(SamsungBrowser%5C%2F(7%5C.2%7C7%5C.(%5B3-9%5D%7C%5Cd%7B2%2C%7D)%7C7%5C.4%7C7%5C.(%5B5-9%5D%7C%5Cd%7B2%2C%7D)%7C(%5B8-9%5D%7C%5Cd%7B2%2C%7D)%5C.%5Cd%2B%7C13%5C.0%7C13%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B4-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B))%7C(Edge%5C%2F(91(%3F%3A%5C.0)%3F%7C91(%3F%3A%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D))%3F%7C(9%5B2-9%5D%7C%5Cd%7B3%2C%7D)(%3F%3A%5C.%5Cd%2B)%3F))%7C((Chromium%7CChrome)%5C%2F(69%5C.0%7C69%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(%5B7-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B%7C87%5C.0%7C87%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(8%5B8-9%5D%7C9%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B%7C90%5C.0%7C90%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(9%5B1-9%5D%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B)(%3F%3A%5C.%5Cd%2B)%3F)%7C(Version%5C%2F(10%5C.0%7C10%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B1-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B%7C11%5C.0%7C11%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B2-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B%7C12%5C.0%7C12%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B3-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B%7C13%5C.0%7C13%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B4-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B%7C14%5C.0%7C14%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B5-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B)(%3F%3A%5C.%5Cd%2B)%3F%20Safari%5C%2F)%7C(Trident%5C%2F7%5C.0)%7C(Firefox%5C%2F(89%5C.0%7C89%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(9%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B)%5C.%5Cd%2B)%7C(Firefox%5C%2F(89%5C.0%7C89%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(9%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B)(pre%7C%5Bab%5D%5Cd%2B%5Ba-z%5D*)%3F)%7C((%5BMS%5D%3FIE)%20(11%5C.0%7C11%5C.(%5B1-9%5D%7C%5Cd%7B2%2C%7D)%7C(1%5B2-9%5D%7C%5B2-9%5D%5Cd%7C%5Cd%7B3%2C%7D)%5C.%5Cd%2B))%2F";
+
+
+
+
+
+      if ('serviceWorker' in navigator) {
+
+        // Use the window load event to keep the page load performant
+
+        window.addEventListener('load', function () {
+
+          navigator.serviceWorker.register('/beta/service-worker.js');
+
+        });
+
+      }</script><link rel="icon" href="/beta/fav.ico?beaeefa25b9c5722649b"><script defer="defer" src="/beta/runtime.beaeefa25b9c5722649b.js?beaeefa25b9c5722649b"></script><script defer="defer" src="/beta/main.beaeefa25b9c5722649b.js?beaeefa25b9c5722649b"></script><link href="/beta/main.02e7dae4edc5e870c29d.css?beaeefa25b9c5722649b" rel="stylesheet"></head><body><noscript>Denna webbplats kräver att Javascript är aktiverat/This site requires Javascript to be enabled</noscript><div id="root"><div id="no-support" style="display: none;"><div style="padding: 16px;"><div><p>Om du ser detta meddelandet finns det risk att du har en för gammal webbläsare för att visa vår nya internetbank. Vänligen uppdatera din webbläsare eller besök <a href="/privat">vår gamla internetbank</a> för att hantera dina lån och konton. Vi har också en app tillgänglig för iOS och Android.</p></div><div style="margin-top: 24px;"><p>If you see this message there's a risk that your browser is too old to use our new internet bank. Please update your browser or visit <a href="/privat">our old internet bank</a> to handle your loans and accounts. We also have an app for iOS and Android.</p></div><div><p>App</p><ul><li><a href="https://apps.apple.com/us/app/sbab/id1284703331">App Store</a></li><li><a href="https://play.google.com/store/apps/details?id=se.sbab.bankapp">Google Play</a></li></ul></div></div></div></div><script>var isCompatibleUA = window.navigator.userAgent.match(
+
+        decodeURIComponent(window.BROWSERSLIST_REGEX)
+
+      );
+
+      if (!isCompatibleUA) {
+
+        var elem = document.getElementById('no-support');
+
+        if (elem) {
+
+          elem.style.display = 'block';
+
+        }
+
+      }</script></body></html>
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+Accept: application/json
+
+{
+  "operationName": "SavingsAccountsQuery",
+  "variables": {
+    "filter": {
+      "statusExcept": "CLOSED"
+    }
+  },
+  "query": "query SavingsAccountsQuery($filter: SavingsAccountsFilter) {\n  user {\n    id\n    savingsAccounts(filter: $filter) {\n      id\n      name\n      description\n      balance\n      availableForWithdrawal\n      status\n      accountType\n      interestRate\n      __typename\n    }\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Date: Wed, 25 Aug 2021 13:23:47 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 698
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Keep-Alive: ***
+Connection: Keep-Alive
+
+{
+  "data": {
+    "user": {
+      "id": "1234567",
+      "savingsAccounts": [
+        {
+          "id": "92521234567",
+          "name": "Savings account",
+          "description": "Sparkonto",
+          "balance": 30000.52,
+          "availableForWithdrawal": 30000.52,
+          "status": "OPEN",
+          "accountType": "DEFAULT",
+          "interestRate": 0.5,
+          "__typename": "SavingsAccount"
+        },
+        {
+          "id": "92527654321",
+          "name": "Joint savings account",
+          "description": "Sparkonto",
+          "balance": 10000.12,
+          "availableForWithdrawal": 10000.12,
+          "status": "OPEN",
+          "accountType": "DEFAULT",
+          "interestRate": 0.5,
+          "__typename": "SavingsAccount"
+        }
+      ],
+      "__typename": "User"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+Content-Type: application/json
+Accept: application/json
+
+{
+  "operationName": "SavingsOverviewQuery",
+  "variables": {
+    "filter": {},
+    "accountNumber": "92521234567"
+  },
+  "query": "query SavingsOverviewQuery($accountNumber: String) {\n  staticInformation {\n    savingsGoalCategories {\n      code\n      name\n      sortIndex\n      __typename\n    }\n    __typename\n  }\n  user {\n    id\n    savingsAccount(accountNumber: $accountNumber) {\n      id\n      name\n      number\n      description\n      balance\n      availableForWithdrawal\n      status\n      accountType\n      interestRate\n      accruedInterestCredit\n      openDate\n      closeDate\n      isActionGranted\n      isTaxAccount\n      mandateType\n      accountHolders {\n        fullName\n        orgPersNbr\n        __typename\n      }\n      authorities {\n        id\n        fullName\n        orgPersNbr\n        __typename\n      }\n      savingsGoal {\n        category {\n          code\n          name\n          sortIndex\n          __typename\n        }\n        amount\n        targetDate\n        __typename\n      }\n      transfers {\n        completed {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        upcoming {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        failed {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 10 SET SAVINGS1
+200
+Date: Wed, 25 Aug 2021 13:23:48 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "data": {
+    "staticInformation": {
+      "savingsGoalCategories": [
+        {
+          "code": "buffer",
+          "name": "Buffert",
+          "sortIndex": 100,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "journey",
+          "name": "Resa",
+          "sortIndex": 200,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "car",
+          "name": "Bil",
+          "sortIndex": 300,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "wedding",
+          "name": "Bröllop",
+          "sortIndex": 400,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "residence",
+          "name": "Boende",
+          "sortIndex": 500,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "custom",
+          "name": "Eget",
+          "sortIndex": 600,
+          "__typename": "SavingsGoalCategory"
+        }
+      ],
+      "__typename": "StaticInformation"
+    },
+    "user": {
+      "id": "1234567",
+      "savingsAccount": {
+        "id": "92521234567",
+        "name": "Savings account",
+        "number": "92521234567",
+        "description": "Sparkonto",
+        "balance": 30000.52,
+        "availableForWithdrawal": 30000.52,
+        "status": "OPEN",
+        "accountType": "DEFAULT",
+        "interestRate": 0.5,
+        "accruedInterestCredit": 500.12,
+        "openDate": "2017-09-21",
+        "isActionGranted": true,
+        "isTaxAccount": false,
+        "mandateType": "OWNER",
+        "accountHolders": [
+          {
+            "fullName": "Firstname Lastname1",
+            "orgPersNbr": "199312050231",
+            "__typename": "AccountHolder"
+          }
+        ],
+        "authorities": [],
+        "transfers": {
+          "completed": [
+            {
+              "amount": 50000,
+              "balance": 30000.52,
+              "transferId": "567890123",
+              "transferStatus": "COMPLETE",
+              "transferType": "DEPOSIT",
+              "releaseDate": "2021-08-19",
+              "postingDate": "2021-08-19",
+              "accountNumberFrom": "Swedbank",
+              "accountNumberTo": "92521234567",
+              "bankNameFrom": "Swedbank",
+              "bankNameTo": "SBAB",
+              "narrativeTo": "ÖVERFÖRING",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            },
+            {
+              "amount": -2500,
+              "balance": 20000.52,
+              "transferId": "234567890",
+              "transferStatus": "COMPLETE",
+              "transferType": "WITHDRAWAL",
+              "releaseDate": "2021-07-30",
+              "postingDate": "2021-07-30",
+              "accountNumberFrom": "92521234567",
+              "accountNumberTo": "SBAB",
+              "bankNameFrom": "SBAB",
+              "bankNameTo": "SBAB",
+              "narrativeFrom": "BETALNING AV LÅN: 45678901 REF: mockedRef",
+              "narrativeTo": "BETALNING AV LÅN: 45678901 REF: mockedRef",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            },
+            {
+              "amount": -2500,
+              "balance": 20000.52,
+              "transferId": "282189501",
+              "transferStatus": "COMPLETE",
+              "transferType": "WITHDRAWAL",
+              "releaseDate": "2021-07-30",
+              "postingDate": "2021-07-30",
+              "accountNumberFrom": "92521234567",
+              "accountNumberTo": "SBAB",
+              "bankNameFrom": "SBAB",
+              "bankNameTo": "SBAB",
+              "narrativeFrom": "BETALNING AV LÅN: 10987654 REF: mockedRef",
+              "narrativeTo": "BETALNING AV LÅN: 10987654 REF: mockedRef",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            },
+            {
+              "amount": 5000,
+              "balance": 25000.52,
+              "transferId": "345567789",
+              "transferStatus": "COMPLETE",
+              "transferType": "DEPOSIT",
+              "releaseDate": "2021-07-26",
+              "postingDate": "2021-07-26",
+              "accountNumberFrom": "Swedbank",
+              "accountNumberTo": "92521234567",
+              "bankNameFrom": "Swedbank",
+              "bankNameTo": "SBAB",
+              "narrativeTo": "ÖVERFÖRING",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            }
+          ],
+          "upcoming": [],
+          "failed": [],
+          "__typename": "Transfers"
+        },
+        "__typename": "SavingsAccount"
+      },
+      "__typename": "User"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+Content-Type: application/json
+Accept: application/json
+
+{
+  "operationName": "SavingsOverviewQuery",
+  "variables": {
+    "filter": {},
+    "accountNumber": "92527654321"
+  },
+  "query": "query SavingsOverviewQuery($accountNumber: String) {\n  staticInformation {\n    savingsGoalCategories {\n      code\n      name\n      sortIndex\n      __typename\n    }\n    __typename\n  }\n  user {\n    id\n    savingsAccount(accountNumber: $accountNumber) {\n      id\n      name\n      number\n      description\n      balance\n      availableForWithdrawal\n      status\n      accountType\n      interestRate\n      accruedInterestCredit\n      openDate\n      closeDate\n      isActionGranted\n      isTaxAccount\n      mandateType\n      accountHolders {\n        fullName\n        orgPersNbr\n        __typename\n      }\n      authorities {\n        id\n        fullName\n        orgPersNbr\n        __typename\n      }\n      savingsGoal {\n        category {\n          code\n          name\n          sortIndex\n          __typename\n        }\n        amount\n        targetDate\n        __typename\n      }\n      transfers {\n        completed {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        upcoming {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        failed {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 11 SET SAVINGS2
+200
+Date: Wed, 25 Aug 2021 13:23:50 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "data": {
+    "staticInformation": {
+      "savingsGoalCategories": [
+        {
+          "code": "buffer",
+          "name": "Buffert",
+          "sortIndex": 100,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "journey",
+          "name": "Resa",
+          "sortIndex": 200,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "car",
+          "name": "Bil",
+          "sortIndex": 300,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "wedding",
+          "name": "Bröllop",
+          "sortIndex": 400,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "residence",
+          "name": "Boende",
+          "sortIndex": 500,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "custom",
+          "name": "Eget",
+          "sortIndex": 600,
+          "__typename": "SavingsGoalCategory"
+        }
+      ],
+      "__typename": "StaticInformation"
+    },
+    "user": {
+      "id": "1234567",
+      "savingsAccount": {
+        "id": "92527654321",
+        "name": "Joint savings account",
+        "number": "92527654321",
+        "description": "Sparkonto",
+        "balance": 10000.12,
+        "availableForWithdrawal": 10000.12,
+        "status": "OPEN",
+        "accountType": "DEFAULT",
+        "interestRate": 0.5,
+        "accruedInterestCredit": 0.31,
+        "openDate": "2018-01-21",
+        "isActionGranted": true,
+        "isTaxAccount": false,
+        "mandateType": "MEDKONTOHAVARE",
+        "accountHolders": [
+          {
+            "fullName": "Firstname Lastname1",
+            "orgPersNbr": "199312050231",
+            "__typename": "AccountHolder"
+          },
+          {
+            "fullName": "Firstname Lastname2",
+            "orgPersNbr": "200001011234",
+            "__typename": "AccountHolder"
+          }
+        ],
+        "authorities": [],
+        "transfers": {
+          "completed": [
+            {
+              "amount": 95.95,
+              "balance": 10000.12,
+              "transferId": "210214441",
+              "transferStatus": "COMPLETE",
+              "transferType": "DEPOSIT",
+              "releaseDate": "2018-12-31",
+              "postingDate": "2018-12-31",
+              "accountNumberFrom": "SBAB",
+              "accountNumberTo": "92527654321",
+              "bankNameFrom": "SBAB",
+              "bankNameTo": "SBAB",
+              "narrativeFrom": "ERHÅLLEN RÄNTA",
+              "narrativeTo": "Erhållen ränta",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            },
+            {
+              "amount": -500,
+              "balance": 0,
+              "transferId": "210214431",
+              "transferStatus": "COMPLETE",
+              "transferType": "WITHDRAWAL",
+              "releaseDate": "2018-07-18",
+              "postingDate": "2018-07-18",
+              "accountNumberFrom": "92527654321",
+              "accountNumberTo": "832791234567890",
+              "bankNameFrom": "SBAB",
+              "bankNameTo": "Swedbank",
+              "narrativeFrom": "-",
+              "narrativeTo": "NAME",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            }
+          ],
+          "upcoming": [],
+          "failed": [],
+          "__typename": "Transfers"
+        },
+        "__typename": "SavingsAccount"
+      },
+      "__typename": "User"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+Content-Type: application/json
+Accept: application/json
+
+{
+  "operationName": "CollateralsQuery",
+  "variables": {
+    "filter": {}
+  },
+  "query": "query CollateralsQuery {\n  user {\n    id\n    loans {\n      id\n      mortgages {\n        id\n        collaterals {\n          totalAmount\n          cadastral\n          objectId\n          objectType\n          energyPerformance {\n            energyClass\n            __typename\n          }\n          mortgages {\n            loanNumber\n            legacyLoanNumber\n            loanAmount\n            originalLoanAmount\n            loanType\n            loanStatus\n            discountType\n            loanTerms {\n              interestRate\n              fixedInterestPeriodMonths\n              __typename\n            }\n            invoices {\n              bankgiroNumber\n              invoiceNumbers\n              invoicePeriod\n              payDate\n              paymentDescription\n              totalAmount\n              settled\n              ocrNumber\n              dueDate\n              loanTypes\n              remainingAmount\n              loans {\n                loanType\n                loanNumber\n                amortizationAmount\n                interestAmount\n                totalAmount\n                invoiceLines {\n                  lineNumber\n                  invoiceLineType\n                  typeDescriptionDetail\n                  amount\n                  __typename\n                }\n                __typename\n              }\n              __typename\n            }\n            __typename\n          }\n          trustDeeds {\n            id\n            deedValue\n            mortgageLienPriority\n            objectId\n            nrlopobj\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Date: Wed, 25 Aug 2021 13:23:51 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "data": {
+    "user": {
+      "id": "1234567",
+      "loans": {
+        "id": "LOANS",
+        "mortgages": {
+          "id": "MORTGAGES",
+          "collaterals": [
+            {
+              "totalAmount": 1000000,
+              "cadastral": "BRF WHATEVER",
+              "objectId": "123123123",
+              "objectType": "CONDOMINIUM",
+              "mortgages": [
+                {
+                  "loanNumber": "10987654",
+                  "loanAmount": 500000,
+                  "originalLoanAmount": 700000,
+                  "loanType": "MORTGAGE_LOAN",
+                  "loanStatus": "CURRENT",
+                  "discountType": "UNDEFINED",
+                  "loanTerms": {
+                    "interestRate": 0.0135,
+                    "fixedInterestPeriodMonths": 3,
+                    "__typename": "LoanTerms"
+                  },
+                  "invoices": [
+                    {
+                      "bankgiroNumber": "5836-8317",
+                      "invoiceNumbers": [
+                        23445465
+                      ],
+                      "invoicePeriod": "2021-08-01, 2021-08-30",
+                      "paymentDescription": "SBABgiro",
+                      "totalAmount": 2500,
+                      "settled": false,
+                      "ocrNumber": "1231232894220011",
+                      "dueDate": "2021-08-30",
+                      "loanTypes": [
+                        "MORTGAGE_LOAN"
+                      ],
+                      "remainingAmount": 2500,
+                      "loans": [
+                        {
+                          "loanType": "MORTGAGE_LOAN",
+                          "loanNumber": "10987654",
+                          "amortizationAmount": 1500,
+                          "interestAmount": 1000,
+                          "totalAmount": 2500,
+                          "invoiceLines": [
+                            {
+                              "lineNumber": 1,
+                              "invoiceLineType": "INTEREST",
+                              "typeDescriptionDetail": "210801 - 210830    1.35 %",
+                              "amount": 1127,
+                              "__typename": "InvoiceLine"
+                            },
+                            {
+                              "lineNumber": 2,
+                              "invoiceLineType": "AMORTIZATION",
+                              "typeDescriptionDetail": "",
+                              "amount": 1500,
+                              "__typename": "InvoiceLine"
+                            }
+                          ],
+                          "__typename": "InvoiceLoans"
+                        }
+                      ],
+                      "__typename": "Invoice"
+                    }
+                  ],
+                  "__typename": "Loan"
+                },
+                {
+                  "loanNumber": "45678901",
+                  "loanAmount": 500000,
+                  "originalLoanAmount": 700000,
+                  "loanType": "MORTGAGE_LOAN",
+                  "loanStatus": "CURRENT",
+                  "discountType": "UNDEFINED",
+                  "loanTerms": {
+                    "interestRate": 0.0135,
+                    "fixedInterestPeriodMonths": 3,
+                    "__typename": "LoanTerms"
+                  },
+                  "invoices": [
+                    {
+                      "bankgiroNumber": "5836-8317",
+                      "invoiceNumbers": [
+                        5384289422
+                      ],
+                      "invoicePeriod": "2021-08-01, 2021-08-30",
+                      "paymentDescription": "SBABgiro",
+                      "totalAmount": 2500,
+                      "settled": false,
+                      "ocrNumber": "0153841231230011",
+                      "dueDate": "2021-08-30",
+                      "loanTypes": [
+                        "MORTGAGE_LOAN"
+                      ],
+                      "remainingAmount": 2500,
+                      "loans": [
+                        {
+                          "loanType": "MORTGAGE_LOAN",
+                          "loanNumber": "45678901",
+                          "amortizationAmount": 1500,
+                          "interestAmount": 1000,
+                          "totalAmount": 1000,
+                          "invoiceLines": [
+                            {
+                              "lineNumber": 1,
+                              "invoiceLineType": "INTEREST",
+                              "typeDescriptionDetail": "210801 - 210830    1.35 %",
+                              "amount": 1000,
+                              "__typename": "InvoiceLine"
+                            },
+                            {
+                              "lineNumber": 2,
+                              "invoiceLineType": "AMORTIZATION",
+                              "typeDescriptionDetail": "",
+                              "amount": 1500,
+                              "__typename": "InvoiceLine"
+                            }
+                          ],
+                          "__typename": "InvoiceLoans"
+                        }
+                      ],
+                      "__typename": "Invoice"
+                    }
+                  ],
+                  "__typename": "Loan"
+                }
+              ],
+              "trustDeeds": [],
+              "__typename": "Collateral"
+            }
+          ],
+          "__typename": "Mortgages"
+        },
+        "__typename": "Loans"
+      },
+      "__typename": "User"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+Content-Type: application/json
+Accept: application/json
+
+{
+  "operationName": "LoansQuery",
+  "variables": {
+    "filter": {}
+  },
+  "query": "query LoansQuery {\n  user {\n    id\n    loans {\n      id\n      blanco {\n        id\n        totalAmount\n        list {\n          loanAmount\n          loanNumber\n          loanType\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Date: Wed, 25 Aug 2021 13:23:52 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "data": {
+    "user": {
+      "id": "1234567",
+      "loans": {
+        "id": "LOANS",
+        "blanco": {
+          "id": "BLANCO",
+          "totalAmount": 0,
+          "list": [],
+          "__typename": "BlancoLoans"
+        },
+        "__typename": "Loans"
+      },
+      "__typename": "User"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 14 MATCH SAVINGS1
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+Content-Type: application/json
+Accept: application/json
+
+{
+  "operationName": "SavingsOverviewQuery",
+  "variables": {
+    "filter": {},
+    "accountNumber": "92521234567"
+  },
+  "query": "query SavingsOverviewQuery($accountNumber: String) {\n  staticInformation {\n    savingsGoalCategories {\n      code\n      name\n      sortIndex\n      __typename\n    }\n    __typename\n  }\n  user {\n    id\n    savingsAccount(accountNumber: $accountNumber) {\n      id\n      name\n      number\n      description\n      balance\n      availableForWithdrawal\n      status\n      accountType\n      interestRate\n      accruedInterestCredit\n      openDate\n      closeDate\n      isActionGranted\n      isTaxAccount\n      mandateType\n      accountHolders {\n        fullName\n        orgPersNbr\n        __typename\n      }\n      authorities {\n        id\n        fullName\n        orgPersNbr\n        __typename\n      }\n      savingsGoal {\n        category {\n          code\n          name\n          sortIndex\n          __typename\n        }\n        amount\n        targetDate\n        __typename\n      }\n      transfers {\n        completed {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        upcoming {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        failed {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 14
+200
+Date: Wed, 25 Aug 2021 13:23:54 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "data": {
+    "staticInformation": {
+      "savingsGoalCategories": [
+        {
+          "code": "buffer",
+          "name": "Buffert",
+          "sortIndex": 100,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "journey",
+          "name": "Resa",
+          "sortIndex": 200,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "car",
+          "name": "Bil",
+          "sortIndex": 300,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "wedding",
+          "name": "Bröllop",
+          "sortIndex": 400,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "residence",
+          "name": "Boende",
+          "sortIndex": 500,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "custom",
+          "name": "Eget",
+          "sortIndex": 600,
+          "__typename": "SavingsGoalCategory"
+        }
+      ],
+      "__typename": "StaticInformation"
+    },
+    "user": {
+      "id": "1234567",
+      "savingsAccount": {
+        "id": "92521234567",
+        "name": "Savings account",
+        "number": "92521234567",
+        "description": "Sparkonto",
+        "balance": 30000.52,
+        "availableForWithdrawal": 30000.52,
+        "status": "OPEN",
+        "accountType": "DEFAULT",
+        "interestRate": 0.5,
+        "accruedInterestCredit": 500.12,
+        "openDate": "2017-09-21",
+        "isActionGranted": true,
+        "isTaxAccount": false,
+        "mandateType": "OWNER",
+        "accountHolders": [
+          {
+            "fullName": "Firstname Lastname1",
+            "orgPersNbr": "199312050231",
+            "__typename": "AccountHolder"
+          }
+        ],
+        "authorities": [],
+        "transfers": {
+          "completed": [
+            {
+              "amount": 50000,
+              "balance": 30000.52,
+              "transferId": "567890123",
+              "transferStatus": "COMPLETE",
+              "transferType": "DEPOSIT",
+              "releaseDate": "2021-08-19",
+              "postingDate": "2021-08-19",
+              "accountNumberFrom": "Swedbank",
+              "accountNumberTo": "92521234567",
+              "bankNameFrom": "Swedbank",
+              "bankNameTo": "SBAB",
+              "narrativeTo": "ÖVERFÖRING",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            },
+            {
+              "amount": -2144,
+              "balance": 20000.52,
+              "transferId": "234567890",
+              "transferStatus": "COMPLETE",
+              "transferType": "WITHDRAWAL",
+              "releaseDate": "2021-07-30",
+              "postingDate": "2021-07-30",
+              "accountNumberFrom": "92521234567",
+              "accountNumberTo": "SBAB",
+              "bankNameFrom": "SBAB",
+              "bankNameTo": "SBAB",
+              "narrativeFrom": "BETALNING AV LÅN: 45678901 REF: mockedRef",
+              "narrativeTo": "BETALNING AV LÅN: 45678901 REF: mockedRef",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            },
+            {
+              "amount": -2144,
+              "balance": 372332.52,
+              "transferId": "282189501",
+              "transferStatus": "COMPLETE",
+              "transferType": "WITHDRAWAL",
+              "releaseDate": "2021-07-30",
+              "postingDate": "2021-07-30",
+              "accountNumberFrom": "92521234567",
+              "accountNumberTo": "SBAB",
+              "bankNameFrom": "SBAB",
+              "bankNameTo": "SBAB",
+              "narrativeFrom": "BETALNING AV LÅN: 10987654 REF: mockedRef",
+              "narrativeTo": "BETALNING AV LÅN: 10987654 REF: mockedRef",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            },
+            {
+              "amount": 5000,
+              "balance": 25000.52,
+              "transferId": "345567789",
+              "transferStatus": "COMPLETE",
+              "transferType": "DEPOSIT",
+              "releaseDate": "2021-07-26",
+              "postingDate": "2021-07-26",
+              "accountNumberFrom": "Swedbank",
+              "accountNumberTo": "92521234567",
+              "bankNameFrom": "Swedbank",
+              "bankNameTo": "SBAB",
+              "narrativeTo": "ÖVERFÖRING",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            }
+          ],
+          "upcoming": [],
+          "failed": [],
+          "__typename": "Transfers"
+        },
+        "__typename": "SavingsAccount"
+      },
+      "__typename": "User"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 15 MATCH SAVINGS2
+POST https://secure.sbab.se/beta/api/bb-bff/graphql
+Content-Type: application/json
+Accept: application/json
+CSRF-Token: ***
+
+{
+  "operationName": "SavingsOverviewQuery",
+  "variables": {
+    "filter": {},
+    "accountNumber": "92527654321"
+  },
+  "query": "query SavingsOverviewQuery($accountNumber: String) {\n  staticInformation {\n    savingsGoalCategories {\n      code\n      name\n      sortIndex\n      __typename\n    }\n    __typename\n  }\n  user {\n    id\n    savingsAccount(accountNumber: $accountNumber) {\n      id\n      name\n      number\n      description\n      balance\n      availableForWithdrawal\n      status\n      accountType\n      interestRate\n      accruedInterestCredit\n      openDate\n      closeDate\n      isActionGranted\n      isTaxAccount\n      mandateType\n      accountHolders {\n        fullName\n        orgPersNbr\n        __typename\n      }\n      authorities {\n        id\n        fullName\n        orgPersNbr\n        __typename\n      }\n      savingsGoal {\n        category {\n          code\n          name\n          sortIndex\n          __typename\n        }\n        amount\n        targetDate\n        __typename\n      }\n      transfers {\n        completed {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        upcoming {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        failed {\n          amount\n          balance\n          transferId\n          transferStatus\n          transferType\n          releaseDate\n          postingDate\n          accountNumberFrom\n          accountNumberTo\n          bankNameFrom\n          bankNameTo\n          narrativeFrom\n          narrativeTo\n          recurringTransfer\n          futureTransfer\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 15
+200
+Date: Wed, 25 Aug 2021 13:23:56 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "data": {
+    "staticInformation": {
+      "savingsGoalCategories": [
+        {
+          "code": "buffer",
+          "name": "Buffert",
+          "sortIndex": 100,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "journey",
+          "name": "Resa",
+          "sortIndex": 200,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "car",
+          "name": "Bil",
+          "sortIndex": 300,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "wedding",
+          "name": "Bröllop",
+          "sortIndex": 400,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "residence",
+          "name": "Boende",
+          "sortIndex": 500,
+          "__typename": "SavingsGoalCategory"
+        },
+        {
+          "code": "custom",
+          "name": "Eget",
+          "sortIndex": 600,
+          "__typename": "SavingsGoalCategory"
+        }
+      ],
+      "__typename": "StaticInformation"
+    },
+    "user": {
+      "id": "1234567",
+      "savingsAccount": {
+        "id": "92527654321",
+        "name": "Joint savings account",
+        "number": "92527654321",
+        "description": "Sparkonto",
+        "balance": 10000.12,
+        "availableForWithdrawal": 10000.12,
+        "status": "OPEN",
+        "accountType": "DEFAULT",
+        "interestRate": 0.5,
+        "accruedInterestCredit": 0.31,
+        "openDate": "2018-01-21",
+        "isActionGranted": true,
+        "isTaxAccount": false,
+        "mandateType": "MEDKONTOHAVARE",
+        "accountHolders": [
+          {
+            "fullName": "Firstname Lastname1",
+            "orgPersNbr": "199312050231",
+            "__typename": "AccountHolder"
+          },
+          {
+            "fullName": "Firstname Lastname2",
+            "orgPersNbr": "200001011234",
+            "__typename": "AccountHolder"
+          }
+        ],
+        "authorities": [],
+        "transfers": {
+          "completed": [
+            {
+              "amount": 95.95,
+              "balance": 10000.12,
+              "transferId": "210214441",
+              "transferStatus": "COMPLETE",
+              "transferType": "DEPOSIT",
+              "releaseDate": "2018-12-31",
+              "postingDate": "2018-12-31",
+              "accountNumberFrom": "SBAB",
+              "accountNumberTo": "92527654321",
+              "bankNameFrom": "SBAB",
+              "bankNameTo": "SBAB",
+              "narrativeFrom": "ERHÅLLEN RÄNTA",
+              "narrativeTo": "Erhållen ränta",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            },
+            {
+              "amount": -500,
+              "balance": 0,
+              "transferId": "210214431",
+              "transferStatus": "COMPLETE",
+              "transferType": "WITHDRAWAL",
+              "releaseDate": "2018-07-18",
+              "postingDate": "2018-07-18",
+              "accountNumberFrom": "92527654321",
+              "accountNumberTo": "832791234567890",
+              "bankNameFrom": "SBAB",
+              "bankNameTo": "Swedbank",
+              "narrativeFrom": "-",
+              "narrativeTo": "NAME",
+              "recurringTransfer": false,
+              "futureTransfer": false,
+              "__typename": "Transfer"
+            }
+          ],
+          "upcoming": [],
+          "failed": [],
+          "__typename": "Transfers"
+        },
+        "__typename": "SavingsAccount"
+      },
+      "__typename": "User"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 16
+GET https://secure.sbab.se/beta/api/bb-bff/document/dataportability
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 16
+200
+Date: Wed, 25 Aug 2021 13:23:58 GMT
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: 0
+Connection: Keep-Alive
+
+{
+  "personalDetails": {
+    "part": {
+      "personalIdentityNumber": "199312050231",
+      "firstName": "Firstname",
+      "lastName": "Lastname",
+      "taxCountryNumericCode": "752",
+      "citizenshipCountryNumericCode": "752"
+    },
+    "addresses": [
+      {
+        "type": "LEGAL",
+        "street": "Street Address 1",
+        "zipCode": "12345",
+        "city": "Stockholm",
+        "countryNumericCode": "752"
+      }
+    ],
+    "emailAddresses": [
+      {
+        "address": "firstname.lastname@gmail.com",
+        "usedDaytime": true,
+        "usedEveningTime": false,
+        "priority": "PRIMARY"
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "number": "0731234556",
+        "usedDaytime": false,
+        "usedEveningTime": true
+      },
+      {
+        "number": "0731234556",
+        "usedDaytime": true,
+        "usedEveningTime": false
+      }
+    ]
+  },
+  "accounts": [],
+  "loans": {
+    "loans": [],
+    "loansStatus": "LOANS_OK"
+  },
+  "preApprovalApplications": [],
+  "loanApplications": []
+}
