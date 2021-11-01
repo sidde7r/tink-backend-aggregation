@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.PolishApiAuthorizationClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.PolishApiGetAuthorizationClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.PolishApiPostAuthorizationClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.filter.PolishApiPostRequestIdFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
@@ -112,6 +113,15 @@ public abstract class PolishApiAgent extends NextGenerationAgent
         client.addFilter(
                 new PolishApiRefreshTokenFilter(
                         authorizationApiClient, polishPersistentStorage, 1, 10));
+        if (polishPostApiAgent()) {
+            client.addFilter(new PolishApiPostRequestIdFilter(agentComponentProvider));
+        }
+    }
+
+    private boolean polishPostApiAgent() {
+        return authorizeApiUrlFactory instanceof PolishPostAuthorizeApiUrlFactory
+                && accountsApiUrlFactory instanceof PolishPostAccountsApiUrlFactory
+                && transactionsApiUrlFactory instanceof PolishPostTransactionsApiUrlFactory;
     }
 
     @Override

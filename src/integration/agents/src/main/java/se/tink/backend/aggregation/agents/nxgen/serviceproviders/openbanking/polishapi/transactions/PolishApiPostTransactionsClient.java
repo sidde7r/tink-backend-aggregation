@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.X_REQUEST_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_TRANSACTIONS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.TransactionTypeRequest.DONE;
@@ -50,7 +49,6 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
             LocalDate from,
             LocalDate to,
             Transactions.TransactionTypeRequest transactionType) {
-        String requestId = getUuid();
         ZonedDateTime zonedDateTime = getNow();
 
         RequestBuilder requestBuilder =
@@ -58,15 +56,9 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
                                 urlFactory.getTransactionsUrl(transactionType),
                                 zonedDateTime,
                                 getTokenFromStorage())
-                        .header(X_REQUEST_ID, requestId)
                         .body(
                                 prepareTransactionsRequestBody(
-                                        accountNumber,
-                                        from,
-                                        to,
-                                        requestId,
-                                        zonedDateTime,
-                                        transactionType),
+                                        accountNumber, from, to, zonedDateTime, transactionType),
                                 MediaType.APPLICATION_JSON);
 
         return PolishApiErrorHandler.callWithErrorHandling(
@@ -80,7 +72,6 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
             LocalDate from,
             LocalDate to,
             Transactions.TransactionTypeRequest transactionType) {
-        String requestId = getUuid();
         ZonedDateTime zonedDateTime = getNow();
 
         RequestBuilder requestBuilder =
@@ -88,14 +79,12 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
                                 urlFactory.getTransactionsUrl(transactionType),
                                 zonedDateTime,
                                 getTokenFromStorage())
-                        .header(X_REQUEST_ID, requestId)
                         .body(
                                 prepareTransactionsContinuationRequestBody(
                                         nextPage,
                                         accountNumber,
                                         from,
                                         to,
-                                        requestId,
                                         zonedDateTime,
                                         transactionType),
                                 MediaType.APPLICATION_JSON);
@@ -108,12 +97,11 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
             String accountNumber,
             LocalDate from,
             LocalDate to,
-            String requestId,
             ZonedDateTime zonedDateTime,
             Transactions.TransactionTypeRequest transactionType) {
         TransactionsRequest.TransactionsRequestBuilder<?, ?> transactionsRequestBuilder =
                 getBaseTransactionRequestBuilder(
-                        accountNumber, from, to, requestId, zonedDateTime, transactionType);
+                        accountNumber, from, to, zonedDateTime, transactionType);
         if (polishApiAgentCreator.getLogicFlowConfigurator().shouldSentPageIdInFirstRequestAs0()) {
             transactionsRequestBuilder.pageId("0");
         }
@@ -125,11 +113,10 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
             String accountNumber,
             LocalDate from,
             LocalDate to,
-            String requestId,
             ZonedDateTime zonedDateTime,
             Transactions.TransactionTypeRequest transactionType) {
         return getBaseTransactionRequestBuilder(
-                        accountNumber, from, to, requestId, zonedDateTime, transactionType)
+                        accountNumber, from, to, zonedDateTime, transactionType)
                 .pageId(nextPage)
                 .build();
     }
@@ -138,14 +125,12 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
             String accountNumber,
             LocalDate from,
             LocalDate to,
-            String requestId,
             ZonedDateTime zonedDateTime,
             Transactions.TransactionTypeRequest transactionType) {
         TransactionsRequest.TransactionsRequestBuilder<?, ?> transactionsRequestBuilder =
                 TransactionsRequest.builder()
                         .requestHeader(
                                 getRequestHeaderEntity(
-                                        requestId,
                                         zonedDateTime,
                                         getAccessTokenFromStorage(),
                                         true,

@@ -107,6 +107,8 @@ public class PolishApiConstants {
                 public static final String CONTENT_TYPE_VAL = "application/json";
             }
         }
+
+        public static final String X_REQUEST_ID_PLACEHOLDER = "{X_REQUEST_ID}";
     }
 
     @UtilityClass
