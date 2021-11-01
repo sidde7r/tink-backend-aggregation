@@ -26,8 +26,8 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
-    public boolean isInvalidPaymentDate() {
-        return ErrorCodes.INVALID_PAYMENT_DATE.equalsIgnoreCase(errorCode);
+    public boolean isGenericPaymentError() {
+        return ErrorCodes.GENERIC_PAYMENT_ERROR.equalsIgnoreCase(errorCode);
     }
 
     @JsonIgnore

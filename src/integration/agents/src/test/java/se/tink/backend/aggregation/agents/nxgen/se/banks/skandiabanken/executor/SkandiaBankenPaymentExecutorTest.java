@@ -10,6 +10,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import agents_platform_agents_framework.org.springframework.test.util.ReflectionTestUtils;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
@@ -22,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentSourceAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utils.SkandiaBankenDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -38,6 +43,8 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SkandiaBankenPaymentExecutorTest {
+    private static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
+
     private SkandiaBankenPaymentExecutor objectUnderTest;
     private SkandiaBankenApiClient apiClient;
 
@@ -271,7 +278,7 @@ public class SkandiaBankenPaymentExecutorTest {
         ThrowingCallable callable =
                 () ->
                         ReflectionTestUtils.invokeMethod(
-                                objectUnderTest, "submitPayment", paymentRequest);
+                                objectUnderTest, "submitPayment", paymentRequest, new Date());
 
         // then
         assertThatThrownBy(callable)
@@ -280,16 +287,17 @@ public class SkandiaBankenPaymentExecutorTest {
     }
 
     @Test
-    public void shouldThrowTransferExceptionWhenErrorResponseIsInvalidPaymentDate() {
+    public void shouldThrowInvalidDateTransferExceptionWhen500ResponseAndPaymentDateIsInvalid() {
         // given
-        when(httpResponse.getStatus()).thenReturn(500);
-        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
 
-        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        // Current date and time: 2021-10-29 14:20:50 CEST
+        SkandiaBankenDateUtils.setClockForTesting(
+                Clock.fixed(Instant.ofEpochSecond(1635510050), ZONE_ID));
 
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(getInvalidPaymentDateErrorResponse());
+        // Payment date: 2021-10-29 00:00:00 CEST
+        Date paymentDate = Date.from(Instant.ofEpochSecond(1635458400));
 
+        setUpSubmitPayment500HttpResponse();
         PaymentRequest paymentRequest = mock(PaymentRequest.class);
         doThrow(httpResponseException).when(apiClient).submitPayment(paymentRequest);
 
@@ -297,12 +305,66 @@ public class SkandiaBankenPaymentExecutorTest {
         ThrowingCallable callable =
                 () ->
                         ReflectionTestUtils.invokeMethod(
-                                objectUnderTest, "submitPayment", paymentRequest);
+                                objectUnderTest, "submitPayment", paymentRequest, paymentDate);
 
         // then
         assertThatThrownBy(callable)
                 .isInstanceOf(TransferExecutionException.class)
                 .hasMessage("Payment could not be submitted, date was rejected by bank.");
+    }
+
+    @Test
+    public void shouldThrowFailedTransferExceptionWhen500ResponseAndPaymentDateIsBeforeCutOff() {
+        // given
+
+        // Current date and time: 2021-11-01 07:15:37 CET
+        SkandiaBankenDateUtils.setClockForTesting(
+                Clock.fixed(Instant.ofEpochSecond(1635750937), ZONE_ID));
+
+        // Payment date: 2021-11-01 00:00:00 CET
+        Date paymentDate = Date.from(Instant.ofEpochSecond(1635724800));
+
+        setUpSubmitPayment500HttpResponse();
+        PaymentRequest paymentRequest = mock(PaymentRequest.class);
+        doThrow(httpResponseException).when(apiClient).submitPayment(paymentRequest);
+
+        // when
+        ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "submitPayment", paymentRequest, paymentDate);
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage("An error occurred when submitting payment to the user's outbox.");
+    }
+
+    @Test
+    public void shouldThrowFailedTransferExceptionWhen500ResponseAndPaymentDateIsFuture() {
+        // given
+
+        // Current date and time: 2021-11-01 07:15:37 CET
+        SkandiaBankenDateUtils.setClockForTesting(
+                Clock.fixed(Instant.ofEpochSecond(1635750937), ZONE_ID));
+
+        // Payment date: 2021-11-25 00:00:00 CET
+        Date paymentDate = Date.from(Instant.ofEpochSecond(1637798400));
+
+        setUpSubmitPayment500HttpResponse();
+        PaymentRequest paymentRequest = mock(PaymentRequest.class);
+        doThrow(httpResponseException).when(apiClient).submitPayment(paymentRequest);
+
+        // when
+        ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "submitPayment", paymentRequest, paymentDate);
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage("An error occurred when submitting payment to the user's outbox.");
     }
 
     private Transfer getValidTransfer() {
@@ -431,7 +493,7 @@ public class SkandiaBankenPaymentExecutorTest {
                 ErrorResponse.class);
     }
 
-    private ErrorResponse getInvalidPaymentDateErrorResponse() {
+    private ErrorResponse getSubmitPaymentGenericErrorResponse() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "  \"StatusCode\": 500,\n"
@@ -441,5 +503,13 @@ public class SkandiaBankenPaymentExecutorTest {
                         + "  \"ErrorMessage\": \"We're experiencing technical difficulties at the moment. Please try again or contact Customer services.\"\n"
                         + "}",
                 ErrorResponse.class);
+    }
+
+    private void setUpSubmitPayment500HttpResponse() {
+        when(httpResponse.getStatus()).thenReturn(500);
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+        when(httpResponse.getBody(ErrorResponse.class))
+                .thenReturn(getSubmitPaymentGenericErrorResponse());
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
     }
 }

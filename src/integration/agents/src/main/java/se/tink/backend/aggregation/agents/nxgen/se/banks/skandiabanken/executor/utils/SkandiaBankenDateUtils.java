@@ -19,6 +19,17 @@ public class SkandiaBankenDateUtils {
         return setTimeToMidnight(date);
     }
 
+    public boolean isAfterCutOffWithPaymentDateBeforeCutOff(Date paymentDate) {
+        Date todayCurrentTime = dateHelper.getNowAsDate();
+        Date todayCutOffTime = getTodayAtCutOffTime();
+
+        if (todayCurrentTime.before(todayCutOffTime)) {
+            return false;
+        }
+
+        return paymentDate.before(todayCutOffTime);
+    }
+
     /**
      * The Skandia app sends date in the format yyyy-MM-dd'T'HH:mm:ss.SSSZ. Time is always set to
      * 00:00:00.000 no matter when the payment is made. This method will set the time of given date
@@ -28,6 +39,18 @@ public class SkandiaBankenDateUtils {
         Calendar calendar = dateHelper.getCalendar();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    private Date getTodayAtCutOffTime() {
+        Date now = dateHelper.getNowAsDate();
+
+        Calendar calendar = dateHelper.getCalendar();
+        calendar.setTime(now);
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);

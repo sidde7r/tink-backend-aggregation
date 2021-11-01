@@ -220,7 +220,7 @@ public class SkandiaBankenConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorCodes {
-        public static final String INVALID_PAYMENT_DATE = "BAPPAY0107";
+        public static final String GENERIC_PAYMENT_ERROR = "BAPPAY0107";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

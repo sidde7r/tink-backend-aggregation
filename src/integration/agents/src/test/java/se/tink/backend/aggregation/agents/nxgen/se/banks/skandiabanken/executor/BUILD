@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     data = [],
     visibility = ["//visibility:public"],
+    runtime_deps = ["//third_party:de_jollyday_jollyday"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/skandiabanken",
