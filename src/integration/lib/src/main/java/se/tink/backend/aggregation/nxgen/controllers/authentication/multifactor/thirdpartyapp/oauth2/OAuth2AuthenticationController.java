@@ -6,12 +6,12 @@ import java.time.temporal.TemporalUnit;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -33,11 +33,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@Slf4j
 public class OAuth2AuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(OAuth2AuthenticationController.class);
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
@@ -93,7 +92,7 @@ public class OAuth2AuthenticationController
                 persistentStorage
                         .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        logger.info(
+        log.info(
                 "[forceAuthenticate] OAuth2AuthenticationController.autoAuthenticate token exists for credentials: {}",
                 credentials.getId());
         if (oAuth2Token.hasAccessExpired()) {
@@ -224,7 +223,20 @@ public class OAuth2AuthenticationController
 
             return refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
         } catch (HttpResponseException ex) {
+            handleRefreshTokenServerError(ex);
+            log.warn("[OAUTH2] Expiring session as a result of exception", ex);
             throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    protected void handleRefreshTokenServerError(HttpResponseException ex) {
+        final int responseStatus = ex.getResponse().getStatus();
+        if (responseStatus >= 500) {
+            log.error(
+                    "[OAUTH2] Bank side error (status code {}) during refreshing token",
+                    responseStatus,
+                    ex);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(ex);
         }
     }
 
@@ -233,7 +245,7 @@ public class OAuth2AuthenticationController
     }
 
     private void useAccessToken(OAuth2Token token) {
-        logger.info(
+        log.info(
                 String.format(
                         "Use a token valid for %s seconds. (issued at: %s s.; lifetime: %s s.)",
                         token.getValidForSecondsTimeLeft(),
