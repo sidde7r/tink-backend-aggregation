@@ -1,0 +1,13 @@
+{
+    "Body": {
+        "Transactions": [],
+        "NoMoreTransactions": true,
+        "FromDate": "2020-06-02",
+        "ToDate": "2020-07-20"
+    },
+    "ResponseStatus": {
+        "Code": 0,
+        "ServerMessage": "",
+        "ClientMessage": ""
+    }
+}

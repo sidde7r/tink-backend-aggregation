@@ -1,0 +1,30 @@
+{
+    "Body":
+    {
+        "OwnAccountsTotalCurrentAmount": 0,
+        "OwnAccountsTotalAvailableAmount": 0,
+        "JointAccountsTotalCurrentAmount": 0,
+        "JointAccountsTotalAvailableAmount": 0,
+        "MinorsAccountsTotalCurrentAmount": 0,
+        "MinorsAccountsTotalAvailableAmount": 0,
+        "DefaultAccountIdForPayments": "",
+        "DefaultAccountIdForTransfers": "",
+        "DefaultAccountIdForEgiros": "",
+        "DefaultAccountIdForInvest": "",
+        "Accounts":
+        {
+            "OwnAccounts":
+            [],
+            "JointAccounts":
+            [],
+            "MinorsAccounts":
+            []
+        }
+    },
+    "ResponseStatus":
+    {
+        "Code": 0,
+        "ServerMessage": "",
+        "ClientMessage": ""
+    }
+}

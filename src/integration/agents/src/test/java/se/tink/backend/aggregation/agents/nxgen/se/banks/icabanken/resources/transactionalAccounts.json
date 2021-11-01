@@ -1,0 +1,79 @@
+{
+    "Body": {
+        "OwnAccountsTotalCurrentAmount": 7540,
+        "OwnAccountsTotalAvailableAmount": 7540,
+        "JointAccountsTotalCurrentAmount": 2298.06,
+        "JointAccountsTotalAvailableAmount": 817.6,
+        "MinorsAccountsTotalCurrentAmount": 0,
+        "MinorsAccountsTotalAvailableAmount": 0,
+        "DefaultAccountIdForPayments": "",
+        "DefaultAccountIdForTransfers": "",
+        "DefaultAccountIdForEgiros": "",
+        "DefaultAccountIdForInvest": "",
+        "Accounts": {
+            "OwnAccounts": [
+                {
+                    "Type": "SavingsAccount",
+                    "AccountId": "0000000003",
+                    "ActiveBankAccountType": "SK",
+                    "AccountNumber": "9272-000 000 3",
+                    "Name": "ICA KONTO",
+                    "AvailableAmount": 7540,
+                    "CurrentAmount": 7540,
+                    "OutstandingAmount": 0,
+                    "CreditLimit": 0,
+                    "ValidFor": [
+                        "TransferFrom",
+                        "TransferTo"
+                    ],
+                    "IBAN": "SE1592700000092720000003",
+                    "BIC": "IBCASES1",
+                    "Address": "ICA Banken AB\n, 504 82 Borås",
+                    "Holder": "Firstname Lastname",
+                    "Services": [],
+                    "AccountOwner": {
+                        "FullName": "Firstname Lastname",
+                        "NationalIdWithCentury": "199909091234"
+                    },
+                    "Swish": []
+                }
+            ],
+            "JointAccounts": [
+                {
+                    "Type": "IcaAccount",
+                    "AccountId": "0000000001",
+                    "ActiveBankAccountType": "IK",
+                    "AccountNumber": "9272-000 000 1",
+                    "Name": "ICA KONTO",
+                    "AvailableAmount": 10817.6,
+                    "CurrentAmount": 2298.06,
+                    "OutstandingAmount": 1480.46,
+                    "CreditLimit": 10000,
+                    "ValidFor": [
+                        "PaymentFrom",
+                        "TransferFrom",
+                        "TransferTo"
+                    ],
+                    "IBAN": "SE6992700000092720000001",
+                    "BIC": "IBCASES1",
+                    "Address": "ICA Banken AB\n, 504 82 Borås",
+                    "Holder": "Firstname Lastname, Firstname2 Lastname",
+                    "Services": [],
+                    "AccountOwner": {
+                        "FullName": "Firstname2 Lastname",
+                        "NationalIdWithCentury": "199909091234"
+                    },
+                    "Swish": [
+                        "46735833767"
+                    ]
+                }
+            ],
+            "MinorsAccounts": []
+        }
+    },
+    "ResponseStatus": {
+        "Code": 0,
+        "ServerMessage": "",
+        "ClientMessage": ""
+    }
+}

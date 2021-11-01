@@ -1,0 +1,55 @@
+{
+    "LoanNumber": "12341231233",
+    "Type": "ICA Privatlån",
+    "PresentDebt": "179 112,31 kr",
+    "LoanDetails":
+    [
+        {
+            "Key": "Lån",
+            "Value": "ICA Privatlån, 1234-123 123 3"
+        },
+        {
+            "Key": "Låntagare",
+            "Value": "Firstname Lastname och Firstname2 Lastname"
+        },
+        {
+            "Key": "Debiteringskonto",
+            "Value": "1234-123 123 1"
+        },
+        {
+            "Key": "Aktuell skuld",
+            "Value": "179 112,31 kr"
+        },
+        {
+            "Key": "Ursprunglig skuld",
+            "Value": "224 000,00 kr"
+        },
+        {
+            "Key": "Aktuell räntesats",
+            "Value": "3,88 %"
+        },
+        {
+            "Key": "Utbetalningsdag",
+            "Value": "2019-09-24"
+        },
+        {
+            "Key": "Slutbetalningsdag",
+            "Value": "2023-09-30"
+        },
+        {
+            "Key": "Låneskydd",
+            "Value": "Nej"
+        }
+    ],
+    "InterestRatesDetails":
+    [
+        {
+            "Key": "2019-12-23",
+            "Value": "3,88 %"
+        },
+        {
+            "Key": "2019-09-24 till 2019-12-23",
+            "Value": "3,63 %"
+        }
+    ]
+}
