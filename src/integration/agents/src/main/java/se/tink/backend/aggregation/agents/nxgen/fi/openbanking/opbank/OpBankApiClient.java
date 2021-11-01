@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.AuthorizationValues.MAX_CONSENT_LENGTH_IN_DAYS;
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.AuthorizationValues.MAX_TRANSACTION_HISTORY_LENGTH_IN_DAYS;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
@@ -122,8 +125,8 @@ public class OpBankApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .body(
                                 AuthorizationRequest.builder()
-                                        .daysOfTransactions(730)
-                                        .daysToExpire(90)
+                                        .daysOfTransactions(MAX_TRANSACTION_HISTORY_LENGTH_IN_DAYS)
+                                        .daysToExpire(MAX_CONSENT_LENGTH_IN_DAYS)
                                         .build())
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
