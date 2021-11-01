@@ -63,7 +63,9 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response generateStatisticsAndActivityAsynchronously(
             HostConfiguration hostConfiguration, GenerateStatisticsAndActivitiesRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationControllerForSendingData(
+                "generateStatisticsAndActivityAsynchronously", request);
+        return Response.ok().build();
     }
 
     @Override
@@ -75,7 +77,7 @@ public class FakeAggregationControllerAggregationClient
 
     @Override
     public String ping(HostConfiguration hostConfiguration) {
-        throw new UnsupportedOperationException("Not implemented");
+        return "pong";
     }
 
     @Override
@@ -98,7 +100,8 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response updateTransferDestinationPatterns(
             HostConfiguration hostConfiguration, UpdateTransferDestinationPatternsRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationControllerForSendingData("updateTransferDestinationPatterns", request);
+        return Response.ok().build();
     }
 
     @Override
@@ -111,13 +114,15 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response optOutAccounts(
             HostConfiguration hostConfiguration, OptOutAccountsRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationControllerForSendingData("optOutAccounts", request);
+        return Response.ok().build();
     }
 
     @Override
     public Response restrictAccounts(
             HostConfiguration hostConfiguration, RestrictAccountsRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationControllerForSendingData("restrictAccounts", request);
+        return Response.ok().build();
     }
 
     @Override
@@ -164,7 +169,7 @@ public class FakeAggregationControllerAggregationClient
 
     @Override
     public Response checkConnectivity(HostConfiguration hostConfiguration) {
-        throw new UnsupportedOperationException("Not implemented");
+        return Response.ok().build();
     }
 
     @Override

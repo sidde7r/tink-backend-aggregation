@@ -322,12 +322,19 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         if (Objects.nonNull(this.rawBankDataEventProducer)
                 && Objects.nonNull(rawBankDataEventAccumulator)
                 && Objects.nonNull(correlationId)) {
+            String providerName = "UNKNOWN";
+            if (Objects.nonNull(this.provider) && Objects.nonNull(this.provider.getName())) {
+                providerName = this.provider.getName();
+            } else {
+                log.warn("Provider name is unknown");
+            }
             this.rawBankDataEventProducerInterceptor =
                     new RawBankDataEventProducerInterceptor(
                             rawBankDataEventProducer,
                             rawBankDataEventAccumulator,
                             refreshableItemInProgressSupplier,
                             correlationId,
+                            providerName,
                             new RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy(
                                     RAW_BANK_DATA_EVENT_EMISSION_RATE));
             addFilter(this.rawBankDataEventProducerInterceptor);

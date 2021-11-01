@@ -43,10 +43,10 @@ public class DefaultRawBankDataEventAccumulatorTest {
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionId")
-                        .setFieldType(RawBankDataTrackerEventBankFieldType.UNKNOWN)
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
-                        .setFieldValue("MASKED")
+                        .setFieldValue("LLd")
                         .setCount(2)
                         .build());
         expectedFields.add(
@@ -62,7 +62,8 @@ public class DefaultRawBankDataEventAccumulatorTest {
         // when
         accumulator.addEvent(
                 defaultRawBankDataEventProducer
-                        .produceRawBankDataEvent(givenResponseBody, "dummy-correlationId")
+                        .produceRawBankDataEvent(
+                                givenResponseBody, "dummy-correlationId", "dummy-providerName")
                         .orElseThrow(() -> new IllegalStateException("No events produced")),
                 RefreshableItem.CHECKING_TRANSACTIONS);
 

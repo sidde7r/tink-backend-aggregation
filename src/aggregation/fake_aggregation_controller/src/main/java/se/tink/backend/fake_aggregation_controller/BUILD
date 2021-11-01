@@ -51,10 +51,8 @@ genrule(
 
 container_image(
     name = "image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
-        "java",
-        "-jar",
         "fake_aggregation_controller.jar",
     ],
     tags = ["manual"],

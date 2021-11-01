@@ -1,5 +1,6 @@
 package se.tink.libraries.discovery;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -40,6 +41,7 @@ import org.apache.curator.framework.api.SetACLBuilder;
 import org.apache.curator.framework.api.SetDataBuilder;
 import org.apache.curator.framework.api.SyncBuilder;
 import org.apache.curator.framework.api.UnhandledErrorListener;
+import org.apache.curator.framework.api.WatchPathable;
 import org.apache.curator.framework.api.transaction.CuratorMultiTransaction;
 import org.apache.curator.framework.api.transaction.CuratorTransaction;
 import org.apache.curator.framework.api.transaction.TransactionOp;
@@ -55,7 +57,639 @@ import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.server.quorum.flexible.QuorumVerifier;
 
-public class FakeCuratorFramework implements CuratorFramework {
+// Since this class is just a fake implementation for system tests we added this suppresser
+@SuppressWarnings("all")
+public class FakeCuratorFramework implements CuratorFramework, WatcherRemoveCuratorFramework {
+
+    private static final String PATH_CONSTANT = "/locks/aggregation/userId/bankid/locks";
+
+    ProtectACLCreateModeStatPathAndBytesable<String> protectACLCreateModeStatPathAndBytesable =
+            new ProtectACLCreateModeStatPathAndBytesable<String>() {
+                @Override
+                public ACLCreateModeBackgroundPathAndBytesable<String> withProtection() {
+                    return new ACLCreateModeBackgroundPathAndBytesable<String>() {
+
+                        @Override
+                        public String forPath(String s, byte[] bytes) throws Exception {
+                            return PATH_CONSTANT + s;
+                        }
+
+                        @Override
+                        public String forPath(String s) throws Exception {
+                            return PATH_CONSTANT + s;
+                        }
+
+                        @Override
+                        public BackgroundPathAndBytesable<String> withACL(List<ACL> list) {
+                            return null;
+                        }
+
+                        @Override
+                        public BackgroundPathAndBytesable<String> withACL(
+                                List<ACL> aclList, boolean applyToParents) {
+                            return null;
+                        }
+
+                        @Override
+                        public ACLBackgroundPathAndBytesable<String> withMode(CreateMode mode) {
+                            return new ACLBackgroundPathAndBytesable<String>() {
+                                @Override
+                                public String forPath(String s, byte[] bytes) throws Exception {
+                                    return PATH_CONSTANT + s;
+                                }
+
+                                @Override
+                                public String forPath(String s) throws Exception {
+                                    return PATH_CONSTANT + s;
+                                }
+
+                                @Override
+                                public BackgroundPathAndBytesable<String> withACL(List<ACL> list) {
+                                    return null;
+                                }
+
+                                @Override
+                                public BackgroundPathAndBytesable<String> withACL(
+                                        List<ACL> aclList, boolean applyToParents) {
+                                    return null;
+                                }
+
+                                @Override
+                                public ErrorListenerPathAndBytesable<String> inBackground() {
+                                    return null;
+                                }
+
+                                @Override
+                                public ErrorListenerPathAndBytesable<String> inBackground(
+                                        Object context) {
+                                    return null;
+                                }
+
+                                @Override
+                                public ErrorListenerPathAndBytesable<String> inBackground(
+                                        BackgroundCallback callback) {
+                                    return null;
+                                }
+
+                                @Override
+                                public ErrorListenerPathAndBytesable<String> inBackground(
+                                        BackgroundCallback callback, Object context) {
+                                    return null;
+                                }
+
+                                @Override
+                                public ErrorListenerPathAndBytesable<String> inBackground(
+                                        BackgroundCallback callback, Executor executor) {
+                                    return null;
+                                }
+
+                                @Override
+                                public ErrorListenerPathAndBytesable<String> inBackground(
+                                        BackgroundCallback callback,
+                                        Object context,
+                                        Executor executor) {
+                                    return null;
+                                }
+                            };
+                        }
+
+                        @Override
+                        public ErrorListenerPathAndBytesable<String> inBackground() {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathAndBytesable<String> inBackground(Object context) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathAndBytesable<String> inBackground(
+                                BackgroundCallback callback) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathAndBytesable<String> inBackground(
+                                BackgroundCallback callback, Object context) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathAndBytesable<String> inBackground(
+                                BackgroundCallback callback, Executor executor) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathAndBytesable<String> inBackground(
+                                BackgroundCallback callback, Object context, Executor executor) {
+                            return null;
+                        }
+                    };
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground() {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(Object o) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(
+                        BackgroundCallback backgroundCallback) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(
+                        BackgroundCallback backgroundCallback, Object o) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(
+                        BackgroundCallback backgroundCallback, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(
+                        BackgroundCallback backgroundCallback, Object o, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public ACLBackgroundPathAndBytesable<String> withMode(CreateMode mode) {
+                    return null;
+                }
+
+                @Override
+                public BackgroundPathAndBytesable<String> withACL(
+                        List<ACL> aclList, boolean applyToParents) {
+                    return null;
+                }
+
+                @Override
+                public BackgroundPathAndBytesable<String> withACL(List<ACL> list) {
+                    return null;
+                }
+
+                @Override
+                public String forPath(String s, byte[] bytes) {
+                    return null;
+                }
+
+                @Override
+                public String forPath(String s) {
+                    return null;
+                }
+
+                @Override
+                public ACLBackgroundPathAndBytesable<String> storingStatIn(Stat stat) {
+                    return null;
+                }
+            };
+
+    CreateBuilder createBuilder =
+            new CreateBuilder() {
+                @Override
+                public CreateBuilderMain withTtl(long l) {
+                    return null;
+                }
+
+                @Override
+                public CreateBuilder2 orSetData() {
+                    return null;
+                }
+
+                @Override
+                public CreateBuilder2 orSetData(int i) {
+                    return null;
+                }
+
+                @Override
+                public ProtectACLCreateModeStatPathAndBytesable<String> creatingParentsIfNeeded() {
+                    return null;
+                }
+
+                @Override
+                public ProtectACLCreateModeStatPathAndBytesable<String>
+                        creatingParentContainersIfNeeded() {
+                    return protectACLCreateModeStatPathAndBytesable;
+                }
+
+                @Override
+                public ACLPathAndBytesable<String> withProtectedEphemeralSequential() {
+                    return null;
+                }
+
+                @Override
+                public ACLCreateModeStatBackgroundPathAndBytesable<String> withProtection() {
+                    return null;
+                }
+
+                @Override
+                public BackgroundPathAndBytesable<String> withACL(List<ACL> list) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground() {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(Object o) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(
+                        BackgroundCallback backgroundCallback) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(
+                        BackgroundCallback backgroundCallback, Object o) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(
+                        BackgroundCallback backgroundCallback, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathAndBytesable<String> inBackground(
+                        BackgroundCallback backgroundCallback, Object o, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public CreateBackgroundModeStatACLable compressed() {
+                    return null;
+                }
+
+                @Override
+                public ACLBackgroundPathAndBytesable<String> withMode(CreateMode mode) {
+                    return null;
+                }
+
+                @Override
+                public BackgroundPathAndBytesable<String> withACL(
+                        List<ACL> aclList, boolean applyToParents) {
+                    return null;
+                }
+
+                @Override
+                public String forPath(String s, byte[] bytes) {
+                    return null;
+                }
+
+                @Override
+                public String forPath(String s) {
+                    return null;
+                }
+
+                @Override
+                public CreateProtectACLCreateModePathAndBytesable<String> storingStatIn(Stat stat) {
+                    return null;
+                }
+            };
+
+    DeleteBuilder deleteBuilder =
+            new DeleteBuilder() {
+                @Override
+                public BackgroundVersionable deletingChildrenIfNeeded() {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Void> inBackground() {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Void> inBackground(Object o) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Void> inBackground(
+                        BackgroundCallback backgroundCallback) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Void> inBackground(
+                        BackgroundCallback backgroundCallback, Object o) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Void> inBackground(
+                        BackgroundCallback backgroundCallback, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Void> inBackground(
+                        BackgroundCallback backgroundCallback, Object o, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public ChildrenDeletable guaranteed() {
+                    return new ChildrenDeletable() {
+
+                        @Override
+                        public BackgroundPathable<Void> withVersion(int version) {
+                            return null;
+                        }
+
+                        @Override
+                        public Void forPath(String s) throws Exception {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Void> inBackground() {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Void> inBackground(Object context) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Void> inBackground(
+                                BackgroundCallback callback) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Void> inBackground(
+                                BackgroundCallback callback, Object context) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Void> inBackground(
+                                BackgroundCallback callback, Executor executor) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Void> inBackground(
+                                BackgroundCallback callback, Object context, Executor executor) {
+                            return null;
+                        }
+
+                        @Override
+                        public BackgroundVersionable deletingChildrenIfNeeded() {
+                            return null;
+                        }
+                    };
+                }
+
+                @Override
+                public Void forPath(String s) {
+                    return null;
+                }
+
+                @Override
+                public DeleteBuilderMain quietly() {
+                    return null;
+                }
+
+                @Override
+                public BackgroundPathable<Void> withVersion(int i) {
+                    return null;
+                }
+            };
+
+    GetChildrenBuilder getChildrenBuilder =
+            new GetChildrenBuilder() {
+                BackgroundPathable<List<String>> backgroundPathable =
+                        new BackgroundPathable<List<String>>() {
+                            @Override
+                            public ErrorListenerPathable<List<String>> inBackground() {
+                                return null;
+                            }
+
+                            @Override
+                            public ErrorListenerPathable<List<String>> inBackground(
+                                    Object context) {
+                                return null;
+                            }
+
+                            @Override
+                            public ErrorListenerPathable<List<String>> inBackground(
+                                    BackgroundCallback callback) {
+                                return null;
+                            }
+
+                            @Override
+                            public ErrorListenerPathable<List<String>> inBackground(
+                                    BackgroundCallback callback, Object context) {
+                                return null;
+                            }
+
+                            @Override
+                            public ErrorListenerPathable<List<String>> inBackground(
+                                    BackgroundCallback callback, Executor executor) {
+                                return null;
+                            }
+
+                            @Override
+                            public ErrorListenerPathable<List<String>> inBackground(
+                                    BackgroundCallback callback,
+                                    Object context,
+                                    Executor executor) {
+                                return null;
+                            }
+
+                            @Override
+                            public List<String> forPath(String s) throws Exception {
+                                return Collections.singletonList("lease-");
+                            }
+                        };
+
+                @Override
+                public BackgroundPathable<List<String>> watched() {
+                    return backgroundPathable;
+                }
+
+                @Override
+                public BackgroundPathable<List<String>> usingWatcher(Watcher watcher) {
+                    return backgroundPathable;
+                }
+
+                @Override
+                public BackgroundPathable<List<String>> usingWatcher(CuratorWatcher watcher) {
+                    return backgroundPathable;
+                }
+
+                @Override
+                public WatchPathable<List<String>> storingStatIn(Stat stat) {
+                    return null;
+                }
+
+                @Override
+                public List<String> forPath(String s) throws Exception {
+                    return Collections.singletonList("locks/aggregation/userId/bankid/locks/lock-");
+                }
+
+                @Override
+                public ErrorListenerPathable<List<String>> inBackground() {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<List<String>> inBackground(Object context) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<List<String>> inBackground(
+                        BackgroundCallback callback) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<List<String>> inBackground(
+                        BackgroundCallback callback, Object context) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<List<String>> inBackground(
+                        BackgroundCallback callback, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<List<String>> inBackground(
+                        BackgroundCallback callback, Object context, Executor executor) {
+                    return null;
+                }
+            };
+
+    ExistsBuilder existsBuilder =
+            new ExistsBuilder() {
+                @Override
+                public ACLableExistBuilderMain creatingParentsIfNeeded() {
+                    return null;
+                }
+
+                @Override
+                public ACLableExistBuilderMain creatingParentContainersIfNeeded() {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Stat> inBackground() {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Stat> inBackground(Object o) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Stat> inBackground(
+                        BackgroundCallback backgroundCallback) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Stat> inBackground(
+                        BackgroundCallback backgroundCallback, Object o) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Stat> inBackground(
+                        BackgroundCallback backgroundCallback, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public ErrorListenerPathable<Stat> inBackground(
+                        BackgroundCallback backgroundCallback, Object o, Executor executor) {
+                    return null;
+                }
+
+                @Override
+                public Stat forPath(String s) {
+                    return null;
+                }
+
+                @Override
+                public BackgroundPathable<Stat> watched() {
+                    return null;
+                }
+
+                @Override
+                public BackgroundPathable<Stat> usingWatcher(Watcher watcher) {
+                    return new BackgroundPathable<Stat>() {
+                        @Override
+                        public ErrorListenerPathable<Stat> inBackground() {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Stat> inBackground(Object o) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Stat> inBackground(
+                                BackgroundCallback backgroundCallback) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Stat> inBackground(
+                                BackgroundCallback backgroundCallback, Object o) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Stat> inBackground(
+                                BackgroundCallback backgroundCallback, Executor executor) {
+                            return null;
+                        }
+
+                        @Override
+                        public ErrorListenerPathable<Stat> inBackground(
+                                BackgroundCallback backgroundCallback,
+                                Object o,
+                                Executor executor) {
+                            return null;
+                        }
+
+                        @Override
+                        public Stat forPath(String s) {
+                            return null;
+                        }
+                    };
+                }
+
+                @Override
+                public BackgroundPathable<Stat> usingWatcher(CuratorWatcher watcher) {
+                    return null;
+                }
+            };
 
     @Override
     public CompletableFuture<Void> runSafe(Runnable runnable) {
@@ -69,373 +703,37 @@ public class FakeCuratorFramework implements CuratorFramework {
 
     @Override
     public void start() {
-        throw new UnsupportedOperationException("Not implemented");
+        // NOOP
     }
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not implemented");
+        // NOOP
     }
 
     @Override
     public CuratorFrameworkState getState() {
-        throw new UnsupportedOperationException("Not implemented");
+        return CuratorFrameworkState.STARTED;
     }
 
     @Override
     public boolean isStarted() {
-        throw new UnsupportedOperationException("Not implemented");
+        return true;
     }
 
     @Override
     public CreateBuilder create() {
-        return new CreateBuilder() {
-            @Override
-            public CreateBuilderMain withTtl(long l) {
-                return null;
-            }
-
-            @Override
-            public CreateBuilder2 orSetData() {
-                return null;
-            }
-
-            @Override
-            public CreateBuilder2 orSetData(int i) {
-                return null;
-            }
-
-            @Override
-            public ProtectACLCreateModeStatPathAndBytesable<String> creatingParentsIfNeeded() {
-                return null;
-            }
-
-            @Override
-            public ProtectACLCreateModeStatPathAndBytesable<String>
-                    creatingParentContainersIfNeeded() {
-                return new ProtectACLCreateModeStatPathAndBytesable<String>() {
-                    @Override
-                    public ACLCreateModeBackgroundPathAndBytesable<String> withProtection() {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathAndBytesable<String> inBackground() {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathAndBytesable<String> inBackground(Object o) {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathAndBytesable<String> inBackground(
-                            BackgroundCallback backgroundCallback) {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathAndBytesable<String> inBackground(
-                            BackgroundCallback backgroundCallback, Object o) {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathAndBytesable<String> inBackground(
-                            BackgroundCallback backgroundCallback, Executor executor) {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathAndBytesable<String> inBackground(
-                            BackgroundCallback backgroundCallback, Object o, Executor executor) {
-                        return null;
-                    }
-
-                    @Override
-                    public ACLBackgroundPathAndBytesable<String> withMode(CreateMode mode) {
-                        return null;
-                    }
-
-                    @Override
-                    public BackgroundPathAndBytesable<String> withACL(
-                            List<ACL> aclList, boolean applyToParents) {
-                        return null;
-                    }
-
-                    @Override
-                    public BackgroundPathAndBytesable<String> withACL(List<ACL> list) {
-                        return null;
-                    }
-
-                    @Override
-                    public String forPath(String s, byte[] bytes) {
-                        return null;
-                    }
-
-                    @Override
-                    public String forPath(String s) {
-                        return null;
-                    }
-
-                    @Override
-                    public ACLBackgroundPathAndBytesable<String> storingStatIn(Stat stat) {
-                        return null;
-                    }
-                };
-            }
-
-            @Override
-            public ACLPathAndBytesable<String> withProtectedEphemeralSequential() {
-                return null;
-            }
-
-            @Override
-            public ACLCreateModeStatBackgroundPathAndBytesable<String> withProtection() {
-                return null;
-            }
-
-            @Override
-            public BackgroundPathAndBytesable<String> withACL(List<ACL> list) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathAndBytesable<String> inBackground() {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathAndBytesable<String> inBackground(Object o) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathAndBytesable<String> inBackground(
-                    BackgroundCallback backgroundCallback) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathAndBytesable<String> inBackground(
-                    BackgroundCallback backgroundCallback, Object o) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathAndBytesable<String> inBackground(
-                    BackgroundCallback backgroundCallback, Executor executor) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathAndBytesable<String> inBackground(
-                    BackgroundCallback backgroundCallback, Object o, Executor executor) {
-                return null;
-            }
-
-            @Override
-            public CreateBackgroundModeStatACLable compressed() {
-                return null;
-            }
-
-            @Override
-            public ACLBackgroundPathAndBytesable<String> withMode(CreateMode mode) {
-                return null;
-            }
-
-            @Override
-            public BackgroundPathAndBytesable<String> withACL(
-                    List<ACL> aclList, boolean applyToParents) {
-                return null;
-            }
-
-            @Override
-            public String forPath(String s, byte[] bytes) {
-                return null;
-            }
-
-            @Override
-            public String forPath(String s) {
-                return null;
-            }
-
-            @Override
-            public CreateProtectACLCreateModePathAndBytesable<String> storingStatIn(Stat stat) {
-                return null;
-            }
-        };
+        return createBuilder;
     }
 
     @Override
     public DeleteBuilder delete() {
-        return new DeleteBuilder() {
-            @Override
-            public BackgroundVersionable deletingChildrenIfNeeded() {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Void> inBackground() {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Void> inBackground(Object o) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Void> inBackground(BackgroundCallback backgroundCallback) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Void> inBackground(
-                    BackgroundCallback backgroundCallback, Object o) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Void> inBackground(
-                    BackgroundCallback backgroundCallback, Executor executor) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Void> inBackground(
-                    BackgroundCallback backgroundCallback, Object o, Executor executor) {
-                return null;
-            }
-
-            @Override
-            public ChildrenDeletable guaranteed() {
-                return null;
-            }
-
-            @Override
-            public Void forPath(String s) {
-                return null;
-            }
-
-            @Override
-            public DeleteBuilderMain quietly() {
-                return null;
-            }
-
-            @Override
-            public BackgroundPathable<Void> withVersion(int i) {
-                return null;
-            }
-        };
+        return deleteBuilder;
     }
 
     @Override
     public ExistsBuilder checkExists() {
-        return new ExistsBuilder() {
-            @Override
-            public ACLableExistBuilderMain creatingParentsIfNeeded() {
-                return null;
-            }
-
-            @Override
-            public ACLableExistBuilderMain creatingParentContainersIfNeeded() {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Stat> inBackground() {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Stat> inBackground(Object o) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Stat> inBackground(BackgroundCallback backgroundCallback) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Stat> inBackground(
-                    BackgroundCallback backgroundCallback, Object o) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Stat> inBackground(
-                    BackgroundCallback backgroundCallback, Executor executor) {
-                return null;
-            }
-
-            @Override
-            public ErrorListenerPathable<Stat> inBackground(
-                    BackgroundCallback backgroundCallback, Object o, Executor executor) {
-                return null;
-            }
-
-            @Override
-            public Stat forPath(String s) {
-                return null;
-            }
-
-            @Override
-            public BackgroundPathable<Stat> watched() {
-                return null;
-            }
-
-            @Override
-            public BackgroundPathable<Stat> usingWatcher(Watcher watcher) {
-                return new BackgroundPathable<Stat>() {
-                    @Override
-                    public ErrorListenerPathable<Stat> inBackground() {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathable<Stat> inBackground(Object o) {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathable<Stat> inBackground(
-                            BackgroundCallback backgroundCallback) {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathable<Stat> inBackground(
-                            BackgroundCallback backgroundCallback, Object o) {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathable<Stat> inBackground(
-                            BackgroundCallback backgroundCallback, Executor executor) {
-                        return null;
-                    }
-
-                    @Override
-                    public ErrorListenerPathable<Stat> inBackground(
-                            BackgroundCallback backgroundCallback, Object o, Executor executor) {
-                        return null;
-                    }
-
-                    @Override
-                    public Stat forPath(String s) {
-                        return null;
-                    }
-                };
-            }
-
-            @Override
-            public BackgroundPathable<Stat> usingWatcher(CuratorWatcher watcher) {
-                return null;
-            }
-        };
+        return existsBuilder;
     }
 
     @Override
@@ -450,7 +748,7 @@ public class FakeCuratorFramework implements CuratorFramework {
 
     @Override
     public GetChildrenBuilder getChildren() {
-        throw new UnsupportedOperationException("Not implemented");
+        return getChildrenBuilder;
     }
 
     @Override
@@ -490,12 +788,12 @@ public class FakeCuratorFramework implements CuratorFramework {
 
     @Override
     public void sync(String s, Object o) {
-        throw new UnsupportedOperationException("Not implemented");
+        // NOOP
     }
 
     @Override
     public void createContainers(String s) throws Exception {
-        throw new UnsupportedOperationException("Not implemented");
+        // NOOP
     }
 
     @Override
@@ -550,7 +848,7 @@ public class FakeCuratorFramework implements CuratorFramework {
 
     @Override
     public void clearWatcherReferences(Watcher watcher) {
-        throw new UnsupportedOperationException("Not implemented");
+        // NOOP
     }
 
     @Override
@@ -560,12 +858,12 @@ public class FakeCuratorFramework implements CuratorFramework {
 
     @Override
     public void blockUntilConnected() throws InterruptedException {
-        throw new UnsupportedOperationException("Not implemented");
+        // NOOP
     }
 
     @Override
     public WatcherRemoveCuratorFramework newWatcherRemoveCuratorFramework() {
-        throw new UnsupportedOperationException("Not implemented");
+        return this;
     }
 
     @Override
@@ -586,5 +884,10 @@ public class FakeCuratorFramework implements CuratorFramework {
     @Override
     public boolean isZk34CompatibilityMode() {
         throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void removeWatchers() {
+        // NOOP
     }
 }

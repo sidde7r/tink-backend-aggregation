@@ -1,8 +1,9 @@
 {
   "dummy_value": "null",
   "dummy_null_value": null,
-  "iban": "IBAN_VALUE",
-  "bban": "BBAN_VALUE",
+  "status": "NOT_POSSIBLE",
+  "iban": "FR7630004033750000835128353",
+  "bban": "12000000033333333333",
   "weird.field": "abc",
   "transactions":
   {
@@ -13,7 +14,7 @@
         "valueDate": "2021-05-18",
         "bookingDate": "2021-05-18",
         "weird[]Field": "xyz",
-        "weird.field": "abcd",
+        "weird.field": "abc",
         "transactionAmount":
         {
           "amount": "-645.06",

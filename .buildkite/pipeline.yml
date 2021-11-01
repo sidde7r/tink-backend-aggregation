@@ -93,6 +93,17 @@ steps:
         run: app
         config: docker/docker-compose-system-tests.bazel.yml
 
+  - name: ':junit: System Test (Java11)'
+    branches: '!master'
+    command: .buildkite/run-system-tests-in-java11.sh
+    timeout_in_minutes: 30
+    agents:
+      queue: default
+    plugins:
+      docker-compose#v3.0.3:
+        run: app
+        config: docker/docker-compose-system-tests.bazel.yml
+
   - name: ':male-detective: run detect-secrets on new commits'
     command: "/bin/sh /opt/detect-secrets"
     branches: '!master'

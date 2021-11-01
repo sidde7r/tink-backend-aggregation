@@ -11,4 +11,28 @@ public interface RawBankDataFieldTypeDetectionStrategy {
 
     RawBankDataTrackerEventBankFieldType getType(
             List<FieldPathPart> fieldPath, String value, JsonNodeType type);
+
+    static boolean isStringAnInteger(String str) {
+        if (str == null) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static boolean isStringADouble(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
 }

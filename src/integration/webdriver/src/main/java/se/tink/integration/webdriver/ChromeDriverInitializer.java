@@ -33,9 +33,6 @@ public class ChromeDriverInitializer {
             BASE_CHROME_PATH + "chrome-mac/Chromium.app/Contents/MacOS/Chromium";
     private static final String LINUX_CHROME_PATH = BASE_CHROME_PATH + "chrome-linux/chrome";
 
-    private static final boolean IS_MAC_OS =
-            System.getProperty("os.name").toLowerCase().contains("mac");
-
     public static WebDriverWrapper constructChromeDriver(
             AgentTemporaryStorage agentTemporaryStorage) {
         return constructChromeDriver(ChromeDriverConfig.defaultConfig(), agentTemporaryStorage);
@@ -83,10 +80,13 @@ public class ChromeDriverInitializer {
         File chromeDriverFile = new File(CHROMEDRIVER_PATH);
         log.info("chromedriver exists: " + chromeDriverFile.exists());
         log.info("chromedriver path: " + chromeDriverFile.getAbsolutePath());
-        System.setProperty("webdriver.chrome.driver", CHROMEDRIVER_PATH);
+        System.setProperty("webdriver.chrome.driver", chromeDriverFile.getAbsolutePath());
+        System.setProperty("webdriver.chrome.whitelistedIps", "");
 
         ChromeOptions options = buildChromeOptions(config);
         ChromeDriver driver = new ChromeDriver(options);
+
+        log.info("Created ChromeDriver!");
 
         driver.manage().timeouts().pageLoadTimeout(config.getTimeoutInSeconds(), TimeUnit.SECONDS);
         driver.manage().timeouts().setScriptTimeout(config.getTimeoutInSeconds(), TimeUnit.SECONDS);
@@ -141,7 +141,8 @@ public class ChromeDriverInitializer {
     }
 
     private static String getChromePath() {
-        if (IS_MAC_OS) {
+        File chromeFile = new File(MAC_CHROME_PATH);
+        if (chromeFile.exists()) {
             return MAC_CHROME_PATH;
         } else {
             return LINUX_CHROME_PATH;
