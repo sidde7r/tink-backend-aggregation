@@ -2,6 +2,7 @@ package se.tink.backend.integration.agent_data_availability_tracker.serializatio
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Function;
 import se.tink.backend.agents.rpc.Account;
@@ -106,12 +107,12 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
             String fieldName = entry.getKey();
             try {
                 String fieldValue = entry.getValue().apply(account);
-                if (Objects.nonNull(fieldValue) && fieldValue.length() > 0) {
+                if (Objects.nonNull(fieldValue) && !fieldValue.isEmpty()) {
                     listBuilder.putRedacted(fieldName, fieldValue);
                 } else {
                     listBuilder.putNull(fieldName);
                 }
-            } catch (Exception e) {
+            } catch (NullPointerException | NoSuchElementException e) {
                 listBuilder.putNull(fieldName);
             }
         }
