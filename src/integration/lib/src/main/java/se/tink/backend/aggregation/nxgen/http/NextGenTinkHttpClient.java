@@ -325,6 +325,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             String providerName = "UNKNOWN";
             if (Objects.nonNull(this.provider) && Objects.nonNull(this.provider.getName())) {
                 providerName = this.provider.getName();
+            } else {
+                log.warn("Provider name is unknown");
             }
             this.rawBankDataEventProducerInterceptor =
                     new RawBankDataEventProducerInterceptor(
