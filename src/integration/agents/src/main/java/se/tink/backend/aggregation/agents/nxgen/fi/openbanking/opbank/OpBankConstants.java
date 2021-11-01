@@ -3,20 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import lombok.experimental.UtilityClass;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@UtilityClass
 public final class OpBankConstants {
-
-    private OpBankConstants() {
-        throw new AssertionError();
-    }
-
-    public static class LogTags {
-        public static final LogTag OP_TAG = LogTag.from("[OP]");
-    }
 
     // OP Bank assumes all dates that we send are in Finland's time zone
     public static final ZoneId API_ZONE_ID = ZoneId.of("Europe/Helsinki");
@@ -68,7 +61,6 @@ public final class OpBankConstants {
 
     public static class HeaderValues {
         public static final String TINK = "tink";
-        public static final String CUSTOMER_IP_ADRESS = "127.0.0.1";
     }
 
     public static class TokenValues {
@@ -92,6 +84,8 @@ public final class OpBankConstants {
     public static class AuthorizationValues {
         public static final String CODE = "code";
         public static final String OPENID_ACCOUNTS = "openid accounts";
+        static final int MAX_TRANSACTION_HISTORY_LENGTH_IN_DAYS = 729;
+        static final int MAX_CONSENT_LENGTH_IN_DAYS = 89;
     }
 
     public static class RefreshTokenFormKeys {
