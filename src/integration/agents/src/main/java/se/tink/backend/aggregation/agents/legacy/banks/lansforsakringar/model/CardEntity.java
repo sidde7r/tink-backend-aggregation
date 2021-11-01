@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -74,6 +75,7 @@ public class CardEntity {
         account.setName(cardName);
         account.setType(AccountTypes.CREDIT_CARD);
         account.setSourceInfo(createAccountSourceInfo());
+        account.setCapabilities(LFUtils.getAccountCapabilities(cardType));
 
         Preconditions.checkState(
                 Preconditions.checkNotNull(account.getBankId()).matches("[0-9]{4}|[0-9]{11}"),
