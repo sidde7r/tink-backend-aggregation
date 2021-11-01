@@ -38,7 +38,7 @@ public class AccountEntity implements GeneralAccountEntity {
     private String productType;
 
     @JsonProperty("name")
-    private String accountaName;
+    private String accountName;
 
     @JsonProperty("number")
     private String accountNumber;
@@ -64,7 +64,7 @@ public class AccountEntity implements GeneralAccountEntity {
         account.setBankId(accountNumber);
         account.setBalance(Double.parseDouble(balance));
         account.setExactBalance(ExactCurrencyAmount.of(availableBalance, "SEK"));
-        account.setName(accountaName);
+        account.setName(accountName);
         account.putIdentifier(new SwedishIdentifier(accountNumber));
 
         if (!Strings.isNullOrEmpty(balance) && !balance.trim().isEmpty()) {
@@ -75,7 +75,7 @@ public class AccountEntity implements GeneralAccountEntity {
             return Optional.empty();
         }
 
-        String name = !Strings.isNullOrEmpty(accountaName) ? accountaName : accountNumber;
+        String name = !Strings.isNullOrEmpty(accountName) ? accountName : accountNumber;
         account.setName(name == null ? "" : name.replace("\n", "").replace("\r", ""));
 
         // Due to this agent being legacy we have to work with the rpc Account model directly. Using
@@ -100,15 +100,14 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @Override
     public String generalGetBank() {
-        if (generalGetAccountIdentifier().isValid()) {
-            return generalGetAccountIdentifier().to(SwedishIdentifier.class).getBankName();
-        }
-        return null;
+        return generalGetAccountIdentifier().isValid()
+                ? generalGetAccountIdentifier().to(SwedishIdentifier.class).getBankName()
+                : null;
     }
 
     @Override
     public String generalGetName() {
-        return accountaName;
+        return accountName;
     }
 
     private AccountSourceInfo createAccountSourceInfo() {
