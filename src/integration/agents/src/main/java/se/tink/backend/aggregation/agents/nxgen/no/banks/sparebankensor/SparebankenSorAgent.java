@@ -160,7 +160,7 @@ public final class SparebankenSorAgent extends NextGenerationAgent
         SparebankenSorCreditCardAccountFetcher ccAccountFetcher =
                 new SparebankenSorCreditCardAccountFetcher(apiClient);
         SparebankenSorCreditCardTransactionFetcher ccTransactionFetcher =
-                new SparebankenSorCreditCardTransactionFetcher();
+                new SparebankenSorCreditCardTransactionFetcher(apiClient);
 
         return new CreditCardRefreshController(
                 metricRefreshController, updateController, ccAccountFetcher, ccTransactionFetcher);

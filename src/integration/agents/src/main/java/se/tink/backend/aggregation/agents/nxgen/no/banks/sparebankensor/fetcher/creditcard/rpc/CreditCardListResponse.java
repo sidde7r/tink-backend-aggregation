@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.creditcard.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.CreditCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

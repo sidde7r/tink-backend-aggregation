@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.AccountBalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.OwnerEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.ProductEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.PropertiesEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
@@ -55,7 +59,7 @@ public class CreditCardEntity {
                 .addHolderName(owner.getName())
                 .setApiIdentifier(id)
                 .putInTemporaryStorage(
-                        SparebankenSorConstants.Storage.TEMPORARY_STORAGE_CREDIT_CARD_LINKS, links)
+                        SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)
                 .build();
     }
 

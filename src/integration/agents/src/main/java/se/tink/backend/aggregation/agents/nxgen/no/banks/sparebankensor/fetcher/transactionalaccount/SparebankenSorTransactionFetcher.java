@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.Spareban
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.TransactionListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -39,7 +40,8 @@ public class SparebankenSorTransactionFetcher implements TransactionFetcher {
         List<TransactionEntity> transactions =
                 apiClient
                         .fetchTransactions(
-                                links.get(SparebankenSorConstants.Storage.TRANSACTIONS).getHref())
+                                links.get(SparebankenSorConstants.Storage.TRANSACTIONS).getHref(),
+                                TransactionListResponse.class)
                         .getTransactions();
 
         if (transactions == null) {

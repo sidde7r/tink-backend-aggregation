@@ -18,10 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenti
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.SecondLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.VerifyCustomerResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.creditcard.rpc.CreditCardListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.AccountListResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.CreditCardListResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.TransactionListResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -158,7 +157,7 @@ public class SparebankenSorApiClient {
         return accountList;
     }
 
-    public TransactionListResponse fetchTransactions(String transactionsPath) {
+    public <T> T fetchTransactions(String transactionsPath, Class<T> transactionsResponse) {
         URL url =
                 new URL(SparebankenSorConstants.Url.BASE_PATH + transactionsPath)
                         .queryParam(
@@ -168,7 +167,7 @@ public class SparebankenSorApiClient {
                                 StaticUrlValuePairs.RESERVED_TRANSACTIONS.getKey(),
                                 StaticUrlValuePairs.RESERVED_TRANSACTIONS.getValue());
 
-        return getRequestWithCommonHeaders(url).get(TransactionListResponse.class);
+        return getRequestWithCommonHeaders(url).get(transactionsResponse);
     }
 
     public CreditCardListResponse fetchCreditCards() {
