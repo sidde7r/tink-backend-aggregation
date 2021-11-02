@@ -81,6 +81,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
@@ -177,6 +178,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         redirectUrl = agentConfiguration.getRedirectUrl();
         tlsConfigurationSetter.applyConfiguration(client);
         setSoftwareStatementForSignatureCreator(softwareStatement);
+
+        // Emit raw bank data event for 10% of the requests
+        client.overrideRawBankDataEventCreationTriggerStrategy(
+                new RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy(0.1));
 
         apiClient =
                 createApiClient(
