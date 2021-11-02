@@ -75,4 +75,22 @@ public class SocieteGeneraleDateUtilTest {
         // then
         Assertions.assertThat(result).contains("2021-01-01");
     }
+
+    @Test
+    public void shouldReturnTodayDateAsPaymentExecutionDateWhenNoExecutionDateIsSet() {
+        // given
+        Calendar cal = Calendar.getInstance();
+        cal.set(2016, Calendar.FEBRUARY, 15, 17, 16, 0);
+        SocieteGeneraleDateUtil.setClock(fixedClock(cal));
+
+        Payment payment = Mockito.mock(Payment.class);
+        given(payment.isSepaInstant()).willReturn(true);
+        given(payment.getExecutionDate()).willReturn(null);
+
+        // when
+        String result = SocieteGeneraleDateUtil.getExecutionDate(payment);
+
+        // then
+        Assertions.assertThat(result).contains("2016-02-15");
+    }
 }

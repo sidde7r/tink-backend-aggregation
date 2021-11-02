@@ -39,7 +39,7 @@ public class SocieteGeneraleDateUtil {
     private static LocalDate provideNextPossibleDate(Payment payment) {
         LocalDate executionDate = payment.getExecutionDate();
         if (payment.isSepaInstant()) {
-            return executionDate;
+            return executionDate == null ? dateHelper.getNowAsLocalDate() : executionDate;
         } else {
             return dateHelper.getProvidedDateOrBestPossibleLocalDate(
                     executionDate, CUTOFF_HOUR, CUTOFF_MINUTE);
