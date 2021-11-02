@@ -3,9 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.BorrowerEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.ExpenseEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.LoanDetailsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.DetailedLoanResponse;
@@ -37,16 +40,16 @@ public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEnt
     protected ExactCurrencyAmount getMonthlyAmortization() {
         return allLoanDetails
                 .filter(ld -> Objects.nonNull(ld.getUpcomingInvoice()))
-                .map(
-                        ld ->
-                                ld.getUpcomingInvoice().getExpenses().stream()
-                                        .filter(
-                                                ex ->
-                                                        SwedbankSEConstants.AMORTIZATION.equals(
-                                                                ex.getDescription()))
-                                        .map(ex -> ex.getAmount().getTinkAmount())
-                                        .findFirst()
-                                        .orElse(null))
+                .flatMap(this::getAmortizationAmount)
                 .orElse(null);
+    }
+
+    private Optional<ExactCurrencyAmount> getAmortizationAmount(DetailedLoanResponse ld) {
+        return getAmortizationInvoices(ld).map(ex -> ex.getAmount().getTinkAmount()).findFirst();
+    }
+
+    private Stream<ExpenseEntity> getAmortizationInvoices(DetailedLoanResponse ld) {
+        return ld.getUpcomingInvoice().getExpenses().stream()
+                .filter(ex -> SwedbankSEConstants.AMORTIZATION.equals(ex.getDescription()));
     }
 }
