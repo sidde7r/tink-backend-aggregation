@@ -146,7 +146,7 @@ public class IkanoApiClient {
                             .header(HeaderKeys.SESSION_ID, sessionId)
                             .post(RegisteredCards.class, request);
 
-            response.logRequestedAndRegisteredCardTypes(credentials, card.getCardType());
+            response.logRequestedAndRegisteredCardTypes(card.getCardType());
         }
     }
 

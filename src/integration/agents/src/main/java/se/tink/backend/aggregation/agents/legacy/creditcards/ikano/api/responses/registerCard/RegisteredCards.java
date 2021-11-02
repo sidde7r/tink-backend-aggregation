@@ -11,7 +11,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.requests.RegisterCardRequest;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 
@@ -42,8 +41,7 @@ public class RegisteredCards {
         }
     }
 
-    public void logRequestedAndRegisteredCardTypes(
-            Credentials credentials, String requestedCardType) {
+    public void logRequestedAndRegisteredCardTypes(String requestedCardType) {
         if (cardTypes != null && cardTypes.size() > 0) {
             logger.info(
                     MoreObjects.toStringHelper(Card.class)
