@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.aib;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.FASTER_PAYMENTS;
@@ -34,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(capabilities = FASTER_PAYMENTS, markets = "GB")
 public final class AibV31Agent extends UkOpenBankingBaseAgent {
 
@@ -42,12 +41,12 @@ public final class AibV31Agent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
-                        .withApiBaseURL(AibConstants.AIS_API_URL)
-                        .withWellKnownURL(AibConstants.WELL_KNOWN_PERSONAL_URL)
-                        .withOrganisationId(AibConstants.ORGANISATION_ID)
-                        .build();
+                new AibAisConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
+                                .withApiBaseURL(AibConstants.AIS_API_URL)
+                                .withWellKnownURL(AibConstants.WELL_KNOWN_PERSONAL_URL)
+                                .withOrganisationId(AibConstants.ORGANISATION_ID));
     }
 
     @Inject
