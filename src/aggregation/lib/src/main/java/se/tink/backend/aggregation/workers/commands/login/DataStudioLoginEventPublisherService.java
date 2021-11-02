@@ -330,6 +330,10 @@ public class DataStudioLoginEventPublisherService {
                                     BankServiceError.SESSION_TERMINATED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.BANK_SERVICE_ERROR_SESSION_TERMINATED)
+                            .put(
+                                    BankServiceError.DEFAULT_MESSAGE,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.BANK_SERVICE_ERROR_BANK_SIDE_FAILURE)
                             .build();
 
     private static final ImmutableMap<
