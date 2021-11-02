@@ -48,13 +48,13 @@ public class RawBankDataEventCreationStrategies {
                 .fieldTypeDetectionStrategies(
                         // order is important!
                         Arrays.asList(
+                                new DateFieldTypeDetectionStrategy(),
                                 new BooleanFieldTypeDetectionStrategy(),
                                 new IbanFieldTypeDetectionStrategy(),
                                 new SortCodeFieldTypeDetectionStrategy(),
                                 new BbanFieldTypeDetectionStrategy(),
                                 new IntegerFieldTypeDetectionStrategy(),
                                 new DoubleFieldTypeDetectionStrategy(),
-                                new DateFieldTypeDetectionStrategy(),
                                 new MaskedPanFieldTypeDetectionStrategy(),
                                 new StringFieldTypeDetectionStrategy(),
                                 new DummyFieldTypeDetectionStrategy()))
