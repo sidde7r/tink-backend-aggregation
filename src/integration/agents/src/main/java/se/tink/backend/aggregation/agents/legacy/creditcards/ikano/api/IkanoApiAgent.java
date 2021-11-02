@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants.Error;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
@@ -31,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersiste
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
@@ -65,24 +63,6 @@ public final class IkanoApiAgent extends AbstractAgent
                 new CredentialsPersistence(
                         persistentStorage, new SessionStorage(), this.credentials, client);
         this.credentialsPersistence.load();
-    }
-
-    /** This constructor is used for unit tests */
-    public IkanoApiAgent(
-            CredentialsRequest request,
-            CompositeAgentContext context,
-            IkanoApiClient apiClient,
-            int pollIntervalMS,
-            CredentialsPersistence credentialsPersistence,
-            PersistentStorage persistentStorage) {
-        super(request, context);
-
-        bankIdPollIntervalMS = pollIntervalMS;
-        credentials = request.getCredentials();
-
-        this.apiClient = apiClient;
-        this.credentialsPersistence = credentialsPersistence;
-        this.persistentStorage = persistentStorage;
     }
 
     private boolean isAuthenticated() {
