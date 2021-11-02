@@ -138,6 +138,7 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/topman/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/topshop/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/tsb/ @tink-ab/aggregation-fluffy-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/tui/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ulster/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/vanquis/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/wallis/ @tink-ab/aggregation-fluffy-maintainer
