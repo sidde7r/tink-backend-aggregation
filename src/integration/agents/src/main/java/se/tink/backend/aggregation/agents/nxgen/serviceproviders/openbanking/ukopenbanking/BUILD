@@ -20,6 +20,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
