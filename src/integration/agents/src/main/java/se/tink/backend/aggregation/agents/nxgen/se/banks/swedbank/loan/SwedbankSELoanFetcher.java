@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
@@ -55,10 +56,11 @@ public class SwedbankSELoanFetcher implements AccountFetcher<LoanAccount> {
         return loanAccounts;
     }
 
-    void fetchLoans(
+    protected void fetchLoans(
             ArrayList<LoanAccount> loanAccounts,
             LoanOverviewResponse loanOverviewResponse,
             EngagementOverviewResponse engagementOverviewResponse) {
+
         fetchCollateralLoans(loanAccounts, loanOverviewResponse);
 
         fetchCarLoans(loanAccounts, loanOverviewResponse);
@@ -74,9 +76,9 @@ public class SwedbankSELoanFetcher implements AccountFetcher<LoanAccount> {
                 Optional.ofNullable(collaterals).orElseGet(Collections::emptyList).stream()
                         .flatMap(collateral -> collateral.getLoans().stream())
                         .map(
-                                l ->
+                                loan ->
                                         createLoanAccountFromLoanInformation(
-                                                l, CollateralsLoanEntity.class))
+                                                loan, CollateralsLoanEntity.class))
                         .collect(Collectors.toList());
 
         loanAccounts.addAll(collateralLoans);
@@ -117,7 +119,7 @@ public class SwedbankSELoanFetcher implements AccountFetcher<LoanAccount> {
                                     !engagementOverviewResponse.hasTransactionAccount(
                                             loan.getAccount()));
         } else {
-            consumptionLoans = consumptionLoans.filter(loan -> filterOutZeroDebtAccounts(loan));
+            consumptionLoans = consumptionLoans.filter(this::filterOutZeroDebtAccounts);
         }
         return consumptionLoans
                 .map(
@@ -130,21 +132,25 @@ public class SwedbankSELoanFetcher implements AccountFetcher<LoanAccount> {
     private boolean filterOutZeroDebtAccounts(LoanEntity loan) {
         return loan.getDebt() != null
                 && !loan.getDebt().getAmount().isEmpty()
-                && loan.getDebt().getAmount() != "0";
+                && !loan.getDebt().getAmount().equals("0");
     }
 
     private <T extends BaseAbstractLoanEntity> LoanAccount createLoanAccountFromLoanInformation(
             LoanEntity loanEntity, Class<T> loanType) {
         return Optional.of(loanEntity)
-                .map(
-                        loan -> {
-                            DetailedLoanResponse loanDetails = getLoanDetails(loan);
-                            return Optional.ofNullable(loanDetails)
-                                    .map(ld -> loanEntityFactory.create(loanType, loan, ld))
-                                    .orElseGet(() -> loanEntityFactory.create(loanType, loan));
-                        })
+                .map(createLoanEntityFromDetails(loanType))
                 .map(BaseAbstractLoanEntity::toTinkLoan)
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    private <T extends BaseAbstractLoanEntity> Function<LoanEntity, T> createLoanEntityFromDetails(
+            Class<T> loanType) {
+        return loan -> {
+            DetailedLoanResponse loanDetails = getLoanDetails(loan);
+            return Optional.ofNullable(loanDetails)
+                    .map(ld -> loanEntityFactory.create(loanType, loan, ld))
+                    .orElseGet(() -> loanEntityFactory.create(loanType, loan));
+        };
     }
 
     private DetailedLoanResponse getLoanDetails(LoanEntity loan) {
