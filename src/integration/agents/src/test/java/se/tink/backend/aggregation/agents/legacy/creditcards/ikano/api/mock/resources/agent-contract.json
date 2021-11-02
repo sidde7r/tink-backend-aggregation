@@ -1,0 +1,86 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "123456789",
+        "accountExclusion" : "NONE",
+        "bankId" : "123456789",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Preem MasterCard",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Firstname Lastname",
+        "flags" : "[]",
+        "availableCredit" : 17999.5,
+        "balance" : -2000.5
+    } ],
+    "transactions" : [ {
+        "amount" : -29.0,
+        "date" : 1628416800000,
+        "description" : "Månadsavgift",
+        "internalPayload" : { },
+        "originalAmount" : -29.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false
+    }, {
+        "amount" : -500.5,
+        "date" : 1627812000000,
+        "description" : "Preem Aut",
+        "internalPayload" : { },
+        "originalAmount" : -500.5,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false
+    }, {
+        "amount" : 10.5,
+        "date" : 1627898400000,
+        "description" : "Rabatt Preem",
+        "internalPayload" : { },
+        "originalAmount" : 10.5,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false
+    }, {
+        "amount" : 5123.45,
+        "date" : 1627639200000,
+        "description" : "Inbetalning bankgiro",
+        "internalPayload" : { },
+        "originalAmount" : 5123.45,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FULLNAME",
+            "value" : "Firstname Lastname"
+        } ],
+        "dateOfBirth" : {
+            "year" : 1992,
+            "month" : "JANUARY",
+            "era" : "CE",
+            "monthValue" : 1,
+            "dayOfMonth" : 23,
+            "dayOfWeek" : "THURSDAY",
+            "leapYear" : true,
+            "dayOfYear" : 23,
+            "chronology" : {
+                "calendarType" : "iso8601",
+                "id" : "ISO"
+            }
+        }
+    }
+}
