@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionsItemEntity {
 
     private static final String STATUS_BOOKED = "BOOK";
+    private static final String STATUS_PENDING = "PDNG";
 
     private RemittanceInformationEntity remittanceInformation;
 
@@ -45,10 +47,15 @@ public class TransactionsItemEntity {
 
     @JsonIgnore
     private Date getTransactionDate() {
-        return isPending() ? expectingBookingDate : bookingDate;
+        return isPending() ? getPendingDate() : bookingDate;
     }
 
     private boolean isPending() {
-        return !STATUS_BOOKED.equals(status);
+        return STATUS_PENDING.equals(status) || !STATUS_BOOKED.equals(status);
+    }
+
+    @JsonIgnore
+    private Date getPendingDate() {
+        return Optional.ofNullable(expectingBookingDate).orElse(bookingDate);
     }
 }
