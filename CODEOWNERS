@@ -124,6 +124,7 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/marbles/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/markandspencer/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/mbna/ @tink-ab/aggregation-fluffy-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/newpay/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/missselfridge/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/nationwide/ @tink-ab/aggregation-fluffy-maintainer
