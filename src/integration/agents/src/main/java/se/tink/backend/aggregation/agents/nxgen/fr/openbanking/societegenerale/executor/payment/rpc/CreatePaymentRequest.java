@@ -16,9 +16,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CreatePaymentRequest implements ValidatablePaymentRequest {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-
     private String paymentInformationId;
     private String creationDateTime;
     private int numberOfTransactions;

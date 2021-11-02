@@ -221,6 +221,10 @@ public class Payment {
                         IbanUtil.getCountryCode(creditor.getAccountNumber()));
     }
 
+    public boolean isSepaInstant() {
+        return paymentScheme == PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER;
+    }
+
     private String getIbanMarket(String accountNumber) {
         return IbanUtil.getCountryCode(accountNumber);
     }

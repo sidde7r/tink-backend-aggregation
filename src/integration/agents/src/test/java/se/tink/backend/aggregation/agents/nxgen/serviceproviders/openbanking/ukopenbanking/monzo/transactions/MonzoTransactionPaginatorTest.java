@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Collections;
@@ -367,6 +368,16 @@ public class MonzoTransactionPaginatorTest {
 
         private DelaySimulatingLocalDateTimeSource(LocalDateTime currentTime) {
             this.currentTime = currentTime;
+        }
+
+        @Override
+        public LocalDateTime now(ZoneId zoneId) {
+            return null;
+        }
+
+        @Override
+        public Instant getInstant(ZoneId zoneId) {
+            return null;
         }
 
         @Override

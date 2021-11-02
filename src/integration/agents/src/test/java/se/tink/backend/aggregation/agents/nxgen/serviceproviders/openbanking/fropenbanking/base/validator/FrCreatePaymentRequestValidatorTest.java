@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class FrCreatePaymentRequestValidatorTest {
     public void shouldThrowExceptionWhenExecutionDateIsNotTodayForInstantPayment()
             throws PaymentValidationException {
         // given
-        given(localDateTimeSource.now()).willReturn(LocalDateTime.of(2020, 1, 2, 13, 30, 5));
+        given(localDateTimeSource.now(any())).willReturn(LocalDateTime.of(2020, 1, 2, 13, 30, 5));
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -44,7 +45,7 @@ public class FrCreatePaymentRequestValidatorTest {
     public void shouldNotThrowAnyExceptionsWhenExecutionDateIsTodayForInstantPayment()
             throws PaymentValidationException {
         // given
-        given(localDateTimeSource.now()).willReturn(LocalDateTime.of(2020, 1, 1, 13, 30, 5));
+        given(localDateTimeSource.now(any())).willReturn(LocalDateTime.of(2020, 1, 1, 13, 30, 5));
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -61,7 +62,7 @@ public class FrCreatePaymentRequestValidatorTest {
     public void shouldNotThrowAnyExceptionsWhenExecutionDateIsNotTodayForNotInstantPayment()
             throws PaymentValidationException {
         // given
-        given(localDateTimeSource.now()).willReturn(LocalDateTime.of(2020, 1, 2, 13, 30, 5));
+        given(localDateTimeSource.now(any())).willReturn(LocalDateTime.of(2020, 1, 2, 13, 30, 5));
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()

@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.TimeZone;
 import se.tink.libraries.date.CountryDateHelper;
+import se.tink.libraries.payment.rpc.Payment;
 
 public class SocieteGeneraleDateUtil {
 
@@ -25,15 +26,24 @@ public class SocieteGeneraleDateUtil {
         dateHelper.setClock(clock);
     }
 
-    public static String getExecutionDate(LocalDate localDate) {
-        LocalDate nextPossibleDate =
-                dateHelper.getProvidedDateOrBestPossibleLocalDate(
-                        localDate, CUTOFF_HOUR, CUTOFF_MINUTE);
+    public static String getExecutionDate(Payment payment) {
+        LocalDate nextPossibleDate = provideNextPossibleDate(payment);
+
         return ZonedDateTime.of(
                         nextPossibleDate,
                         LocalTime.now(DEFAULT_ZONE_ID).plusMinutes(1),
                         DEFAULT_ZONE_ID)
                 .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    }
+
+    private static LocalDate provideNextPossibleDate(Payment payment) {
+        LocalDate executionDate = payment.getExecutionDate();
+        if (payment.isSepaInstant()) {
+            return executionDate;
+        } else {
+            return dateHelper.getProvidedDateOrBestPossibleLocalDate(
+                    executionDate, CUTOFF_HOUR, CUTOFF_MINUTE);
+        }
     }
 
     public static String getCreationDate() {
