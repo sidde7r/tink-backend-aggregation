@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
+import se.tink.connectivity.errors.ConnectivityErrorDetails.AccountInformationErrors;
 import se.tink.connectivity.errors.ConnectivityErrorDetails.UserLoginErrors;
 
 class LegacyExceptionToConnectivityErrorMapper {
@@ -361,6 +362,10 @@ class LegacyExceptionToConnectivityErrorMapper {
                             BankServiceError.SESSION_TERMINATED,
                             ConnectivityErrorFactory.authorizationError(
                                     ConnectivityErrorDetails.AuthorizationErrors.SESSION_EXPIRED))
+                    .put(
+                            BankServiceError.DEFAULT_MESSAGE,
+                            ConnectivityErrorFactory.accountInformationError(
+                                    AccountInformationErrors.UNRECOGNIZED))
                     .build();
 
     static final ImmutableMap<NemIdError, ConnectivityError> NEM_ID_ERROR_MAPPER =
