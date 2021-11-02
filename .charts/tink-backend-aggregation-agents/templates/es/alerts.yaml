@@ -63,11 +63,11 @@ spec:
         tags: {{ .Values.tags }}
 
     # Authentication ping alerts
-    - alert: AuthenticationUnknownErrorRateOver10%ES
+    - alert: AuthenticationUnknownErrorRateOver20%ES
       expr: |
-        # Failed logins (due to unknown RuntimeException) over 10%
+        # Failed logins (due to unknown RuntimeException) over 20%
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="ES", provider_type!="test"}[1h])) by (className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[1h])) by (className,provider) > 0.1)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[1h])) by (className,provider) > 0.2)
         # At least this many attempts.
              and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="ES", provider_type!="test"}[1h])) by (className,provider) > 1
       for: 15m
@@ -82,11 +82,11 @@ spec:
         tags: {{ .Values.tags }}
 
     # Refresh ping alerts
-    - alert: RefreshUnknownErrorRateOver10%ES
+    - alert: RefreshUnknownErrorRateOver20%ES
       expr: |
-        # Failed refreshes (due to unknown RuntimeException) over 10%
+        # Failed refreshes (due to unknown RuntimeException) over 20%
         (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="failed", market="ES", provider_type!="test"}[1h])) by (className,provider,type)
-            / count(sum_over_time(tink_agent_refresh_total{market="ES", provider_type!="test"}[1h])) by (className,provider,type) > 0.1)
+            / count(sum_over_time(tink_agent_refresh_total{market="ES", provider_type!="test"}[1h])) by (className,provider,type) > 0.2)
       for: 15m
       labels:
         severity: ping
