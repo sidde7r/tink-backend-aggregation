@@ -9,15 +9,16 @@ spec:
     ## Login success rates - for DE because of a lot of TIMEOUTs and INCORRECT_CREDENTIALS
     ## and being aware of the issue - we will assume all auth errors as successful refreshes.
     ## To discover agents with really low SR there are long term alerts prepared.
+    ## is action grouping needed ??
     - alert: login_success_rate_between_70_and_80_de
       expr: |
         # Successful/Cancelled attempts above 80%
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.80)
-        and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.70)
+        (sum:all_manual_attempts:not_failed_DE:delta60m:action_className
+            / sum:all_manual_attempts:delta60m:action_className < 0.80)
+        and (sum:all_manual_attempts:not_failed_DE:delta60m:action_className
+                    / sum:all_manual_attempts:delta60m:action_className >= 0.70)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
+        and sum:all_manual_attempts:delta60m:action_className > 5
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: ping
@@ -32,12 +33,12 @@ spec:
 
     - alert: login_success_rate_between_60_and_70_de
       expr: |
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.70)
-        and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.60)
+        (sum:all_manual_attempts:not_failed_DE:delta60m:action_className
+            / sum:all_manual_attempts:delta60m:action_className < 0.70)
+        and (sum:all_manual_attempts:not_failed_DE:delta60m:action_className
+                    / sum:all_manual_attempts:delta60m:action_className >= 0.60)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
+        and sum:all_manual_attempts:delta60m:action_className > 5
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: ping
@@ -52,12 +53,12 @@ spec:
 
     - alert: login_success_rate_between_50_and_60_de
       expr: |
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.60)
-        and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.50)
+        (sum:all_manual_attempts:not_failed_DE:delta60m:action_className
+            / sum:all_manual_attempts:delta60m:action_className < 0.60)
+        and (sum:all_manual_attempts:not_failed_DE:delta60m:action_className
+                    / sum:all_manual_attempts:delta60m:action_className >= 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
+        and sum:all_manual_attempts:delta60m:action_className > 5
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: ping
@@ -70,12 +71,13 @@ spec:
           the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
+    # why only className not action,className grouping ?? or maybe just use className grouping in above alerts
     - alert: manual_login_success_rate_below_50_de
       expr: |
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (className) < 0.50)
+        (sum:all_manual_attempts:not_failed_DE:delta60m:className
+            / sum:all_manual_attempts:delta60m:className < 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (className) > 5
+        and sum:all_manual_attempts:delta60m:className > 5
       for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -92,12 +94,12 @@ spec:
     - alert: bank_success_rate_between_70_and_80_de
       expr: |
         # Unavailable outcome above 50%
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.80)
-        and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-                        / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.70)
+        (sum:all_manual_attempts:not_unavailable:delta60m:action_className
+            / sum:all_manual_attempts:delta60m:action_className < 0.80)
+        and (sum:all_manual_attempts:not_unavailable:delta60m:action_className
+                        / sum:all_manual_attempts:delta60m:action_className >= 0.70)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
+        and sum:all_manual_attempts:delta60m:action_className > 5
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: ping
@@ -113,12 +115,12 @@ spec:
     - alert: bank_success_rate_between_60_and_70_de
       expr: |
         # Unavailable outcome above 50%
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.70)
-        and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.60)
+        (sum:all_manual_attempts:not_unavailable:delta60m:action_className
+            / sum:all_manual_attempts:delta60m:action_className < 0.70)
+        and (sum:all_manual_attempts:not_unavailable:delta60m:action_className
+                    / sum:all_manual_attempts:delta60m:action_className >= 0.60)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
+        and sum:all_manual_attempts:delta60m:action_className > 5
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: ping
@@ -134,12 +136,12 @@ spec:
     - alert: bank_success_rate_between_50_and_60_de
       expr: |
         # Unavailable outcome above 50%
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.60)
-        and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-                        / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.50)
+        (sum:all_manual_attempts:not_unavailable:delta60m:action_className
+            / sum:all_manual_attempts:delta60m:action_className < 0.60)
+        and (sum:all_manual_attempts:not_unavailable:delta60m:action_className
+                        / sum:all_manual_attempts:delta60m:action_className >= 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
+        and sum:all_manual_attempts:delta60m:action_className > 5
       for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -155,10 +157,10 @@ spec:
     - alert: bank_success_rate_below_50_de
       expr: |
         # Unavailable outcome above 50%
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.50)
+        (sum:all_manual_attempts:not_unavailable:delta60m:action_className
+            / sum:all_manual_attempts:delta60m:action_className < 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
+        and sum:all_manual_attempts:delta60m:action_className > 5
       for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -174,8 +176,8 @@ spec:
     - alert: manual_login_error_rate_over_50%_due_to_bank_side_error_de
       expr: |
         (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action="login-manual"}[1h]))
-        / sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h])) > 0.5 )
-        and (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h])) > 5)
+        / sum:className:production:login-manual:delta1h > 0.5 )
+        and sum:className:production:login-manual:delta1h > 5
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -191,8 +193,8 @@ spec:
     - alert: auto_login_error_rate_over_50%_due_to_bank_side_error_de
       expr: |
         (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
-        / sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h])) > 0.5 )
-        and (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h])) > 5)
+        / sum:className:production:login-auto-and-cron:delta1h > 0.5 )
+        and sum:className:production:login-auto-and-cron:delta1h > 5
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -209,10 +211,10 @@ spec:
     ## - to detect only authentication error / timeouts through longer period of time with really low SR
     - alert: long_term_all_error_between_80_and_90_de
       expr: |
-        sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.allErrorsAuth }}, market="DE"}[6h])) BY (className)
-          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) < 0.2
+        sum:all_manual_attempts:not_cancelled_unavaible_failed:delta6h
+          / sum:all_manual_attempts:delta6h < 0.2
         and sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.allErrorsAuth }}", market="DE"}[6h])) BY (className)
-          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) >= 0.1
+          / sum:all_manual_attempts:delta6h >= 0.1
       for: 1h
       labels:
         severity: ping
@@ -227,9 +229,9 @@ spec:
     - alert: long_term_all_error_below_90_de
       expr: |
         # Login failure the last 6 hours
-        sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.allErrorsAuth }}, market="DE"}[6h])) BY (className)
+        sum:all_manual_attempts:not_cancelled_unavaible_failed:delta6h
         # All login attempts the last 6 hours
-          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) < 0.10
+          / sum:all_manual_attempts:delta6h < 0.10
       for: 1h
       labels:
         severity: urgent
@@ -243,10 +245,10 @@ spec:
 
     - alert: long_term_authentication_errors_between_80_and_90_de
       expr: |
-        (sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }},{{ .Values.authErrorsAuth }}, market="DE"}[6h])) BY (className)
-          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) < 0.2)
-        and (sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }},{{ .Values.authErrorsAuth }}, market="DE"}[6h])) BY (className)
-          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) > 0.1)
+        (sum:all_manual_attempts:not_cancelled:delta6h
+          / sum:all_manual_attempts:delta6h < 0.2)
+        and (sum:all_manual_attempts:not_cancelled:delta6h
+          / sum:all_manual_attempts:delta6h > 0.1)
       for: 1h
       labels:
         severity: ping
@@ -261,9 +263,9 @@ spec:
     - alert: long_term_authentication_errors_over_90_de
       expr: |
         # Login cancelled the last 6 hours
-        (sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }},{{ .Values.authErrorsAuth }}, market="DE"}[6h])) BY (className)
+        sum:all_manual_attempts:not_cancelled:delta6h
         # All login attempts the last 6 hours
-          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) < 0.10)
+          / sum:all_manual_attempts:delta6h < 0.10
       for: 1h
       labels:
         severity: urgent
@@ -280,10 +282,10 @@ spec:
     #################################
     - alert: agent_refreshes_below45_greater35_due_to_all_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) < 0.45
-        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) >= 0.35
+        (sum:className_type:not_failed_unavailable_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m < 0.45)
+        and sum:className_type:not_failed_unavailable_partially_completed:delta60m)
+            / sum:refreshes_DE:delta60m >= 0.35)
          and sum:refreshes_DE:delta60m > 20
       for: 30m
       labels:
@@ -299,10 +301,10 @@ spec:
 
     - alert: agent_refreshes_below35_greater25_due_to_all_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) < 0.35
-        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) >= 0.25
+        (sum:className_type:not_failed_unavailable_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m < 0.35)
+        and (sum:className_type:not_failed_unavailable_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m >= 0.25)
          and sum:refreshes_DE:delta60m > 20
       for: 30m
       labels:
@@ -318,10 +320,10 @@ spec:
 
     - alert: agent_refreshes_below25_greater15_due_to_all_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) < 0.25
-        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) >= 0.15
+        (sum:className_type:not_failed_unavailable_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m < 0.25)
+        and (sum:className_type:not_failed_unavailable_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m >= 0.15)
          and sum:refreshes_DE:delta60m > 20
       for: 30m
       labels:
@@ -337,8 +339,8 @@ spec:
 
     - alert: agent_refreshes_below15_due_to_all_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) < 0.15
+        (sum:className_type:not_failed_unavailable_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m < 0.15)
          and sum:refreshes_DE:delta60m > 20
       for: 30m
       labels:
@@ -358,10 +360,10 @@ spec:
 
     - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) < 0.6
-        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) >= 0.5
+        (sum:className_type:not_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m < 0.6)
+        and (sum:className_type:not_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m >= 0.5)
          and sum:refreshes_DE:delta60m > 20
       for: 30m
       labels:
@@ -377,10 +379,10 @@ spec:
 
     - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) < 0.5
-        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) >= 0.4
+        (sum:className_type:not_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m < 0.5)
+        and (sum:className_type:not_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m >= 0.4)
          and sum:refreshes_DE:delta60m > 20
       for: 30m
       labels:
@@ -396,10 +398,10 @@ spec:
 
     - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) < 0.4
-        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) >= 0.3
+        (sum:className_type:not_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m < 0.4)
+        and (sum:className_type:not_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m >= 0.3)
          and sum:refreshes_DE:delta60m > 20
       for: 30m
       labels:
@@ -415,8 +417,8 @@ spec:
 
     - alert: agent_refreshes_below30_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
-            / (sum:refreshes_DE:delta60m) < 0.3
+        sum:className_type:not_partially_completed:delta60m
+            / sum:refreshes_DE:delta60m < 0.3
          and sum:refreshes_DE:delta60m > 20
       for: 30m
       labels:
