@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage.ENDOWMENT_INSURANCE_STRING;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage.EQUITY_TRADERS_STRING;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage.FUND_ACCOUNTS_STRING;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage.ISK_STRING;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage.LIST_INPUT_ERROR_FORMAT_MESSAGE;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,8 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.PensionInsuranceEntity;
@@ -30,15 +35,8 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
+@Slf4j
 public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final Logger log =
-            LoggerFactory.getLogger(SwedbankDefaultInvestmentFetcher.class);
-    private static final String LIST_INPUT_ERROR_FORMAT_MESSAGE =
-            "{} where null, expected at least an empty list.";
-    private static final String FUND_ACCOUNTS_STRING = "Fund accounts";
-    private static final String EQUITY_TRADERS_STRING = "Equity traders";
-    private static final String ISK_STRING = "Investment savings";
-    private static final String ENDOWMENT_INSURANCE_STRING = "Endowment insurance";
 
     private final SwedbankSEApiClient apiClient;
     private final String defaultCurrency;
@@ -52,7 +50,7 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
 
-            if (apiClient.getBankProfileHandler().isAuthorizedForAction(MenuItemKey.PORTFOLIOS)) {
+            if (isAuthorized(MenuItemKey.PORTFOLIOS)) {
 
                 PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
 
@@ -71,15 +69,17 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
                         investmentSavingsToTinkInvestmentAccounts(
                                 portfolioHoldings.getInvestmentSavings()));
             }
-            if (apiClient
-                    .getBankProfileHandler()
-                    .isAuthorizedForAction(MenuItemKey.PENSION_PORTFOLIOS)) {
+            if (isAuthorized(MenuItemKey.PENSION_PORTFOLIOS)) {
                 PensionPortfoliosResponse pensionPortfolios = apiClient.getPensionPortfolios();
                 investmentAccounts.addAll(pensionAccountsToInvestmentAccounts(pensionPortfolios));
             }
         }
 
         return investmentAccounts;
+    }
+
+    private boolean isAuthorized(MenuItemKey itemKey) {
+        return apiClient.getBankProfileHandler().isAuthorizedForAction(itemKey);
     }
 
     private List<InvestmentAccount> equityTradersToTinkInvestmentAccounts(
@@ -153,10 +153,9 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
 
         List<PensionInsuranceEntity> pensionAccounts =
                 Stream.concat(
-                                pensionPortfoliosResponse.getPrivatePensionInsurances()
-                                        .getPensionInsurances().stream(),
-                                pensionPortfoliosResponse.getOccupationalPensionInsurances()
-                                        .getPensionInsurances().stream())
+                                getPrivatePensionInsurances(pensionPortfoliosResponse).stream(),
+                                getOccupationalPensionInsurances(pensionPortfoliosResponse)
+                                        .stream())
                         .collect(Collectors.toList());
 
         List<DetailedPensionResponse> detailedPensionResponses =
@@ -169,6 +168,16 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
                                 detailedPension.toTinkInvestmentAccount(
                                         apiClient, credentialsRequest.getAccounts(), systemUpdater))
                 .collect(Collectors.toList());
+    }
+
+    private List<PensionInsuranceEntity> getOccupationalPensionInsurances(
+            PensionPortfoliosResponse pensionPortfoliosResponse) {
+        return pensionPortfoliosResponse.getOccupationalPensionInsurances().getPensionInsurances();
+    }
+
+    private List<PensionInsuranceEntity> getPrivatePensionInsurances(
+            PensionPortfoliosResponse pensionPortfoliosResponse) {
+        return pensionPortfoliosResponse.getPrivatePensionInsurances().getPensionInsurances();
     }
 
     private List<DetailedPensionResponse> getDetailedPensionReponseList(
