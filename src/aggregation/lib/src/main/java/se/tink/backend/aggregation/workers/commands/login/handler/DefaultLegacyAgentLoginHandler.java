@@ -19,6 +19,10 @@ public class DefaultLegacyAgentLoginHandler implements LoginHandler {
                         () ->
                                 agent.login()
                                         ? new LoginSuccessResult()
-                                        : new LoginUnknownErrorResult(null)));
+                                        : new LoginUnknownErrorResult(
+                                                new IllegalStateException(
+                                                        "Method "
+                                                                + agent.getClass().getSimpleName()
+                                                                + ".login() returned false instead of throwing exception."))));
     }
 }
