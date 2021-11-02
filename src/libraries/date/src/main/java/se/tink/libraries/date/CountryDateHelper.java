@@ -2,8 +2,6 @@ package se.tink.libraries.date;
 
 import com.google.common.collect.ImmutableSet;
 import de.jollyday.Holiday;
-import de.jollyday.HolidayCalendar;
-import de.jollyday.HolidayManager;
 import java.time.Clock;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,15 +9,22 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.libraries.jollyday.CountryCode;
+import se.tink.libraries.jollyday.TinkHolidayManager;
 
 /**
  * The generic date helper class that handles all date/time/holiday for various locale and timezone.
  * It is recommended to use in tink-backend-aggregation.
  */
 public class CountryDateHelper {
-    private Locale locale = new Locale(LANGUAGE_CODE_SWEDISH, COUNTRY_CODE_SWEDEN);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryDateHelper.class);
+
+    private final Locale locale;
     private TimeZone timezone = TimeZone.getTimeZone(TIMEZONE_CODE_CET);
-    private ImmutableSet<String> holidays;
+    private final ImmutableSet<String> holidays;
 
     public static final String COUNTRY_CODE_SWEDEN = "SE";
     public static final String COUNTRY_CODE_BELGIUM = "BE";
@@ -34,13 +39,6 @@ public class CountryDateHelper {
     public static final String TIMEZONE_CODE_GMT = "GMT";
 
     private Clock clock;
-
-    /** Default for Sweden */
-    @Deprecated
-    public CountryDateHelper() {
-        this.clock = Clock.system(timezone.toZoneId());
-        this.holidays = getCountryHolidays(locale.getCountry());
-    }
 
     /** Default timezone set to GMT if locale is UK otherwise CET */
     public CountryDateHelper(Locale locale) {
@@ -147,14 +145,12 @@ public class CountryDateHelper {
 
     public boolean isBeforeToday(Date date) {
         Date today = getTodayWithStartTime();
-
         return date.before(today);
     }
 
     public boolean isBusinessDay(Date date) {
         Calendar calendar = getCalendar();
         calendar.setTime(date);
-
         return isBusinessDay(calendar);
     }
 
@@ -169,12 +165,14 @@ public class CountryDateHelper {
     public boolean isBusinessDay(Calendar calendar) {
         if (holidays.contains(
                 ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(calendar.getTime()))) {
+            LOGGER.info("isBusinessDay with calendar = {} returned false", calendar);
             return false;
         }
 
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-        return (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY);
+        boolean result = (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY);
+        LOGGER.info("isBusinessDay with calendar = {} returned {}", calendar, result);
+        return result;
     }
 
     /**
@@ -189,7 +187,10 @@ public class CountryDateHelper {
         calendar.setTimeInMillis(
                 providedDate.atStartOfDay(timezone.toZoneId()).toInstant().toEpochMilli());
         Date date = getCurrentOrNextBusinessDay(calendar).getTime();
-        return date.toInstant().atZone(timezone.toZoneId()).toLocalDate();
+        java.time.LocalDate result = date.toInstant().atZone(timezone.toZoneId()).toLocalDate();
+        LOGGER.info(
+                "getCurrentOrNextBusinessDay with providedDate = {} is {}", providedDate, result);
+        return result;
     }
 
     /**
@@ -233,11 +234,19 @@ public class CountryDateHelper {
                                         .atStartOfDay()
                                         .atZone(timezone.toZoneId())
                                         .toInstant());
-        return getProvidedDateOrBestPossibleDate(
-                        providedDateAsLocalDate, cutOffHours, cutOffMinutes)
-                .toInstant()
-                .atZone(timezone.toZoneId())
-                .toLocalDate();
+        java.time.LocalDate result =
+                getProvidedDateOrBestPossibleDate(
+                                providedDateAsLocalDate, cutOffHours, cutOffMinutes)
+                        .toInstant()
+                        .atZone(timezone.toZoneId())
+                        .toLocalDate();
+        LOGGER.info(
+                "getProvidedDateOrBestPossibleLocalDate with providedDate = {}, cutOffHours {}, cutOffMinutes {} is {}",
+                providedDate != null ? providedDate : "null",
+                cutOffHours,
+                cutOffMinutes,
+                result);
+        return result;
     }
 
     /**
@@ -253,9 +262,17 @@ public class CountryDateHelper {
      */
     public Date getProvidedDateOrBestPossibleDate(
             Date providedDate, int cutOffHours, int cutOffMinutes) {
-        return providedDate == null
-                ? getBestPossibleTransferDate(cutOffHours, cutOffMinutes)
-                : providedDate;
+        Date result =
+                providedDate == null
+                        ? getBestPossibleTransferDate(cutOffHours, cutOffMinutes)
+                        : providedDate;
+        LOGGER.info(
+                "getProvidedDateOrBestPossibleDate with providedDate = {}, cutOffHours {}, cutOffMinutes {} is {}",
+                providedDate != null ? providedDate : "null",
+                cutOffHours,
+                cutOffMinutes,
+                result);
+        return result;
     }
 
     private ImmutableSet<String> getCountryHolidays(String countryCode) {
@@ -266,24 +283,30 @@ public class CountryDateHelper {
 
         int year = localDate.getYear() - 20;
 
-        HolidayCalendar calendar = HolidayCalendar.SWEDEN;
-        if (countryCode.equals(COUNTRY_CODE_BELGIUM)) {
-            calendar = HolidayCalendar.BELGIUM;
-        } else if (countryCode.equals(COUNTRY_CODE_GB)) {
-            calendar = HolidayCalendar.UNITED_KINGDOM;
-        } else if (countryCode.equals(COUNTRY_CODE_PORTUGAL)) {
-            calendar = HolidayCalendar.PORTUGAL;
-        } else if (countryCode.equals(COUNTRY_CODE_FRANCE)) {
-            calendar = HolidayCalendar.FRANCE;
+        CountryCode calendar;
+        switch (countryCode) {
+            case COUNTRY_CODE_BELGIUM:
+                calendar = CountryCode.BE;
+                break;
+            case COUNTRY_CODE_GB:
+                calendar = CountryCode.UK;
+                break;
+            case COUNTRY_CODE_PORTUGAL:
+                calendar = CountryCode.PT;
+                break;
+            case COUNTRY_CODE_FRANCE:
+                calendar = CountryCode.FR;
+                break;
+            default:
+                calendar = CountryCode.SE;
         }
 
-        HolidayManager holidayManager = HolidayManager.getInstance(calendar);
+        TinkHolidayManager holidayManager = new TinkHolidayManager(calendar);
 
-        for (int yearIdendex = year; yearIdendex < year + 25; yearIdendex++) {
-            Set<Holiday> holidays = holidayManager.getHolidays(yearIdendex);
-            for (Holiday holiday : holidays) {
+        for (int yearIndex = year; yearIndex < year + 25; yearIndex++) {
+            Set<Holiday> holidaysForYear = holidayManager.getHolidays(yearIndex);
+            for (Holiday holiday : holidaysForYear) {
                 holidayLocalDateBuilder.add(holiday.getDate());
-
                 if (countryCode.equals("SE")) {
                     getSwedishSpecificHolidays(holiday, holidayLocalDateBuilder);
                 }

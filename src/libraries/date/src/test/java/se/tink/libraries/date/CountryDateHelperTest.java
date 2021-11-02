@@ -20,7 +20,7 @@ import org.junit.Test;
 public class CountryDateHelperTest {
     private final CountryDateHelper belgianHelper = new CountryDateHelper(new Locale("nl", "BE"));
     private final CountryDateHelper frenchHelper = new CountryDateHelper(Locale.FRANCE);
-    private final CountryDateHelper swedishHelper = new CountryDateHelper();
+    private final CountryDateHelper swedishHelper = new CountryDateHelper(new Locale("sv", "SE"));
     private final CountryDateHelper unitedKingdomHelper =
             new CountryDateHelper(new Locale("en", "GB"), TimeZone.getTimeZone("GMT"));
 

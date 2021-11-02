@@ -72,6 +72,6 @@ public class BpRivesParisWireMockTest {
         assertThatExceptionOfType(BankServiceException.class)
                 .isThrownBy(agentWireMockRefreshTest::executeRefresh)
                 .havingRootCause()
-                .withMessageContaining("Connection reset");
+                .withMessageMatching("^((Connection reset)|(Read timed out))$");
     }
 }

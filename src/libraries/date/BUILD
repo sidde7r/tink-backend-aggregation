@@ -10,6 +10,7 @@ java_library(
 
         # Date libraries
         "//third_party:de_jollyday_jollyday",
+        "//src/libraries/jollyday/src/main/java/se/tink/libraries/jollyday",
         "//third_party:org_pojava_pojava",
         "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:joda_time_joda_time",

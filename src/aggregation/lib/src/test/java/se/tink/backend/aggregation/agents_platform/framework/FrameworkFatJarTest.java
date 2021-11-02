@@ -11,8 +11,10 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public final class FrameworkFatJarTest {
 
     private static final String FRAMEWORK_JAR_SUFFIX =

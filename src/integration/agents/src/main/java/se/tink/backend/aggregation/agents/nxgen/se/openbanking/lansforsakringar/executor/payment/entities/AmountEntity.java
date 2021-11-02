@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Locale;
 import lombok.EqualsAndHashCode;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -24,7 +25,7 @@ public class AmountEntity {
 
     @JsonProperty
     public String getAmount() {
-        return String.format("%.2f", amount);
+        return String.format(Locale.US, "%.2f", amount);
     }
 
     public String getCurrency() {
