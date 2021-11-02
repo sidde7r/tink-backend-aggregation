@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class GrantedByUserEntity {
+
     @JsonProperty("UserPerson")
     private UserRequesterGranter userPerson;
 }

@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ErrorEntity {
+
     private String errorDescription;
     private String errorDescriptionTranslated;
 }
