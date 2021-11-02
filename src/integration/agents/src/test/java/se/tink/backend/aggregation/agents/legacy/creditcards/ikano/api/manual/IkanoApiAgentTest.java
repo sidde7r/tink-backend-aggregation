@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.creditcards.ikano.api;
+package se.tink.backend.aggregation.agents.creditcards.ikano.api.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
