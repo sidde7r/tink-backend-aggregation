@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtBodyEntity;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtHeaderEntity;
 import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultApacheRequestLoggingAdapter;
+import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
@@ -63,6 +64,7 @@ import se.tink.libraries.tracing.lib.api.Tracing;
 public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String RESOLVED_APPID_PLACE_HOLDER = "RESOLVEDAPPIDPLACEHOLDER";
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
+    private static final String TINK_REQUEST_ID = "X-Tink-Debug-RequestId";
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
     private static final String SIGNATURE_INFO_HEADER_KEY = "X-Signature-Info";
     private static final String EIDAS_CLUSTER_ID_HEADER = "X-Tink-QWAC-ClusterId";
@@ -397,6 +399,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                     span.context(),
                     Format.Builtin.HTTP_HEADERS,
                     new TinkApacheHttpRequestExecutor.RequestBuilderCarrier(request));
+
+            RequestTracer.getRequestId().ifPresent(v -> request.addHeader(TINK_REQUEST_ID, v));
 
         } catch (Exception e) {
             log.warn("Failed to start trace: {}", e.getMessage());
