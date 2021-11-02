@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Accounts.PAGE_SIZE;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.X_REQUEST_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
 
 import java.time.ZonedDateTime;
@@ -50,20 +49,17 @@ public class PolishApiPostAccountClient extends BasePolishApiPostClient
             return persistentStorage.getAccounts().get();
         }
 
-        String requestId = getUuid();
         ZonedDateTime zonedDateTime = getNow();
         AccountsRequest accountsRequest =
                 AccountsRequest.builder()
                         .requestHeader(
-                                getRequestHeaderEntity(
-                                        requestId, zonedDateTime, getAccessTokenFromStorage()))
+                                getRequestHeaderEntity(zonedDateTime, getAccessTokenFromStorage()))
                         .perPage(PAGE_SIZE)
                         .build();
 
         RequestBuilder requestBuilder =
                 getRequestWithBaseHeaders(
                                 urlFactory.getAccountsUrl(), zonedDateTime, getTokenFromStorage())
-                        .header(X_REQUEST_ID, requestId)
                         .body(accountsRequest, MediaType.APPLICATION_JSON);
 
         AccountsResponse accountsResponse =
@@ -77,13 +73,11 @@ public class PolishApiPostAccountClient extends BasePolishApiPostClient
 
     @Override
     public AccountDetailsResponse fetchAccountDetails(String accountIdentifier) {
-        String requestId = getUuid();
         ZonedDateTime zonedDateTime = getNow();
         AccountDetailsRequest accountDetailsRequest =
                 AccountDetailsRequest.builder()
                         .requestHeader(
-                                getRequestHeaderEntity(
-                                        requestId, zonedDateTime, getAccessTokenFromStorage()))
+                                getRequestHeaderEntity(zonedDateTime, getAccessTokenFromStorage()))
                         .accountNumber(accountIdentifier)
                         .build();
 
@@ -92,7 +86,6 @@ public class PolishApiPostAccountClient extends BasePolishApiPostClient
                                 urlFactory.getAccountDetailsUrl(accountIdentifier),
                                 zonedDateTime,
                                 getTokenFromStorage())
-                        .header(X_REQUEST_ID, requestId)
                         .body(accountDetailsRequest, MediaType.APPLICATION_JSON);
 
         return PolishApiErrorHandler.callWithErrorHandling(

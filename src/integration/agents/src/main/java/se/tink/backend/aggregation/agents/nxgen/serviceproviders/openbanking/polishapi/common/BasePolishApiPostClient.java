@@ -10,6 +10,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderValues.ACCEPT_CHARSET_VAL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderValues.ACCEPT_ENCODING_VAL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderValues.GetClient.PSU_USER_AGENT_VAL;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.X_REQUEST_ID_PLACEHOLDER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_HEADERS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_REQUEST_HEADERS;
 
@@ -65,14 +66,12 @@ public class BasePolishApiPostClient {
     }
 
     @SneakyThrows
-    protected RequestHeaderEntity getRequestHeaderEntity(
-            String requestId, ZonedDateTime requestTime, String token) {
-        return getRequestHeaderEntity(requestId, requestTime, token, true, true);
+    protected RequestHeaderEntity getRequestHeaderEntity(ZonedDateTime requestTime, String token) {
+        return getRequestHeaderEntity(requestTime, token, true, true);
     }
 
     @SneakyThrows
     protected RequestHeaderEntity getRequestHeaderEntity(
-            String requestId,
             ZonedDateTime requestTime,
             String token,
             boolean shouldSentToken,
@@ -87,7 +86,8 @@ public class BasePolishApiPostClient {
                         .tppId(
                                 CertificateUtils.getOrganizationIdentifier(
                                         configuration.getQsealc()))
-                        .requestId(requestId);
+                        .requestId(X_REQUEST_ID_PLACEHOLDER);
+
         if (shouldSentToken) {
             builder.token(setToken(token));
         }

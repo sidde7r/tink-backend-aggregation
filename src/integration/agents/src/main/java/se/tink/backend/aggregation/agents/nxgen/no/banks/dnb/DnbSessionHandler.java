@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +22,16 @@ public class DnbSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        HttpResponse response = apiClient.fetchAccountsRaw();
+        HttpResponse response;
+        try {
+            response = apiClient.fetchAccountsRaw();
+        } catch (HttpResponseException e) {
+            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)
+                    || DnbExceptionsHelper.noResourceFoundForTheCustomer(e)) {
+                return;
+            }
+            throw e;
+        }
         if (isJsonResponse(response)) {
             return;
         }

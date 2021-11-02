@@ -10,7 +10,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.Scopes.AIS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.Scopes.AIS_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.PostClient.THROTTLING_POLICY;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.X_REQUEST_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderValues.GetClient.PSU_USER_AGENT_VAL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_REQUEST_HEADERS;
 
@@ -63,7 +62,6 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
     @Override
     public URL getAuthorizeUrl(String state) {
-        String requestId = getUuid();
         String consentId = getUuid();
         ZonedDateTime requestTime = getNow();
         persistentStorage.persistConsentId(consentId);
@@ -71,7 +69,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
         AuthorizeRequest.AuthorizeRequestBuilder<?, ?> authorizeRequestBuilder =
                 AuthorizeRequest.builder()
-                        .requestHeader(getRequestHeaderEntity(requestId, requestTime, null))
+                        .requestHeader(getRequestHeaderEntity(requestTime, null))
                         .clientId(apiConfiguration.getApiKey())
                         .redirectUri(configuration.getRedirectUrl())
                         .responseType(CODE)
@@ -90,7 +88,6 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
         RequestBuilder requestBuilder =
                 getRequestWithBaseHeaders(urlFactory.getAuthorizeUrl(), requestTime, null)
-                        .header(X_REQUEST_ID, requestId)
                         .body(authorizeRequest, MediaType.APPLICATION_JSON);
 
         AuthorizationResponse authorizationResponse =
@@ -140,12 +137,11 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
     @Override
     public TokenResponse exchangeAuthorizationToken(String accessCode) {
-        String requestId = getUuid();
         ZonedDateTime requestTime = getNow();
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
         TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder =
                 TokenRequest.builder()
-                        .requestHeader(getRequestHeaderEntity(requestId, requestTime, null))
+                        .requestHeader(getRequestHeaderEntity(requestTime, null))
                         .clientId(apiConfiguration.getApiKey())
                         .grantType(AUTHORIZATION_CODE)
                         .redirectUri(configuration.getRedirectUrl())
@@ -160,7 +156,6 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
         RequestBuilder requestBuilder =
                 getRequestWithBaseHeaders(urlFactory.getOauth2TokenUrl(), requestTime, null)
-                        .header(X_REQUEST_ID, requestId)
                         .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE);
 
         return PolishApiErrorHandler.callWithErrorHandling(
@@ -208,14 +203,12 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
     @Override
     public TokenResponse exchangeRefreshToken(String refreshToken) {
-        String requestId = getUuid();
         ZonedDateTime requestTime = getNow();
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
         TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder =
                 TokenRequest.builder()
                         .requestHeader(
                                 getRequestHeaderEntity(
-                                        requestId,
                                         requestTime,
                                         getAccessTokenFromStorage(),
                                         apiLogicFlowConfigurator
@@ -240,7 +233,6 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                                 requestTime,
                                 getTokenFromStorage(),
                                 apiLogicFlowConfigurator.shouldSentTokenInRefreshAndExchangeToken())
-                        .header(X_REQUEST_ID, requestId)
                         .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE);
 
         return PolishApiErrorHandler.callWithErrorHandling(
@@ -249,14 +241,12 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
     @Override
     public TokenResponse exchangeTokenForAis(String refreshToken) {
-        String requestId = getUuid();
         ZonedDateTime requestTime = getNow();
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
         TokenRequest tokenRequest =
                 TokenRequest.builder()
                         .requestHeader(
                                 getRequestHeaderEntity(
-                                        requestId,
                                         requestTime,
                                         getAccessTokenFromStorage(),
                                         apiLogicFlowConfigurator
@@ -278,7 +268,6 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                                 requestTime,
                                 getTokenFromStorage(),
                                 apiLogicFlowConfigurator.shouldSentTokenInRefreshAndExchangeToken())
-                        .header(X_REQUEST_ID, requestId)
                         .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE);
 
         return PolishApiErrorHandler.callWithErrorHandling(

@@ -3,7 +3,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "redsys",
-    srcs = glob(["*.java"]),
+    srcs = glob([
+        "RedsysAgentTest.java",
+        "RedsysAgentPaymentTest.java",
+    ]),
     data = ["//:agent_test_data"],
     tags = [
         "external",
@@ -13,7 +16,36 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
         "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "//third_party:junit_junit",
+        "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
+    ],
+)
+
+junit_test(
+    name = "redsys_junitTests",
+    srcs = glob(
+        ["*.java"],
+        exclude = [
+            "RedsysAgentTest.java",
+            "RedsysAgentPaymentTest.java",
+        ],
+    ),
+    data = ["//:agent_test_data"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
+        "//src/integration/amount",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
