@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import io.vavr.control.Option;
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,25 +30,137 @@ public class BbvaUtilsTest {
     }
 
     @Test
-    @Parameters({"AAA1234567", "AAAA123456", "aaaa123456", "aaa1234567"})
-    public void shouldPassUsernameIfItIsSpainPassport(String examplePossibleNumber) {
+    public void shouldPassUsernameIfItIsValidDNI() {
         // when
-        String result = BbvaUtils.formatUsername(examplePossibleNumber);
+        String result = BbvaUtils.formatUser("91005186M");
 
         // then
-        assertThat(result).isEqualTo(examplePossibleNumber);
+        assertThat(result).isEqualTo("0019-091005186M");
     }
 
     @Test
-    @Parameters({
-        "AA123456",
-        "aa123456",
-    })
-    public void shouldPassUsernameIfItIsForeignersPassport(String examplePossibleNumber) {
+    public void shouldPassUsernameIfItIsValidOtherDNI() {
         // when
-        String result = BbvaUtils.formatUsername(examplePossibleNumber);
+        String result = BbvaUtils.formatUser("33X");
 
         // then
-        assertThat(result).isEqualTo(examplePossibleNumber);
+        assertThat(result).isEqualTo("0019-000000033X");
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIsValidOtherInvalidDNI() {
+        // when
+        String result = BbvaUtils.formatUser("32X");
+
+        // then
+        assertThat(result).isNull();
+    }
+
+    @Test
+    public void shouldNotPassUsernameIfItIsInvalidDNI() {
+        // when
+        String result = BbvaUtils.formatUser("91005187M");
+
+        // then
+        assertThat(result).isNull();
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIsValidNIE() {
+        // when
+        String result = BbvaUtils.formatUser("X5211866C");
+
+        // then
+        assertThat(result).isEqualTo("0019-X5211866C");
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIsValidShortNIE() {
+        // when
+        String result = BbvaUtils.formatUser("X12345V");
+
+        // then
+        assertThat(result).isEqualTo("0019-X12345V");
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIsForeignPassport() {
+        // when
+        String result = BbvaUtils.formatUser("YY401115D");
+
+        // then
+        assertThat(result).isEqualTo("0019-YY401115D");
+    }
+
+    @Test
+    public void shouldNotPassUsernameIfItIsInvalidNIE() {
+        // when
+        String result = BbvaUtils.formatUser("Y0401116D");
+
+        // then
+        assertThat(result).isNull();
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIsValidPassport() {
+        // when
+        String result = BbvaUtils.formatUser("C029532");
+
+        // then
+        assertThat(result).isEqualTo("0019-C029532");
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIs9LenghtNumber() {
+        // when
+        String result = BbvaUtils.formatUser("029532123");
+
+        // then
+        assertThat(result).isEqualTo("4041340295321239");
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIs7LenghtNumber() {
+        // when
+        String result = BbvaUtils.formatUser("0123456");
+
+        // then
+        assertThat(result).isEqualTo("0123456");
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIsNot9or7LenghtNumber() {
+        // when
+        String result = BbvaUtils.formatUser("01234567");
+
+        // then
+        assertThat(result).isEqualTo("0019-01234567");
+    }
+
+    @Test
+    public void shouldNotPassUsernameIfItIsNotAdmitted() {
+        // when
+        String result = BbvaUtils.formatUser("4444555566667777999");
+
+        // then
+        assertThat(result).isNull();
+    }
+
+    @Test
+    public void shouldPassUsernameIfItIsAnonymousCard() {
+        // when
+        String result = BbvaUtils.formatUser("4444555566667777");
+
+        // then
+        assertThat(result).isEqualTo("4444555566667777");
+    }
+
+    @Test
+    public void shouldNotPassUsernameIfItIsNull() {
+        // when
+        String result = BbvaUtils.formatUser(null);
+
+        // then
+        assertThat(result).isNull();
     }
 }

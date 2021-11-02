@@ -15,7 +15,7 @@ public class BbvaWiremockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva/wiremock/resources/";
 
     private static final String PROVIDER_NAME = "es-bbva-password";
-    private static final String USERNAME = "1234567X";
+    private static final String USERNAME = "1234567L";
     private static final String PASSWORD = "123456";
     private static final String OTP_INPUT = "13371337";
 

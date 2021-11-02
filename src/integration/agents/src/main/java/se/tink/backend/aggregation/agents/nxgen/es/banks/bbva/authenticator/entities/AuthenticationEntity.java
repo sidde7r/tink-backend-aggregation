@@ -38,7 +38,7 @@ public class AuthenticationEntity {
         private String multistepProcessId;
 
         public AuthenticationBuilder withUserID(String userID) {
-            this.userID = LoginParameter.USER_VALUE_PREFIX + userID;
+            this.userID = userID;
             return this;
         }
 

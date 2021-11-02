@@ -153,4 +153,26 @@ public class BbvaAuthenticatorTest {
 
         return exception;
     }
+
+    @Test
+    public void shouldThrowLoginExceptionWhenCustomerUsernameIsInvalidSpanishDNI() {
+        // given
+        apiClient = mock(BbvaApiClient.class);
+        credentials = new Credentials();
+        credentials.setUsername("32X");
+        credentials.setPassword("password");
+        authenticator =
+                new BbvaAuthenticator(
+                        apiClient,
+                        mock(SupplementalInformationHelper.class),
+                        mock(CredentialsRequest.class));
+
+        // when
+        Throwable thrown = catchThrowable(() -> authenticator.authenticate(credentials));
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Username with invalid format");
+    }
 }
