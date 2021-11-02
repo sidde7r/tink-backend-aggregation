@@ -65,9 +65,9 @@ public class IcaBankenConstants {
     public static final class Headers {
         public static final String ACCEPT = "Accept";
         public static final String HEADER_CLIENTAPPVERSION = "ClientAppVersion";
-        public static final String VALUE_CLIENTAPPVERSION = "1.79.2";
+        public static final String VALUE_CLIENTAPPVERSION = "1.85.1";
         public static final String HEADER_APIKEY = "ApiKey";
-        public static final String VALUE_APIKEY = "7B283A61-2CED-4C98-8C6E-FCD049881231";
+        public static final String VALUE_APIKEY = "5EDA45E4-0063-4308-A1D2-A1C07FFE8EB1";
         public static final String HEADER_API_VERSION = "ApiVersion";
         public static final String VALUE_API_VERSION = "12";
         public static final String HEADER_CLIENT_OS = "ClientOS";
@@ -77,7 +77,7 @@ public class IcaBankenConstants {
         public static final String HEADER_CLIENT_HARDWARE = "ClientHardware";
         public static final String VALUE_CLIENT_HARDWARE = "iPhone";
         public static final String VALUE_USER_AGENT =
-                "ICA%20Banken/1.79.2.0 CFNetwork/1220.1 Darwin/20.3.0";
+                "ICA%20Banken/1.85.1.1 CFNetwork/1220.1 Darwin/20.3.0";
     }
 
     public static final class BankIdErrors {
