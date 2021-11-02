@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,9 +10,11 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerMarketUtil;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
@@ -44,6 +47,9 @@ public class CardTransaction {
 
     private String title;
 
+    @JsonProperty("transaction_type")
+    private String transactionType;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate transactionDate;
@@ -56,12 +62,16 @@ public class CardTransaction {
     }
 
     @JsonIgnore
-    public Transaction toTinkTransaction() {
+    public Optional<Transaction> toTinkTransaction(String market) {
+        if (getDate() == null) {
+            log.warn("Ignoring transaction with no date.");
+            return Optional.empty();
+        }
         Builder builder =
                 Transaction.builder()
                         .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setDate(getDate())
-                        .setDescription(getTransactionDescription())
+                        .setDescription(getTransactionDescription(market))
                         .setPending(!booked);
         if (!Strings.isNullOrEmpty(transactionId)) {
             builder.addExternalSystemIds(
@@ -78,19 +88,21 @@ public class CardTransaction {
                     originalAmount.toPlainString());
         }
 
-        return builder.build();
+        return Optional.of(builder.build());
     }
 
     @JsonIgnore
-    private String getTransactionDescription() {
-        return description != null ? description : title;
+    private String getTransactionDescription(String market) {
+        if (title != null) {
+            return title;
+        } else if (transactionType != null) {
+            return transactionType;
+        }
+        return NordeaPartnerMarketUtil.getLocaleDescription(market);
     }
 
     @JsonIgnore
     public LocalDate getDate() {
-        if (booked && Objects.nonNull(bookingDate)) {
-            return bookingDate;
-        }
         return transactionDate;
     }
 }

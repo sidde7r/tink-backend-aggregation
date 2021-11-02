@@ -29,6 +29,7 @@ public class NordeaPartnerCreditCardAccountFetcher
         final CardTransactionListResponse response =
                 apiClient.fetchCreditCardTransactions(account.getApiIdentifier(), page, PAGE_SIZE);
         return new NordeaPartnerCreditCardPaginatorResponse(
-                response.getTinkTransactions(), response.canFetchMore(dateLimit));
+                response.getTinkTransactions(apiClient.getMarket()),
+                response.canFetchMore(dateLimit));
     }
 }

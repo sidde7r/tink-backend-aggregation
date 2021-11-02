@@ -39,7 +39,7 @@ public class NordeaPartnerTransactionalAccountFetcher
                                 account.getApiIdentifier(), key, dateLimit);
 
                 return new NordeaPartnerTransactionalPaginatorResponse(
-                        response.getTinkTransactions(),
+                        response.getTinkTransactions(apiClient.getMarket()),
                         response.getContinuationKey(),
                         response.canFetchMore(dateLimit));
             } catch (BankServiceException e) {

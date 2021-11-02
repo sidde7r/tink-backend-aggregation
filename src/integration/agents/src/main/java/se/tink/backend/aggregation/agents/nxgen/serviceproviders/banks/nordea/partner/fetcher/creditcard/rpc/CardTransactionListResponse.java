@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,9 +28,11 @@ public class CardTransactionListResponse {
     private List<CardTransaction> transactions;
 
     @JsonIgnore
-    public Collection<Transaction> getTinkTransactions() {
-        return transactions.stream()
-                .map(CardTransaction::toTinkTransaction)
+    public Collection<Transaction> getTinkTransactions(String market) {
+        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+                .map(cardTransaction -> cardTransaction.toTinkTransaction(market))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
