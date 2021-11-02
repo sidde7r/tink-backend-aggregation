@@ -31,7 +31,7 @@ public class AnswerEntityGlobalPositionResponse {
 
     public Collection<CreditCardAccount> getCreditCardAccounts() {
         return agreementsList.stream()
-                .filter(AgreementsListEntity::isCard)
+                .filter(AgreementsListEntity::isCreditCard)
                 .map(AgreementsListEntity::toTinkCreditCard)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

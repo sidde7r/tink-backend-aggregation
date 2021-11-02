@@ -158,9 +158,12 @@ public class EvoBancoConstants {
             TransactionalAccountTypeMapper.builder()
                     .put(
                             TransactionalAccountType.CHECKING,
-                            "I#Cuenta Inteligente EVO",
-                            "I#Cuenta Inteligente")
-                    .put(TransactionalAccountType.SAVINGS, "I#Depósito", "I#Deposito")
+                            "Cuenta Inteligente EVO",
+                            "Cuenta Inteligente",
+                            "Cuenta Joven",
+                            "TARJETA DE DÉBITO",
+                            "Cuenta Base")
+                    .put(TransactionalAccountType.SAVINGS, "Depósito", "Deposito")
                     .build();
 
     public static class Constants {
