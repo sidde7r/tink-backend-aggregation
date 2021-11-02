@@ -11,6 +11,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/societegenerale/integration/module",
         "//src/integration/amount",
+        "//src/integration/credentials:service",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",

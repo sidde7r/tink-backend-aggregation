@@ -1,32 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.card;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SocieteGeneraleCreditCardFetcherTest {
 
-    private SocieteGeneraleApiClient societeGeneraleApiClient;
+    @Mock private SocieteGeneraleApiClient societeGeneraleApiClient;
     private SocieteGeneraleCreditCardFetcher objectUnderTest;
 
     @Before
     public void before() {
-        societeGeneraleApiClient = mock(SocieteGeneraleApiClient.class);
         objectUnderTest = new SocieteGeneraleCreditCardFetcher(societeGeneraleApiClient);
     }
 
     @Test
     public void shouldReturnCreditCards() {
         // given
-        when(societeGeneraleApiClient.fetchAccounts())
-                .thenReturn(SocieteGeneraleCreditCardFetcherTestData.CARD_RESPONSE);
+        given(societeGeneraleApiClient.fetchAccounts())
+                .willReturn(SocieteGeneraleCreditCardFetcherTestData.CARD_RESPONSE);
+
         // when
         Collection<CreditCardAccount> response = objectUnderTest.fetchAccounts();
 

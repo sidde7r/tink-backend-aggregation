@@ -18,9 +18,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditc
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
@@ -59,46 +58,36 @@ public class AccountsItemEntity {
         return cashAccountType;
     }
 
-    public Optional<TransactionalAccount> toTinkModel(String connectedPsu) {
+    public Optional<TransactionalAccount> toTinkTransactionalAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType())
                 .withInferredAccountFlags()
                 .withBalance(getBalanceModule())
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(accountIdEntity.getIban())
-                                .withAccountNumber(accountIdEntity.getIban())
-                                .withAccountName(getAccountName())
-                                .addIdentifier(new IbanIdentifier(accountIdEntity.getIban()))
-                                .build())
-                .addHolderName(connectedPsu)
+                .withId(getIdModuleForTransactionalAccount(accountIdEntity))
                 .setApiIdentifier(resourceId)
                 .build();
     }
 
-    public CreditCardAccount toTinkCreditCard() {
-        return CreditCardAccount.nxBuilder()
-                .withCardDetails(
-                        CreditCardModule.builder()
-                                .withCardNumber(accountIdEntity.getOther().getIdentification())
-                                .withBalance(getBalance())
-                                .withAvailableCredit(getBalance())
-                                .withCardAlias(name)
-                                .build())
-                .withInferredAccountFlags()
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(resourceId)
-                                .withAccountNumber(linkedAccount)
-                                .withAccountName(name)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                accountIdEntity.getOther().getIdentification()))
-                                .setProductName(name)
-                                .build())
-                .setApiIdentifier(resourceId)
-                .build();
+    public Optional<CreditCardAccount> toTinkCreditCard() {
+        return Optional.of(
+                CreditCardAccount.nxBuilder()
+                        .withCardDetails(getCreditCardModule())
+                        .withInferredAccountFlags()
+                        .withId(getIdModuleForCreditCardAccount(accountIdEntity))
+                        .setApiIdentifier(resourceId)
+                        .build());
+    }
+
+    public boolean isCheckingAccount() {
+        return CashAccountType.CACC == cashAccountType;
+    }
+
+    public boolean isCreditCard() {
+        return CashAccountType.CARD == cashAccountType && CardDetails.CREDIT_CARD.equals(details);
+    }
+
+    public LinksEntity getLinks() {
+        return links;
     }
 
     private TransactionalAccountType getAccountType() {
@@ -113,6 +102,34 @@ public class AccountsItemEntity {
         } else {
             return cashAccountType.toString();
         }
+    }
+
+    private IdModule getIdModuleForTransactionalAccount(AccountIdEntity accountIdEntity) {
+        return IdModule.builder()
+                .withUniqueIdentifier(accountIdEntity.getIban())
+                .withAccountNumber(accountIdEntity.getIban())
+                .withAccountName(getAccountName())
+                .addIdentifier(new IbanIdentifier(accountIdEntity.getIban()))
+                .build();
+    }
+
+    private IdModule getIdModuleForCreditCardAccount(AccountIdEntity accountIdEntity) {
+        return IdModule.builder()
+                .withUniqueIdentifier(resourceId)
+                .withAccountNumber(linkedAccount)
+                .withAccountName(name)
+                .addIdentifier(new OtherIdentifier(accountIdEntity.getOther().getIdentification()))
+                .setProductName(name)
+                .build();
+    }
+
+    private CreditCardModule getCreditCardModule() {
+        return CreditCardModule.builder()
+                .withCardNumber(accountIdEntity.getOther().getIdentification())
+                .withBalance(getBalance())
+                .withAvailableCredit(getBalance())
+                .withCardAlias(name)
+                .build();
     }
 
     private BalanceModule getBalanceModule() {
@@ -161,13 +178,5 @@ public class AccountsItemEntity {
                         () ->
                                 new IllegalStateException(
                                         SocieteGeneraleConstants.ErrorMessages.MISSING_BALANCE));
-    }
-
-    public boolean isCreditCard() {
-        return CashAccountType.CARD == cashAccountType && CardDetails.CREDIT_CARD.equals(details);
-    }
-
-    public LinksEntity getLinks() {
-        return links;
     }
 }
