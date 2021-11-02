@@ -13,6 +13,7 @@ java_library(
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:core",
         "//src/libraries/metrics:gauges",
+        "//src/libraries/request_tracing",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",

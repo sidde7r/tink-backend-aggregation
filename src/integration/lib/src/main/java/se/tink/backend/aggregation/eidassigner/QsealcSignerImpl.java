@@ -24,12 +24,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
+import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
 public class QsealcSignerImpl implements QsealcSigner {
 
     private static final Logger log = LoggerFactory.getLogger(QsealcSignerImpl.class);
 
+    private static final String TINK_REQUEST_ID = "X-Tink-Debug-RequestId";
     private static final String TINK_QSEALC_APPID = "X-Tink-QSealC-AppId";
     private static final String TINK_QSEALC_CERTID = "X-Tink-QSealC-CertId";
     private static final String TINK_QSEALC_PROVIDERID = "X-Tink-QSealC-ProviderId";
@@ -154,12 +156,13 @@ public class QsealcSignerImpl implements QsealcSigner {
             scope = tracer.activateSpan(span);
             Tags.SPAN_KIND.set(span, Tags.SPAN_KIND_CLIENT);
             Tags.HTTP_METHOD.set(span, request.getMethod());
-            Tags.HTTP_URL.set(span, request.getURI().toString());
 
             tracer.inject(
                     span.context(),
                     Format.Builtin.HTTP_HEADERS,
                     new QsealcSignerImpl.RequestBuilderCarrier(request));
+
+            RequestTracer.getRequestId().ifPresent(v -> request.addHeader(TINK_REQUEST_ID, v));
 
         } catch (Exception e) {
             log.warn("Failed to start trace: {}", e.getMessage());

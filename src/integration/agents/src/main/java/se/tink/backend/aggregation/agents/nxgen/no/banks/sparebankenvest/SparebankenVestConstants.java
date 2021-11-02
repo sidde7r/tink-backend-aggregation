@@ -127,7 +127,7 @@ public class SparebankenVestConstants {
         public static final String REFERER_VALUE =
                 "https://security.spv.no/Innlogging/privat-mobil/LoginServiceSAMobile2/ChoosePIN.aspx";
         static final String USER_AGENT =
-                "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Device/iPhone9,3 SpvApp/4.2.0 Cordova/4.5.3 SpvID/193AAC18-76DB-4ACA-BDA1-88F95167CA96";
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Device/iPhone9,4 SpvApp/4.5.8 Cordova/6.1.2 SpvID/4F8E6C7A-106F-4D55-94BD-D0A8387E9A4C";
         static final String MOBILE_NAME_COOKIE_KEY = "mobileName";
         static final String MOBILE_NAME_COOKIE_VALUE = "Tink";
         static final String ORIGIN_KEY = "Origin";
