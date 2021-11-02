@@ -2,21 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan
 
 import java.util.Date;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.LoanPaymentEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class LoanDetailsResponse {
     private LoanDetailsAccountEntity loanAccount;
     private LoanPaymentEntity loanPayment;
-
-    public LoanDetailsAccountEntity getLoanAccount() {
-        return loanAccount;
-    }
-
-    public LoanPaymentEntity getLoanPayment() {
-        return loanPayment;
-    }
 
     public Optional<String> getInterest() {
         return Optional.ofNullable(loanAccount).map(LoanDetailsAccountEntity::getInterest);
