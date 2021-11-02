@@ -22,10 +22,14 @@
         },
         "_links":
         {
-          "transactionDetails":
-          {
-            "href": "link1"
-          }
+          "transactionDetails": [
+            {
+              "href": "link1"
+            },
+            {
+              "href": "link2"
+            }
+          ]
         }
       },
       {

@@ -101,6 +101,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLL")
+                        .setOffset("0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -109,6 +110,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLL")
+                        .setOffset("0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -117,6 +119,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(false)
                         .setIsFieldMasked(true)
                         .setFieldValue("MASKED")
+                        .setOffset("0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -125,6 +128,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("NOT_POSSIBLE")
+                        .setOffset("0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -133,6 +137,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLddddddddddddddddddddddddd")
+                        .setOffset("0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -141,6 +146,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("dddddddddddddddddddd")
+                        .setOffset("0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -149,6 +155,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLL")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -157,6 +164,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("2021-05-18")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -165,6 +173,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("2021-05-18")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -173,6 +182,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLL")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -181,6 +191,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLL")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -189,6 +200,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("-645.06")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -197,14 +209,25 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("SEK")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
-                        .setFieldPath("transactions.booked[]._links.transactionDetails.href")
+                        .setFieldPath("transactions.booked[]._links.transactionDetails[].href")
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLd")
+                        .setOffset("0,0,0")
+                        .build());
+        expectedFields.add(
+                RawBankDataTrackerEventBankField.newBuilder()
+                        .setFieldPath("transactions.booked[]._links.transactionDetails[].href")
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
+                        .setIsFieldSet(true)
+                        .setIsFieldMasked(true)
+                        .setFieldValue("LLLLd")
+                        .setOffset("0,0,1")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -213,6 +236,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLd")
+                        .setOffset("0,1")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -221,6 +245,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("2021-05-18")
+                        .setOffset("0,1")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -229,6 +254,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("2021-05-18")
+                        .setOffset("0,1")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -237,6 +263,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("-500.0")
+                        .setOffset("0,1")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -245,6 +272,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("SEK")
+                        .setOffset("0,1")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -253,6 +281,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLd")
+                        .setOffset("0,1")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -261,6 +290,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("830.0")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -269,6 +299,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("SEK")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -277,6 +308,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("2021-05-18")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -285,6 +317,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLL LLL")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -293,6 +326,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLLLLL")
+                        .setOffset("0,0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -301,6 +335,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLd")
+                        .setOffset("0")
                         .build());
 
         // when
@@ -391,6 +426,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLLd")
+                        .setOffset("0")
                         .setCount(1)
                         .build());
         expectedFields1.add(
@@ -400,6 +436,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLLd")
+                        .setOffset("0")
                         .setCount(1)
                         .build());
 
@@ -410,6 +447,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLLd")
+                        .setOffset("0")
                         .setCount(1)
                         .build());
         expectedFields2.add(
@@ -419,6 +457,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLLLLd")
+                        .setOffset("0")
                         .setCount(1)
                         .build());
 

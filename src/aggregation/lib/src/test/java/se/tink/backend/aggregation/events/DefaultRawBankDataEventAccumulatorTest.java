@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
@@ -26,17 +29,10 @@ public class DefaultRawBankDataEventAccumulatorTest {
         String responseBodyFilePath =
                 "src/aggregation/lib/src/test/java/se/tink/backend/aggregation/events/resources/aggregator_test.json";
         String givenResponseBody = readResource(responseBodyFilePath);
-        se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer
-                defaultRawBankDataEventProducer =
-                        new se.tink.backend.aggregation.nxgen.http.event.event_producers
-                                .DefaultRawBankDataEventProducer(
-                                se.tink.backend.aggregation.nxgen.http.event.configuration
-                                        .RawBankDataEventCreationStrategies
-                                        .createDefaultConfiguration());
-        se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator
-                accumulator =
-                        new se.tink.backend.aggregation.nxgen.http.event.event_producers
-                                .RawBankDataEventAccumulator();
+        DefaultRawBankDataEventProducer defaultRawBankDataEventProducer =
+                new DefaultRawBankDataEventProducer(
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration());
+        RawBankDataEventAccumulator accumulator = new RawBankDataEventAccumulator();
 
         List<RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField> expectedFields =
                 new ArrayList<>();
@@ -47,7 +43,29 @@ public class DefaultRawBankDataEventAccumulatorTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(true)
                         .setFieldValue("LLd")
-                        .setCount(2)
+                        .setOffset("0,0")
+                        .setCount(1)
+                        .build());
+
+        expectedFields.add(
+                RawBankDataTrackerEventBankField.newBuilder()
+                        .setFieldPath("transactions.booked[].valueDate")
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.DATE)
+                        .setIsFieldSet(true)
+                        .setIsFieldMasked(false)
+                        .setFieldValue("2021-05-18")
+                        .setOffset("0,0")
+                        .setCount(1)
+                        .build());
+        expectedFields.add(
+                RawBankDataTrackerEventBankField.newBuilder()
+                        .setFieldPath("transactions.booked[].transactionId")
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
+                        .setIsFieldSet(true)
+                        .setIsFieldMasked(true)
+                        .setFieldValue("LLd")
+                        .setOffset("0,1")
+                        .setCount(1)
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -56,7 +74,17 @@ public class DefaultRawBankDataEventAccumulatorTest {
                         .setIsFieldSet(true)
                         .setIsFieldMasked(false)
                         .setFieldValue("2021-05-18")
-                        .setCount(2)
+                        .setOffset("0,1")
+                        .setCount(1)
+                        .build());
+        expectedFields.add(
+                RawBankDataTrackerEventBankField.newBuilder()
+                        .setFieldPath("repeating_data[]")
+                        .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
+                        .setIsFieldSet(true)
+                        .setIsFieldMasked(true)
+                        .setFieldValue("LLLLdd")
+                        .setCount(30)
                         .build());
 
         // when
