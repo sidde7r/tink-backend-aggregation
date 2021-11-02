@@ -187,16 +187,16 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldPath("transactions.booked[].transactionAmount.amount")
                         .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
-                        .setIsFieldMasked(true)
-                        .setFieldValue("-ddd.dd")
+                        .setIsFieldMasked(false)
+                        .setFieldValue("-645.06")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionAmount.currency")
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
-                        .setIsFieldMasked(true)
-                        .setFieldValue("LLL")
+                        .setIsFieldMasked(false)
+                        .setFieldValue("SEK")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -235,16 +235,16 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldPath("transactions.booked[].transactionAmount.amount")
                         .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
-                        .setIsFieldMasked(true)
-                        .setFieldValue("-ddd.d")
+                        .setIsFieldMasked(false)
+                        .setFieldValue("-500.0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.booked[].transactionAmount.currency")
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
-                        .setIsFieldMasked(true)
-                        .setFieldValue("LLL")
+                        .setIsFieldMasked(false)
+                        .setFieldValue("SEK")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
@@ -259,16 +259,16 @@ public class DefaultRawBankDataEventProducerTest {
                         .setFieldPath("transactions.pending[].transactionAmount.amount")
                         .setFieldType(RawBankDataTrackerEventBankFieldType.DOUBLE)
                         .setIsFieldSet(true)
-                        .setIsFieldMasked(true)
-                        .setFieldValue("ddd.d")
+                        .setIsFieldMasked(false)
+                        .setFieldValue("830.0")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()
                         .setFieldPath("transactions.pending[].transactionAmount.currency")
                         .setFieldType(RawBankDataTrackerEventBankFieldType.STRING)
                         .setIsFieldSet(true)
-                        .setIsFieldMasked(true)
-                        .setFieldValue("LLL")
+                        .setIsFieldMasked(false)
+                        .setFieldValue("SEK")
                         .build());
         expectedFields.add(
                 RawBankDataTrackerEventBankField.newBuilder()

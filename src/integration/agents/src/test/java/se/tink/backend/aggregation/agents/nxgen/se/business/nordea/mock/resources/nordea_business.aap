@@ -3,15 +3,13 @@ REQUEST 1
 POST https://corporate.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/
 x-App-Country: SE
 x-App-Language: en_SE
-x-App-Version: 3.14.0.148
-x-Device-Make: Apple
-x-Device-Model: iPhone9,4
+x-App-Version: 3.23.0.452
+x-Device-Model: iPhone8,1
 x-Platform-Type: iOS
-x-Platform-Version: 13.3.1
+x-Platform-Version: 14.4.1
 x-app-segment: corporate
-x-device-ec: 1
-x-Device-Id: 934B5E23-119E-4E8F-BE66-D7D3B285F744
-User-Agent: com.nordea.SMEMobileBank.se/3.14.0.148 (Apple iPhone9,4; iOS 13.3.1)
+x-Device-Id: 09C0908A-B6FE-4385-A9DC-C0A3856B6007
+User-Agent: com.nordea.SMEMobileBank.se/3.23.0.452 (Apple iPhone8,1; iOS 14.4.1)
 Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
@@ -41,15 +39,13 @@ REQUEST 2
 GET https://corporate.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/067898e4-a9b5-4172-969d-3e87118cd4d4
 x-App-Country: SE
 x-App-Language: en_SE
-x-App-Version: 3.14.0.148
-x-Device-Make: Apple
-x-Device-Model: iPhone9,4
+x-App-Version: 3.23.0.452
+x-Device-Model: iPhone8,1
 x-Platform-Type: iOS
-x-Platform-Version: 13.3.1
+x-Platform-Version: 14.4.1
 x-app-segment: corporate
-x-device-ec: 1
-x-Device-Id: 934B5E23-119E-4E8F-BE66-D7D3B285F744
-User-Agent: com.nordea.SMEMobileBank.se/3.14.0.148 (Apple iPhone9,4; iOS 13.3.1)
+x-Device-Id: 09C0908A-B6FE-4385-A9DC-C0A3856B6007
+User-Agent: com.nordea.SMEMobileBank.se/3.23.0.452 (Apple iPhone8,1; iOS 14.4.1)
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -74,15 +70,13 @@ REQUEST 3
 POST https://corporate.nordea.se/api/dbf/ca/user-accounts-service-v1/user-accounts/primary/authorization
 x-App-Country: SE
 x-App-Language: en_SE
-x-App-Version: 3.14.0.148
-x-Device-Make: Apple
-x-Device-Model: iPhone9,4
+x-App-Version: 3.23.0.452
+x-Device-Model: iPhone8,1
 x-Platform-Type: iOS
-x-Platform-Version: 13.3.1
+x-Platform-Version: 14.4.1
 x-app-segment: corporate
-x-device-ec: 1
-x-Device-Id: 934B5E23-119E-4E8F-BE66-D7D3B285F744
-User-Agent: com.nordea.SMEMobileBank.se/3.14.0.148 (Apple iPhone9,4; iOS 13.3.1)
+x-Device-Id: 09C0908A-B6FE-4385-A9DC-C0A3856B6007
+User-Agent: com.nordea.SMEMobileBank.se/3.23.0.452 (Apple iPhone8,1; iOS 14.4.1)
 Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
@@ -109,15 +103,13 @@ POST https://corporate.nordea.se/api/dbf/ca/token-service-v3/oauth/token
 Accept: application/json
 x-App-Country: SE
 x-App-Language: en_SE
-x-App-Version: 3.14.0.148
-x-Device-Make: Apple
-x-Device-Model: iPhone9,4
+x-App-Version: 3.23.0.452
+x-Device-Model: iPhone8,1
 x-Platform-Type: iOS
-x-Platform-Version: 13.3.1
+x-Platform-Version: 14.4.1
 x-app-segment: corporate
-x-device-ec: 1
-x-Device-Id: 934B5E23-119E-4E8F-BE66-D7D3B285F744
-User-Agent: com.nordea.SMEMobileBank.se/3.14.0.148 (Apple iPhone9,4; iOS 13.3.1)
+x-Device-Id: 09C0908A-B6FE-4385-A9DC-C0A3856B6007
+User-Agent: com.nordea.SMEMobileBank.se/3.23.0.452 (Apple iPhone8,1; iOS 14.4.1)
 Content-Type: application/x-www-form-urlencoded
 X-Aggregator: Tink Testing
 
@@ -142,15 +134,13 @@ REQUEST 5
 GET https://corporate.nordea.se/api/dbf/se/customerinfo-v3/customers/self/info
 x-App-Country: SE
 x-App-Language: en_SE
-x-App-Version: 3.14.0.148
-x-Device-Make: Apple
-x-Device-Model: iPhone9,4
+x-App-Version: 3.23.0.452
+x-Device-Model: iPhone8,1
 x-Platform-Type: iOS
-x-Platform-Version: 13.3.1
+x-Platform-Version: 14.4.1
 x-app-segment: corporate
-x-device-ec: 1
-x-Device-Id: 934B5E23-119E-4E8F-BE66-D7D3B285F744
-User-Agent: com.nordea.SMEMobileBank.se/3.14.0.148 (Apple iPhone9,4; iOS 13.3.1)
+x-Device-Id: 09C0908A-B6FE-4385-A9DC-C0A3856B6007
+User-Agent: com.nordea.SMEMobileBank.se/3.23.0.452 (Apple iPhone8,1; iOS 14.4.1)
 Accept: application/json
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
 Accept-Language: en-SE
