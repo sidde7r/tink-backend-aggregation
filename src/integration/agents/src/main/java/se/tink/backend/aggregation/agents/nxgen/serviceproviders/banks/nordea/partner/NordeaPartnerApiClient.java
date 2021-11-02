@@ -143,4 +143,8 @@ public class NordeaPartnerApiClient {
     public boolean isUserPresent() {
         return userIsPresent;
     }
+
+    public String getMarket() {
+        return client.getProvider().getMarket();
+    }
 }

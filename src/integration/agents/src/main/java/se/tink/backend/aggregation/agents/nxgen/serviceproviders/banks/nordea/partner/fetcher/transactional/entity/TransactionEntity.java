@@ -13,6 +13,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerMarketUtil;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
@@ -55,7 +56,7 @@ public class TransactionEntity {
 
     private ExchangeEntity exchange;
 
-    public Optional<Transaction> toTinkTransaction() {
+    public Optional<Transaction> toTinkTransaction(String market) {
         // Sometimes pending transactions have no date
         if (getDate() == null) {
             log.warn("Ignoring transaction with no date.");
@@ -71,7 +72,7 @@ public class TransactionEntity {
                 Transaction.builder()
                         .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setDate(getDate())
-                        .setDescription(getTransactionDescription())
+                        .setDescription(getTransactionDescription(market))
                         .setPending(!booked);
 
         if (!Strings.isNullOrEmpty(transactionId)) {
@@ -91,15 +92,22 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    private String getTransactionDescription() {
-        return description != null ? description : title;
+    private String getTransactionDescription(String market) {
+        if (title != null) {
+            return title;
+        } else if (NordeaPartnerMarketUtil.isNorway(market) && description != null) {
+            return description;
+        } else if (transactionType != null && transactionType.getTransactionCodeText() != null) {
+            return transactionType.getTransactionCodeText();
+        }
+        return NordeaPartnerMarketUtil.getLocaleDescription(market);
     }
 
     @JsonIgnore
     public LocalDate getDate() {
-        if (booked && Objects.nonNull(bookingDate)) {
-            return bookingDate;
+        if (transactionDate != null) {
+            return transactionDate;
         }
-        return transactionDate;
+        return bookingDate;
     }
 }

@@ -25,9 +25,9 @@ public class AccountTransactionsResponse {
     private int totalSize;
 
     @JsonIgnore
-    public Collection<Transaction> getTinkTransactions() {
+    public Collection<Transaction> getTinkTransactions(String market) {
         return Optional.ofNullable(result).orElse(Collections.emptyList()).stream()
-                .map(TransactionEntity::toTinkTransaction)
+                .map(transactionEntity -> transactionEntity.toTinkTransaction(market))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
