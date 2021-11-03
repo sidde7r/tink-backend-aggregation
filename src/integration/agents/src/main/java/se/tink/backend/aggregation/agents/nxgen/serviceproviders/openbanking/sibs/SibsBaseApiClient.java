@@ -75,7 +75,8 @@ public class SibsBaseApiClient {
             String aspspCode,
             boolean isUserPresent,
             String userIp,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            AgentConfiguration<SibsConfiguration> agentConfiguration) {
         this.client = client;
         this.userState = userState;
         this.aspspCode = aspspCode;
@@ -83,11 +84,7 @@ public class SibsBaseApiClient {
         this.isUserPresent = isUserPresent;
         this.userIp = userIp;
         this.localDateTimeSource = localDateTimeSource;
-    }
-
-    protected void setConfiguration(AgentConfiguration<SibsConfiguration> agentConfiguration) {
-        Preconditions.checkNotNull(agentConfiguration);
-        this.redirectUrl = Preconditions.checkNotNull(agentConfiguration.getRedirectUrl());
+        setRedirectUrl(agentConfiguration);
     }
 
     public AccountsResponse fetchAccounts() {
@@ -165,6 +162,11 @@ public class SibsBaseApiClient {
             }
             throw ex;
         }
+    }
+
+    private void setRedirectUrl(AgentConfiguration<SibsConfiguration> agentConfiguration) {
+        Preconditions.checkNotNull(agentConfiguration);
+        this.redirectUrl = Preconditions.checkNotNull(agentConfiguration.getRedirectUrl());
     }
 
     private ConsentRequest getConsentRequest() {

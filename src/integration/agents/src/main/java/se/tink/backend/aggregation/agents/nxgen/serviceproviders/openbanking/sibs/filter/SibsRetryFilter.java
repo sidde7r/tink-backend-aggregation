@@ -17,8 +17,8 @@ public class SibsRetryFilter extends AbstractRetryFilter {
 
     private static final List<Integer> RETRY_ON_HTTP_CODES = Arrays.asList(400, 500, 502, 503);
 
-    public SibsRetryFilter() {
-        super(5, 1000);
+    public SibsRetryFilter(int maxNumRetries, int retrySleepMilliseconds) {
+        super(maxNumRetries, retrySleepMilliseconds);
     }
 
     @Override
