@@ -1,0 +1,25 @@
+{
+  "Data": {
+    "Transaction": [
+      {
+        "Status": "Booked"
+      },
+      {
+        "Status": "Pending",
+        "BankTransactionCode": {
+          "Code": "AccountBalancing",
+          "SubCode": "ZeroBalancing"
+        }
+      },
+      {
+        "Status": "Booked",
+        "BankTransactionCode": {
+          "Code": "AccountBalancing",
+          "SubCode": "ZeroBalancing"
+        }
+      }
+    ]
+  },
+  "Links": {},
+  "Meta": {}
+}

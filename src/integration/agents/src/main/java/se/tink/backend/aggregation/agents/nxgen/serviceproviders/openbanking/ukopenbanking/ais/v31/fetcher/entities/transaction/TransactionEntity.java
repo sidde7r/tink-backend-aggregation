@@ -156,6 +156,15 @@ public class TransactionEntity {
         return Optional.ofNullable(getTransactionInformation()).orElse(transactionReference);
     }
 
+    @JsonIgnore
+    public Boolean isNotZeroBalancingTransaction() {
+        if (bankTransactionCode != null) {
+            return !(bankTransactionCode.getCode().equalsIgnoreCase("AccountBalancing")
+                    && bankTransactionCode.getSubCode().equalsIgnoreCase("ZeroBalancing"));
+        }
+        return false;
+    }
+
     private Boolean isDeclined() {
         return supplementaryData != null
                 && Optional.ofNullable(supplementaryData.getDeclined()).orElse(Boolean.FALSE);

@@ -1,0 +1,25 @@
+{
+  "Data": {
+    "Transaction": [
+      {
+        "Status": "Booked"
+      },
+      {
+        "Status": "Pending",
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        }
+      },
+      {
+        "Status": "Booked",
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        }
+      }
+    ]
+  },
+  "Links": {},
+  "Meta": {}
+}
