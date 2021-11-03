@@ -66,7 +66,7 @@ public class FinTecSystemsApiClient {
         // We need to send it in a different field
         // Delete this if and leave just else body when hash is updated with providers with blz
         // codes.
-        if (StringUtils.isAlphanumeric(blz)) {
+        if (!StringUtils.isNumeric(blz)) {
             finTechSystemsPaymentRequest.setSenderBic(blz);
         } else {
             finTechSystemsPaymentRequest.setSenderCountryId(market);
