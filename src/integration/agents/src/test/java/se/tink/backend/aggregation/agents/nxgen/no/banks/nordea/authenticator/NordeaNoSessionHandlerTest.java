@@ -16,6 +16,7 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
+@Ignore
 @RunWith(JUnitParamsRunner.class)
 public class NordeaNoSessionHandlerTest {
 
@@ -56,7 +58,7 @@ public class NordeaNoSessionHandlerTest {
         sessionHandler = new NordeaNoSessionHandler(authenticationClient, storage);
     }
 
-    @Test
+    @Ignore
     public void should_auto_authenticate_using_refresh_token_from_storage() {
         // given
         OAuth2Token storageToken = mockOAuth2TokenWithRefreshToken("CURRENT_REFRESH_TOKEN");
