@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
@@ -92,9 +94,8 @@ public class Account implements Cloneable {
     // Should not be mapped using
     // se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper#fromAggregation
     // TODO (AAP-1566): Ask Core to ensure that we will not expose it to upstream system
-    // TODO (AAP-1566): For each balance we also need timestamp so convert it to
-    // Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>>
-    private Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances;
+
+    private Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularAccountBalances;
 
     // TODO (AAP-1566): Potentially removable, check
     private List<Balance> balances;
@@ -616,12 +617,13 @@ public class Account implements Cloneable {
         this.accountExclusion = accountExclusion;
     }
 
-    public Map<AccountBalanceType, ExactCurrencyAmount> getGranularAccountBalances() {
+    public Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>>
+            getGranularAccountBalances() {
         return granularAccountBalances;
     }
 
     public void setGranularAccountBalances(
-            Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances) {
+            Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularAccountBalances) {
         this.granularAccountBalances = granularAccountBalances;
     }
 

@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder;
 
-import java.util.Map;
 import javax.annotation.Nonnull;
-import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -25,9 +23,6 @@ public interface BalanceBuilderStep {
      * @return balance builder step
      */
     BalanceBuilderStep setCreditLimit(@Nonnull ExactCurrencyAmount creditLimit);
-
-    BalanceBuilderStep setGranularAccountBalances(
-            Map<AccountBalanceType, ExactCurrencyAmount> granularAccountBalances);
 
     BalanceModule build();
 }
