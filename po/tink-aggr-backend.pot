@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-16 11:57+0200\n"
+"POT-Creation-Date: 2021-10-25 14:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1912,4 +1912,76 @@ msgstr ""
 msgid ""
 "Please open the \"{0}\" Banking-App app and confirm the login. Then click "
 "the \"Submit\" button"
+msgstr ""
+
+msgid "You are not authorised to use this service. Please contact your bank."
+msgstr ""
+
+msgid "You have been logged out for security reasons. Please log in again."
+msgstr ""
+
+msgid ""
+"You can not log in. Please activate online banking in your bank app or "
+"contact your bank to resolve this issue."
+msgstr ""
+
+msgid ""
+"You can not log in. Please retry or contact your bank to resolve this issue."
+msgstr ""
+
+msgid "A temporary problem has occurred. Please retry later."
+msgstr ""
+
+msgid "A temporary problem has occurred with your bank. Please retry later."
+msgstr ""
+
+msgid "Your bank account information is not available."
+msgstr ""
+
+msgid "There is not enough banking data to display your results."
+msgstr ""
+
+msgid ""
+"The authentication method can not be used. Please go back and choose another "
+"method or retry later."
+msgstr ""
+
+msgid ""
+"You have entered the wrong user name or/and password. Please try to log in "
+"again."
+msgstr ""
+
+msgid "Your one-time password is incorrect. Please retry."
+msgstr ""
+
+msgid "You have cancelled authentication. Please retry."
+msgstr ""
+
+msgid "Your connection has timed out. Please retry."
+msgstr ""
+
+msgid ""
+"You can not log in. The bank you selected does not accept your choice. "
+"Please select another bank or contact your bank."
+msgstr ""
+
+msgid "You are already logged in. Please log out and retry."
+msgstr ""
+
+msgid ""
+"You can not log in with your bank. Your account may be blocked from logging "
+"in. Please contact your bank."
+msgstr ""
+
+msgid "A problem has occurred. Please retry later."
+msgstr ""
+
+msgid ""
+"You have chosen an invalid authentication method. Please choose another "
+"authentication method."
+msgstr ""
+
+msgid ""
+"You have chosen an unsupported authentication method. Please go back and "
+"choose another authentication method."
 msgstr ""

@@ -2,6 +2,7 @@ package se.tink.libraries.i18n;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import lombok.EqualsAndHashCode;
 
 /**
  * Used for localizing static strings. This is sometimes needed when not having the catalog instance
@@ -12,6 +13,7 @@ import com.google.common.base.Strings;
  *
  * <p>… catalog.getString(MY_TRANSLATED); (additionally with parameters if parametrized)
  */
+@EqualsAndHashCode
 public class LocalizableKey {
     private final String key;
 
