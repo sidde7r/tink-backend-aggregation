@@ -47,13 +47,25 @@ public class SocieteGeneraleTransactionFetcherTest {
         // then
         assertThat(response.canFetchMore().get()).isTrue();
         List<Transaction> transactions = new ArrayList<>(response.getTinkTransactions());
-        assertThat(transactions).hasSize(2);
+        assertThat(transactions).hasSize(3);
 
         Transaction transaction1 = transactions.get(0);
         assertThat(transaction1.getDescription()).isEqualTo("some description 1");
         assertThat(transaction1.getAmount().getDoubleValue()).isEqualTo(50.00);
         assertThat(transaction1.isPending()).isFalse();
         assertThat(transaction1.getDate()).isEqualToIgnoringHours("2021-10-14");
+
+        Transaction transaction2 = transactions.get(1);
+        assertThat(transaction2.getDescription()).isEqualTo("some description 2");
+        assertThat(transaction2.getAmount().getDoubleValue()).isEqualTo(-12.34);
+        assertThat(transaction2.isPending()).isFalse();
+        assertThat(transaction2.getDate()).isEqualToIgnoringHours("2021-09-02");
+
+        Transaction transaction3 = transactions.get(2);
+        assertThat(transaction3.getDescription()).isEqualTo("some description 3");
+        assertThat(transaction3.getAmount().getDoubleValue()).isEqualTo(-6.49);
+        assertThat(transaction3.isPending()).isTrue();
+        assertThat(transaction3.getDate()).isEqualToIgnoringHours("2021-11-02");
     }
 
     @Test
@@ -122,6 +134,21 @@ public class SocieteGeneraleTransactionFetcherTest {
                         + "      \"remittanceInformation\": {\n"
                         + "        \"unstructured\": [\n"
                         + "          \"some description 2\"\n"
+                        + "        ]\n"
+                        + "      }\n"
+                        + "    },\n"
+                        + "    {\n"
+                        + "      \"transactionAmount\": {\n"
+                        + "        \"currency\": \"EUR\",\n"
+                        + "        \"amount\": \"6.49\"\n"
+                        + "      },\n"
+                        + "      \"creditDebitIndicator\": \"DBIT\",\n"
+                        + "      \"status\": \"PDNG\",\n"
+                        + "      \"bookingDate\": \"2021-11-02\",\n"
+                        + "      \"valueDate\": \"2021-11-02\",\n"
+                        + "      \"remittanceInformation\": {\n"
+                        + "        \"unstructured\": [\n"
+                        + "          \"some description 3\"\n"
                         + "        ]\n"
                         + "      }\n"
                         + "    }\n"
