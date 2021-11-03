@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +40,6 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
         // and stop trying to emit event
         JsonNode node;
         try {
-            // Try to parse the response body as JSON, if it fails we will silently ignore it
             node = MAPPER.readTree(responseBody);
         } catch (Exception e) {
             LOGGER.info(
@@ -57,7 +57,11 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
 
             // Flatten the JSON response body
             List<FieldData> fieldDataList = new ArrayList<>();
-            flattenJsonNode(node, new ArrayList<>(), fieldDataList);
+            flattenJsonNode(
+                    node,
+                    new ArrayList<>(),
+                    new ArrayList<>(Collections.singletonList("0")),
+                    fieldDataList);
 
             for (FieldData fieldData : fieldDataList) {
                 List<FieldPathPart> fieldPath = fieldData.getFieldPath();
@@ -90,6 +94,7 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
                                 .setIsFieldSet(isFieldSet)
                                 .setIsFieldMasked(isFieldMasked)
                                 .setFieldValue(maskedFieldValue)
+                                .setOffset(String.join(",", fieldData.getOffsets()))
                                 .build());
             }
             LOGGER.info("[DefaultRawBankDataEventProducer] Event produced successfully");
@@ -160,7 +165,10 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
 
     // Recursively iterate on all fields of JSON and collect key value pairs
     private static void flattenJsonNode(
-            JsonNode node, List<FieldPathPart> keyPrefix, List<FieldData> fieldDataList) {
+            JsonNode node,
+            List<FieldPathPart> keyPrefix,
+            List<String> currentOffset,
+            List<FieldData> fieldDataList) {
         JsonNodeType nodeType = node.getNodeType();
         if (JsonNodeType.POJO.equals(nodeType)
                 || JsonNodeType.MISSING.equals(nodeType)
@@ -171,7 +179,12 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
                 || JsonNodeType.BOOLEAN.equals(nodeType)
                 || JsonNodeType.NUMBER.equals(nodeType)
                 || JsonNodeType.STRING.equals(nodeType)) {
-            fieldDataList.add(new FieldData(new ArrayList<>(keyPrefix), node.asText(), nodeType));
+            fieldDataList.add(
+                    new FieldData(
+                            new ArrayList<>(keyPrefix),
+                            node.asText(),
+                            nodeType,
+                            new ArrayList<>(currentOffset)));
         }
         if (JsonNodeType.ARRAY.equals(nodeType)) {
             for (int i = 0; i < node.size(); i++) {
@@ -183,7 +196,9 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
                     int lastIndex = keyPrefixClone.size() - 1;
                     keyPrefixClone.get(lastIndex).setKeyRepresentsArray(true);
                 }
-                flattenJsonNode(node.get(i), keyPrefixClone, fieldDataList);
+                List<String> newOffsetList = new ArrayList<>(currentOffset);
+                newOffsetList.add(Integer.toString(i));
+                flattenJsonNode(node.get(i), keyPrefixClone, newOffsetList, fieldDataList);
             }
         }
         if (JsonNodeType.OBJECT.equals(nodeType)) {
@@ -192,7 +207,11 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
                 List<FieldPathPart> keyPrefixClone =
                         keyPrefix.stream().map(FieldPathPart::new).collect(Collectors.toList());
                 keyPrefixClone.add(new FieldPathPart(fieldName, false));
-                flattenJsonNode(node.get(fieldName), keyPrefixClone, fieldDataList);
+                flattenJsonNode(
+                        node.get(fieldName),
+                        keyPrefixClone,
+                        new ArrayList<>(currentOffset),
+                        fieldDataList);
             }
         }
     }

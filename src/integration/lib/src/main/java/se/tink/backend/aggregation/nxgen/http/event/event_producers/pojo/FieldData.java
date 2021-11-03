@@ -8,7 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class FieldData {
-    private List<FieldPathPart> fieldPath;
-    private String fieldValue;
-    private JsonNodeType fieldType;
+    private final List<FieldPathPart> fieldPath;
+    private final String fieldValue;
+    private final JsonNodeType fieldType;
+    private final List<String> offsets;
 }
