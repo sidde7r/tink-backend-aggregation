@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Links;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.EmbeddedConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.HandelsbankenClearingNumber;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
@@ -44,8 +45,9 @@ public class ApplicationEntryPointResponse extends BaseResponse {
         return findLink(HandelsbankenConstants.URLS.Links.PENSION_OVERVIEW);
     }
 
-    public URL toSecuritiesHoldings() {
-        return findLink(HandelsbankenConstants.URLS.Links.SECURITIES_HOLDINGS);
+    // new entry point for holdings (instead of "security_holdings")
+    public URL toSaveInvestStart() {
+        return findLink(Links.SAVE_INVEST_START);
     }
 
     public URL toTransferContext() {

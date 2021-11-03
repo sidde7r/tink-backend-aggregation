@@ -66,7 +66,7 @@ public class HandelsbankenSEConstants {
     }
 
     public static final class Headers {
-        public static final String APP_VERSION = "3.5:9.6";
+        public static final String APP_VERSION = "3.6:11.4";
         public static final String DEVICE_MODEL = "IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV";
     }
 
