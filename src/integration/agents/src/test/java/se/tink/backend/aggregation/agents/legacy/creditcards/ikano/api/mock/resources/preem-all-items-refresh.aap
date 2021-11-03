@@ -1,0 +1,353 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://partner.ikanobank.se/mCommunicationService/Engagements/ALL/?numofbonustrans=1&numoftrans=200
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1 SET STATE_1
+200
+Date: Tue, 31 Aug 2021 10:38:57 GMT
+Content-Type: application/json; charset=utf-8
+X-Powered-By: ASP.NET
+
+{
+  "Error": {
+    "ErrorCode": "INVALID_SESSION",
+    "ErrorMessage": "Ogiltig session"
+  },
+  "Response": null
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2 MATCH STATE_1
+GET https://partner.ikanobank.se/mCommunicationService/MobileBankIdReference/
+Content-Type: application/json
+Accept: application/json
+Username: 199201234567
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE_2
+200
+Date: Tue, 31 Aug 2021 10:38:59 GMT
+Content-Type: application/json; charset=utf-8
+X-Powered-By: ASP.NET
+
+{
+  "Error": {
+    "ErrorCode": "NO_ERROR",
+    "ErrorMessage": "No error"
+  },
+  "Response": {
+    "_Reference": "c0cb2846-c702-41c0-835a-005b9beb8c12"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE_2
+GET https://partner.ikanobank.se/mCommunicationService/MobileBankIdSession/c0cb2846-c702-41c0-835a-005b9beb8c12
+Content-Type: application/json
+Accept: application/json
+Username: 199201234567
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE_3
+200
+Date: Tue, 31 Aug 2021 10:39:00 GMT
+Content-Type: application/json; charset=utf-8
+X-Powered-By: ASP.NET
+
+{
+  "Error": {
+    "ErrorCode": "NO_ERROR",
+    "ErrorMessage": "No error"
+  },
+  "Response": {
+    "_Progress": {
+      "_ProgressCode": "OUSTANDING_TRANSACTION",
+      "_ProgressMessage": "Försöker starta BankID-appen."
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE_3
+GET https://partner.ikanobank.se/mCommunicationService/MobileBankIdSession/c0cb2846-c702-41c0-835a-005b9beb8c12
+Content-Type: application/json
+Accept: application/json
+Username: 199201234567
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE_4
+200
+Date: Tue, 31 Aug 2021 10:39:02 GMT
+Content-Type: application/json; charset=utf-8
+X-Powered-By: ASP.NET
+
+{
+  "Error": {
+    "ErrorCode": "NO_ERROR",
+    "ErrorMessage": "No error"
+  },
+  "Response": {
+    "_Progress": {
+      "_ProgressCode": "USER_SIGN",
+      "_ProgressMessage": "Skriv in din säkerhetskod i BankID-appen och välj Legitimera eller Skriv under."
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE_4
+GET https://partner.ikanobank.se/mCommunicationService/MobileBankIdSession/c0cb2846-c702-41c0-835a-005b9beb8c12
+Content-Type: application/json
+Accept: application/json
+Username: 199201234567
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE_5
+200
+Date: Tue, 31 Aug 2021 10:39:07 GMT
+Content-Type: application/json; charset=utf-8
+X-Powered-By: ASP.NET
+
+{
+  "Error": {
+    "ErrorCode": "NO_ERROR",
+    "ErrorMessage": "No error"
+  },
+  "Response": {
+    "_Progress": {
+      "_ProgressCode": "COMPLETE"
+    },
+    "_Session": {
+      "_sessionId": "asdfasdf-f125-4e27-b0cf-asdfasdfasdf",
+      "_sessionKey": -1234567890123456789
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE_5
+GET https://partner.ikanobank.se/mCommunicationService/Cards/ALL/
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE_6
+200
+Date: Tue, 31 Aug 2021 10:39:08 GMT
+Content-Type: application/json; charset=utf-8
+X-Powered-By: ASP.NET
+
+{
+  "Error": {
+    "ErrorCode": "NO_ERROR",
+    "ErrorMessage": "No error"
+  },
+  "Response": [
+    {
+      "_CardMemberNumber": "",
+      "_CardNumber": "",
+      "_CreditAgreement": "Y",
+      "_Expires": "2023-12-24",
+      "_Images": [
+        {
+          "ExternalImageId": "a98d4e2a-3c1c-4cea-9ba8-2d96edbf5546",
+          "Height": 0,
+          "ImageType": "CompanyLogo_25x25",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "c0749bfc-3584-4127-979a-5c8dbbd6c2d2",
+          "Height": 0,
+          "ImageType": "CompanyLogo_50x50",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "27eaf968-18ac-443b-aca2-e0444ecc6e1a",
+          "Height": 0,
+          "ImageType": "CompanyLogo_100x100",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "9bb6516d-3fc6-4d13-ac28-0e487153d3be",
+          "Height": 0,
+          "ImageType": "ProductCreditCardImage_100x62",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "d74df5e4-fdaf-41c0-82d8-052a9393ea1a",
+          "Height": 0,
+          "ImageType": "ProductCreditCardImage_200x124",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "15986477-d66d-4941-85ae-7eaee4b463df",
+          "Height": 0,
+          "ImageType": "ProductCreditCardImage_430x267",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "8828d0e1-b130-4245-a6e1-16b17268c158",
+          "Height": 0,
+          "ImageType": "ProductCreditCardImage_860x534",
+          "Width": 0
+        }
+      ],
+      "_ProductCode": "PREMA",
+      "_State": "Registered"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE_6
+GET https://partner.ikanobank.se/mCommunicationService/Engagements/ALL/?numofbonustrans=1&numoftrans=200
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Tue, 31 Aug 2021 10:39:12 GMT
+Content-Type: application/json; charset=utf-8
+X-Powered-By: ASP.NET
+
+{
+  "Error": {
+    "ErrorCode": "NO_ERROR",
+    "ErrorMessage": "No error"
+  },
+  "Response": [
+    {
+      "_AgreementNumber": "123456789",
+      "_BankGiroNumber": "5134-3226",
+      "_Blocked": "N",
+      "_BonusAmount": "13,37",
+      "_BonusDisplayText": "kr",
+      "_BonusDisplayValue": "13,37",
+      "_BonusPoints": "1337",
+      "_CardNumber": "",
+      "_CustomerName": "Firstname Lastname",
+      "_Expires": "2023-12-24",
+      "_Images": [
+        {
+          "ExternalImageId": "a98d4e2a-3c1c-4cea-9ba8-2d96edbf5546",
+          "Height": 0,
+          "ImageType": "CompanyLogo_25x25",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "c0749bfc-3584-4127-979a-5c8dbbd6c2d2",
+          "Height": 0,
+          "ImageType": "CompanyLogo_50x50",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "27eaf968-18ac-443b-aca2-e0444ecc6e1a",
+          "Height": 0,
+          "ImageType": "CompanyLogo_100x100",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "9bb6516d-3fc6-4d13-ac28-0e487153d3be",
+          "Height": 0,
+          "ImageType": "ProductCreditCardImage_100x62",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "d74df5e4-fdaf-41c0-82d8-052a9393ea1a",
+          "Height": 0,
+          "ImageType": "ProductCreditCardImage_200x124",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "15986477-d66d-4941-85ae-7eaee4b463df",
+          "Height": 0,
+          "ImageType": "ProductCreditCardImage_430x267",
+          "Width": 0
+        },
+        {
+          "ExternalImageId": "8828d0e1-b130-4245-a6e1-16b17268c158",
+          "Height": 0,
+          "ImageType": "ProductCreditCardImage_860x534",
+          "Width": 0
+        }
+      ],
+      "_Limit": "20000",
+      "_NextPayAmount": "2000,25",
+      "_NextPayDate": "2021-08-31",
+      "_ObjectGroupCode": "PREMA",
+      "_OpenToBuy": "17999,5",
+      "_Paid": "N",
+      "_PaymentReference": "1234567899",
+      "_ProductCode": "PREMA",
+      "_ProductName": "Preem MasterCard",
+      "_SmallestAmountToPay": "200",
+      "_bonusTransactions": [
+        {
+          "_Amount": "13,37",
+          "_CompanyCode": "300",
+          "_CompanyName": "Mastercard",
+          "_DisplayText": "kr",
+          "_DisplayValue": "13,37",
+          "_OriginalPurchaseAmount": "400",
+          "_Points": "1337",
+          "_PurchaseAmount": "400"
+        }
+      ],
+      "_transactions": [
+        {
+          "_Amount": "29",
+          "_AmountCurrency": "SEK",
+          "_InvoicePeriod": "202108",
+          "_OriginalAmount": "29",
+          "_OriginalAmountCurrency": "SEK",
+          "_TransCategory": "TRANS",
+          "_TransDate": "2021-08-08",
+          "_TransName": "Månadsavgift",
+          "_TransType": "FEE79"
+        },
+        {
+          "_Amount": "500,5",
+          "_AmountCurrency": "SEK",
+          "_CompanyCode": "300",
+          "_CompanyName": "Preem Aut",
+          "_InvoicePeriod": "202108",
+          "_OriginalAmount": "500,5",
+          "_OriginalAmountCurrency": "SEK",
+          "_TransCategory": "PUR",
+          "_TransDate": "2021-08-01",
+          "_TransName": "Köp",
+          "_TransType": "PUR90"
+        },
+        {
+          "_Amount": "-10,5",
+          "_AmountCurrency": "SEK",
+          "_CompanyCode": "300",
+          "_CompanyName": "Rabatt Preem",
+          "_InvoicePeriod": "202108",
+          "_OriginalAmount": "-10,5",
+          "_OriginalAmountCurrency": "SEK",
+          "_TransCategory": "PUR",
+          "_TransDate": "2021-08-02",
+          "_TransName": "Kreditering",
+          "_TransType": "PUR91"
+        },
+        {
+          "_Amount": "-5123,45",
+          "_AmountCurrency": "SEK",
+          "_InvoicePeriod": "202108",
+          "_OriginalAmount": "-5123,45",
+          "_OriginalAmountCurrency": "SEK",
+          "_TransCategory": "PYMT",
+          "_TransDate": "2021-07-30",
+          "_TransName": "Inbetalning bankgiro",
+          "_TransType": "PYM01"
+        }
+      ]
+    }
+  ]
+}

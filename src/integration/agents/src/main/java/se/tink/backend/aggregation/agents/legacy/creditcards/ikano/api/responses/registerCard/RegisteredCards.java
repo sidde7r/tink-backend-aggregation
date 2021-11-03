@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.registerCard;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Joiner;
 import com.google.common.base.MoreObjects;
@@ -10,12 +11,11 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.banks.crosskey.responses.BaseResponse;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.requests.RegisterCardRequest;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 
-public class RegisteredCards extends BaseResponse {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class RegisteredCards {
     @JsonIgnore
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -41,8 +41,7 @@ public class RegisteredCards extends BaseResponse {
         }
     }
 
-    public void logRequestedAndRegisteredCardTypes(
-            Credentials credentials, String requestedCardType) {
+    public void logRequestedAndRegisteredCardTypes(String requestedCardType) {
         if (cardTypes != null && cardTypes.size() > 0) {
             logger.info(
                     MoreObjects.toStringHelper(Card.class)
