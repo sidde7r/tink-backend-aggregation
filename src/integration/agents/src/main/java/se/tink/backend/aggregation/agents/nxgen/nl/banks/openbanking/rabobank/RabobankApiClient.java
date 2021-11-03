@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -166,6 +167,13 @@ public final class RabobankApiClient {
 
     public TransactionalAccountsResponse fetchAccounts() {
         try {
+            // TODO: Temporary log to debug an issue in TC-4799
+            OAuth2Token token = RabobankUtils.getOauthToken(persistentStorage);
+            log.info(
+                    "Persisted access token: {}, expiry date: {}",
+                    Hash.sha256AsHex(Objects.requireNonNull(token.getAccessToken())),
+                    RabobankUtils.getRefreshTokenExpireDate(token.getAccessExpireEpoch()));
+
             return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
         } catch (HttpResponseException e) {
             ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.a
 
 import com.google.common.base.Strings;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.nl.rabobank.RabobankConsentGenerator;
@@ -18,6 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -114,7 +117,14 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .build();
 
         try {
-            return apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
+            OAuth2Token token =
+                    apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
+            // TODO Temporary log to debug issue in TC-4799
+            log.info(
+                    "Newly refreshed token: {}, expiry date: {}",
+                    Hash.sha256AsHex(Objects.requireNonNull(token.getAccessToken())),
+                    RabobankUtils.getRefreshTokenExpireDate(token.getAccessExpireEpoch()));
+            return token;
         } catch (final HttpResponseException exception) {
             throwSessionErrorIfInvalidToken(exception);
         }
