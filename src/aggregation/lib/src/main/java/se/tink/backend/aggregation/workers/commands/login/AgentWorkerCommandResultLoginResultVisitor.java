@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands.login;
 
 import lombok.Getter;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.AgentPlatformLoginErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.ConnectivityExceptionErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthorizationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBankIdErrorResult;
@@ -48,6 +49,11 @@ public class AgentWorkerCommandResultLoginResultVisitor implements LoginResultVi
 
     @Override
     public void visit(AgentPlatformLoginErrorResult loginErrorResult) {
+        result = AgentWorkerCommandResult.ABORT;
+    }
+
+    @Override
+    public void visit(ConnectivityExceptionErrorResult connectivityExceptionErrorResult) {
         result = AgentWorkerCommandResult.ABORT;
     }
 }

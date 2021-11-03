@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands.login;
 
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.AgentPlatformLoginErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.ConnectivityExceptionErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthorizationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBankIdErrorResult;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBa
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginResultVisitor;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSuccessResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 
 @Slf4j
 public class LoggerLoginResultVisitor implements LoginResultVisitor {
@@ -53,5 +55,25 @@ public class LoggerLoginResultVisitor implements LoginResultVisitor {
                         .getDetails()
                         .getErrorMessage(),
                 loginErrorResult.getException());
+    }
+
+    @Override
+    public void visit(ConnectivityExceptionErrorResult connectivityExceptionErrorResult) {
+        ConnectivityErrorType errorType =
+                connectivityExceptionErrorResult.getException().getError().getType();
+        String logMessage =
+                String.format(
+                        "%s.%s",
+                        errorType.name(),
+                        connectivityExceptionErrorResult.getException().getError().getDetails());
+        switch (errorType) {
+            case USER_LOGIN_ERROR:
+            case AUTHORIZATION_ERROR:
+            case PROVIDER_ERROR:
+                log.info(logMessage, connectivityExceptionErrorResult.getException());
+                break;
+            default:
+                log.error(logMessage, connectivityExceptionErrorResult.getException());
+        }
     }
 }

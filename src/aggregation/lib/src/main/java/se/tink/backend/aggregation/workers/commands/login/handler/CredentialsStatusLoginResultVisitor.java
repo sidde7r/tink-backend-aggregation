@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
+import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.BankApiE
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.FetchDataError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.AgentPlatformLoginErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.ConnectivityExceptionErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthorizationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBankIdErrorResult;
@@ -107,10 +109,28 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
         updateStatus(credentialsStatus, loginErrorResult.getException());
     }
 
+    @Override
+    public void visit(ConnectivityExceptionErrorResult connectivityExceptionErrorResult) {
+        switch (connectivityExceptionErrorResult.getException().getError().getType()) {
+            case USER_LOGIN_ERROR:
+            case AUTHORIZATION_ERROR:
+                updateStatus(
+                        CredentialsStatus.AUTHENTICATION_ERROR,
+                        connectivityExceptionErrorResult.getException());
+                break;
+            default:
+                updateStatus(
+                        CredentialsStatus.TEMPORARY_ERROR,
+                        connectivityExceptionErrorResult.getException());
+        }
+    }
+
     private void updateStatus(
             final CredentialsStatus credentialsStatus, final Exception exception) {
-
-        ConnectivityError error = ConnectivityErrorFactory.fromLegacy(exception);
+        ConnectivityError error =
+                exception instanceof ConnectivityException
+                        ? ((ConnectivityException) exception).getError()
+                        : ConnectivityErrorFactory.fromLegacy(exception);
         String statusPayload = null;
         String exceptionError = "N/A";
 
@@ -118,6 +138,13 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
             AgentException agentException = (AgentException) exception;
             statusPayload = catalog.getString(agentException.getUserMessage());
             exceptionError = agentException.getError().name();
+        } else if (exception instanceof ConnectivityException) {
+            ConnectivityException connectivityException = (ConnectivityException) exception;
+            statusPayload = catalog.getString(connectivityException.getUserMessage());
+            exceptionError =
+                    connectivityException.getError().getType().name()
+                            + ": "
+                            + connectivityException.getError().getDetails().getReason();
         }
 
         metricRegistry

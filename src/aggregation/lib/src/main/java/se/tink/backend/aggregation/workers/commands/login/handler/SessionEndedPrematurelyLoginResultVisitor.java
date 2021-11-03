@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerEr
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.AgentPlatformLoginErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.ConnectivityExceptionErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthorizationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBankIdErrorResult;
@@ -26,6 +27,9 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBa
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginResultVisitor;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSuccessResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
+import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.connectivity.errors.ConnectivityErrorDetails;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -79,6 +83,18 @@ public class SessionEndedPrematurelyLoginResultVisitor implements LoginResultVis
                                 return null;
                             }
                         });
+    }
+
+    @Override
+    public void visit(ConnectivityExceptionErrorResult connectivityExceptionErrorResult) {
+        // We only care about auth, session excepion.
+        ConnectivityError error = connectivityExceptionErrorResult.getException().getError();
+        if (ConnectivityErrorType.AUTHORIZATION_ERROR.equals(error.getType())
+                && ConnectivityErrorDetails.AuthorizationErrors.SESSION_EXPIRED
+                        .name()
+                        .equals(error.getDetails().getReason())) {
+            writeToMetric();
+        }
     }
 
     private void writeToMetric() {

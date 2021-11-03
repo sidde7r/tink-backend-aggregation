@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerEr
 import se.tink.backend.aggregation.eidassigner.QsealcSignerException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.AgentPlatformLoginErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.ConnectivityExceptionErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthorizationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBankIdErrorResult;
@@ -25,6 +27,8 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSu
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityErrorDetails;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 
 public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
 
@@ -151,5 +155,35 @@ public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
                         (entry) ->
                                 entry.getKey().isAssignableFrom(exception.getClass())
                                         && exception.getMessage().contains(entry.getValue()));
+    }
+
+    @Override
+    public void visit(ConnectivityExceptionErrorResult connectivityExceptionErrorResult) {
+        ConnectivityException connectivityException =
+                connectivityExceptionErrorResult.getException();
+        switch (connectivityException.getError().getType()) {
+            case USER_LOGIN_ERROR:
+            case AUTHORIZATION_ERROR:
+                if (isThirdPartyAppTimeoutError(connectivityException)) {
+                    loginMetric.cancelledDueToThirdPartyAppTimeout();
+                } else {
+                    loginMetric.cancelled();
+                }
+                break;
+            case PROVIDER_ERROR:
+                loginMetric.unavailable();
+                break;
+            default:
+                loginMetric.failed();
+        }
+    }
+
+    private boolean isThirdPartyAppTimeoutError(ConnectivityException connectivityException) {
+        return credentials.getStatus() == CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION
+                && connectivityException.getError().getType()
+                        == ConnectivityErrorType.USER_LOGIN_ERROR
+                && ConnectivityErrorDetails.UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT
+                        .name()
+                        .equals(connectivityException.getError().getDetails().getReason());
     }
 }
