@@ -66,12 +66,6 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     private final IngPaymentApiClient paymentApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    /*
-        ING in their documentation use country code in lowercase, however their API treat
-        lowercase as wrong country code and returns error that it's malformed
-    */
-    private final String marketCodeUpperCase = request.getProvider().getMarket().toUpperCase();
-
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         configureHttpClient(client);
@@ -86,23 +80,33 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         client,
                         persistentStorage,
                         providerSessionCacheController,
-                        new IngUserAuthenticationData(
-                                shouldDoManualAuthentication(request), psuIpAddress),
                         this,
                         request,
                         qsealcSigner,
+                        IngAuthenticationInputData.builder()
+                                .userAuthenticationData(
+                                        new IngUserAuthenticationData(
+                                                shouldDoManualAuthentication(request),
+                                                psuIpAddress))
+                                .strongAuthenticationState(null)
+                                .build(),
                         agentComponentProvider);
         paymentApiClient =
                 new IngPaymentApiClient(
                         client,
                         persistentStorage,
                         providerSessionCacheController,
-                        new IngUserAuthenticationData(
-                                shouldDoManualAuthentication(request), psuIpAddress),
                         this,
                         qsealcSigner,
                         request,
                         strongAuthenticationState,
+                        IngAuthenticationInputData.builder()
+                                .userAuthenticationData(
+                                        new IngUserAuthenticationData(
+                                                shouldDoManualAuthentication(request),
+                                                psuIpAddress))
+                                .strongAuthenticationState(strongAuthenticationState)
+                                .build(),
                         agentComponentProvider);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -234,9 +238,13 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         return null;
     }
 
+    /*
+        ING in their documentation use country code in lowercase, however their API treat
+        lowercase as wrong country code and returns error that it's malformed
+    */
     @Override
     public String marketCode() {
-        return marketCodeUpperCase;
+        return request.getProvider().getMarket().toUpperCase();
     }
 
     protected LocalDate getTransactionsFromDate() {

@@ -77,14 +77,14 @@ public class IngBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             ProviderSessionCacheController providerSessionCacheController,
-            IngUserAuthenticationData userAuthenticationData,
             MarketConfiguration marketConfiguration,
             QsealcSigner proxySigner,
+            IngAuthenticationInputData authenticationInputData,
             AgentComponentProvider agentComponentProvider) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.providerSessionCacheController = providerSessionCacheController;
-        this.userAuthenticationData = userAuthenticationData;
+        this.userAuthenticationData = authenticationInputData.getUserAuthenticationData();
         this.marketConfiguration = marketConfiguration;
         this.marketCode = marketConfiguration.marketCode();
         this.proxySigner = proxySigner;

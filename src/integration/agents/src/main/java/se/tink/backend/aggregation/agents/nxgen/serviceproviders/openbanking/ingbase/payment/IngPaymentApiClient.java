@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngAuthenticationInputData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngUserAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentAuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentSignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.TokenResponse;
@@ -35,9 +35,9 @@ public class IngPaymentApiClient extends IngBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             ProviderSessionCacheController providerSessionCacheController,
-            IngUserAuthenticationData userAuthenticationData,
             MarketConfiguration marketConfiguration,
             QsealcSigner proxySigner,
+            IngAuthenticationInputData authenticationInputData,
             CredentialsRequest credentialsRequest,
             StrongAuthenticationState strongAuthenticationState) {
             StrongAuthenticationState strongAuthenticationState,
@@ -46,14 +46,15 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                 client,
                 persistentStorage,
                 providerSessionCacheController,
-                userAuthenticationData,
                 marketConfiguration,
                 proxySigner,
-                agentComponentProvider);
-                proxySigner,
+                authenticationInputData,
+                agentComponentProvider,
                 credentialsRequest);
         this.strongAuthenticationState = strongAuthenticationState;
         this.psuIpAddress = userAuthenticationData.getPsuIdAddress();
+        this.strongAuthenticationState = authenticationInputData.getStrongAuthenticationState();
+        this.psuIpAddress = authenticationInputData.getUserAuthenticationData().getPsuIdAddress();
     }
 
     public IngCreatePaymentResponse createPayment(

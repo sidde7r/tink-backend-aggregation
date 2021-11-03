@@ -16,7 +16,7 @@ public class IngAgentWireMockTest {
     private static final String CONFIG_PATH = RESOURCES_PATH + "configuration.yml";
 
     @Test
-    public void testClientCanAuthenticateManuallyForTheFirstTime() throws Exception {
+    public void shouldAuthenticateNewUser() throws Exception {
         // given
         final String wireMockFilePath = RESOURCES_PATH + "ing_manual_first_authorization.aap";
         final AgentsServiceConfiguration configuration =

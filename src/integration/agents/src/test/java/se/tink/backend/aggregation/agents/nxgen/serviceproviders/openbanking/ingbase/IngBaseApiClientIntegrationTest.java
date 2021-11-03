@@ -1,15 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.security.cert.CertificateException;
-import java.util.Optional;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,20 +31,19 @@ public class IngBaseApiClientIntegrationTest {
     private static final WireMockIntegrationTestServer WIREMOCK_TEST_SERVER =
             new WireMockIntegrationTestServer();
 
-    @Mock private PersistentStorage persistentStorage;
+    private PersistentStorage persistentStorage;
 
     @Mock private MarketConfiguration marketConfiguration;
 
     @Mock private AgentComponentProvider agentComponentProvider;
 
-    private IngBaseApiClient baseApiClient;
+    private IngAuthenticationInputData authenticationInputData;
 
-    private final URL authorizationUrl = new URL("https://non.existing.address.com");
-    private final String marketCode = "AA";
+    private IngBaseApiClient baseApiClient;
 
     private final AgentConfiguration<IngBaseConfiguration> agentConfiguration =
             new AgentConfiguration.Builder<IngBaseConfiguration>()
-                    .setRedirectUrl(authorizationUrl.toString())
+                    .setRedirectUrl("https://non.existing.address.com")
                     .setQsealc(EIdasTinkCert.QSEALC)
                     .setQwac(EIdasTinkCert.QWAC)
                     .build();
@@ -58,21 +55,28 @@ public class IngBaseApiClientIntegrationTest {
         baseApiClient =
                 new IngBaseApiClient(
                         WIREMOCK_TEST_SERVER.createTinkHttpClient(),
-                        persistentStorage,
+                        persistentStorage = new PersistentStorage(),
                         mock(ProviderSessionCacheController.class),
-                        mock(IngUserAuthenticationData.class),
                         marketConfiguration,
                         mock(QsealcSigner.class),
+                        authenticationInputData =
+                                IngAuthenticationInputData.builder()
+                                        .userAuthenticationData(
+                                                new IngUserAuthenticationData(true, "psuIpAddress"))
+                                        .strongAuthenticationState(null)
+                                        .build(),
                         agentComponentProvider);
 
         baseApiClient.setConfiguration(agentConfiguration);
     }
 
-    private void defaultMockSetUp() {
-        when(marketConfiguration.marketCode()).thenReturn(marketCode);
+    @AfterClass
+    public static void cleanUpClass() {
+        WIREMOCK_TEST_SERVER.shutdown();
+    }
 
-        when(persistentStorage.get(anyString(), eq(String.class)))
-                .thenReturn(Optional.of("some-client-id"));
+    private void defaultMockSetUp() {
+        when(marketConfiguration.marketCode()).thenReturn("AA");
 
         when(agentComponentProvider.getRandomValueGenerator())
                 .thenReturn(new MockRandomValueGenerator());
@@ -91,6 +95,8 @@ public class IngBaseApiClientIntegrationTest {
 
         // then
         assertThat(authorisationUrl).isNotNull();
+        assertThat(persistentStorage).containsKey("APPLICATION_TOKEN");
+        assertThat(persistentStorage).containsKey("CLIENT_ID");
     }
 
     private static void givenScenario(String fileName) {
