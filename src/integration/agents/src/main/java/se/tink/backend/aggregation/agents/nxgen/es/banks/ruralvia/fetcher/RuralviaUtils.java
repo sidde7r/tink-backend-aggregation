@@ -20,7 +20,10 @@ public final class RuralviaUtils {
             return ExactCurrencyAmount.of(
                     new BigDecimal(nf.parse(amountWithoutSpaces).toString()), currency);
         } catch (ParseException e) {
-            log.warn("WARN: parsing the value was not possible", e);
+            // If amount is equal to - then value is set to 0 and it's expected scenario
+            if (!amountWithoutSpaces.equalsIgnoreCase("-")) {
+                log.warn("WARN: parsing the value was not possible", e);
+            }
         }
         return ExactCurrencyAmount.inEUR(0);
     }

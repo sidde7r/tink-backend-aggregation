@@ -32,11 +32,11 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String APP_VERSION = "2021.9";
     private static final String APP_VERSION_HEADER =
-            "MobileBank ios com danskebank.mobilebank3dk 33212";
+            "MobileBank ios com danskebank.mobilebank3dk 34250";
     private static final String CLIENT_SECRET =
-            "ee2f976f478a4b56a03d8a11a8faca5eC45EFA0BC60B412E8C";
+            "4d4c0f84588f48db891ad81b3f7525f322DC4D888EDD47CD96";
     private static final String USER_AGENT =
-            "dennyemobilbankdkdanskebank/2021.9 (com.danskebank.mobilebank3dk; build:33212; iOS 14.7.1; DK)";
+            "dennyemobilbankdkdanskebank/2021.10 (com.danskebank.mobilebank3dk; build:34250; iOS 14.7.1; DK)";
 
     public String getUserAgent() {
         return USER_AGENT;
