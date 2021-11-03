@@ -13,18 +13,18 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.libraries.metrics.core.MetricId;
 
-public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCommand
+public class RefreshItemPostProcessingAgentWorkedCommand extends AgentWorkerCommand
         implements MetricsCommand {
     private static final Logger log =
-            LoggerFactory.getLogger(SendAccountsToUpdateServiceAgentWorkerCommand.class);
+            LoggerFactory.getLogger(RefreshItemPostProcessingAgentWorkedCommand.class);
 
     private static final String METRIC_NAME = "agent_refresh";
-    private static final String METRIC_ACTION = "send_accounts";
+    private static final String METRIC_ACTION = "post_process";
 
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
-    public SendAccountsToUpdateServiceAgentWorkerCommand(
+    public RefreshItemPostProcessingAgentWorkedCommand(
             AgentWorkerCommandContext context, AgentWorkerCommandMetricState metrics) {
         this.context = context;
         this.metrics = metrics.init(this);
@@ -41,18 +41,15 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
         try {
             MetricAction action =
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
+
             try {
-                log.info("Sending accounts to UpdateService");
-
-                context.sendAllCachedAccountsToUpdateService();
-
+                context.getAgent().postProcess(context.getAccountDataCache());
                 action.completed();
             } catch (Exception e) {
                 action.failed();
-                log.warn("Couldn't send Accounts to UpdateService");
-
-                throw e;
+                log.warn("Couldn't execute the post-processing for agent");
             }
+
         } finally {
             metrics.stop();
         }
@@ -71,7 +68,7 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
                 new MetricId.MetricLabels()
                         .add(
                                 "class",
-                                SendAccountsToUpdateServiceAgentWorkerCommand.class.getSimpleName())
+                                RefreshItemPostProcessingAgentWorkedCommand.class.getSimpleName())
                         .add("command", type.getMetricName());
 
         return Lists.newArrayList(typeName);
