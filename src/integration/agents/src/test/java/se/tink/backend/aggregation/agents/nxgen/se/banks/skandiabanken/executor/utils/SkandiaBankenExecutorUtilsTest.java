@@ -52,6 +52,32 @@ public class SkandiaBankenExecutorUtilsTest {
     }
 
     @Test
+    public void shouldFormatShortPlusgiroCorrectly() {
+        // given
+        Transfer transfer = new Transfer();
+        transfer.setDestination(new PlusGiroIdentifier("22"));
+
+        // when
+        String formattedGirNumber = SkandiaBankenExecutorUtils.formatGiroNumber(transfer);
+
+        // then
+        assertThat(formattedGirNumber).isEqualTo("2-2");
+    }
+
+    @Test
+    public void shouldFormatLongPlusgiroCorrectly() {
+        // given
+        Transfer transfer = new Transfer();
+        transfer.setDestination(new PlusGiroIdentifier("90035188"));
+
+        // when
+        String formattedGirNumber = SkandiaBankenExecutorUtils.formatGiroNumber(transfer);
+
+        // then
+        assertThat(formattedGirNumber).isEqualTo("9003518-8");
+    }
+
+    @Test
     public void shouldThrowExceptionIfNotBankgiroOrPlusgiro() {
         // given
         Transfer transfer = new Transfer();
