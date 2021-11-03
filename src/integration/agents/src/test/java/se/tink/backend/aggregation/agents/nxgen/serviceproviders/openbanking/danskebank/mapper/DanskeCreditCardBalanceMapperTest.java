@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.CreditLineEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
@@ -67,7 +68,7 @@ public class DanskeCreditCardBalanceMapperTest {
         balance2.setCreditLine(Collections.emptyList());
 
         // when
-        ArgumentCaptor<ImmutableList<UkOpenBankingApiDefinitions.AccountBalanceType>> argument =
+        ArgumentCaptor<ImmutableList<UkObBalanceType>> argument =
                 ArgumentCaptor.forClass(ImmutableList.class);
         when(valueExtractor.pickByValuePriority(eq(creditLines), any(), argument.capture()))
                 .thenReturn(Optional.of(returnedCreditLine));
@@ -93,7 +94,7 @@ public class DanskeCreditCardBalanceMapperTest {
         CreditLineEntity returnedCreditLine = availableCreditLine();
 
         // when
-        ArgumentCaptor<ImmutableList<UkOpenBankingApiDefinitions.AccountBalanceType>> argument =
+        ArgumentCaptor<ImmutableList<UkObBalanceType>> argument =
                 ArgumentCaptor.forClass(ImmutableList.class);
         when(valueExtractor.pickByValuePriority(eq(creditLines), any(), argument.capture()))
                 .thenReturn(Optional.of(returnedCreditLine));

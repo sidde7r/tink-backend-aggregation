@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -18,7 +19,7 @@ public class AccountBalanceEntity {
 
     private UkOpenBankingApiDefinitions.CreditDebitIndicator creditDebitIndicator;
 
-    private UkOpenBankingApiDefinitions.AccountBalanceType type;
+    private UkObBalanceType type;
 
     private String dateTime;
 

@@ -13,7 +13,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.IdentifierFixtures;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
@@ -34,7 +34,7 @@ public class DanskebankIdentifierMapperTest {
         // given
         AccountIdentifierEntity sortCodeIdentifier = IdentifierFixtures.sortCodeIdentifier();
         // when
-        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<UkObBalanceType>> argument = ArgumentCaptor.forClass(List.class);
         when(valueExtractor.pickByValuePriority(anyList(), any(), argument.capture()))
                 .thenReturn(Optional.of(sortCodeIdentifier));
 
@@ -50,7 +50,7 @@ public class DanskebankIdentifierMapperTest {
         // given
         AccountIdentifierEntity ibanIdentifier = IdentifierFixtures.ibanIdentifier();
         // when
-        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<UkObBalanceType>> argument = ArgumentCaptor.forClass(List.class);
         when(valueExtractor.pickByValuePriority(anyList(), any(), argument.capture()))
                 .thenReturn(Optional.of(ibanIdentifier));
 
@@ -64,7 +64,7 @@ public class DanskebankIdentifierMapperTest {
     @Test
     public void shouldGetCreditCardEmptyIdentifier() {
         // when
-        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<UkObBalanceType>> argument = ArgumentCaptor.forClass(List.class);
         when(valueExtractor.pickByValuePriority(anyList(), any(), argument.capture()))
                 .thenReturn(Optional.empty());
 
