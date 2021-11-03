@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transfersdestinations.LansforsakringarTransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.ConsentErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.LansforsakringarRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.ServerFaultFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.ServiceBlockedFilter;
@@ -95,6 +96,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new ConsentErrorFilter());
         client.addFilter(new ServiceBlockedFilter(systemUpdater, credentials));
         client.addFilter(
                 new LansforsakringarRetryFilter(
