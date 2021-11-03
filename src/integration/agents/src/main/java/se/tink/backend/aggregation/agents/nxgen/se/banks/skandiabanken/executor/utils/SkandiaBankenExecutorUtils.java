@@ -35,7 +35,7 @@ public class SkandiaBankenExecutorUtils {
         if (isBankGiroPayment(transfer)) {
             return calculateBankGiroOffset(transfer);
         } else if (isPlusGiroPayment(transfer)) {
-            return calculatePlusGiroOffset();
+            return calculatePlusGiroOffset(transfer);
         }
         throw new NotImplementedException("Offset for non BG/PG payments is not implemented");
     }
@@ -54,8 +54,9 @@ public class SkandiaBankenExecutorUtils {
         }
     }
 
-    private static int calculatePlusGiroOffset() {
-        return PaymentTransfer.SE_PG_OFFSET;
+    private static int calculatePlusGiroOffset(Transfer transfer) {
+        return transfer.getDestination().getIdentifier().length()
+                - PaymentTransfer.SE_PG_ENDING_OFFSET;
     }
 
     private static boolean isBankGiroPayment(Transfer transfer) {
