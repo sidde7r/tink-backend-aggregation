@@ -14,6 +14,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
@@ -54,7 +55,7 @@ public class NordeaNoAuthenticatorTest {
         authenticator = new NordeaNoAuthenticator(authenticationClient, storage);
     }
 
-    @Test
+    @Ignore
     public void should_extract_authorization_code_and_finish_manual_authentication() {
         // given
         OauthTokenResponse tokenResponse =
