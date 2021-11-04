@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 REQUEST auth-02
-GET https://api.ing.com/oauth2/authorization-server-url?redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&scope=payment-accounts%3Atransactions%3Aview+payment-accounts%3Abalances%3Aview&country_code=NL
+GET https://api.ing.com/oauth2/authorization-server-url?redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&scope=payment-accounts%3Abalances%3Aview+payment-accounts%3Atransactions%3Aview&country_code=NL
 Accept: application/json
 
 RESPONSE auth-02
@@ -46,7 +46,7 @@ RESPONSE auth-03
 200
 Content-Type: application/json;charset=utf-8
 
-{"access_token":"accessToken","refresh_token":"refreshToken","token_type":"bearer","expires_in":900,"scope":"payment-accounts:transactions:view payment-accounts:balances:view","refresh_token_expires_in":12345}
+{"access_token":"accessToken","refresh_token":"refreshToken","token_type":"bearer","expires_in":900,"scope":"payment-accounts:balances:view payment-accounts:transactions:view","refresh_token_expires_in":12345}
 
 REQUEST fetch-accounts
 GET https://api.ing.com/v3/accounts

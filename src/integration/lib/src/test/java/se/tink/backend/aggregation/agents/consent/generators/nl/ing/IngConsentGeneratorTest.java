@@ -31,7 +31,9 @@ public class IngConsentGeneratorTest {
     @Test
     public void shouldMapAllItemsCorrectly() {
         // given
-        refreshScope.setRefreshableItemsIn(Sets.newHashSet(RefreshableItem.CHECKING_ACCOUNTS, RefreshableItem.CHECKING_TRANSACTIONS));
+        refreshScope.setRefreshableItemsIn(
+                Sets.newHashSet(
+                        RefreshableItem.CHECKING_ACCOUNTS, RefreshableItem.CHECKING_TRANSACTIONS));
         given(manualAuthenticateRequest.getRefreshScope()).willReturn(refreshScope);
         given(componentProvider.getCredentialsRequest()).willReturn(manualAuthenticateRequest);
         generator = IngConsentGenerator.of(manualAuthenticateRequest, getIngScopes());
@@ -41,7 +43,6 @@ public class IngConsentGeneratorTest {
 
         // then
         assertThat(scopes).isEqualTo(String.join(" ", getAllScopes()));
-
     }
 
     @Test
@@ -75,10 +76,7 @@ public class IngConsentGeneratorTest {
     }
 
     private static Set<IngScope> getIngScopes() {
-        return Sets.newHashSet(
-                IngScope.VIEW_PAYMENT_BALANCES,
-                IngScope.VIEW_PAYMENT_TRANSACTIONS
-        );
+        return Sets.newHashSet(IngScope.VIEW_PAYMENT_BALANCES, IngScope.VIEW_PAYMENT_TRANSACTIONS);
     }
 
     private Set<String> getAllScopes() {
@@ -99,5 +97,4 @@ public class IngConsentGeneratorTest {
         set.add(IngScope.VIEW_PAYMENT_TRANSACTIONS.toString());
         return set;
     }
-
 }

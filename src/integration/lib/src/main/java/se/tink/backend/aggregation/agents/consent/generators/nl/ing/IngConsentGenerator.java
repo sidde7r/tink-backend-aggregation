@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.ToScopes;
 import se.tink.backend.aggregation.agents.consent.suppliers.ItemsSupplier;
 import se.tink.backend.aggregation.agents.consent.suppliers.ScopesSupplier;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
@@ -17,11 +16,9 @@ public class IngConsentGenerator implements ConsentGenerator<String> {
             item -> {
                 switch (item) {
                     case CHECKING_ACCOUNTS:
-                        return Sets.newHashSet(
-                                IngScope.VIEW_PAYMENT_BALANCES);
+                        return Sets.newHashSet(IngScope.VIEW_PAYMENT_BALANCES);
                     case CHECKING_TRANSACTIONS:
-                        return Sets.newHashSet(
-                                IngScope.VIEW_PAYMENT_TRANSACTIONS);
+                        return Sets.newHashSet(IngScope.VIEW_PAYMENT_TRANSACTIONS);
                     case SAVING_ACCOUNTS:
                     case CREDITCARD_ACCOUNTS:
                     case LOAN_ACCOUNTS:
@@ -36,18 +33,17 @@ public class IngConsentGenerator implements ConsentGenerator<String> {
                     default:
                         return Collections.emptySet();
                 }
-
             };
 
     private final ScopesSupplier<RefreshableItem, IngScope> scopesSupplier;
 
     public IngConsentGenerator(CredentialsRequest request, Set<IngScope> availableScopes) {
-        this.scopesSupplier = new ScopesSupplier<>(ItemsSupplier.get(request),
-                availableScopes,
-                itemToScopes);
+        this.scopesSupplier =
+                new ScopesSupplier<>(ItemsSupplier.get(request), availableScopes, itemToScopes);
     }
 
-    public static IngConsentGenerator of(CredentialsRequest request, Set<IngScope> availableScopes) {
+    public static IngConsentGenerator of(
+            CredentialsRequest request, Set<IngScope> availableScopes) {
         return new IngConsentGenerator(request, availableScopes);
     }
 
@@ -55,5 +51,4 @@ public class IngConsentGenerator implements ConsentGenerator<String> {
     public String generate() {
         return String.join(" ", scopesSupplier.getStrings());
     }
-
 }
