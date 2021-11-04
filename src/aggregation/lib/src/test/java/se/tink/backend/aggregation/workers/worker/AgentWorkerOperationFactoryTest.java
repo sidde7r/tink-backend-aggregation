@@ -329,8 +329,8 @@ public final class AgentWorkerOperationFactoryTest {
         // IT case, regardless of source account
         when(pisProvider.getName()).thenReturn("it-bancasella-ob");
         assertThat(factory.isAisPlusPisFlow(request)).isTrue();
-        // Revolut SE
-        when(pisProvider.getName()).thenReturn("se-revolut-ob");
+        // Revolut DE
+        when(pisProvider.getName()).thenReturn("de-revolut-ob");
         assertThat(factory.isAisPlusPisFlow(request)).isFalse();
     }
 
