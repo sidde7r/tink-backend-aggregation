@@ -15,8 +15,10 @@ import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.HolderRole;
+import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -36,7 +38,7 @@ public class AccountEntity implements GeneralAccountEntity {
     private String productType;
 
     @JsonProperty("name")
-    private String accountaName;
+    private String accountName;
 
     @JsonProperty("number")
     private String accountNumber;
@@ -62,7 +64,7 @@ public class AccountEntity implements GeneralAccountEntity {
         account.setBankId(accountNumber);
         account.setBalance(Double.parseDouble(balance));
         account.setExactBalance(ExactCurrencyAmount.of(availableBalance, "SEK"));
-        account.setName(accountaName);
+        account.setName(accountName);
         account.putIdentifier(new SwedishIdentifier(accountNumber));
 
         if (!Strings.isNullOrEmpty(balance) && !balance.trim().isEmpty()) {
@@ -73,7 +75,7 @@ public class AccountEntity implements GeneralAccountEntity {
             return Optional.empty();
         }
 
-        String name = !Strings.isNullOrEmpty(accountaName) ? accountaName : accountNumber;
+        String name = !Strings.isNullOrEmpty(accountName) ? accountName : accountNumber;
         account.setName(name == null ? "" : name.replace("\n", "").replace("\r", ""));
 
         // Due to this agent being legacy we have to work with the rpc Account model directly. Using
@@ -81,10 +83,31 @@ public class AccountEntity implements GeneralAccountEntity {
         AccountHolder accountHolder = getTinkAccountHolder();
         account.setAccountHolder(accountHolder);
         account.setHolderName(getFirstHolder(accountHolder.getIdentities()).orElse(null));
-
         account.setSourceInfo(createAccountSourceInfo());
+        account.setCapabilities(getAccountCapabilities(productType));
 
         return Optional.of(account);
+    }
+
+    public TransfersEntity getTransfers() {
+        return transfers;
+    }
+
+    @Override
+    public AccountIdentifier generalGetAccountIdentifier() {
+        return new SwedishIdentifier(accountNumber);
+    }
+
+    @Override
+    public String generalGetBank() {
+        return generalGetAccountIdentifier().isValid()
+                ? generalGetAccountIdentifier().to(SwedishIdentifier.class).getBankName()
+                : null;
+    }
+
+    @Override
+    public String generalGetName() {
+        return accountName;
     }
 
     private AccountSourceInfo createAccountSourceInfo() {
@@ -120,25 +143,14 @@ public class AccountEntity implements GeneralAccountEntity {
         return HolderRole.OTHER;
     }
 
-    public TransfersEntity getTransfers() {
-        return transfers;
-    }
-
-    @Override
-    public AccountIdentifier generalGetAccountIdentifier() {
-        return new SwedishIdentifier(accountNumber);
-    }
-
-    @Override
-    public String generalGetBank() {
-        if (generalGetAccountIdentifier().isValid()) {
-            return generalGetAccountIdentifier().to(SwedishIdentifier.class).getBankName();
-        }
-        return null;
-    }
-
-    @Override
-    public String generalGetName() {
-        return accountaName;
+    public static AccountCapabilities getAccountCapabilities(String type) {
+        return SBABConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(type)
+                .orElse(
+                        new AccountCapabilities(
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN,
+                                AccountCapabilities.Answer.UNKNOWN));
     }
 }

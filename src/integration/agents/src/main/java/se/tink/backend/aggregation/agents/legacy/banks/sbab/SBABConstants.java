@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+
 public class SBABConstants {
     public static final String INTEGRATION_NAME = "sbab";
     public static final String TRUE = "true";
@@ -70,4 +73,23 @@ public class SBABConstants {
         public static final String AUTH_STATUS =
                 "query AuthStatusPollQuery {\n  user {\n    id\n    __typename\n  }\n}\n";
     }
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES),
+                            "SPARKONTO_SAP",
+                            "Sparkonto")
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.NO,
+                                    AccountCapabilities.Answer.NO),
+                            "null")
+                    .build();
 }

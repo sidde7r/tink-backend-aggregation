@@ -15,6 +15,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 
 @Slf4j
@@ -173,6 +174,12 @@ public class LoanEntity {
         account.setBalance(getAmount().negate().doubleValue());
         account.setType(AccountTypes.LOAN);
         account.setSourceInfo(createAccountSourceInfo());
+        account.setCapabilities(
+                new AccountCapabilities(
+                        AccountCapabilities.Answer.NO,
+                        AccountCapabilities.Answer.NO,
+                        AccountCapabilities.Answer.NO,
+                        AccountCapabilities.Answer.NO));
 
         return Optional.of(account);
     }
