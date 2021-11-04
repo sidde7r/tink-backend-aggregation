@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -193,13 +194,18 @@ public class OpenIdAuthenticationController
             oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
 
         } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() >= 500) {
+                log.warn(
+                        "[OpenIdAuthenticationController] Bank side error (status code {}) during refreshing token",
+                        e.getResponse().getStatus());
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+            }
+            log.error(
+                    "[OpenIdAuthenticationController] Access token refresh failed: {}",
+                    e.getResponse().getBody(String.class));
 
-            log.error("Access token refresh failed: {}", e.getResponse().getBody(String.class));
-            // This will "fix" the invalid_grant error temporarily while waiting for more log
-            // data. It might also filter some other errors.
-            throw LoginError.DEFAULT_MESSAGE.exception();
+            throw SessionError.SESSION_EXPIRED.exception();
         }
-
         log.info(
                 "Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
                 new Date(oAuth2Token.getAccessExpireEpoch() * 1000),

@@ -13,6 +13,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid/jwt/signer/iface",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",

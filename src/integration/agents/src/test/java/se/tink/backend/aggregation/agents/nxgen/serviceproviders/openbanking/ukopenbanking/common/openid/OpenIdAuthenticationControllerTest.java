@@ -15,7 +15,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -98,7 +99,33 @@ public class OpenIdAuthenticationControllerTest {
     }
 
     @Test
-    public void shouldThrowLoginErrorExceptionWhenHttpResponseExceptionOccurs() {
+    public void shouldThrowSessionExceptionForNot5XXStatusResponse() {
+        OAuth2Token oAuth2Token = mock(OAuth2Token.class);
+        HttpRequest httpRequest = mock(HttpRequest.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        HttpResponseException httpResponseException =
+                new HttpResponseException(httpRequest, httpResponse);
+
+        when(persistentStorage.get(
+                        OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
+                .thenReturn(Optional.of(oAuth2Token));
+        when(oAuth2Token.hasAccessExpired()).thenReturn(true);
+        when(oAuth2Token.canRefresh()).thenReturn(true);
+        when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("refreshToken"));
+        when(apiClient.refreshAccessToken("refreshToken", ClientMode.ACCOUNTS))
+                .thenThrow(httpResponseException);
+        when(httpResponseException.getResponse().getStatus()).thenReturn(400);
+        when(httpResponseException.getResponse().getBody(String.class)).thenReturn(eq(any()));
+
+        // when
+        Throwable thrown = catchThrowable(() -> openIdAuthenticationController.autoAuthenticate());
+
+        // then
+        assertThat(thrown).isExactlyInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void shouldThrowBankServiceExceptionFor5XXStatusResponse() {
         // given
         OAuth2Token oAuth2Token = mock(OAuth2Token.class);
         HttpRequest httpRequest = mock(HttpRequest.class);
@@ -114,13 +141,13 @@ public class OpenIdAuthenticationControllerTest {
         when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("refreshToken"));
         when(apiClient.refreshAccessToken("refreshToken", ClientMode.ACCOUNTS))
                 .thenThrow(httpResponseException);
-        when(httpResponseException.getResponse().getBody(String.class)).thenReturn(eq(any()));
+        when(httpResponseException.getResponse().getStatus()).thenReturn(500);
 
         // when
         Throwable thrown = catchThrowable(() -> openIdAuthenticationController.autoAuthenticate());
 
         // then
-        assertThat(thrown).isExactlyInstanceOf(LoginException.class);
+        assertThat(thrown).isExactlyInstanceOf(BankServiceException.class);
     }
 
     private OAuth2Token createValidOAuth2Token() {
