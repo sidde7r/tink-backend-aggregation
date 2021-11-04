@@ -40,7 +40,7 @@ public class AccountTransactionsV31Response extends BaseV31Response<List<Transac
                 response.nextKey());
     }
 
-    protected List<? extends Transaction> toTinkTransactions(TransactionMapper transactionMapper) {
+    public List<? extends Transaction> toTinkTransactions(TransactionMapper transactionMapper) {
         return getData().orElse(Collections.emptyList()).stream()
                 .filter(TransactionEntity::isNotRejected)
                 .filter(TransactionEntity::isNotDeclined)
@@ -48,7 +48,7 @@ public class AccountTransactionsV31Response extends BaseV31Response<List<Transac
                 .collect(Collectors.toList());
     }
 
-    protected List<? extends Transaction> toTinkCreditCardTransactions(
+    public List<? extends Transaction> toTinkCreditCardTransactions(
             TransactionMapper transactionMapper, CreditCardAccount account) {
         return getData().orElse(Collections.emptyList()).stream()
                 .filter(TransactionEntity::isNotRejected)

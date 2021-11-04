@@ -15,4 +15,9 @@ public class HandelsbankenConstants {
     public static class Time {
         public static final ZoneOffset DEFAULT_OFFSET = ZoneOffset.UTC;
     }
+
+    public static class AccountMapper {
+        public static final String CURRENT = "current";
+        public static final String DEPOSIT = "deposit";
+    }
 }

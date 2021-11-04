@@ -1,0 +1,59 @@
+{
+  "Data": {
+    "Transaction": [
+      {
+        "Status": "Booked",
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        }
+      },
+      {
+        "Status": "Pending",
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        }
+      },
+      {
+        "Status": "Rejected",
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        }
+      },
+      {
+        "Status": "Booked",
+        "SupplementaryData": {
+          "Declined": false
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        }
+      },
+      {
+        "Status": "Pending",
+        "SupplementaryData": {
+          "Declined": false
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        }
+      },
+      {
+        "Status": "Pending",
+        "SupplementaryData": {
+          "Declined": true
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        }
+      }
+    ]
+  },
+  "Links": {},
+  "Meta": {}
+}

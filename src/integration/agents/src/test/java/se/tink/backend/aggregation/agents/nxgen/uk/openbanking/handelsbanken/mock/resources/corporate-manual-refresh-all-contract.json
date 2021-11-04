@@ -1,5 +1,40 @@
 {
     "accounts" : [ {
+        "accountNumber" : "405162-84223103",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "GBP",
+            "scale" : 1,
+            "unscaledValue" : 132645,
+            "exactValue" : 13264.5,
+            "doubleValue" : 13264.5
+        },
+        "currencyCode" : "GBP",
+        "bankId" : "84223103",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "CLIENT ACCOUNT DEPOSITS",
+        "ownership" : 1.0,
+        "type" : "SAVINGS",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://GB97HAND40516284223103?name=CLIENT+ACCOUNT+DEPOSITS\"]",
+        "closed" : false,
+        "holderName" : "Fd",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "BUSINESS",
+            "identities" : [ {
+                "name" : "Fd",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 13264.5
+    }, {
         "accountNumber" : "405162-11740779",
         "accountExclusion" : "NONE",
         "exactBalance" : {
@@ -36,6 +71,29 @@
         "balance" : 90.09
     } ],
     "transactions" : [ {
+        "amount" : 999.99,
+        "date" : 696942000000,
+        "description" : "1234567",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-02-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Credited",
+        "providerMarket" : "GB"
+    }, {
         "amount" : 999.99,
         "date" : 696942000000,
         "description" : "1234567",

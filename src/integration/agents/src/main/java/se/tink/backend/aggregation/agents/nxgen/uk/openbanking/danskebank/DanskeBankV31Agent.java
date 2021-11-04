@@ -75,7 +75,7 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
                 new CreditCardAccountMapper(
                         new DefaultCreditCardBalanceMapper(valueExtractor),
                         new DanskeBankIdentifierMapper(valueExtractor));
-        return new UkOpenBankingV31Ais(
+        return new DanskeBankV31Ais(
                 aisConfig,
                 persistentStorage,
                 localDateTimeSource,
