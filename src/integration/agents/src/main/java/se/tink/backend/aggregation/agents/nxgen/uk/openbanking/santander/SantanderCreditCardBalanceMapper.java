@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.FORWARD_AVAILABLE;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.OPENING_CLEARED;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.PREVIOUSLY_CLOSED_BOOKED;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType.FORWARD_AVAILABLE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType.OPENING_CLEARED;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType.PREVIOUSLY_CLOSED_BOOKED;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardBalanceMapper;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -23,7 +23,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @RequiredArgsConstructor
 public class SantanderCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
-    public static final ImmutableList<AccountBalanceType> ALLOWED_BALANCE_TYPES =
+    public static final ImmutableList<UkObBalanceType> ALLOWED_BALANCE_TYPES =
             ImmutableList.of(OPENING_CLEARED, PREVIOUSLY_CLOSED_BOOKED);
 
     private final PrioritizedValueExtractor valueExtractor;
@@ -73,7 +73,7 @@ public class SantanderCreditCardBalanceMapper implements CreditCardBalanceMapper
         return entity.getAmount();
     }
 
-    private List<AccountBalanceType> getTypes(Collection<AccountBalanceEntity> balances) {
+    private List<UkObBalanceType> getTypes(Collection<AccountBalanceEntity> balances) {
         return balances.stream().map(AccountBalanceEntity::getType).collect(Collectors.toList());
     }
 

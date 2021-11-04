@@ -6,8 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
@@ -28,8 +27,7 @@ public class CapitalOneCreditCardBalanceMapper implements CreditCardBalanceMappe
                         () ->
                                 new NoSuchElementException(
                                         "Could not extract credit card account balance. No available balance with type of: "
-                                                + UkOpenBankingApiDefinitions.AccountBalanceType
-                                                        .OPENING_BOOKED));
+                                                + UkObBalanceType.OPENING_BOOKED));
     }
 
     @Override
@@ -44,7 +42,7 @@ public class CapitalOneCreditCardBalanceMapper implements CreditCardBalanceMappe
         return entity.getAmount();
     }
 
-    private List<AccountBalanceType> getTypes(Collection<AccountBalanceEntity> balances) {
+    private List<UkObBalanceType> getTypes(Collection<AccountBalanceEntity> balances) {
         return balances.stream().map(AccountBalanceEntity::getType).collect(Collectors.toList());
     }
 }

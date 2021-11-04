@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
@@ -41,7 +41,7 @@ public class SantanderCreditCardBalanceMapperTest {
     public void shouldPickBalanceByDefinedPriority() {
         // given
         AccountBalanceEntity balanceToReturn = openingClearedBalance();
-        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<UkObBalanceType>> argument = ArgumentCaptor.forClass(List.class);
         when(valueExtractor.pickByValuePriority(eq(balancesMockedList), any(), argument.capture()))
                 .thenReturn(Optional.of(balanceToReturn));
 
@@ -59,7 +59,7 @@ public class SantanderCreditCardBalanceMapperTest {
     public void shouldPickPreviouslyClosedBalance() {
         // given
         AccountBalanceEntity balanceToReturn = previouslyClosedBookedBalance();
-        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<UkObBalanceType>> argument = ArgumentCaptor.forClass(List.class);
         when(valueExtractor.pickByValuePriority(eq(balancesMockedList), any(), argument.capture()))
                 .thenReturn(Optional.of(balanceToReturn));
 

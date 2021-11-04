@@ -62,7 +62,7 @@ public class UkOpenBankingApiDefinitions {
         }
     }
 
-    public enum AccountBalanceType {
+    public enum UkObBalanceType {
         CLEARED_BALANCE,
         CLOSING_AVAILABLE,
         CLOSING_BOOKED,
@@ -79,9 +79,9 @@ public class UkOpenBankingApiDefinitions {
         PREVIOUSLY_CLOSED_BOOKED;
 
         @JsonCreator
-        private static AccountBalanceType fromString(String key) {
+        private static UkObBalanceType fromString(String key) {
             return (!Strings.isNullOrEmpty(key))
-                    ? AccountBalanceType.valueOf(
+                    ? UkObBalanceType.valueOf(
                             CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
                     : null;
         }
