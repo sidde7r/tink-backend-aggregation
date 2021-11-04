@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class IngBaseAuthenticator implements OAuth2Authenticator {
 
@@ -25,7 +26,10 @@ public final class IngBaseAuthenticator implements OAuth2Authenticator {
     private final IngBaseApiClient client;
     private final PersistentStorage persistentStorage;
 
-    public IngBaseAuthenticator(IngBaseApiClient apiClient, PersistentStorage persistentStorage) {
+    public IngBaseAuthenticator(
+            IngBaseApiClient apiClient,
+            PersistentStorage persistentStorage,
+            CredentialsRequest credentialsRequest) {
         this.client = apiClient;
         this.persistentStorage = persistentStorage;
     }

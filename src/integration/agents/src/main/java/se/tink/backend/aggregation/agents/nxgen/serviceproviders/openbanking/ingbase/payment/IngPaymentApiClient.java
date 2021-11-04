@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
@@ -37,6 +38,7 @@ public class IngPaymentApiClient extends IngBaseApiClient {
             IngUserAuthenticationData userAuthenticationData,
             MarketConfiguration marketConfiguration,
             QsealcSigner proxySigner,
+            CredentialsRequest credentialsRequest,
             StrongAuthenticationState strongAuthenticationState) {
         super(
                 client,
@@ -45,7 +47,8 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                 providerSessionCacheController,
                 userAuthenticationData,
                 marketConfiguration,
-                proxySigner);
+                proxySigner,
+                credentialsRequest);
         this.strongAuthenticationState = strongAuthenticationState;
         this.psuIpAddress = userAuthenticationData.getPsuIdAddress();
     }

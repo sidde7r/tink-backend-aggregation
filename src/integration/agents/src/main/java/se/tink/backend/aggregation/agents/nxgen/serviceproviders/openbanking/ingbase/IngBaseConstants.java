@@ -71,8 +71,6 @@ public final class IngBaseConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         public static final String CODE = "code";
-        public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW =
-                "payment-accounts:transactions:view payment-accounts:balances:view";
         public static final String TRANSACTIONS_LIMIT = "50";
     }
 
