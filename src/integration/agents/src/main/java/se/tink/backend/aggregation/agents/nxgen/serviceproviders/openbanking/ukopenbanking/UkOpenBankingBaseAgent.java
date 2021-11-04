@@ -196,10 +196,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         addFilter(new TerminatedHandshakeRetryFilter());
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        addFilter(addRateLimitFilter());
         addFilter(new TimeoutFilter());
         addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
         addFilter(new ConsentErrorFilter(persistentStorage));
-        addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
     }
 
     @Override
@@ -419,6 +419,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         credentialsUpdater);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    protected RateLimitFilter addRateLimitFilter() {
+        return new RateLimitFilter(provider.getName(), 500, 1500, 3);
     }
 
     private UkOpenBankingPisAuthApiClient createAuthApiClient(
