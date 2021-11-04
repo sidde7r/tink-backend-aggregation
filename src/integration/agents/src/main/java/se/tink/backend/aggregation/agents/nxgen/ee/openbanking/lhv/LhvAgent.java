@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.LhvAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.configuration.LhvConfiguration;
@@ -21,9 +22,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-@AgentCapabilities({Capability.CHECKING_ACCOUNTS})
+@AgentCapabilities({Capability.CHECKING_ACCOUNTS, Capability.SAVINGS_ACCOUNTS})
 public final class LhvAgent extends SubsequentProgressiveGenerationAgent
-        implements RefreshCheckingAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final LhvApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -91,5 +92,15 @@ public final class LhvAgent extends SubsequentProgressiveGenerationAgent
                         new TransactionKeyPaginationController<>(
                                 new LhvTransactionFetcher(
                                         apiClient, transactionPaginationHelper, todaysDate))));
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 }
