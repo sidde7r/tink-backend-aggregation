@@ -42,6 +42,7 @@ public class ProviderConfigurationServiceResource implements ProviderConfigurati
                 String.format(
                         "Constructed ProviderConfigurationServiceClient towards url: %s.",
                         configuration.getHost() + ":" + configuration.getPort()));
+        logger.info("[ProviderConfigurationServiceResource] Successfully initialised");
     }
 
     private ProviderConfigurationService getProviderConfigurationService() {
@@ -52,35 +53,54 @@ public class ProviderConfigurationServiceResource implements ProviderConfigurati
 
     @Override
     public List<ProviderConfiguration> list(String clusterName, String clusterEnvironment) {
+        logger.info("[ProviderConfigurationServiceResource] list method called");
         List<ProviderConfiguration> providerConfigurations =
                 getProviderConfigurationService().list(clusterName, clusterEnvironment);
+        logger.info("[ProviderConfigurationServiceResource] list method succeeded");
         return providerConfigurations;
     }
 
     @Override
     public List<ProviderConfiguration> listByMarket(
             String clusterName, String clusterEnvironment, String market) {
-        return getProviderConfigurationService()
-                .listByMarket(clusterName, clusterEnvironment, market);
+        logger.info("[ProviderConfigurationServiceResource] listByMarket method called");
+        List<ProviderConfiguration> result =
+                getProviderConfigurationService()
+                        .listByMarket(clusterName, clusterEnvironment, market);
+        logger.info("[ProviderConfigurationServiceResource] listByMarket method succeeded");
+        return result;
     }
 
     @Override
     public List<ProviderConfiguration> listAll() {
-        return getProviderConfigurationService().listAll();
+        logger.info("[ProviderConfigurationServiceResource] listAll method called");
+        List<ProviderConfiguration> result = getProviderConfigurationService().listAll();
+        logger.info("[ProviderConfigurationServiceResource] listAll method succeeded");
+        return result;
     }
 
     @Override
     public ProviderConfiguration getProviderByName(
             String clusterName, String clusterEnvironment, String providerName) {
-        return getProviderConfigurationService()
-                .getProviderByName(clusterName, clusterEnvironment, providerName);
+        logger.info("[ProviderConfigurationServiceResource] getProviderByName method called");
+        ProviderConfiguration result =
+                getProviderConfigurationService()
+                        .getProviderByName(clusterName, clusterEnvironment, providerName);
+        logger.info("[ProviderConfigurationServiceResource] getProviderByName method succeeded");
+        return result;
     }
 
     @Override
     public ProviderConfiguration getProviderByNameInClusterIfPossible(
             String clusterName, String clusterEnvironment, String providerName) {
-        return getProviderConfigurationService()
-                .getProviderByNameInClusterIfPossible(
-                        clusterName, clusterEnvironment, providerName);
+        logger.info(
+                "[ProviderConfigurationServiceResource] getProviderByNameInClusterIfPossible method called");
+        ProviderConfiguration result =
+                getProviderConfigurationService()
+                        .getProviderByNameInClusterIfPossible(
+                                clusterName, clusterEnvironment, providerName);
+        logger.info(
+                "[ProviderConfigurationServiceResource] getProviderByNameInClusterIfPossible method succeeded");
+        return result;
     }
 }

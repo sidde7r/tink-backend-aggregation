@@ -5,6 +5,8 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -24,6 +26,8 @@ import se.tink.libraries.social.security.SocialSecurityNumber;
 */
 public class CreditSafeServiceResource implements CreditSafeService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreditSafeServiceResource.class);
+
     private static final ImmutableList<String> VALID_CLUSTERS =
             ImmutableList.of("oxford-production", "oxford-staging", "local-development");
 
@@ -33,6 +37,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
                 configuration.getCreditSafe().getUsername(),
                 configuration.getCreditSafe().getPassword(),
                 configuration.getCreditSafe().isLogConsumerMonitoringTraffic());
+        LOGGER.info("[CreditSafeServiceResource] Successfully initialised");
     }
 
     CreditSafeServiceResource(String user, String pass, boolean logTraffic) {}
@@ -41,44 +46,55 @@ public class CreditSafeServiceResource implements CreditSafeService {
     public void removeConsumerMonitoring(
             RemoveMonitoredConsumerCreditSafeRequest request,
             @ClientContext ClientInfo clientInfo) {
+        LOGGER.info("[CreditSafeServiceResource] removeConsumerMonitoring method called");
         validateCluster(clientInfo);
         SocialSecurityNumber.Sweden socialSecurityNumber =
                 new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
+            LOGGER.info("[CreditSafeServiceResource] removeConsumerMonitoring method succeeded");
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
+        LOGGER.info("[CreditSafeServiceResource] removeConsumerMonitoring method called");
     }
 
     @Override
     public Response addConsumerMonitoring(
             AddMonitoredConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo) {
+        LOGGER.info("[CreditSafeServiceResource] addConsumerMonitoring method called");
         validateCluster(clientInfo);
         SocialSecurityNumber.Sweden socialSecurityNumber =
                 new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
+            LOGGER.info("[CreditSafeServiceResource] addConsumerMonitoring method succeeded");
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
-
+        LOGGER.info("[CreditSafeServiceResource] addConsumerMonitoring method succeeded");
         return HttpResponseHelper.ok();
     }
 
     @Override
     public PortfolioListResponse listPortfolios(@ClientContext ClientInfo clientInfo) {
+        LOGGER.info("[CreditSafeServiceResource] listPortfolios method called");
         validateCluster(clientInfo);
+        LOGGER.info("[CreditSafeServiceResource] listPortfolios method succeeded");
         return null;
     }
 
     @Override
     public PageableConsumerCreditSafeResponse listChangedConsumers(
             ChangedConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo) {
+        LOGGER.info("[CreditSafeServiceResource] listChangedConsumers method called");
         validateCluster(clientInfo);
+        LOGGER.info("[CreditSafeServiceResource] listChangedConsumers method succeeded");
         return null;
     }
 
     @Override
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(
             PageableConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo) {
+        LOGGER.info("[CreditSafeServiceResource] listMonitoredConsumers method called");
         validateCluster(clientInfo);
+        LOGGER.info("[CreditSafeServiceResource] listMonitoredConsumers method succeeded");
         return null;
     }
 
