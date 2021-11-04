@@ -20,10 +20,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter.BarclaysInvalidDataFilter;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter.BarclaysRateLimitFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
@@ -65,6 +67,11 @@ public final class BarclaycardV31BusinessAgent extends UkOpenBankingBaseAgent {
         UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
 
         return createAutoAuthController(authController);
+    }
+
+    @Override
+    protected RateLimitFilter addRateLimitFilter() {
+        return new BarclaysRateLimitFilter(provider.getName(), 500, 1500, 3);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
