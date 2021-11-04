@@ -16,7 +16,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: payments-connectivity
+        who: connectivity-thundercats
       annotations:
         description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
@@ -27,7 +27,7 @@ spec:
       expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken|Lansforsakringar).*", outcome="failed"}[30m])) >= 10
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P4
       annotations:
         description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
@@ -38,7 +38,7 @@ spec:
         / sum by (className) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*"}[1h]))) > 0.12 and sum by (className) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*"}[1h])) > 100
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P3
       annotations:
         description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
@@ -48,7 +48,7 @@ spec:
       expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken|Lansforsakringar).*", outcome=~"unavailable"}[15m])) >= 15
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P4
       annotations:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
@@ -58,7 +58,7 @@ spec:
       expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 15
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P3
       annotations:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
@@ -69,7 +69,7 @@ spec:
         / sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h]))) > 0.02 and sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h])) > 1000
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P3
       annotations:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
@@ -80,7 +80,7 @@ spec:
         and sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h])) <= 1000
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P3
       annotations:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
@@ -91,7 +91,7 @@ spec:
       expr: sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent", outcome="failed"}[6h])) / sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent"}[6h])) > 0.5
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P4
       annotations:
         description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
@@ -101,7 +101,7 @@ spec:
       expr: sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent", outcome="unavailable"}[6h])) / sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent"}[6h])) > 0.5
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P4
       annotations:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
@@ -113,7 +113,7 @@ spec:
         and sum by(className,market) (increase(tink_agent_transfer_total{market="SE", provider_type!="test"}[6h])) >= 1000
       labels:
         severity: urgent
-        who: payments-connectivity
+        who: connectivity-thundercats
         priority: P2
       annotations:
         description: This indicates that all the transfers for the bank are succeeding in last 6 hours. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
