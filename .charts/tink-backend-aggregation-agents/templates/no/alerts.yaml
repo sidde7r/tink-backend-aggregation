@@ -117,3 +117,18 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
+    - alert: EXPERIMENTAL_RefreshUnknownErrorRateOver10%NO
+      expr: |
+        # Failed refreshes (due to unknown RuntimeException) over 10%
+        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="failed", market="NO", provider_type!="test"}[1h])) by (className, provider, type)
+            / count(sum_over_time(tink_agent_refresh_total{market="NO", provider_type!="test"}[1h])) by (className, provider, type) > 0.1)
+      for: 15m
+      labels:
+        severity: ping
+        priority: P3
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLinkAbs1h }}
+          {{ .Values.grafanaLinkAbs1h }}
+        summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
+        tags: {{ .Values.tags }}
