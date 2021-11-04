@@ -37,8 +37,6 @@ public class IngBaseApiClientIntegrationTest {
 
     @Mock private AgentComponentProvider agentComponentProvider;
 
-    private IngAuthenticationInputData authenticationInputData;
-
     private IngBaseApiClient baseApiClient;
 
     private final AgentConfiguration<IngBaseConfiguration> agentConfiguration =
@@ -59,12 +57,11 @@ public class IngBaseApiClientIntegrationTest {
                         mock(ProviderSessionCacheController.class),
                         marketConfiguration,
                         mock(QsealcSigner.class),
-                        authenticationInputData =
-                                IngAuthenticationInputData.builder()
-                                        .userAuthenticationData(
-                                                new IngUserAuthenticationData(true, "psuIpAddress"))
-                                        .strongAuthenticationState(null)
-                                        .build(),
+                        IngAuthenticationInputData.builder()
+                                .userAuthenticationData(
+                                        new IngUserAuthenticationData(true, "psuIpAddress"))
+                                .strongAuthenticationState(null)
+                                .build(),
                         agentComponentProvider);
 
         baseApiClient.setConfiguration(agentConfiguration);
