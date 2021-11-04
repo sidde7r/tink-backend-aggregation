@@ -1,0 +1,119 @@
+
+------------------------------------------------------------------
+REQUEST 1
+GET https://somehost/openapi/oauth2/consents/fffff
+Accept: application/json
+
+------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+  "consentId": "fffff",
+  "status": "valid",
+  "validUntil": "2021-04-12",
+  "access": {
+    "ais.balances.read": [
+      {
+        "iban": "NL30RABO0000000000",
+        "currency": "EUR"
+      }
+    ],
+    "ais.transactions.read-90days": [
+      {
+        "iban": "NL30RABO0000000000",
+        "currency": "EUR"
+      }
+    ],
+    "ais.transactions.read-history": [
+      {
+        "iban": "NL30RABO0000000000",
+        "currency": "EUR"
+      }
+    ]
+  }
+}
+
+------------------------------------------------------------------
+REQUEST 2
+GET https://api.rabobank.nl/openapi/payments/account-information/ais/accounts
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json
+
+{
+  "accounts": [
+    {
+      "resourceId": "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2",
+      "iban": "NL30RABO0000000000",
+      "currency": "EUR",
+      "status": "enabled",
+      "ownerName": "Monty Python",
+      "_links": {
+        "balances": {
+          "href": "/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/balances"
+        },
+        "transactions": {
+          "href": "/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/transactions"
+        }
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://somehost/openapi/payments/account-information/ais/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/balances
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET should-retry
+429
+Content-Type: application/problem+json
+
+{
+  "httpcode": "429",
+  "httpmessage": "too many requests",
+  "moreinformation": "rate limit exceeded"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH should-retry
+GET https://somehost/openapi/payments/account-information/ais/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/balances
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"account":{"iban":"NL30RABO0000000000","currency":"EUR"},"balances":[{"balanceAmount":{"amount":"0.01","currency":"EUR"},"balanceType":"expected","lastChangeDateTime":"2021-04-14T19:56:43.861Z"}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://somehost/openapi/payments/account-information/ais/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/transactions?bookingStatus=booked&dateFrom=1992-01-11T23%3A00%3A00.000Z&dateTo=1992-04-09T22%3A00%3A00.000Z&size=500
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json
+
+{
+  "account": {
+    "iban": "NL30RABO0000000000",
+    "currency": "EUR"
+  },
+  "transactions": {
+    "booked": [],
+    "_links": {
+      "account": {
+        "href": "/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2"
+      }
+    }
+  }
+}

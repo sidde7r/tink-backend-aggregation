@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.filter.RabobankFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.filter.RabobankRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.filter.RabobankUserRefreshLimitExceededFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -48,7 +49,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -127,15 +127,11 @@ public final class RabobankAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(
-                new RateLimitRetryFilter(
-                        RabobankConstants.HttpClient.MAX_RETRIES,
-                        HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new AccessExceededFilter());
         client.addFilter(
                 new RabobankRetryFilter(
-                        RabobankConstants.HttpClient.MAX_RETRIES,
-                        HttpClient.RETRY_SLEEP_MILLISECONDS));
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new RabobankUserRefreshLimitExceededFilter());
         client.addFilter(new RabobankFailureFilter());
     }
 

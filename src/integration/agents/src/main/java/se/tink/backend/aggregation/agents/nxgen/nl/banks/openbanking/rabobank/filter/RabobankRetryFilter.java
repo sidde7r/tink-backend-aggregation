@@ -17,7 +17,7 @@ public class RabobankRetryFilter extends AbstractRandomRetryFilter {
 
     @Override
     protected boolean shouldRetry(HttpResponse response) {
-        return ErrorMessages.ERROR_RESPONSES.contains(response.getStatus())
+        return ErrorMessages.STATUS_CODES_FOR_RETRY.contains(response.getStatus())
                 || isTokenUrlNotFoundError(response);
     }
 
