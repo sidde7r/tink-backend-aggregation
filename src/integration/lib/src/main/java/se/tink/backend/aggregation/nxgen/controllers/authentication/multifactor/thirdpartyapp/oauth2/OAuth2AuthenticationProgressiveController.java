@@ -5,12 +5,12 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -25,14 +25,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class OAuth2AuthenticationProgressiveController
         implements AutoAuthenticator, ThirdPartyAppStrongAuthenticator<String> {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(OAuth2AuthenticationProgressiveController.class);
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
@@ -85,9 +85,9 @@ public class OAuth2AuthenticationProgressiveController
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         if (oAuth2Token.hasAccessExpired()) {
-            logger.info("[oAUth2Token] has expied");
+            log.info("[oAUth2Token] has expied");
             if (!oAuth2Token.canRefresh()) {
-                logger.info("[oAUth2Token] cannot be refreshed");
+                log.info("[oAUth2Token] cannot be refreshed");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
@@ -96,13 +96,13 @@ public class OAuth2AuthenticationProgressiveController
             Optional<String> refreshToken = oAuth2Token.getRefreshToken();
 
             if (!refreshToken.isPresent()) {
-                logger.info("[oAUth2Token] is not present");
+                log.info("[oAUth2Token] is not present");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            OAuth2Token refreshedOAuth2Token = authenticator.refreshAccessToken(refreshToken.get());
+            OAuth2Token refreshedOAuth2Token = refreshAccessToken(refreshToken.get());
             if (!refreshedOAuth2Token.isValid()) {
-                logger.info("[oAUth2Token] is not valid after attempt to refresh it");
+                log.info("[oAUth2Token] is not valid after attempt to refresh it");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
@@ -180,5 +180,26 @@ public class OAuth2AuthenticationProgressiveController
         authenticator.useAccessToken(oAuth2Token);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    private OAuth2Token refreshAccessToken(String refreshToken) {
+        try {
+            return authenticator.refreshAccessToken(refreshToken);
+        } catch (HttpResponseException ex) {
+            handleRefreshTokenServerError(ex);
+            log.warn("[OAuth2Token] Expiring session as a result of exception", ex);
+            throw ex;
+        }
+    }
+
+    protected void handleRefreshTokenServerError(HttpResponseException ex) {
+        final int responseStatus = ex.getResponse().getStatus();
+        if (responseStatus >= 500) {
+            log.error(
+                    "[OAuth2Token] Bank side error (status code {}) during refreshing token",
+                    responseStatus,
+                    ex);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(ex);
+        }
     }
 }
