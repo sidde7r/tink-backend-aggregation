@@ -30,7 +30,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
-    private static final String APP_VERSION = "2021.9";
+    private static final String APP_VERSION = "2021.10";
     private static final String APP_VERSION_HEADER =
             "MobileBank ios com danskebank.mobilebank3dk 34250";
     private static final String CLIENT_SECRET =

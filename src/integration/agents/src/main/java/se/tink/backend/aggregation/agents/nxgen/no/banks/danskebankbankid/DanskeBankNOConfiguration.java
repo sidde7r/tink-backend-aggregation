@@ -20,12 +20,12 @@ public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String CLIENT_SECRET =
-            "oT5hmRd2otSjlbrPAKtvmBJ5cTSVzwttGRxYLUzHfRvWS5m2Kf";
+            "cb8a70401fae40af966c03b632cb9bb9C18352D42C194728B5";
     private static final String APP_VERSION_HEADER =
-            "MobileBank ios com danskebank.mobilebank3no 28076";
-    private static final String APP_VERSION = "2021.2";
+            "MobileBank ios com danskebank.mobilebank3no 34250";
+    private static final String APP_VERSION = "2021.10";
     private static final String USER_AGENT =
-            "nymobilbanknodanskebank/2021.2 (com.danskebank.mobilebank3no; build:28076; iOS 13.3.1; NO)";
+            "nymobilbanknodanskebank/2021.10 (com.danskebank.mobilebank3no; build:34250; iOS 14.7.1; NO)";
 
     public String getUserAgent() {
         return USER_AGENT;
