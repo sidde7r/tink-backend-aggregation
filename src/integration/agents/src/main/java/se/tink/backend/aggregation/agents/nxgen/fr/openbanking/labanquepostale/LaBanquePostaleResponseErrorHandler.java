@@ -13,13 +13,19 @@ public class LaBanquePostaleResponseErrorHandler extends DefaultResponseStatusHa
         if (httpResponse.getStatus() == 404
                 && httpResponse.getBody(String.class).contains("404 File Not Found")) {
             throw LoginError.NO_ACCOUNTS.exception();
-        } else if (isBankSideError(httpResponse)) {
+        } else if (isBankSideError(httpResponse) || isProxyError(httpResponse)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
         super.handleResponse(httpRequest, httpResponse);
     }
 
     private boolean isBankSideError(HttpResponse httpResponse) {
-        return httpResponse.getBody(LaBanquePostaleErrorResponse.class).isBankSideError();
+        return httpResponse.getStatus() == 500
+                && httpResponse.getBody(LaBanquePostaleErrorResponse.class).isBankSideError();
+    }
+
+    private boolean isProxyError(HttpResponse httpResponse) {
+        return httpResponse.getStatus() == 502
+                && httpResponse.getBody(LaBanquePostaleProxyErrorResponse.class).isProxyError();
     }
 }
