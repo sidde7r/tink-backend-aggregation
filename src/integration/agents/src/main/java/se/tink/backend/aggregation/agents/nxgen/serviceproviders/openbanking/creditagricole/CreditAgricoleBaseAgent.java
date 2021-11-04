@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 public class CreditAgricoleBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -73,6 +74,8 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
 
         this.agentConfiguration = getAgentConfiguration();
         this.creditAgricoleConfiguration = agentConfiguration.getProviderSpecificConfiguration();
+
+        this.client.addFilter(new TimeoutFilter());
 
         this.apiClient =
                 new CreditAgricoleBaseApiClient(
