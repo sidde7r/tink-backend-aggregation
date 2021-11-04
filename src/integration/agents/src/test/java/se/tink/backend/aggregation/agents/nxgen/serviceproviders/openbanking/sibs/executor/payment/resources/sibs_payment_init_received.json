@@ -1,0 +1,10 @@
+{
+    "transactionStatus": "RCVD",
+    "paymentId": "DUMMY_PAYMENT_ID",
+    "transactionFeeIndicator": false,
+    "_links": {
+        "redirect": "https://app.cgd.pt/cdoOBA/login.seam?ref=DUMMY_REF",
+        "updatePsuIdentification": "DUMMY_PSU_ID"
+    },
+    "psuMessage": "DUMMY_MESSAGE"
+}
