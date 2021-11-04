@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -28,8 +29,15 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
             AgentComponentProvider componentProvider,
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            QsealcSigner qsealcSigner) {
-        super(componentProvider, client, persistentStorage, qsealcSigner, false);
+            QsealcSigner qsealcSigner,
+            StrongAuthenticationState strongAuthenticationState) {
+        super(
+                componentProvider,
+                client,
+                persistentStorage,
+                qsealcSigner,
+                false,
+                strongAuthenticationState);
     }
 
     public DecoupledAuthenticationResponse authenticateDecoupled(String ssn) {

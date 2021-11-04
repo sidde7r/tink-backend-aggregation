@@ -36,9 +36,15 @@ public final class NordeaBaseConstants {
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
         public static final URL INITIATE_PAYMENT = new URL(BASE_URL + ApiService.INITIATE_PAYMENT);
+        public static final URL INITIATE_SINGLE_SCA_PAYMENT =
+                new URL(BASE_URL + ApiService.INITIATE_SINGLE_SCA_PAYMENT);
         public static final URL CONFIRM_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_PAYMENT);
+        public static final URL CONFIRM_PAYMENT_LIST =
+                new URL(BASE_URL + ApiService.CONFIRM_PAYMENT_LIST);
         public static final URL GET_PAYMENT = new URL(BASE_URL + ApiService.GET_PAYMENT);
         public static final URL DELETE_PAYMENT = new URL(BASE_URL + ApiService.DELETE_PAYMENT);
+        public static final URL GET_SINGLE_SCA_PAYMENT =
+                new URL(BASE_URL + ApiService.GET_SINGLE_SCA_PAYMENT);
         public static final URL GET_PAYMENTS = new URL(BASE_URL + ApiService.GET_PAYMENTS);
         public static final URL GET_CARDS = new URL(BASE_URL + ApiService.GET_CARDS);
         public static final URL GET_CARD_TRANSACTIONS =
@@ -70,6 +76,7 @@ public final class NordeaBaseConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ApiService {
+        private static final String V_1 = "/v1";
         private static final String V_4 = "/v4";
         private static final String V_5 = "/v5";
         public static final String DECOUPLED_AUTHENTICATION = V_5 + "/decoupled/authentications";
@@ -87,6 +94,11 @@ public final class NordeaBaseConstants {
         public static final String GET_CARD_DETAILS = V_5 + "/cards/{cardId}";
         public static final String INITIATE_PAYMENT = V_4 + "/payments/{paymentType}";
         public static final String CONFIRM_PAYMENT = V_4 + "/payments/{paymentType}/confirm";
+        public static final String INITIATE_SINGLE_SCA_PAYMENT =
+                V_1 + "/payments/authorization/sepa-credit-transfer";
+        public static final String CONFIRM_PAYMENT_LIST = V_4 + "/payments/sepa/confirm";
+        public static final String GET_SINGLE_SCA_PAYMENT = "/v1/payments/{paymentId}/status";
+
         public static final String GET_PAYMENT = V_4 + "/payments/{paymentType}/{paymentId}";
         public static final String GET_PAYMENTS = V_4 + "/payments/{paymentType}";
         public static final String GET_TOKEN_DECOUPLED = "/token";
@@ -97,6 +109,7 @@ public final class NordeaBaseConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String ACCOUNT_ID = "account_id";
+        public static final String PAYMENT_AUTHORIZATION_URL = "PAYMENT_AUTHORIZATION_URL";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -221,6 +234,7 @@ public final class NordeaBaseConstants {
     public static final class ErrorCodes {
         public static final String TOKEN_EXPIRED = "error.token.expired";
         public static final String SESSION_CANCELLED = "error.session.cancelled";
+        public static final String CANCELLED = "cancelled";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

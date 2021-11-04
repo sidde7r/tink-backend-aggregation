@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @JsonObject
 public class GetPaymentResponse extends NordeaBaseResponse {
@@ -15,7 +16,8 @@ public class GetPaymentResponse extends NordeaBaseResponse {
         return response;
     }
 
-    public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
-        return response.toTinkPaymentResponse(paymentType);
+    public PaymentResponse toTinkPaymentResponse(
+            PaymentType paymentType, PaymentServiceType paymentServiceType) {
+        return response.toTinkPaymentResponse(paymentType, paymentServiceType);
     }
 }

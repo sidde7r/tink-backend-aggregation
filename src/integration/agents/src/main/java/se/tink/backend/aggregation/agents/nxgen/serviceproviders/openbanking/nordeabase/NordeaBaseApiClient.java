@@ -45,8 +45,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreateSingleScaPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreateSingleScaPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.SingleScaPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.AccountDetailsResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountDetailsResponse;
@@ -58,6 +61,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -83,13 +87,15 @@ public class NordeaBaseApiClient implements TokenInterface {
     private GetAccountsResponse cachedAccounts;
     private final UserAvailability userAvailability;
     private final LocalDate localDate;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public NordeaBaseApiClient(
             AgentComponentProvider componentProvider,
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             QsealcSigner qsealcSigner,
-            boolean corporate) {
+            boolean corporate,
+            StrongAuthenticationState strongAuthenticationState) {
         this.componentProvider = componentProvider;
         this.client = client;
         this.persistentStorage = persistentStorage;
@@ -97,6 +103,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.corporate = corporate;
         this.userAvailability = componentProvider.getCredentialsRequest().getUserAvailability();
         this.localDate = componentProvider.getLocalDateTimeSource().now().toLocalDate();
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     public NordeaBaseConfiguration getConfiguration() {
@@ -347,6 +354,39 @@ public class NordeaBaseApiClient implements TokenInterface {
         }
     }
 
+    public CreateSingleScaPaymentResponse createSingleScaPayment(
+            CreatePaymentRequest createPaymentRequest) throws PaymentException {
+        CreateSingleScaPaymentRequest createSingleScaPaymentRequest =
+                CreateSingleScaPaymentRequest.builder()
+                        .withPayment(createPaymentRequest)
+                        .withExternalId(createPaymentRequest.getExternalId())
+                        .withRedirectUri(getRedirectUrl())
+                        .withState(strongAuthenticationState.getState())
+                        .build();
+        String body = SerializationUtils.serializeToString(createSingleScaPaymentRequest);
+        try {
+            return createRequest(Urls.INITIATE_SINGLE_SCA_PAYMENT, HttpMethod.POST, body)
+                    .post(CreateSingleScaPaymentResponse.class, createSingleScaPaymentRequest);
+        } catch (HttpResponseException e) {
+            handleHttpPisResponseException(e);
+            throw e;
+        }
+    }
+
+    public ConfirmPaymentResponse confirmPaymentList(List<String> paymentIds)
+            throws PaymentException {
+        ConfirmPaymentRequest confirmPaymentRequest =
+                new ConfirmPaymentRequest(paymentIds, strongAuthenticationState.getState());
+        String body = SerializationUtils.serializeToString(confirmPaymentRequest);
+        try {
+            return createRequestInSession(Urls.CONFIRM_PAYMENT_LIST, HttpMethod.PUT, body)
+                    .put(ConfirmPaymentResponse.class, confirmPaymentRequest);
+        } catch (HttpResponseException e) {
+            handleHttpPisResponseException(e);
+            throw e;
+        }
+    }
+
     public GetPaymentResponse getPayment(String paymentId, PaymentType paymentType)
             throws PaymentException {
         try {
@@ -357,6 +397,20 @@ public class NordeaBaseApiClient implements TokenInterface {
                             HttpMethod.GET,
                             null)
                     .get(GetPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpPisResponseException(e);
+            throw e;
+        }
+    }
+
+    public SingleScaPaymentStatusResponse getSingleScaPayment(String paymentId)
+            throws PaymentException {
+        try {
+            return createRequest(
+                            Urls.GET_SINGLE_SCA_PAYMENT.parameter(IdTags.PAYMENT_ID, paymentId),
+                            HttpMethod.GET,
+                            null)
+                    .get(SingleScaPaymentStatusResponse.class);
         } catch (HttpResponseException e) {
             handleHttpPisResponseException(e);
             throw e;

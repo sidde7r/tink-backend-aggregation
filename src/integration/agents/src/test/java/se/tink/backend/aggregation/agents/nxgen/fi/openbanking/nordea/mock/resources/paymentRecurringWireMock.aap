@@ -1,0 +1,67 @@
+REQUEST 1
+POST https://open.nordea.com/personal/v5/authorize
+Content-Type: application/json
+
+{"country":"FI","scope":["CARDS_TRANSACTIONS","ACCOUNTS_DETAILS","CARDS_INFORMATION","ACCOUNTS_BALANCES","ACCOUNTS_BASIC","PAYMENTS_MULTIPLE","ACCOUNTS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://api.tink.se/api/v1/credentials/third-party/callback","max_tx_history":12,"account_list":["ALL_WITH_CARDS"],"skip_account_selection":true}
+
+RESPONSE 1
+302
+Content-Type: application/json;charset=utf-8
+Location: https://identify.nordea.com?client_id=VjIDcKEAah8ioKuzUIDZ&code_challenge_method=S256&redirect_uri=https%3A%2F%2Fopen.nordea.com%2Fpersonal%2Foauth%2F&response_type=code&code_challenge=N9l4klOviIUey2Evu4ZpfLnPpsZjrM-4FO8DHts41pM&scope=openid+ndf+agreement&state=0d59c833-b839-4f77-9eee-1cac7864c96d%26skip_ui&nonce=zcRO8foo59otqBQ9fgMEki8lnO9kRa9rv67FUO1d
+
+REQUEST 2
+POST https://open.nordea.com/personal/v5/authorize/token
+Content-Type: application/x-www-form-urlencoded
+
+code=dummyCode&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+
+RESPONSE 2
+200
+Date: Tue, 07 Jul 2020 13:47:02 GMT
+Date: Tue, 07 Jul 2020 13:47:02 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+x-request-id: a5a38af3a7cf2e9f40464b4e33d6d1eb
+X-Global-Transaction-ID: 569f94405f047cd6040f0ee0
+Access-Control-Allow-Origin: *
+X-RateLimit-Limit: name=rate-limit-1,5000;
+X-RateLimit-Remaining: name=rate-limit-1,4136;
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access_token":"dummyToken","expires_in":64800,"token_type":"Bearer","refresh_token":"dummyRefreshToken"}
+
+REQUEST 3
+POST https://open.nordea.com/personal/v4/payments/sepa
+Content-Type: application/json
+
+{"amount":0.01,"creditor":{"account":{"currency":"EUR","value":"FI0712424625986591","_type":"IBAN"},"message":"610550873500157","name":"dummy owner","reference":null},"currency":"EUR","debtor":{"account":{"currency":"EUR","value":"FI4016726388543294","_type":"IBAN"},"message":null},"urgency":null,"external_id":"232539fc-dfc3-47ed-8c70-205a928f05c8","requested_execution_date":null,"recurring":{"count":2,"recurrence_type":"MONTHLY_SAME_DAY"}}
+
+RESPONSE 3
+201
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"0130dc8587011609","creation_date_time":"2021-11-02T14:25:12.277737Z","http_code":201},"response":{"_id":"74de7892-8269-41a2-a7c9-92407fe0c94a","external_id":"13621360-b26e-440e-bde7-763c2114d267","entry_date_time":"2021-11-02T14:25:12Z","debtor":{"account":{"value":"FI8412203500721390","_type":"IBAN","currency":"EUR"}},"creditor":{"account":{"value":"FI8312163500040664","_type":"IBAN","currency":"EUR"},"name":"Creditor Name","message":"TinkSepaRecurring-2021-11-02--14-24-38"},"amount":"0.01","currency":"EUR","payment_status":"PendingConfirmation","urgency":"standard","requested_execution_date":"2021-11-02","planned_execution_date":"2021-11-02","tpp_messages":[],"_links":[{"rel":"self","href":"/v4/payments/sepa/74de7892-8269-41a2-a7c9-92407fe0c94a"}]}}
+
+REQUEST 4
+PUT https://open.nordea.com/personal/v4/payments/sepa/confirm
+Content-Type: application/json
+
+{"state":"00000000-0000-4000-0000-000000000000","payments_ids":["74de7892-8269-41a2-a7c9-92407fe0c94a"]}
+
+RESPONSE 4
+201
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"0130dc8e87011609","creation_date_time":"2021-11-02T14:25:13.237451Z","http_code":200},"errors":[],"_links":[{"rel":"signing","href":"https://identify.nordea.com?client_id=VjIDcKEAah8ioKuzUIDZ&code_challenge_method=S256&redirect_uri=https://open.nordea.com/personal/v4/payments/sign/callback&response_type=code&code_challenge=6v91dW6H4IIhD5Pw3g_yY3BZhycNsxoXTcQRT7yPgTQ&scope=openid+ndf+agreement&state=c2lnbmluZ19vcmRlcl9pZD1lM2UwODA0ZC00ZGIyLTQ1NzktYmEyNi1mY2EzMGEyNzNjYzcmc3RhdGVfaWQ9ZWUxNzk1ZjMtZWI0Zi00ZTk1LWEyMGUtYjg5ODljYThjMmY4&signing_order_id=e3e0804d-4db2-4579-ba26-fca30a273cc7"}],"response":{"payments":[{"_id":"74de7892-8269-41a2-a7c9-92407fe0c94a","external_id":"13621360-b26e-440e-bde7-763c2114d267","entry_date_time":"2021-11-02T14:25:12Z","debtor":{"account":{"value":"FI8412203500721390","_type":"IBAN","currency":"EUR"}},"creditor":{"account":{"value":"FI8312163500040664","_type":"IBAN","currency":"EUR"},"name":"Creditor Name","message":"TinkSepaRecurring-2021-11-02--14-24-38"},"amount":"0.01","currency":"EUR","payment_status":"PendingUserApproval","urgency":"standard","requested_execution_date":"2021-11-02","planned_execution_date":"2021-11-02","tpp_messages":[],"_links":[{"rel":"self","href":"/v4/payments/sepa/74de7892-8269-41a2-a7c9-92407fe0c94a"}]}]}}
+
+REQUEST 5
+GET https://open.nordea.com/personal/v4/payments/sepa/74de7892-8269-41a2-a7c9-92407fe0c94a
+Content-Type: application/json
+
+RESPONSE 5
+201
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"0130e02287011609","creation_date_time":"2021-11-02T14:25:36.465813Z","http_code":200},"response":{"_id":"74de7892-8269-41a2-a7c9-92407fe0c94a","external_id":"13621360-b26e-440e-bde7-763c2114d267","entry_date_time":"2021-11-02T14:25:12.26105Z","debtor":{"account":{"value":"FI8412203500721390","_type":"IBAN","currency":"EUR"}},"creditor":{"account":{"value":"FI8312163500040664","_type":"IBAN","currency":"EUR"},"message":"TinkSepaRecurring-2021-11-02--14-24-38"},"amount":"0.01","currency":"EUR","payment_status":"Paid","requested_execution_date":"2021-11-02","planned_execution_date":"2021-11-02","tpp_messages":[{"category":"WARNING","text":"We are experiencing technical difficulties accessing the latest payment details. The supplied details could be slightly outdated or missing some fields."}],"_links":[{"rel":"self","href":"/v4/payments/sepa/74de7892-8269-41a2-a7c9-92407fe0c94a"}]}}

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.nordea.a
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -27,6 +28,7 @@ public class BankStatusIdTest {
     NordeaSeBusinessDecoupledAuthenticator nordeaSeBusinessDecoupledAuthenticator;
     String companyId;
     DecoupledAuthenticationResponse authenticationResponse;
+    StrongAuthenticationState strongAuthenticationState;
     CredentialsRequest credentialsRequest;
     LocalDateTime localDateTime = LocalDateTime.parse("1995-11-05T10:11:30");
 
@@ -34,6 +36,7 @@ public class BankStatusIdTest {
     public void setUp() {
         LocalDateTimeSource localDateTimeSource = mock(LocalDateTimeSource.class);
         authenticationResponse = mock(DecoupledAuthenticationResponse.class);
+        strongAuthenticationState = mock(StrongAuthenticationState.class);
         persistentStorage = mock(PersistentStorage.class);
         client = mock(TinkHttpClient.class);
         componentProvider = mock(AgentComponentProvider.class);
@@ -48,7 +51,11 @@ public class BankStatusIdTest {
         qsealcSigner = mock(QsealcSigner.class);
         apiClient =
                 new NordeaSeBusinessApiClient(
-                        componentProvider, client, persistentStorage, qsealcSigner);
+                        componentProvider,
+                        client,
+                        persistentStorage,
+                        qsealcSigner,
+                        strongAuthenticationState);
         companyId = "1111111";
         nordeaSeBusinessDecoupledAuthenticator =
                 new NordeaSeBusinessDecoupledAuthenticator(apiClient, companyId);

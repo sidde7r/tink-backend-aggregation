@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities.DebtorEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities.PaymentRecurrence;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class CreatePaymentRequest {
     private double amount;
     private CreditorEntity creditor;
@@ -20,6 +23,9 @@ public class CreatePaymentRequest {
     @JsonProperty("requested_execution_date")
     private String executionDate;
 
+    @JsonProperty("recurring")
+    private PaymentRecurrence recurrence;
+
     private CreatePaymentRequest(Builder builder) {
         this.amount = builder.amount;
         this.creditor = builder.creditor;
@@ -28,6 +34,7 @@ public class CreatePaymentRequest {
         this.externalId = builder.externalId;
         this.urgency = builder.urgency;
         this.executionDate = builder.executionDate;
+        this.recurrence = builder.recurrence;
     }
 
     public static class Builder {
@@ -39,6 +46,7 @@ public class CreatePaymentRequest {
         private DebtorEntity debtor;
         private String externalId;
         private String urgency;
+        private PaymentRecurrence recurrence;
 
         public Builder withAmount(double amount) {
             this.amount = amount;
@@ -72,6 +80,11 @@ public class CreatePaymentRequest {
 
         public Builder withUrgency(String urgency) {
             this.urgency = urgency;
+            return this;
+        }
+
+        public Builder withRecurrence(PaymentRecurrence recurrence) {
+            this.recurrence = recurrence;
             return this;
         }
 
