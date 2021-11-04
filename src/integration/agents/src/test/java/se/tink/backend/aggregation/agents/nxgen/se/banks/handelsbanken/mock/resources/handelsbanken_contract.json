@@ -1,154 +1,16 @@
 {
   "accounts" : [ {
-    "accountNumber" : "1234-523 667 841",
+    "accountNumber" : "1234-332 211 222",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "unscaledValue" : 7914456,
       "scale" : 2,
-      "exactValue" : 79144.56,
-      "doubleValue" : 79144.56
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "123456789",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Joint account",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"se-internal://123456789\",\"se://1234523667841\"]",
-    "closed" : false,
-    "holderName" : "Firstname Lastname",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Firstname Lastname",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 79144.56
-  }, {
-    "accountNumber" : "27 771 757",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 91247753,
-      "scale" : 3,
-      "exactValue" : 91247.753,
-      "doubleValue" : 91247.753
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "27771757",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Tjänstepension Fond",
-    "ownership" : 1.0,
-    "type" : "INVESTMENT",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 91247.753
-  }, {
-    "accountNumber" : "1234-586 318 178",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 55500,
-      "scale" : 1,
-      "exactValue" : 5550.0,
-      "doubleValue" : 5550.0
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "586318178",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Plan B",
-    "ownership" : 1.0,
-    "type" : "SAVINGS",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"se-internal://586318178\",\"iban://SE5060000000000586318178\",\"se://1234586318178\"]",
-    "closed" : false,
-    "holderName" : "Firstname Lastname",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Firstname Lastname",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 5550.0
-  }, {
-    "accountNumber" : "6378-11 123 123",
-    "accountExclusion" : "NONE",
-    "exactAvailableCredit" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 0,
-      "scale" : 1,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : -100000,
-      "scale" : 1,
-      "exactValue" : -10000.0,
-      "doubleValue" : -10000.0
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "810711959",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Allkortskonto",
-    "ownership" : 1.0,
-    "type" : "CREDIT_CARD",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"se-internal://810711959\",\"se://637811123123\"]",
-    "closed" : false,
-    "holderName" : "Firstname Card",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Firstname Card",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : -10000.0
-  }, {
-    "accountNumber" : "1234-810 711 958",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
       "unscaledValue" : 1340388,
-      "scale" : 2,
       "exactValue" : 13403.88,
       "doubleValue" : 13403.88
     },
     "currencyCode" : "SEK",
-    "bankId" : "810711958",
+    "bankId" : "332211222",
     "excluded" : false,
     "favored" : false,
     "name" : "Allkonto",
@@ -157,7 +19,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[\"se-internal://810711958\",\"iban://SE1860000000000810711958\",\"se://1234810711958\"]",
+    "identifiers" : "[\"se://1234332211222\",\"se-internal://332211222\",\"iban://SE1860000000000810711958\"]",
     "closed" : false,
     "holderName" : "Firstname Lastname",
     "accountHolder" : {
@@ -173,12 +35,249 @@
     "availableCredit" : 0.0,
     "balance" : 13403.88
   }, {
+    "accountNumber" : "1234-123 456 789",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 7914456,
+      "exactValue" : 79144.56,
+      "doubleValue" : 79144.56
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "123456789",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Joint account",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://1234123456789\",\"se-internal://123456789\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 79144.56
+  }, {
+    "accountNumber" : "223334444",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 306077,
+      "exactValue" : 3060.77,
+      "doubleValue" : 3060.77
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "223334444",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "ISK",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 3060.77
+  }, {
+    "accountNumber" : "27 771 757",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 3,
+      "unscaledValue" : 91247753,
+      "exactValue" : 91247.753,
+      "doubleValue" : 91247.753
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "27771757",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Tjänstepension Fond",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 91247.753
+  }, {
+    "accountNumber" : "444422333",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "444422333",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "ISK - används ej",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "12345678",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 521618,
+      "exactValue" : 5216.18,
+      "doubleValue" : 5216.18
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "12345678",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Fondinnehav",
+    "ownership" : 1.0,
+    "payload" : "{\"fundAccountNumbers\":\"{\\\" SE4444224444\\\":\\\"444422333\\\"}\"}",
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 5216.18
+  }, {
+    "accountNumber" : "6378-11 224 4444",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : -100000,
+      "exactValue" : -10000.0,
+      "doubleValue" : -10000.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "111224444",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Allkortskonto",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://6378112244444\",\"se-internal://111224444\"]",
+    "closed" : false,
+    "holderName" : "Firstname Card",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Card",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -10000.0
+  }, {
+    "accountNumber" : "1234-444 414 444",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : 55500,
+      "exactValue" : 5550.0,
+      "doubleValue" : 5550.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "444414444",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Plan B",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://SE5060000000000586318178\",\"se-internal://444414444\",\"se://1234444414444\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 5550.0
+  }, {
     "accountNumber" : "10-280848-123456",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "unscaledValue" : -25168320,
       "scale" : 1,
+      "unscaledValue" : -25168320,
       "exactValue" : -2516832.0,
       "doubleValue" : -2516832.0
     },
@@ -194,142 +293,17 @@
     "userModifiedType" : false,
     "identifiers" : "[\"se://10280848123456\"]",
     "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
     "flags" : "[]",
     "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : -2516832.0
   } ],
   "transactions" : [ {
-    "amount" : 30000.0,
-    "date" : 1619172000000,
-    "description" : "Adulting",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 20000.0,
-    "date" : 1619172000000,
-    "description" : "Laura April",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -639.0,
-    "date" : 1619172000000,
-    "description" : "COLLECTOR BANK",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -776.9,
-    "date" : 1619085600000,
-    "description" : "K*H & M Henn",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -739.0,
-    "date" : 1618999200000,
-    "description" : "Billmate AB",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -548.0,
-    "date" : 1618999200000,
-    "description" : "K*Traningsko",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -487.0,
-    "date" : 1618912800000,
-    "description" : "K* Klarna",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -148.0,
-    "date" : 1618912800000,
-    "description" : "K*Svensk Hal",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -967.32,
-    "date" : 1618826400000,
-    "description" : "K*H & M Henn",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 20000.0,
-    "date" : 1579863600000,
-    "description" : "Adulting",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
     "amount" : -20000.0,
     "date" : 1619172000000,
     "description" : "Laura April",
@@ -486,6 +460,136 @@
     "externalSystemIds" : { },
     "transactionDates" : [ ]
   }, {
+    "amount" : 30000.0,
+    "date" : 1619172000000,
+    "description" : "Adulting",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 20000.0,
+    "date" : 1619172000000,
+    "description" : "Laura April",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -639.0,
+    "date" : 1619172000000,
+    "description" : "COLLECTOR BANK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -776.9,
+    "date" : 1619085600000,
+    "description" : "K*H & M Henn",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -739.0,
+    "date" : 1618999200000,
+    "description" : "Billmate AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -548.0,
+    "date" : 1618999200000,
+    "description" : "K*Traningsko",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -487.0,
+    "date" : 1618912800000,
+    "description" : "K* Klarna",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -148.0,
+    "date" : 1618912800000,
+    "description" : "K*Svensk Hal",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -967.32,
+    "date" : 1618826400000,
+    "description" : "K*H & M Henn",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 20000.0,
+    "date" : 1579863600000,
+    "description" : "Adulting",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
     "amount" : 1850.0,
     "date" : 1616756400000,
     "description" : "5 percent plan",
@@ -531,7 +635,7 @@
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : {
-      "SUB_ACCOUNT" : "6378-11 123 123"
+      "SUB_ACCOUNT" : "6378-11 224 4444"
     },
     "pending" : false,
     "timestamp" : 0,
@@ -782,14 +886,14 @@
     "dateOfBirth" : {
       "year" : 1983,
       "month" : "MARCH",
-      "era" : "CE",
       "dayOfWeek" : "MONDAY",
       "leapYear" : false,
       "dayOfYear" : 66,
       "chronology" : {
-        "id" : "ISO",
-        "calendarType" : "iso8601"
+        "calendarType" : "iso8601",
+        "id" : "ISO"
       },
+      "era" : "CE",
       "monthValue" : 3,
       "dayOfMonth" : 7
     }

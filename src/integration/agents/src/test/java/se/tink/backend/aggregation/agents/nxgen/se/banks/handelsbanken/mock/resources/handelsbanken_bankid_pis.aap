@@ -5,7 +5,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -31,7 +31,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -55,7 +55,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -79,7 +79,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -103,7 +103,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -127,7 +127,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -151,7 +151,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -175,7 +175,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -199,7 +199,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 9
@@ -222,7 +222,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 10 SET TRANSACTIONS_1
@@ -244,7 +244,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 11 SET TRANSACTIONS_2
@@ -267,7 +267,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 12 SET TRANSACTIONS_3
@@ -289,7 +289,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 13 SET TRANSACTIONS_4
@@ -311,7 +311,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 14 SET TRANSACTIONS_5
@@ -333,7 +333,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 15 SET TRANSACTIONS_6
@@ -355,7 +355,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 16 SET TRANSACTIONS_7
@@ -377,7 +377,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 17
@@ -399,7 +399,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 18
@@ -421,7 +421,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 19
@@ -443,7 +443,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 20
@@ -465,7 +465,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 21
@@ -487,7 +487,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 22
@@ -509,7 +509,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 23
@@ -531,7 +531,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 24
@@ -552,7 +552,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 25
@@ -574,7 +574,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 26
@@ -596,7 +596,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 27
@@ -618,7 +618,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 28
@@ -640,7 +640,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 29
@@ -662,7 +662,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 30
@@ -685,7 +685,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 31
@@ -708,7 +708,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 32
@@ -731,7 +731,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -754,7 +754,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 34
@@ -777,7 +777,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -801,7 +801,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -825,7 +825,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -849,7 +849,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -873,7 +873,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -897,7 +897,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -921,7 +921,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -945,7 +945,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -969,7 +969,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
@@ -993,7 +993,7 @@ Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
 X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
-X-SHB-APP-VERSION: 3.5:9.6
+X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
 
 RESPONSE 44

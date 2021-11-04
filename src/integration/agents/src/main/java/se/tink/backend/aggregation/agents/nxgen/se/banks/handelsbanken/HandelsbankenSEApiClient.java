@@ -30,9 +30,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.CustodyAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.FundHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.HandelsbankenSEFundAccountHoldingDetail;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.HoldingsSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.PensionDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.PensionOverviewResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.SecurityHoldingsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.SaveInvestStartPageResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.HandelsbankenSEPaymentContext;
@@ -161,10 +162,14 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .map(url -> createRequest(url).get(PaymentDetails.class));
     }
 
-    public SecurityHoldingsResponse securitiesHoldings(
+    public SaveInvestStartPageResponse saveInvestStart(
             ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toSecuritiesHoldings())
-                .get(SecurityHoldingsResponse.class);
+        return createRequest(applicationEntryPoint.toSaveInvestStart())
+                .get(SaveInvestStartPageResponse.class);
+    }
+
+    public HoldingsSummaryResponse holdingsSummary(URL url) {
+        return createRequest(url).get(HoldingsSummaryResponse.class);
     }
 
     public Optional<FundHoldingsResponse> fundHoldings(CustodyAccount custodyAccount) {

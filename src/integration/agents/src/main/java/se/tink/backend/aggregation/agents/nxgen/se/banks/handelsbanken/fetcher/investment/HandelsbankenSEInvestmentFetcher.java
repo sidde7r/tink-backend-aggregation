@@ -11,7 +11,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.SecurityHoldingsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.HoldingsSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -40,8 +40,9 @@ public class HandelsbankenSEInvestmentFetcher implements AccountFetcher<Investme
             final Collection<InvestmentAccount> holdings =
                     sessionStorage
                             .applicationEntryPoint()
-                            .map(client::securitiesHoldings)
-                            .map(sh -> sh.toTinkInvestments(client))
+                            .map(client::saveInvestStart)
+                            .map(si -> client.holdingsSummary(si.toHoldingsSummary()))
+                            .map(hs -> hs.toTinkInvestments(client))
                             .orElseGet(Collections::emptyList);
 
             final Collection<InvestmentAccount> pensionAccounts =
@@ -66,10 +67,10 @@ public class HandelsbankenSEInvestmentFetcher implements AccountFetcher<Investme
         if (hre.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
             HttpResponse response = hre.getResponse();
             if (response != null && response.hasBody()) {
-                SecurityHoldingsResponse holdingsResponse =
-                        response.getBody(SecurityHoldingsResponse.class);
+                HoldingsSummaryResponse holdingsSummaryResponse =
+                        response.getBody(HoldingsSummaryResponse.class);
                 if (HandelsbankenSEConstants.Investments.ERROR_TOO_YOUNG_INVESTMENTS
-                        .equalsIgnoreCase(holdingsResponse.getCode())) {
+                        .equalsIgnoreCase(holdingsSummaryResponse.getCode())) {
                     // If user is too young to use investments in app, just ignore and return empty
                     // list
                     return true;
