@@ -458,6 +458,12 @@ public class SwedbankBaseConstants {
         public static final String DEFAULT_CURRENCY_NULL = "Default currency cannot be null";
         public static final String NO_LINKS_FOUND =
                 "No confirm transfer link found. Transfer failed.";
+        public static final String LIST_INPUT_ERROR_FORMAT_MESSAGE =
+                "{} where null, expected at least an empty list.";
+        public static final String FUND_ACCOUNTS_STRING = "Fund accounts";
+        public static final String EQUITY_TRADERS_STRING = "Equity traders";
+        public static final String ISK_STRING = "Investment savings";
+        public static final String ENDOWMENT_INSURANCE_STRING = "Endowment insurance";
     }
 
     public static class UserMessage {

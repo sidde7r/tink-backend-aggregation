@@ -3,11 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class LoanDetailsAccountEntity {
-
     private String type;
     private TermsAndConditionsEntity termsAndConditions;
     private InterestRateEntity interestRate;
@@ -25,60 +26,4 @@ public class LoanDetailsAccountEntity {
     private List<BorrowerEntity> borrowers;
     private boolean showFutureLoanPayments;
     private boolean showHistoricalPayments;
-
-    public String getType() {
-        return type;
-    }
-
-    public TermsAndConditionsEntity getTermsAndConditions() {
-        return termsAndConditions;
-    }
-
-    public InterestRateEntity getInterestRate() {
-        return interestRate;
-    }
-
-    public AmountEntity getAmortizationOnDueDate() {
-        return amortizationOnDueDate;
-    }
-
-    public String getAmortizationPlan() {
-        return amortizationPlan;
-    }
-
-    public String getPaymentIntervalAmortization() {
-        return paymentIntervalAmortization;
-    }
-
-    public String getPaymentIntervalInterest() {
-        return paymentIntervalInterest;
-    }
-
-    public String getFixedInterestPeriod() {
-        return fixedInterestPeriod;
-    }
-
-    public Date getInterestFixedToDate() {
-        return interestFixedToDate;
-    }
-
-    public int getRemainingRepaymentTime() {
-        return remainingRepaymentTime;
-    }
-
-    public List<CollateralsEntity> getCollaterals() {
-        return collaterals;
-    }
-
-    public List<BorrowerEntity> getBorrowers() {
-        return borrowers;
-    }
-
-    public boolean isShowFutureLoanPayments() {
-        return showFutureLoanPayments;
-    }
-
-    public boolean isShowHistoricalPayments() {
-        return showHistoricalPayments;
-    }
 }

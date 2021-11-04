@@ -5,8 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PensionPortfoliosResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
@@ -22,12 +21,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class SwedbankSETransactionalAccountFetcher
         extends SwedbankDefaultTransactionalAccountFetcher {
-    private static final Logger log =
-            LoggerFactory.getLogger(SwedbankSETransactionalAccountFetcher.class);
 
-    private SwedbankSEApiClient apiClient;
+    private final SwedbankSEApiClient apiClient;
     private List<String> investmentAccountNumbers;
 
     public SwedbankSETransactionalAccountFetcher(
@@ -45,41 +43,14 @@ public class SwedbankSETransactionalAccountFetcher
 
             EngagementOverviewResponse engagementOverviewResponse =
                     bankProfile.getEngagementOverViewResponse();
+
+            accounts.addAll(getTransactionAccounts(bankProfile, engagementOverviewResponse));
+
             accounts.addAll(
-                    engagementOverviewResponse.getTransactionAccounts().stream()
-                            .filter(account -> !isInvestmentAccount(account))
-                            .map(
-                                    account ->
-                                            account.toTransactionalAccount(
-                                                    bankProfile,
-                                                    getEngagementTransactionsResponse(account)))
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList()));
-            accounts.addAll(
-                    engagementOverviewResponse.getTransactionDisposalAccounts().stream()
-                            .filter(account -> !isInvestmentAccount(account))
-                            .map(
-                                    account ->
-                                            account.toTransactionalAccount(
-                                                    bankProfile,
-                                                    getEngagementTransactionsResponse(account)))
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList()));
-            accounts.addAll(
-                    engagementOverviewResponse.getSavingAccounts().stream()
-                            .filter(account -> !isInvestmentAccount(account))
-                            .map(
-                                    account -> {
-                                        tryAccessPensionPortfoliosIfPensionType(account);
-                                        return account.toTransactionalAccount(
-                                                bankProfile,
-                                                getEngagementTransactionsResponse(account));
-                                    })
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList()));
+                    getTransactionDisposalAccounts(bankProfile, engagementOverviewResponse));
+
+            accounts.addAll(getSavingsAccounts(bankProfile, engagementOverviewResponse));
+
             investmentAccountNumbers = null;
         }
 
@@ -88,6 +59,47 @@ public class SwedbankSETransactionalAccountFetcher
         }
 
         return accounts;
+    }
+
+    private List<TransactionalAccount> getSavingsAccounts(
+            BankProfile bankProfile, EngagementOverviewResponse engagementOverviewResponse) {
+        return engagementOverviewResponse.getSavingAccounts().stream()
+                .filter(account -> !isInvestmentAccount(account))
+                .map(
+                        account -> {
+                            tryAccessPensionPortfoliosIfPensionType(account);
+                            return account.toTransactionalAccount(
+                                    bankProfile, getEngagementTransactionsResponse(account));
+                        })
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private List<TransactionalAccount> getTransactionDisposalAccounts(
+            BankProfile bankProfile, EngagementOverviewResponse engagementOverviewResponse) {
+        return engagementOverviewResponse.getTransactionDisposalAccounts().stream()
+                .filter(account -> !isInvestmentAccount(account))
+                .map(
+                        account ->
+                                account.toTransactionalAccount(
+                                        bankProfile, getEngagementTransactionsResponse(account)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private List<TransactionalAccount> getTransactionAccounts(
+            BankProfile bankProfile, EngagementOverviewResponse engagementOverviewResponse) {
+        return engagementOverviewResponse.getTransactionAccounts().stream()
+                .filter(account -> !isInvestmentAccount(account))
+                .map(
+                        account ->
+                                account.toTransactionalAccount(
+                                        bankProfile, getEngagementTransactionsResponse(account)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     private EngagementTransactionsResponse getEngagementTransactionsResponse(
