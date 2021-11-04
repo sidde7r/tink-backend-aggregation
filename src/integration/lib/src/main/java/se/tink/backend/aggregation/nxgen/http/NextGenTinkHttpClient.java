@@ -180,7 +180,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final Supplier<RefreshableItem> refreshableItemInProgressSupplier;
     // Determines the percentage of operations for which we will emit raw bank data event for
     // all HTTP traffic
-    private static final double RAW_BANK_DATA_EVENT_EMISSION_RATE = 0.01;
+    private static final double RAW_BANK_DATA_EVENT_EMISSION_RATE = 0.1;
 
     private static class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
