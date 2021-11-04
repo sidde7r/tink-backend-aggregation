@@ -84,7 +84,7 @@ spec:
         severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLink }}
+        description: {{ .Values.kibanaClassLink }} {{ .Values.kibanaLinkAbs1h }} {{ .Values.grafanaLinkAbs1h }}
         summary: Login unavailable rate is higher than 20% for (<{ $labels.className }>) for the last 30m
         tags: {{ .Values.tags }}
     - alert: LoginTemporaryErrorsRateHigherThan10%DK
@@ -97,7 +97,7 @@ spec:
         severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLink }}
+        description: {{ .Values.kibanaClassLink }} {{ .Values.kibanaLinkAbs1h }} {{ .Values.grafanaLinkAbs1h }}
         summary: Login temporary errors rate is higher than 10% for (<{ $labels.className }>) for the last 30m
         tags: {{ .Values.tags }}
     - alert: LoginAllErrorsRateHigherThan90%DK
@@ -110,6 +110,6 @@ spec:
         severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLink }}
+        description: {{ .Values.kibanaClassLink }} {{ .Values.kibanaLinkAbs1h }} {{ .Values.grafanaLinkAbs1h }}
         summary: Login all errors rate is higher than 90% for (<{ $labels.className }>) for the last 30m
         tags: {{ .Values.tags }}
