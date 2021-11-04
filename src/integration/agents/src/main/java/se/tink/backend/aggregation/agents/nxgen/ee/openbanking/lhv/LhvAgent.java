@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.configuration.LhvConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.LhvAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.LhvTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.sessionhandler.LhvSessionHandler;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -48,7 +49,7 @@ public final class LhvAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new LhvSessionHandler(apiClient);
     }
 
     @Override
