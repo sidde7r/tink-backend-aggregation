@@ -81,14 +81,13 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         providerSessionCacheController,
                         this,
-                        request,
                         qsealcSigner,
-                        IngAuthenticationInputData.builder()
+                        IngApiInputData.builder()
                                 .userAuthenticationData(
                                         new IngUserAuthenticationData(
                                                 shouldDoManualAuthentication(request),
                                                 psuIpAddress))
-                                .strongAuthenticationState(null)
+                                .credentialsRequest(request)
                                 .build(),
                         agentComponentProvider);
         paymentApiClient =
@@ -98,9 +97,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         providerSessionCacheController,
                         this,
                         qsealcSigner,
-                        request,
-                        strongAuthenticationState,
-                        IngAuthenticationInputData.builder()
+                        IngApiInputData.builder()
                                 .userAuthenticationData(
                                         new IngUserAuthenticationData(
                                                 shouldDoManualAuthentication(request),

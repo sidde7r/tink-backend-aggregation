@@ -2,13 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AllArgsConstructor
 @Builder
-public class IngAuthenticationInputData {
+@Value
+public class IngApiInputData {
 
-    @Getter private final IngUserAuthenticationData userAuthenticationData;
-    @Getter private final StrongAuthenticationState strongAuthenticationState;
+    IngUserAuthenticationData userAuthenticationData;
+    StrongAuthenticationState strongAuthenticationState;
+    CredentialsRequest credentialsRequest;
 }

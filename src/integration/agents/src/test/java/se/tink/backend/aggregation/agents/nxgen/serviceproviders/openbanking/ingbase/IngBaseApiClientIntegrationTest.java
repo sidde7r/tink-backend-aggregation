@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheC
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTestServer;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IngBaseApiClientIntegrationTest {
@@ -57,10 +58,10 @@ public class IngBaseApiClientIntegrationTest {
                         mock(ProviderSessionCacheController.class),
                         marketConfiguration,
                         mock(QsealcSigner.class),
-                        IngAuthenticationInputData.builder()
+                        IngApiInputData.builder()
                                 .userAuthenticationData(
                                         new IngUserAuthenticationData(true, "psuIpAddress"))
-                                .strongAuthenticationState(null)
+                                .credentialsRequest(mock(CredentialsRequest.class))
                                 .build(),
                         agentComponentProvider);
 
@@ -92,8 +93,7 @@ public class IngBaseApiClientIntegrationTest {
 
         // then
         assertThat(authorisationUrl).isNotNull();
-        assertThat(persistentStorage).containsKey("APPLICATION_TOKEN");
-        assertThat(persistentStorage).containsKey("CLIENT_ID");
+        assertThat(persistentStorage).containsKeys("CLIENT_ID", "APPLICATION_TOKEN");
     }
 
     private static void givenScenario(String fileName) {

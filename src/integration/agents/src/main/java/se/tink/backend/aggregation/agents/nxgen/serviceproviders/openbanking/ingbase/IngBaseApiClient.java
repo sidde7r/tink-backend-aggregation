@@ -53,7 +53,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.date.DateFormat;
 
 @Slf4j
 public class IngBaseApiClient {
@@ -79,17 +78,18 @@ public class IngBaseApiClient {
             ProviderSessionCacheController providerSessionCacheController,
             MarketConfiguration marketConfiguration,
             QsealcSigner proxySigner,
-            IngAuthenticationInputData authenticationInputData,
+            IngApiInputData ingApiInputData,
             AgentComponentProvider agentComponentProvider) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.providerSessionCacheController = providerSessionCacheController;
-        this.userAuthenticationData = authenticationInputData.getUserAuthenticationData();
+        this.userAuthenticationData = ingApiInputData.getUserAuthenticationData();
         this.marketConfiguration = marketConfiguration;
         this.marketCode = marketConfiguration.marketCode();
         this.proxySigner = proxySigner;
         this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         this.localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
+        this.credentialsRequest = ingApiInputData.getCredentialsRequest();
     }
 
     public void setConfiguration(AgentConfiguration<IngBaseConfiguration> agentConfiguration)
@@ -287,24 +287,6 @@ public class IngBaseApiClient {
         return response;
     }
 
-    private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {
-
-        final String reqPath =
-                new URL(Urls.OAUTH)
-                        .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                        .queryParam(QueryKeys.SCOPE, getScopes())
-                        .queryParam(QueryKeys.COUNTRY_CODE, market)
-                        .toString();
-
-        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
-                .addBearerToken(tokenResponse.toTinkToken())
-                .get(AuthorizationUrl.class);
-    }
-
-    private TokenResponse fetchToken(final String payload) {
-        return new CertificateIsRevokedExceptionRequestRepeater(this, payload).execute();
-    }
-
     RequestBuilder buildRequestWithSignature(
             final String reqPath, final String httpMethod, final String payload) {
         final String reqId = getRequestId();
@@ -360,7 +342,7 @@ public class IngBaseApiClient {
 
     protected String getFormattedDate() {
         return DateTimeFormatter.ofPattern(Signature.DATE_FORMAT)
-                .format(localDateTimeSource.now().atZone(ZoneOffset.UTC));
+                .format(localDateTimeSource.now(ZoneOffset.UTC));
     }
 
     protected String getRequestId() {
@@ -383,9 +365,7 @@ public class IngBaseApiClient {
     private URL createUrlForAuthorization() {
         return new URL(Urls.OAUTH)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                .queryParam(
-                        QueryKeys.SCOPE,
-                        QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
+                .queryParam(QueryKeys.SCOPE, getScopes())
                 .queryParam(QueryKeys.COUNTRY_CODE, marketCode);
     }
 

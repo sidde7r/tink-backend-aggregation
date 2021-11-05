@@ -40,7 +40,7 @@ Content-Length: 3492
 }
 
 REQUEST 2
-GET https://api.ing.com/oauth2/authorization-server-url?redirect_uri=https://non.existing.address.com&scope=payment-accounts:transactions:view+payment-accounts:balances:view&country_code=AA
+GET https://api.ing.com/oauth2/authorization-server-url?redirect_uri=https://non.existing.address.com&scope=payment-accounts:balances:view+payment-accounts:transactions:view&country_code=AA
 Accept: application/json
 Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 Date: Fri, 10 Apr 1992 00:00:00 GMT
