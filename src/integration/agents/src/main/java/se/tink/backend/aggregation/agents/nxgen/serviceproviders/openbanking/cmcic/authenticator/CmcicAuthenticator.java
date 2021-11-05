@@ -25,7 +25,7 @@ public class CmcicAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) {
-        return apiClient.getAispToken(code);
+        return apiClient.exchangeCodeForToken(code);
     }
 
     @Override

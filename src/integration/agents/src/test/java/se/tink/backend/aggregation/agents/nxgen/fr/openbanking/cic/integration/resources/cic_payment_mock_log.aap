@@ -13,7 +13,7 @@ Content-Type: application/json
 {"access_token":"DUMMY_ACCESS_TOKEN","token_type":"bearer","expires_in":900,"scope":"pisp"}
 
 REQUEST 2
-POST https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v1.1/payment-requests
+POST https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v2.0/payment-requests
 Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
@@ -66,11 +66,12 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
 RESPONSE 2
 200
 Content-Type: application/json
+location: /cic/stet-psd2-api/v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw
 
-{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https://www.cic.fr/oauth2/fr/banque/confirmer_paiement.html?paymentId=1g-LoWXHNU2-fx7ApYDKNQ"}}}
+{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https://www.cic.fr/oauth2/xx/pisp_confirmation_link.html?context=12940295809&client_id=1234567890abcdef&scope=pisp"}}}
 
 REQUEST 3
-GET https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v1.1/payment-requests/1g-LoWXHNU2-fx7ApYDKNQ
+GET https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Bearer DUMMY_ACCESS_TOKEN
@@ -81,123 +82,381 @@ RESPONSE 3
 Content-Type: application/json
 
 {
-    "paymentRequest": {
-        "numberOfTransactions": 1,
-        "initiatingParty": {
-            "name": "Payment Initiator"
-        },
-        "paymentTypeInformation": {
-            "serviceLevel": "SEPA"
-        },
-        "debtorAccount": {
-            "iban": "FR1261401750597365134612940"
-        },
-        "beneficiary": {
-            "creditor": {
-                "name": "Payment Receiver"
-            },
-            "creditorAccount": {
-                "iban": "FR1420041010050500013M02606"
-            }
-        },
-        "paymentInformationStatusCode": "ACSP",
-        "requestedExecutionDate": "2021-04-20",
-        "creditTransferTransaction": [
-            {
-                "instructedAmount": {
-                    "currency": "EUR",
-                    "amount": "1.0"
-                },
-                "remittanceInformation": {
-                    "unstructured": [
-                        "Message"
-                    ]
-                }
-            }
-        ],
-        "supplementaryData": {
-            "acceptedAuthenticationApproach": [
-                "REDIRECT"
-            ],
-            "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?code=123&state=00000000-0000-4000-0000-000000000000",
-            "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?code=123&state=00000000-0000-4000-0000-000000000000"
-        }
+  "paymentRequest": {
+    "paymentInformationId": "MyPmtInfId",
+    "creationDateTime": "2018-03-31T13:25:22.527+02:00",
+    "numberOfTransactions": 1,
+    "paymentInformationStatus": "ACSP",
+    "initiatingParty": {
+      "name": "MyPreferedPisp",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "organisationId": {
+        "identification": "12FR5",
+        "schemeName": "COID",
+        "issuer": "ACPR"
+      }
     },
-    "_links": {
-        "self": {
-            "href": "/cic/stet-psd2-api/v1.1/payment-requests/1g-LoWXHNU2-fx7ApYDKNQ"
+    "paymentTypeInformation": {
+      "serviceLevel": "SEPA",
+      "localInstrument": "INST",
+      "categoryPurpose": "DVPM"
+    },
+    "debtorAccount": {
+      "iban": "FR1261401750597365134612940"
+    },
+    "debtor": {
+      "name": "MyCustomer",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "privateId": {
+        "identification": "FD37G",
+        "schemeName": "BANK",
+        "issuer": "BICXYYTTZZZ"
+      }
+    },
+    "beneficiary": {
+      "creditor": {
+        "name": "myMerchant",
+        "postalAddress": {
+          "country": "FR",
+          "addressLine": [
+            "18 rue de la DSP2",
+            "75008 PARIS"
+          ]
         },
-        "request": {
-            "href": "/cic/stet-psd2-api/v1.1/payment-requests/1g-LoWXHNU2-fx7ApYDKNQ"
-        },
-        "confirmation": {
-            "href": "/cic/stet-psd2-api/v1.1/payment-requests/1g-LoWXHNU2-fx7ApYDKNQ/confirmation"
+        "organisationId": {
+          "identification": "852126789",
+          "schemeName": "SIREN",
+          "issuer": "FR"
         }
+      },
+      "creditorAccount": {
+        "iban": "YY64COJH41059545330222956960771321"
+      }
+    },
+    "ultimateCreditor": {
+      "name": "myPreferedUltimateMerchant",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "organisationId": {
+        "identification": "85212678900025",
+        "schemeName": "SRET",
+        "issuer": "FR"
+      }
+    },
+    "purpose": "COMC",
+    "chargeBearer": "SLEV",
+    "creditTransferTransaction": [
+      {
+        "paymentId": {
+          "instructionId": "MyInstrId",
+          "endToEndId": "MyEndToEndId"
+        },
+        "requestedExecutionDate": "2016-12-31T00:00:00.000+01:00",
+        "instructedAmount": {
+          "currency": "EUR",
+          "amount": 124.35
+        },
+        "remittanceInformation": [
+          "MyRemittanceInformation"
+        ]
+      }
+    ],
+    "supplementaryData": {
+      "acceptedAuthenticationApproach": [
+        "REDIRECT"
+      ]
     }
+  },
+  "_links": {
+    "self": {
+      "href": "v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw"
+    },
+    "confirmation": {
+      "href": "v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw/confirmation"
+    }
+  }
 }
 
 REQUEST 4
-POST https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v1.1/payment-requests/1g-LoWXHNU2-fx7ApYDKNQ/confirmation
+POST https://oauth2-apiii.e-i.com/cic/oauth2/token
+Content-Type: application/x-www-form-urlencoded
 Accept: application/json
-X-Aggregator: Tink Testing
-Authorization: Bearer DUMMY_ACCESS_TOKEN
-Content-Type: application/json
+X-Aggregator : Tink Testing
 
-{"psuAuthenticationFactor":"DUMMY_PSU_AUTH_CODE"}
+client_id=DUMMY_ID&grant_type=authorization_code&code=DUMMY_AUTH_CODE
 
 RESPONSE 4
 200
 Content-Type: application/json
 
+{"access_token":"DUMMY_ACCESS_TOKEN2","token_type":"bearer","expires_in":900,"scope":"pisp"}
+
+REQUEST 5
+POST https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw/o-confirmation
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN2
+Content-Type: application/json
+
+{}
+
+RESPONSE 5
+200
+Content-Type: application/json
+
 {
-    "paymentRequest": {
-        "numberOfTransactions": 1,
-        "initiatingParty": {
-            "name": "Payment Initiator"
-        },
-        "paymentTypeInformation": {
-            "serviceLevel": "SEPA"
-        },
-        "debtorAccount": {
-            "iban": "FR1261401750597365134612940"
-        },
-        "beneficiary": {
-            "creditor": {
-                "name": "Payment Receiver"
-            },
-            "creditorAccount": {
-                "iban": "FR1420041010050500013M02606"
-            }
-        },
-        "paymentInformationStatusCode": "ACSC",
-        "requestedExecutionDate": "2021-04-20",
-        "creditTransferTransaction": [
-            {
-                "instructedAmount": {
-                    "currency": "EUR",
-                    "amount": "1.0"
-                },
-                "remittanceInformation": {
-                    "unstructured": [
-                        "Message"
-                    ]
-                }
-            }
-        ],
-        "supplementaryData": {
-            "acceptedAuthenticationApproach": [
-                "REDIRECT"
-            ],
-            "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?code=123&state=00000000-0000-4000-0000-000000000000",
-            "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?code=123&state=00000000-0000-4000-0000-000000000000"
-        }
+  "paymentRequest": {
+    "paymentInformationId": "MyPmtInfId",
+    "creationDateTime": "2018-03-31T13:25:22.527+02:00",
+    "numberOfTransactions": 1,
+    "paymentInformationStatus": "ACSC",
+    "initiatingParty": {
+      "name": "MyPreferedPisp",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "organisationId": {
+        "identification": "12FR5",
+        "schemeName": "COID",
+        "issuer": "ACPR"
+      }
     },
-    "_links": {
-        "self": {
-            "href": "/cic/stet-psd2-api/v1.1/payment-requests/1g-LoWXHNU2-fx7ApYDKNQ/confirmation"
+    "paymentTypeInformation": {
+      "serviceLevel": "SEPA",
+      "localInstrument": "INST",
+      "categoryPurpose": "DVPM"
+    },
+    "debtorAccount": {
+          "iban": "FR1261401750597365134612940"
+      },
+    "debtor": {
+      "name": "MyCustomer",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "privateId": {
+        "identification": "FD37G",
+        "schemeName": "BANK",
+        "issuer": "BICXYYTTZZZ"
+      }
+    },
+    "beneficiary": {
+      "creditor": {
+        "name": "myMerchant",
+        "postalAddress": {
+          "country": "FR",
+          "addressLine": [
+            "18 rue de la DSP2",
+            "75008 PARIS"
+          ]
         },
-        "confirmation": {
-            "href": "/cic/stet-psd2-api/v1.1/payment-requests/1g-LoWXHNU2-fx7ApYDKNQ/confirmation"
+        "organisationId": {
+          "identification": "852126789",
+          "schemeName": "SIREN",
+          "issuer": "FR"
         }
+      },
+      "creditorAccount": {
+        "iban": "YY64COJH41059545330222956960771321"
+      }
+    },
+    "ultimateCreditor": {
+      "name": "myPreferedUltimateMerchant",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "organisationId": {
+        "identification": "85212678900025",
+        "schemeName": "SRET",
+        "issuer": "FR"
+      }
+    },
+    "purpose": "COMC",
+    "chargeBearer": "SLEV",
+    "creditTransferTransaction": [
+      {
+        "paymentId": {
+          "instructionId": "MyInstrId",
+          "endToEndId": "MyEndToEndId"
+        },
+        "requestedExecutionDate": "2016-12-31T00:00:00.000+01:00",
+        "instructedAmount": {
+          "currency": "EUR",
+          "amount": 124.35
+        },
+        "remittanceInformation": [
+          "MyRemittanceInformation"
+        ]
+      }
+    ],
+    "supplementaryData": {
+      "acceptedAuthenticationApproach": [
+        "REDIRECT"
+      ]
     }
+  },
+  "_links": {
+    "self": {
+      "href": "v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw"
+    },
+    "confirmation": {
+      "href": "v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw/confirmation"
+    }
+  }
+}
+
+REQUEST 6
+GET https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN2
+Content-Type: application/json
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{
+  "paymentRequest": {
+    "paymentInformationId": "MyPmtInfId",
+    "creationDateTime": "2018-03-31T13:25:22.527+02:00",
+    "numberOfTransactions": 1,
+    "paymentInformationStatus": "ACSP",
+    "initiatingParty": {
+      "name": "MyPreferedPisp",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "organisationId": {
+        "identification": "12FR5",
+        "schemeName": "COID",
+        "issuer": "ACPR"
+      }
+    },
+    "paymentTypeInformation": {
+      "serviceLevel": "SEPA",
+      "localInstrument": "INST",
+      "categoryPurpose": "DVPM"
+    },
+    "debtorAccount": {
+      "iban": "FR1261401750597365134612940"
+    },
+    "debtor": {
+      "name": "MyCustomer",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "privateId": {
+        "identification": "FD37G",
+        "schemeName": "BANK",
+        "issuer": "BICXYYTTZZZ"
+      }
+    },
+    "beneficiary": {
+      "creditor": {
+        "name": "myMerchant",
+        "postalAddress": {
+          "country": "FR",
+          "addressLine": [
+            "18 rue de la DSP2",
+            "75008 PARIS"
+          ]
+        },
+        "organisationId": {
+          "identification": "852126789",
+          "schemeName": "SIREN",
+          "issuer": "FR"
+        }
+      },
+      "creditorAccount": {
+        "iban": "YY64COJH41059545330222956960771321"
+      }
+    },
+    "ultimateCreditor": {
+      "name": "myPreferedUltimateMerchant",
+      "postalAddress": {
+        "country": "FR",
+        "addressLine": [
+          "18 rue de la DSP2",
+          "75008 PARIS"
+        ]
+      },
+      "organisationId": {
+        "identification": "85212678900025",
+        "schemeName": "SRET",
+        "issuer": "FR"
+      }
+    },
+    "purpose": "COMC",
+    "chargeBearer": "SLEV",
+    "creditTransferTransaction": [
+      {
+        "paymentId": {
+          "instructionId": "MyInstrId",
+          "endToEndId": "MyEndToEndId"
+        },
+        "requestedExecutionDate": "2016-12-31T00:00:00.000+01:00",
+        "instructedAmount": {
+          "currency": "EUR",
+          "amount": 124.35
+        },
+        "remittanceInformation": [
+          "MyRemittanceInformation"
+        ]
+      }
+    ],
+    "supplementaryData": {
+      "acceptedAuthenticationApproach": [
+        "REDIRECT"
+      ]
+    }
+  },
+  "_links": {
+    "self": {
+      "href": "v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw"
+    },
+    "confirmation": {
+      "href": "v2.0/payment-requests/M2pg41JrpE2yg3IWm0TkDw/confirmation"
+    }
+  }
+}
+
+
 }

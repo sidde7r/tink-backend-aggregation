@@ -13,7 +13,7 @@ Content-Type: application/json
 {"access_token":"DUMMY_ACCESS_TOKEN","token_type":"bearer","expires_in":900,"scope":"aisp", "refreshToken":"DUMMY_REFRESH_TOKEN"}
 
 REQUEST 2
-GET https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v1.1/accounts
+GET https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v2.0/accounts
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Refreshtoken accessToken
@@ -22,4 +22,4 @@ RESPONSE 2
 403
 Content-Type: application/json
 
-{"status": 403, "timestamp": "2021-11-10T07:16:55+00:00", "message": "The specified user has no payment accounts, and is thus not in scope for PSD2 API access.", "error": "Forbidden", "path": "/cic/stet-psd2-api/v1.1/accounts"}
+{"status": 403, "timestamp": "2021-11-10T07:16:55+00:00", "message": "The specified user has no payment accounts, and is thus not in scope for PSD2 API access.", "error": "Forbidden", "path": "/cic/stet-psd2-api/v2.0/accounts"}

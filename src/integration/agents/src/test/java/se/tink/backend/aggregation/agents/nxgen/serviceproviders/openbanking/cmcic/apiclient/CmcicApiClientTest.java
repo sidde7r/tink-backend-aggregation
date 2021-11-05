@@ -33,11 +33,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ConfirmationResourceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -57,10 +57,10 @@ public class CmcicApiClientTest {
     private static final String TOKEN_PATH = "oauth2/token";
     private static final String TOKEN_URL = BASE_URL + BASE_PATH + TOKEN_PATH;
     private static final String BENEFICIARIES_PATH = "trusted-beneficiaries";
-    private static final String API_PATH = "stet-psd2-api/v1.1/";
+    private static final String API_PATH = "stet-psd2-api/v2.0/";
     private static final String PAYMENT_ID = "unique-id-2137";
     private static final String PAYMENT_PATH = "payment-requests/";
-    private static final String PAYMENT_CONFIRMATION_PATH = "/confirmation";
+    private static final String PAYMENT_CONFIRMATION_PATH = "/o-confirmation";
     private static final String PAYMENT_URL =
             BASE_URL + BASE_PATH + API_PATH + PAYMENT_PATH + PAYMENT_ID + PAYMENT_CONFIRMATION_PATH;
     private static final String BENEFICIARIES_URL =
@@ -206,11 +206,7 @@ public class CmcicApiClientTest {
         setUpHttpClientMockForApi(PAYMENT_URL, mock(HttpResponse.class));
 
         // expect
-        assertThatCode(
-                        () ->
-                                cmcicApiClient.confirmPayment(
-                                        PAYMENT_ID, new ConfirmationResourceEntity()))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> cmcicApiClient.confirmPayment(PAYMENT_ID)).doesNotThrowAnyException();
     }
 
     private OAuth2Token anyValidOauth2Token() {
@@ -227,18 +223,23 @@ public class CmcicApiClientTest {
     private CmcicApiClient setupCmcicApiClient(
             PersistentStorage persistentStorage, SessionStorage sessionStorage) {
         tinkHttpClientMock = mock(TinkHttpClient.class);
-        final CmcicConfiguration cmcicConfigurationMock = createCmcicConfigurationMock();
         final CmcicDigestProvider digestProviderMock = mock(CmcicDigestProvider.class);
         final CmcicSignatureProvider signatureProviderMock = mock(CmcicSignatureProvider.class);
         final CmcicCodeChallengeProvider codeChallengeProviderMock =
                 mock(CmcicCodeChallengeProvider.class);
         final CmcicAgentConfig cmcicAgentConfig = createCmcicAgentConfigurationMock();
+        AgentConfiguration<CmcicConfiguration> agentConfigurationMock =
+                mock(AgentConfiguration.class);
+
+        CmcicConfiguration cmcicConfigurationMock = createCmcicConfigurationMock();
+        when(agentConfigurationMock.getProviderSpecificConfiguration())
+                .thenReturn(cmcicConfigurationMock);
 
         return cmcicApiClient =
                 new CmcicApiClient(
                         tinkHttpClientMock,
                         new CmcicRepository(persistentStorage, sessionStorage),
-                        cmcicConfigurationMock,
+                        agentConfigurationMock,
                         digestProviderMock,
                         signatureProviderMock,
                         codeChallengeProviderMock,

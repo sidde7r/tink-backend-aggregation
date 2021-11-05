@@ -16,7 +16,7 @@ Content-Type: application/json;charset=utf-8
 }
 
 REQUEST 2
-POST https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/payment-requests
+POST https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v2.0/payment-requests
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -65,18 +65,19 @@ RESPONSE 2
 201
 Content-Language: fr
 Content-Type: application/json;charset=utf-8
+location: /cm/stet-psd2-api/v2.0/payment-requests/OUpZTidqlkmSHJZHvyDrUg
 
 {
     "appliedAuthenticationApproach": "REDIRECT",
     "_links": {
         "consentApproval": {
-            "href": "https://www.creditmutuel.fr/oauth2/fr/banque/saisie_paiement.html?paymentId=OUpZTidqlkmSHJZHvyDrUg"
+            "href": "https://www.creditmutuel.fr/oauth2/xx/pisp_confirmation_link.html?context=12940295809&client_id=1234567890abcdef&scope=pisp"
         }
     }
 }
 
 REQUEST 3
-GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/payment-requests/OUpZTidqlkmSHJZHvyDrUg
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v2.0/payment-requests/OUpZTidqlkmSHJZHvyDrUg
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Bearer DUMMY_ACCESS_TOKEN
@@ -109,7 +110,7 @@ Content-Language: fr
             }
         },
         "requestedExecutionDate": "2021-04-20",
-        "paymentInformationStatusCode": "ACSP",
+        "paymentInformationStatus": "ACSP",
         "creditTransferTransaction": [
             {
                 "paymentId": {
@@ -136,29 +137,41 @@ Content-Language: fr
     },
     "_links": {
         "self": {
-            "href": "/cm/stet-psd2-api/v1.1/payment-requests/OUpZTidqlkmSHJZHvyDrUg"
+            "href": "/cm/stet-psd2-api/v2.0/payment-requests/OUpZTidqlkmSHJZHvyDrUg"
         },
         "request": {
-            "href": "/cm/stet-psd2-api/v1.1/payment-requests/OUpZTidqlkmSHJZHvyDrUg"
+            "href": "/cm/stet-psd2-api/v2.0/payment-requests/OUpZTidqlkmSHJZHvyDrUg"
         },
         "confirmation": {
-            "href": "/cm/stet-psd2-api/v1.1/payment-requests/OUpZTidqlkmSHJZHvyDrUg/confirmation"
+            "href": "/cm/stet-psd2-api/v2.0/payment-requests/OUpZTidqlkmSHJZHvyDrUg/confirmation"
         }
     }
 }
 
 REQUEST 4
-POST https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/payment-requests/OUpZTidqlkmSHJZHvyDrUg/confirmation
+POST https://oauth2-apiii.e-i.com/cic/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator : Tink Testing
+
+client_id=DUMMY_ID&grant_type=authorization_code&code=DUMMY_AUTH_CODE
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN2","token_type":"bearer","expires_in":900,"scope":"pisp"}
+
+REQUEST 5
+POST https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v2.0/payment-requests/OUpZTidqlkmSHJZHvyDrUg/o-confirmation
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Content-Type: application/json
 
-{
-    "psuAuthenticationFactor": "DUMMY_PSU_AUTH_CODE"
-}
+{}
 
-RESPONSE 4
+RESPONSE 5
 200
 Content-Type: application/json;charset=utf-8
 Content-Language: fr
@@ -184,7 +197,7 @@ Content-Language: fr
                 "iban": "FR7630004033770000100375924"
             }
         },
-        "paymentInformationStatusCode": "PDNG",
+        "paymentInformationStatus": "PDNG",
         "requestedExecutionDate": "2021-04-20",
         "creditTransferTransaction": [
             {
@@ -212,10 +225,10 @@ Content-Language: fr
     },
     "_links": {
         "self": {
-            "href": "/cm/stet-psd2-api/v1.1/payment-requests/OUpZTidqlkmSHJZHvyDrUg/confirmation"
+            "href": "/cm/stet-psd2-api/v2.0/payment-requests/OUpZTidqlkmSHJZHvyDrUg/confirmation"
         },
         "confirmation": {
-            "href": "/cm/stet-psd2-api/v1.1/payment-requests/OUpZTidqlkmSHJZHvyDrUg/confirmation"
+            "href": "/cm/stet-psd2-api/v2.0/payment-requests/OUpZTidqlkmSHJZHvyDrUg/confirmation"
         }
     }
 }

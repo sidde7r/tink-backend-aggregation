@@ -2,9 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Arrays;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
-public enum PaymentInformationStatusCodeEntity {
+public enum PaymentInformationStatusEntity {
     ACCP("ACCP", PaymentStatus.SIGNED),
     ACSC("ACSC", PaymentStatus.SIGNED),
     ACSP("ACSP", PaymentStatus.SIGNED),
@@ -21,7 +22,7 @@ public enum PaymentInformationStatusCodeEntity {
     private String value;
     private PaymentStatus paymentStatus;
 
-    PaymentInformationStatusCodeEntity(String value, PaymentStatus paymentStatus) {
+    PaymentInformationStatusEntity(String value, PaymentStatus paymentStatus) {
         this.value = value;
         this.paymentStatus = paymentStatus;
     }
@@ -35,13 +36,11 @@ public enum PaymentInformationStatusCodeEntity {
     }
 
     @JsonCreator
-    public static PaymentInformationStatusCodeEntity fromValue(String text) {
-        for (PaymentInformationStatusCodeEntity b : PaymentInformationStatusCodeEntity.values()) {
-            if (String.valueOf(b.value).equals(text)) {
-                return b;
-            }
-        }
-        return null;
+    public static PaymentInformationStatusEntity fromValue(String text) {
+        return Arrays.stream(PaymentInformationStatusEntity.values())
+                .filter(status -> status.value.equals(text))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

@@ -16,7 +16,7 @@ public final class CmcicConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
-        public static final String BASE_API_PATH = "stet-psd2-api/v1.1";
+        public static final String BASE_API_PATH = "stet-psd2-api/v2.0";
         public static final String FETCH_ACCOUNTS_PATH = BASE_API_PATH + "/accounts";
         public static final String FETCH_END_USER_IDENTITY = BASE_API_PATH + "/end-user-identity";
         public static final String TOKEN_PATH = "oauth2/token";
@@ -25,28 +25,32 @@ public final class CmcicConstants {
         public static final String PAYMENT_REQUESTS = BASE_API_PATH + "/payment-requests";
         public static final String SUCCESS_REPORT_PATH = "?code=123&state=";
         public static final String BENEFICIARIES_PATH = "/trusted-beneficiaries";
-        public static final String PIS_CONFIRMATION_PATH = "confirmation";
+        public static final String PIS_CONFIRMATION_OF_CANCELLATION_PATH = "confirmation";
+        public static final String PIS_CONFIRMATION_PATH = "o-confirmation";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
+        public static final String OAUTH_PIS_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CODE_VERIFIER = "CODE_VERIFIER";
         public static final String PISP_TOKEN = "PISP_TOKEN";
         public static final String STATE = "STATE";
         public static final String AUTH_URL = "AUTH_URL";
-        public static final String AUTH_FACTOR = "AUTH_FACTOR";
+        public static final String AUTHORIZATION_CODE = "CODE";
+        public static final String PAYMENT_ID = "PAYMENT_ID";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
+        public static final String REDIRECT_URI = "redirect_uri";
         public static final String RESPONSE_TYPE = "response_type";
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE = "scope";
         public static final String STATE = "state";
         public static final String CODE_CHALLENGE = "code_challenge";
         public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
-        public static final String PSU_AUTHENTICATION_FACTOR = "psuAF";
+        public static final String AUTHORIZATION_CODE = "code";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -81,6 +85,7 @@ public final class CmcicConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = "code";
         public static final String CODE_VERIFIER = "code_verifier";
+        public static final String REDIRECT_URL = "redirect_uri";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -96,7 +101,7 @@ public final class CmcicConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentSteps {
-        public static final String POST_SIGN_STEP = "post_sign_state";
+        public static final String POST_CONFIRM_STEP = "post_confirm_state";
         public static final String CONFIRM_PAYMENT_STEP = "confirm_payment_step";
     }
 

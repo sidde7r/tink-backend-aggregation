@@ -20,7 +20,7 @@ public class CmcicPaymentResponseMapper {
         return new PaymentResponse(
                 new Payment.Builder()
                         .withUniqueId(payment.getResourceId())
-                        .withStatus(payment.getPaymentInformationStatusCode().getPaymentStatus())
+                        .withStatus(payment.getPaymentInformationStatus().getPaymentStatus())
                         .withCreditor(createCreditor(payment.getBeneficiary()))
                         .withDebtor(createDebtor(payment))
                         .build());

@@ -9,34 +9,33 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicRepository;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentInformationStatusCodeEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentInformationStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentResponseEntity;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class CmcicPaymentExecutorTest {
 
     private CmcicApiClient apiClient;
-    private SessionStorage sessionStorage;
     private AgentConfiguration agentConfiguration;
     private SupplementalInformationHelper supplementalInformationHelper;
     private StrongAuthenticationState strongAuthenticationState;
     private CmcicPaymentRequestFactory paymentRequestFactory;
     private CmcicPaymentResponseMapper responseMapper;
     private CmcicPaymentExecutor paymentExecutor;
+    private CmcicRepository cmcicRepository;
 
     @Before
     public void setUp() {
         apiClient = Mockito.mock(CmcicApiClient.class);
-        sessionStorage = Mockito.mock(SessionStorage.class);
+        cmcicRepository = Mockito.mock(CmcicRepository.class);
         agentConfiguration = Mockito.mock(AgentConfiguration.class);
         supplementalInformationHelper = Mockito.mock(SupplementalInformationHelper.class);
         strongAuthenticationState = Mockito.mock(StrongAuthenticationState.class);
@@ -45,7 +44,7 @@ public class CmcicPaymentExecutorTest {
         paymentExecutor =
                 new CmcicPaymentExecutor(
                         apiClient,
-                        sessionStorage,
+                        cmcicRepository,
                         agentConfiguration,
                         supplementalInformationHelper,
                         strongAuthenticationState,
@@ -58,16 +57,16 @@ public class CmcicPaymentExecutorTest {
         // given
         String paymentId = "13333";
         PaymentMultiStepRequest request = Mockito.mock(PaymentMultiStepRequest.class);
-        given(sessionStorage.get(StorageKeys.AUTH_URL)).willReturn("=" + paymentId);
-        given(request.getStep()).willReturn("post_sign_state");
+        given(cmcicRepository.getPaymentId()).willReturn(paymentId);
+        given(request.getStep()).willReturn("post_confirm_state");
 
         HalPaymentRequestEntity paymentRequest = Mockito.mock(HalPaymentRequestEntity.class);
         given(paymentRequest.isPending()).willReturn(false);
 
         PaymentResponseEntity paymentResponse = Mockito.mock(PaymentResponseEntity.class);
 
-        given(paymentResponse.getPaymentInformationStatusCode())
-                .willReturn(PaymentInformationStatusCodeEntity.ACCP);
+        given(paymentResponse.getPaymentInformationStatus())
+                .willReturn(PaymentInformationStatusEntity.ACSP);
 
         PaymentResponse paymentReponse = Mockito.mock(PaymentResponse.class);
         given(paymentReponse.getStorage()).willReturn(Mockito.mock(Storage.class));
@@ -88,8 +87,8 @@ public class CmcicPaymentExecutorTest {
         // given
         String paymentId = "13333";
         PaymentMultiStepRequest request = Mockito.mock(PaymentMultiStepRequest.class);
-        given(sessionStorage.get(StorageKeys.AUTH_URL)).willReturn("=" + paymentId);
-        given(request.getStep()).willReturn("post_sign_state");
+        given(cmcicRepository.getPaymentId()).willReturn(paymentId);
+        given(request.getStep()).willReturn("post_confirm_state");
 
         HalPaymentRequestEntity paymentRequest = Mockito.mock(HalPaymentRequestEntity.class);
         given(paymentRequest.isPending()).willReturn(true);
@@ -98,8 +97,8 @@ public class CmcicPaymentExecutorTest {
         given(paymentRequest2.isPending()).willReturn(false);
         PaymentResponseEntity paymentResponse = Mockito.mock(PaymentResponseEntity.class);
 
-        given(paymentResponse.getPaymentInformationStatusCode())
-                .willReturn(PaymentInformationStatusCodeEntity.ACCP);
+        given(paymentResponse.getPaymentInformationStatus())
+                .willReturn(PaymentInformationStatusEntity.ACSP);
         given(paymentRequest2.getPaymentRequest()).willReturn(paymentResponse);
 
         PaymentResponse paymentReponse = Mockito.mock(PaymentResponse.class);
@@ -120,8 +119,8 @@ public class CmcicPaymentExecutorTest {
         // given
         String paymentId = "13333";
         PaymentMultiStepRequest request = Mockito.mock(PaymentMultiStepRequest.class);
-        given(sessionStorage.get(StorageKeys.AUTH_URL)).willReturn("=" + paymentId);
-        given(request.getStep()).willReturn("post_sign_state");
+        given(cmcicRepository.getPaymentId()).willReturn(paymentId);
+        given(request.getStep()).willReturn("post_confirm_state");
 
         HalPaymentRequestEntity paymentRequest = null;
 
@@ -129,8 +128,8 @@ public class CmcicPaymentExecutorTest {
         given(paymentRequest2.isPending()).willReturn(false);
         PaymentResponseEntity paymentResponse = Mockito.mock(PaymentResponseEntity.class);
 
-        given(paymentResponse.getPaymentInformationStatusCode())
-                .willReturn(PaymentInformationStatusCodeEntity.ACCP);
+        given(paymentResponse.getPaymentInformationStatus())
+                .willReturn(PaymentInformationStatusEntity.ACSP);
         given(paymentRequest2.getPaymentRequest()).willReturn(paymentResponse);
 
         PaymentResponse paymentReponse = Mockito.mock(PaymentResponse.class);
