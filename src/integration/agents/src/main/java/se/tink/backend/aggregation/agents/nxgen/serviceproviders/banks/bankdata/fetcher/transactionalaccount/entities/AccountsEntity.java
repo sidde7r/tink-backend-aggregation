@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
@@ -52,7 +54,7 @@ public class AccountsEntity {
                 .withInferredAccountFlags()
                 .withBalance(getBalanceModule())
                 .withId(getTransactionalAccountIdModule())
-                .addHolderName(ownerName)
+                .addParties(new Party(ownerName, Role.HOLDER))
                 .putInTemporaryStorage(Storage.PUBLIC_ID, accountNumber.getPublicId())
                 .build();
     }
