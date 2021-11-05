@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.filters.FTSExceptionFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.FinTechSystemsPaymentExecutor;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -46,31 +45,6 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
     }
 
     private FinTecSystemsApiClient constructApiClient() {
-        FinTecSystemsConfiguration configuration =
-                getAgentConfigurationController()
-                        .getAgentConfigurationFromK8s(
-                                FinTecSystemsConstants.INTEGRATION_NAME,
-                                FinTecSystemsConfiguration.class);
-
-        // This defaulting to hardcoded test api key is, ideally, temporary.
-        // It is only in place to make sure the agent in test setting keeps working while we try to
-        // get the secrets deployed to secure solution work.
-        String apiKey;
-        if (provider.getType() == ProviderTypes.TEST) {
-            apiKey = configuration.getTestApiKey();
-            if (StringUtils.isEmpty(apiKey)) {
-                log.warn("Test apiKey not found in secrets! Defaulting to one defined in code.");
-                apiKey = Constants.TEST_API_KEY;
-            } else {
-                log.info("Using test apiKey defined in secrets! " + apiKey.length());
-            }
-        } else {
-            apiKey = configuration.getProdApiKey();
-            if (StringUtils.isEmpty(apiKey)) {
-                throw new IllegalStateException("Empty prod apiKey in secrets! Cannot continue!");
-            }
-        }
-
         String blz;
         if (provider.getPayload() != null) {
             blz = provider.getPayload();
@@ -80,7 +54,30 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
         }
 
         return new FinTecSystemsApiClient(
-                client, randomValueGenerator, apiKey, blz, provider.getMarket());
+                client, randomValueGenerator, readApiKey(), blz, provider.getMarket());
+    }
+
+    private String readApiKey() {
+        FinTecSystemsConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
+                                FinTecSystemsConstants.INTEGRATION_NAME,
+                                FinTecSystemsConfiguration.class);
+        String apiKey =
+                isTestProvider() ? configuration.getTestApiKey() : configuration.getProdApiKey();
+
+        if (StringUtils.isEmpty(apiKey)) {
+            throw new IllegalStateException(
+                    "apiKey not found in secrets for "
+                            + (isTestProvider() ? "test" : "production")
+                            + " scenario! Agent cannot work without it!");
+        }
+
+        return apiKey;
+    }
+
+    private boolean isTestProvider() {
+        return provider.getType() == ProviderTypes.TEST;
     }
 
     @Override
