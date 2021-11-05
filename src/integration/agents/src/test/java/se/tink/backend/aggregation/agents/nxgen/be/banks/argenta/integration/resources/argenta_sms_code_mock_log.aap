@@ -4,7 +4,7 @@ REQUEST 1
 GET https://mobile-api.argenta.be/config
 Content-Type: application/json
 Accept: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -617,7 +617,7 @@ REQUEST 2
 POST https://mobile-api.argenta.be/authentication/start-auth
 Content-Type: application/json
 Accept: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -667,7 +667,7 @@ REQUEST 3
 POST https://mobile-api.argenta.be/authentication/validate-auth
 Accept: application/json
 Content-Type: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -706,7 +706,7 @@ REQUEST 4
 POST https://mobile-api.argenta.be/authentication/validate-auth
 Accept: application/json
 Content-Type: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -745,7 +745,7 @@ REQUEST 5
 GET https://mobile-api.argenta.be/config
 Content-Type: application/json
 Accept: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -1358,7 +1358,7 @@ REQUEST 6
 POST https://mobile-api.argenta.be/authentication/start-auth
 Content-Type: application/json
 Accept: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -1406,7 +1406,7 @@ REQUEST 7
 POST https://mobile-api.argenta.be/authentication/validate-auth
 Accept: application/json
 Content-Type: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -1443,7 +1443,7 @@ Transfer-Encoding: chunked
 REQUEST 8
 GET https://mobile-api.argenta.be/accounts
 Accept: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -1525,7 +1525,7 @@ Transfer-Encoding: chunked
 REQUEST 9
 GET https://mobile-api.argenta.be/accounts/BE84953437896159/transactions?page=1
 Accept: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
@@ -1592,7 +1592,7 @@ Transfer-Encoding: chunked
 REQUEST 10
 GET https://mobile-api.argenta.be/accounts/BE84953437896159/transactions?page=2
 Accept: application/json
-App-Version: 5.18.2
+App-Version: 5.19.1
 User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
 Accept-Language: nl
 Device-Id: 00000000-0000-4000-0000-000000000000
