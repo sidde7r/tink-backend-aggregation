@@ -20,11 +20,6 @@ public class FTSExceptionFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         HttpResponse httpResponse = nextFilter(httpRequest);
-        log.error(
-                "Error from FTS code:{} and body:{}",
-                httpResponse.getStatus(),
-                httpResponse.getBody(String.class));
-
         switch (httpResponse.getStatus()) {
             case 401:
                 throw new FTSException(ERROR_MESSAGE_401);
