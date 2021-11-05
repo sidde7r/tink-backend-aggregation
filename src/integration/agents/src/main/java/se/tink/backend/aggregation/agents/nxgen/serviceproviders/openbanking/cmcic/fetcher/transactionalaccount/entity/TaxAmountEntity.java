@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 public class TaxAmountEntity {
     @JsonProperty("rate")
@@ -17,36 +21,4 @@ public class TaxAmountEntity {
 
     @JsonProperty("details")
     private List<TaxRecordDetails> details = null;
-
-    public Float getRate() {
-        return rate;
-    }
-
-    public void setRate(Float rate) {
-        this.rate = rate;
-    }
-
-    public AmountTypeEntity getTaxableBaseAmount() {
-        return taxableBaseAmount;
-    }
-
-    public void setTaxableBaseAmount(AmountTypeEntity taxableBaseAmount) {
-        this.taxableBaseAmount = taxableBaseAmount;
-    }
-
-    public AmountTypeEntity getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(AmountTypeEntity totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public List<TaxRecordDetails> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<TaxRecordDetails> details) {
-        this.details = details;
-    }
 }

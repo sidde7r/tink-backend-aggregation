@@ -3,8 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 public class ReferredDocumentInformationEntity {
     @JsonProperty("type")
@@ -18,36 +22,4 @@ public class ReferredDocumentInformationEntity {
 
     @JsonProperty("lineDetails")
     private List<LineDetailEntity> lineDetails = null;
-
-    public ReferredDocumentTypeEntity getType() {
-        return type;
-    }
-
-    public void setType(ReferredDocumentTypeEntity type) {
-        this.type = type;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public LocalDate getRelatedDate() {
-        return relatedDate;
-    }
-
-    public void setRelatedDate(LocalDate relatedDate) {
-        this.relatedDate = relatedDate;
-    }
-
-    public List<LineDetailEntity> getLineDetails() {
-        return lineDetails;
-    }
-
-    public void setLineDetails(List<LineDetailEntity> lineDetails) {
-        this.lineDetails = lineDetails;
-    }
 }

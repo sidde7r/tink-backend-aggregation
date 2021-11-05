@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 public class ClearingSystemMemberIdentificationEntity {
     @JsonProperty("clearingSystemId")
@@ -10,20 +14,4 @@ public class ClearingSystemMemberIdentificationEntity {
 
     @JsonProperty("memberId")
     private String memberId = null;
-
-    public String getClearingSystemId() {
-        return clearingSystemId;
-    }
-
-    public void setClearingSystemId(String clearingSystemId) {
-        this.clearingSystemId = clearingSystemId;
-    }
-
-    public String getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
 }

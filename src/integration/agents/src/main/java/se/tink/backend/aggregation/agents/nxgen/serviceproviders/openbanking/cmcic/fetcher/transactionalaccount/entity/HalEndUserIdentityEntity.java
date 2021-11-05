@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 public class HalEndUserIdentityEntity {
     @JsonProperty("connectedPsu")
@@ -10,20 +14,4 @@ public class HalEndUserIdentityEntity {
 
     @JsonProperty("_links")
     private EndUserIdentityLinksEntity links = null;
-
-    public String getConnectedPsu() {
-        return connectedPsu;
-    }
-
-    public void setConnectedPsu(String connectedPsu) {
-        this.connectedPsu = connectedPsu;
-    }
-
-    public EndUserIdentityLinksEntity getLinks() {
-        return links;
-    }
-
-    public void setLinks(EndUserIdentityLinksEntity links) {
-        this.links = links;
-    }
 }
