@@ -40,7 +40,6 @@ public class LhvAgentTest {
                 .setAppId("tink")
                 .expectLoggedIn(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();
     }
