@@ -128,7 +128,7 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
                         QueryValues.AUTHORIZATION_CODE,
                         redirectUri);
 
-        return client.request(getConfiguration().getOauthBaseUrl() + Urls.GET_TOKEN)
+        return client.request(getConfiguration().getOauthBaseUrl() + Urls.APP2APP_GET_TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .addBasicAuth(clientId, clientSecret)

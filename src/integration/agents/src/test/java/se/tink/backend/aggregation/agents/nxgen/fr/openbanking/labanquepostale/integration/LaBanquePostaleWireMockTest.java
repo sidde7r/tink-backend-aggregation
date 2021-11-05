@@ -54,7 +54,7 @@ public class LaBanquePostaleWireMockTest {
                                         PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER,
                                         LocalDate.of(2021, 1, 1)))
                         .withAgentModule(new LaBanquePostaleWireMockTestModule())
-                        .buildWithLogin(PaymentCommand.class);
+                        .buildWithoutLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
     }
@@ -80,7 +80,7 @@ public class LaBanquePostaleWireMockTest {
                                         PaymentScheme.SEPA_CREDIT_TRANSFER,
                                         LocalDate.of(2021, 4, 20)))
                         .withAgentModule(new LaBanquePostaleWireMockTestModule())
-                        .buildWithLogin(PaymentCommand.class);
+                        .buildWithoutLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
     }
@@ -106,7 +106,7 @@ public class LaBanquePostaleWireMockTest {
                                         PaymentScheme.SEPA_CREDIT_TRANSFER,
                                         LocalDate.of(2021, 4, 20)))
                         .withAgentModule(new LaBanquePostaleWireMockTestModule())
-                        .buildWithLogin(PaymentCommand.class);
+                        .buildWithoutLogin(PaymentCommand.class);
 
         Throwable thrown = Assertions.catchThrowable(agentWireMockPaymentTest::executePayment);
 
