@@ -89,7 +89,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         new IngUserAuthenticationData(
                                 shouldDoManualAuthentication(request), psuIpAddress),
                         this,
-                        qsealcSigner);
+                        qsealcSigner,
+                        request);
         paymentApiClient =
                 new IngPaymentApiClient(
                         client,
@@ -100,6 +101,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                                 shouldDoManualAuthentication(request), psuIpAddress),
                         this,
                         qsealcSigner,
+                        request,
                         strongAuthenticationState);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -150,7 +152,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final IngBaseAuthenticator ingBaseAuthenticator =
-                new IngBaseAuthenticator(apiClient, persistentStorage);
+                new IngBaseAuthenticator(apiClient, persistentStorage, request);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,

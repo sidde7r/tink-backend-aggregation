@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.consent.generators.nl.ing.IngConsentGenerator;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorCodes;
@@ -50,6 +51,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateFormat;
 
 @Slf4j
@@ -63,6 +65,7 @@ public class IngBaseApiClient {
     private final IngUserAuthenticationData userAuthenticationData;
     private final MarketConfiguration marketConfiguration;
     protected final QsealcSigner proxySigner;
+    private final CredentialsRequest credentialsRequest;
 
     private String hexCertificateSerial;
     private String base64derQsealc;
@@ -155,6 +158,11 @@ public class IngBaseApiClient {
                 .get(FetchCardTransactionsResponse.class);
     }
 
+    private String getScopes() {
+        return new IngConsentGenerator(credentialsRequest, IngBaseConfiguration.getIngScopes())
+                .generate();
+    }
+
     public URL getAuthorizeUrl(final String state) {
         final TokenResponse tokenResponse = getApplicationAccessToken();
         setApplicationTokenToSession(tokenResponse.toTinkToken());
@@ -162,9 +170,7 @@ public class IngBaseApiClient {
 
         return new URL(getAuthorizationUrl(tokenResponse).getLocation())
                 .queryParam(QueryKeys.CLIENT_ID, tokenResponse.getClientId())
-                .queryParam(
-                        QueryKeys.SCOPE,
-                        QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
+                .queryParam(QueryKeys.SCOPE, getScopes())
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE);
@@ -265,9 +271,7 @@ public class IngBaseApiClient {
         final String reqPath =
                 new URL(Urls.OAUTH)
                         .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                        .queryParam(
-                                QueryKeys.SCOPE,
-                                QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
+                        .queryParam(QueryKeys.SCOPE, getScopes())
                         .queryParam(QueryKeys.COUNTRY_CODE, market)
                         .toString();
 
