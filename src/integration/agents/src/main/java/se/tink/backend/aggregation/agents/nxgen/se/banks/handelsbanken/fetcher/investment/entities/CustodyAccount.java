@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.FundHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
@@ -28,9 +27,10 @@ public class CustodyAccount extends BaseResponse {
         if (type != null) {
             switch (type.toLowerCase()) {
                 case HandelsbankenSEConstants.Investments.FUND:
-                    return client.fundHoldings(this)
-                            .map(FundHoldingsResponse::getUserFundHoldings)
-                            .map(fundHoldings -> fundHoldings.toAccount(this));
+                    // TC-5478 All fund/fundHoldings fetching attempts end with 500 response which
+                    // breaks the whole refresh. Temporarily return empty list and delete request
+                    // for fundHoldings
+                    return Optional.empty();
                 case HandelsbankenSEConstants.Investments.ISK:
                     // Intentional fall through
                 case HandelsbankenSEConstants.Investments.NORMAL:
