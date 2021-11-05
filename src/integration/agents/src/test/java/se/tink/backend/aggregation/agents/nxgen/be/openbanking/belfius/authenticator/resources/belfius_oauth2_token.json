@@ -1,0 +1,9 @@
+{
+  "access_token": "belfiusAccessToken",
+  "refresh_token": "belfiusRefreshToken",
+  "id_token": "123",
+  "logical_id": "1234",
+  "token_type": "oauth2",
+  "expires_in": "98765",
+  "sca_token": "sca"
+}
