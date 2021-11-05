@@ -15,6 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.AccountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.PsuRelationsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
@@ -115,10 +116,10 @@ public class AccountDetailsEntity {
     }
 
     private String getUserName() {
-        if (auxData != null) {
+        if (auxData != null && StringUtils.isNotBlank(auxData.getUser())) {
             return auxData.getUser();
         }
-        if (nameAddress != null) {
+        if (nameAddress != null && StringUtils.isNotBlank(nameAddress.getOwnerName())) {
             return nameAddress.getOwnerName();
         }
         return ownerName;
