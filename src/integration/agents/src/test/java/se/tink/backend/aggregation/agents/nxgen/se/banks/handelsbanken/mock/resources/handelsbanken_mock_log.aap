@@ -608,7 +608,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 REQUEST 21
 GET https://m2.handelsbanken.se/app/priv/loan?authToken=123Token132
-Accept: application/json,application/xml
+Accept: application/json
 X-Aggregator: Tink Testing
 
 RESPONSE 21

@@ -27,19 +27,11 @@ public class HandelsbankenLoanFetcher implements AccountFetcher<LoanAccount> {
     @Override
     public Collection<LoanAccount> fetchAccounts() {
 
-        try {
-            return sessionStorage
-                    .applicationEntryPoint()
-                    .map(
-                            applicationEntryPoint ->
-                                    client.loans(applicationEntryPoint).toTinkLoans(credentials))
-                    .orElseGet(Collections::emptyList);
-        } catch (Exception e) {
-            // TC-5468 All SE loan fetching attempts end with 500 response which breaks the whole
-            // refresh. Temporarily return empty list when any exception is thrown while we
-            // investigate the issue.
-            log.warn("Fetching of loans failed, returning empty list.");
-            return Collections.emptyList();
-        }
+        return sessionStorage
+                .applicationEntryPoint()
+                .map(
+                        applicationEntryPoint ->
+                                client.loans(applicationEntryPoint).toTinkLoans(credentials))
+                .orElseGet(Collections::emptyList);
     }
 }
