@@ -141,7 +141,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "32a3ec4d70f6000d87e2741232ef30e2e726ad22",
+    commit = "c3ce24a11fe33dd69d26928c16cf8741f86eb89a",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -695,6 +695,7 @@ maven_install(
         "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-netty-shaded:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
         "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
@@ -767,6 +768,7 @@ maven_install(
         "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
         "org.glassfish.web:javax.el:2.2.6",
+        "org.glassfish.jaxb:jaxb-runtime:2.3.3",
         "org.iban4j:iban4j:3.1.0",
         "org.reflections:reflections:0.9.11",
         maven.artifact(

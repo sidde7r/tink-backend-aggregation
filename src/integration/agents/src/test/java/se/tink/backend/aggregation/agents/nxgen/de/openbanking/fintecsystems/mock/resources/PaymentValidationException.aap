@@ -7,7 +7,7 @@ Accept: application/json
 Content-Type: application/json
 X-Request-Id: 00000000-0000-4000-0000-000000000000
 
-{"amount":"1.0","currency_id":"EUR","recipient_holder":"Creditor Name","recipient_iban":"DE04888888880087654321","purpose":"ReferenceToCreditor","sender_bic":"TESTDE88XXX"}
+{"amount":"1.0","currency_id":"EUR","recipient_holder":"Creditor Name","recipient_iban":"DE04888888880087654321","purpose":"ReferenceToCreditor","sender_bank_code":"88888888","sender_country_id":"DE"}
 
 -----------------------------------------------------------------------------------
 RESPONSE 1
