@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoadSessionCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.AgentsServiceConfigurationStep;
@@ -364,7 +365,7 @@ public final class AgentWireMockRefreshTestNxBuilder
 
     private List<Class<? extends CompositeAgentTestCommand>> commands(boolean skipAuthentication) {
         return skipAuthentication
-                ? ImmutableList.of(RefreshCommand.class)
+                ? ImmutableList.of(LoadSessionCommand.class, RefreshCommand.class)
                 : ImmutableList.of(LoginCommand.class, RefreshCommand.class);
     }
 

@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.Comp
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentWiremockTestContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoadSessionCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
@@ -320,7 +321,7 @@ public final class AgentWireMockPaymentTest {
                     agentTestModule,
                     payment,
                     transfer,
-                    of(command),
+                    of(LoadSessionCommand.class, command),
                     httpDebugTrace);
         }
 
