@@ -1,0 +1,117 @@
+{
+  "operationId": "35cde6bc-809c-4045-9260-b7ddc8d1ed63",
+  "manual": true,
+  "forceAuthenticate": false,
+  "refreshId": "dummyId",
+  "itemsToRefresh": [
+    "CHECKING_ACCOUNTS",
+    "CHECKING_TRANSACTIONS",
+    "SAVING_ACCOUNTS",
+    "SAVING_TRANSACTIONS",
+    "CREDITCARD_ACCOUNTS",
+    "CREDITCARD_TRANSACTIONS",
+    "LOAN_ACCOUNTS",
+    "LOAN_TRANSACTIONS",
+    "INVESTMENT_ACCOUNTS",
+    "INVESTMENT_TRANSACTIONS",
+    "TRANSFER_DESTINATIONS",
+    "LIST_BENEFICIARIES",
+    "IDENTITY_DATA"
+  ],
+  "create": false,
+  "callbackUri": "callbackUri",
+  "appUriId": "appUriId",
+  "userDeviceId": "userDeviceId",
+  "credentials": {
+    "debugUntil": 695260800,
+    "providerLatency": 0,
+    "id": "refresh-test-for-nordea",
+    "nextUpdate": null,
+    "fields": {
+      "username": "199901011230",
+      "password": "dummy-password"
+    },
+    "payload": "",
+    "providerName": "dk-nordea-nemid",
+    "sessionExpiryDate": null,
+    "status": "CREATED",
+    "statusPayload": "CREATED",
+    "statusPrompt": "",
+    "statusUpdated": "695260800",
+    "supplementalInformation": "",
+    "type": "PASSWORD",
+    "updated": "695260800",
+    "userId": "userId",
+    "market": "DK"
+  },
+  "userAvailability": {
+    "userAvailableForInteraction": true,
+    "userPresent": true
+  },
+  "provider": {
+    "accessType": "OTHER",
+    "agentSources": [
+      "AGGREGATION_SERVICE"
+    ],
+    "authenticationUserType": "PERSONAL",
+    "backgroundRefreshEnabled": false,
+    "backgroundRefreshMaxFrequency": 1,
+    "className": "nxgen.dk.banks.nordea.NordeaDkAgent",
+    "credentialsType": "PASSWORD",
+    "displayDescription": "NemID Login",
+    "displayName": "Nordea",
+    "fields": [
+      {
+        "description": "User ID",
+        "helpText": "Please enter the same User ID as you would enter to NemID. It’s either NemID number, CPR number or self-chosen NemID username.",
+        "maxLength": 48,
+        "minLength": 5,
+        "name": "username",
+        "pattern": "^[a-zA-Z0-9{}!#\"$'%^&,*()_+\\-=:;?.@]{5,48}$",
+        "patternError": "Must be between 5 and 48 characters\nMay not contain certain special characters, such as æ, ø, å\nMay not begin or end with a blank character"
+      },
+      {
+        "description": "Password",
+        "helpText": "Please enter your password to NemID. It can be a 4 digit password or password with at least 6 alphanumeric characters. If you do not remember it, you can reset your password on NemID website.",
+        "masked": true,
+        "maxLength": 40,
+        "minLength": 4,
+        "name": "password",
+        "pattern": "^(\\d{4}|[a-zA-Z0-9{}!#\"$'%^&,*()_+\\-=:;?.@]{6,40})$",
+        "patternError": "Must be between 4 and 40 characters\nMay not begin or end with a blank character\nMay not contain certain special characters, such as æ, ø, å",
+        "sensitive": true
+      }
+    ],
+    "financialInstitutionId": "e76a6fb9eaf844b0a317135794c64825",
+    "financialInstitutionName": "Nordea",
+    "financialServices": [
+      {
+        "segment": "PERSONAL"
+      }
+    ],
+    "imageUrls": {
+      "icon": "https://cdn.tink.se/provider-images/dk/dk-nordea.png"
+    },
+    "multiFactor": false,
+    "name": "dk-nordea-nemid",
+    "passwordHelpText": "In the next step we will ask you to select how you want to confirm the NemID authentication.",
+    "popular": false,
+    "releaseStatus": "GENERALLY_AVAILABLE",
+    "status": "ENABLED",
+    "transactional": true,
+    "type": "BANK",
+    "market": "DK",
+    "currency": "DKK"
+  },
+  "user": {
+    "flags": [],
+    "flagsSerialized": "[]",
+    "id": "userId",
+    "profile": {
+      "locale": "en_US"
+    },
+    "username": "username",
+    "debugUntil": 695260800
+  },
+  "accounts": []
+}

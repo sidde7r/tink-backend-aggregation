@@ -29,6 +29,9 @@ public class AggregationDecoupledAapFileProvider implements AapFileProvider {
         providerToAapFile.put(
                 "se-danskebank-bankid",
                 ImmutableSet.of("data/agents/se/danskebank/se-danskebank-bankid-mock.aap"));
+        providerToAapFile.put(
+                "dk-nordea-nemid",
+                ImmutableSet.of("data/agents/dk/nordea/dk-nordea-nemid-mock.aap"));
     }
 
     @Override

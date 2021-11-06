@@ -97,6 +97,10 @@ spec:
         - name: altered-config-volume
           mountPath: /mnt/altered-config-volume
         env:
+        # IMPORTANT: OPENSSL_CONF is included only in J11 chart, when moving AS to J11
+        # we must ensure that it will be included in its chart as well!
+        - name: OPENSSL_CONF
+          value: "/etc/ssl/"
         - name: COLLECTOR_SUBSCRIPTION_KEY
           valueFrom:
             secretKeyRef:
