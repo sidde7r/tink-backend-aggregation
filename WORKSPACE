@@ -3189,10 +3189,10 @@ http_file(
 )
 
 http_file(
-    name = "libssh-4_0.8.7-1deb10u1_amd64",
-    downloaded_file_path = "libssh-4_0.8.7-1+deb10u1_amd64.deb",
-    sha256 = "bad0e3361ee53054cd91f60482c57f780a93b5fbdbb7031e547d504de64499fa",
-    urls = ["http://deb.debian.org/debian/pool/main/libs/libssh/libssh-4_0.8.7-1+deb10u1_amd64.deb"],
+    name = "libssh-4_0.9.5-1deb11u1_amd64.deb",
+    downloaded_file_path = "libssh-4_0.9.5-1+deb11u1_amd64.deb",
+    sha256 = "75d04fac5fbea0f4c1f047198122e26aa26f4267de0a3c079c44100b3ea9066f",
+    urls = ["http://ftp.us.debian.org/debian/pool/main/libs/libssh/libssh-4_0.9.5-1+deb11u1_amd64.deb"],
 )
 
 http_file(
