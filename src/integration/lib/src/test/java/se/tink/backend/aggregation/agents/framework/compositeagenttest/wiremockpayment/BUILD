@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -47,4 +48,12 @@ java_library(
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@tink_backend//src/libraries/protobuf_type_utils",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
