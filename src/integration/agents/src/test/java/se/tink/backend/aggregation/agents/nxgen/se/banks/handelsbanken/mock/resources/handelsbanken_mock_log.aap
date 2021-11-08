@@ -852,7 +852,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 REQUEST 24P
 GET https://m2.handelsbanken.se/app/priv/pending-transactions?user=&authToken=123Token132
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.4.1,11.2.0,iPhone8.1,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
@@ -944,7 +944,7 @@ REQUEST 27IN
 GET https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken=123Token132
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.4.1,11.2.0,iPhone8.1,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.4
 X-Aggregator: Tink Testing
