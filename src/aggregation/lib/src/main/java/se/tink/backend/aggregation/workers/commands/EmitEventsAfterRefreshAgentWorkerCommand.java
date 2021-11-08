@@ -71,6 +71,8 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
                             AccountTypes.INVESTMENT,
                             RefreshableItem.INVESTMENT_TRANSACTIONS);
 
+    private static final EventListSplitter EVENT_LIST_SPLITTER = new EventListSplitter(10000000);
+
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
@@ -145,7 +147,14 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
 
                     messages.addAll(rawBankDataEventAccumulator.getEventList());
 
-                    eventSender.sendMessages(messages);
+                    // !!! Workaround until EPS service is fixed: we check here if the list
+                    // is too big and if so we divide it
+                    List<List<Message>> messageLists =
+                            EVENT_LIST_SPLITTER.splitMessageListIntoChunks(messages);
+                    for (List<Message> chunk : messageLists) {
+                        eventSender.sendMessages(chunk);
+                    }
+
                     trackLatency(
                             DATA_TRACKER_V2_LATENCY_METRIC_ID,
                             watchDataTrackerV1AndV2ElapsedTime
