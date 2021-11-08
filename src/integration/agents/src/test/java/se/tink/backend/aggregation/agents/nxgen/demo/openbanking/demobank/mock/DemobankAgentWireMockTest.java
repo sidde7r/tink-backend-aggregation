@@ -59,6 +59,10 @@ public class DemobankAgentWireMockTest {
             RESOURCE_PATH + "/demobank-otp-auth-invalid_credentials.aap";
     private static final String OTP_AUTH_INVALID_OTP_AAP =
             RESOURCE_PATH + "/demobank-otp-auth-invalid_otp.aap";
+    private static final String PASSWORD_AUTH_SUCCESSFUL_AAP =
+            RESOURCE_PATH + "/demobank-password-auth-successful.aap";
+    private static final String PASSWORD_AUTH_INVALID_CREDENTIALS_AAP =
+            RESOURCE_PATH + "/demobank-password-auth-invalid_credentials.aap";
 
     private static final String SOURCE_IDENTIFIER = "IT76K2958239128VVJCLBIHVDAT";
     private static final String DESTINATION_IDENTIFIER = "IT12L8551867857UFGAYZF25O4M";
@@ -74,6 +78,44 @@ public class DemobankAgentWireMockTest {
     private static final String GENERAL_USERNAME = "u12345678";
     private static final String GENERAL_PASSWORD = "abc123";
     private static final String OTP_RESPONSE = "2423";
+
+    @Test
+    public void testPasswordAuthSuccessful() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-demobank-password")
+                        .withWireMockFilePath(PASSWORD_AUTH_SUCCESSFUL_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), GENERAL_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD.getFieldKey(), GENERAL_PASSWORD)
+                        .build();
+
+        assertThatCode(test::executeRefresh).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testPasswordAuthInvalidCredentials() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-demobank-password")
+                        .withWireMockFilePath(PASSWORD_AUTH_INVALID_CREDENTIALS_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), GENERAL_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD.getFieldKey(), GENERAL_PASSWORD)
+                        .build();
+
+        final Throwable thrown = catchThrowable(test::executeRefresh);
+
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+    }
 
     @Test
     public void testOtpAuthSuccessful() {
