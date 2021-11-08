@@ -82,30 +82,41 @@ public class IdentifierMapperTest {
     }
 
     @Test
-    public void getCreditCardIdentifier_returnPAN_id() {
+    public void shouldGetSortCodeIdentifierOfCreditCard() {
         // given
-        AccountIdentifierEntity panIdentifier = IdentifierFixtures.panIdentifier();
-        AccountIdentifierEntity ibanIdentifier = IdentifierFixtures.ibanIdentifier();
+        final List<ExternalAccountIdentification4Code> expectedPriorityList =
+                ImmutableList.of(
+                        ExternalAccountIdentification4Code.PAN,
+                        ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER);
         AccountIdentifierEntity sortCodeIdentifier = IdentifierFixtures.sortCodeIdentifier();
-
         // when
-        AccountIdentifierEntity result =
-                identifierMapper.getCreditCardIdentifier(
-                        ImmutableList.of(ibanIdentifier, panIdentifier, sortCodeIdentifier));
+        ArgumentCaptor<List<UkObBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        when(valueExtractor.pickByValuePriority(anyList(), any(), argument.capture()))
+                .thenReturn(Optional.of(sortCodeIdentifier));
+
+        AccountIdentifierEntity sortCodeResult =
+                identifierMapper.getCreditCardIdentifier(Collections.emptyList());
 
         // then
-        assertThat(result).isEqualTo(panIdentifier);
+        assertThat(argument.getValue()).asList().isEqualTo(expectedPriorityList);
+        assertThat(sortCodeResult).isEqualTo(sortCodeIdentifier);
     }
 
     @Test
-    public void getCreditCardIdentifier_shouldThrowException_when_PAN_IdentifierIsMissing() {
+    public void shouldGetEmptyIdentifierOfCreditCard() {
         // when
+        ArgumentCaptor<List<UkObBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        when(valueExtractor.pickByValuePriority(anyList(), any(), argument.capture()))
+                .thenReturn(Optional.empty());
+
         Throwable throwable =
                 catchThrowable(
                         () -> identifierMapper.getCreditCardIdentifier(Collections.emptyList()));
 
         // then
-        assertThat(throwable).isInstanceOf(NoSuchElementException.class);
+        assertThat(throwable)
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("Missing allowed credit card account identifiers like PAN or SortCode");
     }
 
     @Test
