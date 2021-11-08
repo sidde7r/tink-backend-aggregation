@@ -58,6 +58,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.st
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -112,12 +113,14 @@ public final class DemobankAgent extends NextGenerationAgent
     private final String callbackUri;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final RandomValueGenerator randomValueGenerator;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Inject
     public DemobankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.callbackUri = getCallbackUri();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         apiClient = new DemobankApiClient(client, persistentStorage, callbackUri);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
@@ -161,6 +164,7 @@ public final class DemobankAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
                                         demobankTransactionalAccountFetcher)
+                                .setLocalDateTimeSource(this.localDateTimeSource)
                                 .build()));
     }
 
@@ -175,6 +179,7 @@ public final class DemobankAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(demobankCreditCardFetcher)
+                                .setLocalDateTimeSource(this.localDateTimeSource)
                                 .build()));
     }
 
