@@ -13,7 +13,7 @@ public class ISOInstantDeserializer extends InstantDeserializer<Instant> {
                 new DateTimeFormatterBuilder()
                         .appendPattern("yyyy-MM-dd'T'HH:mm[:ss]")
                         .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
-                        .appendPattern("[VV][x][xxx]")
+                        .appendPattern("[VV][xxx][xx][x]")
                         .toFormatter());
     }
 }

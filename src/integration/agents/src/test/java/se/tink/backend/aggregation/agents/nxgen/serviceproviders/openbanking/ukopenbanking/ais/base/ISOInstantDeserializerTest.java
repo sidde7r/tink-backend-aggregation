@@ -39,6 +39,10 @@ public class ISOInstantDeserializerTest {
     private static final String TRANSACTION_DATE_WITH_HH_OFFSET =
             "{\"transactionDate\": \"2021-09-13T11:16:40.345+01\"}";
 
+    // Santander
+    private static final String TRANSACTION_DATE_WITH_ZERO_OFFSET =
+            "{\"transactionDate\": \"2021-09-13T10:16:40.345+0000\"}";
+
     @Before
     public void setUp() {
         mapper = new ObjectMapper(new JsonFactory());
@@ -130,6 +134,14 @@ public class ISOInstantDeserializerTest {
     @Test
     public void shouldDeserializeDateWithHHOffset() throws JsonProcessingException {
         TestEntity entity = mapper.readValue(TRANSACTION_DATE_WITH_HH_OFFSET, TestEntity.class);
+
+        assertThat(entity.getTransactionDate())
+                .isEqualTo(Instant.parse("2021-09-13T10:16:40.345Z"));
+    }
+
+    @Test
+    public void shouldDeserializeDateWithNoOffset() throws JsonProcessingException {
+        TestEntity entity = mapper.readValue(TRANSACTION_DATE_WITH_ZERO_OFFSET, TestEntity.class);
 
         assertThat(entity.getTransactionDate())
                 .isEqualTo(Instant.parse("2021-09-13T10:16:40.345Z"));
