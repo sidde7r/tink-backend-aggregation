@@ -216,6 +216,8 @@ public class SkandiaBankenConstants {
         public static final String NOT_CUSTOMER =
                 "för att använda vår app behöver du ha ett bankkonto";
         public static final String INVALID_OCR = "payments[0].OCRReference";
+        public static final String HELIUM_API_EXCEPTION =
+                "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown.";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
