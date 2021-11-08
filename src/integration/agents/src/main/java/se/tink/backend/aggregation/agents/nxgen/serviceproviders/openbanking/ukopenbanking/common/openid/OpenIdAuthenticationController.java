@@ -144,12 +144,7 @@ public class OpenIdAuthenticationController
                 saveAccessToken(refreshedToken);
                 oAuth2Token = refreshedToken;
 
-                String consentId =
-                        persistentStorage
-                                .get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class)
-                                .orElse(StringUtils.EMPTY);
-
-                if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
+                if (getConsentId().equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
                     cleanAuthenticationPersistentStorage();
                     throw SessionError.CONSENT_INVALID.exception(
                             "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
@@ -365,7 +360,10 @@ public class OpenIdAuthenticationController
             String serializedCallbackData, String errorType, String errorDescription)
             throws LoginException {
 
-        log.info("OpenId callback data: {}", serializedCallbackData);
+        log.info(
+                "OpenId callback data: {} for consentId {}",
+                serializedCallbackData,
+                getConsentId());
 
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
@@ -385,5 +383,11 @@ public class OpenIdAuthenticationController
 
         throw new IllegalStateException(
                 String.format("Unknown error: %s:%s.", errorType, errorDescription));
+    }
+
+    private String getConsentId() {
+        return persistentStorage
+                .get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class)
+                .orElse(StringUtils.EMPTY);
     }
 }
