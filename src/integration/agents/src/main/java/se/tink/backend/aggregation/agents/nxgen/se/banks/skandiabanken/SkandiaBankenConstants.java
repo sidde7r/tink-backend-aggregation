@@ -221,6 +221,7 @@ public class SkandiaBankenConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorCodes {
         public static final String GENERIC_PAYMENT_ERROR = "BAPPAY0107";
+        public static final String BANKID_TIMEOUT_ERROR = "SYPSIG0101";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

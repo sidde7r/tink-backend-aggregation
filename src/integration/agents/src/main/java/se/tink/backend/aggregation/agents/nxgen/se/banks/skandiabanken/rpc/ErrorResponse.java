@@ -31,6 +31,11 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isBankIdTimeoutError() {
+        return ErrorCodes.BANKID_TIMEOUT_ERROR.equalsIgnoreCase(errorCode);
+    }
+
+    @JsonIgnore
     public boolean isInvalidOcrError() {
         if (ListUtils.emptyIfNull(fields).size() != 1) {
             log.warn(
