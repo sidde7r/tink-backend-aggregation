@@ -351,6 +351,10 @@ spec:
         env:
           - name: JAVA_TOOL_OPTIONS
             value: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=70.0"
+          # IMPORTANT: OPENSSL_CONF is included only in J11 chart, when moving AS to J11
+          # we must ensure that it will be included in its chart as well!
+          - name: OPENSSL_CONF
+            value: "/etc/ssl/"
 
         ports:
         - name: https-api
