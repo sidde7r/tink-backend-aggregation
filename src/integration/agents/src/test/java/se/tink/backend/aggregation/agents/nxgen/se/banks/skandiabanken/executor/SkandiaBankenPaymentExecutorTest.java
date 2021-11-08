@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -284,6 +285,24 @@ public class SkandiaBankenPaymentExecutorTest {
     }
 
     @Test
+    public void shouldThrowBankIdAnotherInProgressWhenAnotherSignIsActive() {
+        when(apiClient.initSignPayment(anyString())).thenThrow(httpResponseException);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getStatus()).thenReturn(500);
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+        when(httpResponse.getBody(ErrorResponse.class)).thenReturn(getBankIdAlreadyInProgress());
+
+        ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "initPaymentSigning", "mockedEncryptedPaymentId");
+
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage("Another BankId authentication was initiated while authenticating.");
+    }
+
+    @Test
     public void shouldThrowTransferExceptionWhenErrorResponseIsInvalidOcr() {
         // given
         when(httpResponse.getStatus()).thenReturn(400);
@@ -506,6 +525,19 @@ public class SkandiaBankenPaymentExecutorTest {
                         + "    [],\n"
                         + "    \"ErrorCode\": null,\n"
                         + "    \"ErrorMessage\": \"Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown.\"\n"
+                        + "}",
+                ErrorResponse.class);
+    }
+
+    private ErrorResponse getBankIdAlreadyInProgress() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"StatusCode\": 500,\n"
+                        + "    \"StatusMessage\": \"InternalServerError\",\n"
+                        + "    \"Fields\":\n"
+                        + "    [],\n"
+                        + "    \"ErrorCode\": \"BAPSIG0102\",\n"
+                        + "    \"ErrorMessage\": \"A sign job was already active, try again.\"\n"
                         + "}",
                 ErrorResponse.class);
     }
