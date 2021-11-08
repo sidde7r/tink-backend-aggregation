@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.nxgen.core.account.transactional.Trans
 
 import java.util.Optional;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -21,6 +23,7 @@ public class AccountEntity {
     private String accountName;
     private double balance;
     private String balanceTxt;
+    private double availableAmount;
     private String dateLastRecord;
     private double maximum;
     private String maximumTxt;
@@ -45,13 +48,21 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(transactionalAccountType)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getTinkBalance()))
+                .withBalance(
+                        BalanceModule.builder()
+                                .withBalance(ExactCurrencyAmount.of(balance, currency))
+                                .setAvailableBalance(
+                                        ExactCurrencyAmount.of(availableAmount, currency))
+                                .build())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountId)
                                 .withAccountNumber(accountId)
                                 .withAccountName(accountName)
                                 .addIdentifier(new IbanIdentifier(details.getIban()))
+                                .addIdentifier(
+                                        new BbanIdentifier(
+                                                StringUtils.right(details.getIban(), 14)))
                                 .build())
                 .addHolderName(details.getAccountHolder())
                 .build();

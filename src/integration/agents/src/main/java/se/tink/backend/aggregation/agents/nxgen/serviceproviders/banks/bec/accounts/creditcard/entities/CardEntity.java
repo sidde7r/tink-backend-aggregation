@@ -57,6 +57,7 @@ public class CardEntity {
     }
 
     public boolean isCardActive() {
-        return BecConstants.CreditCard.STATUS_ACTIVE.equalsIgnoreCase(statusText);
+        return BecConstants.CreditCard.STATUS_ACTIVE.stream()
+                .anyMatch(s -> s.equalsIgnoreCase(statusText));
     }
 }
