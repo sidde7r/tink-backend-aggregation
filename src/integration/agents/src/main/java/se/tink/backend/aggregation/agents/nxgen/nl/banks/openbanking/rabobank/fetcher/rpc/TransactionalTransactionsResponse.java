@@ -72,7 +72,7 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
         final List<Transaction> txs = Lists.newArrayList();
         final Optional<List<TransactionItem>> bookedTransactions = transactions.getBooked();
         bookedTransactions.orElseGet(Collections::emptyList).stream()
-                .map(t -> toTinkTransaction(t, true))
+                .map(t -> toTinkTransaction(t, false))
                 .forEach(txs::add);
         return txs;
     }
