@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.trans
 
 @Getter
 public class BalanceResponse {
-
     private AccountNumberEntity account;
     private List<BalanceEntity> balances;
 }
