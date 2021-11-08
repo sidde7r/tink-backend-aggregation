@@ -20,7 +20,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
@@ -42,7 +42,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
@@ -60,7 +60,7 @@ spec:
       labels:
         severity: ping
         priority: P3
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
@@ -82,7 +82,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
@@ -100,7 +100,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
@@ -119,7 +119,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
@@ -136,7 +136,7 @@ spec:
            and count(sum_over_time(tink_agent_login_total{action="refresh", outcome="unavailable", market="FI", provider_type!="test"}[4h])) by (className, provider) > 2
       labels:
         severity: urgent
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
@@ -150,7 +150,7 @@ spec:
             / count(sum_over_time(tink_agent_refresh_total{market="FI", provider_type!="test"}[12h])) by (className, provider) > 0.99)
       labels:
         severity: urgent
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
@@ -173,7 +173,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
@@ -191,7 +191,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
@@ -210,7 +210,7 @@ spec:
       labels:
         severity: ping
         priority: P3
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
