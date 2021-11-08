@@ -101,7 +101,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.pt.openbanking.bankinter.BankinterAgent", 0.025)
                     .put("nxgen.pt.openbanking.big.BigAgent", 0.025)
                     .put("nxgen.pt.openbanking.bpg.BpgAgent", 0.025)
-                    .put("nxgen.pt.openbanking.caixa.CaixaRedirectAgent", 0.025)
+                    .put("nxgen.pt.openbanking.caixa.CaixaRedirectAgent", 0.01)
                     .put("nxgen.pt.openbanking.caixacrl.CaixaCrlAgent", 0.025)
                     .put("nxgen.pt.openbanking.cemah.CemahAgent", 0.025)
                     .put("nxgen.pt.openbanking.cofidis.CofidisAgent", 0.025)
