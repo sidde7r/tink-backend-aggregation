@@ -212,3 +212,6 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/enums/src/integration/enums/src/main/java/se/tink/libraries/enums @tink-ab/aggregation-agent-platform-maintainer
 /src/libraries/queue_sqs/src/libraries/queue_sqs @tink-ab/aggregation-agent-platform-maintainer
 /src/aggregation/lib/src/main/java/se/tink/backend/aggregation/resources/ @tink-ab/aggregation-agent-platform-maintainer
+/src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/command/ @tink-ab/aggregation-agent-platform-maintainer
+/src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment/ @tink-ab/aggregation-agent-platform-maintainer
+/src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh/ @tink-ab/aggregation-agent-platform-maintainer

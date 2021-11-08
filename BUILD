@@ -183,6 +183,9 @@ generate_codeowners(
         "//src/integration/enums:integration_enums_owners",
         "//src/libraries/queue_sqs:queue_sqs_owners",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/resources:owners",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/command:owners",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment:owners",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh:owners",
     ],
 )
 
