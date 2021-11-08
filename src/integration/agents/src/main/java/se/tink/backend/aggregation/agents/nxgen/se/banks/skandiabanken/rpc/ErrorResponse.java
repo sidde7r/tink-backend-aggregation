@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.entities.ErrorField;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -17,7 +19,7 @@ public class ErrorResponse {
     private int statusCode;
     private String statusMessage = "";
     private String errorCode = "";
-    private String errorMessage = "";
+    @Getter private String errorMessage = "";
     private List<ErrorField> fields;
 
     @JsonIgnore
@@ -28,6 +30,21 @@ public class ErrorResponse {
     @JsonIgnore
     public boolean isGenericPaymentError() {
         return ErrorCodes.GENERIC_PAYMENT_ERROR.equalsIgnoreCase(errorCode);
+    }
+
+    @JsonIgnore
+    public boolean isBankIdTimeoutError() {
+        return ErrorCodes.BANKID_TIMEOUT_ERROR.equalsIgnoreCase(errorCode);
+    }
+
+    @JsonIgnore
+    public boolean isAnotherBankIdAlreadyInProgress() {
+        return ErrorCodes.BANKID_ALREADY_IN_PROGRESS.equalsIgnoreCase(errorCode);
+    }
+
+    @JsonIgnore
+    public boolean isBankRaisingApiException() {
+        return ErrorMessages.HELIUM_API_EXCEPTION.equalsIgnoreCase(errorMessage);
     }
 
     @JsonIgnore

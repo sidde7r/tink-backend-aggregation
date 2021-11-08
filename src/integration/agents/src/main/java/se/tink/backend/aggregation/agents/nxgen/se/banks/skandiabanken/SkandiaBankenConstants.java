@@ -216,11 +216,15 @@ public class SkandiaBankenConstants {
         public static final String NOT_CUSTOMER =
                 "för att använda vår app behöver du ha ett bankkonto";
         public static final String INVALID_OCR = "payments[0].OCRReference";
+        public static final String HELIUM_API_EXCEPTION =
+                "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown.";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorCodes {
         public static final String GENERIC_PAYMENT_ERROR = "BAPPAY0107";
+        public static final String BANKID_ALREADY_IN_PROGRESS = "BAPSIG0102";
+        public static final String BANKID_TIMEOUT_ERROR = "SYPSIG0101";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -275,6 +279,8 @@ public class SkandiaBankenConstants {
         public static final String SIGN_CANCELLED = "User cancelled signing of payment.";
         public static final String UNKNOWN_SIGN_STATUS = "Unknown sign status received from bank.";
         public static final String SIGN_TIMEOUT = "Signing of payment timed out.";
+        public static final String BANKID_ANOTHER_IN_PROGRESS =
+                "Another BankId authentication was initiated while authenticating.";
         public static final String COMPLETE_PAYMENT_FAILED =
                 "An error occurred when completing the payment.";
         public static final String PAYMENT_DELETE_FAILED =

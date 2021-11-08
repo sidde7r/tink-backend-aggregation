@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
@@ -77,17 +78,22 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     }
 
     private PaymentSourceAccount getPaymentSourceAccount(Transfer transfer) {
-        Collection<PaymentSourceAccount> paymentSourceAccounts =
-                apiClient.fetchPaymentSourceAccounts();
 
-        return SkandiaBankenExecutorUtils.tryFindOwnAccount(
-                        transfer.getSource(), paymentSourceAccounts)
-                .orElseThrow(
-                        () ->
-                                getTransferCancelledException(
-                                        TransferExceptionMessage.SOURCE_NOT_FOUND,
-                                        EndUserMessage.SOURCE_NOT_FOUND,
-                                        InternalStatus.INVALID_SOURCE_ACCOUNT));
+        try {
+            Collection<PaymentSourceAccount> paymentSourceAccounts =
+                    apiClient.fetchPaymentSourceAccounts();
+            return SkandiaBankenExecutorUtils.tryFindOwnAccount(
+                            transfer.getSource(), paymentSourceAccounts)
+                    .orElseThrow(
+                            () ->
+                                    getTransferCancelledException(
+                                            TransferExceptionMessage.SOURCE_NOT_FOUND,
+                                            EndUserMessage.SOURCE_NOT_FOUND,
+                                            InternalStatus.INVALID_SOURCE_ACCOUNT));
+        } catch (HttpResponseException e) {
+            throwIfBankRaisesApiException(e.getResponse());
+            throw e;
+        }
     }
 
     private void addRecipient(Transfer transfer, PaymentSourceAccount sourceAccount) {
@@ -173,6 +179,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         try {
             initSignResponse = apiClient.initSignPayment(encryptedPaymentId);
         } catch (HttpResponseException e) {
+            throwIfAnotherBankIdIsAlreadyInProgress(e.getResponse());
             throw getTransferFailedException(
                     TransferExceptionMessage.INIT_SIGN_FAILED,
                     EndUserMessage.SIGN_TRANSFER_FAILED,
@@ -240,6 +247,9 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         try {
             return apiClient.pollSignStatus(signReference);
         } catch (HttpResponseException e) {
+            throwIfBankIdTimeout(e.getResponse());
+            throwIfAnotherBankIdIsAlreadyInProgress(e.getResponse());
+
             throw getTransferFailedException(
                     TransferExceptionMessage.POLL_SIGN_STATUS_FAILED,
                     EndUserMessage.BANKID_TRANSFER_FAILED,
@@ -349,6 +359,47 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                         TransferExceptionMessage.INVALID_OCR,
                         EndUserMessage.INVALID_OCR,
                         InternalStatus.INVALID_DESTINATION_MESSAGE);
+            }
+        }
+    }
+
+    private void throwIfBankIdTimeout(HttpResponse response) {
+
+        if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isBankIdTimeoutError()) {
+                throw getTransferCancelledException(
+                        TransferExceptionMessage.SIGN_TIMEOUT,
+                        EndUserMessage.BANKID_NO_RESPONSE,
+                        InternalStatus.BANKID_TIMEOUT);
+            }
+        }
+    }
+
+    private void throwIfAnotherBankIdIsAlreadyInProgress(HttpResponse response) {
+
+        if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isAnotherBankIdAlreadyInProgress()) {
+                throw getTransferCancelledException(
+                        TransferExceptionMessage.BANKID_ANOTHER_IN_PROGRESS,
+                        EndUserMessage.BANKID_ANOTHER_IN_PROGRESS,
+                        InternalStatus.BANKID_ANOTHER_IN_PROGRESS);
+            }
+        }
+    }
+
+    private void throwIfBankRaisesApiException(HttpResponse response) {
+
+        if (MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isBankRaisingApiException()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(errorResponse.getErrorMessage());
             }
         }
     }
