@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc;
 
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@AllArgsConstructor
 public class LoginRequest {
-
-    private String authenticationMethodId;
-
-    public LoginRequest(String authenticationMethodId) {
-        this.authenticationMethodId = authenticationMethodId;
-    }
+    private final String authenticationMethodId;
 }
