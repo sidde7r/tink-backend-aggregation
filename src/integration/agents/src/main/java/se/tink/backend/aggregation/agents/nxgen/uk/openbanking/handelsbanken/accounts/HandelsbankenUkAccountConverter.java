@@ -58,7 +58,7 @@ public class HandelsbankenUkAccountConverter implements HandelsbankenBaseAccount
         if (isCurrentAccountBalance(accountEntity, accountDetails)) {
             return TransactionalAccountType.CHECKING;
         }
-        if (isSavingsAccountBalance(accountEntity)) {
+        if (isSavingsAccountBalance(accountEntity, accountDetails)) {
             return TransactionalAccountType.SAVINGS;
         }
         throw new IllegalStateException(
@@ -77,7 +77,10 @@ public class HandelsbankenUkAccountConverter implements HandelsbankenBaseAccount
                                                 .equalsIgnoreCase("AVAILABLE_AMOUNT"));
     }
 
-    private boolean isSavingsAccountBalance(AccountsItemEntity accountEntity) {
-        return accountEntity.getAccountType().toLowerCase().contains(AccountMapper.DEPOSIT);
+    private boolean isSavingsAccountBalance(
+            AccountsItemEntity accountEntity, AccountDetailsResponse accountDetails) {
+        return accountEntity.getAccountType().toLowerCase().contains(AccountMapper.DEPOSIT)
+                || accountDetails.getBalances().stream()
+                        .anyMatch(balance -> balance.getBalanceType().equalsIgnoreCase("CURRENT"));
     }
 }
