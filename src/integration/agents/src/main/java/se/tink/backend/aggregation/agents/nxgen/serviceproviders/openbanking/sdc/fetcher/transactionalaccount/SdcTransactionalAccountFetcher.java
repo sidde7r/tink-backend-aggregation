@@ -17,10 +17,15 @@ public class SdcTransactionalAccountFetcher implements AccountFetcher<Transactio
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccounts().stream()
+                .filter(this::isValidAccount)
                 .map(this::toTinkAccountWithBalance)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isValidAccount(AccountEntity a) {
+        return !"0".equals(a.getResourceId());
     }
 
     private Optional<TransactionalAccount> toTinkAccountWithBalance(AccountEntity accountEntity) {
