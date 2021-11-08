@@ -95,8 +95,7 @@ public final class RabobankAgent
                         rabobankConfiguration,
                         qsealPem,
                         qsealcSigner,
-                        getUserIpInformation(),
-                        componentProvider);
+                        getUserIpInformation());
 
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
@@ -188,10 +187,7 @@ public final class RabobankAgent
         TransactionDatePaginator<TransactionalAccount> transactionFetcher =
                 isSandbox()
                         ? new SandboxTransactionFetcher(apiClient)
-                        : new TransactionFetcher(
-                                apiClient,
-                                transactionDateLimit,
-                                getUserIpInformation().isUserPresent());
+                        : new TransactionFetcher(apiClient, transactionDateLimit);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
