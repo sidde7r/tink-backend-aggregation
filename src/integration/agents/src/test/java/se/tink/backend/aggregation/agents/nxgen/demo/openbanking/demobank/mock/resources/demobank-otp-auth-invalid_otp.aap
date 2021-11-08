@@ -1,0 +1,35 @@
+REQUEST 1
+POST https://demobank.production.global.tink.se/api/auth/otplogin/commence
+Content-Type: application/json
+Accept: application/json,application/json
+X-Aggregator: Tink Testing
+
+{"username":"u12345678","password":"abc123"}
+
+RESPONSE 1
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 04 Nov 2021 12:29:39 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"message":"Please provide an OTP to complete login. The current otp is '1860'"}
+
+REQUEST 2
+POST https://demobank.production.global.tink.se/api/auth/otplogin/complete
+Content-Type: application/json
+Accept: application/json,application/json
+X-Aggregator: Tink Testing
+
+{"username":"u12345678","password":"abc123","otp":"2423"}
+
+RESPONSE 2
+403
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 04 Nov 2021 12:43:39 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"timestamp":"2021-11-04T12:43:39.519+0000","status":403,"error":"Forbidden","message":"403 FORBIDDEN","path":"/api/auth/otplogin/complete"}

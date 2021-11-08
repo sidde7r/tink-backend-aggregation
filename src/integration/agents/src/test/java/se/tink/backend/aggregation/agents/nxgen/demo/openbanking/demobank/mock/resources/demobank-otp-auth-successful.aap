@@ -1,0 +1,35 @@
+REQUEST 1
+POST https://demobank.production.global.tink.se/api/auth/otplogin/commence
+Content-Type: application/json
+Accept: application/json,application/json
+X-Aggregator: Tink Testing
+
+{"username":"u12345678","password":"abc123"}
+
+RESPONSE 1
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 04 Nov 2021 12:29:39 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"message":"Please provide an OTP to complete login. The current otp is '1860'"}
+
+REQUEST 2
+POST https://demobank.production.global.tink.se/api/auth/otplogin/complete
+Content-Type: application/json
+Accept: application/json,application/json
+X-Aggregator: Tink Testing
+
+{"username":"u12345678","password":"abc123","otp":"2423"}
+
+RESPONSE 2
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 04 Nov 2021 12:29:43 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"accessToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzYwMzI1ODQsInVzZXJfbmFtZSI6InU2ODEzMTA4MCIsImp0aSI6Imk2am9PYThwclMzZTBDNGpReHpCZ3FGZl9odyIsImNsaWVudF9pZCI6ImFnZ3JlZ2F0aW9uIiwic2NvcGUiOltdfQ.TX2qt8VsaURP1qpFNTtIbohoHnbD4yYwUUWMNViwae081uj3HYP6yWl1eQmAuIoO1YJN58fxIxMYVO4On7PmL8-oZk0PPnCajPQISI8d4yO5j4eNXo3zWzv1Cr97kb16tn5TwjCdsz-JM0zPspnY_V5iIKryZOj1pR6xuCV_lIyrzgxEPRZg4XYgnsIshWyXO-dN-ddybHkC0tEWmXioGhYC79ITTCyZiRPj-AzGX285-IqGbZXYv1pb6HiqEpV2s0u1azF3oAUU7rlC7DqJWjp7LWadqA24H02Bv71wyFopI2r7kmyzduBZZA5fo2dPS6xa33Nvl-u5_iUbD65a6w","refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDM4MDQ5ODQsInVzZXJfbmFtZSI6InU2ODEzMTA4MCIsImp0aSI6ImN2TlpSOXRyOXFteDd5LVdoLXN1bEZxcGVyUSIsImNsaWVudF9pZCI6ImFnZ3JlZ2F0aW9uIiwic2NvcGUiOltdLCJhdGkiOiJpNmpvT2E4cHJTM2UwQzRqUXh6QmdxRmZfaHcifQ.dITKRDKIbzbQzn0l852sEHOoDleFSugKeqEhVyHFh1aHANOH31tgjs3qXn5r5ey-7eA64jRbDdZVz7XNzH0OO7_la1vIlvymHFsUAFJ01AcQXo8NuSXoH5z5_uj2IQkbse61uh5HmLsWPa4QPl4CntfrPnw4LY5QG8dl8w6L0O9Y5wxO-zOzTYpQOoLiwqdYpxYxz9188BQ7k4L_Bk6hLbL0oWnLiJijU7SNwBN9tWofLFb1JICVU6-c2sWrvfeKzxmvmUUo4YgTuUUByZk0V0B3429raTeSaw9cF4oTmJ8pltZGS2aBAmZK5sE18Lkd7vae8tEdHQUyhLy4rnP8cg","expiresIn":3599,"refreshExpiresIn":7775999}

@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -52,6 +53,12 @@ public class DemobankAgentWireMockTest {
             RESOURCE_PATH + "/demobank-se-bankid-auth-successful.aap";
     private static final String SE_BANKID_AUTH_INVALID_USERNAME_AAP =
             RESOURCE_PATH + "/demobank-se-bankid-auth-invalid_username.aap";
+    private static final String OTP_AUTH_SUCCESSFUL_AAP =
+            RESOURCE_PATH + "/demobank-otp-auth-successful.aap";
+    private static final String OTP_AUTH_INVALID_CREDENTIALS_AAP =
+            RESOURCE_PATH + "/demobank-otp-auth-invalid_credentials.aap";
+    private static final String OTP_AUTH_INVALID_OTP_AAP =
+            RESOURCE_PATH + "/demobank-otp-auth-invalid_otp.aap";
 
     private static final String SOURCE_IDENTIFIER = "IT76K2958239128VVJCLBIHVDAT";
     private static final String DESTINATION_IDENTIFIER = "IT12L8551867857UFGAYZF25O4M";
@@ -63,6 +70,68 @@ public class DemobankAgentWireMockTest {
     private static final String DK_NEMID_PINCODE = "987654";
 
     private static final String SE_BANKID_USERNAME = "195808168015";
+
+    private static final String GENERAL_USERNAME = "u12345678";
+    private static final String GENERAL_PASSWORD = "abc123";
+    private static final String OTP_RESPONSE = "2423";
+
+    @Test
+    public void testOtpAuthSuccessful() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-demobank-open-banking-embedded")
+                        .withWireMockFilePath(OTP_AUTH_SUCCESSFUL_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), GENERAL_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD.getFieldKey(), GENERAL_PASSWORD)
+                        .addCallbackData("otpinput", OTP_RESPONSE)
+                        .build();
+
+        assertThatCode(test::executeRefresh).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testOtpAuthInvalidCredentials() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-demobank-open-banking-embedded")
+                        .withWireMockFilePath(OTP_AUTH_INVALID_CREDENTIALS_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), GENERAL_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD.getFieldKey(), GENERAL_PASSWORD)
+                        .addCallbackData("otpinput", OTP_RESPONSE)
+                        .build();
+
+        final Throwable thrown = catchThrowable(test::executeRefresh);
+
+        assertThat(thrown).isExactlyInstanceOf(AuthorizationException.class);
+    }
+
+    @Test
+    public void testOtpAuthInvalidOtp() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-demobank-open-banking-embedded")
+                        .withWireMockFilePath(OTP_AUTH_INVALID_OTP_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), GENERAL_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD.getFieldKey(), GENERAL_PASSWORD)
+                        .addCallbackData("otpinput", OTP_RESPONSE)
+                        .build();
+
+        final Throwable thrown = catchThrowable(test::executeRefresh);
+
+        assertThat(thrown).isExactlyInstanceOf(AuthorizationException.class);
+    }
 
     @Test
     public void testSeBankIdAuthSuccessful() {
