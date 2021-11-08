@@ -264,6 +264,25 @@ public class SkandiaBankenPaymentExecutorTest {
     }
 
     @Test
+    public void shouldThrowBankIdTimeoutWhenErrorMessageContainsMobiltBankIdCollectAsync() {
+        when(apiClient.pollSignStatus(anyString())).thenThrow(httpResponseException);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getStatus()).thenReturn(500);
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+        when(httpResponse.getBody(ErrorResponse.class)).thenReturn(getBankIdTimeout());
+
+        ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "getSignStatus", "mockedSignReference");
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(TransferExecutionException.class)
+                .hasMessage("Signing of payment timed out.");
+    }
+
+    @Test
     public void shouldThrowBankSideFailureWhenErrorResponseIsApiException() {
         when(apiClient.fetchPaymentSourceAccounts()).thenThrow(httpResponseException);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
@@ -514,6 +533,30 @@ public class SkandiaBankenPaymentExecutorTest {
                         + "  }\n"
                         + "]",
                 PaymentSourceAccountsResponse.class);
+    }
+
+    private ErrorResponse getBankIdTimeout() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"StatusCode\": 500,\n"
+                        + "    \"StatusMessage\": \"InternalServerError\",\n"
+                        + "    \"Fields\":\n"
+                        + "    [\n"
+                        + "        {\n"
+                        + "            \"Code\": \"0001\",\n"
+                        + "            \"Field\": \"Reference\",\n"
+                        + "            \"Message\": \"1c004487-2675-4ad4-9452-4c18c784f5bf\"\n"
+                        + "        },\n"
+                        + "        {\n"
+                        + "            \"Code\": \"0002\",\n"
+                        + "            \"Field\": \"Status\",\n"
+                        + "            \"Message\": \"1\"\n"
+                        + "        }\n"
+                        + "    ],\n"
+                        + "    \"ErrorCode\": \"SYPSIG0101\",\n"
+                        + "    \"ErrorMessage\": \"MobiltBankIdCollectAsync: Unable to convert response in SigningProvider: Sign\"\n"
+                        + "}",
+                ErrorResponse.class);
     }
 
     private ErrorResponse getBankApiException() {
