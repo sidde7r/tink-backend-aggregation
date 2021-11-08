@@ -19,7 +19,7 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
-            throws AuthorizationException, AuthorizationException {
+            throws AuthorizationException {
 
         Optional<OAuth2Token> oAuth2Token =
                 storage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
@@ -42,20 +42,15 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
             return AuthenticationStepResponse.executeNextStep();
         }
 
-        Optional<TokenResponse> refreshedTokenResponse = refreshTokenResponse(refreshToken.get());
-
-        OAuth2Token refreshedOAuth2Token = refreshedTokenResponse.get().toTinkToken();
+        OAuth2Token refreshedOAuth2Token =
+                refreshTokenResponse(refreshToken.get()).get().toTinkToken();
 
         if (!refreshedOAuth2Token.isValid()) {
             return AuthenticationStepResponse.executeNextStep();
         }
 
-        token = refreshedOAuth2Token.updateTokenWithOldToken(token);
-
-        // Store the new access token on the persistent storage again.
-        storage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, token);
-
-        // do we need to check if consent is valid in here?
+        OAuth2Token newToken = refreshedOAuth2Token.updateTokenWithOldToken(token);
+        storage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, newToken);
 
         return AuthenticationStepResponse.authenticationSucceeded();
     }

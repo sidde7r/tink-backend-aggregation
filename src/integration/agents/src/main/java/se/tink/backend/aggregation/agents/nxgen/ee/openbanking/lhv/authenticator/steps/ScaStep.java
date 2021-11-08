@@ -88,9 +88,7 @@ public class ScaStep implements AuthenticationStep {
                             authorisationStatusResponse.getAvailableRoles());
                     return;
                 case AuthorisationStatus.STARTED:
-                    break;
                 case AuthorisationStatus.SCA_METHOD_SELECTED:
-                    break;
                 case AuthorisationStatus.RECEIVED:
                     break;
                 default:
