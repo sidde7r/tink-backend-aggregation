@@ -179,6 +179,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         try {
             initSignResponse = apiClient.initSignPayment(encryptedPaymentId);
         } catch (HttpResponseException e) {
+            throwIfAnotherBankIdIsAlreadyInProgress(e.getResponse());
             throw getTransferFailedException(
                     TransferExceptionMessage.INIT_SIGN_FAILED,
                     EndUserMessage.SIGN_TRANSFER_FAILED,
@@ -247,6 +248,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
             return apiClient.pollSignStatus(signReference);
         } catch (HttpResponseException e) {
             throwIfBankIdTimeout(e.getResponse());
+            throwIfAnotherBankIdIsAlreadyInProgress(e.getResponse());
 
             throw getTransferFailedException(
                     TransferExceptionMessage.POLL_SIGN_STATUS_FAILED,
@@ -372,6 +374,21 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                         TransferExceptionMessage.SIGN_TIMEOUT,
                         EndUserMessage.BANKID_NO_RESPONSE,
                         InternalStatus.BANKID_TIMEOUT);
+            }
+        }
+    }
+
+    private void throwIfAnotherBankIdIsAlreadyInProgress(HttpResponse response) {
+
+        if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isAnotherBankIdAlreadyInProgress()) {
+                throw getTransferCancelledException(
+                        TransferExceptionMessage.BANKID_ANOTHER_IN_PROGRESS,
+                        EndUserMessage.BANKID_ANOTHER_IN_PROGRESS,
+                        InternalStatus.BANKID_ANOTHER_IN_PROGRESS);
             }
         }
     }

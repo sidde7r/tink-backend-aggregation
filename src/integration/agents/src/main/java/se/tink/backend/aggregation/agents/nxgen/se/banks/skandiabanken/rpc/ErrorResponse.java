@@ -38,6 +38,11 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isAnotherBankIdAlreadyInProgress() {
+        return ErrorCodes.BANKID_ALREADY_IN_PROGRESS.equalsIgnoreCase(errorCode);
+    }
+
+    @JsonIgnore
     public boolean isBankRaisingApiException() {
         return ErrorMessages.HELIUM_API_EXCEPTION.equalsIgnoreCase(errorMessage);
     }
