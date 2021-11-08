@@ -149,7 +149,7 @@ public abstract class HandelsbankenApiClient {
     }
 
     public HandelsbankenLoansResponse loans(ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toLoans())
+        return createRequestWithoutXmlAcceptHeader(applicationEntryPoint.toLoans())
                 .get(handelsbankenConfiguration.getLoansResponse());
     }
 
@@ -177,6 +177,28 @@ public abstract class HandelsbankenApiClient {
                         MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_XML) // unexpectedly Handelsbanken may
                 // return application/xml
+                .header(
+                        HandelsbankenConstants.Headers.X_SHB_DEVICE_NAME,
+                        HandelsbankenConstants.Headers.DEVICE_NAME)
+                .header(
+                        HandelsbankenConstants.Headers.X_SHB_DEVICE_MODEL,
+                        handelsbankenConfiguration.getDeviceModel())
+                .header(
+                        HandelsbankenConstants.Headers.X_SHB_DEVICE_CLASS,
+                        HandelsbankenConstants.Headers.DEVICE_CLASS)
+                .header(
+                        HandelsbankenConstants.Headers.X_SHB_APP_VERSION,
+                        handelsbankenConfiguration.getAppVersion());
+    }
+
+    // TC-5468 and TC-5478: All fund/fundHoldings and loan fetching attempts end with 500 response
+    // which breaks while refresh. It was found that for such kind of request
+    // MediaType.APPLICATION_XM cause 500 response.
+    protected RequestBuilder createRequestWithoutXmlAcceptHeader(URL url) {
+        return client.request(url)
+                // Have to set Accept header, otherwise Handelsbanken doesn't set a Content-Type or
+                // returns error.
+                .accept(MediaType.APPLICATION_JSON)
                 .header(
                         HandelsbankenConstants.Headers.X_SHB_DEVICE_NAME,
                         HandelsbankenConstants.Headers.DEVICE_NAME)
