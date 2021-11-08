@@ -10,14 +10,18 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -63,6 +67,8 @@ public class DemobankAgentWireMockTest {
             RESOURCE_PATH + "/demobank-password-auth-successful.aap";
     private static final String PASSWORD_AUTH_INVALID_CREDENTIALS_AAP =
             RESOURCE_PATH + "/demobank-password-auth-invalid_credentials.aap";
+    private static final String FETCHING_AAP = RESOURCE_PATH + "/demobank-fetch.aap";
+    private static final String FETCHING_CONTRACT = RESOURCE_PATH + "/demobank-fetch-contract.json";
 
     private static final String SOURCE_IDENTIFIER = "IT76K2958239128VVJCLBIHVDAT";
     private static final String DESTINATION_IDENTIFIER = "IT12L8551867857UFGAYZF25O4M";
@@ -78,6 +84,30 @@ public class DemobankAgentWireMockTest {
     private static final String GENERAL_USERNAME = "u12345678";
     private static final String GENERAL_PASSWORD = "abc123";
     private static final String OTP_RESPONSE = "2423";
+
+    @Test
+    public void testFetching() {
+        OAuth2Token token = OAuth2Token.createBearer("foo", "bar", 1000);
+
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-demobank-password")
+                        .withWireMockFilePath(FETCHING_AAP)
+                        .withoutConfigFile()
+                        .skipAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addPersistentStorageData("oAuth2Token", token)
+                        .build();
+
+        final AgentContractEntity expectedData =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(FETCHING_CONTRACT);
+
+        assertThatCode(test::executeRefresh).doesNotThrowAnyException();
+        test.assertExpectedData(expectedData);
+    }
 
     @Test
     public void testPasswordAuthSuccessful() {
