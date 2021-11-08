@@ -629,74 +629,12 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 {
   "_links": {
-    "inet-loan-information": {
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q7703A85157017989C1257B5C004BB10D",
-      "type": "text/html",
-      "gaScreenName": "loans / loan details / about loan details"
-    },
-    "inet-interest-distribution": {
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q4401D5CDA9E943B0C1257B5C004C4432?OpenDocument",
-      "type": "text/html",
-      "gaScreenName": "loans / my risk allocation of interest"
-    },
-    "inet-about-loan-protection-old": {
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q601606C5684AE980C1257F000057027E",
-      "type": "text/html",
-      "gaScreenName": "loans / about loan protection"
-    },
-    "inet-about-loan-protection-with-security-capital": {
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q0F27889004129AA1C1257F0000574C31",
-      "type": "text/html",
-      "gaScreenName": "loans / about loan protection"
-    },
     "infopage-loan-generic-info": {
       "href": "https://m2.handelsbanken.se/app/priv/infopage?alias=loan.generic-info&service=PRIV&authToken=123Token132",
       "title": "Om lånedetaljer",
       "gaScreenName": "loans / loan details / about loan details"
-    },
-    "inet-unpaid-avi": {
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q87A84F33FD3CD46DC1257B5C004BEFE6?OpenDocument",
-      "type": "text/html"
     }
   },
-  "links": [
-    {
-      "rel": "inet-loan-information",
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q7703A85157017989C1257B5C004BB10D",
-      "type": "text/html",
-      "gaScreenName": "loans / loan details / about loan details"
-    },
-    {
-      "rel": "inet-unpaid-avi",
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q87A84F33FD3CD46DC1257B5C004BEFE6?OpenDocument",
-      "type": "text/html"
-    },
-    {
-      "rel": "inet-interest-distribution",
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q4401D5CDA9E943B0C1257B5C004C4432?OpenDocument",
-      "type": "text/html",
-      "gaScreenName": "loans / my risk allocation of interest"
-    },
-    {
-      "rel": "inet-about-loan-protection-old",
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q601606C5684AE980C1257F000057027E",
-      "type": "text/html",
-      "gaScreenName": "loans / about loan protection"
-    },
-    {
-      "rel": "inet-about-loan-protection-with-security-capital",
-      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q0F27889004129AA1C1257F0000574C31",
-      "type": "text/html",
-      "gaScreenName": "loans / about loan protection"
-    },
-    {
-      "rel": "infopage-loan-generic-info",
-      "href": "https://m2.handelsbanken.se/app/priv/infopage?alias=loan.generic-info&service=PRIV&authToken=123Token132",
-      "type": "application/json",
-      "title": "Om lånedetaljer",
-      "gaScreenName": "loans / loan details / about loan details"
-    }
-  ],
   "noLoan": false,
   "noLoanText": null,
   "totalAnnouncedPayment": 7609.000,
@@ -707,87 +645,105 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   "totalDebtEUR": 0,
   "totalDebtEURFormatted": "0,00",
   "eurCurrencyCode": "EUR",
-  "unpaidAviText": "Lånet är obetalt och avin måste därför betalas manuellt. Du registrerar avin/betalningen i Internet- eller Mobiltjänsten. Glöm inte att ange det OCR-nummer som finns på avin. Saknar du OCR-nummer kan du kontakta ditt bankkontor.",
-  "loans": [
-    {
-      "lenderId": "SLAN",
-      "lender": "Stadshypotek",
-      "agreementNumber": "10-280848-123456",
-      "currentDebt": 2516832.000,
-      "currentDebtFormatted": "SEK 2 516 832,00",
-      "currentDebtAmount": {
-        "amount": 2516832.000,
-        "amountFormatted": "2 516 832,00",
-        "currency": "SEK"
-      },
-      "interestRateFormatted": "1,50%",
-      "toPayFormatted": "7 609,00",
-      "displayBadge": false,
-      "specialTextList": null,
-      "unpaid": false,
-      "displayDetails": true,
-      "unpaidText": null,
-      "contactOffice": false,
-      "contactOfficeText": null,
-      "segments": [
-        {
-          "title": "Låneinformation",
-          "properties": [
-            {
-              "label": "Lånenummer",
-              "value": "10-280848-123456"
-            },
-            {
-              "label": "Fler låntagare finns",
-              "value": "Ja"
-            },
-            {
-              "label": "Lånets bindningstid",
-              "value": "2 år"
-            },
-            {
-              "label": "Villkorsändringsdag",
-              "value": "2022-03-30"
-            },
-            {
-              "label": "Amortering",
-              "value": "4 463,00"
-            },
-            {
-              "label": "Debiteringsperiod",
-              "value": "Månad"
-            }
-          ]
+  "unpaidAviText": "Lånet är obetalt och avin måste därför betalas manuellt. Du registrerar avin/betalningen i Internetbanken eller Mobilappen. Glöm inte att ange det OCR-nummer som finns på avin. Saknar du OCR-nummer kan du kontakta ditt bankkontor.",
+  "loans": null,
+  "loanInfo": {
+    "title": "Lån",
+    "loans": [
+      {
+        "_links": {
+          "infopage-loan-condition-change": {
+            "href": "https://m2.handelsbanken.se/app/priv/infopage?alias=loan.conditionchange&service=PRIV&authToken=authToken=123Token132",
+            "type": "**HASHED:us**",
+            "title": "Mer om villkorsändring",
+            "gaScreenName": "loans / loan details / amend specific terms / more about amend specific terms"
+          },
+          "loan-condition-context": {
+            "href": "https://m2.handelsbanken.se/app/priv/loan/loan-condition-context?agreementNumber=mockedAgreementNumber&currentDebt=mockedCurrentDebt&hasMoreBorrower=true&amortizationPeriod=&conditionChangeDate=mockedChangeDate&authToken=authToken=123Token132",
+            "type": "**HASHED:us**",
+            "title": "Villkorsändra",
+            "gaScreenName": "loans / loan details / amend specific terms"
+          }
         },
-        {
-          "title": "Betalningsinformation",
-          "properties": [
-            {
-              "label": "Förfallodag",
-              "value": "2021-04-30"
-            },
-            {
-              "label": "Amortering",
-              "value": "4 463,00"
-            },
-            {
-              "label": "Ränta",
-              "value": "3 146,00"
-            },
-            {
-              "label": "Totalt att betala",
-              "value": "7 609,00"
-            },
-            {
-              "label": "Konto som belastas",
-              "value": "523 667 841"
-            }
-          ]
-        }
-      ],
-      "fixationdateText": "2 år"
-    }
-  ],
+        "lenderId": "SLAN",
+        "lender": "Stadshypotek",
+        "agreementNumber": "10-280848-123456",
+        "currentDebt": 2516832.000,
+        "currentDebtFormatted": "SEK 2 516 832,00",
+        "currentDebtAmount": {
+          "amount": 2516832.000,
+          "amountFormatted": "2 516 832,00",
+          "currency": "SEK"
+        },
+        "interestRateFormatted": "1,50%",
+        "toPayFormatted": "7 609,00",
+        "displayBadge": false,
+        "specialTextList": null,
+        "unpaid": false,
+        "displayDetails": true,
+        "unpaidText": null,
+        "contactOffice": false,
+        "contactOfficeText": null,
+        "segments": [
+          {
+            "title": "Låneinformation",
+            "properties": [
+              {
+                "label": "Lånenummer",
+                "value": "10-280848-123456"
+              },
+              {
+                "label": "Fler låntagare finns",
+                "value": "Ja"
+              },
+              {
+                "label": "Lånets bindningstid",
+                "value": "2 år"
+              },
+              {
+                "label": "Villkorsändringsdag",
+                "value": "2022-03-30"
+              },
+              {
+                "label": "Amortering",
+                "value": "4 463,00"
+              },
+              {
+                "label": "Debiteringsperiod",
+                "value": "Månad"
+              }
+            ]
+          },
+          {
+            "title": "Betalningsinformation",
+            "properties": [
+              {
+                "label": "Förfallodag",
+                "value": "2021-04-30"
+              },
+              {
+                "label": "Amortering",
+                "value": "4 463,00"
+              },
+              {
+                "label": "Ränta",
+                "value": "3 146,00"
+              },
+              {
+                "label": "Totalt att betala",
+                "value": "7 609,00"
+              },
+              {
+                "label": "Konto som belastas",
+                "value": "523 667 841"
+              }
+            ]
+          }
+        ],
+        "fixationdateText": "2 år"
+      }
+    ]
+  },
   "interestDistribution": [
     {
       "displayTitle": "< 1 år",
