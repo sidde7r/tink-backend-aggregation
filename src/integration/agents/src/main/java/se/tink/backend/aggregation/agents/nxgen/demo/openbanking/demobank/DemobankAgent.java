@@ -58,6 +58,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.st
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -110,11 +111,13 @@ public final class DemobankAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final String callbackUri;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public DemobankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.callbackUri = getCallbackUri();
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         apiClient = new DemobankApiClient(client, persistentStorage, callbackUri);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
@@ -246,7 +249,12 @@ public final class DemobankAgent extends NextGenerationAgent
 
         DemobankMockDkNemIdReAuthenticator demobankNemIdAuthenticator =
                 new DemobankMockDkNemIdReAuthenticator(
-                        apiClient, client, persistentStorage, username, password);
+                        apiClient,
+                        client,
+                        persistentStorage,
+                        username,
+                        password,
+                        this.randomValueGenerator);
 
         return new AutoAuthenticationController(
                 request,

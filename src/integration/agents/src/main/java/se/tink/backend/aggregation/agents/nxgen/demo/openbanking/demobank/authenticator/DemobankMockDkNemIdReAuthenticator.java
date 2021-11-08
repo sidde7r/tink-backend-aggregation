@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdLoginEncryptionEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdLoginInstallIdEncryptionEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdLoginWithInstallIdResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppPollResponse;
@@ -20,13 +21,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.uuid.UUIDUtils;
 
 public class DemobankMockDkNemIdReAuthenticator
         extends NemIdCodeAppAuthenticator<NemIdGenerateCodeResponse> implements AutoAuthenticator {
 
     private final DemobankApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final RandomValueGenerator randomValueGenerator;
 
     private static final String PSK_USERID = "userId";
     private static final String PSK_PINCODE = "pincode";
@@ -41,17 +42,19 @@ public class DemobankMockDkNemIdReAuthenticator
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String userId,
-            String pincode) {
+            String pincode,
+            RandomValueGenerator randomValueGenerator) {
         super(client);
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.persistentStorage.put(PSK_USERID, userId);
         this.persistentStorage.put(PSK_PINCODE, pincode);
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     @Override
     protected NemIdGenerateCodeResponse initiateAuthentication() {
-        String token = UUIDUtils.generateUUID();
+        String token = this.randomValueGenerator.getUUID().toString().replaceAll("-", "");
         persistentStorage.put(PSK_TOKEN, token);
 
         NemIdLoginEncryptionEntity encryptionEntity =
