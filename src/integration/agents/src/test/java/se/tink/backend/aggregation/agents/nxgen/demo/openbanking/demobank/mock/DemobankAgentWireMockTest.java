@@ -42,12 +42,86 @@ public class DemobankAgentWireMockTest {
             RESOURCE_PATH + "/demobank-dk-nemid-auth-successful.aap";
     private static final String DK_NEMID_AUTH_INVALID_CREDENTIALS_AAP =
             RESOURCE_PATH + "/demobank-dk-nemid-auth-invalid_credentials.aap";
+    private static final String NO_BANKID_AUTH_SUCCESSFUL_AAP =
+            RESOURCE_PATH + "/demobank-no-bankid-auth-successful.aap";
+    private static final String NO_BANKID_AUTH_INVALID_USERNAME_AAP =
+            RESOURCE_PATH + "/demobank-no-bankid-auth-invalid_username.aap";
+    private static final String NO_BANKID_AUTH_INVALID_MOBILENUMBER_AAP =
+            RESOURCE_PATH + "/demobank-no-bankid-auth-invalid_mobilenumber.aap";
 
     private static final String SOURCE_IDENTIFIER = "IT76K2958239128VVJCLBIHVDAT";
     private static final String DESTINATION_IDENTIFIER = "IT12L8551867857UFGAYZF25O4M";
 
+    private static final String NO_BANKID_USERNAME = "12345678901";
+    private static final String NO_BANKID_MOBILENUMBER = "98765432";
+
     private static final String DK_NEMID_USERNAME = "12345678";
     private static final String DK_NEMID_PINCODE = "987654";
+
+    @Test
+    public void testNoBankIdAuthSuccessful() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.NO)
+                        .withProviderName("no-demobank-bankid")
+                        .withWireMockFilePath(NO_BANKID_AUTH_SUCCESSFUL_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), NO_BANKID_USERNAME)
+                        .addCredentialField(
+                                Field.Key.MOBILENUMBER.getFieldKey(), NO_BANKID_MOBILENUMBER)
+                        .addCallbackData("dummy_continue", "dummy_continue")
+                        .build();
+
+        assertThatCode(test::executeRefresh).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testNoBankIdAuthInvalidUsername() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.NO)
+                        .withProviderName("no-demobank-bankid")
+                        .withWireMockFilePath(NO_BANKID_AUTH_INVALID_USERNAME_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), NO_BANKID_USERNAME)
+                        .addCredentialField(
+                                Field.Key.MOBILENUMBER.getFieldKey(), NO_BANKID_MOBILENUMBER)
+                        .addCallbackData("dummy_continue", "dummy_continue")
+                        .build();
+
+        final Throwable thrown = catchThrowable(test::executeRefresh);
+
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+    }
+
+    @Test
+    public void testNoBankIdAuthInvalidMobilenumber() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.NO)
+                        .withProviderName("no-demobank-bankid")
+                        .withWireMockFilePath(NO_BANKID_AUTH_INVALID_MOBILENUMBER_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), NO_BANKID_USERNAME)
+                        .addCredentialField(
+                                Field.Key.MOBILENUMBER.getFieldKey(), NO_BANKID_MOBILENUMBER)
+                        .addCallbackData("dummy_continue", "dummy_continue")
+                        .build();
+
+        final Throwable thrown = catchThrowable(test::executeRefresh);
+
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+    }
 
     @Test
     public void testDkNemidAuthSuccessful() {
