@@ -5,9 +5,14 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-public class ISOInstantDeserializer extends InstantDeserializer<Instant> {
+/**
+ * Handles deserialization of date time string into Instant
+ *
+ * <p>for all known cases that UK banks provide
+ */
+public class UkObInstantDeserializer extends InstantDeserializer<Instant> {
 
-    public ISOInstantDeserializer() {
+    public UkObInstantDeserializer() {
         super(
                 INSTANT,
                 new DateTimeFormatterBuilder()

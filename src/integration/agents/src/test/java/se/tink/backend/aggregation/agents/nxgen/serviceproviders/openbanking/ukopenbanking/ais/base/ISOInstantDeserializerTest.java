@@ -150,7 +150,7 @@ public class ISOInstantDeserializerTest {
     @Getter
     private static class TestEntity {
 
-        @JsonDeserialize(using = ISOInstantDeserializer.class)
+        @JsonDeserialize(using = UkObInstantDeserializer.class)
         private Instant transactionDate;
     }
 }

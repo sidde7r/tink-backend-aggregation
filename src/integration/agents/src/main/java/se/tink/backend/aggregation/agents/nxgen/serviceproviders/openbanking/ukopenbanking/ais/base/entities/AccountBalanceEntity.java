@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.Instant;
 import java.util.List;
 import lombok.Data;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ISOInstantDeserializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkObInstantDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -24,7 +24,7 @@ public class AccountBalanceEntity {
 
     private UkObBalanceType type;
 
-    @JsonDeserialize(using = ISOInstantDeserializer.class)
+    @JsonDeserialize(using = UkObInstantDeserializer.class)
     private Instant dateTime;
 
     private List<CreditLineEntity> creditLine;
