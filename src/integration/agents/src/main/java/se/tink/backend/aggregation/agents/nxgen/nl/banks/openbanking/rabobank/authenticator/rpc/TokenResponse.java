@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.a
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
@@ -65,10 +66,11 @@ public class TokenResponse {
     public OAuth2Token toOauthToken(final PersistentStorage persistentStorage) {
         final String refreshTokenExpiryDate =
                 RabobankUtils.getRefreshTokenExpireDate(getRefreshTokenExpiresIn());
+        // TODO Temporary log to debug an issue in TC-4799
         log.info(
-                "New Refresh Token: {}, Expires on: {}",
-                Hash.sha256AsHex(getRefreshToken()),
-                refreshTokenExpiryDate);
+                "New Access Token: {}, Expires on: {}",
+                Hash.sha256AsHex(Objects.requireNonNull(accessToken)),
+                RabobankUtils.getRefreshTokenExpireDate(getExpiresIn()));
         persistentStorage.put(StorageKey.TOKEN_EXPIRY_DATE, refreshTokenExpiryDate);
         // Not using refreshTokenExpiresIn: the bank response for 30 days of token expiry
         return OAuth2Token.create(
