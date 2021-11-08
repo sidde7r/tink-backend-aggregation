@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -52,4 +53,12 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-penguins-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
