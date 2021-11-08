@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -23,6 +24,10 @@ public class NordeaAccountIdentifierFormatter implements AccountIdentifierFormat
             if (swedishIdentifier.getBank() == Bank.NORDEA_PERSONKONTO) {
                 return applyNordeaPersonkonto(swedishIdentifier);
             }
+        }
+
+        if (identifier.is(AccountIdentifierType.IBAN)) {
+            return identifier.to(IbanIdentifier.class).getIban();
         }
 
         return identifier.getIdentifier(DEFAULT_FORMATTER);
