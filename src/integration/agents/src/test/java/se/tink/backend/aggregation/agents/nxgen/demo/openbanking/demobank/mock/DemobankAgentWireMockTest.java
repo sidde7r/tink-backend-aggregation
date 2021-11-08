@@ -48,6 +48,10 @@ public class DemobankAgentWireMockTest {
             RESOURCE_PATH + "/demobank-no-bankid-auth-invalid_username.aap";
     private static final String NO_BANKID_AUTH_INVALID_MOBILENUMBER_AAP =
             RESOURCE_PATH + "/demobank-no-bankid-auth-invalid_mobilenumber.aap";
+    private static final String SE_BANKID_AUTH_SUCCESSFUL_AAP =
+            RESOURCE_PATH + "/demobank-se-bankid-auth-successful.aap";
+    private static final String SE_BANKID_AUTH_INVALID_USERNAME_AAP =
+            RESOURCE_PATH + "/demobank-se-bankid-auth-invalid_username.aap";
 
     private static final String SOURCE_IDENTIFIER = "IT76K2958239128VVJCLBIHVDAT";
     private static final String DESTINATION_IDENTIFIER = "IT12L8551867857UFGAYZF25O4M";
@@ -57,6 +61,46 @@ public class DemobankAgentWireMockTest {
 
     private static final String DK_NEMID_USERNAME = "12345678";
     private static final String DK_NEMID_PINCODE = "987654";
+
+    private static final String SE_BANKID_USERNAME = "195808168015";
+
+    @Test
+    public void testSeBankIdAuthSuccessful() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-demobank-open-banking-bankid")
+                        .withWireMockFilePath(SE_BANKID_AUTH_SUCCESSFUL_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), SE_BANKID_USERNAME)
+                        .addCallbackData("dummy_continue", "dummy_continue")
+                        .build();
+
+        assertThatCode(test::executeRefresh).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testSeBankIdAuthInvalidUsername() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-demobank-open-banking-bankid")
+                        .withWireMockFilePath(SE_BANKID_AUTH_INVALID_USERNAME_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), SE_BANKID_USERNAME)
+                        .addCallbackData("dummy_continue", "dummy_continue")
+                        .build();
+
+        final Throwable thrown = catchThrowable(test::executeRefresh);
+
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+    }
 
     @Test
     public void testNoBankIdAuthSuccessful() {
