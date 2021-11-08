@@ -238,7 +238,7 @@ container_layer(
         "@libpam-cap_2.25-2_amd64//file",
         "@libpython3.7_3.7.3-2deb10u3_amd64//file",
         "@libsm6_1.2.3-1_amd64//file",
-        "@libssh-4_0.9.5-1deb11u1_amd64.deb//file",
+        "@libssh-4_0.8.7-1deb10u1_amd64//file",
         "@libtext-iconv-perl_1.7-5b7_amd64//file",
         "@libtie-ixhash-perl_1.23-2_all//file",
         "@libx11-protocol-perl_0.56-7_all//file",
