@@ -175,7 +175,10 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     public Optional<FundHoldingsResponse> fundHoldings(CustodyAccount custodyAccount) {
         return custodyAccount
                 .getFundHoldingsUrl()
-                .map(url -> createRequest(url).get(FundHoldingsResponse.class));
+                .map(
+                        url ->
+                                createRequestWithoutXmlAcceptHeader(url)
+                                        .get(FundHoldingsResponse.class));
     }
 
     public Optional<CustodyAccountResponse> custodyAccount(CustodyAccount custodyAccount) {
