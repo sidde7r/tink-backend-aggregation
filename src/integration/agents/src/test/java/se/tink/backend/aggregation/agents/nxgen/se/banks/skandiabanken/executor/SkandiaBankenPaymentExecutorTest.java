@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.PaymentSourceAccount;
@@ -262,6 +263,27 @@ public class SkandiaBankenPaymentExecutorTest {
     }
 
     @Test
+    public void shouldThrowBankSideFailureWhenErrorResponseIsApiException() {
+        when(apiClient.fetchPaymentSourceAccounts()).thenThrow(httpResponseException);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+        when(httpResponse.getBody(ErrorResponse.class)).thenReturn(getBankApiException());
+
+        Transfer transfer = getTransferWithSource("91599999999");
+
+        ThrowingCallable callable =
+                () ->
+                        ReflectionTestUtils.invokeMethod(
+                                objectUnderTest, "getPaymentSourceAccount", transfer);
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(BankServiceException.class)
+                .hasMessage(
+                        "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown.");
+    }
+
+    @Test
     public void shouldThrowTransferExceptionWhenErrorResponseIsInvalidOcr() {
         // given
         when(httpResponse.getStatus()).thenReturn(400);
@@ -473,6 +495,19 @@ public class SkandiaBankenPaymentExecutorTest {
                         + "  }\n"
                         + "]",
                 PaymentSourceAccountsResponse.class);
+    }
+
+    private ErrorResponse getBankApiException() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"StatusCode\": 0,\n"
+                        + "    \"StatusMessage\": \"0\",\n"
+                        + "    \"Fields\":\n"
+                        + "    [],\n"
+                        + "    \"ErrorCode\": null,\n"
+                        + "    \"ErrorMessage\": \"Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown.\"\n"
+                        + "}",
+                ErrorResponse.class);
     }
 
     private ErrorResponse getInvalidOcrErrorResponse() {
