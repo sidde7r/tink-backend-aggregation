@@ -79,4 +79,13 @@ public class AccountBalanceEntityTest {
         // then
         Assert.assertNull(debitBalance.getCreditDebitIndicator());
     }
+
+    @Test
+    public void shouldMapNullDateTime() {
+        // given
+        AccountBalanceEntity debitBalance = BalanceFixtures.nullDateTime();
+
+        // then
+        Assert.assertNull(debitBalance.getDateTime());
+    }
 }

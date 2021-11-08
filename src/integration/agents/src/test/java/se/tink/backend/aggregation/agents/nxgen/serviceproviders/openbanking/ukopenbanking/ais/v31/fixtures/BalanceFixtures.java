@@ -44,6 +44,9 @@ public class BalanceFixtures {
     private static final String NULL_BALANCE_TYPE_AVAILABLE =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"333.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"null\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
 
+    private static final String NULL_DATE_TIME =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"CREDIT\",\"Type\":\"InterimAvailable\",\"DateTime\":null}";
+
     private static final String TEMPORARY_CREDIT_LINE =
             "{\"Amount\":{\"Amount\":\"111.11\",\"Currency\":\"GBP\"},\"Included\":false,\"Type\":\"Temporary\"}";
     private static final String AVAILABLE_CREDIT_LINE =
@@ -146,6 +149,10 @@ public class BalanceFixtures {
     public static AccountBalanceEntity nullTypeAvailableBalance() {
         return SerializationUtils.deserializeFromString(
                 NULL_BALANCE_TYPE_AVAILABLE, AccountBalanceEntity.class);
+    }
+
+    public static AccountBalanceEntity nullDateTime() {
+        return SerializationUtils.deserializeFromString(NULL_DATE_TIME, AccountBalanceEntity.class);
     }
 
     public static CreditLineEntity temporaryCreditLine() {
