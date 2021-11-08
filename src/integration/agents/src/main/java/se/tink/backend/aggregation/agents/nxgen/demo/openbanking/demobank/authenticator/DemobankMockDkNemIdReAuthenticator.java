@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authe
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdChallengeEntity;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppPollResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -61,10 +63,17 @@ public class DemobankMockDkNemIdReAuthenticator
                 new NemIdLoginEncryptionEntity(
                         persistentStorage.get(PSK_USERID), persistentStorage.get(PSK_PINCODE));
 
-        NemIdChallengeEntity challengeResponse =
-                apiClient.nemIdGetChallenge(encryptionEntity, token);
-        persistentStorage.put(
-                PSK_CHALLENGE_ENTITY, SerializationUtils.serializeToString(challengeResponse));
+        try {
+            NemIdChallengeEntity challengeResponse =
+                    apiClient.nemIdGetChallenge(encryptionEntity, token);
+
+            persistentStorage.put(
+                    PSK_CHALLENGE_ENTITY, SerializationUtils.serializeToString(challengeResponse));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == 400) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            }
+        }
 
         return apiClient.nemIdGenerateCode(
                 new NemIdGenerateCodeRequest().setPushEnabled(true), token);
