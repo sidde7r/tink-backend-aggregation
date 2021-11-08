@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.Url;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc.AuthorisationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc.LoginRequest;
@@ -96,9 +97,9 @@ public class LhvApiClient {
     public TokenResponse getAccessToken(TokenRequest tokenRequest) {
         String body =
                 Form.builder()
-                        .put("client_id", configuration.getClientId())
-                        .put("grant_type", GrantType.AUTHORIZATION_CODE)
-                        .put("code", tokenRequest.getCode())
+                        .put(QueryKey.CLIENT_ID, configuration.getClientId())
+                        .put(QueryKey.GRANT_TYPE, GrantType.AUTHORIZATION_CODE)
+                        .put(QueryKey.CODE, tokenRequest.getCode())
                         .build()
                         .serialize();
         return client.request(Url.GET_OAUTH2_TOKEN)
@@ -118,7 +119,6 @@ public class LhvApiClient {
 
     public AuthorisationResponse login(
             LoginRequest loginRequest, String psuId, String psuCorporateId) throws LoginException {
-
         return createRequest(Url.AUTH)
                 .header(Keys.PSU_ID, psuId)
                 .header(QueryKey.PSU_CORPORATE_ID, psuCorporateId)
@@ -126,7 +126,6 @@ public class LhvApiClient {
     }
 
     public AccountSummaryResponse getAccountSummary() {
-
         return client.request(Url.ACCOUNT_SUMMARY_LIST)
                 .addBearerToken(getTokenFromStorage())
                 .header(Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
@@ -134,7 +133,6 @@ public class LhvApiClient {
     }
 
     public AccountResponse getAccounts() {
-
         return client.request(Url.ACCOUNT_LIST)
                 .addBearerToken(getTokenFromStorage())
                 .header(Keys.CONSENT_ID, persistentStorage.get(StorageKeys.USER_CONSENT_ID))
@@ -176,7 +174,7 @@ public class LhvApiClient {
         return new ConsentRequest(
                 consentAccess,
                 QueryValues.RECURRING_INDICATOR,
-                todaysDate.plusDays(90).toString(),
+                todaysDate.plusDays(Values.HISTORY_MAX_DAYS).toString(),
                 QueryValues.FREQUENCY_PER_DAY,
                 QueryValues.COMBINED_SERVICE_INDICATOR);
     }
