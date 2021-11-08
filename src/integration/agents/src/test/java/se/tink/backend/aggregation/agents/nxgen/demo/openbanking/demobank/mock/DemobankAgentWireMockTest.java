@@ -1,11 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.mock;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
@@ -32,9 +38,56 @@ public class DemobankAgentWireMockTest {
             RESOURCE_PATH + "/demobank-recurring-payment-error.aap";
     private static final String SINGLE_EMBEDDED_PAYMENT_AAP =
             RESOURCE_PATH + "/demobank-single-embedded-payment.aap";
+    private static final String DK_NEMID_AUTH_SUCCESSFUL_AAP =
+            RESOURCE_PATH + "/demobank-dk-nemid-auth-successful.aap";
+    private static final String DK_NEMID_AUTH_INVALID_CREDENTIALS_AAP =
+            RESOURCE_PATH + "/demobank-dk-nemid-auth-invalid_credentials.aap";
 
     private static final String SOURCE_IDENTIFIER = "IT76K2958239128VVJCLBIHVDAT";
     private static final String DESTINATION_IDENTIFIER = "IT12L8551867857UFGAYZF25O4M";
+
+    private static final String DK_NEMID_USERNAME = "12345678";
+    private static final String DK_NEMID_PINCODE = "987654";
+
+    @Test
+    public void testDkNemidAuthSuccessful() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.DK)
+                        .withProviderName("dk-demobank-nemid")
+                        .withWireMockFilePath(DK_NEMID_AUTH_SUCCESSFUL_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), DK_NEMID_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD.getFieldKey(), DK_NEMID_PINCODE)
+                        .addCallbackData("dummy_continue", "dummy_continue")
+                        .build();
+
+        assertThatCode(test::executeRefresh).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testDkNemidAuthInvalidCredentials() {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.DK)
+                        .withProviderName("dk-demobank-nemid")
+                        .withWireMockFilePath(DK_NEMID_AUTH_INVALID_CREDENTIALS_AAP)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), DK_NEMID_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD.getFieldKey(), DK_NEMID_PINCODE)
+                        .addCallbackData("code", "dummy_continue")
+                        .build();
+
+        final Throwable thrown = catchThrowable(test::executeRefresh);
+
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+    }
 
     @Test
     public void testSinglePayment() throws Exception {

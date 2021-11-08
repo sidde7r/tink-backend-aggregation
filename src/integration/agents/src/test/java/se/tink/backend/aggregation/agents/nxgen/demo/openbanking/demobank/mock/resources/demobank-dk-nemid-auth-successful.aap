@@ -1,0 +1,93 @@
+REQUEST 1
+POST https://demobank.production.global.tink.se/auth/dk/mobilbank/nemid/get_challange
+Content-Type: application/json
+Accept: application/json,application/json
+X-NemID-Token: 00000000000040000000000000000000
+X-Aggregator: Tink Testing
+
+{"userId":"12345678","pinCode":"987654"}
+
+RESPONSE 1
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 03 Nov 2021 12:54:31 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"data":"{\"keycardNo\":\"mockKeycard\",\"tokenSerial\":\"tokenSerial\",\"anyActiveCodeapps\":\"activeCodeApps\",\"securityDevice\":{\"deviceNameBD\":\"securityDeviceName\",\"deviceNameDanid\":\"securityDeviceDanId\"}}"}
+
+REQUEST 2
+POST https://demobank.production.global.tink.se/auth/dk/mobilbank/nemid/generatecode
+Content-Type: application/json
+Accept: application/json,application/json
+X-NemID-Token: 00000000000040000000000000000000
+X-Aggregator: Tink Testing
+
+{"pushEnabled":true}
+
+RESPONSE 2
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 03 Nov 2021 12:54:31 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"data":"{\"pollUrl\":\"https://demobank.production.global.tink.se/auth/dk/mobilbank/nemid/poll\",\"clientPollTimeout\":null,\"token\":\"generateCodeResponse.token\",\"securityWordEnabled\":\"securityWordEnabled\",\"challengeExpiry\":\"challengeExpiry\"}"}
+
+REQUEST 3
+POST https://demobank.production.global.tink.se/auth/dk/mobilbank/nemid/poll
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"ticket":"generateCodeResponse.token"}
+
+RESPONSE 3
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 03 Nov 2021 12:54:46 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"ticket":null,"payload":{"response":"payloadentity response","signedResponse":"ple signed response"},"confirmation":true,"status":"ok","codeAppSerialNumber":"CODEAPP_SN_1234","codeAppIP":"192.168.1.1"}
+
+REQUEST 4
+POST https://demobank.production.global.tink.se/auth/dk/mobilbank/nemid/inroll
+Content-Type: application/json
+Accept: application/json,application/json
+X-NemID-Token: 00000000000040000000000000000000
+X-Aggregator: Tink Testing
+
+{"codeappSerialNo":"CODEAPP_SN_1234","responseSignature":"ple signed response","userResponse":"payloadentity response","mobileCode":"987654","securityDevice":{"deviceNameBD":"securityDeviceName","deviceNameDanid":"securityDeviceDanId"}}
+
+RESPONSE 4
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 03 Nov 2021 12:54:47 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"data":"{\"installId\":\"50444c081fd445f8b82ce8c35c5b1ef7\"}"}
+
+REQUEST 5
+POST https://demobank.production.global.tink.se/auth/dk/mobilbank/nemid/login_with_installid_prop
+Content-Type: application/json
+Accept: application/json,application/json
+X-NemID-Token: 00000000000040000000000000000000
+X-Aggregator: Tink Testing
+
+{"installId":"50444c081fd445f8b82ce8c35c5b1ef7","userId":"12345678","pinCode":"987654"}
+
+RESPONSE 5
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 03 Nov 2021 12:54:47 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"data":"{\"cprNo\":null,\"personalId\":null,\"advisor\":null,\"customerName\":null,\"campaignAvailable\":false,\"sessionToken\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzU5NDc2ODcsInVzZXJfbmFtZSI6InU2ODEzMTA4MCIsImp0aSI6Im1NRHRxcUlUc2dUS21wYmFxSFlRSmpKay1oVSIsImNsaWVudF9pZCI6ImFnZ3JlZ2F0aW9uIiwic2NvcGUiOltdfQ.ksM-CnXVi5rRKdbUJeIkfKCMuycrkJi2U463Qj6gSAs9iora92zE3ZpdluSFktkx8UXjayX15VxLeEDep5_uF-4gLniN2K6g5gkxblKgzYs09F-u__hayW5fPL1h3iRuekbbINIf9OgBuQB4JDmILfRHE8jisAfMNwUsWjzIe74q3RYE3MDln9y_FqcFMJUwnAvQ6rwfyqaa9In6cv79kpZblcbWApqNMvQowy3F-MnmW-cRpMI7m2bXWiOWlOSVEvgwu1iBY3rIBTbOfT1zN8jWPjJpgdyqRSE2VNvS9AVzmJcrAO6IFlQ0aWz6negUPXZIKNoYBXH2vOTQrpX_oQ\"}"}
