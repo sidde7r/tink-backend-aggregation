@@ -45,7 +45,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -151,7 +150,6 @@ public class SystemTest {
                 .waitingFor(
                         Wait.forHttp("/aggregation/ping").forPort(AggregationDecoupled.HTTP_PORT))
                 .withEnv("AGGREGATION_CONTROLLER_SOCKET", acSocket)
-                .withEnv("OPENSSL_CONF", "/etc/ssl/")
                 .withExposedPorts(AggregationDecoupled.HTTP_PORT)
                 .withNetwork(network)
                 .withLogConsumer(new Slf4jLogConsumer(log));
@@ -413,67 +411,9 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForRefreshEndpoint);
 
-        List<?> givenAccounts =
-                parseAccounts(
-                        pollForAllCallbacksForAnEndpoint(
-                                fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
-
-        List<Map<String, Object>> givenTransactions =
-                parseTransactions(
-                        pollForAllCallbacksForAnEndpoint(
-                                fakeAggregationControllerDataEndpoint(),
-                                "updateTransactionsAsynchronously",
-                                50,
-                                1));
-
-        // then
-        Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
-        Assert.assertTrue(
-                AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expectedTransactions, givenTransactions));
-        Assert.assertTrue(
-                AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expectedAccounts, givenAccounts));
-    }
-
-    /*
-       This test was failing to execute PhantomJS before but after the changes now
-       we are able to execute it. However, since the AAP file used in this test is
-       not created properly, the test fails. AAP file should be created and the test
-       should be enabled. However, we could verify that PhantomJS works fine with Java11
-       container after the changes. The following files needs to be completed to make this
-       test work:
-
-       - data/agents/dk/nordea/nordeabank-agent-contract-for-system-test.json
-       - data/agents/dk/nordea/dk-nordea-nemid-mock.aap
-    */
-    @Test
-    @Ignore
-    public void getRefreshShouldUploadEntitiesForNordeaBank() throws Exception {
-        // given
-        String aggregationHost = aggregationContainer.getContainerIpAddress();
-        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
-
-        AgentContractEntitiesJsonFileParser contractParser =
-                new AgentContractEntitiesJsonFileParser();
-        AgentContractEntity expectedBankEntities =
-                contractParser.parseContractOnBasisOfFile(
-                        "data/agents/dk/nordea/nordeabank-agent-contract-for-system-test.json");
-
-        List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
-        List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
-
-        String requestBodyForRefreshEndpoint =
-                readRequestBodyFromFile(
-                        "data/agents/dk/nordea/system_test_refresh_request_body.json");
-
-        // when
-        ResponseEntity<String> refreshEndpointCallResult =
-                makePostRequest(
-                        String.format(
-                                "http://%s:%d/aggregation/refresh",
-                                aggregationHost, aggregationPort),
-                        requestBodyForRefreshEndpoint);
+        /*String supplementalInformation = "{\"code\":\"DUMMY_AUTH_CODE\"}";
+        postSupplementalInformation(
+            aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);*/
 
         List<?> givenAccounts =
                 parseAccounts(
