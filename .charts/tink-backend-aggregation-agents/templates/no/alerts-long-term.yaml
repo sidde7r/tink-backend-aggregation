@@ -24,7 +24,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs12h }}
           {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures is 100% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
+        summary: Authentication failures is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
           the last hour.
         tags: {{ .Values.tags }}
 
@@ -64,7 +64,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs12h }}
           {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12 hours
+        summary: Authentication failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for <{ $labels.className }> (<{ $labels.provider }>) for the last 12 hours
         tags: {{ .Values.tags }}
 
     #-------------------------------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs12h }}
           {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Refresh failures due to bank site errors is 100% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
+        summary: Refresh failures due to bank site errors is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
         tags: {{ .Values.tags }}
 
 

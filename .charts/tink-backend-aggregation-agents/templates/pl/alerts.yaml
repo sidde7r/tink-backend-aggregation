@@ -25,7 +25,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs1h }}
           {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Authentication failures is over 90% (<{ $value }>) for the last 1h.
+        summary: Authentication failures is <{ $value | humanizePercentage }> for the last 1h.
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationErrorRateOver90%PL
@@ -43,7 +43,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs12h }}
           {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures is over 90% (<{ $value }>) for the last 12h
+        summary: Authentication failures is <{ $value | humanizePercentage }> for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh alerts
@@ -59,7 +59,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs1h }}
           {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Refresh failures is over 20% (<{ $value }>) for the last 1h
+        summary: Refresh failures is <{ $value | humanizePercentage }> for the last 1h
         tags: {{ .Values.tags }}
 
     #-------------------------------------------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs1h }}
           {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 20% (<{ $value }>) for the last 1h
+        summary: Authentication failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 1h
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUnknownErrorRateOver20%PL
@@ -99,7 +99,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs12h }}
           {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for the last 12h
+        summary: Authentication failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh alerts
@@ -115,7 +115,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs1h }}
           {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for the last 1h
+        summary: Refresh failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 1h
         tags: {{ .Values.tags }}
 
     #-------------------------------------------------------------------------------------------------------------------
@@ -138,7 +138,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs4h }}
           {{ .Values.grafanaProviderLinkAbs4h }}
-        summary: Manual authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
+        summary: Manual authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: AutoAuthenticationBankSiteErrorRateOver90%PL
@@ -157,7 +157,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs4h }}
           {{ .Values.grafanaProviderLinkAbs4h }}
-        summary: Auto authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
+        summary: Auto authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
         tags: {{ .Values.tags }}
 
 
@@ -177,7 +177,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs12h }}
           {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 12h
+        summary: Authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh alerts
@@ -195,7 +195,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs4h }}
           {{ .Values.grafanaProviderLinkAbs4h }}
-        summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
+        summary: Refresh failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: LongTermRefreshBankSiteErrorRateOver90%PL
@@ -210,7 +210,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs12h }}
           {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for the last 12h
+        summary: Refresh failures due to bank site errors is <{ $value | humanizePercentage }> for the last 12h
         tags: {{ .Values.tags }}
 
 
@@ -234,7 +234,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs4h }}
           {{ .Values.grafanaProviderLinkAbs4h }}
-        summary: Authentication failures due to user cancelletion is over 75% (<{ $value }>) for the last 2h
+        summary: Authentication failures due to user cancelletion is <{ $value | humanizePercentage }> for the last 2h
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRateOver95%PL
@@ -253,5 +253,5 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs12h }}
           {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures due to user cancelletion is over 95% (<{ $value }>) for the last 12h. Please check if a redirect url is correct.
+        summary: Authentication failures due to user cancelletion is <{ $value | humanizePercentage }> for the last 12h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}

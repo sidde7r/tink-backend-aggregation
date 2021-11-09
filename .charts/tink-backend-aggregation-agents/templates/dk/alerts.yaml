@@ -98,7 +98,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs1h }}
           {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
+        summary: Authentication failures due to unknown RuntimeExceptions is (<{ $value | humanizePercentage }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
         tags: {{ .Values.tags }}
 
     # Refresh ping alerts
@@ -115,5 +115,5 @@ spec:
       annotations:
         description: {{ .Values.kibanaProviderLinkAbs1h }}
           {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
+        summary: Refresh failures due to unknown RuntimeExceptions is 10% (<{ $value | humanizePercentage }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
