@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -45,7 +46,7 @@ public class SdcAccount {
                                     ? TransactionalAccountType.CHECKING
                                     : TransactionalAccountType.SAVINGS)
                     .withFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                    .withBalance(BalanceModule.of(amount.toExactCurrencyAmount()))
+                    .withBalance(buildBalanceMondule())
                     .withId(
                             IdModule.builder()
                                     .withUniqueIdentifier(
@@ -75,6 +76,17 @@ public class SdcAccount {
                 .canExecuteExternalTransfer(canExecuteExternalTransfer())
                 .canReceiveExternalTransfer(canReceiveExternalTransfer())
                 .build();
+    }
+
+    private BalanceModule buildBalanceMondule() {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(amount.toExactCurrencyAmount());
+
+        if (Objects.nonNull(availableAmount)) {
+            balanceBuilderStep.setAvailableBalance(availableAmount.toExactCurrencyAmount());
+        }
+
+        return balanceBuilderStep.build();
     }
 
     @JsonIgnore
