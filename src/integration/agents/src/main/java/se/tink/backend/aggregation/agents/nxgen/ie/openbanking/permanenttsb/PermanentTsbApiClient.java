@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.ie.openbanking.permanenttsb;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
@@ -90,5 +92,31 @@ public class PermanentTsbApiClient extends UkOpenBankingApiClient {
                 .withJWTId(UUID.randomUUID().toString())
                 .withExpiresAt(expiresAt)
                 .signAttached(Algorithm.PS256, signer);
+    }
+
+    protected TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
+        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
+
+        String scope =
+                wellKnownConfiguration
+                        .verifyAndGetScopes(createScope(mode))
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Provider does not support the mandatory scopes."));
+
+        TokenRequestForm requestForm =
+                new TokenRequestForm()
+                        .withGrantType(grantType)
+                        .withScope(scope)
+                        .withRedirectUri(redirectUrl);
+
+        handleFormAuthentication(requestForm, wellKnownConfiguration);
+
+        return requestForm;
+    }
+
+    private List<String> createScope(ClientMode mode) {
+        return Arrays.asList("openid", mode.getValue());
     }
 }
