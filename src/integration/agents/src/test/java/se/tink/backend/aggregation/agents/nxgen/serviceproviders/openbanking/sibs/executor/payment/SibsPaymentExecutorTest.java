@@ -137,7 +137,7 @@ public class SibsPaymentExecutorTest {
         // then
         assertThat(paymentResponse)
                 .usingRecursiveComparison()
-                .ignoringFields("payment.id", "payment.remittanceInformation")
+                .ignoringFields("payment.id")
                 .isEqualTo(getExpectedPaymentResponseOnCreate());
     }
 
