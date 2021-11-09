@@ -163,6 +163,38 @@
     "availableCredit" : 0.0,
     "balance" : 0.0
   }, {
+    "accountNumber" : "12345678",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 521618,
+      "exactValue" : 5216.18,
+      "doubleValue" : 5216.18
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "12345678",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Fondinnehav",
+    "ownership" : 1.0,
+    "payload" : "{\"fundAccountNumbers\":\"{\\\" SE4444224444\\\":\\\"444422333\\\"}\"}",
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 5216.18
+  }, {
     "accountNumber" : "6378-11 224 4444",
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
@@ -854,7 +886,6 @@
     "dateOfBirth" : {
       "year" : 1983,
       "month" : "MARCH",
-      "era" : "CE",
       "dayOfWeek" : "MONDAY",
       "leapYear" : false,
       "dayOfYear" : 66,
@@ -862,6 +893,7 @@
         "calendarType" : "iso8601",
         "id" : "ISO"
       },
+      "era" : "CE",
       "monthValue" : 3,
       "dayOfMonth" : 7
     }
