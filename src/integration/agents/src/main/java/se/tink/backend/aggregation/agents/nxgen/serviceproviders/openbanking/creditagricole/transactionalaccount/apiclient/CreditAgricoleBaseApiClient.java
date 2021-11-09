@@ -11,7 +11,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.EndUserIdentityResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.PutConsentsRequest;
@@ -27,9 +28,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
@@ -172,9 +173,11 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
                             CreditAgricoleBaseConstants.HeaderKeys.CATS_CANAL,
                             CreditAgricoleBaseConstants.HeaderValues.CATS_CANAL)
                     .post(TokenResponse.class, tokenRequest.toData());
-        } catch (HttpClientException ex) {
-            if (ex.getMessage().contains("failed to respond")) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } catch (HttpResponseException ex) {
+            HttpResponse response = ex.getResponse();
+            if (response.getStatus() == 400
+                    && response.getBody(ErrorResponse.class).isBlockedOrNonExistent()) {
+                throw LoginError.NOT_SUPPORTED.exception();
             }
             throw ex;
         }

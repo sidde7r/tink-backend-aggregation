@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -62,8 +61,7 @@ public class CreditAgricoleBaseAuthenticatorTest {
         URL url = creditAgricoleBaseAuthenticator.buildAuthorizeUrl(state);
 
         // then
-        assertNotNull(url);
-        assertEquals(expectedUrl, url.get());
+        assertThat(url.get()).isEqualTo(expectedUrl);
     }
 
     @Test
@@ -80,7 +78,7 @@ public class CreditAgricoleBaseAuthenticatorTest {
         OAuth2Token resp = creditAgricoleBaseAuthenticator.exchangeAuthorizationCode(code);
 
         // then
-        assertEquals(oAuth2Token, resp);
+        assertThat(resp).isEqualTo(oAuth2Token);
     }
 
     @Test
@@ -95,7 +93,7 @@ public class CreditAgricoleBaseAuthenticatorTest {
         OAuth2Token resp = creditAgricoleBaseAuthenticator.refreshAccessToken(refreshToken);
 
         // then
-        assertEquals(oAuth2Token, resp);
+        assertThat(resp).isEqualTo(oAuth2Token);
     }
 
     @Test
