@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -84,17 +83,8 @@ public class TransactionEntity {
                         ? transactionAmount.negate()
                         : transactionAmount;
 
-        final String transactionName;
-        if (creditorAccount != null && !Strings.isNullOrEmpty(creditorAccount.getName())) {
-            transactionName = creditorAccount.getName();
-        } else if (debtorAccount != null && !Strings.isNullOrEmpty(debtorAccount.getName())) {
-            transactionName = debtorAccount.getName();
-        } else {
-            transactionName = "";
-        }
-
         return (Transaction)
-                getAggregationTransaction(transactionAmount, transactionName, providerMarket);
+                getAggregationTransaction(transactionAmount, getDescription(), providerMarket);
     }
 
     private AggregationTransaction getAggregationTransaction(
@@ -149,7 +139,19 @@ public class TransactionEntity {
     @JsonIgnore
     private String getDescription() {
         return Optional.ofNullable(transactionInformation)
-                .orElse(StringUtils.capitalize(getProprietaryBankTransactionCode()));
+                .orElse(StringUtils.capitalize(getCreditorName()));
+    }
+
+    private String getCreditorName() {
+        return Optional.ofNullable(creditorAccount)
+                .map(CreditorAccountEntity::getName)
+                .orElse(getDebtorName());
+    }
+
+    private String getDebtorName() {
+        return Optional.ofNullable(debtorAccount)
+                .map(DebtorAccountEntity::getName)
+                .orElse(getProprietaryBankTransactionCode());
     }
 
     private String getProprietaryBankTransactionCode() {
