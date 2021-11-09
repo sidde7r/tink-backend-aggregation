@@ -10,8 +10,7 @@ public final class LaBanquePostaleConstants {
     public static class Urls {
         public static final String BASE_URL = "https://api.labanquepostale.com/v1";
         public static final String OAUTH_BASE_URL = "https://oauth2.labanquepostale.com";
-        public static final String OAUTH = "/pph/authorize";
-        static final String APP2APP_GET_TOKEN = "/pph/token";
+        public static final String OAUTH = "/authorize";
         static final String GET_TOKEN = "/token";
         public static final String FETCH_ACCOUNTS = "/accounts";
         static final String FETCH_BALANCES = "/accounts/%s/balances";
