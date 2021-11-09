@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
@@ -19,8 +20,8 @@ import se.tink.libraries.account.enums.AccountFlag;
 
 @Slf4j
 @JsonObject
+@Getter
 public class SdcAccount {
-
     private SdcAccountKey entityKey;
     private SdcAmount amount;
     private SdcAmount availableAmount;
@@ -205,46 +206,6 @@ public class SdcAccount {
 
     public SdcAccountKey getEntityKey() {
         return entityKey != null ? entityKey : new SdcAccountKey();
-    }
-
-    public SdcAmount getAmount() {
-        return amount;
-    }
-
-    public SdcAmount getAvailableAmount() {
-        return availableAmount;
-    }
-
-    public SdcAccountProperties getAccountProperties() {
-        return accountProperties;
-    }
-
-    public String getLocalizedAccountId() {
-        return localizedAccountId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getSortNumber() {
-        return sortNumber;
-    }
-
-    public String getProductElementType() {
-        return productElementType;
     }
 
     boolean isAccount(SdcCreditCardAccountEntity creditCardAccount) {
