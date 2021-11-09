@@ -360,9 +360,11 @@ codeowners(
     patterns = [
         "src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/",
         "src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/",
+        "src/main/java/se/tink/backend/aggregation/agents/legacy/abnamro/",
+        "src/test/java/se/tink/backend/aggregation/agents/legacy/abnamro/",
     ],
     teams = [
-        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-minion-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
@@ -382,8 +384,6 @@ codeowners(
 codeowners(
     name = "legacy_banks_providers_owners",
     patterns = [
-        "src/main/java/se/tink/backend/aggregation/agents/legacy/abnamro/",
-        "src/test/java/se/tink/backend/aggregation/agents/legacy/abnamro/",
         "src/main/java/se/tink/backend/aggregation/agents/legacy/banks/",
         "src/test/java/se/tink/backend/aggregation/agents/legacy/banks/",
         "src/main/java/se/tink/backend/aggregation/agents/legacy/brokers/",

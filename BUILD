@@ -392,7 +392,7 @@ codeowners(
         "/.charts/tink-backend-aggregation-agents/templates/nl",
     ],
     teams = [
-        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-minion-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

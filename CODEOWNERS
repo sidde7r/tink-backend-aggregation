@@ -18,7 +18,7 @@
 /.charts/tink-backend-aggregation-agents/templates/it @tink-ab/aggregation-nazguls-maintainer
 /.charts/tink-backend-aggregation-agents/templates/lt @tink-ab/aggregation-thundercats-maintainer
 /.charts/tink-backend-aggregation-agents/templates/lv @tink-ab/aggregation-thundercats-maintainer
-/.charts/tink-backend-aggregation-agents/templates/nl @tink-ab/aggregation-thundercats-maintainer
+/.charts/tink-backend-aggregation-agents/templates/nl @tink-ab/aggregation-minion-maintainer
 /.charts/tink-backend-aggregation-agents/templates/no @tink-ab/aggregation-teletubbies-maintainer
 /.charts/tink-backend-aggregation-agents/templates/pl @tink-ab/aggregation-teletubbies-maintainer
 /.charts/tink-backend-aggregation-agents/templates/pt @tink-ab/aggregation-minion-maintainer
@@ -150,10 +150,10 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/lv/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lt/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/lt/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/abnamro/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/abnamro/ @tink-ab/aggregation-thundercats-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/abnamro/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/abnamro/ @tink-ab/aggregation-minion-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/banks/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/brokers/ @tink-ab/aggregation-thundercats-maintainer
@@ -179,7 +179,7 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/handelsbanken/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbaltics/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/ @tink-ab/aggregation-thundercats-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/ @tink-ab/aggregation-minion-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/entercard/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/amex/ @tink-ab/aggregation-thundercats-maintainer
