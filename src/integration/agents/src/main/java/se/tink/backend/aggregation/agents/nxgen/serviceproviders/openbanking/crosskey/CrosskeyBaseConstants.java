@@ -162,7 +162,7 @@ public class CrosskeyBaseConstants {
 
     @UtilityClass
     public static class HttpClient {
-        public static final int MAX_RETRIES_FOR_429_RETRY_AFTER_RESPONSE = 2;
+        public static final int MAX_RETRIES_FOR_429_RETRY_AFTER_RESPONSE = 4;
     }
 
     public enum IdentificationType {

@@ -71,7 +71,7 @@ public class RetryAfterRetryFilter extends AbstractRetryFilter {
                 "{} Will retry after seconds: {}. Retry: [{}/{}]",
                 LOG_TAG,
                 waitForSeconds,
-                retry,
+                retry + 1,
                 getMaxNumRetries());
         return waitForSeconds * 1_000;
     }
