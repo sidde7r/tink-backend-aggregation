@@ -40,7 +40,7 @@ public class RabobankConstants {
     }
 
     public static class Consents {
-        public static final List<String> STATUS = ImmutableList.of("expire", "invalid", "revoked");
+        public static final List<String> STATUS = ImmutableList.of("expired", "invalid", "revoked");
     }
 
     public static class StorageKey {

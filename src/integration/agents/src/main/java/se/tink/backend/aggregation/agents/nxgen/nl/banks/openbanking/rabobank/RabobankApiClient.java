@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -165,17 +165,13 @@ public final class RabobankApiClient {
 
     public TransactionalAccountsResponse fetchAccounts() {
         try {
-            // TODO: Temporary log to debug an issue in TC-4799
-            OAuth2Token token = RabobankUtils.getOauthToken(persistentStorage);
-            log.info(
-                    "Persisted access token: {}, expiry date: {}",
-                    Hash.sha256AsHex(Objects.requireNonNull(token.getAccessToken())),
-                    RabobankUtils.getRefreshTokenExpireDate(token.getAccessExpireEpoch()));
-
             return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
         } catch (HttpResponseException e) {
-            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-            if (errorResponse.isNotSubscribedError(e.getResponse().getStatus())) {
+            final HttpResponse response = e.getResponse();
+            checkErrorBodyType(response);
+
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+            if (errorResponse.isNotSubscribedError(response.getStatus())) {
                 rabobankConfiguration.getUrls().setConsumeLatest(false);
                 return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
             }
@@ -205,8 +201,11 @@ public final class RabobankApiClient {
         try {
             return getTransactionsPages(url, fromDate, toDate, QueryValues.BOOKED, isSandbox);
         } catch (HttpResponseException e) {
-            ErrorResponse errorResponse = new ErrorResponse();
-            if (errorResponse.isPeriodInvalidError(e)) {
+            final HttpResponse response = e.getResponse();
+            checkErrorBodyType(response);
+
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+            if (errorResponse.isPeriodInvalidError()) {
                 return new EmptyFinalPaginatorResponse();
             }
             throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
@@ -290,6 +289,13 @@ public final class RabobankApiClient {
     private void fetchNewConsentIfEmpty() {
         if (consentStatus == null) {
             setConsentStatus();
+        }
+    }
+
+    private void checkErrorBodyType(HttpResponse httpResponse) {
+        if (!MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
+            log.info("Invalid response body: {}", httpResponse.getBody(String.class));
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Incorrect error body response.");
         }
     }
 }
