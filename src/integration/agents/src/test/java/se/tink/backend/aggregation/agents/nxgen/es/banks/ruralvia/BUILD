@@ -3,6 +3,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "ruralvia_unitTests",
     srcs = [
+        "authenticator/RuralviaAuthenticatorTest.java",
         "fetcher/RuralviaUtilsTest.java",
         "fetcher/creditcard/RuralviaCreditCardFetcherTest.java",
         "fetcher/identitydata/RuralviaIdentityDataFetcherTest.java",
@@ -32,15 +33,19 @@ junit_test(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/models",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/date",
         "//src/libraries/serialization",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
+        "//third_party/browserup_proxy_core",
         "@aggregation//:com_google_guava_guava",
     ],
 )
