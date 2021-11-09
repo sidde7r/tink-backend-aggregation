@@ -195,6 +195,37 @@
     "availableCredit" : 0.0,
     "balance" : 5216.18
   }, {
+    "accountNumber" : "1111222333",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 3,
+      "unscaledValue" : 41873157,
+      "exactValue" : 41873.157,
+      "doubleValue" : 41873.157
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "1111222333",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Tjänstepension Fond",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 41873.157
+  }, {
     "accountNumber" : "6378-11 224 4444",
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
@@ -893,9 +924,9 @@
         "calendarType" : "iso8601",
         "id" : "ISO"
       },
-      "era" : "CE",
       "monthValue" : 3,
-      "dayOfMonth" : 7
+      "dayOfMonth" : 7,
+      "era" : "CE"
     }
   }
 }

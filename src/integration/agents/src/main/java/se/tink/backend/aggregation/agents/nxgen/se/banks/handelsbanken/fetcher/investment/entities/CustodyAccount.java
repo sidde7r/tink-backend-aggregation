@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 public class CustodyAccount extends BaseResponse {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -22,6 +25,7 @@ public class CustodyAccount extends BaseResponse {
     private String type;
     private String title;
     private String custodyAccountNumber;
+    private String accountNumberFormatted;
     private HandelsbankenAmount marketValue;
 
     public Optional<InvestmentAccount> toInvestmentAccount(HandelsbankenSEApiClient client) {
@@ -65,7 +69,13 @@ public class CustodyAccount extends BaseResponse {
     }
 
     public String getCustodyAccountNumber() {
-        return custodyAccountNumber;
+        if (custodyAccountNumber != null) {
+            log.info("Handelsbanken returned an old version of KF investment in CustodyAccounts.");
+            return custodyAccountNumber;
+        } else {
+            log.info("Handelsbanken returned new version of KF investment in CustodyAccounts.");
+            return getAccountNumberFormatted();
+        }
     }
 
     public String getTitle() {
@@ -85,5 +95,9 @@ public class CustodyAccount extends BaseResponse {
         return Optional.ofNullable(marketValue)
                 .map(HandelsbankenAmount::toExactCurrencyAmount)
                 .orElse(ExactCurrencyAmount.zero("SEK"));
+    }
+
+    public String getAccountNumberFormatted() {
+        return StringUtils.deleteWhitespace(accountNumberFormatted);
     }
 }

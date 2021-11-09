@@ -817,7 +817,154 @@ Vary: Accept-Encoding
 Connection: close
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
-{"myHoldings":{"totalMarketValue":{"amount":8276.9500,"amountFormatted":"8 276,95","unit":"","currency":"SEK"},"totalPerformance":{"changeAmount":{"amount":2183.8200,"amountFormatted":"2 183,82","unit":"","currency":"SEK"},"changePercentage":{"quantityFormatted":"35,84","unit":"%"},"changeDirection":"POSITIVE"},"custodyAccounts":[{"_links":{"fund-holdings":{"href":"https://m2.handelsbanken.se/app/priv/fund/fundHoldings/get?includeMinors=false&authToken=123Token132","type":"application/json"}},"type":"FUND_SUMMARY","title":"Fondinnehav","accountNumberFormatted":"","marketValue":{"amount":5216.18,"amountFormatted":"5 216,18","unit":"","currency":"SEK"},"performance":{"changeAmount":{"amount":1923.05,"amountFormatted":"1 923,05","unit":"","currency":"SEK"},"changePercentage":{"quantityFormatted":"58,40","unit":"%"},"changeDirection":"POSITIVE"},"overdrawnText":null},{"_links":{"custody-account":{"href":"https://m2.handelsbanken.se/app/priv/securities/custodyAccounts/223334444?authToken=123Token132","type":"application/json","gaScreenName":"save invest / custody account"}},"type":"ISK","title":"ISK","accountNumberFormatted":"2 233 344 444","marketValue":{"amount":3060.7700,"amountFormatted":"3 060,77","unit":"","currency":"SEK"},"performance":{"changeAmount":{"amount":260.7700,"amountFormatted":"260,77","unit":"","currency":"SEK"},"changePercentage":{"quantityFormatted":"9,31","unit":"%"},"changeDirection":"POSITIVE"},"overdrawnText":null},{"_links":{"custody-account":{"href":"https://m2.handelsbanken.se/app/priv/securities/custodyAccounts/444422333?authToken=123Token132","type":"application/json","gaScreenName":"save invest / custody account"}},"type":"ISK","title":"ISK - används ej","accountNumberFormatted":"3 332 255 555","marketValue":{"amount":0.0000,"amountFormatted":"0,00","unit":"","currency":"SEK"},"performance":{"changeAmount":{"amount":0.0000,"amountFormatted":"0,00","unit":"","currency":"SEK"},"changeDirection":null},"overdrawnText":null}],"performanceDisclaimer":"*Visar värdeutveckling sedan köp."},"othersHoldings":{"personsWithHoldings":[]},"contentStrings":{"myHoldingsTitle":"Mitt innehav","myHoldingsTotalMarketValue":"Marknadsvärde","myHoldingsTotalValuePerformance":"Värdeutveckling*","othersHoldingsTitle":"Annans innehav"}}
+{
+	"myHoldings": {
+		"totalMarketValue": {
+			"amount": 8276.95,
+			"amountFormatted": "8 276,95",
+			"unit": "",
+			"currency": "SEK"
+		},
+		"totalPerformance": {
+			"changeAmount": {
+				"amount": 2183.82,
+				"amountFormatted": "2 183,82",
+				"unit": "",
+				"currency": "SEK"
+			},
+			"changePercentage": {
+				"quantityFormatted": "35,84",
+				"unit": "%"
+			},
+			"changeDirection": "POSITIVE"
+		},
+		"custodyAccounts": [
+			{
+				"_links": {
+					"fund-holdings": {
+						"href": "https://m2.handelsbanken.se/app/priv/fund/fundHoldings/get?includeMinors=false&authToken=123Token132",
+						"type": "application/json"
+					}
+				},
+				"type": "FUND_SUMMARY",
+				"title": "Fondinnehav",
+				"accountNumberFormatted": "",
+				"marketValue": {
+					"amount": 5216.18,
+					"amountFormatted": "5 216,18",
+					"unit": "",
+					"currency": "SEK"
+				},
+				"performance": {
+					"changeAmount": {
+						"amount": 1923.05,
+						"amountFormatted": "1 923,05",
+						"unit": "",
+						"currency": "SEK"
+					},
+					"changePercentage": {
+						"quantityFormatted": "58,40",
+						"unit": "%"
+					},
+					"changeDirection": "POSITIVE"
+				},
+				"overdrawnText": null
+			},
+			{
+				"_links": {
+					"custody-account": {
+						"href": "https://m2.handelsbanken.se/app/priv/securities/custodyAccounts/223334444?authToken=123Token132",
+						"type": "application/json",
+						"gaScreenName": "save invest / custody account"
+					}
+				},
+				"type": "ISK",
+				"title": "ISK",
+				"accountNumberFormatted": "2 233 344 444",
+				"marketValue": {
+					"amount": 3060.77,
+					"amountFormatted": "3 060,77",
+					"unit": "",
+					"currency": "SEK"
+				},
+				"performance": {
+					"changeAmount": {
+						"amount": 260.77,
+						"amountFormatted": "260,77",
+						"unit": "",
+						"currency": "SEK"
+					},
+					"changePercentage": {
+						"quantityFormatted": "9,31",
+						"unit": "%"
+					},
+					"changeDirection": "POSITIVE"
+				},
+				"overdrawnText": null
+			},
+			{
+				"_links": {
+					"custody-account": {
+						"href": "https://m2.handelsbanken.se/app/priv/securities/custodyAccounts/444422333?authToken=123Token132",
+						"type": "application/json",
+						"gaScreenName": "save invest / custody account"
+					}
+				},
+				"type": "ISK",
+				"title": "ISK - används ej",
+				"accountNumberFormatted": "3 332 255 555",
+				"marketValue": {
+					"amount": 0.0,
+					"amountFormatted": "0,00",
+					"unit": "",
+					"currency": "SEK"
+				},
+				"performance": {
+					"changeAmount": {
+						"amount": 0.0,
+						"amountFormatted": "0,00",
+						"unit": "",
+						"currency": "SEK"
+					},
+					"changeDirection": null
+				},
+				"overdrawnText": null
+			},
+			{
+				"_links": {
+					"pension-detail": {
+						"href": "https://m2.handelsbanken.se/app/priv/pension/emyyhHbhBhVpw3xBmqP1aw/Xxj54hc2oGz8eKsl_e1KaHEvHMTEaaaaa4555551234/1016/XXA-ey3aFNGeEg8PRW63mw/F7n_SX1OjdteeWj2nRXUZg/detail?authToken=123Token132",
+						"type": "**HASHED:us**",
+						"gaScreenName": "Savings / Security holdings summary / Pension detail"
+					}
+				},
+				"type": "KAPITAL",
+				"title": "Kapitalspar Fond",
+				"accountNumberFormatted": "1 111 222 333",
+				"marketValue": {
+					"amount": 41873.157,
+					"amountFormatted": "41 873,16",
+					"unit": "",
+					"currency": "SEK"
+				},
+				"performance": null,
+				"overdrawnText": null
+			}
+		],
+		"performanceDisclaimer": "*Visar värdeutveckling sedan köp."
+	},
+	"othersHoldings": {
+		"personsWithHoldings": [
+
+		]
+	},
+	"contentStrings": {
+		"myHoldingsTitle": "Mitt innehav",
+		"myHoldingsTotalMarketValue": "Marknadsvärde",
+		"myHoldingsTotalValuePerformance": "Värdeutveckling*",
+		"othersHoldingsTitle": "Annans innehav"
+	}
+}
 
 REQUEST 22b
 GET https://m2.handelsbanken.se/app/priv/fund/fundHoldings/get?includeMinors=false&authToken=123Token132
@@ -923,7 +1070,163 @@ Vary: Accept-Encoding
 Connection: close
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
-{"_links":{"pension-mypension":{"href":"https://www.minpension.se","type":"text/html","title":"Minpension.se"},"infopage-pension-overview":{"href":"https://m2.handelsbanken.se/app/priv/infopage?alias=pension.overview&service=PRIV&authToken=123Token132","title":"Om pension","gaScreenName":"pension / about pensions"},"my-office":{"href":"https://m2.handelsbanken.se/app/priv/branch?authToken=123Token132","title":"Mitt kontor"},"pension-overview-info":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qF2FDAB80674662AFC1257F77002E6356","type":"text/html","title":"Om Pension","gaScreenName":"pension / about pensions"}},"links":[{"rel":"my-office","href":"https://m2.handelsbanken.se/app/priv/branch?authToken=123Token132","type":"application/json","title":"Mitt kontor"},{"rel":"pension-mypension","href":"https://www.minpension.se","type":"text/html","title":"Minpension.se"},{"rel":"pension-overview-info","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qF2FDAB80674662AFC1257F77002E6356","type":"text/html","title":"Om Pension","gaScreenName":"pension / about pensions"},{"rel":"infopage-pension-overview","href":"https://m2.handelsbanken.se/app/priv/infopage?alias=pension.overview&service=PRIV&authToken=123Token132","type":"application/json","title":"Om pension","gaScreenName":"pension / about pensions"}],"summary":{"type":"generic_info_group","items":[{"label":"Värde","value":"91 247,75"}]},"privateSavingTitle":"Eget sparande","privateSaving":[],"privateLinkHeader":"Kom igång med eget pensionssparande","noPrivateSavingMessage":{"type":"generic_info_group","items":[{"label":null,"value":"Kapitalspar Pension\nKapitalspar Pension är en kapitalförsäkring där du sparar långsiktigt i fonder du kan till exempel välja att spara i våra pensionsfonder. Sparandet kan betalas ut varje månad och om du skulle avlida betalas pengarna ut till dina närstående. När sparandet betalas ut är de skattade och klara, du betalar istället en årlig schablonskatt på det sparade kapitalet. För att öppna Kapitalspar Pension eller boka pensionsrådgivning, kontakta ditt lokala bankkontor.\n\nInvesteringssparkonto (ISK)\nMed ett Investeringssparkonto kan du spara i fonder och även andra värdepapper som aktier. Köp och sälj utan krångel, skatten är redan ifylld i deklarationen. Kontot är avgiftsfritt och du kan ta ut dina pengar när du sålt dina fonder, aktier och andra värdepapper. Du kan starta ett sparande i ISK här i appen eller genom att kontakta ditt lokala bankkontor."}]},"videoGroupList":[{"type":"video_group","heading":"Kom igång med pensionssparande","description":"Längd: 2.17","showImagePreview":false,"video":{"title":"Kom igång med pensionssparande","description":"Längd: 2.17","videoFormatList":[{"formatType":"IPHONE","mimeType":"application/x-mpegURL","url":"https://005d85d366e13d46a3089fa55a00d5dc-httpcache0-90107-cacheod0.dna.ip-only.net/90107-cacheod0/_definst_/smil:assets/86/866B89E1/866B89E1/playlist.m3u8"},{"formatType":"IPAD","mimeType":"application/x-mpegURL","url":"https://005d85d366e13d46a3089fa55a00d5dc-httpcache0-90107-cacheod0.dna.ip-only.net/90107-cacheod0/_definst_/smil:assets/86/866B89E1/866B89E1/playlist.m3u8"},{"formatType":"ANDROID","mimeType":"application/x-mpegURL","url":"https://005d85d366e13d46a3089fa55a00d5dc-httpcache0-90107-cacheod0.dna.ip-only.net/90107-cacheod0/_definst_/smil:assets/86/866B89E1/866B89E1/playlist.m3u8"}],"videoImageList":[{"imageType":"STANDARD","height":"351","width":"620","url":"https://7a514d7812a8c85c5eb5cd0e7fc6e705-httpcache0-90107-cachedown0.dna.ip-only.net/90107-cachedown0/assets/86/866B89E1/eget_pensionsspar_1.jpg"}]}}],"privateSavingFooter":"Har du sparat på ett ISK-konto så hittar du ditt konto under Spara Placera.","employerSavingTitle":"Från arbetsgivare","employerSaving":[{"_links":{"pension-detail":{"href":"https://m2.handelsbanken.se/app/priv/pension/pVrfPNLlBF7mDCYXb1HQRw/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/LURQTtJRMpOy9urI2ezx6A/detail?authToken=123Token132","title":"","gaScreenName":"pension / pension details"}},"links":[{"rel":"pension-detail","href":"https://m2.handelsbanken.se/app/priv/pension/pVrfPNLlBF7mDCYXb1HQRw/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/LURQTtJRMpOy9urI2ezx6A/detail?authToken=123Token132","type":"application/json","title":"","gaScreenName":"pension / pension details"}],"key":"Tjänstepension Fond","additionalText":"27 771 757","specialText":"Topplab AB","value":{"amount":91247.753,"amountFormatted":"91 247,75"}}],"employerLinkHeader":"Samla din tjänstepension","noEmployerSavingMessage":null,"stateSavingTitle":"Från staten","stateSavingFooter":"På pensionsportalen Minpension.se kan du se hela din pension och göra pensionsprognoser.","contactTitle":"Vill du kontakta oss?","contact":{"type":"generic_info_group","items":[{"label":"Personlig service dygnet runt","value":"+46 771 77 88 99"}]},"pensionGuideTeaserDTO":null,"pensionManagementTeaserDTO":null}
+{
+	"_links": {
+		"pension-mypension": {
+			"href": "https://www.minpension.se",
+			"type": "text/html",
+			"title": "Minpension.se"
+		},
+		"infopage-pension-overview": {
+			"href": "https://m2.handelsbanken.se/app/priv/infopage?alias=pension.overview&service=PRIV&authToken=123Token132",
+			"title": "Om pension",
+			"gaScreenName": "pension / about pensions"
+		},
+		"my-office": {
+			"href": "https://m2.handelsbanken.se/app/priv/branch?authToken=123Token132",
+			"title": "Mitt kontor"
+		},
+		"pension-overview-info": {
+			"href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qF2FDAB80674662AFC1257F77002E6356",
+			"type": "text/html",
+			"title": "Om Pension",
+			"gaScreenName": "pension / about pensions"
+		}
+	},
+	"links": [
+		{
+			"rel": "my-office",
+			"href": "https://m2.handelsbanken.se/app/priv/branch?authToken=123Token132",
+			"type": "application/json",
+			"title": "Mitt kontor"
+		},
+		{
+			"rel": "pension-mypension",
+			"href": "https://www.minpension.se",
+			"type": "text/html",
+			"title": "Minpension.se"
+		},
+		{
+			"rel": "pension-overview-info",
+			"href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qF2FDAB80674662AFC1257F77002E6356",
+			"type": "text/html",
+			"title": "Om Pension",
+			"gaScreenName": "pension / about pensions"
+		},
+		{
+			"rel": "infopage-pension-overview",
+			"href": "https://m2.handelsbanken.se/app/priv/infopage?alias=pension.overview&service=PRIV&authToken=123Token132",
+			"type": "application/json",
+			"title": "Om pension",
+			"gaScreenName": "pension / about pensions"
+		}
+	],
+	"summary": {
+		"type": "generic_info_group",
+		"items": [
+			{
+				"label": "Värde",
+				"value": "91 247,75"
+			}
+		]
+	},
+	"privateSavingTitle": "Eget sparande",
+	"privateSaving": [
+
+	],
+	"privateLinkHeader": "Kom igång med eget pensionssparande",
+	"noPrivateSavingMessage": {
+		"type": "generic_info_group",
+		"items": [
+			{
+				"label": null,
+				"value": "Kapitalspar Pension\nKapitalspar Pension är en kapitalförsäkring där du sparar långsiktigt i fonder du kan till exempel välja att spara i våra pensionsfonder. Sparandet kan betalas ut varje månad och om du skulle avlida betalas pengarna ut till dina närstående. När sparandet betalas ut är de skattade och klara, du betalar istället en årlig schablonskatt på det sparade kapitalet. För att öppna Kapitalspar Pension eller boka pensionsrådgivning, kontakta ditt lokala bankkontor.\n\nInvesteringssparkonto (ISK)\nMed ett Investeringssparkonto kan du spara i fonder och även andra värdepapper som aktier. Köp och sälj utan krångel, skatten är redan ifylld i deklarationen. Kontot är avgiftsfritt och du kan ta ut dina pengar när du sålt dina fonder, aktier och andra värdepapper. Du kan starta ett sparande i ISK här i appen eller genom att kontakta ditt lokala bankkontor."
+			}
+		]
+	},
+	"videoGroupList": [
+		{
+			"type": "video_group",
+			"heading": "Kom igång med pensionssparande",
+			"description": "Längd: 2.17",
+			"showImagePreview": false,
+			"video": {
+				"title": "Kom igång med pensionssparande",
+				"description": "Längd: 2.17",
+				"videoFormatList": [
+					{
+						"formatType": "IPHONE",
+						"mimeType": "application/x-mpegURL",
+						"url": "https://005d85d366e13d46a3089fa55a00d5dc-httpcache0-90107-cacheod0.dna.ip-only.net/90107-cacheod0/_definst_/smil:assets/86/866B89E1/866B89E1/playlist.m3u8"
+					},
+					{
+						"formatType": "IPAD",
+						"mimeType": "application/x-mpegURL",
+						"url": "https://005d85d366e13d46a3089fa55a00d5dc-httpcache0-90107-cacheod0.dna.ip-only.net/90107-cacheod0/_definst_/smil:assets/86/866B89E1/866B89E1/playlist.m3u8"
+					},
+					{
+						"formatType": "ANDROID",
+						"mimeType": "application/x-mpegURL",
+						"url": "https://005d85d366e13d46a3089fa55a00d5dc-httpcache0-90107-cacheod0.dna.ip-only.net/90107-cacheod0/_definst_/smil:assets/86/866B89E1/866B89E1/playlist.m3u8"
+					}
+				],
+				"videoImageList": [
+					{
+						"imageType": "STANDARD",
+						"height": "351",
+						"width": "620",
+						"url": "https://7a514d7812a8c85c5eb5cd0e7fc6e705-httpcache0-90107-cachedown0.dna.ip-only.net/90107-cachedown0/assets/86/866B89E1/eget_pensionsspar_1.jpg"
+					}
+				]
+			}
+		}
+	],
+	"privateSavingFooter": "Har du sparat på ett ISK-konto så hittar du ditt konto under Spara Placera.",
+	"employerSavingTitle": "Från arbetsgivare",
+	"employerSaving": [
+		{
+			"_links": {
+				"pension-detail": {
+					"href": "https://m2.handelsbanken.se/app/priv/pension/pVrfPNLlBF7mDCYXb1HQRw/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/LURQTtJRMpOy9urI2ezx6A/detail?authToken=123Token132",
+					"title": "",
+					"gaScreenName": "pension / pension details"
+				}
+			},
+			"links": [
+				{
+					"rel": "pension-detail",
+					"href": "https://m2.handelsbanken.se/app/priv/pension/pVrfPNLlBF7mDCYXb1HQRw/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/LURQTtJRMpOy9urI2ezx6A/detail?authToken=123Token132",
+					"type": "application/json",
+					"title": "",
+					"gaScreenName": "pension / pension details"
+				}
+			],
+			"key": "Tjänstepension Fond",
+			"additionalText": "27 771 757",
+			"specialText": "Topplab AB",
+			"value": {
+				"amount": 91247.753,
+				"amountFormatted": "91 247,75"
+			}
+		}
+	],
+	"employerLinkHeader": "Samla din tjänstepension",
+	"noEmployerSavingMessage": null,
+	"stateSavingTitle": "Från staten",
+	"stateSavingFooter": "På pensionsportalen Minpension.se kan du se hela din pension och göra pensionsprognoser.",
+	"contactTitle": "Vill du kontakta oss?",
+	"contact": {
+		"type": "generic_info_group",
+		"items": [
+			{
+				"label": "Personlig service dygnet runt",
+				"value": "+46 771 77 88 99"
+			}
+		]
+	},
+	"pensionGuideTeaserDTO": null,
+	"pensionManagementTeaserDTO": null
+}
 
 REQUEST 24
 GET https://m2.handelsbanken.se/app/priv/pension/pVrfPNLlBF7mDCYXb1HQRw/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/LURQTtJRMpOy9urI2ezx6A/detail?authToken=123Token132
@@ -931,6 +1234,29 @@ Accept: application/json,application/xml
 X-Aggregator: Tink Testing
 
 RESPONSE 24
+200
+Date: Fri, 23 Apr 2021 07:55:27 GMT
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Type: application/json;charset=UTF-8
+Via: 1.1 xsemobap102.itek.shb.biz
+Vary: Accept-Encoding
+Connection: close
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+{"_links":{"fund-holdings":{"href":"https://m2.handelsbanken.se/app/priv/market/funds/lists?authToken=123Token132","title":"Fonder"},"pension-detail_info":{"href":"https://m2.handelsbanken.se/app/priv/pension/3giNjqHPfstaAuDlvCCRpQ/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/info?authToken=123Token132","title":"Försäkringsinformation","gaScreenName":"pension / pension details / insurance information"},"pension-fund-allocation":{"href":"https://m2.handelsbanken.se/app/priv/pension/3giNjqHPfstaAuDlvCCRpQ/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/fundallocation?authToken=123Token132","title":"Fondfördelning","gaScreenName":"pension / pension details / fund distribution"},"inet-pension-information":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q55888F3A649C7AFEC1257F4C002B1D75","type":"text/html","title":"Om försäkringar","gaScreenName":"pension / pension details / insurance information / about insurance"}},"links":[{"rel":"pension-detail_info","href":"https://m2.handelsbanken.se/app/priv/pension/3giNjqHPfstaAuDlvCCRpQ/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/info?authToken=123Token132","type":"application/json","title":"Försäkringsinformation","gaScreenName":"pension / pension details / insurance information"},{"rel":"pension-fund-allocation","href":"https://m2.handelsbanken.se/app/priv/pension/3giNjqHPfstaAuDlvCCRpQ/SXboLd_jqgvPIvg_ghueoF6-Mm9OTOa_62HphoMG6ys/1016/cNGLDAUAXBmBKDu-NxdSyw/fundallocation?authToken=123Token132","type":"application/json","title":"Fondfördelning","gaScreenName":"pension / pension details / fund distribution"},{"rel":"fund-holdings","href":"https://m2.handelsbanken.se/app/priv/market/funds/lists?authToken=123Token132","type":"application/json","title":"Fonder"},{"rel":"inet-pension-information","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q55888F3A649C7AFEC1257F4C002B1D75","type":"text/html","title":"Om försäkringar","gaScreenName":"pension / pension details / insurance information / about insurance"}],"pensionName":"Tjänstepension Fond","summary":{"type":"generic_info_group","items":[{"label":"Försäkringsnummer","value":"27 771 757","type":"IDENTIFIER"},{"label":"Försäkringstagare","value":"Topplab AB","type":"STRING"},{"label":null,"value":null,"type":"SPACE_MEDIUM"},{"label":"Värde","value":"91 247,75","type":"STRING"},{"label":null,"value":null,"type":"SPACE_MEDIUM"},{"label":"Inbetalningar","value":"66 197,00","type":"STRING"},{"label":null,"value":null,"type":"SPACE_MEDIUM"},{"label":null,"value":"Uppgifter per 2021-04-22","type":"SPECIAL_TEXT"}]},"fundHeader":"Fonder","fundHoldingHeader":"Fondinnehav","funds":[{"_links":{"fund-holding-details":{"href":"https://m2.handelsbanken.se/app/priv/fund/fundHoldings/SE0011223344/0/91247.752?authToken=123Token132","title":"","gaScreenName":"save invest / fund holdings / fund"}},"links":[{"rel":"fund-holding-details","href":"https://m2.handelsbanken.se/app/priv/fund/fundHoldings/SE0011223344/0/91247.752?authToken=123Token132","type":"application/json","title":"","gaScreenName":"save invest / fund holdings / fund"}],"key":"Handelsbanken Pension 80 Pens&Förs","additionalText":"Marknadsvärde","specialText":"","value":{"amount":91247.752,"amountFormatted":"91 247,75"}}],"fundInfotext":null,"extraInsuranceValue":null}
+
+REQUEST 24a
+GET https://m2.handelsbanken.se/app/priv/pension/emyyhHbhBhVpw3xBmqP1aw/Xxj54hc2oGz8eKsl_e1KaHEvHMTEaaaaa4555551234/1016/XXA-ey3aFNGeEg8PRW63mw/F7n_SX1OjdteeWj2nRXUZg/detail?authToken=123Token132
+Accept: application/json,application/xml
+X-Aggregator: Tink Testing
+
+RESPONSE 24a
 200
 Date: Fri, 23 Apr 2021 07:55:27 GMT
 Server: Apache
