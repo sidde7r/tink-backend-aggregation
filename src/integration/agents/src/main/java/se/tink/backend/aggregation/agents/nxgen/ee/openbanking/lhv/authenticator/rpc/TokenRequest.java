@@ -11,14 +11,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Builder
 public class TokenRequest {
-
     private String code;
-
     private String clientId;
-
     private String grantType;
-
     private String refreshToken;
-
     private String redirectUri;
 }

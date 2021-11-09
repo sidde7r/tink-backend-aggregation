@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.payment.CreditAgricolePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseCreditCardsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseIdentityDataFetcher;
@@ -66,9 +67,9 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider,
             QSealSignatureProvider qSealSignatureProvider) {
         super(componentProvider);
-        final String[] payload =
-                request.getProvider().getPayload().split("\\s+"); // one or more whitespace
-        this.branchConfiguration = new CreditAgricoleBranchConfiguration(payload[0], payload[1]);
+        final CreditAgricoleBranchMapper configurationMapper = new CreditAgricoleBranchMapper();
+        this.branchConfiguration =
+                configurationMapper.determineBranchConfiguration(request.getProvider().getName());
         final CreditAgricoleStorage creditAgricoleStorage =
                 new CreditAgricoleStorage(this.persistentStorage);
 

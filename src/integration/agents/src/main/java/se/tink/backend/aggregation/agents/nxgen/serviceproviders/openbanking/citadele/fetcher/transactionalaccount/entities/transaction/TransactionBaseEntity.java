@@ -30,7 +30,7 @@ public class TransactionBaseEntity {
     private AccountEntity debtorAccount;
     private String ultimateDebtor;
     private String remittanceInformationUnstructured;
-    private String remittanceInformationStructured;
+    private RemittanceInformationStructuredEntity remittanceInformationStructured;
     private String additionalInformation;
     private String purposeCode;
     private String bankTransactionCode;

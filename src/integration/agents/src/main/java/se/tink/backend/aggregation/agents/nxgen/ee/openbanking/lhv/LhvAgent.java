@@ -54,7 +54,6 @@ public final class LhvAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
-
         return new LhvAuthenticator(
                 apiClient,
                 credentials,

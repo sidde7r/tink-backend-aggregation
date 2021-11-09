@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional;
 
+import static se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.Values.HISTORY_MAX_DAYS;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -28,7 +30,7 @@ public class LhvTransactionFetcher
         Optional<Date> certainDate = paginationHelper.getTransactionDateLimit(account);
 
         if (!certainDate.isPresent()) {
-            fromDate = todaysDate.minusDays(90);
+            fromDate = todaysDate.minusDays(HISTORY_MAX_DAYS);
         } else {
             fromDate = certainDate.get().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         }

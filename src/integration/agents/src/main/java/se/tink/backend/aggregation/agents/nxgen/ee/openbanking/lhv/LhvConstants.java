@@ -40,10 +40,12 @@ public class LhvConstants {
     public static class QueryKey {
         public static final String PSU_CORPORATE_ID = "PSU-Corporate-ID";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
+        public static final String CLIENT_ID = "client_id";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String CODE = "code";
     }
 
     public static class QueryValues {
-
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final long FREQUENCY_PER_DAY = 4;
         public static final boolean RECURRING_INDICATOR = true;
@@ -62,7 +64,6 @@ public class LhvConstants {
     }
 
     public static class ErrorMessages {
-
         public static final String TOKEN_NOT_FOUND = "Access token not found in storage.";
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
