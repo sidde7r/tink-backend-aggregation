@@ -44,7 +44,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
-    private static final int MAX_HTTP_NUM_RETRIES = 1;
+    private static final int MAX_HTTP_NUM_RETRIES = 5;
     private static final int RETRY_SLEEP_MILLISECONDS = 1000;
     protected final SibsBaseApiClient apiClient;
     protected final SibsUserState userState;
