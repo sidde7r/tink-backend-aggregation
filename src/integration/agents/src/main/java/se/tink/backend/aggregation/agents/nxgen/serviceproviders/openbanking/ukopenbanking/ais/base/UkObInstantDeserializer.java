@@ -5,15 +5,20 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-public class ISOInstantDeserializer extends InstantDeserializer<Instant> {
+/**
+ * Handles deserialization of date time string into Instant
+ *
+ * <p>for all known cases that UK banks provide
+ */
+public class UkObInstantDeserializer extends InstantDeserializer<Instant> {
 
-    public ISOInstantDeserializer() {
+    public UkObInstantDeserializer() {
         super(
                 INSTANT,
                 new DateTimeFormatterBuilder()
                         .appendPattern("yyyy-MM-dd'T'HH:mm[:ss]")
                         .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
-                        .appendPattern("[VV][x][xxx]")
+                        .appendPattern("[VV][xxx][xx][x]")
                         .toFormatter());
     }
 }

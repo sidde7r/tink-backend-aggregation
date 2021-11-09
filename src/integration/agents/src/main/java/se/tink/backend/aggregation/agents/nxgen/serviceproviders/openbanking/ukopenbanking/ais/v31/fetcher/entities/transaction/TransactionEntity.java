@@ -10,8 +10,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ISOInstantDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.TransactionDateMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkObInstantDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.EntryStatusCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.TransactionMutability;
@@ -42,10 +42,10 @@ public class TransactionEntity {
     private UkOpenBankingApiDefinitions.TransactionMutability transactionMutability =
             TransactionMutability.UNDEFINED;
 
-    @JsonDeserialize(using = ISOInstantDeserializer.class)
+    @JsonDeserialize(using = UkObInstantDeserializer.class)
     private Instant bookingDateTime;
 
-    @JsonDeserialize(using = ISOInstantDeserializer.class)
+    @JsonDeserialize(using = UkObInstantDeserializer.class)
     private Instant valueDateTime;
 
     private String transactionInformation;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.Instant;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ISOInstantDeserializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkObInstantDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountPermissionsDataResponseEntity extends AccountPermissionDataEntity {
     private String accountRequestId;
 
-    @JsonDeserialize(using = ISOInstantDeserializer.class)
+    @JsonDeserialize(using = UkObInstantDeserializer.class)
     private Instant creationDateTime;
 
     private UkOpenBankingApiDefinitions.ConsentStatus status;
