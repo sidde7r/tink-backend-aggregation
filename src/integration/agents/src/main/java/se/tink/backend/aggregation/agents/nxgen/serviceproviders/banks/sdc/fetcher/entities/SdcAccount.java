@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -18,8 +20,8 @@ import se.tink.libraries.account.enums.AccountFlag;
 
 @Slf4j
 @JsonObject
+@Getter
 public class SdcAccount {
-
     private SdcAccountKey entityKey;
     private SdcAmount amount;
     private SdcAmount availableAmount;
@@ -45,7 +47,7 @@ public class SdcAccount {
                                     ? TransactionalAccountType.CHECKING
                                     : TransactionalAccountType.SAVINGS)
                     .withFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                    .withBalance(BalanceModule.of(amount.toExactCurrencyAmount()))
+                    .withBalance(buildBalanceMondule())
                     .withId(
                             IdModule.builder()
                                     .withUniqueIdentifier(
@@ -75,6 +77,17 @@ public class SdcAccount {
                 .canExecuteExternalTransfer(canExecuteExternalTransfer())
                 .canReceiveExternalTransfer(canReceiveExternalTransfer())
                 .build();
+    }
+
+    private BalanceModule buildBalanceMondule() {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(amount.toExactCurrencyAmount());
+
+        if (Objects.nonNull(availableAmount)) {
+            balanceBuilderStep.setAvailableBalance(availableAmount.toExactCurrencyAmount());
+        }
+
+        return balanceBuilderStep.build();
     }
 
     @JsonIgnore
@@ -193,46 +206,6 @@ public class SdcAccount {
 
     public SdcAccountKey getEntityKey() {
         return entityKey != null ? entityKey : new SdcAccountKey();
-    }
-
-    public SdcAmount getAmount() {
-        return amount;
-    }
-
-    public SdcAmount getAvailableAmount() {
-        return availableAmount;
-    }
-
-    public SdcAccountProperties getAccountProperties() {
-        return accountProperties;
-    }
-
-    public String getLocalizedAccountId() {
-        return localizedAccountId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getSortNumber() {
-        return sortNumber;
-    }
-
-    public String getProductElementType() {
-        return productElementType;
     }
 
     boolean isAccount(SdcCreditCardAccountEntity creditCardAccount) {
