@@ -15,5 +15,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//third_party:io_dropwizard_dropwizard_configuration",
     ],
 )

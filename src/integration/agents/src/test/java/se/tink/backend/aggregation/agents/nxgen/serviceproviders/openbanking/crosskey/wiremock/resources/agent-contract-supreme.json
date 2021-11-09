@@ -1,0 +1,201 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "ba04b986-8d64-11ea-8379-123456789012",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "SEK",
+                "scale": 2,
+                "unscaledValue": 1176752,
+                "doubleValue": 11767.52,
+                "exactValue": 11767.52
+            },
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "scale": 2,
+                "unscaledValue": 1176752,
+                "doubleValue": 11767.52,
+                "exactValue": 11767.52
+            },
+            "currencyCode": "SEK",
+            "bankId": "ba04b9868d6411ea8379123456789012",
+            "excluded": false,
+            "favored": false,
+            "name": "SUPREME CARD GOLD",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 11767.52,
+            "balance": 11767.52
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -484.62,
+            "date": 1635937200000,
+            "description": "RESTAURANTE LA TRATTO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "60083518096_000005620"
+            },
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-11-03",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "PURCHASE",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -9.55,
+            "date": 1635937200000,
+            "description": "CHARGE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "60083518096_000005621"
+            },
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-11-03",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "CHARGE",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -24.89,
+            "date": 1635937200000,
+            "description": "PURCHASE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "60083518096_000005622"
+            },
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-11-03",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "PURCHASE",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -0.49,
+            "date": 1635937200000,
+            "description": "CHARGE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "60083518096_000005623"
+            },
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-11-03",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "CHARGE",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -894.69,
+            "date": 1635850800000,
+            "description": "REST. SORPRESA SORPRES",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "60083518096_000005618"
+            },
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-11-02",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "PURCHASE",
+            "providerMarket": "SE"
+        },
+        {
+            "amount": -60.0,
+            "date": 1636110000000,
+            "description": "PRELIMINARY",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "_188325493"
+            },
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-11-05",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "PRELIMINARY",
+            "providerMarket": "SE"
+        }
+    ]
+}
