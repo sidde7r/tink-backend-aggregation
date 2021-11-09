@@ -63,7 +63,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         final LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(localDateTimeSource);
-        creditCardRefreshController = getCreditCardRefreshController();
+        creditCardRefreshController = getCreditCardRefreshController(localDateTimeSource);
     }
 
     private void configureHttpClient() {
@@ -190,7 +190,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                                 .build()));
     }
 
-    protected CreditCardRefreshController getCreditCardRefreshController() {
+    protected CreditCardRefreshController getCreditCardRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
@@ -199,6 +200,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
                                         new CrossKeyCreditCardTransactionFetcher(apiClient))
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 }

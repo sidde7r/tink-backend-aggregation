@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.wiremock;
 
+import io.dropwizard.configuration.ConfigurationException;
+import java.io.IOException;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -16,29 +18,54 @@ public class CrosskeyAgentWireMockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/crosskey/wiremock/resources/";
     private static final String CONFIGURATION_PATH = BASE_PATH + "configuration.yml";
     private static final String WIREMOCK_SERVER_FILEPATH = BASE_PATH + "wiremockfile.aap";
+    private static final String WIREMOCK_SERVER_FILEPATH_RESURS_SUPREME =
+            BASE_PATH + "wiremockfile_supreme.aap";
     private static final String CONTRACT_FILE_PATH = BASE_PATH + "agent-contract.json";
+    private static final String CONTRACT_FILE_PATH_RESURS_SUPREME =
+            BASE_PATH + "agent-contract-supreme.json";
 
-    @Test
-    public void testRefresh() throws Exception {
+    private AgentWireMockRefreshTest buildAgentWireMockRefreshTest(
+            String providerName, String wiremockFile) throws IOException, ConfigurationException {
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
+        return AgentWireMockRefreshTest.nxBuilder()
+                .withMarketCode(MarketCode.SE)
+                .withProviderName(providerName)
+                .withWireMockFilePath(wiremockFile)
+                .withConfigFile(configuration)
+                .testFullAuthentication()
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addCallbackData("code", "dummyCode")
+                .withAgentTestModule(new CrosskeyWireMockTestModule())
+                .build();
+    }
+
+    @Test
+    public void testRefresh() throws Exception {
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.nxBuilder()
-                        .withMarketCode(MarketCode.SE)
-                        .withProviderName("se-alandsbanken-ob")
-                        .withWireMockFilePath(WIREMOCK_SERVER_FILEPATH)
-                        .withConfigFile(configuration)
-                        .testFullAuthentication()
-                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
-                        .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
-                        .addCallbackData("code", "dummyCode")
-                        .withAgentTestModule(new CrosskeyWireMockTestModule())
-                        .build();
+                buildAgentWireMockRefreshTest("se-alandsbanken-ob", WIREMOCK_SERVER_FILEPATH);
 
         final AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
                         .parseContractOnBasisOfFile(CONTRACT_FILE_PATH);
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testRefreshResursBankSupremeCard() throws Exception {
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                buildAgentWireMockRefreshTest(
+                        "se-resursbank-ob", WIREMOCK_SERVER_FILEPATH_RESURS_SUPREME);
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(CONTRACT_FILE_PATH_RESURS_SUPREME);
 
         // when
         agentWireMockRefreshTest.executeRefresh();
