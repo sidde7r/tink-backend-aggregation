@@ -107,7 +107,6 @@ public final class IngBaseConstants {
         public static final String SIGNING_STRING = "(request-target): ";
         public static final String DATE = "date: ";
         public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
-        public static final String TIMEZONE = "GMT";
         public static final String DIGEST = "digest: ";
         public static final String X_ING_REQUEST_ID = "x-ing-reqid: ";
         public static final String X_REQUEST_ID = "x-request-id: ";

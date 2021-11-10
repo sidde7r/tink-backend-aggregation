@@ -4,14 +4,13 @@ import com.google.gson.Gson;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.consent.generators.nl.ing.IngConsentGenerator;
@@ -40,10 +39,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -52,24 +53,44 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.date.DateFormat;
 
 @Slf4j
-@RequiredArgsConstructor
 public class IngBaseApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private final String market;
+    private final String marketCode;
     private final ProviderSessionCacheController providerSessionCacheController;
     private final IngUserAuthenticationData userAuthenticationData;
     private final MarketConfiguration marketConfiguration;
     protected final QsealcSigner proxySigner;
     private final CredentialsRequest credentialsRequest;
+    private final RandomValueGenerator randomValueGenerator;
+    private final LocalDateTimeSource localDateTimeSource;
 
     private String hexCertificateSerial;
     private String base64derQsealc;
     protected String redirectUrl;
+
+    public IngBaseApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            ProviderSessionCacheController providerSessionCacheController,
+            MarketConfiguration marketConfiguration,
+            QsealcSigner proxySigner,
+            IngApiInputData ingApiInputData,
+            AgentComponentProvider agentComponentProvider) {
+        this.client = client;
+        this.persistentStorage = persistentStorage;
+        this.providerSessionCacheController = providerSessionCacheController;
+        this.userAuthenticationData = ingApiInputData.getUserAuthenticationData();
+        this.marketConfiguration = marketConfiguration;
+        this.marketCode = marketConfiguration.marketCode();
+        this.proxySigner = proxySigner;
+        this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
+        this.localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
+        this.credentialsRequest = ingApiInputData.getCredentialsRequest();
+    }
 
     public void setConfiguration(AgentConfiguration<IngBaseConfiguration> agentConfiguration)
             throws CertificateException {
@@ -194,8 +215,8 @@ public class IngBaseApiClient {
         persistentStorage.put(StorageKeys.TOKEN, accessToken);
     }
 
-    public String getMarket() {
-        return market;
+    public String getMarketCode() {
+        return marketCode;
     }
 
     protected TokenResponse getApplicationAccessToken() {
@@ -222,7 +243,7 @@ public class IngBaseApiClient {
             }
         }
 
-        final String reqId = Psd2Headers.getRequestId();
+        final String reqId = getRequestId();
         final String date = getFormattedDate();
 
         /*
@@ -266,27 +287,9 @@ public class IngBaseApiClient {
         return response;
     }
 
-    private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {
-
-        final String reqPath =
-                new URL(Urls.OAUTH)
-                        .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                        .queryParam(QueryKeys.SCOPE, getScopes())
-                        .queryParam(QueryKeys.COUNTRY_CODE, market)
-                        .toString();
-
-        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
-                .addBearerToken(tokenResponse.toTinkToken())
-                .get(AuthorizationUrl.class);
-    }
-
-    private TokenResponse fetchToken(final String payload) {
-        return new CertificateIsRevokedExceptionRequestRepeater(this, payload).execute();
-    }
-
     RequestBuilder buildRequestWithSignature(
             final String reqPath, final String httpMethod, final String payload) {
-        final String reqId = Psd2Headers.getRequestId();
+        final String reqId = getRequestId();
         final String date = getFormattedDate();
         final String digest = generateDigest(payload);
 
@@ -325,20 +328,45 @@ public class IngBaseApiClient {
         persistentStorage.put(StorageKeys.CLIENT_ID, clientId, false);
     }
 
-    private void clearToken() {
-        persistentStorage.remove(StorageKeys.TOKEN);
-    }
-
-    private OAuth2Token getTokenFromSession() {
-        return persistentStorage
-                .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
-    }
-
     protected String getClientIdFromSession() {
         return persistentStorage
                 .get(StorageKeys.CLIENT_ID, String.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
+    }
+
+    protected String generateDigest(final String data) {
+        return Signature.DIGEST_PREFIX
+                + Base64.getEncoder()
+                        .encodeToString(Hash.sha256(data.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    protected String getFormattedDate() {
+        return DateTimeFormatter.ofPattern(Signature.DATE_FORMAT)
+                .format(localDateTimeSource.now(ZoneOffset.UTC));
+    }
+
+    protected String getRequestId() {
+        return randomValueGenerator.getUUID().toString();
+    }
+
+    private TokenResponse fetchToken(final String payload) {
+        return new CertificateIsRevokedExceptionRequestRepeater(this, payload).execute();
+    }
+
+    private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {
+
+        final String reqPath = createUrlForAuthorization().toString();
+
+        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                .addBearerToken(tokenResponse.toTinkToken())
+                .get(AuthorizationUrl.class);
+    }
+
+    private URL createUrlForAuthorization() {
+        return new URL(Urls.OAUTH)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
+                .queryParam(QueryKeys.SCOPE, getScopes())
+                .queryParam(QueryKeys.COUNTRY_CODE, marketCode);
     }
 
     private String getAuthorization(
@@ -366,14 +394,13 @@ public class IngBaseApiClient {
         return proxySigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }
 
-    protected String generateDigest(final String data) {
-        return Signature.DIGEST_PREFIX
-                + Base64.getEncoder()
-                        .encodeToString(Hash.sha256(data.getBytes(StandardCharsets.UTF_8)));
+    private void clearToken() {
+        persistentStorage.remove(StorageKeys.TOKEN);
     }
 
-    protected String getFormattedDate() {
-        return DateFormat.getFormattedCurrentDate(
-                Signature.DATE_FORMAT, Signature.TIMEZONE, Locale.ENGLISH);
+    private OAuth2Token getTokenFromSession() {
+        return persistentStorage
+                .get(StorageKeys.TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 }

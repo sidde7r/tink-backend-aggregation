@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 
 public interface MarketConfiguration {
 
+    String marketCode();
+
     boolean shouldReturnLowercaseAccountId();
 
     LocalDate earliestTransactionHistoryDate();

@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngApiInputData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngUserAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentAuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentSignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.TokenResponse;
@@ -15,13 +15,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
@@ -33,24 +33,21 @@ public class IngPaymentApiClient extends IngBaseApiClient {
     public IngPaymentApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            String market,
             ProviderSessionCacheController providerSessionCacheController,
-            IngUserAuthenticationData userAuthenticationData,
             MarketConfiguration marketConfiguration,
             QsealcSigner proxySigner,
-            CredentialsRequest credentialsRequest,
-            StrongAuthenticationState strongAuthenticationState) {
+            IngApiInputData ingApiInputData,
+            AgentComponentProvider agentComponentProvider) {
         super(
                 client,
                 persistentStorage,
-                market,
                 providerSessionCacheController,
-                userAuthenticationData,
                 marketConfiguration,
                 proxySigner,
-                credentialsRequest);
-        this.strongAuthenticationState = strongAuthenticationState;
-        this.psuIpAddress = userAuthenticationData.getPsuIdAddress();
+                ingApiInputData,
+                agentComponentProvider);
+        this.strongAuthenticationState = ingApiInputData.getStrongAuthenticationState();
+        this.psuIpAddress = ingApiInputData.getUserAuthenticationData().getPsuIdAddress();
     }
 
     public IngCreatePaymentResponse createPayment(

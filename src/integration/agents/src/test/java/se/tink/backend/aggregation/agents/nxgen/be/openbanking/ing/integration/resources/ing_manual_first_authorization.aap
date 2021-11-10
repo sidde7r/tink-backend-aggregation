@@ -1,0 +1,93 @@
+REQUEST 1
+POST /oauth2/token
+Accept: application/json
+Digest: SHA-256=w0mymuL8aCrbJmmabs1pytZhon8lQucTuJMUtuKr+uw=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Authorization: Signature keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Content-Type: application/x-www-form-urlencoded
+TPP-Signature-Certificate: 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
+
+grant_type=client_credentials
+
+RESPONSE 1
+200
+Date: Mon, 11 Oct 2021 21:31:55 GMT
+Date: Mon, 11 Oct 2021 21:31:56 GMT
+Content-Type: application/json
+X-Frame-Options: deny
+X-Content-Type-Options: nosniff
+Expires: 0
+X-ING-Response-ID: f4a5fc2a-e944-484a-895c-f0b095dd1072
+Content-Security-Policy: ***
+Content-Length: 3492
+
+{
+  "access_token": "access_token",
+  "expires_in": 905,
+  "scope": "granting",
+  "token_type": "bearer",
+  "keys": [
+    {
+      "kty": "RSA",
+      "n": "3l3rdz4hyJkMx5ChddZmQft6_YsRfBkyA2ftXy1cOcqSm6Wtywt1ztVYATFHBOaX_tr7C5LXtMcghjoRbUfUHoy-egpC2B4wZ45YxWbBvLtG6QyCQH8kqLqjeGzDgpnJfDuhZP8i0lXPZwkWpF8J9XuB0DgVDrDXiS0wPB_I4mCW9s4ZMOdMA7aJMN2qhGo4DJqTn2aPjnzyx1OaeiRZC6YiyLU9QJJpWanFk69bZRu9Lpox8j4y5O2TW8bDmkKb0P_WXZVcSYgkX0Ed9Da0jCBl9cbqXdp7Ww4B8f8y9oBgK58VHlPvaufORw8IyaJ4Q6WezsHSq_Dmp2WFbV4z_qNS-ZpEGGdpkPtaYODTXU1p_3gTmNGBuAN0jLE9DaQZJswKj9-oBJifpHbOMnv2f__jBdjNvtDxe_LJPMj1B6XUetqoq8k9fU_XiHxz3mSBvzRqf-d-fD_evr4i_nxqEvsT_5D1nGvts8XQaSPehtlpFTym35KR83qoo04VPkdV",
+      "e": "AQAB",
+      "use": "sig",
+      "alg": "RS256",
+      "x5t": "26e5d9329369bf1e5d3198cb4f4da45c9de040cf"
+    }
+  ],
+  "client_id": "0440f53f-93e0-4ebf-95a6-64cfd2d52a90"
+}
+
+REQUEST 2
+GET https://api.ing.com/oauth2/authorization-server-url?redirect_uri=https://api.tink.se/api/v1/credentials/third-party/callback&scope=payment-accounts:balances:view+payment-accounts:transactions:view&country_code=BE
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="0440f53f-93e0-4ebf-95a6-64cfd2d52a90",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer access_token
+
+RESPONSE 2
+200
+Date: Mon, 11 Oct 2021 21:31:56 GMT
+Date: Mon, 11 Oct 2021 21:31:56 GMT
+Content-Type: application/json;charset=utf-8
+X-ING-ReqID: a5f16518-9e80-4721-bc45-7a90055a3a9e
+X-ING-Response-ID: 56a731bb-16e0-44c6-844e-a6e7c5f1c61d
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="k/VCNiLrHafR8dAzj3TJVaYZOViqytZyIgqVCqJW9cP8rFFrbS+nDhDSAXJbCfO518IuzfPm+y+beA53GDIiS/oFE7qyP6/VHhM7vVebsFDkykBS2DbE46cSQcbjlEmM5ZmZaOlV7hNoLpabLYikQwPK4SondX2OO0gjV2MUKjpWwpxsmpHNI8TAZ/FR2rS/NtZqVO2L+f8WoVw6vBKWM4O4HT0l5fPHDVi2QoQp1fxmVvuOeQ3SLxoxSkHy/PRvCXsJlAPMisCPCuZ0U/WkMxbBrqi5hcirU9aiFSLOQi9Xi+QMowaPlxN8eDkC6yfi1PITNsvltBBot5eWVxCz8gxKRnlsK7wiOKGCdP811ovwy4mI5vbyJESdHRYEIvAITzh4whdfHIbzyvMLIkoYL/OuZNiyCRxh58xL58BuOMMghEWYOW8mvfodJ+izxtlK6B8/sMfZLGxSlmDh+oJ6UbS36Bq/FfWcpm0rD+syAQRVc8IGC13/j/9NYiENttWO"
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 117
+
+{"location":"https://myaccount.ing.com/granting/c7f84aa4a9cc9811fb697a786b5d7e7b949d17e155e6b9ff24f8b0fb959c8c90/BE"}
+
+REQUEST 3
+POST /oauth2/token
+Accept: application/json
+Digest: SHA-256=ETfBMrE9KTCQ96JvKzTK8PI4hMknV0CfKXe8a2uH/hA=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="0440f53f-93e0-4ebf-95a6-64cfd2d52a90",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer access_token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&code=DUMMY_CODE&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+
+RESPONSE 3
+200
+Date: Mon, 11 Oct 2021 21:32:22 GMT
+Date: Mon, 11 Oct 2021 21:32:24 GMT
+Content-Type: application/json;charset=utf-8
+X-ING-ReqID: 0023900f-74d3-4c2c-b837-d2d9273ff297
+X-ING-Response-ID: 5f50cbf3-5a88-4a8f-9ef3-0b19de1394b6
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="mB7k6RynNJkDjqM8XeL8FZbjy4lMWVURklTQJi7tOK/cNAjx/Kf8u90wvuyZcq84zL1HILKonv7cmOh0FtesA/706qsUyoDXE2vDRf28zIruxkKcnbKEpCLZ6wxsSQSSwS+uZklUYzilC+1OV9gJ4+GU6BmU5nsv9MxrpMj1OzjU6VEt5MJ69DAe/yoYYX70eTIVzpiTuVEsoLkC5JJD7Kj1/bnRdyHR4VuTTrN/hUgwvxVXT2Om3cwj4vBumtVyTGipduhrcKvInaKEMT/SFJpxAOFSePjjPFBIIk2UKRvWE44ke0FFN2EcEZvbeGTMORzcXtzalKGZwGUW/jn6KH1T9WZ34e8bUHsmPbea8Pn52buWjUYM/gVs2cCkyugp05DkS0CUnpEI9eK6GrVc9ZQOlRkl5UprA4mcq7DUGR4cy+qomFZDS/cwIETiiBhzd1Ii348w1Q4F7dbwuymF8C6UCISGepouMiztGWtMJsWrHVc5hRR+HaTzXKqnDksc"
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: deny
+Content-Security-Policy: ***
+Content-Length: 5388
+
+{"access_token":"access_token","refresh_token":"refresh_token","token_type":"bearer","expires_in":900,"scope":"payment-accounts:transactions:view payment-accounts:balances:view","refresh_token_expires_in":"123456"}

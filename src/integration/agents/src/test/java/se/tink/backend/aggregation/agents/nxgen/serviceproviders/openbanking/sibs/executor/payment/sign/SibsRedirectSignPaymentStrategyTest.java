@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class SibsRedirectSignPaymentStrategyTest {
@@ -21,7 +22,8 @@ public class SibsRedirectSignPaymentStrategyTest {
     private final SibsRedirectCallbackHandler redirectCallbackHandler =
             mock(SibsRedirectCallbackHandler.class);
     private final SibsRedirectSignPaymentStrategy sibsRedirectSignPaymentStrategy =
-            new SibsRedirectSignPaymentStrategy(apiClient, redirectCallbackHandler);
+            new SibsRedirectSignPaymentStrategy(
+                    apiClient, redirectCallbackHandler, SibsUtils.getPaymentStatusRetryer(1, 1));
 
     @Test
     @Parameters({"ACTC", "ACCP", "ACFC", "ACWC", "ACSP", "ACSC", "ACCC"})

@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
@@ -24,17 +23,15 @@ public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStra
     private static final Logger log =
             LoggerFactory.getLogger(SibsRedirectSignPaymentStrategy.class);
     protected final SibsRedirectCallbackHandler redirectCallbackHandler;
-
-    private static final long SLEEP_TIME = 10L;
-    private static final int RETRY_ATTEMPTS = 59;
-
-    private final Retryer<SibsTransactionStatus> paymentStatusRetryer =
-            SibsUtils.getPaymentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
+    private final Retryer<SibsTransactionStatus> paymentStatusRetryer;
 
     public SibsRedirectSignPaymentStrategy(
-            SibsBaseApiClient apiClient, SibsRedirectCallbackHandler redirectCallbackHandler) {
+            SibsBaseApiClient apiClient,
+            SibsRedirectCallbackHandler redirectCallbackHandler,
+            Retryer<SibsTransactionStatus> paymentStatusRetryer) {
         super(apiClient);
         this.redirectCallbackHandler = redirectCallbackHandler;
+        this.paymentStatusRetryer = paymentStatusRetryer;
     }
 
     @Override
@@ -44,10 +41,7 @@ public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStra
             Payment payment)
             throws PaymentException {
         SibsTransactionStatus transactionStatus;
-        log.info(
-                "Start to Get Payment Status every {} Seconds for a total of {} times.",
-                SLEEP_TIME,
-                RETRY_ATTEMPTS);
+
         try {
             transactionStatus =
                     paymentStatusRetryer.call(

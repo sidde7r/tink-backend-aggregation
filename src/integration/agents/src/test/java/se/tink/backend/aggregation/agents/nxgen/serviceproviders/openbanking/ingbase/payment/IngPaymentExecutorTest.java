@@ -86,7 +86,7 @@ public class IngPaymentExecutorTest {
                                 "SAMPLE_PAYMENT_ID",
                                 "SAMPLE_TRANSACTION_STATUS",
                                 new IngPaymentsLinksEntity(authUrl)));
-        when(paymentApiClient.getMarket()).thenReturn("FR");
+        when(paymentApiClient.getMarketCode()).thenReturn("FR");
         when(paymentMapper.getPaymentStatus(anyString())).thenReturn(resultPaymentStatus);
 
         // when
@@ -144,7 +144,7 @@ public class IngPaymentExecutorTest {
                                 new IngPaymentsLinksEntity(authUrl)));
 
         // and
-        when(paymentApiClient.getMarket()).thenReturn("DE");
+        when(paymentApiClient.getMarketCode()).thenReturn("DE");
         when(paymentMapper.getPaymentStatus(anyString())).thenReturn(createPaymentStatus);
 
         // when
