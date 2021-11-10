@@ -54,11 +54,10 @@ public class HandelsbankenUkAccountConverter implements HandelsbankenBaseAccount
 
     private TransactionalAccountType getAccountType(
             AccountsItemEntity accountEntity, AccountDetailsResponse accountDetails) {
-
-        if (isCurrentAccountBalance(accountEntity, accountDetails)) {
+        if (isCurrent(accountEntity, accountDetails)) {
             return TransactionalAccountType.CHECKING;
         }
-        if (isSavingsAccountBalance(accountEntity, accountDetails)) {
+        if (isSavings(accountEntity, accountDetails)) {
             return TransactionalAccountType.SAVINGS;
         }
         throw new IllegalStateException(
@@ -67,20 +66,13 @@ public class HandelsbankenUkAccountConverter implements HandelsbankenBaseAccount
                         accountEntity.getAccountType()));
     }
 
-    private boolean isCurrentAccountBalance(
-            AccountsItemEntity accountEntity, AccountDetailsResponse accountDetails) {
-        return accountEntity.getAccountType().toLowerCase().contains(AccountMapper.CURRENT)
-                || accountDetails.getBalances().stream()
-                        .anyMatch(
-                                balance ->
-                                        balance.getBalanceType()
-                                                .equalsIgnoreCase("AVAILABLE_AMOUNT"));
+    private boolean isCurrent(AccountsItemEntity account, AccountDetailsResponse accountDetails) {
+        return account.getAccountType().toLowerCase().contains(AccountMapper.CURRENT)
+                || account.getAvailableBalance(accountDetails).isPresent();
     }
 
-    private boolean isSavingsAccountBalance(
-            AccountsItemEntity accountEntity, AccountDetailsResponse accountDetails) {
-        return accountEntity.getAccountType().toLowerCase().contains(AccountMapper.DEPOSIT)
-                || accountDetails.getBalances().stream()
-                        .anyMatch(balance -> balance.getBalanceType().equalsIgnoreCase("CURRENT"));
+    private boolean isSavings(AccountsItemEntity account, AccountDetailsResponse accountDetails) {
+        return account.getAccountType().toLowerCase().contains(AccountMapper.DEPOSIT)
+                || account.getCurrentBalance(accountDetails).isPresent();
     }
 }

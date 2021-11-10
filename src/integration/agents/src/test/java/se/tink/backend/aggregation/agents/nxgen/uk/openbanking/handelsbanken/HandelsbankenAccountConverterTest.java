@@ -8,9 +8,9 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AccountsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.handelsbanken.HandelsbankenConstants.ExceptionMessages;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.handelsbanken.accounts.HandelsbankenUkAccountConverter;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -27,15 +27,15 @@ public class HandelsbankenAccountConverterTest {
     private static final String CHECKING_ACCOUNT_WITHOUT_NAME =
             "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions\"}},\"accountId\":\"acc1\",\"accountType\":\"ACCOUNT\",\"bban\":\"49747837\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB06HAND40516249747837\",\"ownerName\":\"FLUFFY\"}";
     private static final String SAVINGS_ACCOUNT =
-            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions\"}},\"accountId\":\"acc2\",\"accountType\":\"CLIENT ACCOUNT DEPOSITS\",\"bban\":\"84223103\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB97HAND40516284223103\",\"ownerName\":\"FLUFFY\"}";
+            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions\"}},\"accountId\":\"acc1\",\"accountType\":\"CLIENT ACCOUNT DEPOSITS\",\"bban\":\"49747837\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB06HAND40516249747837\",\"ownerName\":\"FLUFFY\"}";
     private static final String SAVINGS_ACCOUNT_WITHOUT_NAME =
-            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions\"}},\"accountId\":\"acc2\",\"accountType\":\"CLIENT ACCOUNT\",\"bban\":\"84223103\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB97HAND40516284223103\",\"ownerName\":\"FLUFFY\"}";
+            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions\"}},\"accountId\":\"acc1\",\"accountType\":\"CLIENT ACCOUNT\",\"bban\":\"49747837\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB97HAND40516284223103\",\"ownerName\":\"FLUFFY\"}";
     private static final String CHECKING_ACCOUNT_BALANCES =
-            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions\"}},\"accountId\":\"acc1\",\"accountType\":\"CURRENT ACCOUNT\",\"balances\":[{\"amount\":{\"content\":33713.47,\"currency\":\"GBP\"},\"balanceType\":\"AVAILABLE_AMOUNT\"},{\"amount\":{\"content\":33670.35,\"currency\":\"GBP\"},\"balanceType\":\"CURRENT\"},{\"amount\":{\"content\":33670.35,\"currency\":\"GBP\"},\"balanceType\":\"CLEARED\"}],\"bban\":\"49747837\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB06HAND40516249747837\",\"ownerName\":\"FLUFFY\"}";
+            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions\"}},\"accountId\":\"acc1\",\"accountType\":\"CURRENT ACCOUNT\",\"balances\":[{\"amount\":{\"content\":1.01,\"currency\":\"GBP\"},\"balanceType\":\"AVAILABLE_AMOUNT\"},{\"amount\":{\"content\":1.01,\"currency\":\"GBP\"},\"balanceType\":\"CURRENT\"},{\"amount\":{\"content\":1.01,\"currency\":\"GBP\"},\"balanceType\":\"CLEARED\"}],\"bban\":\"49747837\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB06HAND40516249747837\",\"ownerName\":\"FLUFFY\"}";
     private static final String SAVINGS_ACCOUNT_BALANCES =
-            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions\"}},\"accountId\":\"acc2\",\"accountType\":\"CLIENT ACCOUNT DEPOSITS\",\"balances\":[{\"amount\":{\"content\":13264.5,\"currency\":\"GBP\"},\"balanceType\":\"CURRENT\"},{\"amount\":{\"content\":13264.5,\"currency\":\"GBP\"},\"balanceType\":\"CLEARED\"}],\"bban\":\"84223103\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB97HAND40516284223103\",\"ownerName\":\"FLUFFY\"}";
+            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions\"}},\"accountId\":\"acc1\",\"accountType\":\"CLIENT ACCOUNT DEPOSITS\",\"balances\":[{\"amount\":{\"content\":1.01,\"currency\":\"GBP\"},\"balanceType\":\"CURRENT\"},{\"amount\":{\"content\":1.01,\"currency\":\"GBP\"},\"balanceType\":\"CLEARED\"}],\"bban\":\"49747837\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB06HAND40516249747837\",\"ownerName\":\"FLUFFY\"}";
     private static final String ACCOUNT_WITHOUT_BALANCES =
-            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc2/transactions\"}},\"accountId\":\"acc2\",\"accountType\":\"CLIENT ACCOUNT DEPOSITS\",\"balances\":[{\"amount\":{\"content\":13264.5,\"currency\":\"GBP\"},\"balanceType\":\"OPENING_CLEARED\"}],\"bban\":\"84223103\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB97HAND40516284223103\",\"ownerName\":\"FLUFFY\"}";
+            "{\"_links\":{\"transactions\":{\"href\":\"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions\"}},\"accountId\":\"acc1\",\"accountType\":\"CLIENT ACCOUNT DEPOSITS\",\"balances\":[{\"amount\":{\"content\":1.01,\"currency\":\"GBP\"},\"balanceType\":\"OPENING_CLEARED\"}],\"bban\":\"49747837\",\"bic\":\"HANDGB22\",\"clearingNumber\":\"405162\",\"currency\":\"GBP\",\"iban\":\"GB06HAND40516249747837\",\"ownerName\":\"FLUFFY\"}";
 
     private HandelsbankenUkAccountConverter accountConverter;
 
@@ -58,7 +58,7 @@ public class HandelsbankenAccountConverterTest {
         // then
         assertThat(result)
                 .usingRecursiveComparison()
-                .isEqualTo(createExpectedCheckingAccount(null));
+                .isEqualTo(createExpectedAccount(TransactionalAccountType.CHECKING));
     }
 
     @Test
@@ -77,7 +77,8 @@ public class HandelsbankenAccountConverterTest {
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(
-                        createExpectedCheckingAccount(
+                        createExpectedAccount(
+                                TransactionalAccountType.CHECKING,
                                 AccountIdentifier.create(
                                         AccountIdentifierType.IBAN,
                                         "GB06HAND40516249747837",
@@ -96,7 +97,9 @@ public class HandelsbankenAccountConverterTest {
                 accountConverter.toTinkAccount(account, detailsResponse);
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(createExpectedSavingsAccount(null));
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(createExpectedAccount(TransactionalAccountType.SAVINGS));
     }
 
     @Test
@@ -115,7 +118,8 @@ public class HandelsbankenAccountConverterTest {
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(
-                        createExpectedSavingsAccount(
+                        createExpectedAccount(
+                                TransactionalAccountType.SAVINGS,
                                 AccountIdentifier.create(
                                         AccountIdentifierType.IBAN,
                                         "GB97HAND40516284223103",
@@ -136,27 +140,39 @@ public class HandelsbankenAccountConverterTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(AccountRefreshException.class)
-                .hasMessage(ExceptionMessages.AVAILABLE_BALANCE_NOT_FOUND);
+                .hasMessage(ExceptionMessages.BALANCE_NOT_FOUND);
     }
 
     private <T> T objectFromString(String json, Class<T> tClass) throws Exception {
         return new ObjectMapper().readValue(json, tClass);
     }
 
-    private Optional<TransactionalAccount> createExpectedCheckingAccount(
-            AccountIdentifier accountIdentifier) {
+    private Optional<TransactionalAccount> createExpectedAccount(TransactionalAccountType type) {
+        return createExpectedAccount(type, null);
+    }
+
+    private Optional<TransactionalAccount> createExpectedAccount(
+            TransactionalAccountType type, AccountIdentifier accountIdentifier) {
         if (accountIdentifier == null) {
-            accountIdentifier =
-                    AccountIdentifier.create(
-                            AccountIdentifierType.IBAN,
-                            "GB06HAND40516249747837",
-                            "CURRENT ACCOUNT");
+            if (type == TransactionalAccountType.CHECKING) {
+                accountIdentifier =
+                        AccountIdentifier.create(
+                                AccountIdentifierType.IBAN,
+                                "GB06HAND40516249747837",
+                                "CURRENT ACCOUNT");
+            } else {
+                accountIdentifier =
+                        AccountIdentifier.create(
+                                AccountIdentifierType.IBAN,
+                                "GB06HAND40516249747837",
+                                "CLIENT ACCOUNT DEPOSITS");
+            }
         }
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
+                .withType(type)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(33713.47, "GBP")))
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(1.01, "GBP")))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier("49747837")
@@ -166,31 +182,6 @@ public class HandelsbankenAccountConverterTest {
                                 .build())
                 .addHolderName("FLUFFY")
                 .setApiIdentifier("acc1")
-                .build();
-    }
-
-    private Optional<TransactionalAccount> createExpectedSavingsAccount(
-            AccountIdentifier accountIdentifier) {
-        if (accountIdentifier == null) {
-            accountIdentifier =
-                    AccountIdentifier.create(
-                            AccountIdentifierType.IBAN,
-                            "GB97HAND40516284223103",
-                            "CLIENT ACCOUNT DEPOSITS");
-        }
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
-                .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(13264.5, "GBP")))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier("84223103")
-                                .withAccountNumber("405162-84223103")
-                                .withAccountName(accountIdentifier.getName().get())
-                                .addIdentifier(accountIdentifier)
-                                .build())
-                .addHolderName("FLUFFY")
-                .setApiIdentifier("acc2")
                 .build();
     }
 }

@@ -20,8 +20,13 @@ public class BalancesItemEntity {
         return balanceType;
     }
 
-    public boolean isBalance() {
+    public boolean isAvailable() {
         return getBalanceType()
                 .equalsIgnoreCase(HandelsbankenBaseConstants.AccountBalance.AVAILABLE_BALANCE);
+    }
+
+    public boolean isCurrent() {
+        return getBalanceType()
+                .equalsIgnoreCase(HandelsbankenBaseConstants.AccountBalance.CURRENT_BALANCE);
     }
 }
