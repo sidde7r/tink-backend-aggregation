@@ -147,7 +147,7 @@ public final class BecConstants {
     }
 
     public static final class CreditCard {
-        public static final String STATUS_ACTIVE = "active";
+        public static final List<String> STATUS_ACTIVE = ImmutableList.of("active", "aktivt");
     }
 
     // Lookups are String.contains().

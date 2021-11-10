@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 
@@ -79,6 +81,8 @@ public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                         .setAccountNumber(accountDetails.getAccountId())
                         .addIdentifier(new IbanIdentifier(accountDetails.getIban()))
                         .addIdentifier(new MaskedPanIdentifier(cardDetails.getCardNumber()))
+                        .addIdentifier(
+                                new BbanIdentifier(StringUtils.right(accountDetails.getIban(), 14)))
                         .setHolderName(new HolderName(accountDetails.getAccountHolder()))
                         .setName(account.getAccountName())
                         .build());
