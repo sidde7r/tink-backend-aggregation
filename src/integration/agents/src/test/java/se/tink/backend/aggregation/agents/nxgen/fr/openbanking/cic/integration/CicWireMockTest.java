@@ -84,6 +84,34 @@ public class CicWireMockTest {
         agentWireMockRefreshTest.executeRefresh();
     }
 
+    @Test(expected = LoginException.class)
+    public void tesNoAccountsException() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/cic/integration/resources/cic_no_accounts.app";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-cic-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .withAgentTestModule(new CicWireMockTestModule())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addPersistentStorageData("oauth2_access_token", getToken())
+                        .enableHttpDebugTrace()
+                        .build();
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+    }
+
     @Test
     public void testPayment() throws Exception {
         // given
