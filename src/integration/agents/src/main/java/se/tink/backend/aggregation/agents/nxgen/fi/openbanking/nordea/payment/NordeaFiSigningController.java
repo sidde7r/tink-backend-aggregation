@@ -38,6 +38,8 @@ public class NordeaFiSigningController implements Signer<PaymentRequest> {
                     break;
                 case REJECTED:
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
+                case USER_APPROVAL_FAILED:
+                    throw ThirdPartyAppError.TIMED_OUT.exception();
                 default:
                     log.warn(String.format("Unknown payment sign response status: (%s)", status));
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
