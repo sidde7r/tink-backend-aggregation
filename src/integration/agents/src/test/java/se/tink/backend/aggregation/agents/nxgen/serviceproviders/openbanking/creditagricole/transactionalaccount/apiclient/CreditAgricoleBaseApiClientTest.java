@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.matches;
@@ -29,11 +30,13 @@ import javax.ws.rs.core.MediaType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.PutConsentsRequest;
@@ -43,7 +46,9 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditAgricoleBaseApiClientTest {
 
@@ -134,6 +139,20 @@ public class CreditAgricoleBaseApiClientTest {
                         "scope=aisp+extended_transaction_history&grant_type=refresh_token&refresh_token=DUMMY_REFRESH_TOKEN&redirect_uri=http%3A%2F%2Fredirect-url&client_id=DUMMY_CLIENT_ID");
         verify(creditAgricoleStorageMock).storeInitialFetchState(Boolean.FALSE);
         verify(creditAgricoleStorageMock).storeToken(returnedResponse);
+    }
+
+    @Test
+    public void shouldThrowLoginExceptionWhenRefreshingToken() {
+        // given
+        final RequestBuilder requestBuilderMock = setUpHttpClientMockForAuth();
+        HttpResponseException exception = getBlockedOrNonExistentException();
+        when(requestBuilderMock.post(eq(TokenResponse.class), any())).thenThrow(exception);
+
+        // when
+        Throwable throwable = catchThrowable(() -> apiClient.getToken("code"));
+
+        // then
+        assertThat(throwable).isInstanceOf(LoginException.class);
     }
 
     @Test
@@ -347,7 +366,7 @@ public class CreditAgricoleBaseApiClientTest {
         return requestBuilderMock;
     }
 
-    private static AgentConfiguration<CreditAgricoleBaseConfiguration> getConfigurationMock() {
+    private AgentConfiguration<CreditAgricoleBaseConfiguration> getConfigurationMock() {
         final CreditAgricoleBaseConfiguration creditAgricoleBaseConfigurationMock =
                 mock(CreditAgricoleBaseConfiguration.class);
 
@@ -370,11 +389,24 @@ public class CreditAgricoleBaseApiClientTest {
         return creditAgricoleBranchConfigurationMock;
     }
 
-    private static CreditAgricoleStorage createCreditAgricoleStorageMock() {
+    private CreditAgricoleStorage createCreditAgricoleStorageMock() {
         final CreditAgricoleStorage creditAgricoleStorageMock = mock(CreditAgricoleStorage.class);
 
         when(creditAgricoleStorageMock.getTokenFromStorage()).thenReturn(ACCESS_TOKEN);
 
         return creditAgricoleStorageMock;
+    }
+
+    private HttpResponseException getBlockedOrNonExistentException() {
+        HttpResponseException exception = mock(HttpResponseException.class);
+        HttpResponse response = mock(HttpResponse.class);
+        when(exception.getResponse()).thenReturn(response);
+        when(response.getStatus()).thenReturn(400);
+        when(response.getBody(ErrorResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"error\":\"invalid_request\",\"error_description\":\"Compte inexistant ou bloque, Veuillez contacter votre conseiller\"}",
+                                ErrorResponse.class));
+        return exception;
     }
 }
