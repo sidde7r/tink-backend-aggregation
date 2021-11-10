@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.exceptions.payment;
 
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
-public class PaymentException extends Exception {
+public class PaymentException extends RuntimeException {
     private static final String DEFAULT_MESSAGE = "Payment failed.";
     private final InternalStatus internalStatus;
 
