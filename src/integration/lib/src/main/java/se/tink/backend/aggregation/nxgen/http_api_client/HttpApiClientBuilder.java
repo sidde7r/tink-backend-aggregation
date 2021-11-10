@@ -32,7 +32,6 @@ import se.tink.libraries.aggregation_agent_api_client.src.configuration.ClientCo
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.Configuration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.EidasConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.EidasConfiguration.EidasConfigurationBuilder;
-import se.tink.libraries.aggregation_agent_api_client.src.configuration.LoggingConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.ServiceConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.TlsConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
@@ -72,13 +71,6 @@ public class HttpApiClientBuilder {
                         Configuration.builder()
                                 .clientConfiguration(buildClientConfiguration())
                                 .eidasConfiguration(setupEidasConfig())
-                                .loggingConfiguration(
-                                        LoggingConfiguration.builder()
-                                                .maskingFunction(this.logMasker::mask)
-                                                .outputStream(
-                                                        this.rawHttpTrafficLogger
-                                                                .getLoggingPrintStream())
-                                                .build())
                                 .build());
 
         this.persistentStorage.subscribeOnInsertion(

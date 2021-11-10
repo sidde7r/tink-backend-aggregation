@@ -21,3 +21,17 @@ java_library(
         "@maven//:javax_el_javax_el_api",
     ],
 )
+
+java_library(
+    name = "har_logger",
+    srcs = ["@tink_backend//src/libraries/har_logger:har_logger_srcjar"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:lombok_plugin",
+        "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:org_projectlombok_lombok",
+    ],
+)
