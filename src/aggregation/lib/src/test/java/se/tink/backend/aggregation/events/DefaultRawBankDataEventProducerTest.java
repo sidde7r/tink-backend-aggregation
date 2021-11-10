@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
 import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.DenyAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
@@ -529,6 +530,9 @@ public class DefaultRawBankDataEventProducerTest {
                                 () -> RefreshableItem.CHECKING_ACCOUNTS,
                                 givenCorrelationId)
                         .build();
+
+        client.overrideRawBankDataEventCreationTriggerStrategy(
+                new DenyAlwaysRawBankDataEventCreationTriggerStrategy());
 
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicPort();
         WireMockServer wireMockServer = new WireMockServer(config);
