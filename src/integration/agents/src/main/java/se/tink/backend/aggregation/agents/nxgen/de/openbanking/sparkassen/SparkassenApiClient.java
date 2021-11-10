@@ -5,6 +5,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenConsentGenerator;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryKeys;
@@ -12,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.OauthEndpointsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.SparkassenErrorHandler;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.SparkassenKnownErrors;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRespo
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.SelectAuthorizationMethodRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
@@ -212,20 +216,34 @@ public class SparkassenApiClient implements PaymentApiClient {
     }
 
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
-        String paymentId = paymentRequest.getPayment().getUniqueId();
-        return createRequest(
-                        SparkassenConstants.Urls.FETCH_PAYMENT_STATUS
-                                .parameter(
-                                        PaymentConstants.PathVariables.PAYMENT_SERVICE,
-                                        PaymentService.getPaymentService(
-                                                paymentRequest
-                                                        .getPayment()
-                                                        .getPaymentServiceType()))
-                                .parameter(
-                                        PaymentConstants.PathVariables.PAYMENT_PRODUCT,
-                                        PaymentProduct.getPaymentProduct(
-                                                paymentRequest.getPayment().getPaymentScheme()))
-                                .parameter(PaymentConstants.PathVariables.PAYMENT_ID, paymentId))
-                .get(FetchPaymentStatusResponse.class);
+        try {
+            String paymentId = paymentRequest.getPayment().getUniqueId();
+            return createRequest(
+                            SparkassenConstants.Urls.FETCH_PAYMENT_STATUS
+                                    .parameter(
+                                            PaymentConstants.PathVariables.PAYMENT_SERVICE,
+                                            PaymentService.getPaymentService(
+                                                    paymentRequest
+                                                            .getPayment()
+                                                            .getPaymentServiceType()))
+                                    .parameter(
+                                            PaymentConstants.PathVariables.PAYMENT_PRODUCT,
+                                            PaymentProduct.getPaymentProduct(
+                                                    paymentRequest.getPayment().getPaymentScheme()))
+                                    .parameter(
+                                            PaymentConstants.PathVariables.PAYMENT_ID, paymentId))
+                    .get(FetchPaymentStatusResponse.class);
+        } catch (HttpResponseException httpResponseException) {
+            // This handling is done here instead of SparkassenErrorHandler due to the fact that
+            // payment exceptions are not AgentError friendly.
+            if (ErrorResponse.fromHttpException(httpResponseException)
+                    .filter(
+                            ErrorResponse.anyTppMessageMatchesPredicate(
+                                    SparkassenKnownErrors.PAYMENT_STATUS_UNKNOWN))
+                    .isPresent()) {
+                throw new PaymentRejectedException(httpResponseException);
+            }
+            throw httpResponseException;
+        }
     }
 }

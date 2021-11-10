@@ -69,8 +69,7 @@ public class PaymentController {
                 }
             }
 
-            throw new PaymentAuthorizationException(
-                    "Payment could not be signed", InternalStatus.BANKID_UNKNOWN_EXCEPTION, e);
+            throw new PaymentAuthorizationException("Payment could not be signed", e);
         }
     }
 

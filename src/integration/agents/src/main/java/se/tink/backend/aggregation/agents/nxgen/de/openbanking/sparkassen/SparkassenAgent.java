@@ -24,9 +24,11 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenEmbeddedFieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenEmbeddedFieldBuilderPayments;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.PaymentStatusUnknownRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.RequestNotProcessedFilter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.RequestNotProcessedRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.filter.RequestNotProcessedFilter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
@@ -42,7 +44,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
@@ -85,7 +86,9 @@ public class SparkassenAgent extends NextGenerationAgent
         client.addFilter(new BankServiceDownExceptionFilter());
         client.addFilter(new AccessExceededFilter());
         client.addFilter(new RequestNotProcessedFilter());
+        client.addFilter(new RequestNotProcessedRetryFilter(3, 2000));
         client.addFilter(new TerminatedHandshakeRetryFilter());
+        client.addFilter(new PaymentStatusUnknownRetryFilter(3, 2000));
     }
 
     protected SparkassenApiClient constructApiClient() {
@@ -142,11 +145,6 @@ public class SparkassenAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
     }
 
     @Override

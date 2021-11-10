@@ -16,38 +16,17 @@ public final class SparkassenConstants {
     }
 
     public static class ErrorMessages {
-        public static final String MISSING_SCA_AUTHORIZATION_URL = "Sca Authorization Url missing";
         public static final String MISSING_SCA_METHOD_DETAILS = "Sca method details missing";
         public static final String COULD_NOT_PARSE_TRANSACTIONS =
                 "Could not parse transactions description";
         public static final String COULD_NOT_INITIALIZE_JAXBCONTEXT =
                 "Could not initialize JAXBContext";
-        public static final String STARTCODE_NOT_FOUND = "Startcode for Chip tan not found";
-        public static final String INSTRUCTIONS_NOT_FOUND = "Instructions for Chip tan not found";
         public static final String NO_SUPPORTED_METHOD_FOUND = "No supported method found";
-    }
-
-    public static class PsuErrorMessages {
-        public static final String REQUEST_PROCESSING_ERROR =
-                "Die Anfrage konnte nicht verarbeitet werden.";
-        static final String TEMPORARILY_BLOCKED_ACCOUNT =
-                "Ihr Zugang ist vorläufig gesperrt - Bitte PIN-Sperre aufheben";
-        static final String BLOCKED_ACCOUNT =
-                "Ihr Zugang ist gesperrt - Bitte informieren Sie Ihren Berater";
-        static final String NO_ACTIVE_TAN_MEDIUM = "Kein aktives TAN-Medium gefunden.";
-        static final String PLEASE_CHANGE_PIN = "Bitte führen Sie eine PIN-Änderung durch.";
-        static final String CUSTOMER_NOT_FOUND =
-                "9070- Der Auftrag wurde nicht ausgeführt. - 9931- Anmeldename oder PIN ist falsch.";
     }
 
     public static class Urls {
         public static final String BASE_URL = "https://xs2a.f-i-apim.de:8443/fixs2aop-env";
         static final URL CONSENT = new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/consents");
-        static final URL UPDATE_SCA_METHOD =
-                new URL(CONSENT + "/{consentId}/authorisations/{authorizationId}");
-        static final URL FINALIZE_AUTHORIZATION =
-                new URL(CONSENT + "/{consentId}/authorisations/{authorizationId}");
-        static final URL CONSENT_STATUS = new URL(CONSENT + "/{consentId}/status");
         static final URL CONSENT_DETAILS = new URL(CONSENT + "/{consentId}");
         static final URL FETCH_ACCOUNTS = new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/accounts");
         static final URL FETCH_BALANCES = new URL(FETCH_ACCOUNTS + "/{accountId}/balances");
