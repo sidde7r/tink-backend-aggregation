@@ -112,13 +112,11 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
         // Register errors.
 
         if (!wasCircuitBreaked) {
-            switch (context.getRequest().getCredentials().getStatus()) {
-                case TEMPORARY_ERROR:
-                    circuitBreakerStatistics.registerError();
-                    break;
-                default:
-                    circuitBreakerStatistics.registerSuccess();
-                    break;
+            if (context.getRequest().getCredentials().getStatus()
+                    == CredentialsStatus.TEMPORARY_ERROR) {
+                circuitBreakerStatistics.registerError();
+            } else {
+                circuitBreakerStatistics.registerSuccess();
             }
         }
     }
