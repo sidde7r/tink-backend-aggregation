@@ -1,12 +1,20 @@
 package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils;
 
+import java.security.Security;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class ActivationMessage2Test {
     private static final String ACTIVATION_MESSAGE2_AS_HEX =
             "00415FDF47AA6B7725E17B2ACA71CFB4E52935018A07C11E0213995BE9F6CC7A7A81C45B594223A0F4394DC8C1891F4CC1C06F351E6BA86251D526F3B233";
+
+    @Before
+    public void setup() {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     @Test
     public void testActivationMessage2Decrypt() {
