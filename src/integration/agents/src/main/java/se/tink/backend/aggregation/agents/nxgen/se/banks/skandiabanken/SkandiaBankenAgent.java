@@ -33,6 +33,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.SkandiaBankenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transferdestination.SkandiaBankenTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.SkandiaBankenUpcomingTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.filter.SkandiaBankenBankSideFailureFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.filter.SkandiaBankenRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.session.SkandiaBankenSessionHandler;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -199,10 +201,14 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new SkandiaBankenBankSideFailureFilter());
         client.addFilter(new TimeoutFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
                         RetryConfig.NUM_RETRIES, RetryConfig.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new GatewayTimeoutFilter());
+        client.addFilter(
+                new SkandiaBankenRetryFilter(
+                        RetryConfig.NUM_RETRIES, RetryConfig.RETRY_SLEEP_MILLISECONDS));
     }
 }
