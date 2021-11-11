@@ -707,15 +707,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
     }
 
-    /**
-     * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use
-     *     `QsealcSigner` if requesting signatures
-     */
-    @Deprecated
-    public void setEidasSign(EidasProxyConfiguration conf) {
-        setEidasClient(conf.toInternalConfig());
-    }
-
     private void setEidasClient(InternalEidasProxyConfiguration conf) {
         try {
             trustRootCaCertificate(conf.getRootCaTrustStore());

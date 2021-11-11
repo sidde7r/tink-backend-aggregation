@@ -100,13 +100,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void setEidasProxy(EidasProxyConfiguration conf);
 
-    /**
-     * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use
-     *     `QsealcSigner` if requesting signatures
-     */
-    @Deprecated
-    void setEidasSign(EidasProxyConfiguration conf);
-
     void addRedirectHandler(RedirectHandler handler);
 
     // --- Configuration ---

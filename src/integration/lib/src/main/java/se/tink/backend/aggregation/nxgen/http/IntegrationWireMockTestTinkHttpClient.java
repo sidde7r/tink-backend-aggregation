@@ -207,12 +207,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
-    @Deprecated
-    public void setEidasSign(EidasProxyConfiguration conf) {
-        tinkHttpClient.setEidasSign(conf);
-    }
-
-    @Override
     public void addRedirectHandler(RedirectHandler handler) {
         tinkHttpClient.addRedirectHandler(handler);
     }
