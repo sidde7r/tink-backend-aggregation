@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.inject.Inject;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
@@ -18,18 +19,15 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({LOANS})
 public final class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -50,20 +48,11 @@ public final class CSNAgent extends AbstractAgent implements DeprecatedRefreshEx
     private final Credentials credentials;
     private boolean hasRefreshed = false;
 
-    public CSNAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
-
-        this.credentials = request.getCredentials();
-        this.client =
-                new LegacyTinkHttpClient(
-                        context.getAggregatorInfo(),
-                        metricContext.getMetricRegistry(),
-                        context.getRawHttpTrafficLogger(),
-                        signatureKeyPair,
-                        request.getProvider(),
-                        context.getLogMasker(),
-                        context.getLogMasker().shouldLog(request.getProvider()));
+    @Inject
+    public CSNAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
+        this.credentials = agentComponentProvider.getCredentialsRequest().getCredentials();
+        this.client = agentComponentProvider.getTinkHttpClient();
         this.client.addMessageReader(
                 new CharacterEncodedMessageBodyReader(StandardCharsets.ISO_8859_1));
     }
