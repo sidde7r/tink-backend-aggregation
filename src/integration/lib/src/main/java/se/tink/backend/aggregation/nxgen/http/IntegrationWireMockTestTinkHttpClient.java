@@ -67,11 +67,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
-    public String getHeaderAggregatorIdentifier() {
-        return tinkHttpClient.getHeaderAggregatorIdentifier();
-    }
-
-    @Override
     public HttpResponseStatusHandler getResponseStatusHandler() {
         return tinkHttpClient.getResponseStatusHandler();
     }

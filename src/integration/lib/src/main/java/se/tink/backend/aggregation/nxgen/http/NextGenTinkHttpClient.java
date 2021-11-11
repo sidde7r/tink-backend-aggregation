@@ -181,10 +181,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         return this.userAgent;
     }
 
-    public String getHeaderAggregatorIdentifier() {
-        return aggregator.getAggregatorIdentifier();
-    }
-
     @Override
     public HttpResponseStatusHandler getResponseStatusHandler() {
         return responseStatusHandler;
@@ -835,7 +831,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new NextGenRequestBuilder(
                         new ArrayList<>(this.getFilters()),
                         url,
-                        getHeaderAggregatorIdentifier(),
+                        aggregator.getAggregatorIdentifier(),
                         responseStatusHandler);
         if (!shouldAddAggregatorHeader) {
             builder.removeAggregatorHeader();
@@ -847,13 +843,17 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     public <T> T request(Class<T> c, HttpRequest request)
             throws HttpClientException, HttpResponseException {
         return new NextGenRequestBuilder(
-                        this.getFilters(), getHeaderAggregatorIdentifier(), responseStatusHandler)
+                        this.getFilters(),
+                        aggregator.getAggregatorIdentifier(),
+                        responseStatusHandler)
                 .raw(c, request);
     }
 
     public void request(HttpRequest request) throws HttpClientException, HttpResponseException {
         new NextGenRequestBuilder(
-                        this.getFilters(), getHeaderAggregatorIdentifier(), responseStatusHandler)
+                        this.getFilters(),
+                        aggregator.getAggregatorIdentifier(),
+                        responseStatusHandler)
                 .raw(request);
     }
     // --- Requests ---
