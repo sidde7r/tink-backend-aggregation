@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
+import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvider {
@@ -18,13 +19,11 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
             final CredentialsRequest credentialsRequest,
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
-
         tinkHttpClient =
                 NextGenTinkHttpClient.builder(
                                 context.getLogMasker(),
                                 context.getLogMasker().shouldLog(credentialsRequest.getProvider()))
                         .setAggregatorInfo(context.getAggregatorInfo())
-                        .setMetricRegistry(context.getMetricRegistry())
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setJsonHttpTrafficLogger(context.getJsonHttpTrafficLogger())
                         .setSignatureKeyPair(signatureKeyPair)
@@ -37,6 +36,12 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
                                 context::getCurrentRefreshableItemInProgress,
                                 context.getCorrelationId())
                         .build();
+
+        if (context.getMetricRegistry() != null && credentialsRequest.getProvider() != null) {
+            tinkHttpClient.addFilter(
+                    new MetricFilter(
+                            context.getMetricRegistry(), credentialsRequest.getProvider()));
+        }
     }
 
     @Override
