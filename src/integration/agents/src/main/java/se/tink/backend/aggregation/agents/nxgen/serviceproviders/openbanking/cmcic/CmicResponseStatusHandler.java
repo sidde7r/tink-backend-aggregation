@@ -16,6 +16,7 @@ public class CmicResponseStatusHandler extends DefaultResponseStatusHandler {
     private static final String NO_ACCOUNTS = "The specified user has no payment accounts";
 
     private static final String SERVICE_UNAVAILABLE = "Service unavailable";
+    private static final String INTERNAL_ERROR = "Internal Server Error";
 
     @Override
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
@@ -27,6 +28,9 @@ public class CmicResponseStatusHandler extends DefaultResponseStatusHandler {
         }
         if (isServiceUnavailable(httpResponse)) {
             throw BankServiceError.NO_BANK_SERVICE.exception();
+        }
+        if (isInternalServerError(httpResponse)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
         super.handleResponse(httpRequest, httpResponse);
     }
@@ -45,5 +49,10 @@ public class CmicResponseStatusHandler extends DefaultResponseStatusHandler {
     private boolean isNoAccountsError(HttpResponse httpResponse) {
         String body = httpResponse.getBody(String.class);
         return (httpResponse.getStatus() == 403 && (body.contains(NO_ACCOUNTS)));
+    }
+
+    private boolean isInternalServerError(HttpResponse httpResponse) {
+        String body = httpResponse.getBody(String.class);
+        return (httpResponse.getStatus() == 500 && (body.contains(INTERNAL_ERROR)));
     }
 }
