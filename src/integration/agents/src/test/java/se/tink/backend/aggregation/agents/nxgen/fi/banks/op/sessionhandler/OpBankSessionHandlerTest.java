@@ -41,7 +41,6 @@ public class OpBankSessionHandlerTest {
                         NextGenTinkHttpClient.builder(
                                         context.getLogMasker(),
                                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                                .setAggregatorInfo(context.getAggregatorInfo())
                                 .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                                 .build());
         OpBankPersistentStorage persistentStorage =

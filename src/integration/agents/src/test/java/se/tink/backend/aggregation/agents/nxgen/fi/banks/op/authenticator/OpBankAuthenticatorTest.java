@@ -71,7 +71,6 @@ public class OpBankAuthenticatorTest {
         TinkHttpClient tinkHttpClient =
                 NextGenTinkHttpClient.builder(
                                 context.getLogMasker(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                        .setAggregatorInfo(context.getAggregatorInfo())
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .build();
         // tinkHttpClient.setDebugOutput(true);
@@ -198,7 +197,6 @@ public class OpBankAuthenticatorTest {
                                 NextGenTinkHttpClient.builder(
                                                 context.getLogMasker(),
                                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                                        .setAggregatorInfo(context.getAggregatorInfo())
                                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                                         .build()));
         loginResultCaptor = new ResultCaptor<>();
