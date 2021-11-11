@@ -6,7 +6,6 @@ import java.security.KeyStore;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -26,8 +25,6 @@ import se.tink.backend.aggregation.nxgen.http.serializecontainer.SerializeContai
 public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuilderProvidable {
 
     String getUserAgent();
-
-    SSLContext getSslContext();
 
     String getHeaderAggregatorIdentifier();
 

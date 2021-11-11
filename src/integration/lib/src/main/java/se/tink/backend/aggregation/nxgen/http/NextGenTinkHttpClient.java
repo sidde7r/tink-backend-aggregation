@@ -181,10 +181,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         return this.userAgent;
     }
 
-    public SSLContext getSslContext() {
-        return sslContext;
-    }
-
     public String getHeaderAggregatorIdentifier() {
         return aggregator.getAggregatorIdentifier();
     }

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -65,11 +64,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     @Override
     public String getUserAgent() {
         return tinkHttpClient.getUserAgent();
-    }
-
-    @Override
-    public SSLContext getSslContext() {
-        return tinkHttpClient.getSslContext();
     }
 
     @Override
