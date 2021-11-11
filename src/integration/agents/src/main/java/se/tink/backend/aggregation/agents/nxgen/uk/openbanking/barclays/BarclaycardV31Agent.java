@@ -16,9 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter.BarclaysInvalidDataFilter;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter.BarclaysRateLimitFilter;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter.BarclaysRetryFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
@@ -44,15 +43,11 @@ public final class BarclaycardV31Agent extends UkOpenBankingBaseAgent {
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
         client.addFilter(new BarclaysInvalidDataFilter());
+        client.addFilter(new BarclaysRetryFilter(4, 1500));
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
-    }
-
-    @Override
-    protected RateLimitFilter addRateLimitFilter() {
-        return new BarclaysRateLimitFilter(provider.getName(), 500, 1500, 3);
     }
 }
