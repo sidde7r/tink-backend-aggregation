@@ -75,7 +75,6 @@ public final class BawagPskTransactionalAccountFetcherTest {
                         NextGenTinkHttpClient.builder(
                                         context.getLogMasker(),
                                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                                .setAggregatorInfo(context.getAggregatorInfo())
                                 .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                                 .build(),
                         new SessionStorage(),
