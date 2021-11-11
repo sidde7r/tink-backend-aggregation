@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter;
 
+import java.util.Objects;
+import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -26,23 +28,38 @@ public class ServiceBlockedFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        HttpResponse response = nextFilter(httpRequest);
-
-        // this is due to the response sometimes can be 503 with a html body.
-        // If that is the case, we will throw a BankServiceException to inform the user and suggest
-        // them to try again
-        if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        try {
+            return nextFilter(httpRequest);
+        } catch (HttpResponseException e) {
+            final HttpResponse response = e.getResponse();
+            checkErrorResponseBodyType(response);
+            throwIfServiceBlocked(response);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
         }
+    }
 
-        TppErrorResponse body = response.getBody(TppErrorResponse.class);
-        if (response.getStatus() == HttpStatus.SC_FORBIDDEN && body.isAnyServiceBlocked()) {
+    private void checkErrorResponseBodyType(HttpResponse response) {
+        if (!MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Invalid error response format : " + response.getBody(String.class));
+        }
+    }
+
+    private void throwIfServiceBlocked(HttpResponse response) {
+        TppErrorResponse errorResponses = response.getBody(TppErrorResponse.class);
+        if (response.getStatus() == HttpStatus.SC_FORBIDDEN
+                && errorResponses.isAnyServiceBlocked()) {
             if (credentials.getType() == CredentialsTypes.PASSWORD) {
                 credentials.setType(CredentialsTypes.MOBILE_BANKID);
                 systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
             }
-            throw SessionError.CONSENT_EXPIRED.exception();
+            final String errorMessage =
+                    Objects.requireNonNull(
+                                    errorResponses.getTppMessages().stream()
+                                            .findFirst()
+                                            .orElse(null))
+                            .getText();
+            throw SessionError.CONSENT_INVALID.exception(errorMessage);
         }
-        return response;
     }
 }
