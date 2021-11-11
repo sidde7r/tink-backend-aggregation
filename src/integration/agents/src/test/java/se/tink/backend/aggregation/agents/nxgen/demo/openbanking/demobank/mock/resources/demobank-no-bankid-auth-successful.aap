@@ -1,0 +1,54 @@
+REQUEST 1
+POST https://demobank.production.global.tink.se/auth/no/init
+Content-Type: application/json
+Accept: application/json,application/json
+X-Aggregator: Tink Testing
+
+{"ssn":"12345678901","mobileNumber":"98765432"}
+
+RESPONSE 1 SET STATE1
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 04 Nov 2021 09:05:05 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"errorCode":null,"sessionId":"f24164ce-e96a-4d4a-94b6-c1cbec239959"}
+
+REQUEST 2 MATCH STATE1
+POST https://demobank.production.global.tink.se/auth/no/collect
+Content-Type: application/json
+Accept: application/json,application/json
+X-Aggregator: Tink Testing
+
+{"ssn":"12345678901","sessionId":"f24164ce-e96a-4d4a-94b6-c1cbec239959"}
+
+RESPONSE 2 SET STATE2
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 04 Nov 2021 09:05:05 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"code":"WAITING","token":null}
+
+REQUEST 3 MATCH STATE2
+POST https://demobank.production.global.tink.se/auth/no/collect
+Content-Type: application/json
+Accept: application/json,application/json
+X-Aggregator: Tink Testing
+
+{"ssn":"12345678901","sessionId":"f24164ce-e96a-4d4a-94b6-c1cbec239959"}
+
+RESPONSE 3
+200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 04 Nov 2021 09:05:25 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{"code":"COMPLETED","token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzYwMjAzMjYsInVzZXJfbmFtZSI6InU2ODEzMTA4MCIsImp0aSI6ImZBaFZaSWhSdzZOSTlwR3FBVTZzcldRdDhURSIsImNsaWVudF9pZCI6ImFnZ3JlZ2F0aW9uIiwic2NvcGUiOltdfQ.V-ZX2C1Widg02hs12S0NWQgy0ngGJu04zx5SldrEw7OJfVEFFD6HDsfGtHFtNWmNBR1GyUBKSefqWCTwvIBoq7CvThEmMc5GJvp9SMa4MPyRCVRDmZylw3Am6HgTegw1GufUrjKeD3NJEWyMC7LS2Qf-bUV8lHag65RHzuQyrWkUqSHCRxSAGAtSLYgFK9C_4P-tSf1As6L4FeSr_5EyOA1VeCGL2XydvbfsNuto_lTrHhmStzdY-G04fKLI9ZRtcqInG6T3xv1T1gVywQ258h34-oyQMD6-fWVSr_YOXGyvCScE4eTAZh9NjGAFUDfOWo5cD_GSE7vETdbH794IDw"}
+
