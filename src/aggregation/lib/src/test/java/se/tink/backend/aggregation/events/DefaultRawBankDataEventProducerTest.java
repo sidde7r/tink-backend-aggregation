@@ -23,7 +23,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.Provider.AccessType;
-import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
@@ -368,7 +367,6 @@ public class DefaultRawBankDataEventProducerTest {
         NextGenTinkHttpClient client =
                 NextGenTinkHttpClient.builder(
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                        .setAggregatorInfo(AggregatorInfo.getAggregatorForTesting())
                         .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
@@ -509,7 +507,6 @@ public class DefaultRawBankDataEventProducerTest {
         NextGenTinkHttpClient client =
                 NextGenTinkHttpClient.builder(
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                        .setAggregatorInfo(AggregatorInfo.getAggregatorForTesting())
                         .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
