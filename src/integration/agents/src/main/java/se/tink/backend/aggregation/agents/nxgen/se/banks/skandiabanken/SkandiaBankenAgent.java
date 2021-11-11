@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TimeoutRetryConfig;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.RetryConfig;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.SkandiaBankenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.SkandiaBankenBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.SkandiaBankenPaymentExecutor;
@@ -202,8 +202,7 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
         client.addFilter(new TimeoutFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
-                        TimeoutRetryConfig.NUM_TIMEOUT_RETRIES,
-                        TimeoutRetryConfig.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+                        RetryConfig.NUM_RETRIES, RetryConfig.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new GatewayTimeoutFilter());
     }
 }
