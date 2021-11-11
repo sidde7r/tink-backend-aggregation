@@ -376,7 +376,7 @@ codeowners(
         "src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/",
     ],
     teams = [
-        "@tink-ab/aggregation-teletubbies-maintainer",
+        "@tink-ab/aggregation-llamas-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
