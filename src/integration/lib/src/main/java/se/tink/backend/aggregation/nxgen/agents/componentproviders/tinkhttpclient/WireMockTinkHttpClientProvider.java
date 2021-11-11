@@ -27,7 +27,6 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                                 context.getLogMasker(),
                                 context.getLogMasker().shouldLog(credentialsRequest.getProvider()))
                         .setAggregatorInfo(context.getAggregatorInfo())
-                        .setMetricRegistry(context.getMetricRegistry())
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
