@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.metrics;
+package se.tink.backend.aggregation.nxgen.http_metrics;
 
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Provider;

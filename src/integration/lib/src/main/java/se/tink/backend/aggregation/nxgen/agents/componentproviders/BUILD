@@ -17,6 +17,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http_metrics",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/libraries/agent-storage",
         "//third_party:com_google_inject_guice",

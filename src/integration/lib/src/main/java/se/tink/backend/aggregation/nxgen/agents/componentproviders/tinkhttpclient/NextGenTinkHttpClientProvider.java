@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
-import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
+import se.tink.backend.aggregation.nxgen.http_metrics.MetricFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvider {
