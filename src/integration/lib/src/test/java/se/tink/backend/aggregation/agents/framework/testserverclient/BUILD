@@ -7,11 +7,13 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/dao",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_findbugs_jsr305",

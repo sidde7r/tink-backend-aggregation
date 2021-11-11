@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.utils.currency.CurrencyConstants;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.agents.agenttest.NextGenerationAgentTest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -53,14 +53,12 @@ public class SpKeyCardAuthenticatorTest extends NextGenerationAgentTest {
     public void testAuthenticate() throws Exception {
         AgentContext context = new AgentTestContext(credentials);
         TinkHttpClient client =
-                new LegacyTinkHttpClient(
-                        context.getAggregatorInfo(),
-                        context.getMetricRegistry(),
-                        context.getRawHttpTrafficLogger(),
-                        null,
-                        null,
-                        context.getLogMasker(),
-                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
+                NextGenTinkHttpClient.builder(
+                                context.getLogMasker(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                        .setAggregatorInfo(context.getAggregatorInfo())
+                        .setMetricRegistry(context.getMetricRegistry())
+                        .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
+                        .build();
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());
         SamlinkApiClient bankClient =
                 new SamlinkApiClient(

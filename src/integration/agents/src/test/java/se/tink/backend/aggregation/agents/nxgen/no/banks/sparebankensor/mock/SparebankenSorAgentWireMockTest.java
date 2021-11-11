@@ -18,7 +18,7 @@ public class SparebankenSorAgentWireMockTest {
 
         // given
         final String encapMockFilePath =
-                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/utils/authentication/encap/mock/resources/encap_mock_log.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebankensor/mock/resources/encap_mock_log.aap";
 
         // given
         final String wireMockFilePath =

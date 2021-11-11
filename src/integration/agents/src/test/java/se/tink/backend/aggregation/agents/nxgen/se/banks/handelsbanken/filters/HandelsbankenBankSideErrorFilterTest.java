@@ -14,7 +14,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
+import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -29,7 +31,11 @@ public class HandelsbankenBankSideErrorFilterTest {
     @Before
     public void setUp() {
         mockUrl = "http://localhost:" + wireMockRule.port();
-        client = new LegacyTinkHttpClient();
+        client =
+                NextGenTinkHttpClient.builder(
+                                new FakeLogMasker(),
+                                LogMasker.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                        .build();
         client.addFilter(new HandelsbankenSEBankSideErrorFilter());
     }
 

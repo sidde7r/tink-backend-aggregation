@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.Op
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -69,14 +69,12 @@ public class OpBankAuthenticatorTest {
         credentials.setType(CredentialsTypes.PASSWORD);
         AgentTestContext context = new AgentTestContext(credentials);
         TinkHttpClient tinkHttpClient =
-                new LegacyTinkHttpClient(
-                        context.getAggregatorInfo(),
-                        context.getMetricRegistry(),
-                        context.getRawHttpTrafficLogger(),
-                        null,
-                        null,
-                        context.getLogMasker(),
-                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
+                NextGenTinkHttpClient.builder(
+                                context.getLogMasker(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                        .setAggregatorInfo(context.getAggregatorInfo())
+                        .setMetricRegistry(context.getMetricRegistry())
+                        .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
+                        .build();
         // tinkHttpClient.setDebugOutput(true);
         // tinkHttpClient.setProxy("http://127.0.0.1:8888");
 
@@ -198,14 +196,13 @@ public class OpBankAuthenticatorTest {
         OpBankApiClient bankClient =
                 spy(
                         new OpBankApiClient(
-                                new LegacyTinkHttpClient(
-                                        context.getAggregatorInfo(),
-                                        context.getMetricRegistry(),
-                                        context.getRawHttpTrafficLogger(),
-                                        null,
-                                        null,
-                                        context.getLogMasker(),
-                                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS)));
+                                NextGenTinkHttpClient.builder(
+                                                context.getLogMasker(),
+                                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                        .setAggregatorInfo(context.getAggregatorInfo())
+                                        .setMetricRegistry(context.getMetricRegistry())
+                                        .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
+                                        .build()));
         loginResultCaptor = new ResultCaptor<>();
         doAnswer(loginResultCaptor).when(bankClient).login(any());
         doReturn(new OpBankMobileConfigurationsEntity())

@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils;
 
+import java.security.Security;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
@@ -12,6 +15,11 @@ public class CryptoTest {
     private static final String OTP_IV = "4644516670693239";
     private static final String OTP_DATA = "7c0778deeefc6891";
     private static final String EXPECTED_OTP_KEY = "4a34522f1f6b8fe526a4de6a60cac1d1";
+
+    @Before
+    public void setup() {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     @Test
     public void testDeriveActivationKey() {

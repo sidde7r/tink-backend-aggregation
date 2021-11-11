@@ -1,10 +1,19 @@
 package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass;
 
+import java.security.Security;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.OtpChallengeResponse;
 
 public class DigipassTest {
+
+    @Before
+    public void setup() {
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
     @Test
     public void serializationTest() {
         Digipass a = new Digipass();

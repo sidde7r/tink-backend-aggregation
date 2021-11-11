@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuto
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class OpBankSessionHandlerTest {
@@ -38,14 +38,13 @@ public class OpBankSessionHandlerTest {
         AgentContext context = new AgentTestContext(null);
         bankClient =
                 new OpBankApiClient(
-                        new LegacyTinkHttpClient(
-                                context.getAggregatorInfo(),
-                                context.getMetricRegistry(),
-                                context.getRawHttpTrafficLogger(),
-                                null,
-                                null,
-                                context.getLogMasker(),
-                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS));
+                        NextGenTinkHttpClient.builder(
+                                        context.getLogMasker(),
+                                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                .setAggregatorInfo(context.getAggregatorInfo())
+                                .setMetricRegistry(context.getMetricRegistry())
+                                .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
+                                .build());
         OpBankPersistentStorage persistentStorage =
                 new OpBankPersistentStorage(credentials, new PersistentStorage());
         persistentStorage.put(

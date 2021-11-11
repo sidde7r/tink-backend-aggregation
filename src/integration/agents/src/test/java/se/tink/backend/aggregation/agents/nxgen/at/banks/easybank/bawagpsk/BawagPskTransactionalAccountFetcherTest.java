@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -72,14 +72,13 @@ public final class BawagPskTransactionalAccountFetcherTest {
 
         final BawagPskApiClient apiClient =
                 new BawagPskApiClient(
-                        new LegacyTinkHttpClient(
-                                context.getAggregatorInfo(),
-                                context.getMetricRegistry(),
-                                context.getRawHttpTrafficLogger(),
-                                null,
-                                null,
-                                context.getLogMasker(),
-                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS),
+                        NextGenTinkHttpClient.builder(
+                                        context.getLogMasker(),
+                                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                .setAggregatorInfo(context.getAggregatorInfo())
+                                .setMetricRegistry(context.getMetricRegistry())
+                                .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
+                                .build(),
                         new SessionStorage(),
                         new PersistentStorage(),
                         provider);

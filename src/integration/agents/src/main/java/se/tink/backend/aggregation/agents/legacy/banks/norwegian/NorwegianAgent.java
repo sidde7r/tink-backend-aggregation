@@ -60,10 +60,8 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -131,19 +129,10 @@ public final class NorwegianAgent extends AbstractAgent
     private final TinkHttpClient client;
 
     @Inject
-    public NorwegianAgent(
-            AgentComponentProvider agentComponentProvider, SignatureKeyPair signatureKeyPair) {
+    public NorwegianAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
 
-        client =
-                new LegacyTinkHttpClient(
-                        getAggregatorInfo(),
-                        null,
-                        context.getRawHttpTrafficLogger(),
-                        signatureKeyPair,
-                        request.getProvider(),
-                        context.getLogMasker(),
-                        context.getLogMasker().shouldLog(request.getProvider()));
+        this.client = agentComponentProvider.getTinkHttpClient();
     }
 
     @Override

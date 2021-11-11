@@ -7,7 +7,9 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
+import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -68,7 +70,11 @@ public class AgentTestServerClient {
     }
 
     private static TinkHttpClient constructHttpClient() {
-        TinkHttpClient client = new LegacyTinkHttpClient();
+        TinkHttpClient client =
+                NextGenTinkHttpClient.builder(
+                                new FakeLogMasker(),
+                                LogMasker.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                        .build();
         client.setTimeout(TIMEOUT_MS);
 
         // Disable ssl verification because of self signed certificate.
