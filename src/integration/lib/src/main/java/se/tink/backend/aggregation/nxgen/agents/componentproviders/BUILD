@@ -24,6 +24,7 @@ java_library(
         "//third_party:com_google_protobuf_protobuf_java",
         "//third_party:commons_codec_commons_codec",
         "//third_party:lombok_libs",
+        "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_uuid_java_uuid_generator",
         "@com_tink_api_grpc//event_producer_service:event_producer_service_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",

@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.net.ssl.SSLContext;
@@ -82,12 +81,6 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
-import se.tink.backend.aggregation.nxgen.http.event.interceptor.RawBankDataEventProducerInterceptor;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
@@ -123,7 +116,6 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificates
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.VerifyHostname;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -171,13 +163,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private SSLContext sslContext;
 
     private HttpResponseStatusHandler responseStatusHandler;
-
-    private RawBankDataEventProducerInterceptor rawBankDataEventProducerInterceptor;
-    private RawBankDataEventProducer rawBankDataEventProducer;
-    private final Supplier<RefreshableItem> refreshableItemInProgressSupplier;
-    // Determines the percentage of operations for which we will emit raw bank data event for
-    // all HTTP traffic
-    private static final double RAW_BANK_DATA_EVENT_EMISSION_RATE = 0;
 
     private static class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
@@ -308,33 +293,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new ExecutionTimeLoggingFilter(TimeMeasuredRequestExecutor::withRequest);
         addFilter(executionTimeLoggingFilter);
         addFilter(new SendRequestFilter());
-
-        // Build raw bank data event emission interceptor
-        this.refreshableItemInProgressSupplier = builder.getRefreshableItemInProgressSupplier();
-        this.rawBankDataEventProducer = builder.getRawBankDataEventProducer();
-        RawBankDataEventAccumulator rawBankDataEventAccumulator =
-                builder.getRawBankDataEventAccumulator();
-        String correlationId = builder.getCorrelationId();
-        if (Objects.nonNull(this.rawBankDataEventProducer)
-                && Objects.nonNull(rawBankDataEventAccumulator)
-                && Objects.nonNull(correlationId)) {
-            String providerName = "UNKNOWN";
-            if (Objects.nonNull(this.provider) && Objects.nonNull(this.provider.getName())) {
-                providerName = this.provider.getName();
-            } else {
-                log.warn("Provider name is unknown");
-            }
-            this.rawBankDataEventProducerInterceptor =
-                    new RawBankDataEventProducerInterceptor(
-                            rawBankDataEventProducer,
-                            rawBankDataEventAccumulator,
-                            refreshableItemInProgressSupplier,
-                            correlationId,
-                            providerName,
-                            new RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy(
-                                    RAW_BANK_DATA_EVENT_EMISSION_RATE));
-            addFilter(this.rawBankDataEventProducerInterceptor);
-        }
     }
 
     /**
@@ -366,11 +324,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
 
-        private RawBankDataEventProducer rawBankDataEventProducer;
-        private RawBankDataEventAccumulator rawBankDataEventAccumulator;
-        private String correlationId;
-        private Supplier<RefreshableItem> refreshableItemInProgressSupplier;
-
         public Builder(LogMasker logMasker, LoggingMode loggingMode) {
             this.logMasker = logMasker;
             this.loggingMode = loggingMode;
@@ -378,18 +331,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         public NextGenTinkHttpClient build() {
             return new NextGenTinkHttpClient(this, logMasker, loggingMode);
-        }
-
-        public Builder setRawBankDataEventEmissionComponents(
-                RawBankDataEventProducer rawBankDataEventProducer,
-                RawBankDataEventAccumulator rawBankDataEventAccumulator,
-                Supplier<RefreshableItem> refreshableItemInProgressSupplier,
-                String correlationId) {
-            this.rawBankDataEventProducer = rawBankDataEventProducer;
-            this.rawBankDataEventAccumulator = rawBankDataEventAccumulator;
-            this.refreshableItemInProgressSupplier = refreshableItemInProgressSupplier;
-            this.correlationId = correlationId;
-            return this;
         }
     }
 
@@ -925,23 +866,4 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 .raw(request);
     }
     // --- Requests ---
-
-    // +++ Raw bank data event emission +++
-    @Override
-    public void overrideRawBankDataEventCreationStrategies(
-            RawBankDataEventCreationStrategies configuration) {
-        if (Objects.nonNull(this.rawBankDataEventProducer)) {
-            this.rawBankDataEventProducer.overrideRawBankDataEventCreationStrategies(configuration);
-        }
-    }
-
-    @Override
-    public void overrideRawBankDataEventCreationTriggerStrategy(
-            RawBankDataEventCreationTriggerStrategy configuration) {
-        if (Objects.nonNull(this.rawBankDataEventProducerInterceptor)) {
-            this.rawBankDataEventProducerInterceptor
-                    .overrideRawBankDataEventCreationTriggerStrategy(configuration);
-        }
-    }
-    // --- Raw bank data event emission ---
 }

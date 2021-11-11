@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpCli
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
+import se.tink.backend.aggregation.nxgen.http.event.interceptor.RawBankDataEventProducerInterceptor;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvider {
@@ -30,17 +32,23 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
-                        .setRawBankDataEventEmissionComponents(
-                                new DefaultRawBankDataEventProducer(
-                                        RawBankDataEventCreationStrategies
-                                                .createDefaultConfiguration()),
-                                context.getRawBankDataEventAccumulator(),
-                                context::getCurrentRefreshableItemInProgress,
-                                context.getCorrelationId())
                         .build();
 
-        httpClient.overrideRawBankDataEventCreationTriggerStrategy(
-                rawBankDataEventCreationTriggerStrategy);
+        // Build raw bank data event emission interceptor
+        DefaultRawBankDataEventProducer rawBankDataEventProducer =
+                new DefaultRawBankDataEventProducer(
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration());
+        String correlationId = context.getCorrelationId();
+
+        httpClient.addFilter(
+                new RawBankDataEventProducerInterceptor(
+                        rawBankDataEventProducer,
+                        context.getRawBankDataEventAccumulator(),
+                        context::getCurrentRefreshableItemInProgress,
+                        correlationId,
+                        credentialsRequest.getProvider().getName(),
+                        new AllowAlwaysRawBankDataEventCreationTriggerStrategy()));
+
         httpClient.disableSslVerification();
 
         this.tinkHttpClient =
