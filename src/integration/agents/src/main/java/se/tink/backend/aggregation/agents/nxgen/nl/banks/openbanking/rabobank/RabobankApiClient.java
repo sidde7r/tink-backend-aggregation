@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -54,7 +53,6 @@ public final class RabobankApiClient {
     private final String qsealcPem;
     private final QsealcSigner qsealcSigner;
     private final RabobankUserIpInformation userIpInformation;
-    private final AgentComponentProvider componentProvider;
     private String consentStatus;
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {
@@ -262,9 +260,7 @@ public final class RabobankApiClient {
 
     private boolean shouldFetchMoreTransactions(
             boolean isSandbox, TransactionalTransactionsResponse page) {
-        return page.getTransactions().getLinks().getNextKey() != null
-                && !isSandbox
-                && userIpInformation.isUserPresent();
+        return page.getTransactions().getLinks().getNextKey() != null && !isSandbox;
     }
 
     private String buildSignatureHeader(
