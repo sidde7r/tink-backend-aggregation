@@ -70,7 +70,6 @@ import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.ResponseLoggingFilter;
-import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
@@ -773,10 +772,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     public void addRedirectHandler(RedirectHandler handler) {
         this.redirectStrategy.addHandler(handler);
-    }
-
-    public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
-        addFilter(messageSignInterceptor);
     }
     // --- Configuration ---
 

@@ -15,7 +15,6 @@ import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
-import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
@@ -61,11 +60,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
                     }
                 });
         this.tinkHttpClient.setRequestExecutionTimeLogger(TimeMeasuredRequestExecutor::withRequest);
-    }
-
-    @Override
-    public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
-        tinkHttpClient.setMessageSignInterceptor(messageSignInterceptor);
     }
 
     @Override
