@@ -57,7 +57,7 @@ public class SkandiaBankenPaymentWiremockTest {
                         .addPersistentStorageData(
                                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, getToken())
                         .withTransfer(transfer)
-                        .buildWithLogin(TransferCommand.class);
+                        .buildWithoutLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();
         Assert.assertTrue(true);
@@ -88,7 +88,7 @@ public class SkandiaBankenPaymentWiremockTest {
                         .addPersistentStorageData(
                                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, getToken())
                         .withTransfer(transfer)
-                        .buildWithLogin(TransferCommand.class);
+                        .buildWithoutLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();
         Assert.assertTrue(true);
@@ -121,7 +121,7 @@ public class SkandiaBankenPaymentWiremockTest {
                         .addPersistentStorageData(
                                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, getToken())
                         .withTransfer(transfer)
-                        .buildWithLogin(TransferCommand.class);
+                        .buildWithoutLogin(TransferCommand.class);
 
         try {
             agentWireMockPaymentTest.executePayment();
