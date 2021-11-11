@@ -31,11 +31,13 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/serialization",
+        "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:org_apache_httpcomponents_httpcore",
+        "@com_google_code_gson_gson",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
