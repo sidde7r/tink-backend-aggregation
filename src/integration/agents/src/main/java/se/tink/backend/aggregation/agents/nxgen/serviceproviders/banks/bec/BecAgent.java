@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.BecAccountTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticatorInitializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticatorModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.BecBankUnavailableErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.BecBankUnavailableRetryFilter;
@@ -74,15 +74,15 @@ public final class BecAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BecAuthenticatorInitializer authenticatorInitializer =
-                new BecAuthenticatorInitializer(
+        BecAuthenticatorModule authenticatorModule =
+                new BecAuthenticatorModule(
                         apiClient,
                         credentials,
-                        request.getUserAvailability(),
                         storage,
+                        request.getUserAvailability(),
                         catalog,
                         supplementalInformationController);
-        return authenticatorInitializer.initializeAuthenticator();
+        return authenticatorModule.createAuthenticator();
     }
 
     private void configureClient() {

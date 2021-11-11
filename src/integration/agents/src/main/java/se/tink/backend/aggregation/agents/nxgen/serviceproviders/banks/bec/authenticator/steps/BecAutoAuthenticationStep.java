@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.auth
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Log.BEC_LOG_TAG;
 
+import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
@@ -14,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authe
 import se.tink.libraries.credentials.service.UserAvailability;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class BecAutoAuthenticationStep {
 
     private final BecApiClient apiClient;

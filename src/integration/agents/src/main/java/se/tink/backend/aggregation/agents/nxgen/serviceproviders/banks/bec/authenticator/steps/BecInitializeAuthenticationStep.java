@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.auth
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Log.BEC_LOG_TAG;
 
 import com.google.common.base.Strings;
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -15,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecStorage;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class BecInitializeAuthenticationStep {
 
     private static final Pattern USERNAME_PATTERN = Pattern.compile("\\d{10,11}");

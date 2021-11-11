@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.steps;
 
+import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -16,7 +17,7 @@ import se.tink.libraries.retrypolicy.RetryCallback;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class BecAuthWithCodeAppStep {
 
     private static final int POLL_NEM_ID_MAX_ATTEMPTS = 10;
