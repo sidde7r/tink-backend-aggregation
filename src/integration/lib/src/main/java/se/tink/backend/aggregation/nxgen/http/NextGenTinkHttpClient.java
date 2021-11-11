@@ -604,11 +604,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.cipherSuites = cipherSuites;
     }
 
-    @Override
-    public Provider getProvider() {
-        return provider;
-    }
-
     public void setUserAgent(String userAgent) {
         Preconditions.checkState(this.internalClient == null);
         this.userAgent = userAgent;
