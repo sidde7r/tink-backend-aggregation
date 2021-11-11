@@ -38,7 +38,6 @@ public class HandelsbankenSEContentTypeFilterTest {
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
                                 context.getLogMasker(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                        .setAggregatorInfo(context.getAggregatorInfo())
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .build();
         client.addFilter(new HandelsbankenSEContentTypeFilter());
