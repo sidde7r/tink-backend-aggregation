@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.events;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,8 +40,6 @@ import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.Raw
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.metrics.types.timers.Timer;
 
 public class DefaultRawBankDataEventProducerTest {
 
@@ -360,9 +357,6 @@ public class DefaultRawBankDataEventProducerTest {
         Provider provider = mock(Provider.class);
         when(provider.getAccessType()).thenReturn(AccessType.OPEN_BANKING);
 
-        MetricRegistry metricRegistry = mock(MetricRegistry.class);
-        when(metricRegistry.timer(any())).thenReturn(mock(Timer.class));
-
         RawBankDataEventProducer eventProducer =
                 new DefaultRawBankDataEventProducer(
                         RawBankDataEventCreationStrategies.createDefaultConfiguration());
@@ -374,7 +368,6 @@ public class DefaultRawBankDataEventProducerTest {
                 NextGenTinkHttpClient.builder(
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setAggregatorInfo(AggregatorInfo.getAggregatorForTesting())
-                        .setMetricRegistry(metricRegistry)
                         .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
@@ -507,9 +500,6 @@ public class DefaultRawBankDataEventProducerTest {
         Provider provider = mock(Provider.class);
         when(provider.getAccessType()).thenReturn(AccessType.OPEN_BANKING);
 
-        MetricRegistry metricRegistry = mock(MetricRegistry.class);
-        when(metricRegistry.timer(any())).thenReturn(mock(Timer.class));
-
         RawBankDataEventProducer eventProducer =
                 new DefaultRawBankDataEventProducer(
                         RawBankDataEventCreationStrategies.createDefaultConfiguration());
@@ -520,7 +510,6 @@ public class DefaultRawBankDataEventProducerTest {
                 NextGenTinkHttpClient.builder(
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setAggregatorInfo(AggregatorInfo.getAggregatorForTesting())
-                        .setMetricRegistry(metricRegistry)
                         .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
