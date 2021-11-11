@@ -51,11 +51,7 @@ import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.params.ClientPNames;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.StrictHostnameVerifier;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -64,7 +60,6 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
@@ -132,8 +127,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final AggregatorInfo aggregator;
     private boolean shouldAddAggregatorHeader = true;
 
-    private List<String> cipherSuites;
-
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
@@ -159,7 +152,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                     .build();
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private SSLContext sslContext;
 
     private HttpResponseStatusHandler responseStatusHandler;
 
@@ -340,6 +332,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     private void constructInternalClient() {
+        SSLContext sslContext;
         try {
             sslContext = this.internalSslContextBuilder.build();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
@@ -355,22 +348,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         if (!this.followRedirects) {
             // Add a redirect handler to deny all redirects.
             addRedirectHandler(new DenyAllRedirectHandler());
-        }
-
-        if (Objects.nonNull(cipherSuites)) {
-            final Registry<ConnectionSocketFactory> socketFactoryRegistry =
-                    RegistryBuilder.<ConnectionSocketFactory>create()
-                            .register(
-                                    "https",
-                                    new SSLConnectionSocketFactory(
-                                            sslContext,
-                                            null,
-                                            cipherSuites.stream().toArray(String[]::new),
-                                            null))
-                            .build();
-
-            internalHttpClientBuilder.setConnectionManager(
-                    new BasicHttpClientConnectionManager(socketFactoryRegistry));
         }
 
         HttpResponseInterceptor contentEncodingFixerInterceptor =
@@ -516,15 +493,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         jacksonProvider.setMapper(OBJECT_MAPPER);
 
         this.internalClientConfig.getSingletons().add(jacksonProvider);
-    }
-
-    /**
-     * @param cipherSuites A list of cipher suites to be presented to the server at TLS Client Hello
-     *     in order of preference, e.g. TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 etc. This might be
-     *     necessary if the choice of cipher suite causes the TLS handshake to fail.
-     */
-    public void setCipherSuites(final List<String> cipherSuites) {
-        this.cipherSuites = cipherSuites;
     }
 
     public void setUserAgent(String userAgent) {

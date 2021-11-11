@@ -103,11 +103,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
-    public void setCipherSuites(List<String> cipherSuites) {
-        tinkHttpClient.setCipherSuites(cipherSuites);
-    }
-
-    @Override
     public void setUserAgent(String userAgent) {
         tinkHttpClient.setUserAgent(userAgent);
     }

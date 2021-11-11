@@ -42,13 +42,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void registerJacksonModule(Module module);
 
-    /**
-     * @param cipherSuites A list of cipher suites to be presented to the server at TLS Client Hello
-     *     in order of preference, e.g. TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 etc. This might be
-     *     necessary if the choice of cipher suite causes the TLS handshake to fail.
-     */
-    void setCipherSuites(final List<String> cipherSuites);
-
     void setUserAgent(String userAgent);
 
     void setCookieSpec(String cookieSpec);
