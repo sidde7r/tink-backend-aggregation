@@ -8,21 +8,20 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter.BarclaysRateLimitFilter;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter.BarclaysRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
-public class BarclaysRateLimitFilterTest {
-    private BarclaysRateLimitFilter filter;
+public class BarclaysRetryFilterTest {
+    private BarclaysRetryFilter filter;
 
     @Before
     public void setup() {
-        filter = new BarclaysRateLimitFilter("barclays-provider", 500, 1500, 3);
+        filter = new BarclaysRetryFilter(4, 1500);
     }
 
-    @Test(expected = BankServiceException.class)
-    public void shouldRetryAndThrowBankServiceError() {
+    @Test
+    public void shouldRetry() {
         // given
         Filter nextFilter = mock(Filter.class);
         HttpResponse response = mockResponse(502);
@@ -33,7 +32,7 @@ public class BarclaysRateLimitFilterTest {
         filter.handle(null);
 
         // then
-        verify(nextFilter, times(4)).handle(any());
+        verify(nextFilter, times(5)).handle(any());
     }
 
     @Test
