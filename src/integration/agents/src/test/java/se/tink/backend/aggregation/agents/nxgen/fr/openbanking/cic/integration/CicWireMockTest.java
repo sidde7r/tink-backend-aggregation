@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.cic.integration;
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
@@ -85,10 +86,38 @@ public class CicWireMockTest {
     }
 
     @Test(expected = LoginException.class)
-    public void tesNoAccountsException() throws Exception {
+    public void testNoAccountsException() throws Exception {
         // given
         final String wireMockFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/cic/integration/resources/cic_no_accounts.app";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-cic-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .withAgentTestModule(new CicWireMockTestModule())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addPersistentStorageData("oauth2_access_token", getToken())
+                        .enableHttpDebugTrace()
+                        .build();
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+    }
+
+    @Test(expected = BankServiceException.class)
+    public void testInternalServerError() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/cic/integration/resources/cic_internal_server_error.aap";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
