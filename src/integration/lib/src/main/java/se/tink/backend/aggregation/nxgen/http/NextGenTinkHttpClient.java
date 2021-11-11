@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -65,7 +64,6 @@ import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.ResponseLoggingFilter;
-import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -116,6 +114,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         implements TinkHttpClient {
 
+    private static final String AGGREGATOR_IDENTIFIER_FOR_TESTING = "Tink Testing";
+
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -124,7 +124,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final BasicCookieStore internalCookieStore;
     private SSLContextBuilder internalSslContextBuilder;
     private String userAgent;
-    private final AggregatorInfo aggregator;
+    private final String aggregatorIdentifier;
     private boolean shouldAddAggregatorHeader = true;
 
     private boolean followRedirects = false;
@@ -247,10 +247,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
         this.rawHttpTrafficLogger = builder.getRawHttpTrafficLogger();
         this.jsonHttpTrafficLogger = builder.getJsonHttpTrafficLogger();
-        this.aggregator =
-                Objects.nonNull(builder.getAggregatorInfo())
-                        ? builder.getAggregatorInfo()
-                        : AggregatorInfo.getAggregatorForTesting();
+
+        this.aggregatorIdentifier =
+                Optional.ofNullable(builder.getAggregatorIdentifier())
+                        .orElse(AGGREGATOR_IDENTIFIER_FOR_TESTING);
+
         this.provider = builder.getProvider();
 
         // Add an initial redirect handler to fix any illegal location paths
@@ -303,7 +304,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private RawHttpTrafficLogger rawHttpTrafficLogger;
         private JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
-        private AggregatorInfo aggregatorInfo;
+        private String aggregatorIdentifier;
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
 
@@ -790,7 +791,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new NextGenRequestBuilder(
                         new ArrayList<>(this.getFilters()),
                         url,
-                        aggregator.getAggregatorIdentifier(),
+                        this.aggregatorIdentifier,
                         responseStatusHandler);
         if (!shouldAddAggregatorHeader) {
             builder.removeAggregatorHeader();
@@ -802,17 +803,13 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     public <T> T request(Class<T> c, HttpRequest request)
             throws HttpClientException, HttpResponseException {
         return new NextGenRequestBuilder(
-                        this.getFilters(),
-                        aggregator.getAggregatorIdentifier(),
-                        responseStatusHandler)
+                        this.getFilters(), this.aggregatorIdentifier, responseStatusHandler)
                 .raw(c, request);
     }
 
     public void request(HttpRequest request) throws HttpClientException, HttpResponseException {
         new NextGenRequestBuilder(
-                        this.getFilters(),
-                        aggregator.getAggregatorIdentifier(),
-                        responseStatusHandler)
+                        this.getFilters(), this.aggregatorIdentifier, responseStatusHandler)
                 .raw(request);
     }
     // --- Requests ---
