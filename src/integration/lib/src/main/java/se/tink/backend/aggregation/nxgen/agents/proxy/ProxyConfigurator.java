@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.agents.proxy;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -19,9 +20,10 @@ public final class ProxyConfigurator {
         this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
 
-    public TinkHttpClient assignProxyForUser(TinkHttpClient client, String userId) {
+    public TinkHttpClient assignProxyForUser(
+            TinkHttpClient client, Provider provider, String userId) {
         try {
-            String countryCode = client.getProvider().getMarket().toLowerCase();
+            String countryCode = provider.getMarket().toLowerCase();
             String marketProxy = countryCode + PROXY;
 
             if (this.agentsServiceConfiguration.isFeatureEnabled(marketProxy)) {
@@ -50,7 +52,7 @@ public final class ProxyConfigurator {
         } catch (RuntimeException e) {
             log.error(
                     "[PROXY] Setting proxy for {} finish with fail due to {}",
-                    client.getProvider().getName(),
+                    provider.getName(),
                     e.getMessage());
         }
         return client;
