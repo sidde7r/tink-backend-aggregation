@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.nxgen.http.header.AuthorizationHeader;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         isGetterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class OAuth2Token extends OAuth2TokenBase {
+public class OAuth2Token extends OAuth2TokenBase implements AuthorizationHeader {
 
     private static final String BEARER = "bearer";
 
@@ -139,6 +140,7 @@ public class OAuth2Token extends OAuth2TokenBase {
         return isBearer();
     }
 
+    @Override
     public String toAuthorizeHeader() {
         // `Bearer XYZ`
         return String.format(

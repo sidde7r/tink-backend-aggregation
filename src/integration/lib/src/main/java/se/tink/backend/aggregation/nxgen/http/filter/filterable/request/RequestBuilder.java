@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.Filterable;
+import se.tink.backend.aggregation.nxgen.http.header.AuthorizationHeader;
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -218,10 +218,10 @@ public interface RequestBuilder
     /**
      * Method setting value of `Authorization` header on the request.
      *
-     * @param token Ton of type {@link OAuth2Token} to be used for authorization of request.
+     * @param token Ton of type {@link AuthorizationHeader} to be used for authorization of request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    RequestBuilder addBearerToken(OAuth2Token token);
+    RequestBuilder addBearerToken(AuthorizationHeader token);
 
     /**
      * Remove the X-Aggregator header from the request. There exist scenarios where it is necessary
