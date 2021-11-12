@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.be
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecStorage;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
@@ -25,6 +25,7 @@ public class BecInitializeAuthenticationStep {
     private final BecApiClient apiClient;
     private final Credentials credentials;
     private final BecStorage storage;
+    private final RandomValueGenerator randomValueGenerator;
 
     public List<String> initAuthenticationAndFetch2FAOptions() {
         String username = credentials.getField(Field.Key.USERNAME);
@@ -61,7 +62,7 @@ public class BecInitializeAuthenticationStep {
         return apiClient.getScaOptions(username, password, deviceId).getSecondFactorOptions();
     }
 
-    private static String generateDeviceId() {
-        return UUID.randomUUID().toString();
+    private String generateDeviceId() {
+        return randomValueGenerator.getUUID().toString();
     }
 }

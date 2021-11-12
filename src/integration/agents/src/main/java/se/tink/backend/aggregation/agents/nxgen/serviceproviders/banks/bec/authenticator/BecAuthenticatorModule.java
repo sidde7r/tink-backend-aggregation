@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecStorage;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
@@ -20,6 +21,7 @@ public class BecAuthenticatorModule extends AbstractModule {
     private final UserAvailability userAvailability;
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Override
     public void configure() {
@@ -29,6 +31,7 @@ public class BecAuthenticatorModule extends AbstractModule {
         bind(UserAvailability.class).toInstance(userAvailability);
         bind(Catalog.class).toInstance(catalog);
         bind(SupplementalInformationController.class).toInstance(supplementalInformationController);
+        bind(RandomValueGenerator.class).toInstance(randomValueGenerator);
     }
 
     public BecAuthenticator createAuthenticator() {

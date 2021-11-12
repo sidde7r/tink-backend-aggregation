@@ -51,7 +51,7 @@ public class BecAuthWithKeyCardStep {
                 supplementalInformationController.askSupplementalInformationSync(
                         keyCardInfoField, keyCardCodeField);
 
-        return Optional.of(supplementalInfoResponse.get(keyCardCodeField.getName()))
+        return Optional.ofNullable(supplementalInfoResponse.get(keyCardCodeField.getName()))
                 .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
     }
 

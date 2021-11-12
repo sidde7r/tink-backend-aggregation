@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.session.BecSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -55,6 +56,7 @@ public final class BecAgent extends NextGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public BecAgent(AgentComponentProvider agentComponentProvider) {
@@ -70,6 +72,8 @@ public final class BecAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         configureClient();
+
+        this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
     }
 
     @Override
@@ -81,7 +85,8 @@ public final class BecAgent extends NextGenerationAgent
                         storage,
                         request.getUserAvailability(),
                         catalog,
-                        supplementalInformationController);
+                        supplementalInformationController,
+                        randomValueGenerator);
         return authenticatorModule.createAuthenticator();
     }
 
