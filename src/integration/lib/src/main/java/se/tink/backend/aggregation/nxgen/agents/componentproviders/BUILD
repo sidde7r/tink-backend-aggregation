@@ -5,6 +5,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
@@ -16,6 +17,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http_metrics",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/raw_data_events",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
