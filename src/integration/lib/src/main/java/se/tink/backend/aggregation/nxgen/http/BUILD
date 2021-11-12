@@ -42,7 +42,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/serializecontainer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/truststrategy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/libraries/metrics:registry",
         "//src/libraries/rate_limit_service",
         "//src/libraries/serialization",
         "//third_party:com_auth0_java_jwt",
@@ -62,6 +61,5 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_proto",
-        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
     ],
 )

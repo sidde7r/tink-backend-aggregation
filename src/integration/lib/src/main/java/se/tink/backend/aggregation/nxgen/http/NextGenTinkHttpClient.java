@@ -110,7 +110,6 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficL
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLoggingExecutor;
-import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
@@ -125,7 +124,6 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.VerifyHostname;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -154,7 +152,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
-    private final MetricRegistry metricRegistry;
     private final Provider provider;
 
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
@@ -286,7 +283,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 Objects.nonNull(builder.getAggregatorInfo())
                         ? builder.getAggregatorInfo()
                         : AggregatorInfo.getAggregatorForTesting();
-        this.metricRegistry = builder.getMetricRegistry();
         this.provider = builder.getProvider();
 
         // Add an initial redirect handler to fix any illegal location paths
@@ -367,7 +363,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
         private AggregatorInfo aggregatorInfo;
-        private MetricRegistry metricRegistry;
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
 
@@ -492,10 +487,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         TinkApacheHttpClient4Handler httpHandler = new TinkApacheHttpClient4Handler(httpClient);
         this.internalClient = new TinkApacheHttpClient4(httpHandler, this.internalClientConfig);
         setupLogging();
-
-        if (this.metricRegistry != null && this.provider != null) {
-            addFilter(new MetricFilter(this.metricRegistry, this.provider));
-        }
     }
 
     private void setupLogging() {

@@ -42,7 +42,6 @@ public class OpBankSessionHandlerTest {
                                         context.getLogMasker(),
                                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                                 .setAggregatorInfo(context.getAggregatorInfo())
-                                .setMetricRegistry(context.getMetricRegistry())
                                 .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                                 .build());
         OpBankPersistentStorage persistentStorage =
