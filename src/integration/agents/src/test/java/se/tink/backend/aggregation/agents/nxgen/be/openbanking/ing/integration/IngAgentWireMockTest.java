@@ -23,7 +23,7 @@ public class IngAgentWireMockTest {
     private AgentsServiceConfiguration configuration;
 
     @Before
-    public void init() throws Exception {
+    public void setUp() throws Exception {
         configuration = AgentsServiceConfigurationReader.read(RESOURCES_PATH + "configuration.yml");
     }
 
@@ -59,25 +59,27 @@ public class IngAgentWireMockTest {
                                 OAuth2Token.create(
                                         "bearer", "test_access_token", "test_refresh_token", 899))
                         .build();
+
         // then
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 
     @Test
-    public void shouldRefreshManually() throws Exception {
+    public void shouldRefreshManuallyWhenAuthenticated() throws Exception {
         // given
         final String wireMockFilePath = RESOURCES_PATH + "ing_manual_refresh.aap";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 prepareBasicWiremockConfiguration(wireMockFilePath)
-                        .testAutoAuthentication()
+                        .skipAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .withAgentTestModule(new IngAgentWireMockTestModule())
+                        .addPersistentStorageData("CLIENT_ID", "123_CLIENT_ID")
+                        .addPersistentStorageData("AUTHENTICATION_TIME", 100l)
                         .addPersistentStorageData(
-                                OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN,
+                                "TOKEN",
                                 OAuth2Token.create(
                                         "bearer", "test_access_token", "test_refresh_token", 8))
-                        .addPersistentStorageData("CLIENT_ID", "123_CLIENT_ID")
                         .build();
 
         final AgentContractEntity expectedData =
