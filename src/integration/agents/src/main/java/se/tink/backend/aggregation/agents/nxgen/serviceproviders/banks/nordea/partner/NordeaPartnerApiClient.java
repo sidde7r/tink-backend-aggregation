@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.EndPoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.PathParamsKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.QueryParamsKeys;
@@ -28,6 +29,7 @@ public class NordeaPartnerApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final Provider provider;
     private final Credentials credentials;
     private final String locale;
     private NordeaPartnerConfiguration configuration;
@@ -37,11 +39,13 @@ public class NordeaPartnerApiClient {
     public NordeaPartnerApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
+            Provider provider,
             Credentials credentials,
             String locale,
             boolean userIsPresent) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.provider = provider;
         this.credentials = credentials;
         this.locale = locale;
         this.userIsPresent = userIsPresent;
@@ -61,8 +65,8 @@ public class NordeaPartnerApiClient {
 
     public AccountTransactionsResponse fetchAccountTransaction(
             String accountId, String key, LocalDate startDate) {
-        if (client.getProvider().getName().equals("se-nordeapartner-jwt")
-                || client.getProvider().getName().equals("dk-nordeapartner-jwt")) {
+        if (provider.getName().equals("se-nordeapartner-jwt")
+                || provider.getName().equals("dk-nordeapartner-jwt")) {
             return requestRefreshableGet(
                     request(EndPoints.ACCOUNT_TRANSACTIONS, PathParamsKeys.ACCOUNT_ID, accountId)
                             .queryParam(
@@ -139,12 +143,13 @@ public class NordeaPartnerApiClient {
                         .queryParam(QueryParamsKeys.PAGE_SIZE, Integer.toString(pageSize)),
                 CardTransactionListResponse.class);
     }
+
     // By request from Nordea some refreshes are not to be done when the user is not present.
     public boolean isUserPresent() {
         return userIsPresent;
     }
 
     public String getMarket() {
-        return client.getProvider().getMarket();
+        return provider.getMarket();
     }
 }

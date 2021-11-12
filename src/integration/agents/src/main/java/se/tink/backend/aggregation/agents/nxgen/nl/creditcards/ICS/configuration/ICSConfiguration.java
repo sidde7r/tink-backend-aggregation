@@ -21,6 +21,16 @@ import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfigurati
 
 @JsonObject
 public class ICSConfiguration implements ClientConfiguration {
+    private static final Set<IcsScope> SCOPES =
+            Sets.newHashSet(
+                    IcsScope.READ_ACCOUNT_BASIC,
+                    IcsScope.READ_ACCOUNTS_DETAIL,
+                    IcsScope.READ_BALANCES,
+                    IcsScope.READ_TRANSACTION_BASIC,
+                    IcsScope.READ_TRANSACTIONS_CREDITS,
+                    IcsScope.READ_TRANSACTIONS_DEBITS,
+                    IcsScope.READ_TRANSACTIONS_DETAIL);
+
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
@@ -61,13 +71,6 @@ public class ICSConfiguration implements ClientConfiguration {
     }
 
     public static Set<IcsScope> getIcsScopes() {
-        return Sets.newHashSet(
-                IcsScope.READ_ACCOUNT_BASIC,
-                IcsScope.READ_ACCOUNTS_DETAIL,
-                IcsScope.READ_BALANCES,
-                IcsScope.READ_TRANSACTION_BASIC,
-                IcsScope.READ_TRANSACTIONS_CREDITS,
-                IcsScope.READ_TRANSACTIONS_DEBITS,
-                IcsScope.READ_TRANSACTIONS_DETAIL);
+        return SCOPES;
     }
 }

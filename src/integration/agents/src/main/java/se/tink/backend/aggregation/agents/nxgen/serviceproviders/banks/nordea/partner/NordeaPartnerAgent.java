@@ -59,6 +59,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                 new NordeaPartnerApiClient(
                         client,
                         sessionStorage,
+                        provider,
                         credentials,
                         getApiLocale(request.getUser().getLocale()),
                         componentProvider
