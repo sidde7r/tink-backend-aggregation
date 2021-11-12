@@ -43,6 +43,7 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
         implements FrAispApiClient {
 
     private final QsealcSigner qsealcSigner;
+    private final LaBanquePostaleUserState userState;
 
     public LaBanquePostaleApiClient(
             TinkHttpClient client,
@@ -52,10 +53,12 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
             CredentialsRequest request,
             String redirectUrl,
             String qSealc,
+            LaBanquePostaleUserState userState,
             final LogMasker logMasker) {
         super(client, persistentStorage, logMasker, configuration, request, redirectUrl, qSealc);
 
         this.qsealcSigner = qsealcSigner;
+        this.userState = userState;
     }
 
     @Override
@@ -128,7 +131,11 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
                         QueryValues.AUTHORIZATION_CODE,
                         redirectUri);
 
-        return client.request(getConfiguration().getOauthBaseUrl() + Urls.GET_TOKEN)
+        return client.request(
+                        getConfiguration().getOauthBaseUrl()
+                                + (userState.isBusinessAccountSegment()
+                                        ? Urls.BUSINESS_TOKEN
+                                        : Urls.PERSONAL_TOKEN))
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .addBasicAuth(clientId, clientSecret)
@@ -151,7 +158,11 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
         final String clientId = getConfiguration().getClientId();
         final String redirectUrl = getRedirectUrl();
 
-        return client.request(getConfiguration().getOauthBaseUrl() + Urls.OAUTH)
+        return client.request(
+                        getConfiguration().getOauthBaseUrl()
+                                + (userState.isBusinessAccountSegment()
+                                        ? Urls.BUSINESS_OAUTH
+                                        : Urls.PERSONAL_OAUTH))
                 .queryParam(BerlinGroupConstants.QueryKeys.CLIENT_ID, clientId)
                 .queryParam(BerlinGroupConstants.QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(
