@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.nxgen.http.legacy.entities;
 
-import se.tink.backend.aggregation.annotations.JsonObject;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonObject
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class JwtHeaderEntity {
 
     private String alg = "RS256";
