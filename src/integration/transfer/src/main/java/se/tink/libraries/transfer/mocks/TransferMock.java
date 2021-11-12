@@ -53,11 +53,6 @@ public class TransferMock {
             return (T) this;
         }
 
-        public T withAmount(Amount amount) {
-            transfer.setAmount(amount);
-            return (T) this;
-        }
-
         public T withSourceMessage(String sourceMessage) {
             transfer.setSourceMessage(sourceMessage);
             return (T) this;
