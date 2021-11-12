@@ -10,6 +10,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -26,7 +27,8 @@ public class IngBaseTransactionsFetcherTest {
                     BaseFetchTransactionsResponse.class);
 
     private IngBaseTransactionsFetcher fetcher =
-            new IngBaseTransactionsFetcher(apiClient, LocalDate::now);
+            new IngBaseTransactionsFetcher(
+                    apiClient, LocalDate::now, new ConstantLocalDateTimeSource());
 
     @Test
     public void shouldFetchAndMapTransactionsToTinkModel() {

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 import com.google.common.collect.ImmutableSet;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -107,8 +108,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                                 .strongAuthenticationState(strongAuthenticationState)
                                 .build(),
                         agentComponentProvider);
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -157,7 +158,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final IngBaseAuthenticator ingBaseAuthenticator =
-                new IngBaseAuthenticator(apiClient, persistentStorage, request);
+                new IngBaseAuthenticator(
+                        apiClient, persistentStorage, request, localDateTimeSource);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
@@ -203,7 +205,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
                                 new IngBaseTransactionsFetcher(
-                                        apiClient, this::getTransactionsFromDate))));
+                                        apiClient,
+                                        this::getTransactionsFromDate,
+                                        localDateTimeSource))));
     }
 
     @Override
@@ -255,7 +259,10 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         if (authenticationAge < Transaction.FULL_HISTORY_MAX_AGE) {
             return earliestTransactionHistoryDate();
         }
-        return localDateTimeSource.now().toLocalDate().minusDays(Transaction.DEFAULT_HISTORY_DAYS);
+        return localDateTimeSource
+                .now(ZoneOffset.UTC)
+                .toLocalDate()
+                .minusDays(Transaction.DEFAULT_HISTORY_DAYS);
     }
 
     /*
