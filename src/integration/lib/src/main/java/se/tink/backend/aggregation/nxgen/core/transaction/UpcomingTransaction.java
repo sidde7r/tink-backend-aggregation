@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -123,12 +122,6 @@ public final class UpcomingTransaction extends AggregationTransaction {
         public Builder setUpcomingTransfer(Transfer upcomingTransfer) {
             this.upcomingTransfer = upcomingTransfer;
             return this;
-        }
-
-        @Deprecated
-        @Override
-        public Builder setAmount(Amount amount) {
-            return (Builder) super.setAmount(amount);
         }
 
         @Override
