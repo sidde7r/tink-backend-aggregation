@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.http.truststrategy;
 
-import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -11,7 +10,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import org.apache.http.conn.ssl.TrustStrategy;
-import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 
 /**
  * This trust strategy can be used when a bank is presenting a specific certificate that is invalid.
@@ -43,18 +41,15 @@ public class TrustPinnedCertificateStrategy implements TrustStrategy, VerifyHost
         }
     }
 
-    public static TrustStrategy forCertificate(String pemBytes) {
+    public static TrustPinnedCertificateStrategy forCertificate(Certificate pinnedCertificate) {
         try {
-            Certificate pinnedCertificate =
-                    Pem.parseCertificate(pemBytes.getBytes(StandardCharsets.US_ASCII));
-
             final TrustManagerFactory javaDefaultTrustManagerFactory =
                     TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             javaDefaultTrustManagerFactory.init((KeyStore) null);
             TrustManager[] trustManagers = javaDefaultTrustManagerFactory.getTrustManagers();
             X509TrustManager javaDefaultTrustManager = (X509TrustManager) trustManagers[0];
             return new TrustPinnedCertificateStrategy(pinnedCertificate, javaDefaultTrustManager);
-        } catch (CertificateException | KeyStoreException | NoSuchAlgorithmException e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException e) {
             throw new IllegalStateException(e);
         }
     }
