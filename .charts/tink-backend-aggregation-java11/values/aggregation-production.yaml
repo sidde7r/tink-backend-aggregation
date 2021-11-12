@@ -3,8 +3,8 @@ podCpuLimit: "3500m"
 podMemoryRequest: "6Gi"
 podMemoryLimit: "6Gi"
 heapSize: "4G"
-replicas: 5
-maxReplicas: 10
+replicas: 15
+maxReplicas: 30
 targetAverageCpuValue: "1.5"
 initialDelaySeconds: "300"
 
@@ -13,13 +13,13 @@ coordinationHosts: coordination-0.internal.production.aggregation.tink.network:2
 cacheHosts: main.pxkgtt.0001.euw1.cache.amazonaws.com:11211
 
 regularSqsQueueConfiguration:
-  enabled: False
+  enabled: True
   url: "https://sqs.eu-west-1.amazonaws.com/106818914384/aggregation-refresh-queue-aggregation-production"
   region: "eu-west-1"
   name: "aggregation-refresh-queue-aggregation-production"
 
 prioritySqsQueueConfiguration:
-  enabled: False
+  enabled: True
   url: "https://sqs.eu-west-1.amazonaws.com/106818914384/aggregation-priority-refresh-queue-aggregation-production"
   region: "eu-west-1"
   name: "aggregation-priority-refresh-queue-aggregation-production"
