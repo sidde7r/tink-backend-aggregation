@@ -11,7 +11,7 @@
 /.charts/tink-backend-aggregation-agents/templates/dk @tink-ab/aggregation-teletubbies-maintainer
 /.charts/tink-backend-aggregation-agents/templates/ee @tink-ab/aggregation-thundercats-maintainer
 /.charts/tink-backend-aggregation-agents/templates/es @tink-ab/aggregation-toros-maintainer
-/.charts/tink-backend-aggregation-agents/templates/fi @tink-ab/aggregation-teletubbies-maintainer
+/.charts/tink-backend-aggregation-agents/templates/fi @tink-ab/aggregation-llamas-maintainer
 /.charts/tink-backend-aggregation-agents/templates/fr @tink-ab/aggregation-penguins-maintainer
 /.charts/tink-backend-aggregation-agents/templates/gb @tink-ab/aggregation-fluffy-maintainer
 /.charts/tink-backend-aggregation-agents/templates/ie @tink-ab/aggregation-fluffy-maintainer
@@ -56,8 +56,8 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/ @tink-ab/aggregation-coreagg-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/demo/ @tink-ab/aggregation-coreagg-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/ @tink-ab/aggregation-teletubbies-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/ @tink-ab/aggregation-teletubbies-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/ @tink-ab/aggregation-llamas-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/ @tink-ab/aggregation-llamas-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/ @tink-ab/aggregation-teletubbies-maintainer

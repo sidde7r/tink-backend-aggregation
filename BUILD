@@ -315,7 +315,7 @@ codeowners(
         "/.charts/tink-backend-aggregation-agents/templates/fi",
     ],
     teams = [
-        "@tink-ab/aggregation-teletubbies-maintainer",
+        "@tink-ab/aggregation-llamas-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
