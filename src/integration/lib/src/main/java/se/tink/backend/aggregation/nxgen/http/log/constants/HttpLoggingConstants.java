@@ -71,6 +71,7 @@ public final class HttpLoggingConstants {
                     "x-amzn-trace-id",
                     "x-content-type-options",
                     "x-correlation-id",
+                    "x-correlationid",
                     "x-fapi-financial-id",
                     "x-fapi-interaction-id",
                     "x-forwarded-for",
