@@ -17,7 +17,7 @@ junit_test(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/raw_data_events",
         "//src/libraries/agent-storage",
         "//src/libraries/cache",
         "//src/libraries/request_tracing",

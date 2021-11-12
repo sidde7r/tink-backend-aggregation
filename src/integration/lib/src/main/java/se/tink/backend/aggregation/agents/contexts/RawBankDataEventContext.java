@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.contexts;
 
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
+import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.RawBankDataEventAccumulator;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public interface RawBankDataEventContext {

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.pojo.FieldPathPart;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.account_identifier_detectors.BbanFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.pojo.FieldPathPart;
+import se.tink.backend.aggregation.nxgen.raw_data_events.type_detection.account_identifier_detectors.BbanFieldTypeDetectionStrategy;
 
 public class BbanFieldTypeDetectionStrategyTest {
 

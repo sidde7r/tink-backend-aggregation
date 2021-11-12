@@ -6,11 +6,11 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
-import se.tink.backend.aggregation.nxgen.http.event.interceptor.RawBankDataEventProducerInterceptor;
+import se.tink.backend.aggregation.nxgen.raw_data_events.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.raw_data_events.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
+import se.tink.backend.aggregation.nxgen.raw_data_events.decision_strategy.RawBankDataEventCreationTriggerStrategy;
+import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.DefaultRawBankDataEventProducer;
+import se.tink.backend.aggregation.nxgen.raw_data_events.interceptor.RawBankDataEventProducerInterceptor;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvider {

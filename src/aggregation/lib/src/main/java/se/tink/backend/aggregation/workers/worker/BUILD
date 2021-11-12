@@ -13,7 +13,7 @@ java_library(
         "@tink_backend//src/libraries/unleash",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/api",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/raw_data_events",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/libraries/agent-storage",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
