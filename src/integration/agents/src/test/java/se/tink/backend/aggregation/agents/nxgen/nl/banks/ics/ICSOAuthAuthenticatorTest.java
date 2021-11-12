@@ -56,16 +56,17 @@ public class ICSOAuthAuthenticatorTest {
     public void shouldBuildAuthorizeUrlProperly() {
         // given
         ClientCredentialTokenResponse clientCredentialTokenResponse =
-                TestHelper.getClientCredentialTokenResponse();
+                mock(ClientCredentialTokenResponse.class);
+
         URL expectedUrl = new URL("sth");
         AccountSetupResponse accountSetupResponse = TestHelper.getAccountSetupResponse();
-        OAuth2Token token = clientCredentialTokenResponse.toTinkToken();
+
+        final OAuth2Token token = mock(OAuth2Token.class);
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
-        Date fromDate = new Date();
-        fromDate.setTime(999L);
 
         // when
         when(client.fetchTokenWithClientCredential()).thenReturn(clientCredentialTokenResponse);
+        when(clientCredentialTokenResponse.toTinkToken()).thenReturn(token);
         when(client.setupAccount(token)).thenReturn(accountSetupResponse);
         when(client.createAuthorizeRequest(anyString(), anyString()))
                 .thenReturn(requestBuilderMock);
