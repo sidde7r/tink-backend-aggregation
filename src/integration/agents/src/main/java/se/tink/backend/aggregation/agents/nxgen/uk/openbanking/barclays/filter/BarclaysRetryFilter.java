@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter;
 
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.AbstractRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -21,6 +22,9 @@ public class BarclaysRetryFilter extends AbstractRetryFilter {
 
     @Override
     protected boolean shouldRetry(RuntimeException exception) {
+        if (exception instanceof BankServiceException) {
+            return true;
+        }
         if (exception instanceof HttpResponseException) {
             HttpResponseException responseException = (HttpResponseException) exception;
             return responseException.getResponse().getStatus() == 502;
