@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.handler.CreditAgricoleResponseStatusHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.payment.CreditAgricolePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseCreditCardsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseIdentityDataFetcher;
@@ -77,6 +78,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         this.creditAgricoleConfiguration = agentConfiguration.getProviderSpecificConfiguration();
 
         this.client.addFilter(new TimeoutFilter());
+        this.client.setResponseStatusHandler(new CreditAgricoleResponseStatusHandler());
 
         this.apiClient =
                 new CreditAgricoleBaseApiClient(

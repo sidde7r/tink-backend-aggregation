@@ -179,9 +179,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         tlsConfigurationSetter.applyConfiguration(client);
         setSoftwareStatementForSignatureCreator(softwareStatement);
 
-        // Emit raw bank data event for 10% of the requests
+        // Emit raw bank data event for 1% of the requests
         client.overrideRawBankDataEventCreationTriggerStrategy(
-                new RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy(0.1));
+                new RandomStickyDecisionMakerRawBankDataEventCreationTriggerStrategy(0.01));
 
         apiClient =
                 createApiClient(
