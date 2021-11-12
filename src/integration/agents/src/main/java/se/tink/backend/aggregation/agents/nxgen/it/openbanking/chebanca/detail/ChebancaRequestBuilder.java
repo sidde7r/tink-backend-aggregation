@@ -9,10 +9,10 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants;
+import se.tink.backend.aggregation.eidassigner.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.header;
+package src.integration.lib.src.test.java.se.tink.backend.aggregation.eidassigner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -14,6 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
+import se.tink.backend.aggregation.eidassigner.SignatureHeaderGenerator;
 
 public class SignatureHeaderGeneratorTest {
     private static final String SIGNATURE_HEADER =

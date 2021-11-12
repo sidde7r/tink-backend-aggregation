@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.nxgen.http.header;
+package se.tink.backend.aggregation.eidassigner;
 
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class SignatureHeaderGenerator {
 
