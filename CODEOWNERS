@@ -118,7 +118,6 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/halifax/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/houseoffraser/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/hsbc/ @tink-ab/aggregation-fluffy-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/lauraashley/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/lloyds/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/marbles/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/markandspencer/ @tink-ab/aggregation-fluffy-maintainer
@@ -128,7 +127,6 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/nationwide/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/natwest/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/opus/ @tink-ab/aggregation-fluffy-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/outfit/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/rbs/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/revolut/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/santander/ @tink-ab/aggregation-fluffy-maintainer
