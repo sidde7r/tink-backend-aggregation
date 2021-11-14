@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
@@ -24,6 +26,8 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
     private final SamlinkAgentsConfiguration agentConfiguration;
     private final CreditCardRefreshController creditCardRefreshController;
     private final LogMasker logMasker;
+    private final SystemUpdater systemUpdater;
+    private final Credentials credentials;
 
     public SamlinkAgent(
             AgentComponentProvider componentProvider,
@@ -36,6 +40,8 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.creditCardRefreshController = getCreditCardRefreshController();
+        this.systemUpdater = componentProvider.getSystemUpdater();
+        this.credentials = componentProvider.getCredentialsRequest().getCredentials();
     }
 
     @Override
@@ -48,7 +54,9 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
                 getConfiguration().getProviderSpecificConfiguration(),
                 request,
                 agentConfiguration,
-                logMasker);
+                logMasker,
+                systemUpdater,
+                credentials);
     }
 
     @Override

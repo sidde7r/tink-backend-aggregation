@@ -17,6 +17,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormKeys;
@@ -47,6 +50,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -56,6 +61,8 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
     private final QsealcSigner qsealcSigner;
     private final AgentConfiguration configuration;
     private final SamlinkAgentsConfiguration agentConfiguration;
+    private final SystemUpdater systemUpdater;
+    private final Credentials credentials;
     private String organizationIdentifier;
 
     public SamlinkApiClient(
@@ -66,7 +73,9 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
             final SamlinkConfiguration samlinkConfiguration,
             final CredentialsRequest request,
             final SamlinkAgentsConfiguration agentConfiguration,
-            final LogMasker logMasker) {
+            final LogMasker logMasker,
+            final SystemUpdater systemUpdater,
+            final Credentials credentials) {
         super(
                 client,
                 persistentStorage,
@@ -80,6 +89,8 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
         this.configuration = configuration;
         this.qsealcSigner = qsealcSigner;
         this.organizationIdentifier = getOrganizationIdentifier();
+        this.systemUpdater = systemUpdater;
+        this.credentials = credentials;
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -106,7 +117,19 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
                         .map(this::fetchBalances)
                         .collect(Collectors.toList());
 
-        return new AccountsBaseResponseBerlinGroup(accountsWithBalances);
+        try {
+            return new AccountsBaseResponseBerlinGroup(accountsWithBalances);
+        } catch (HttpResponseException e) {
+            final HttpResponse httpResponse = e.getResponse();
+            if (httpResponse
+                            .getBody(String.class)
+                            .contains(SamlinkConstants.ErrorMessage.NO_API_KEY)
+                    && credentials.getType() == CredentialsTypes.PASSWORD) {
+                credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
+                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
+            }
+            throw e;
+        }
     }
 
     private AccountEntityBaseEntity fetchBalances(final AccountEntityBaseEntity accountBaseEntity) {
