@@ -117,6 +117,12 @@ public class OpenIdAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
+        if (getConsentId().equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
+            cleanAuthenticationPersistentStorage();
+            throw SessionError.CONSENT_INVALID.exception(
+                    "[OpenIdAuthenticationController] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
+        }
+
         OAuth2Token oAuth2Token =
                 persistentStorage
                         .get(
@@ -129,26 +135,21 @@ public class OpenIdAuthenticationController
                                     return SessionError.SESSION_EXPIRED.exception();
                                 });
 
-        if (oAuth2Token.hasAccessExpired()) {
-            if (!oAuth2Token.canRefresh()) {
-                log.info(
-                        "[OpenIdAuthenticationController] Access token has expired and refreshing impossible. Expiring the session.");
-                cleanAuthenticationPersistentStorage();
-                throw SessionError.SESSION_EXPIRED.exception();
-            } else {
-                OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
-                saveAccessToken(refreshedToken);
-                oAuth2Token = refreshedToken;
-
-                if (getConsentId().equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
-                    cleanAuthenticationPersistentStorage();
-                    throw SessionError.CONSENT_INVALID.exception(
-                            "[OpenIdAuthenticationController] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
-                }
-            }
+        if (oAuth2Token.isAccessTokenNotExpired()) {
+            apiClient.instantiateAisAuthFilter(oAuth2Token);
+            return;
         }
 
-        // as AutoAuthenticate will only happen in case of Ais so need to instantiate Ais filter
+        if (oAuth2Token.canNotRefreshAccessToken()) {
+            log.info("[OpenIdAuthenticationController] Access token has expired and refreshing impossible. Expiring the session.");
+            cleanAuthenticationPersistentStorage();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
+        saveAccessToken(refreshedToken);
+        oAuth2Token = refreshedToken;
+
         apiClient.instantiateAisAuthFilter(oAuth2Token);
     }
 
