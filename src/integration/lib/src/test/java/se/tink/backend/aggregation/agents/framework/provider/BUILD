@@ -6,7 +6,9 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

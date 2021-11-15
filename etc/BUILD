@@ -1,6 +1,9 @@
 filegroup(
     name = "development",
-    srcs = glob(["*.yml"]),
+    srcs = glob([
+        "*.yml",
+        "provider-override-development.json",
+    ]),
     visibility = ["//visibility:public"],
 )
 
