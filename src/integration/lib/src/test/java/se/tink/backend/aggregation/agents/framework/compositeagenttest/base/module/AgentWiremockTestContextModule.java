@@ -1,14 +1,11 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -18,6 +15,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.provider.SupplementalInformationControllerProvider;
 import se.tink.backend.aggregation.agents.framework.context.NewAgentTestContext;
+import se.tink.backend.aggregation.agents.framework.provider.ProviderConfigurationUtil;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
@@ -127,7 +125,9 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     @Provides
     @Singleton
     private Provider provideProvider() {
-        ProviderConfig marketProviders = readProvidersConfiguration(marketCode);
+        ProviderConfig marketProviders =
+                ProviderConfigurationUtil.readProvidersConfiguration(
+                        marketCode.toString().toLowerCase());
         final Provider provider = marketProviders.getProvider(providerName);
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
@@ -205,20 +205,5 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
         context.setAgentConfigurationController(agentConfigurationControllerable);
         context.setRawBankDataEventAccumulator(rawBankDataEventAccumulator);
         return context;
-    }
-
-    private static ProviderConfig readProvidersConfiguration(
-            se.tink.libraries.enums.MarketCode market) {
-        String providersFilePath =
-                "external/tink_backend/src/provider_configuration/data/seeding/providers-"
-                        + market.toString().toLowerCase()
-                        + ".json";
-        File providersFile = new File(providersFilePath);
-        final ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(providersFile, ProviderConfig.class);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
     }
 }

@@ -32,6 +32,7 @@ java_library(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/context",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/dao",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/modules/production",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/provider",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/testserverclient",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/utils",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",

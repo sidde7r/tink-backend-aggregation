@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.framework;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -44,6 +43,7 @@ import se.tink.backend.aggregation.agents.contractproducer.ContractProducer;
 import se.tink.backend.aggregation.agents.framework.context.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
 import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
+import se.tink.backend.aggregation.agents.framework.provider.ProviderConfigurationUtil;
 import se.tink.backend.aggregation.agents.framework.testserverclient.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
@@ -1001,28 +1001,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private boolean withoutRefreshableItems = false;
 
         public Builder(String market, String providerName) {
-            ProviderConfig marketProviders = readProvidersConfiguration(market);
+            ProviderConfig marketProviders =
+                    ProviderConfigurationUtil.readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
             this.provider.setMarket(marketProviders.getMarket());
             this.provider.setCurrency(marketProviders.getCurrency());
-        }
-
-        private static String escapeMarket(String market) {
-            return market.replaceAll("[^a-zA-Z]", "");
-        }
-
-        private static ProviderConfig readProvidersConfiguration(String market) {
-            String providersFilePath =
-                    "external/tink_backend/src/provider_configuration/data/seeding/providers-"
-                            + escapeMarket(market).toLowerCase()
-                            + ".json";
-            File providersFile = new File(providersFilePath);
-            final ObjectMapper mapper = new ObjectMapper();
-            try {
-                return mapper.readValue(providersFile, ProviderConfig.class);
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
         }
 
         private static User createDefaultUser() {
