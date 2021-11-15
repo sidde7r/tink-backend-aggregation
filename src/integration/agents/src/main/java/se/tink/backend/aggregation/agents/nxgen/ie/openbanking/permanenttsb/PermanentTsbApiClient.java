@@ -119,4 +119,20 @@ public class PermanentTsbApiClient extends UkOpenBankingApiClient {
     private List<String> createScope(ClientMode mode) {
         return Arrays.asList("openid", mode.getValue());
     }
+
+    @Override
+    public OAuth2Token exchangeAccessCode(String code) {
+
+        List<String> scopes = Arrays.asList("openid", ClientMode.ACCOUNTS.getValue());
+        String scope = String.join(" ", scopes);
+
+        TokenRequestForm postData =
+                new TokenRequestForm()
+                        .withGrantType("authorization_code")
+                        .withScope(scope)
+                        .withRedirectUri(redirectUrl)
+                        .withCode(code);
+
+        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
+    }
 }
