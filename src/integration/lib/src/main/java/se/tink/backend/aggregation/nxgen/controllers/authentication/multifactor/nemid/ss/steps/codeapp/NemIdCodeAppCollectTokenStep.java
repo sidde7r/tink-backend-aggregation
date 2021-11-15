@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codeapp;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TIMEOUT_ICON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_TIMEOUT_HEADER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_TOKEN_METRIC;
@@ -33,7 +33,7 @@ class NemIdCodeAppCollectTokenStep {
                 driverWrapper.searchForFirstElement(
                         ElementsSearchQuery.builder()
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
-                                .searchInAnIframe(NEMID_TIMEOUT_ICON)
+                                .searchInAnIframe(NEMID_CODE_APP_TIMEOUT_HEADER)
                                 .searchForSeconds(
                                         NemIdConstants.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN)
                                 .build());
@@ -42,7 +42,7 @@ class NemIdCodeAppCollectTokenStep {
         if (elementSelector == NOT_EMPTY_NEMID_TOKEN) {
             return searchResult.getElementTextTrimmed();
         }
-        if (elementSelector == NEMID_TIMEOUT_ICON) {
+        if (elementSelector == NEMID_CODE_APP_TIMEOUT_HEADER) {
             throw NemIdError.TIMEOUT.exception();
         }
 

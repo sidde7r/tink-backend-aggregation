@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CLOSE_SELECT_METHOD_POPUP;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_LINK_TO_CLOSE_SELECT_METHOD_POPUP;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD;
 
 import java.util.Set;
@@ -147,7 +147,9 @@ public class NemIdSwitchTo2FAScreenStepTest {
                 detect2FAMethodsResult, screenForMethodChosenByUser);
 
         // then
-        mocksToVerifyInOrder.verify(driverWrapper).clickButton(NEMID_CLOSE_SELECT_METHOD_POPUP);
+        mocksToVerifyInOrder
+                .verify(driverWrapper)
+                .clickButton(NEMID_LINK_TO_CLOSE_SELECT_METHOD_POPUP);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_SELECT_METHOD_POPUP;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_SELECT_METHOD_POPUP_HEADER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod.CODE_APP;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod.CODE_CARD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod.CODE_TOKEN;
@@ -145,7 +145,7 @@ public class NemIdDetect2FAMethodsStepTest {
                     NemId2FAMethodScreen defaultScreen) {
         // given
         mockElementDoesExist(NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD);
-        mockElementsSearchResultAfterLinkIsClicked(NEMID_SELECT_METHOD_POPUP);
+        mockElementsSearchResultAfterLinkIsClicked(NEMID_SELECT_METHOD_POPUP_HEADER);
         mockElementsSearchResultForAllOptionButtons(
                 ImmutableMap.of(
                         CODE_APP_BUTTON, true,
@@ -182,7 +182,7 @@ public class NemIdDetect2FAMethodsStepTest {
                     Set<NemId2FAMethod> expectedAvailableMethods) {
         // given
         mockElementDoesExist(NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD);
-        mockElementsSearchResultAfterLinkIsClicked(NEMID_SELECT_METHOD_POPUP);
+        mockElementsSearchResultAfterLinkIsClicked(NEMID_SELECT_METHOD_POPUP_HEADER);
         mockElementsSearchResultForAllOptionButtons(existingButtonsWithIsDisplayedFlag);
 
         // when

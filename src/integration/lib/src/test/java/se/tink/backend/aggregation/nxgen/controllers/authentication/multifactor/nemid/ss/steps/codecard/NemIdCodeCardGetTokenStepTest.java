@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_CODE_INPUT;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
@@ -78,7 +78,7 @@ public class NemIdCodeCardGetTokenStepTest {
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
                                 .searchInAnIframe(
                                         NOT_EMPTY_ERROR_MESSAGE,
-                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
+                                        NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -111,7 +111,7 @@ public class NemIdCodeCardGetTokenStepTest {
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
                                 .searchInAnIframe(
                                         NOT_EMPTY_ERROR_MESSAGE,
-                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
+                                        NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -191,7 +191,7 @@ public class NemIdCodeCardGetTokenStepTest {
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
                                 .searchInAnIframe(
                                         NOT_EMPTY_ERROR_MESSAGE,
-                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
+                                        NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER)
                                 .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
@@ -203,8 +203,7 @@ public class NemIdCodeCardGetTokenStepTest {
         // given
         WebElement element = webElementMockWithText("--- SAMPLE TOKEN ---");
         when(driverWrapper.searchForFirstElement(any()))
-                .thenReturn(
-                        ElementsSearchResult.of(NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES, null))
+                .thenReturn(ElementsSearchResult.of(NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER, null))
                 .thenReturn(ElementsSearchResult.of(NOT_EMPTY_NEMID_TOKEN, element));
 
         // when
@@ -217,9 +216,7 @@ public class NemIdCodeCardGetTokenStepTest {
                 .verify(driverWrapper)
                 .setValueToElement(CODE_CARD_CODE, NEMID_CODE_CARD_CODE_INPUT);
         mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
-        mocksToVerifyInOrder
-                .verify(driverWrapper)
-                .clickButton(NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES);
+        mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
                 .searchForFirstElement(
@@ -227,7 +224,7 @@ public class NemIdCodeCardGetTokenStepTest {
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
                                 .searchInAnIframe(
                                         NOT_EMPTY_ERROR_MESSAGE,
-                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
+                                        NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }

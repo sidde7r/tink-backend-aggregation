@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.INVALID_CARD_OR_TOKEN_CODE_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_CODE_INPUT;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
@@ -52,12 +52,12 @@ class NemIdCodeCardGetTokenStep {
         ElementsSearchResult searchResult =
                 driverWrapper.searchForFirstElement(
                         ElementsSearchQuery.builder()
-                                .searchInAnIframe(NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
+                                .searchInAnIframe(NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER)
                                 .build());
         By elementSelector = searchResult.getSelector();
-        if (elementSelector == NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES) {
+        if (elementSelector == NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER) {
             log.info("{}[NemIdCodeCardGetTokenStep], user is running out codes", NEM_ID_PREFIX);
-            driverWrapper.clickButton(elementSelector);
+            driverWrapper.clickButton(SUBMIT_BUTTON);
         }
     }
 
@@ -68,7 +68,7 @@ class NemIdCodeCardGetTokenStep {
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
                                 .searchInAnIframe(
                                         NOT_EMPTY_ERROR_MESSAGE,
-                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
+                                        NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER)
                                 .build());
         By elementSelector = searchResult.getSelector();
 
