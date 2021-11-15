@@ -35,6 +35,13 @@ public class ICSApiClientFiltersTest {
     private static final int TEST_MAX_RETRIES_NUMBER = 2;
     private static final int NO_OF_FILTER_RETRIES = 3;
     private static final URL TEST_URL = new URL("https://ics.nl/test");
+    private static final String TERMINATED_HANDSHAKE_MESSAGE =
+            "Remote host terminated the handshake";
+    private static final String CONNECTION_RESET_MESSAGE = "connection reset";
+    private static final String CONNECT_TIMED_OUT_MESSAGE = "connect timed out";
+    private static final String READ_TIMED_OUT_MESSAGE = "read timed out";
+    private static final String FAILED_TO_RESPOND_MESSAGE = "failed to respond";
+    private static final String TOO_MANY_REQUESTS_MESSAGE = "Too many requests";
 
     @Mock private Filter callFilter;
     @Mock private HttpResponse response;
@@ -80,28 +87,28 @@ public class ICSApiClientFiltersTest {
     private Object[] parametersForShouldFilterAndThrowProperException() {
         return new Object[][] {
             {
-                "Remote host terminated the handshake",
-                new HttpClientException("Remote host terminated the handshake", null)
+                TERMINATED_HANDSHAKE_MESSAGE,
+                new HttpClientException(TERMINATED_HANDSHAKE_MESSAGE, null)
             },
             {
-                "connection reset",
+                CONNECTION_RESET_MESSAGE,
                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                        new HttpClientException("connection reset", null))
+                        new HttpClientException(CONNECTION_RESET_MESSAGE, null))
             },
             {
-                "connect timed out",
+                CONNECT_TIMED_OUT_MESSAGE,
                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                        new HttpClientException("connect timed out", null))
+                        new HttpClientException(CONNECT_TIMED_OUT_MESSAGE, null))
             },
             {
-                "read timed out",
+                READ_TIMED_OUT_MESSAGE,
                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                        new HttpClientException("read timed out", null))
+                        new HttpClientException(READ_TIMED_OUT_MESSAGE, null))
             },
             {
-                "failed to respond",
+                FAILED_TO_RESPOND_MESSAGE,
                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                        new HttpClientException("failed to respond", null))
+                        new HttpClientException(FAILED_TO_RESPOND_MESSAGE, null))
             },
         };
     }
@@ -158,7 +165,7 @@ public class ICSApiClientFiltersTest {
     @SuppressWarnings("unused")
     private Object[] parametersForShouldThrowOn429ErrorAndRetryOnTooManyRequests() {
         return new Object[][] {
-            {"Too many requests", "Too many requests", NO_OF_FILTER_RETRIES},
+            {TOO_MANY_REQUESTS_MESSAGE, TOO_MANY_REQUESTS_MESSAGE, NO_OF_FILTER_RETRIES},
             {"Access exceeded on account", "access exceeded on account", 1},
         };
     }

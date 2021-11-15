@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.MAX_RETRIES;
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_MAX_RETRIES;
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_RETRY_MS_MAX;
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_RETRY_MS_MIN;
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
 import com.google.inject.Inject;
@@ -7,7 +12,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
@@ -74,12 +78,11 @@ public final class ICSAgent extends NextGenerationAgent
         new ICSApiClientConfigurator()
                 .applyFilters(
                         client,
-                        new ICSRetryFilterProperties(
-                                HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS),
+                        new ICSRetryFilterProperties(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS),
                         new ICSRateLimitFilterProperties(
-                                HttpClient.RATE_LIMIT_RETRY_MS_MIN,
-                                HttpClient.RATE_LIMIT_RETRY_MS_MAX,
-                                HttpClient.RATE_LIMIT_MAX_RETRIES),
+                                RATE_LIMIT_RETRY_MS_MIN,
+                                RATE_LIMIT_RETRY_MS_MAX,
+                                RATE_LIMIT_MAX_RETRIES),
                         provider.getName());
     }
 
