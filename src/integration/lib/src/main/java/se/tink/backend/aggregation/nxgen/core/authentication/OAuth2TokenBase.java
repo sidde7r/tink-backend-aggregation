@@ -53,7 +53,7 @@ public abstract class OAuth2TokenBase {
             String oldRefreshToken = possibleOldRefreshToken.get();
             this.setRefreshToken(oldRefreshToken);
             this.setRefreshExpiresInSeconds(
-                    oldOAuth2Token.hasRefreshExpire()
+                    oldOAuth2Token.isRefreshTokenExpirationPeriodSpecified()
                             ? oldOAuth2Token.getRefreshExpireEpoch() - this.getIssuedAt()
                             : REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED);
         }
@@ -67,7 +67,7 @@ public abstract class OAuth2TokenBase {
         return getRefreshToken().isPresent() && !hasRefreshExpired();
     }
 
-    public boolean hasRefreshExpire() {
+    public boolean isRefreshTokenExpirationPeriodSpecified() {
         return refreshExpiresInSeconds != REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED;
     }
 

@@ -94,7 +94,7 @@ public class OpenBankingTokenExpirationDateHelper {
             return getExpirationDateFrom(tokenLifetime, tokenLifetimeUnit);
         }
 
-        if (!token.hasRefreshExpire()) {
+        if (!token.isRefreshTokenExpirationPeriodSpecified()) {
             return getExpirationDateFrom(tokenLifetime, tokenLifetimeUnit);
         }
 

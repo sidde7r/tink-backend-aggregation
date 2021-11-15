@@ -88,7 +88,7 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
     }
 
     private OAuth2Token addRefreshExpireToToken(OAuth2Token token) {
-        if (!token.hasRefreshExpire()) {
+        if (!token.isRefreshTokenExpirationPeriodSpecified()) {
             sessionStorage
                     .get(StorageKeys.EXPIRATION_DATE, Date.class)
                     .ifPresent(

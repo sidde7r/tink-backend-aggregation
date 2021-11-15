@@ -167,7 +167,7 @@ public class OpenIdAuthenticationController
                 new Date(oAuth2Token.getIssuedAt() * 1000),
                 new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
                 !oAuth2Token.isRefreshNullOrEmpty(),
-                oAuth2Token.hasRefreshExpire()
+                oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
                         ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
                         : "N/A");
 
@@ -180,7 +180,7 @@ public class OpenIdAuthenticationController
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            if (refreshedOAuth2Token.hasRefreshExpire()) {
+            if (refreshedOAuth2Token.isRefreshTokenExpirationPeriodSpecified()) {
                 credentials.setSessionExpiryDate(
                         OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                                 refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
@@ -205,7 +205,7 @@ public class OpenIdAuthenticationController
                 "Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
                 new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
                 !oAuth2Token.isRefreshNullOrEmpty(),
-                oAuth2Token.hasRefreshExpire()
+                oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
                         ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
                         : "N/A");
         return oAuth2Token;

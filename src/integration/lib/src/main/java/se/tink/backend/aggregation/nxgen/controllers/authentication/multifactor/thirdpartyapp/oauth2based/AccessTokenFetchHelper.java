@@ -40,7 +40,7 @@ public class AccessTokenFetchHelper<T extends OAuth2TokenBase> {
     }
 
     private T updateRefreshToken(T refreshedToken, T oldToken) {
-        if (refreshedToken.hasRefreshExpire()) {
+        if (refreshedToken.isRefreshTokenExpirationPeriodSpecified()) {
             credentials.setSessionExpiryDate(
                     OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                             refreshedToken, tokenLifeTime.getLifetime(), tokenLifeTime.getUnit()));

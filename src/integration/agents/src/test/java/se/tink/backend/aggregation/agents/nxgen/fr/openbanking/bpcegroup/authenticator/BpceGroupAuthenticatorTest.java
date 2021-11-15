@@ -84,7 +84,7 @@ public class BpceGroupAuthenticatorTest {
     private static void assertTokenIsValid(OAuth2Token token) {
         assertNotNull(token);
         assertTrue(token.isValid());
-        assertFalse(token.hasRefreshExpire());
+        assertFalse(token.isRefreshTokenExpirationPeriodSpecified());
         assertFalse(token.hasAccessExpired());
         assertTrue(token.canRefresh());
         assertThat(token.getAccessToken()).isEqualTo(ACCESS_TOKEN);
