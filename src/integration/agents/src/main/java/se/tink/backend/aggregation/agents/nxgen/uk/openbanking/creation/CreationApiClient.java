@@ -81,6 +81,12 @@ public class CreationApiClient extends UkOpenBankingApiClient {
         return overrideRefreshExpiresInIfNeeded(tokenResponse).toAccessToken();
     }
 
+    /* Override scope list because we should add "offline_access" to the scope during authentication */
+    @Override
+    public List<String> createScopeList(ClientMode mode) {
+        return createScope(null, mode);
+    }
+
     protected TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
