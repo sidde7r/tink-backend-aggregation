@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestRespon
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
+import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.RawBankDataEventAccumulator;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UserAvailability;

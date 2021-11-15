@@ -17,16 +17,12 @@ import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
@@ -38,6 +34,8 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionPaginator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.RefreshScopeTransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -50,12 +48,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
-import se.tink.libraries.credentials.service.AccountTransactionsRefreshScope;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.HasRefreshScope;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.credentials.service.RefreshScope;
-import se.tink.libraries.credentials.service.TransactionsRefreshScope;
 import se.tink.libraries.unleash.UnleashClient;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,23 +56,32 @@ public class MonzoTransactionPaginatorTest {
     private static final String DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/resources/";
 
+    private final DelaySimulatingLocalDateTimeSource localDateTimeSource =
+            new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2021-10-02T00:00:00"));
+
     @Mock private AgentComponentProvider componentProvider;
     @Mock private UnleashClient unleashClient;
     @Mock private CompositeAgentContext context;
     @Mock private Provider provider;
 
-    private final DelaySimulatingLocalDateTimeSource localDateTimeSource =
-            new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2021-09-02T00:00:00"));
-
-    private MonzoTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
-            paginator;
+    private AccountTransactionsV31Response oldTransactions;
+    private AccountTransactionsV31Response currentTransactions;
     private PersistentStorage persistentStorage;
     private UkOpenBankingApiClient apiClient;
-    private CredentialsRequest request;
     private UkOpenBankingAisConfig ukOpenBankingAisConfig;
+    private MonzoTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
+            transactionPaginator;
+    private TransactionPaginationHelper paginationHelper;
 
     @Before
-    public void init() {
+    public void init() throws IOException {
+        oldTransactions =
+                loadSampleData("two-years-transactions.json", AccountTransactionsV31Response.class);
+        currentTransactions =
+                loadSampleData("last-transactions.json", AccountTransactionsV31Response.class);
+
+        persistentStorage = mock(PersistentStorage.class);
+        apiClient = mock(UkOpenBankingApiClient.class);
         ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
         when(ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(any()))
                 .thenReturn(String.format(ApiServices.ACCOUNT_TRANSACTIONS_REQUEST, "identifier1"));
@@ -89,14 +90,9 @@ public class MonzoTransactionPaginatorTest {
         when(componentProvider.getUnleashClient()).thenReturn(unleashClient);
         when(provider.getName()).thenReturn("providerName");
 
-        persistentStorage = mock(PersistentStorage.class);
-        apiClient = mock(UkOpenBankingApiClient.class);
-    }
-
-    public void setBeforeTestWithCertainDate() {
-        request = mock(CredentialsRequest.class);
-        paginator =
-                new MonzoTransactionPaginator(
+        paginationHelper = mock(RefreshScopeTransactionPaginationHelper.class);
+        transactionPaginator =
+                new MonzoTransactionPaginator<>(
                         componentProvider,
                         provider,
                         ukOpenBankingAisConfig,
@@ -106,172 +102,73 @@ public class MonzoTransactionPaginatorTest {
                         (response, account) ->
                                 AccountTransactionsV31Response
                                         .toAccountTransactionPaginationResponse(
-                                                (AccountTransactionsV31Response) response,
-                                                new MonzoTransactionMapper()),
+                                                response, new MonzoTransactionMapper()),
                         localDateTimeSource,
-                        request);
-    }
-
-    public void setBeforeTestWithRefreshScope() {
-        request = mock(RefreshInformationRequest.class);
-        paginator =
-                new MonzoTransactionPaginator(
-                        componentProvider,
-                        provider,
-                        ukOpenBankingAisConfig,
-                        persistentStorage,
-                        apiClient,
-                        AccountTransactionsV31Response.class,
-                        (response, account) ->
-                                AccountTransactionsV31Response
-                                        .toAccountTransactionPaginationResponse(
-                                                (AccountTransactionsV31Response) response,
-                                                new MonzoTransactionMapper()),
-                        localDateTimeSource,
-                        request);
+                        paginationHelper);
     }
 
     @Test
-    public void shouldFetchOnePageOfTransactionsWhenThereIsNoKeyAndCertainDateIsNotPresent()
-            throws IOException {
+    public void
+            shouldFetchOnePageOfTransactionsWhenThereIsNoKeyAndLastTransactionsDateIsNotPresent() {
         // given
-        setBeforeTestWithCertainDate();
-        final AccountTransactionsV31Response response =
-                loadSampleData("transactions.json", AccountTransactionsV31Response.class);
-        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
+        final Instant oldInstant = Instant.parse("2021-07-12T17:20:19.485Z");
+        final LocalDate oldLocalDate = LocalDate.parse("2021-07-12");
+        final Collection<Transaction> expected =
+                getExpectedPageWithTransactions(oldInstant, oldLocalDate);
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(oldTransactions);
 
         // when
         TransactionKeyPaginatorResponse<String> result =
-                paginator.getTransactionsFor(createTestAccount(), null);
+                transactionPaginator.getTransactionsFor(createTestAccount(), null);
 
         // then
         assertThat(result)
                 .usingRecursiveComparison()
-                .isEqualTo(
-                        new TransactionKeyPaginatorResponseImpl<String>(
-                                getExpectedLastPageTransactions(), null));
+                .isEqualTo(new TransactionKeyPaginatorResponseImpl<String>(expected, null));
     }
 
     @Test
-    public void shouldFetchTransactionsWhenCertainDateIsAfterFromDateForManualRefresh()
-            throws IOException {
+    public void shouldFetchTransactionsWhenLastTransactionsDateIsBeforeFromBookingDate() {
         // given
-        setBeforeTestWithCertainDate();
-        final Date youngCertainDate = new Date(1632913920000L); // 1632913920000L = 29-09-2021
-        final AccountTransactionsV31Response response =
-                loadSampleData(
-                        "transactions_certain_date.json", AccountTransactionsV31Response.class);
-        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
-        when(request.getAccounts()).thenReturn(createTestListAccounts(youngCertainDate));
+        final Instant oldInstant = Instant.parse("2021-07-12T17:20:19.485Z");
+        final LocalDate oldLocalDate = LocalDate.parse("2021-07-12");
+        final Collection<Transaction> expected =
+                getExpectedPageWithTransactions(oldInstant, oldLocalDate);
+        final Optional<Date> oldCertainDate =
+                Optional.of(new Date(1538219520000L)); // 1538219520000L = 29-09-2018
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(oldTransactions);
+        when(paginationHelper.getTransactionDateLimit(any())).thenReturn(oldCertainDate);
 
         // when
         TransactionKeyPaginatorResponse<String> result =
-                paginator.getTransactionsFor(createTestAccount(), null);
+                transactionPaginator.getTransactionsFor(createTestAccount(), null);
 
         // then
         assertThat(result)
                 .usingRecursiveComparison()
-                .isEqualTo(
-                        new TransactionKeyPaginatorResponseImpl<String>(
-                                getExpectedTransactionsWithBookedDate(), null));
+                .isEqualTo(new TransactionKeyPaginatorResponseImpl<String>(expected, null));
     }
 
     @Test
-    public void shouldFetchTransactionsWhenCertainDateIsBeforeThanFromDateForManualRefresh()
-            throws IOException {
+    public void shouldFetchTransactionsWhenLastTransactionsDateIsAfterFromBookingDate() {
         // given
-        setBeforeTestWithCertainDate();
-        final Date oldCertainDate = new Date(1538219520000L); // 1538219520000L = 29-09-2018
-        final AccountTransactionsV31Response response =
-                loadSampleData("transactions.json", AccountTransactionsV31Response.class);
-        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
-        when(request.getAccounts()).thenReturn(createTestListAccounts(oldCertainDate));
+        final Instant currentInstant = Instant.parse("2021-10-01T17:20:19.485Z");
+        final LocalDate currentLocalDate = LocalDate.parse("2021-10-01");
+        final Collection<Transaction> expected =
+                getExpectedPageWithTransactions(currentInstant, currentLocalDate);
+        final Optional<Date> youngCertainDate =
+                Optional.of(new Date(1632913920000L)); // 1632913920000L = 29-09-2021
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(currentTransactions);
+        when(paginationHelper.getTransactionDateLimit(any())).thenReturn(youngCertainDate);
+
         // when
         TransactionKeyPaginatorResponse<String> result =
-                paginator.getTransactionsFor(createTestAccount(), null);
+                transactionPaginator.getTransactionsFor(createTestAccount(), null);
 
         // then
         assertThat(result)
                 .usingRecursiveComparison()
-                .isEqualTo(
-                        new TransactionKeyPaginatorResponseImpl<String>(
-                                getExpectedLastPageTransactions(), null));
-    }
-
-    @Test
-    public void shouldFetchTransactionsWhenRefreshScopeIsEnabledForManualRefresh()
-            throws IOException {
-        // given
-        setBeforeTestWithRefreshScope();
-        final AccountTransactionsV31Response response =
-                loadSampleData(
-                        "transactions_certain_date.json", AccountTransactionsV31Response.class);
-        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
-        when(((HasRefreshScope) request).getRefreshScope()).thenReturn(createRefreshScope());
-
-        // when
-        TransactionKeyPaginatorResponse<String> result =
-                paginator.getTransactionsFor(createTestAccount(), null);
-
-        // then
-        assertThat(result)
-                .usingRecursiveComparison()
-                .isEqualTo(
-                        new TransactionKeyPaginatorResponseImpl<String>(
-                                getExpectedTransactionsWithBookedDate(), null));
-    }
-
-    @Test
-    public void shouldFetchTransactionsWhenRefreshScopeIsEnabledWithAccountHistoryDate()
-            throws IOException {
-        // given
-        setBeforeTestWithRefreshScope();
-        final AccountTransactionsV31Response response =
-                loadSampleData(
-                        "transactions_certain_date.json", AccountTransactionsV31Response.class);
-        final LocalDate localDate = LocalDate.of(2021, 10, 1);
-        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
-        when(((HasRefreshScope) request).getRefreshScope())
-                .thenReturn(createRefreshScope(true, localDate));
-
-        // when
-        TransactionKeyPaginatorResponse<String> result =
-                paginator.getTransactionsFor(createTestAccount(), null);
-
-        // then
-        assertThat(result)
-                .usingRecursiveComparison()
-                .isEqualTo(
-                        new TransactionKeyPaginatorResponseImpl<String>(
-                                getExpectedTransactionsWithBookedDate(), null));
-    }
-
-    private RefreshScope createRefreshScope() {
-        return createRefreshScope(false, null);
-    }
-
-    private RefreshScope createRefreshScope(boolean isAccountShouldBeAdded, LocalDate date) {
-        RefreshScope refreshScope = new RefreshScope();
-        refreshScope.setTransactions(createTransactionsRefreshScope(isAccountShouldBeAdded, date));
-        return refreshScope;
-    }
-
-    private TransactionsRefreshScope createTransactionsRefreshScope(
-            boolean isAccountShouldBeAdded, LocalDate bookedTransactionsDate) {
-        LocalDate defaultRefreshScopeDate = LocalDate.of(2020, 10, 2);
-        TransactionsRefreshScope transactionsRefreshScope = new TransactionsRefreshScope();
-        transactionsRefreshScope.setTransactionBookedDateGte(defaultRefreshScopeDate);
-
-        if (isAccountShouldBeAdded) {
-            AccountTransactionsRefreshScope account = new AccountTransactionsRefreshScope();
-            account.setAccountIdentifiers(
-                    Stream.of(new OtherIdentifier("id1").toString()).collect(Collectors.toSet()));
-            account.setTransactionBookedDateGte(bookedTransactionsDate);
-            Set<AccountTransactionsRefreshScope> accounts =
-                    Stream.of(account).collect(Collectors.toSet());
-            transactionsRefreshScope.setAccounts(accounts);
-        }
-        return transactionsRefreshScope;
+                .isEqualTo(new TransactionKeyPaginatorResponseImpl<String>(expected, null));
     }
 
     private TransactionalAccount createTestAccount() {
@@ -291,62 +188,23 @@ public class MonzoTransactionPaginatorTest {
                 .orElse(null);
     }
 
-    private List<Account> createTestListAccounts(Date certainDate) {
-        Account account = new Account();
-        account.setBankId("Unique1");
-        account.setCertainDate(certainDate);
-        return Collections.singletonList(account);
-    }
-
-    private Collection<Transaction> getExpectedLastPageTransactions() {
+    private Collection<Transaction> getExpectedPageWithTransactions(
+            Instant instantDate, LocalDate localDate) {
         return Collections.singletonList(
                 (Transaction)
                         Transaction.builder()
                                 .setAmount(ExactCurrencyAmount.of(-18.9600, "GBP"))
                                 .setDescription("RAW")
                                 .setPending(true)
-                                .setDate(Date.from(Instant.parse("2021-07-12T17:20:19.485Z")))
+                                .setDate(Date.from(instantDate))
                                 .setMerchantCategoryCode("5812")
                                 .setProprietaryFinancialInstitutionType("mastercard")
                                 .setTransactionDates(
                                         TransactionDates.builder()
                                                 .setBookingDate(
                                                         new AvailableDateInformation()
-                                                                .setDate(
-                                                                        LocalDate.parse(
-                                                                                "2021-07-12"))
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2021-07-12T17:20:19.485Z")))
-                                                .build())
-                                .setProviderMarket("UK")
-                                .addExternalSystemIds(
-                                        TransactionExternalSystemIdType
-                                                .PROVIDER_GIVEN_TRANSACTION_ID,
-                                        "tx_0000A8DTP")
-                                .build());
-    }
-
-    private Collection<Transaction> getExpectedTransactionsWithBookedDate() {
-        return Collections.singletonList(
-                (Transaction)
-                        Transaction.builder()
-                                .setAmount(ExactCurrencyAmount.of(-18.9600, "GBP"))
-                                .setDescription("RAW")
-                                .setPending(true)
-                                .setDate(Date.from(Instant.parse("2021-10-01T17:20:19.485Z")))
-                                .setMerchantCategoryCode("5812")
-                                .setProprietaryFinancialInstitutionType("mastercard")
-                                .setTransactionDates(
-                                        TransactionDates.builder()
-                                                .setBookingDate(
-                                                        new AvailableDateInformation()
-                                                                .setDate(
-                                                                        LocalDate.parse(
-                                                                                "2021-10-01"))
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2021-10-01T17:20:19.485Z")))
+                                                                .setDate(localDate)
+                                                                .setInstant(instantDate))
                                                 .build())
                                 .setProviderMarket("UK")
                                 .addExternalSystemIds(

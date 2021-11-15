@@ -52,7 +52,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/raw_data_events",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
         "//src/libraries/agent-storage",

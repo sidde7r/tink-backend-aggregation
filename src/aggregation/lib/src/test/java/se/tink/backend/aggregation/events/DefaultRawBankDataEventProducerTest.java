@@ -28,13 +28,14 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.DenyAlwaysRawBankDataEventCreationTriggerStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
-import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.raw_data_events.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.raw_data_events.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
+import se.tink.backend.aggregation.nxgen.raw_data_events.decision_strategy.DenyAlwaysRawBankDataEventCreationTriggerStrategy;
+import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.DefaultRawBankDataEventProducer;
+import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.RawBankDataEventAccumulator;
+import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.RawBankDataEventProducer;
+import se.tink.backend.aggregation.nxgen.raw_data_events.interceptor.RawBankDataEventProducerInterceptor;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
@@ -371,17 +372,16 @@ public class DefaultRawBankDataEventProducerTest {
                         .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
-                        .setRawBankDataEventEmissionComponents(
-                                eventProducer,
-                                eventAccumulator,
-                                () -> RefreshableItem.CHECKING_ACCOUNTS,
-                                givenCorrelationId)
                         .build();
 
-        client.overrideRawBankDataEventCreationStrategies(
-                RawBankDataEventCreationStrategies.createDefaultConfiguration());
-        client.overrideRawBankDataEventCreationTriggerStrategy(
-                new AllowAlwaysRawBankDataEventCreationTriggerStrategy());
+        client.addFilter(
+                new RawBankDataEventProducerInterceptor(
+                        eventProducer,
+                        eventAccumulator,
+                        () -> RefreshableItem.CHECKING_ACCOUNTS,
+                        givenCorrelationId,
+                        "providerName",
+                        new AllowAlwaysRawBankDataEventCreationTriggerStrategy()));
 
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicPort();
         WireMockServer wireMockServer = new WireMockServer(config);
@@ -513,15 +513,16 @@ public class DefaultRawBankDataEventProducerTest {
                         .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
-                        .setRawBankDataEventEmissionComponents(
-                                eventProducer,
-                                eventAccumulator,
-                                () -> RefreshableItem.CHECKING_ACCOUNTS,
-                                givenCorrelationId)
                         .build();
 
-        client.overrideRawBankDataEventCreationTriggerStrategy(
-                new DenyAlwaysRawBankDataEventCreationTriggerStrategy());
+        client.addFilter(
+                new RawBankDataEventProducerInterceptor(
+                        eventProducer,
+                        eventAccumulator,
+                        () -> RefreshableItem.CHECKING_ACCOUNTS,
+                        givenCorrelationId,
+                        "providerName",
+                        new DenyAlwaysRawBankDataEventCreationTriggerStrategy()));
 
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicPort();
         WireMockServer wireMockServer = new WireMockServer(config);

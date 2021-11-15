@@ -14,8 +14,6 @@ import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.Filterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilderProvidable;
@@ -163,13 +161,4 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void request(HttpRequest request) throws HttpClientException, HttpResponseException;
     // --- Requests ---
-
-    // +++ Raw bank data event emission +++
-    void overrideRawBankDataEventCreationStrategies(
-            RawBankDataEventCreationStrategies configuration);
-
-    void overrideRawBankDataEventCreationTriggerStrategy(
-            RawBankDataEventCreationTriggerStrategy configuration);
-    // --- Raw bank data event emission ---
-
 }

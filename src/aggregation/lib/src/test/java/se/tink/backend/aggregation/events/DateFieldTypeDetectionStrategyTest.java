@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.DateFieldTypeDetectionStrategy;
+import se.tink.backend.aggregation.nxgen.raw_data_events.type_detection.DateFieldTypeDetectionStrategy;
 
 public class DateFieldTypeDetectionStrategyTest {
 
