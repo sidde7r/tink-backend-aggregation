@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.Collections;
+import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
 import lombok.Data;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvApiClient;
-import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc.SelectedRole;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.rpc.BalanceResponse;
@@ -17,13 +18,12 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Data
+@Getter
 public class AccountEntity {
     private String resourceId;
     private String iban;
@@ -36,38 +36,18 @@ public class AccountEntity {
     public Optional<TransactionalAccount> toTinkAccount(
             LhvApiClient apiClient, SessionStorage sessionStorage) {
         return TransactionalAccount.nxBuilder()
-                .withType(getAccountType(cashAccountType))
-                .withPaymentAccountFlag()
-                .withBalance(getBalanceModule(apiClient))
+                .withTypeAndFlagsFrom(LhvConstants.ACCOUNT_TYPE_MAPPER, cashAccountType)
+                .withBalance(getBalanceModule(getBalances(apiClient)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(name)
+                                .withAccountName(getAccountName())
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .addHolderName(getHolderName(sessionStorage))
                 .setApiIdentifier(resourceId)
                 .build();
-    }
-
-    @JsonIgnore
-    private TransactionalAccountType getAccountType(String accountType) {
-        return accountType.toLowerCase().contains(AccountTypes.CURRENT)
-                ? TransactionalAccountType.CHECKING
-                : TransactionalAccountType.SAVINGS;
-    }
-
-    @JsonIgnore
-    public ExactCurrencyAmount getAvailableBalance(LhvApiClient apiClient, String resourceId) {
-        BalanceResponse balanceResponse = apiClient.fetchAccountBalance(resourceId);
-
-        return Optional.ofNullable(balanceResponse.getBalances()).orElse(Collections.emptyList())
-                .stream()
-                .filter(BalanceEntity::isAvailableBalance)
-                .findFirst()
-                .map(BalanceEntity::toAmount)
-                .orElseThrow(() -> new IllegalStateException("could not get balance"));
     }
 
     private String getHolderName(SessionStorage sessionStorage) {
@@ -83,15 +63,20 @@ public class AccountEntity {
         return availableRoles.stream().findFirst().get().getName();
     }
 
-    private BalanceModule getBalanceModule(LhvApiClient apiClient) {
-        BalanceResponse balanceResponse = apiClient.fetchAccountBalance(resourceId);
-        List<BalanceEntity> balances = balanceResponse.getBalances();
+    private String getAccountName() {
+        return Strings.isNullOrEmpty(name) ? iban : name;
+    }
+
+    private List<BalanceEntity> getBalances(LhvApiClient apiClient) {
+        BalanceResponse balanceResponse = apiClient.fetchAccountBalance(getResourceId());
+        return balanceResponse.getBalances();
+    }
+
+    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
         BalanceBuilderStep balanceBuilderStep =
                 BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
-
         BalanceMapper.getAvailableBalance(balances)
                 .ifPresent(balanceBuilderStep::setAvailableBalance);
-
         return balanceBuilderStep.build();
     }
 }
