@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
@@ -16,29 +16,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 @JsonObject
+@Getter
+@Slf4j
 public class SubPlacementEntity {
-    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(SubPlacementEntity.class);
-
     private String type;
     private String name;
     private List<DetailedHoldingEntity> holdings;
     private AmountEntity aggregatedMarketValue;
-
-    public String getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<DetailedHoldingEntity> getHoldings() {
-        return holdings;
-    }
-
-    public AmountEntity getAggregatedMarketValue() {
-        return aggregatedMarketValue;
-    }
 
     public List<Instrument> toTinkFundInstruments(SwedbankSEApiClient apiClient) {
         List<Instrument> instruments = new ArrayList<>();
@@ -64,32 +48,38 @@ public class SubPlacementEntity {
             if (Strings.isNullOrEmpty(this.type)) {
                 continue;
             }
-
-            switch (this.type.toLowerCase()) {
-                case "equity":
-                case "equities":
-                case "subscription_right":
-                case "spax":
-                case "etf":
-                case "warrant":
-                case "fixed_income":
-                case "interestequity":
-                    holding.toTinkInstrument(this.type).ifPresent(instruments::add);
-                    break;
-                case "funds":
-                case "equityfund":
-                case "mixedfund":
-                case "interestfund":
-                case "alternativefund":
-                    String isinCode = getIsinOfFund(apiClient, holding.getFundCode());
-                    holding.toTinkFundInstrument(isinCode).ifPresent(instruments::add);
-                    break;
-                default:
-                    log.warn("Previously unknown subplacement type:[{}]", type);
-            }
+            mapHolding(apiClient, instruments, holding);
         }
 
         return instruments;
+    }
+
+    private void mapHolding(
+            SwedbankSEApiClient apiClient,
+            List<Instrument> instruments,
+            DetailedHoldingEntity holding) {
+        switch (this.type.toLowerCase()) {
+            case "equity":
+            case "equities":
+            case "subscription_right":
+            case "spax":
+            case "etf":
+            case "warrant":
+            case "fixed_income":
+            case "interestequity":
+                holding.toTinkInstrument(this.type).ifPresent(instruments::add);
+                break;
+            case "funds":
+            case "equityfund":
+            case "mixedfund":
+            case "interestfund":
+            case "alternativefund":
+                String isinCode = getIsinOfFund(apiClient, holding.getFundCode());
+                holding.toTinkFundInstrument(isinCode).ifPresent(instruments::add);
+                break;
+            default:
+                log.warn("Previously unknown subplacement type:[{}]", type);
+        }
     }
 
     /**
