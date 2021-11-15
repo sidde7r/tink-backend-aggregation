@@ -5,14 +5,39 @@ GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/A
 
 
 -----------------------------------------------------------------------------------
-RESPONSE 1
+RESPONSE 1 SET STATE_RETRY
 200
 Connection: Keep-Alive
 Transfer-Encoding: chunked
 Content-Type: application/json; charset=utf-8
 Expires: -1
 X-Powered-By: ASP.NET
-Date: Fri, 22 Oct 2021 10:20:12 GMT
+Date: Wed, 20 Oct 2021 08:21:12 GMT
+X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
+
+{
+    "StatusCode": 0,
+    "StatusMessage": "0",
+    "Fields":
+    [],
+    "ErrorCode": null,
+    "ErrorMessage": "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2 MATCH STATE_RETRY
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/AvailableAccounts
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Powered-By: ASP.NET
+Date: Wed, 20 Oct 2021 08:21:12 GMT
 X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
 
 [
@@ -35,11 +60,11 @@ X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
 ]
 
 -----------------------------------------------------------------------------------
-REQUEST 2
+REQUEST 3
 GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Recipients/Payments/UZ3OmimsbcwYVwRy3qdrTYBrcY67chQrpN0kVaOQ-oKVL8l35OI9GfhJXtGTRDkZyZfYi2OQ1oht1pdqUPbyKw
 
 -----------------------------------------------------------------------------------
-RESPONSE 2
+RESPONSE 3
 200
 Connection: Keep-Alive
 Transfer-Encoding: chunked
@@ -52,34 +77,34 @@ X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
 [
   {
     "EncryptedRecipientId": "21Ru8WwMUTRoXlC1n1Pz6mefuEjF8tnkQ1ShBsJmsavBOeaUs1HGR8BF_yM7sjnYSmxH6uc3LMxzA3BLhs5rEt2PN4TcXjuXKvWNUNES330",
-    "GiroNumber": "999999-9",
+    "GiroNumber": "999-9999",
     "Name": "Recipient name"
   }
 ]
 
 -----------------------------------------------------------------------------------
-REQUEST 3
+REQUEST 4
 POST https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments
 Content-Type: application/json
 
 [{
     "Amount": 1.00,
-    "Date": "2021-10-25T00:00:00.000+0200",
+    "Date": "2021-10-30T00:00:00.000+0200",
     "EncryptedFromBankAccountNumber": "UZ3OmimsbcwYVwRy3qdrTYBrcY67chQrpN0kVaOQ-oKVL8l35OI9GfhJXtGTRDkZyZfYi2OQ1oht1pdqUPbyKw",
-    "FromBankAccountTransactionNote": "Tink source",
-    "GiroNumber": "999999-9",
-    "MessageReference": null,
-    "OcrReference": "50099999999"
+    "FromBankAccountTransactionNote": "Some message",
+    "GiroNumber": "999-9999",
+    "MessageReference": "Tink source",
+    "OcrReference": null
 }]
 
 -----------------------------------------------------------------------------------
-RESPONSE 3
+RESPONSE 4
 201
 Connection: Keep-Alive
 Transfer-Encoding: chunked
 Expires: -1
 X-Powered-By: ASP.NET
-Date: Fri, 22 Oct 2021 10:20:14 GMT
+Date: Wed, 20 Oct 2021 08:21:14 GMT
 X-Global-Transaction-ID: 9c7ec721616fd179045b9631
 Content-Type: application/json
 
@@ -87,26 +112,26 @@ Content-Type: application/json
 
 
 -----------------------------------------------------------------------------------
-REQUEST 4
+REQUEST 5
 GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments
 
 
 -----------------------------------------------------------------------------------
-RESPONSE 4
+RESPONSE 5
 200
 Connection: Keep-Alive
 Transfer-Encoding: chunked
 Content-Type: application/json; charset=utf-8
 Expires: -1
 X-Powered-By: ASP.NET
-Date: Fri, 22 Oct 2021 10:20:14 GMT
+Date: Wed, 20 Oct 2021 08:21:14 GMT
 X-Global-Transaction-ID: 9c7ec721616fd17b091fcdf2
 
 [
     {
         "EncryptedPaymentId": "hWh7L6o0MlOrIGwYPezHoar1p1-Qv5l0Ewj-9QJbP5mPFGDguvTcudjGiHZpflTCKFbklqDwMe05OguO0IrcXw",
         "Amount": 1.0,
-        "Date": "2021-10-25T00:00:00+02:00",
+        "Date": "2021-10-30T00:00:00+02:00",
         "Type": 2,
         "TypeName": "Payment",
         "TypeDisplayName": "Payment",
@@ -125,7 +150,7 @@ X-Global-Transaction-ID: 9c7ec721616fd17b091fcdf2
         "Sender":
         {
             "Name": "Firstname Lastname",
-            "BankAccountTransactionNote": "Tink source",
+            "BankAccountTransactionNote": "Some message",
             "BankAccount":
             {
                 "BankAccountNumber": "91599999999",
@@ -142,8 +167,8 @@ X-Global-Transaction-ID: 9c7ec721616fd17b091fcdf2
         "Recipient":
         {
             "Name": "RECIPIENT NAME",
-            "RecipientNumber": "999999-9",
-            "Reference": "50099999999"
+            "RecipientNumber": "999-9999",
+            "Reference": "Tink source"
         },
         "IsInvoice": false,
         "Invoice": null
@@ -151,21 +176,21 @@ X-Global-Transaction-ID: 9c7ec721616fd17b091fcdf2
 ]
 
 -----------------------------------------------------------------------------------
-REQUEST 5
+REQUEST 6
 POST https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
 Content-Type: application/json
 
 ["hWh7L6o0MlOrIGwYPezHoar1p1-Qv5l0Ewj-9QJbP5mPFGDguvTcudjGiHZpflTCKFbklqDwMe05OguO0IrcXw"]
 
 -----------------------------------------------------------------------------------
-RESPONSE 5 SET STATE1
+RESPONSE 6 SET STATE1
 403
 Connection: Keep-Alive
 Transfer-Encoding: chunked
 Content-Type: application/json; charset=utf-8
 Expires: -1
 X-Powered-By: ASP.NET
-Date: Fri, 22 Oct 2021 10:20:15 GMT
+Date: Wed, 20 Oct 2021 08:21:15 GMT
 X-Global-Transaction-ID: 9c7ec721616fd17b0a7b6a30
 
 {
@@ -195,18 +220,18 @@ X-Global-Transaction-ID: 9c7ec721616fd17b0a7b6a30
 
 
 -----------------------------------------------------------------------------------
-REQUEST 6 MATCH STATE1
+REQUEST 7 MATCH STATE1
 GET https://client-apis.skandia.se/mobile/external/api.system.v2/api/Sign/WH8A7BPo_-PMd2tXJVLc-NBJo58GjBLs7SPfKpszBVaucI_gmtjBc6XrrXqiAQoG7l9yYTu83RVrBwyNUCoVLZp3iDFhBEQ1-9KPMM0mYc-jboGTaKiL5pIdB56PM2lT
 
 -----------------------------------------------------------------------------------
-RESPONSE 6 SET STATE2
+RESPONSE 7 SET STATE2
 200
 Connection: Keep-Alive
 Transfer-Encoding: chunked
 Content-Type: application/json; charset=utf-8
 Expires: -1
 X-Powered-By: ASP.NET
-Date: Fri, 22 Oct 2021 10:20:23 GMT
+Date: Wed, 20 Oct 2021 08:21:23 GMT
 X-Global-Transaction-ID: 9c7ec721616fd1830a7b6a90
 
 {
@@ -216,7 +241,7 @@ X-Global-Transaction-ID: 9c7ec721616fd1830a7b6a90
 
 
 -----------------------------------------------------------------------------------
-REQUEST 7 MATCH STATE2
+REQUEST 8 MATCH STATE2
 POST https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
 X-SKANDIA-SIGNINGREFERENCE: WH8A7BPo_-PMd2tXJVLc-NBJo58GjBLs7SPfKpszBVaucI_gmtjBc6XrrXqiAQoG7l9yYTu83RVrBwyNUCoVLZp3iDFhBEQ1-9KPMM0mYc-jboGTaKiL5pIdB56PM2lT
 Content-Type: application/json
@@ -225,14 +250,14 @@ Content-Type: application/json
 
 
 -----------------------------------------------------------------------------------
-RESPONSE 7
+RESPONSE 8
 200
 Connection: Keep-Alive
 Transfer-Encoding: chunked
 Content-Type: application/json; charset=utf-8
 Expires: -1
 X-Powered-By: ASP.NET
-Date: Fri, 22 Oct 2021 10:20:31 GMT
+Date: Wed, 20 Oct 2021 08:21:31 GMT
 X-Global-Transaction-ID: 9c7ec721616fd18403abc4c3
 
-[{"StatusDisplayName":"OK","Description":"999999-9 RECIPIENT NAME, datum 2021-10-25"}]
+[{"StatusDisplayName":"OK","Description":"999-9999 RECIPIENT NAME, datum 2021-10-30"}]

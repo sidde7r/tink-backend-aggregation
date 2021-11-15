@@ -1,0 +1,152 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/AvailableAccounts
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 1 SET STATE_RETRY_1
+200
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Powered-By: ASP.NET
+Date: Wed, 20 Oct 2021 08:21:12 GMT
+X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
+
+{
+    "StatusCode": 0,
+    "StatusMessage": "0",
+    "Fields":
+    [],
+    "ErrorCode": null,
+    "ErrorMessage": "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown."
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 2 MATCH STATE_RETRY_1
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/AvailableAccounts
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE_RETRY_2
+200
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Powered-By: ASP.NET
+Date: Wed, 20 Oct 2021 08:21:12 GMT
+X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
+
+{
+    "StatusCode": 0,
+    "StatusMessage": "0",
+    "Fields":
+    [],
+    "ErrorCode": null,
+    "ErrorMessage": "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE_RETRY_2
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/AvailableAccounts
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE_RETRY_3
+200
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Powered-By: ASP.NET
+Date: Wed, 20 Oct 2021 08:21:12 GMT
+X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
+
+{
+    "StatusCode": 0,
+    "StatusMessage": "0",
+    "Fields":
+    [],
+    "ErrorCode": null,
+    "ErrorMessage": "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE_RETRY_3
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/AvailableAccounts
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE_RETRY_4
+200
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Powered-By: ASP.NET
+Date: Wed, 20 Oct 2021 08:21:12 GMT
+X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
+
+{
+    "StatusCode": 0,
+    "StatusMessage": "0",
+    "Fields":
+    [],
+    "ErrorCode": null,
+    "ErrorMessage": "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE_RETRY_4
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/AvailableAccounts
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE_RETRY_5
+200
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Powered-By: ASP.NET
+Date: Wed, 20 Oct 2021 08:21:12 GMT
+X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
+
+{
+    "StatusCode": 0,
+    "StatusMessage": "0",
+    "Fields":
+    [],
+    "ErrorCode": null,
+    "ErrorMessage": "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE_RETRY_5
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/AvailableAccounts
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Powered-By: ASP.NET
+Date: Wed, 20 Oct 2021 08:21:12 GMT
+X-Global-Transaction-ID: 9c7ec721616fd178091fcdb2
+
+{
+    "StatusCode": 0,
+    "StatusMessage": "0",
+    "Fields":
+    [],
+    "ErrorCode": null,
+    "ErrorMessage": "Exception of type 'Helium.Api.Common.Exceptions.HeliumApiException' was thrown."
+}
+

@@ -240,9 +240,9 @@ public class SkandiaBankenConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class TimeoutRetryConfig {
-        public static final int NUM_TIMEOUT_RETRIES = 5;
-        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 2000;
+    public static class RetryConfig {
+        public static final int NUM_RETRIES = 5;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

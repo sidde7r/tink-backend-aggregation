@@ -8,7 +8,6 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
@@ -79,21 +78,16 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
     private PaymentSourceAccount getPaymentSourceAccount(Transfer transfer) {
 
-        try {
-            Collection<PaymentSourceAccount> paymentSourceAccounts =
-                    apiClient.fetchPaymentSourceAccounts();
-            return SkandiaBankenExecutorUtils.tryFindOwnAccount(
-                            transfer.getSource(), paymentSourceAccounts)
-                    .orElseThrow(
-                            () ->
-                                    getTransferCancelledException(
-                                            TransferExceptionMessage.SOURCE_NOT_FOUND,
-                                            EndUserMessage.SOURCE_NOT_FOUND,
-                                            InternalStatus.INVALID_SOURCE_ACCOUNT));
-        } catch (HttpResponseException e) {
-            throwIfBankRaisesApiException(e.getResponse());
-            throw e;
-        }
+        Collection<PaymentSourceAccount> paymentSourceAccounts =
+                apiClient.fetchPaymentSourceAccounts();
+        return SkandiaBankenExecutorUtils.tryFindOwnAccount(
+                        transfer.getSource(), paymentSourceAccounts)
+                .orElseThrow(
+                        () ->
+                                getTransferCancelledException(
+                                        TransferExceptionMessage.SOURCE_NOT_FOUND,
+                                        EndUserMessage.SOURCE_NOT_FOUND,
+                                        InternalStatus.INVALID_SOURCE_ACCOUNT));
     }
 
     private void addRecipient(Transfer transfer, PaymentSourceAccount sourceAccount) {
@@ -389,17 +383,6 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                         TransferExceptionMessage.BANKID_ANOTHER_IN_PROGRESS,
                         EndUserMessage.BANKID_ANOTHER_IN_PROGRESS,
                         InternalStatus.BANKID_ANOTHER_IN_PROGRESS);
-            }
-        }
-    }
-
-    private void throwIfBankRaisesApiException(HttpResponse response) {
-
-        if (MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
-            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-
-            if (errorResponse.isBankRaisingApiException()) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(errorResponse.getErrorMessage());
             }
         }
     }
