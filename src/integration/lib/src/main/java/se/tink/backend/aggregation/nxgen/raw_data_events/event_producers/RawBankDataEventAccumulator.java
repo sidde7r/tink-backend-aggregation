@@ -72,7 +72,8 @@ public class RawBankDataEventAccumulator {
         for (RawBankDataTrackerEventBankField field : event.getFieldDataList()) {
             String stringifiedRow = getRowStringIgnoreOffsetColumn(field);
             if (rowsToCompress.contains(stringifiedRow)) {
-                if (!isAggregatedRowAdded.get(stringifiedRow)) {
+                Boolean added = isAggregatedRowAdded.get(stringifiedRow);
+                if (Boolean.FALSE.equals(added)) {
                     builder.addFieldData(
                             createBuilderToClone(field)
                                     .setCount(fieldCount.get(stringifiedRow))

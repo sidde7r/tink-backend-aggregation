@@ -67,10 +67,11 @@ public class RawBankDataEventProducerInterceptor extends Filter {
         // we are facing)
         try {
             List<String> contentType = response.getHeaders().get("Content-Type");
-            LOGGER.info("[RESPONSE CONTENT TYPE] Detected content-type: " + contentType.toString());
+            LOGGER.info("[RESPONSE CONTENT TYPE] Detected content-type: {}", contentType);
         } catch (Exception e) {
             LOGGER.warn(
-                    "[RESPONSE CONTENT TYPE] Could not detect the content-type for HTTP response");
+                    "[RESPONSE CONTENT TYPE] Could not detect the content-type for HTTP response",
+                    e);
         }
 
         // Check if the decision strategy tells us to produce an event or not
