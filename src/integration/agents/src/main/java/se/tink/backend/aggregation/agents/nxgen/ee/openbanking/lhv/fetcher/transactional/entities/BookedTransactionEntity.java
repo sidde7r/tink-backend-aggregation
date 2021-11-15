@@ -31,6 +31,8 @@ public class BookedTransactionEntity {
                         .setDate(bookingDate)
                         .setDescription(remittanceInformationUnstructured)
                         .setPending(false)
+                        .setTransactionReference(entryReference)
+                        .setMerchantName(creditorName)
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 entryReference)
