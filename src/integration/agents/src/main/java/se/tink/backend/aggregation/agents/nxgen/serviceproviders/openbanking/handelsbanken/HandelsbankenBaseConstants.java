@@ -120,6 +120,7 @@ public final class HandelsbankenBaseConstants {
 
     public static class AccountBalance {
         public static final String AVAILABLE_BALANCE = "AVAILABLE_AMOUNT";
+        public static final String CURRENT_BALANCE = "CURRENT";
     }
 
     public static class Transactions {

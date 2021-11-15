@@ -63,7 +63,13 @@ public class AccountsItemEntity {
 
     public Optional<BalancesItemEntity> getAvailableBalance(AccountDetailsResponse accountDetails) {
         return accountDetails.getBalances().stream()
-                .filter(BalancesItemEntity::isBalance)
+                .filter(BalancesItemEntity::isAvailable)
+                .findFirst();
+    }
+
+    public Optional<BalancesItemEntity> getCurrentBalance(AccountDetailsResponse accountDetails) {
+        return accountDetails.getBalances().stream()
+                .filter(BalancesItemEntity::isCurrent)
                 .findFirst();
     }
 
