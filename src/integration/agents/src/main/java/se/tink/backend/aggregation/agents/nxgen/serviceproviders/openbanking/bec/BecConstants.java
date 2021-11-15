@@ -32,7 +32,8 @@ public abstract class BecConstants {
                             "Basal Betaling",
                             "PrivatLøn",
                             "Appaløn",
-                            "Totalløn")
+                            "Totalløn",
+                            "SuperlÃ¸n")
                     .put(
                             TransactionalAccountType.SAVINGS,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,

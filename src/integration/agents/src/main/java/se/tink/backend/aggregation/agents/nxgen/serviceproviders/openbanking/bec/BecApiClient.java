@@ -49,7 +49,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
-public final class BecApiClient {
+public class BecApiClient {
 
     private static final int HEX_FORMAT_RADIX = 16;
 
