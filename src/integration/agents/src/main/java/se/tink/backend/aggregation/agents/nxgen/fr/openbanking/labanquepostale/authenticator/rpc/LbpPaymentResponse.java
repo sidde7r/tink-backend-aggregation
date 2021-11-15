@@ -55,4 +55,8 @@ public class LbpPaymentResponse {
     public String getStatusReasonInformation() {
         return paymentRequest.getStatusReasonInformation();
     }
+
+    public String getPaymentInformationStatus() {
+        return paymentRequest.getPaymentInformationStatus();
+    }
 }

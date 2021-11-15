@@ -53,14 +53,11 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 @Slf4j
 public class LaBanquePostalePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    public static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
     public static final String CONFIRM_PAYMENT = "confirm_payment";
     public static final String CHECK_STATUS = "check_status";
-    public static final String PSU_AUTHORIZATION_FACTOR = "psu_authorization_factor";
     public static final String PSU_AUTHORIZATION_FACTOR_KEY = "psuAuthenticationFactor";
     private static final String STATE = "state";
-    PaymentType paymentType = PaymentType.SEPA;
-
+    private static final PaymentType PAYMENT_TYPE = PaymentType.SEPA;
     private static final long WAIT_FOR_MINUTES = 9L;
 
     private final LaBanquePostalePaymentApiClient apiClient;
@@ -102,7 +99,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         return new PaymentResponse(
                 new Payment.Builder()
                         .withUniqueId(paymentId)
-                        .withType(paymentType)
+                        .withType(PAYMENT_TYPE)
                         .withCurrency(amount.getCurrency())
                         .withExactCurrencyAmount(amount.toTinkAmount())
                         .withCreditor(creditor.toTinkCreditor())
@@ -115,14 +112,16 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
             throws PaymentException {
         String nextStep;
         Payment payment = paymentMultiStepRequest.getPayment();
+        String currentStep = paymentMultiStepRequest.getStep();
 
-        switch (paymentMultiStepRequest.getStep()) {
+        log.info("[PAYMENT EXECUTOR] Starting sign operation with step: {}", currentStep);
+        switch (currentStep) {
             case AuthenticationStepConstants.STEP_INIT:
                 String authorizationUrl =
                         laBanquePostalePaymentSigner.getPaymentAuthorizationUrlOrThrow();
 
                 Map<String, String> queryParametersMap =
-                        new CaseInsensitiveMap<>(openThirdPartyApp(new URL(authorizationUrl)));
+                        new CaseInsensitiveMap<>(openThirdPartyApp(URL.of(authorizationUrl)));
                 laBanquePostalePaymentSigner.setPsuAuthenticationFactor(queryParametersMap);
 
                 nextStep = CHECK_STATUS;
@@ -141,7 +140,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 break;
             default:
                 throw new PaymentException(
-                        "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.",
+                        "Unknown step " + currentStep + " for payment sign.",
                         InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return new PaymentMultiStepResponse(payment, nextStep);
@@ -165,7 +164,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                                 Collections.singletonList(remittanceInformation.getValue()), null);
 
         return new CreatePaymentRequest.Builder()
-                .withPaymentType(paymentType)
+                .withPaymentType(PAYMENT_TYPE)
                 .withAmount(amount)
                 .withCreditorAgentEntity(creditorAgent)
                 .withCreditorAccount(creditor)
@@ -190,33 +189,40 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                                 .compareTo(new BigDecimal(MinimumValues.MINIMUM_AMOUNT_FOR_SEPA))
                         < 0) {
             throw new PaymentValidationException(
-                    "Transfer amount can't be less than 1.5 EUR.",
+                    "Transfer amount can't be less than 1.5 EUR for SEPA.",
                     InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
     }
 
     private PaymentResponse getAndVerifyStatus(String paymentId) throws PaymentException {
+        LbpPaymentResponse response = apiClient.getPayment(paymentId);
+        String statusReasonInformation = response.getStatusReasonInformation();
+        log.info(
+                "[PAYMENT EXECUTOR] Checking, received paymentInformationStatus: {}, statusReasonInformation: {}",
+                response.getPaymentInformationStatus(),
+                statusReasonInformation);
 
-        LbpPaymentResponse lbpPaymentResponse = apiClient.getPayment(paymentId);
-
-        PaymentResponse paymentResponse = lbpPaymentResponse.toTinkPaymentResponse();
+        PaymentResponse paymentResponse = response.toTinkPaymentResponse();
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
 
         if (paymentStatus == PaymentStatus.REJECTED) {
-            throw FrOpenBankingErrorMapper.mapToError(
-                    lbpPaymentResponse.getStatusReasonInformation());
+            throw FrOpenBankingErrorMapper.mapToError(statusReasonInformation);
         }
 
         return paymentResponse;
     }
 
     private PaymentResponse confirmAndVerifyStatus(String paymentId) throws PaymentException {
-
-        LbpPaymentResponse lbpPaymentResponse =
+        LbpPaymentResponse response =
                 apiClient.confirmPayment(
                         paymentId, laBanquePostalePaymentSigner.getPsuAuthenticationFactor());
+        String statusReasonInformation = response.getStatusReasonInformation();
+        log.info(
+                "[PAYMENT EXECUTOR] Confirmation, received paymentInformationStatus: {}, statusReasonInformation: {}",
+                response.getPaymentInformationStatus(),
+                statusReasonInformation);
 
-        PaymentResponse paymentResponse = lbpPaymentResponse.toTinkPaymentResponse();
+        PaymentResponse paymentResponse = response.toTinkPaymentResponse();
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
 
         if (paymentStatus == PaymentStatus.PENDING) {
@@ -224,8 +230,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         }
 
         if (paymentStatus != PaymentStatus.SIGNED) {
-            throw FrOpenBankingErrorMapper.mapToError(
-                    lbpPaymentResponse.getStatusReasonInformation());
+            throw FrOpenBankingErrorMapper.mapToError(statusReasonInformation);
         }
 
         return paymentResponse;
