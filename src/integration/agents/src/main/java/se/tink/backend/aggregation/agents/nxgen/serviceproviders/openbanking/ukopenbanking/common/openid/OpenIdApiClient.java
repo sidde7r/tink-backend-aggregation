@@ -241,8 +241,7 @@ public class OpenIdApiClient {
 
         String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
         String clientId = providerConfiguration.getClientId();
-        List<String> requiredScopes =
-                Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, mode.getValue());
+        List<String> requiredScopes = createScopeList(mode);
         String scopeArray =
                 wellKnownConfiguration
                         .verifyAndGetScopes(requiredScopes)
@@ -282,6 +281,10 @@ public class OpenIdApiClient {
 
     public Optional<ErrorEntity> getErrorEntity() {
         return Optional.ofNullable(errorEntity);
+    }
+
+    public List<String> createScopeList(ClientMode mode) {
+        return Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, mode.getValue());
     }
 
     public Optional<Map<String, PublicKey>> getJwkPublicKeys() {
