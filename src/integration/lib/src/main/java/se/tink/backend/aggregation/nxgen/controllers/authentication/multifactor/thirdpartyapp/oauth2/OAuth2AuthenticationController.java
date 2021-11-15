@@ -215,7 +215,7 @@ public class OAuth2AuthenticationController
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            if (refreshedOAuth2Token.hasRefreshExpire()) {
+            if (refreshedOAuth2Token.isRefreshTokenExpirationPeriodSpecified()) {
                 credentials.setSessionExpiryDate(
                         OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                                 refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));

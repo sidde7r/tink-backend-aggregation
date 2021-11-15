@@ -14,7 +14,7 @@ public class TestAsserts {
     public static void assertValid(OAuth2Token token) {
         assertNotNull(token);
         assertTrue(token.isValid());
-        assertTrue(token.hasRefreshExpire());
+        assertTrue(token.isRefreshTokenExpirationPeriodSpecified());
         assertFalse(token.hasAccessExpired());
         assertTrue(token.canRefresh());
         assertNotNull(token.getRefreshToken().get());
