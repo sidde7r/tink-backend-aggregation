@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class SettlementEntity {
     private String name;
     private String id;
@@ -13,32 +15,4 @@ public class SettlementEntity {
     private AmountEntity buyingPower;
     private AmountEntity preliminaryLiquidity;
     private LinksEntity links;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public AmountEntity getBalance() {
-        return balance;
-    }
-
-    public String getFullyFormattedNumber() {
-        return fullyFormattedNumber;
-    }
-
-    public AmountEntity getBuyingPower() {
-        return buyingPower;
-    }
-
-    public AmountEntity getPreliminaryLiquidity() {
-        return preliminaryLiquidity;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
-    }
 }

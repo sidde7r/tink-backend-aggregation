@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.OccupationalPensionInsurancesEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.PensionInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.PrivatePensionInsurancesEntity;
@@ -11,17 +12,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class PensionPortfoliosResponse {
     private PrivatePensionInsurancesEntity privatePensionInsurances;
     private OccupationalPensionInsurancesEntity occupationalPensionInsurances;
-
-    public PrivatePensionInsurancesEntity getPrivatePensionInsurances() {
-        return privatePensionInsurances;
-    }
-
-    public OccupationalPensionInsurancesEntity getOccupationalPensionInsurances() {
-        return occupationalPensionInsurances;
-    }
 
     @JsonIgnore
     private List<PensionInsuranceEntity> getAllPensionInsurances() {

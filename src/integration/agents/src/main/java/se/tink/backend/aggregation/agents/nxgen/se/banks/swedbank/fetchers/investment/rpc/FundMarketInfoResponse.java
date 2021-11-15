@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class FundMarketInfoResponse {
     private String name;
     private String description;
@@ -21,72 +23,4 @@ public class FundMarketInfoResponse {
     private String legalResidenceCountryCode;
     private String ppmcode;
     private String performanceToday;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public RateEntity getRate() {
-        return rate;
-    }
-
-    public String getFundCode() {
-        return fundCode;
-    }
-
-    public String getRateDate() {
-        return rateDate;
-    }
-
-    public boolean isFundguide() {
-        return fundguide;
-    }
-
-    public FundRatingEntity getRating() {
-        return rating;
-    }
-
-    public String getTsid() {
-        return tsid;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public String getFundAssets() {
-        return fundAssets;
-    }
-
-    public String getFundAssetsUnit() {
-        return fundAssetsUnit;
-    }
-
-    public InfoURLsEntity getInfoURLs() {
-        return infoURLs;
-    }
-
-    public String getIsincode() {
-        return isincode;
-    }
-
-    public String getLegalResidenceCountryCode() {
-        return legalResidenceCountryCode;
-    }
-
-    public String getPpmcode() {
-        return ppmcode;
-    }
-
-    public String getPerformanceToday() {
-        return performanceToday;
-    }
 }
