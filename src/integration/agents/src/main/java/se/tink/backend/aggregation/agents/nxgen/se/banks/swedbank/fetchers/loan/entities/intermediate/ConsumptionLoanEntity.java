@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
@@ -42,10 +43,7 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
 
     private LoanDetails buildLoanDetails(List<String> borrowers) {
         LoanDetails.Builder builder =
-                LoanDetails.builder(
-                                getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN)
-                                        ? LoanDetails.Type.MEMBERSHIP
-                                        : LoanDetails.Type.BLANCO)
+                LoanDetails.builder(getLoanType())
                         .setApplicants(borrowers)
                         .setCoApplicant(borrowers.size() > 1);
 
@@ -56,5 +54,11 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
         }
 
         return builder.build();
+    }
+
+    private LoanDetails.Type getLoanType() {
+        return getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN)
+                ? Type.MEMBERSHIP
+                : Type.BLANCO;
     }
 }

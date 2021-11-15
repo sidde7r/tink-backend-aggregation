@@ -41,18 +41,9 @@ public class SignatureUtils implements SignatureProvider {
                         QsealcAlg.EIDAS_RSA_SHA256,
                         eidasIdentity);
 
-        String signedHeaders =
-                Arrays.stream(HeadersToSign.values())
-                        .map(HeadersToSign::getHeader)
-                        .filter(headers::containsKey)
-                        .collect(Collectors.joining(" "));
+        String signedHeaders = getSignedHeaders(headers);
 
-        String signedHeadersWithValues =
-                Arrays.stream(HeadersToSign.values())
-                        .map(HeadersToSign::getHeader)
-                        .filter(headers::containsKey)
-                        .map(header -> String.format("%s: %s", header, headers.get(header)))
-                        .collect(Collectors.joining("\n"));
+        String signedHeadersWithValues = getSignedHeadersWithValues(headers);
 
         String signature = signer.getSignatureBase64(signedHeadersWithValues.getBytes());
 
@@ -61,6 +52,21 @@ public class SignatureUtils implements SignatureProvider {
                 Psd2Headers.getTppCertificateKeyId(getX509Certificate(qSealc)),
                 signedHeaders,
                 signature);
+    }
+
+    private String getSignedHeadersWithValues(Map<String, Object> headers) {
+        return Arrays.stream(HeadersToSign.values())
+                .map(HeadersToSign::getHeader)
+                .filter(headers::containsKey)
+                .map(header -> String.format("%s: %s", header, headers.get(header)))
+                .collect(Collectors.joining("\n"));
+    }
+
+    private String getSignedHeaders(Map<String, Object> headers) {
+        return Arrays.stream(HeadersToSign.values())
+                .map(HeadersToSign::getHeader)
+                .filter(headers::containsKey)
+                .collect(Collectors.joining(" "));
     }
 
     private String serializeBodyIfNecessary(HttpRequest request) {
