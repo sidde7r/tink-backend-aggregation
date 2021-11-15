@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.Filters;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
@@ -75,11 +75,11 @@ public final class ICSAgent extends NextGenerationAgent
                 .applyFilters(
                         client,
                         new ICSRetryFilterProperties(
-                                Filters.MAX_RETRIES, Filters.RETRY_SLEEP_MILLISECONDS),
+                                HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS),
                         new ICSRateLimitFilterProperties(
-                                Filters.RATE_LIMIT_RETRY_MS_MIN,
-                                Filters.RATE_LIMIT_RETRY_MS_MAX,
-                                Filters.RATE_LIMIT_MAX_RETRIES),
+                                HttpClient.RATE_LIMIT_RETRY_MS_MIN,
+                                HttpClient.RATE_LIMIT_RETRY_MS_MAX,
+                                HttpClient.RATE_LIMIT_MAX_RETRIES),
                         provider.getName());
     }
 

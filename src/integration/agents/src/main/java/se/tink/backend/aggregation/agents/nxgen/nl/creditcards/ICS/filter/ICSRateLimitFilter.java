@@ -7,9 +7,9 @@ public class ICSRateLimitFilter extends RateLimitFilter {
 
     public ICSRateLimitFilter(
             String providerName,
-            long retrySleepMillisecondsMin,
-            long retrySleepMillisecondsMax,
-            long maxRetries) {
+            int retrySleepMillisecondsMin,
+            int retrySleepMillisecondsMax,
+            int maxRetries) {
         super(providerName, retrySleepMillisecondsMin, retrySleepMillisecondsMax, maxRetries);
     }
 

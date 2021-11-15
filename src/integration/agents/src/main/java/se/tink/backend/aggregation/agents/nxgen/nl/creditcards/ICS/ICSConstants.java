@@ -99,11 +99,11 @@ public class ICSConstants {
         public static final String EXPIRATION_DATE = "expirationDate";
     }
 
-    public static class Filters {
+    public static class HttpClient {
         public static final int MAX_RETRIES = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 3000;
         public static final int RATE_LIMIT_MAX_RETRIES = 5;
-        public static final long RATE_LIMIT_RETRY_MS_MIN = 1500;
-        public static final long RATE_LIMIT_RETRY_MS_MAX = 6500;
+        public static final int RATE_LIMIT_RETRY_MS_MIN = 1500;
+        public static final int RATE_LIMIT_RETRY_MS_MAX = 6500;
     }
 }

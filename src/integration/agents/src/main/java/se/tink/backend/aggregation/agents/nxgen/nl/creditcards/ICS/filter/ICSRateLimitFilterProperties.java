@@ -5,7 +5,7 @@ import lombok.Value;
 @Value
 public class ICSRateLimitFilterProperties {
 
-    long retrySleepMillisecondsMin;
-    long retrySleepMillisecondsMax;
+    int retrySleepMillisecondsMin;
+    int retrySleepMillisecondsMax;
     int numberOfRetries;
 }
