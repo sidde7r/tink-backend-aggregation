@@ -123,6 +123,11 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
                 .format(amount);
     }
 
+    @JsonIgnore
+    public ExactCurrencyAmount getExactCurrencyAmount() {
+        return ExactCurrencyAmount.of(getAmount().toBigDecimal(), getAmount().getCurrency());
+    }
+
     public Amount getAmount() {
         if (amount != null) {
             return new Amount(currency, amount.doubleValue());

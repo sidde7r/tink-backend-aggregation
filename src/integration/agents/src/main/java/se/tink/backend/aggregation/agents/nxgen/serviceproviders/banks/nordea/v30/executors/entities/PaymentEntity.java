@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.social.security.SocialSecurityNumber;
@@ -227,8 +226,8 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
-    public Amount getAmount() {
-        return new Amount(NordeaBaseConstants.CURRENCY, amount);
+    public ExactCurrencyAmount getAmount() {
+        return ExactCurrencyAmount.of(amount, NordeaBaseConstants.CURRENCY);
     }
 
     @JsonIgnore
@@ -239,7 +238,7 @@ public class PaymentEntity {
 
     @JsonIgnore
     public boolean isEqualToTransfer(Transfer transfer, Date transferDueDate) {
-        return transfer.getAmount().equals(getAmount())
+        return transfer.getExactCurrencyAmount().equals(getAmount())
                 && isIdentifierEquals(transfer.getDestination(), getRecipientAccountNumber())
                 && isIdentifierEquals(transfer.getSource(), getFrom())
                 && DateUtils.isSameDay(transferDueDate, getDue())
