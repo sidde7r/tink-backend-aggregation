@@ -6,10 +6,12 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.credit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.GroupedMovementsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.PaginatorEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
+@JsonObject
 public class CreditCardTransactionsResponse implements PaginatorResponse {
     private String contractNumber;
     private String contractOwner;
