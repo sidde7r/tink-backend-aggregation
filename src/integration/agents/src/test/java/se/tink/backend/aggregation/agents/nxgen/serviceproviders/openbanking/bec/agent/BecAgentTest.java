@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.agent;
 
 import org.junit.Before;
 import org.junit.Test;

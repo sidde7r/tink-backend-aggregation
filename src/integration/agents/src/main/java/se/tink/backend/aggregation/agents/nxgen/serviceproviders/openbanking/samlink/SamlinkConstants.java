@@ -45,4 +45,10 @@ public final class SamlinkConstants {
 
         public static final String ACCOUNT_ID = "accountId";
     }
+
+    public static class ErrorMessage {
+        private ErrorMessage() {}
+
+        public static final String NO_API_KEY = "No API key found in request";
+    }
 }

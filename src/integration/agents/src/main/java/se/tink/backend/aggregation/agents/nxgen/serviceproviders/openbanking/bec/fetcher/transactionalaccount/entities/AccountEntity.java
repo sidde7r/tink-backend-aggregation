@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -45,7 +45,8 @@ public class AccountEntity {
                                 .withUniqueIdentifier(getUniqueIdentifier())
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(Optional.ofNullable(name).orElse(product))
-                                .addIdentifier(getIdentifier())
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(new BbanIdentifier(bban))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
@@ -60,10 +61,6 @@ public class AccountEntity {
 
     private String getAccountNumber() {
         return bban;
-    }
-
-    private AccountIdentifier getIdentifier() {
-        return new IbanIdentifier(iban);
     }
 
     public String getResourceId() {
