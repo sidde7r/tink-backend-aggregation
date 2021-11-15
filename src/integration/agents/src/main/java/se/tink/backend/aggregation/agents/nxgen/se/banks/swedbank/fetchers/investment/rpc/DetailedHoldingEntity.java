@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.inve
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
@@ -18,11 +18,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
+@Getter
+@Slf4j
 public class DetailedHoldingEntity {
     @JsonIgnore private static final String EMPTY_STRING = "";
-
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(DetailedHoldingEntity.class);
 
     private String name;
     private String fundCode;
@@ -48,102 +47,6 @@ public class DetailedHoldingEntity {
     private TypedAmountEntity valuationPrice;
     private TypedAmountEntity acquisitionPrice;
     private TypedAmountEntity amountNominalBlocked;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFundCode() {
-        return fundCode;
-    }
-
-    public boolean isFundguide() {
-        return fundguide;
-    }
-
-    public AmountEntity getFundRate() {
-        return fundRate;
-    }
-
-    public AmountEntity getAcquisitionValue() {
-        return acquisitionValue;
-    }
-
-    public String getNumberOfFundParts() {
-        return numberOfFundParts;
-    }
-
-    public AmountEntity getChangeOfValue() {
-        return changeOfValue;
-    }
-
-    public String getChangeOfValuePercent() {
-        return changeOfValuePercent;
-    }
-
-    public AmountEntity getMarketValue() {
-        return marketValue;
-    }
-
-    public String getHoldingType() {
-        return holdingType;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public String getTsid() {
-        return tsid;
-    }
-
-    public String getInstrumentType() {
-        return instrumentType;
-    }
-
-    public AmountEntity getChangeTodayAbsolute() {
-        return changeTodayAbsolute;
-    }
-
-    public String getChangeTodayPercent() {
-        return changeTodayPercent;
-    }
-
-    public String getNameMarketPlace() {
-        return nameMarketPlace;
-    }
-
-    public String getIsin() {
-        return isin;
-    }
-
-    public boolean isAddOrderPossible() {
-        return isAddOrderPossible;
-    }
-
-    public NumberOrAmountEntity getNumberOrAmount() {
-        return numberOrAmount;
-    }
-
-    public TypedAmountEntity getLastPaid() {
-        return lastPaid;
-    }
-
-    public TypedAmountEntity getValuationPrice() {
-        return valuationPrice;
-    }
-
-    public TypedAmountEntity getAcquisitionPrice() {
-        return acquisitionPrice;
-    }
-
-    public TypedAmountEntity getAmountNominalBlocked() {
-        return amountNominalBlocked;
-    }
 
     public InstrumentModule toTinkInstrumentModule(String isin) {
         return InstrumentModule.builder()

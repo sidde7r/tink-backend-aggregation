@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage.API_CLIENT_ERROR_MESSAGE;
+
 import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
@@ -19,12 +20,9 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
+@Slf4j
 public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(DetailedPortfolioEntity.class);
-
-    @JsonIgnore private static final String API_CLIENT_ERROR_MESSAGE = "No API client provided.";
-
     private AmountEntity acquisitionValue;
     private ChartDataEntity chartData;
     private TotalEquitiesEntity totalEquities;
@@ -34,42 +32,6 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
     private String fundAccountNumber;
     private String fundAccountName;
     private String encompassedHoldings;
-
-    public AmountEntity getAcquisitionValue() {
-        return acquisitionValue;
-    }
-
-    public ChartDataEntity getChartData() {
-        return chartData;
-    }
-
-    public TotalEquitiesEntity getTotalEquities() {
-        return totalEquities;
-    }
-
-    public List<PlacementEntity> getPlacements() {
-        return placements;
-    }
-
-    public List<SettlementEntity> getSettlements() {
-        return settlements;
-    }
-
-    public List<OperationEntity> getOperations() {
-        return operations;
-    }
-
-    public String getFundAccountNumber() {
-        return fundAccountNumber;
-    }
-
-    public String getFundAccountName() {
-        return fundAccountName;
-    }
-
-    public String getEncompassedHoldings() {
-        return encompassedHoldings;
-    }
 
     public Optional<InvestmentAccount> toTinkFundInvestmentAccount(
             SwedbankSEApiClient apiClient, String defaultCurrency) {
