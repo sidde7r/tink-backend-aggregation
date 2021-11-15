@@ -38,6 +38,7 @@ public class BpostWiremockTest {
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addPersistentStorageData("consent_id", "DUMMY_CONSENT_ID")
                         .addPersistentStorageData("sca_approach", "DECOUPLED")
+                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =

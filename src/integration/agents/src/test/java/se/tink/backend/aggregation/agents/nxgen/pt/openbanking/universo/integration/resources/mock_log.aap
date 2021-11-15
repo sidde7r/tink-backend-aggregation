@@ -72,7 +72,7 @@ Date: Fri, 26 Mar 2021 11:29:28 GMT
 Date: Fri, 26 Mar 2021 11:29:29 GMT
 Content-Type: application/json
 
-{"accounts":[{"resourceId":"resourceId1","iban":"iban1","currency":"EUR","name":"Credit","product":"Current Account","cashAccountType":"CACC","_links":{"balances":{"href":"/v1/accounts/resourceId1/balances"},"transactions":{"href":"/v1/accounts/resourceId1/transactions"}}},{"resourceId":"resourceId2","iban":"iban2","currency":"EUR","name":"Debit","product":"Current Account","cashAccountType":"CACC","_links":{"balances":{"href":"/v1/accounts/resourceId2/balances"},"transactions":{"href":"/v1/accounts/resourceId2/transactions"}}}]}
+{"accounts":[{"resourceId":"resourceId1","iban":"PT63003506514727884362224","currency":"EUR","name":"Credit","product":"Current Account","cashAccountType":"CACC","_links":{"balances":{"href":"/v1/accounts/resourceId1/balances"},"transactions":{"href":"/v1/accounts/resourceId1/transactions"}}},{"resourceId":"resourceId2","iban":"PT06003506518367564463955","currency":"EUR","name":"Debit","product":"Current Account","cashAccountType":"CACC","_links":{"balances":{"href":"/v1/accounts/resourceId2/balances"},"transactions":{"href":"/v1/accounts/resourceId2/transactions"}}}]}
 
 REQUEST 6
 GET https://api.psd2.universo.pt/berlingroup/v1/accounts/resourceId1/balances

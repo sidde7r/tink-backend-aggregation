@@ -1,7 +1,7 @@
 {
   "accounts": [
     {
-      "accountNumber": "IBAN",
+      "accountNumber": "DE25500105175866395233",
       "accountExclusion": "NONE",
       "exactAvailableCredit": null,
       "exactBalance": {
@@ -20,7 +20,7 @@
         "unscaledValue": 9651
       },
       "creditLimit": null,
-      "bankId": "IBAN",
+      "bankId": "DE25500105175866395233",
       "certainDate": null,
       "credentialsId": null,
       "excluded": false,
@@ -33,7 +33,7 @@
       "userModifiedExcluded": false,
       "userModifiedName": false,
       "userModifiedType": false,
-      "identifiers": "[]",
+      "identifiers": "[\"bban://500105175866395233\",\"iban://NTSBDEB1XXX/DE25500105175866395233\"]",
       "transferDestinations": null,
       "details": null,
       "closed": false,
