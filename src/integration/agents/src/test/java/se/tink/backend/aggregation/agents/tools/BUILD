@@ -58,6 +58,7 @@ junit_test(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/provider",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",

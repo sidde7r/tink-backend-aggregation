@@ -12,10 +12,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.ORIGINATING_USER_IP;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.REDIRECT_URL;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 import net.minidev.json.JSONObject;
@@ -24,6 +21,7 @@ import org.junit.Rule;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.framework.provider.ProviderConfigurationUtil;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
@@ -180,7 +178,8 @@ public abstract class IntegrationTestBase {
     }
 
     private static Provider getProvider() {
-        final ProviderConfig marketProviders = readProvidersConfiguration();
+        final ProviderConfig marketProviders =
+                ProviderConfigurationUtil.readProvidersConfiguration("uk");
         final Provider provider = marketProviders.getProvider("uk-amex-ob");
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
@@ -221,17 +220,5 @@ public abstract class IntegrationTestBase {
         when(metricRegistryMock.histogram(any(), anyList())).thenReturn(histogram);
 
         return metricRegistryMock;
-    }
-
-    private static ProviderConfig readProvidersConfiguration() {
-        final File providersFile =
-                new File(
-                        "external/tink_backend/src/provider_configuration/data/seeding/providers-uk.json");
-        final ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(providersFile, ProviderConfig.class);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
     }
 }
