@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator.AmexAccessTokenProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator.AmexThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.filter.AmexFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.filter.AmexInvalidTokenFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.filter.AmexRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.AmexMacGenerator;
@@ -95,6 +96,7 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         AmericanExpressConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new GatewayTimeoutFilter());
+        client.addFilter(new AmexFailureFilter());
         client.addFilter(
                 new TerminatedHandshakeRetryFilter(
                         AmericanExpressConstants.HttpClient.MAX_ATTEMPTS,
