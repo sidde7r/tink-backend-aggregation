@@ -30,6 +30,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 public class AccountEntity {
     private String resourceId;
     private String product;
+    private String bic;
     private String iban;
     private String currency;
     private String status;
@@ -53,7 +54,7 @@ public class AccountEntity {
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
                                 .withAccountName(buildAccountName())
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(new IbanIdentifier(bic, iban))
                                 .addIdentifier(new BbanIdentifier(iban.substring(4)))
                                 .build())
                 .setApiIdentifier(resourceId)
