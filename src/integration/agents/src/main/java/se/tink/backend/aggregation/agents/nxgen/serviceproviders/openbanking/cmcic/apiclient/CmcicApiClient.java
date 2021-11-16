@@ -110,7 +110,8 @@ public class CmcicApiClient implements FrAispApiClient {
     public URL getAuthorizeUrl(String state) {
         return authorizeRequest(
                 client.request(cmcicAgentConfig.getAuthBaseUrl())
-                        .queryParam(QueryKeys.STATE, state));
+                        .queryParam(QueryKeys.STATE, state)
+                        .queryParam(QueryKeys.REDIRECT_URI, redirectUrl));
     }
 
     public EndUserIdentityResponse getEndUserIdentity() {
