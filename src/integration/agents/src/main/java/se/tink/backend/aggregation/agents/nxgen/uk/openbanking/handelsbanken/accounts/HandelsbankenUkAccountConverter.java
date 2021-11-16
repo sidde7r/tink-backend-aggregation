@@ -4,16 +4,13 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AccountsItemEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.handelsbanken.HandelsbankenConstants.AccountMapper;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
 public class HandelsbankenUkAccountConverter implements HandelsbankenBaseAccountConverter {
@@ -27,15 +24,10 @@ public class HandelsbankenUkAccountConverter implements HandelsbankenBaseAccount
         String accountName =
                 Optional.ofNullable(accountEntity.getName()).orElse(accountEntity.getAccountType());
 
-        AmountEntity amountEntity = balanceMapper.getBalance(accountDetails.getBalances());
-
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType(accountEntity, accountDetails))
                 .withPaymentAccountFlag()
-                .withBalance(
-                        BalanceModule.of(
-                                ExactCurrencyAmount.of(
-                                        amountEntity.getContent(), amountEntity.getCurrency())))
+                .withBalance(balanceMapper.createAccountBalance(accountDetails.getBalances()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountEntity.getBbanWithoutClearing())
