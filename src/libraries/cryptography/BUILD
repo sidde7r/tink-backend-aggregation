@@ -6,12 +6,7 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_auth0_java_jwt",
-        "//third_party:commons_codec_commons_codec",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
-        "//third_party:org_slf4j_slf4j_api",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@aggregation//:com_google_guava_guava",
     ],
 )
 
