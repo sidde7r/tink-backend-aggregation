@@ -5,7 +5,7 @@ import java.util.Random;
 import org.bouncycastle.util.Arrays;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.IspConstants;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public class CryptoUtils {

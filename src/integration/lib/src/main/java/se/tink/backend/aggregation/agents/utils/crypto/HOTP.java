@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.crypto;
 
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.libraries.cryptography.hash.Hash;
 
 public class HOTP {
     public static String generateOTP(

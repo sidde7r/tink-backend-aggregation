@@ -25,11 +25,11 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.Encryp
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RequestBody;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.storage.BaseEncapStorage;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

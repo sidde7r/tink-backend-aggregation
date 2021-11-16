@@ -5,9 +5,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
+import se.tink.libraries.cryptography.hash.Hash;
 
 @RequiredArgsConstructor
 public class BoursoramaSignatureHeaderGenerator {

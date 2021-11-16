@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature;
 
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusAuthenticationData;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.libraries.cryptography.hash.Hash;
 
 public class BelfiusSignatureCreator {
 

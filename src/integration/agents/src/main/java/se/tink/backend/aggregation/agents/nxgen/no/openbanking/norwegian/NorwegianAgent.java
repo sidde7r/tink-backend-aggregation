@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.NorwegianAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.NorwegianCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.NorwegianTransactionFetcher;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -40,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.cryptography.hash.Hash;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class NorwegianAgent extends NextGenerationAgent

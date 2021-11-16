@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.u
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.DigipassConstants;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.StaticVector;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public class FingerPrintUtils {

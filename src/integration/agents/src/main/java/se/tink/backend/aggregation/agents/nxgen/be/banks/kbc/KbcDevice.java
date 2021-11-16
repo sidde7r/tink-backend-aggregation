@@ -21,9 +21,9 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.serializer.KeyPairS
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.utils.KbcOtpUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 
 @JsonObject

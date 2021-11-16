@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
@@ -16,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 
 @FilterOrder(category = FilterPhases.REQUEST_HANDLE, order = Integer.MAX_VALUE)

@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.filters.DanskeBankHttpFilter;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -41,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableB
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.GatewayTimeoutRetryFilter;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
+import se.tink.libraries.cryptography.hash.Hash;
 
 public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBankApiClient>
         extends NextGenerationAgent
