@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BbvaMxUtils {

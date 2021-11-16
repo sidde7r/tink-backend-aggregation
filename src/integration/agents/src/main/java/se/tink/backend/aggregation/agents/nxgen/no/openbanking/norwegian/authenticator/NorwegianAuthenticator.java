@@ -9,12 +9,12 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authent
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianApiClient;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class NorwegianAuthenticator implements OAuth2Authenticator {
 

@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class HashTest {
     private static final String EXPECTED = "7f9a6871b86f40c330132c4fc42cda59";

@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticat
 
 import lombok.Builder;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
+import se.tink.libraries.encoding.EncodingUtils;
 
 @Builder
 public class LoginRequest extends AbstractForm {

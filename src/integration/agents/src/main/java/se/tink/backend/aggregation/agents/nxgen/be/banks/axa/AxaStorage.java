@@ -18,9 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.B
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.utils.AxaCryptoUtil;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class AxaStorage {
 

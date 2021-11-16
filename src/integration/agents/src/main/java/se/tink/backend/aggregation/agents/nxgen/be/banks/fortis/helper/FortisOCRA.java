@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.helper;
 
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 /**
  * This is OCRA implementation taken from RFC https://tools.ietf.org/html/rfc6287

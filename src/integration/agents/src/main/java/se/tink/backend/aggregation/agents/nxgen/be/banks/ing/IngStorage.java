@@ -5,9 +5,9 @@ import java.security.PublicKey;
 import javax.crypto.spec.SecretKeySpec;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.crypto.IngCryptoUtils;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class IngStorage {
 

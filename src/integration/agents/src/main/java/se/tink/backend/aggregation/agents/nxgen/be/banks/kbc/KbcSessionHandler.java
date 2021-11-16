@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.filters.KbcHttpFilter;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public final class KbcSessionHandler implements SessionHandler {
 

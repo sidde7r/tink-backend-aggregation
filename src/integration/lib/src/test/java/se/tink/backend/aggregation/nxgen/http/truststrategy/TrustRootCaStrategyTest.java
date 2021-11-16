@@ -2,13 +2,13 @@ package se.tink.backend.aggregation.nxgen.http.truststrategy;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.encoding.EncodingUtils;
 
 @Ignore
 public class TrustRootCaStrategyTest {

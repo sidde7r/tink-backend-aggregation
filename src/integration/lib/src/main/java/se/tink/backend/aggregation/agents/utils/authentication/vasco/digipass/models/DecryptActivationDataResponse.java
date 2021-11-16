@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models;
 
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class DecryptActivationDataResponse {
     private final String clientInitialVector;

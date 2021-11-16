@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 @Data
 @AllArgsConstructor

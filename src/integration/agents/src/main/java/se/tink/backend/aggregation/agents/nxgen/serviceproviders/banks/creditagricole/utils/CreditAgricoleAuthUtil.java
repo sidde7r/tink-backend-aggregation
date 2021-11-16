@@ -4,7 +4,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class CreditAgricoleAuthUtil {
 

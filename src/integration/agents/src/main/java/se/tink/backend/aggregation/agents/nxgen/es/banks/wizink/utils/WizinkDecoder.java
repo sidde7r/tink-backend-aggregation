@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.utils;
 import java.math.BigInteger;
 import java.util.Base64;
 import org.apache.commons.codec.binary.StringUtils;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class WizinkDecoder {
 

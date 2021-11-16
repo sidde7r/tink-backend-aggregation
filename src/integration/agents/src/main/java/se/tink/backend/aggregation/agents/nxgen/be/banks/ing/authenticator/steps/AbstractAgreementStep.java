@@ -21,10 +21,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.crypto.SRP6ClientVa
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngMiscUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngRequestFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public abstract class AbstractAgreementStep extends AbstractAuthenticationStep {
 

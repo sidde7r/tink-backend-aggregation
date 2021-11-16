@@ -6,7 +6,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
@@ -16,6 +15,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/adapter",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
+        "//src/libraries/encoding",
         "//src/libraries/request_tracing",
         "//src/libraries/serialization",
         "//third_party:com_auth0_java_jwt",

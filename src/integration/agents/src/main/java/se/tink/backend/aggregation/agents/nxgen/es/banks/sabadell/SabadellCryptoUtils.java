@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConsta
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class SabadellCryptoUtils {
 

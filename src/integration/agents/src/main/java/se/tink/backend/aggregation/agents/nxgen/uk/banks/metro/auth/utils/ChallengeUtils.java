@@ -4,7 +4,7 @@ import java.security.PrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public interface ChallengeUtils {
 

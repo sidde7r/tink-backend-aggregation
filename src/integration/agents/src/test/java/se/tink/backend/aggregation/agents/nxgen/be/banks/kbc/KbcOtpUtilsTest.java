@@ -6,7 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.utils.KbcOtpUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore

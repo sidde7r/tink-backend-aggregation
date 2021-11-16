@@ -13,8 +13,8 @@ import lombok.Data;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.exceptions.refresh.IdentityRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.identity.entities.IdentityDataEntity;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Data

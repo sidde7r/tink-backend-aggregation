@@ -30,9 +30,9 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.Base
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapCryptoUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 /**

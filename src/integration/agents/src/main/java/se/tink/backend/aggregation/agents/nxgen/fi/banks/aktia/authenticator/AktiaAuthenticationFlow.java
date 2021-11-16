@@ -12,9 +12,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceAuthenticationResponse;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AktiaAuthenticationFlow {

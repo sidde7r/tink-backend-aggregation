@@ -7,7 +7,7 @@ import java.security.PrivateKey;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.MetroServiceConstants;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public interface ContentSigner {
 

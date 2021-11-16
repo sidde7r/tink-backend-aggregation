@@ -4,7 +4,7 @@ import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.StaticVector;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class OtpUtilsTest {
     private static final String FINGERPRINT =

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class PasswordEncryptionUtil {
 

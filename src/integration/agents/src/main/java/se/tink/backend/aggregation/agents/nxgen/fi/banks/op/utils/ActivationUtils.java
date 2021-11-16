@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.utils.srp.ClientEvidenceMessageResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class ActivationUtils {
     private static byte[] encryptionKeyFromSrpSessionKey(

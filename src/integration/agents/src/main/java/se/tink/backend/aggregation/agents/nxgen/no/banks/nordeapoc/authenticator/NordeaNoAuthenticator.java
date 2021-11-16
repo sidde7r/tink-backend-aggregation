@@ -13,11 +13,11 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.authenticator
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.authenticator.rpc.OauthTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.libraries.encoding.EncodingUtils;
 import src.integration.bankid.BankIdOidcIframeAuthenticationService;
 
 @Slf4j

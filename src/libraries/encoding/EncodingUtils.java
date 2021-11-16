@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.encoding;
+package se.tink.libraries.encoding;
 
 import com.google.common.base.Charsets;
 import java.io.UnsupportedEncodingException;
