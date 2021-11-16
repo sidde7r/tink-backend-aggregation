@@ -134,9 +134,9 @@ Content-Type: application/json
       },
       "creditDebitIndicator": "CRDT",
       "status": "BOOK",
-      "bookingDate": "2018-02-12",
-      "transactionDate": "2018-02-12",
-      "valueDate": "2018-02-12",
+      "bookingDate": "2018-02-12T00:00:00Z",
+      "transactionDate": "2018-02-12T00:00:00Z",
+      "valueDate": "2018-02-12T00:00:00Z",
       "remittanceInformation": {
         "unstructured": [
           "SEPA CREDIT TRANSFER from PSD2Company"
