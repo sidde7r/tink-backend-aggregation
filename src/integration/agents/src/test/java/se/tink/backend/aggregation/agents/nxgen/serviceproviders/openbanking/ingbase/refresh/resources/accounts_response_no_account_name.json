@@ -1,0 +1,19 @@
+{
+  "accounts": [
+    {
+      "resourceId": "resource_id",
+      "iban": "BE54000000000000",
+      "maskedPan": "",
+      "name": "TestFirstName TestSurname",
+      "currency": "EUR",
+      "_links": {
+        "balances": {
+          "href": "/v3/accounts/resource_id/balances?currency\u003dEUR"
+        },
+        "transactions": {
+          "href": "/v2/accounts/resource_id/transactions?currency\u003dEUR"
+        }
+      }
+    }
+  ]
+}
