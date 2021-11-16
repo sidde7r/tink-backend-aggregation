@@ -36,7 +36,7 @@ public class TransactionEntity {
     @JsonIgnore
     public CreditCardTransaction toTinkTransaction() {
         return CreditCardTransaction.builder()
-                .setAmount(amount.negate())
+                .setAmount(amount.toExactCurrencyAmount().negate())
                 .setDate(date.toTinkDate())
                 .setDescription(text)
                 .build();

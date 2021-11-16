@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransferItem {
@@ -41,12 +41,12 @@ public class TransferItem {
         return FortisConstants.NEGATIVE_TRANSACTION_TYPE.equalsIgnoreCase(amountType);
     }
 
-    private Amount getTinkAmount() {
+    private ExactCurrencyAmount getTinkAmount() {
         try {
-            Amount result =
-                    new Amount(
-                            amount.getCurrency(),
-                            NumberFormat.getInstance(Locale.FRANCE).parse(amount.getAmount()));
+            ExactCurrencyAmount result =
+                    ExactCurrencyAmount.of(
+                            NumberFormat.getInstance(Locale.FRANCE).parse(amount.getAmount()),
+                            amount.getCurrency());
             if (isTransactionNegative()) {
                 return result.negate();
             }
