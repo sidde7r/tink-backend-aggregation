@@ -3,7 +3,12 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "cryptography",
-    srcs = glob(["src/main/**/*.java"]),
+    srcs = glob(
+        ["*.java"],
+        exclude = [
+            "*Test.java",
+        ],
+    ),
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
@@ -12,7 +17,7 @@ java_library(
 
 junit_test(
     name = "cryptography_test",
-    srcs = glob(["src/test/**/*.java"]),
+    srcs = glob(["*Test.java"]),
     data = [
         "//data:cryptography_test",
     ],
