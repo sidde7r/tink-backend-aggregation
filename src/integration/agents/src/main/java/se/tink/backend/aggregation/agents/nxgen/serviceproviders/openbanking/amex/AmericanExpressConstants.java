@@ -16,6 +16,7 @@ public class AmericanExpressConstants {
 
         public static final String DATE_OUT_OF_RANGE =
                 "Request Validation Failed - Requested date range exceeds the supported limit";
+        public static final String API_FAILED_TO_RESPOND = "failed to respond";
 
         public static final TypeMapper<Boolean> REVOKED_TOKEN_MAPPER =
                 TypeMapper.<Boolean>builder()
