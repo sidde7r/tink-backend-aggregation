@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_SELECT_METHOD_POPUP;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_SELECT_METHOD_POPUP_HEADER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 
 import com.google.common.collect.ImmutableList;
@@ -26,7 +26,7 @@ class NemIdDetect2FAMethodsStep {
 
     public static final List<By> ELEMENTS_TO_SEARCH_FOR_AFTER_CLICKING_CHANGE_METHOD_LINK =
             ImmutableList.<By>builder()
-                    .add(NEMID_SELECT_METHOD_POPUP)
+                    .add(NEMID_SELECT_METHOD_POPUP_HEADER)
                     .addAll(NemId2FAMethodScreen.getSelectorsForAllScreens())
                     .build();
 
@@ -70,7 +70,7 @@ class NemIdDetect2FAMethodsStep {
                     defaultScreen, maybeMethodScreen.get());
         }
 
-        if (elementFound == NEMID_SELECT_METHOD_POPUP) {
+        if (elementFound == NEMID_SELECT_METHOD_POPUP_HEADER) {
             return NemIdDetect2FAMethodsResult.canChooseMethodFromPopup(
                     defaultScreen, detectVisible2FAMethodInSelectionPopup());
         }

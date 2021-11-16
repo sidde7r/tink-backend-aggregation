@@ -120,57 +120,96 @@ public class NemIdConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlElements {
-        // Parent window
+        /*
+        Parent window
+        */
         public static final By IFRAME = By.tagName("iframe");
         public static final By NOT_EMPTY_NEMID_TOKEN =
                 By.xpath("//div[@id='tink_nemIdToken' and text()!='']");
 
-        // Common iframe elements
-        public static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
-        public static final By NOT_EMPTY_ERROR_MESSAGE =
-                By.xpath("//p[@class='error' and text()!='']");
-        public static final By NEMID_WIDE_INFO_HEADING = By.xpath("//h1[@class='wide-heading'][1]");
+        /*
+        Common iframe elements
+         */
+        private static final String FRAME_CONTAINER_XPATH = "//*[@id='framecontentscroll']";
 
-        // Login screen
+        // actionable button seems to always be the first button in the frame content
+        private static final String SUBMIT_BUTTON_XPATH =
+                String.format("(%s//button)[1]", FRAME_CONTAINER_XPATH);
+        public static final By SUBMIT_BUTTON = By.xpath(SUBMIT_BUTTON_XPATH);
+
+        // error message seems to be the last <p> before submit button
+        public static final By NOT_EMPTY_ERROR_MESSAGE =
+                By.xpath(SUBMIT_BUTTON_XPATH + "/preceding::div/p[text() != '']");
+
+        // NOTE: this header is always present in the frame - it can contain a title for
+        // authentication screen or some error screen. In order to detect error screen,
+        // it should always be the LAST selector that we're looking for - otherwise we
+        // won't detect anything else.
+        public static final By NEMID_FRAME_HEADER =
+                By.xpath(String.format("%s//h1[text() != ''][1]", FRAME_CONTAINER_XPATH));
+
+        /*
+        Login screen
+         */
         public static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
         public static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
 
-        // 2FA method screens
-        public static final By NEMID_CODE_APP_SCREEN = By.className("otp__icon-phone-pulse");
-        public static final By NEMID_CODE_CARD_SCREEN = By.className("otp__card-number");
-        public static final By NEMID_CODE_TOKEN_SCREEN = By.className("otp__token");
-        public static final By NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD =
-                By.xpath("//*[@class='frame__row']//a");
-        public static final By NEMID_SELECT_METHOD_POPUP =
-                By.xpath("//button[contains(@class, 'otp__iconTextButton')]");
-        public static final By NEMID_CLOSE_SELECT_METHOD_POPUP =
-                NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD;
-
-        // Code app screen
-        public static final By NEMID_TIMEOUT_ICON = By.className("otp__icon-noresponse");
-
-        // Code card screen
-        public static final By NEMID_CODE_CARD_NUMBER = NEMID_CODE_CARD_SCREEN;
-        public static final By NEMID_CODE_CARD_CODE_NUMBER =
-                By.xpath("//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][1]");
-        public static final By NEMID_CODE_CARD_CODE_INPUT =
+        /*
+        Code app screen
+         */
+        public static final By NEMID_CODE_APP_SCREEN_HEADER =
                 By.xpath(
-                        "//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][2]//input");
-        public static final By NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES =
-                By.xpath("//*[@id='framecontentscroll']/div[1]/div[2]/button");
+                        "//h1[contains(text(),'Authenticate using code app') or contains(text(),'Godkend med nøgleapp')]");
+        public static final By NEMID_CODE_APP_TIMEOUT_HEADER =
+                By.xpath(
+                        "//h1[contains(text(), 'Your request has timed out') or contains(text(), 'Anmodningen er udløbet')]");
 
-        // Code token screen
+        /*
+        Code card screen
+         */
+        public static final By NEMID_CODE_CARD_NUMBER =
+                By.xpath(
+                        "//div[contains(text(),'Code card') or contains(text(),'Nøglekort')]/span");
+
+        // the code user has to provide
+        private static final String NEMID_CODE_CARD_CODE_INPUT_XPATH =
+                "//input[@type='tel' and @maxlength='6']";
+        public static final By NEMID_CODE_CARD_CODE_INPUT =
+                By.xpath(NEMID_CODE_CARD_CODE_INPUT_XPATH);
+
+        // the number (#) of code that user has to provide
+        public static final By NEMID_CODE_CARD_CODE_NUMBER =
+                By.xpath(NEMID_CODE_CARD_CODE_INPUT_XPATH + "/preceding::div[1]");
+
+        // IC-677 add for EN
+        public static final By NEMID_RUNNING_OUT_OF_CODES_SCREEN_HEADER =
+                By.xpath("//h1[contains(text(),'Nyt nøglekort')]");
+
+        /*
+        Code token screen
+         */
         public static final By NEMID_CODE_TOKEN_SERIAL_NUMBER =
-                By.xpath("//*[@class='frame__row']//div[1]//span");
-        public static final By NEMID_CODE_TOKEN_INPUT = By.xpath("//*[@class='input otp-input']");
+                By.xpath(
+                        "//p[contains(text(),'Code token serial number') or contains(text(),'Serienummer på nøgleviser')]/following::span");
 
-        // Select 2FA methods popup
+        public static final By NEMID_CODE_TOKEN_INPUT = By.xpath(NEMID_CODE_CARD_CODE_INPUT_XPATH);
+
+        /*
+        Change method link & popup
+         */
+        public static final By NEMID_SELECT_METHOD_POPUP_HEADER =
+                By.xpath("//h1[text() = 'Select code type' or text() = 'Vælg nøgletype']");
+        public static final By NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD =
+                By.xpath("//a[text() = 'Change code type' or text() = 'Skift nøgletype']");
+        public static final By NEMID_LINK_TO_CLOSE_SELECT_METHOD_POPUP =
+                By.xpath("//a[text() = 'Back' or text() = 'Tilbage']");
+
         public static final By NEMID_SELECT_CODE_APP_BUTTON =
-                By.xpath("//button[./*[@class='icon-element otp__icon-phone']]");
+                By.xpath("//span[text() = 'Code app' or text() = 'Nøgleapp']/ancestor::button");
         public static final By NEMID_SELECT_CODE_CARD_BUTTON =
-                By.xpath("//button[./*[@class='icon-element otp__icon-keycard']]");
+                By.xpath("//span[text() = 'Code card' or text() = 'Nøglekort']/ancestor::button");
         public static final By NEMID_SELECT_CODE_TOKEN_BUTTON =
-                By.xpath("//button[./*[@class='icon-element otp__icon-token']]");
+                By.xpath("//span[text() = 'Code token' or text() = 'Nøgleviser']/ancestor::button");
     }
 
     // source:

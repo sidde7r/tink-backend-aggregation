@@ -8,7 +8,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.NEM_ID_RENEW_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.NEM_ID_REVOKED_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.USE_NEW_CODE_CARD_PATTERNS;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_FRAME_HEADER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
@@ -46,7 +46,7 @@ public class NemIdVerifyLoginResponseStep {
             ImmutableList.<By>builder()
                     .addAll(NemId2FAMethodScreen.getSelectorsForAllScreens())
                     .add(NOT_EMPTY_ERROR_MESSAGE)
-                    .add(NEMID_WIDE_INFO_HEADING)
+                    .add(NEMID_FRAME_HEADER)
                     .build();
 
     private final NemIdWebDriverWrapper driverWrapper;
@@ -68,6 +68,10 @@ public class NemIdVerifyLoginResponseStep {
 
     private NemId2FAMethodScreen verifyCorrectLoginResponseAndGetDefault2FAScreen(
             Credentials credentials) {
+        // We don't want NEMID_FRAME_HEADER to detect header on login page. Adding a quick sleep
+        // should give login screen more time to reload
+        driverWrapper.sleepFor(1_000);
+
         ElementsSearchResult validationElementsSearchResult =
                 driverWrapper.searchForFirstElement(
                         ElementsSearchQuery.builder()
@@ -115,7 +119,7 @@ public class NemIdVerifyLoginResponseStep {
         if (elementSelector == NOT_EMPTY_ERROR_MESSAGE) {
             throwCredentialsValidationError(element.getText());
         }
-        if (elementSelector == NEMID_WIDE_INFO_HEADING) {
+        if (elementSelector == NEMID_FRAME_HEADER) {
             throwNemIdError(element.getText());
         }
 

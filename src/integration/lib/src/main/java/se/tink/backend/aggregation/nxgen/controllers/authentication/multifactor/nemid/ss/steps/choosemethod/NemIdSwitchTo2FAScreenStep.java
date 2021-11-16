@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CLOSE_SELECT_METHOD_POPUP;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_LINK_TO_CLOSE_SELECT_METHOD_POPUP;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 
@@ -80,7 +80,7 @@ class NemIdSwitchTo2FAScreenStep {
     }
 
     private void closePopup() {
-        driverWrapper.clickButton(NEMID_CLOSE_SELECT_METHOD_POPUP);
+        driverWrapper.clickButton(NEMID_LINK_TO_CLOSE_SELECT_METHOD_POPUP);
     }
 
     private void toggleBetween2FAMethodScreens() {

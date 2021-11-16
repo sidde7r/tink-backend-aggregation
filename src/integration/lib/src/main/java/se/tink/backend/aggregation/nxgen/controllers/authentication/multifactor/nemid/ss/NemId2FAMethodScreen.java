@@ -16,9 +16,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @Getter
 @RequiredArgsConstructor
 public enum NemId2FAMethodScreen {
-    CODE_APP_SCREEN(HtmlElements.NEMID_CODE_APP_SCREEN, NemId2FAMethod.CODE_APP),
-    CODE_CARD_SCREEN(HtmlElements.NEMID_CODE_CARD_SCREEN, NemId2FAMethod.CODE_CARD),
-    CODE_TOKEN_SCREEN(HtmlElements.NEMID_CODE_TOKEN_SCREEN, NemId2FAMethod.CODE_TOKEN);
+    CODE_APP_SCREEN(HtmlElements.NEMID_CODE_APP_SCREEN_HEADER, NemId2FAMethod.CODE_APP),
+    CODE_CARD_SCREEN(HtmlElements.NEMID_CODE_CARD_NUMBER, NemId2FAMethod.CODE_CARD),
+    CODE_TOKEN_SCREEN(HtmlElements.NEMID_CODE_TOKEN_SERIAL_NUMBER, NemId2FAMethod.CODE_TOKEN);
 
     // Selector that allows to detect that we're on a given screen
     private final By selectorToDetectScreen;

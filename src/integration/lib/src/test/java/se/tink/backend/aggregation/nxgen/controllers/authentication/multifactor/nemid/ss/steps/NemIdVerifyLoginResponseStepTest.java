@@ -6,10 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_SCREEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_SCREEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_SCREEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_SCREEN_HEADER;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_NUMBER;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_SERIAL_NUMBER;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_FRAME_HEADER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep.ELEMENTS_TO_SEARCH_FOR_IN_IFRAME;
@@ -106,9 +106,9 @@ public class NemIdVerifyLoginResponseStepTest {
     @SuppressWarnings("unused")
     private Object[] all2FAWebElementsWithExpected2FAScreen() {
         return new Object[] {
-            asArray(NEMID_CODE_APP_SCREEN, NemId2FAMethodScreen.CODE_APP_SCREEN),
-            asArray(NEMID_CODE_CARD_SCREEN, NemId2FAMethodScreen.CODE_CARD_SCREEN),
-            asArray(NEMID_CODE_TOKEN_SCREEN, NemId2FAMethodScreen.CODE_TOKEN_SCREEN)
+            asArray(NEMID_CODE_APP_SCREEN_HEADER, NemId2FAMethodScreen.CODE_APP_SCREEN),
+            asArray(NEMID_CODE_CARD_NUMBER, NemId2FAMethodScreen.CODE_CARD_SCREEN),
+            asArray(NEMID_CODE_TOKEN_SERIAL_NUMBER, NemId2FAMethodScreen.CODE_TOKEN_SCREEN)
         };
     }
 
@@ -226,7 +226,7 @@ public class NemIdVerifyLoginResponseStepTest {
         // given
         WebElement headingElement = webElementMockWithText(errorText);
         when(driverWrapper.searchForFirstElement(any()))
-                .thenReturn(ElementsSearchResult.of(NEMID_WIDE_INFO_HEADING, headingElement));
+                .thenReturn(ElementsSearchResult.of(NEMID_FRAME_HEADER, headingElement));
 
         // when
         Throwable throwable =

@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TIMEOUT_ICON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_TIMEOUT_HEADER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.nemIdMetricsMock;
@@ -62,7 +62,7 @@ public class NemIdCodeAppCollectTokenStepTest {
         // given
         WebElement timeoutElement = webElementMock();
         when(driverWrapper.searchForFirstElement(any()))
-                .thenReturn(ElementsSearchResult.of(NEMID_TIMEOUT_ICON, timeoutElement));
+                .thenReturn(ElementsSearchResult.of(NEMID_CODE_APP_TIMEOUT_HEADER, timeoutElement));
 
         // when
         Throwable throwable = catchThrowable(() -> collectTokenStep.collectToken());
@@ -98,7 +98,7 @@ public class NemIdCodeAppCollectTokenStepTest {
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
-                                .searchInAnIframe(NEMID_TIMEOUT_ICON)
+                                .searchInAnIframe(NEMID_CODE_APP_TIMEOUT_HEADER)
                                 .searchForSeconds(NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN)
                                 .build());
     }
