@@ -41,7 +41,7 @@ RESPONSE 5
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"iban":"EE347700771005934222","currency":"XXX","name":"Naruto"},{"iban":"EE787700771005998777","currency":"XXX","name":"Naruto"}]}
+{"accounts":[{"iban":"EE347700771005934222","currency":"EUR","name":"My account"},{"iban":"EE787700771005998777","currency":"EUR","name":"Naruto"}]}
 
 REQUEST 6
 POST https://api.lhv.eu/psd2/v1/consents
@@ -50,7 +50,7 @@ Content-Type: application/json
 {"access":{"availableAccounts":"allAccounts","balances":[{"iban":"EE347700771005934222"},{"iban":"EE787700771005998777"}],"transactions":[{"iban":"EE347700771005934222"},{"iban":"EE787700771005998777"}]},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":true}
 
 RESPONSE 6
-200
+201
 Content-Type: application/json;charset=utf-8
 
 {"consentStatus":"received","consentId":"0cdd8383-38a5-45c5-8b01-fc4bffb325d3","_links":{"scaRedirect":{"href":"https://api.lhv.eu/psd2/ui/consent/0cdd8383-38a5-45c5-8b01-fc4bffb325d3"},"status":{"href":"https://api.lhv.eu/psd2/v1/consents/0cdd8383-38a5-45c5-8b01-fc4bffb325d3/status"}}}
@@ -71,7 +71,7 @@ RESPONSE 9
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"resourceId":"6103210e-d01e-4b53-adfc-01d53485a1ff","iban":"EE787700771005998888","currency":"XXX","product":"Multi currency account","cashAccountType":"CACC","name":"Jane Doe","_links":{"balances":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/balances"},"transactions":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/transactions"}}},{"resourceId":"97bc64d8-b742-4a97-a34b-d95db91c5fb6","iban":"EE347700771005934444","currency":"XXX","product":"Multi currency account","cashAccountType":"CACC","name":"Jane Doe","_links":{"balances":{"href":"https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/balances"},"transactions":{"href":"https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/transactions"}}}]}
+{"accounts":[{"resourceId":"6103210e-d01e-4b53-adfc-01d53485a1ff","iban":"EE787700771005998888","currency":"EUR","product":"Multi currency account","cashAccountType":"CACC","name":"My account","_links":{"balances":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/balances"},"transactions":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/transactions"}}},{"resourceId":"97bc64d8-b742-4a97-a34b-d95db91c5fb6","iban":"EE347700771005934444","currency":"EUR","product":"Multi currency account","cashAccountType":"CACC","name":"Naruto","_links":{"balances":{"href":"https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/balances"},"transactions":{"href":"https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/transactions"}}}]}
 
 REQUEST 10
 GET https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/balances
@@ -80,7 +80,7 @@ RESPONSE 10
 200
 Content-Type: application/hal+json;charset=UTF-8
 
-{"account":{"iban":"EE787700771005998888"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"22.33"}},{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"22.33"}},{"balanceType":"interimAvailable","balanceAmount":{"currency":"USD","amount":"-0.39"}},{"balanceType":"interimBooked","balanceAmount":{"currency":"USD","amount":"-0.39"}}]}
+{"account":{"iban":"EE787700771005998888"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"777.33"}},{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"5432.33"}}]}
 
 REQUEST 11
 GET https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/balances
@@ -89,7 +89,7 @@ RESPONSE 11
 200
 Content-Type: application/hal+json;charset=UTF-8
 
-{"account":{"iban":"EE347700771005934444"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"22.33"}},{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"22.33"}},{"balanceType":"interimAvailable","balanceAmount":{"currency":"USD","amount":"-0.39"}},{"balanceType":"interimBooked","balanceAmount":{"currency":"USD","amount":"-0.39"}}]}
+{"account":{"iban":"EE347700771005934444"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"55555.33"}},{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"22.33"}}]}
 
 REQUEST 12
 GET https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/transactions?dateFrom=1992-01-11&bookingStatus=booked
@@ -98,7 +98,7 @@ RESPONSE 12
 200
 Content-Type: application/json;charset=utf-8
 
-{"account":{"iban":"EE787700771005998888"},"transactions":{"booked":[{"entryReference":"202106281378178164-302887546","bookingDate":"1992-01-28","transactionAmount":{"currency":"EUR","amount":"-75.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE347700771005934444"},"debtorName":"Jane Doe","debtorAccount":{"iban":"EE787700771005998888"},"remittanceInformationUnstructured":"Payment"},{"entryReference":"202106301378679415-303289656","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"660.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Jane Doe","debtorAccount":{"iban":"EE347700771005934444"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"},{"entryReference":"202106301378706076-303310033","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"500.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Jane Doe","debtorAccount":{"iban":"EE347700771005934444"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"}],"_links":{"account":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff"}}}}
+{"account":{"iban":"EE787700771005998888"},"transactions":{"booked":[{"entryReference":"202106281378178164-302887546","bookingDate":"1992-01-28","transactionAmount":{"currency":"EUR","amount":"-75.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE347700771005934444"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE787700771005998888"},"remittanceInformationUnstructured":"Payment"},{"entryReference":"202106301378679415-303289656","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"660.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE347700771005934444"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"},{"entryReference":"202106301378706076-303310033","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"500.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE347700771005934444"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"}],"_links":{"account":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff"}}}}
 
 REQUEST 13
 GET https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/transactions?dateFrom=1992-01-11&bookingStatus=booked
@@ -107,4 +107,4 @@ RESPONSE 13
 200
 Content-Type: application/json;charset=utf-8
 
-{"account":{"iban":"EE787700771005998888"},"transactions":{"booked":[{"entryReference":"202106281378178164-302887546","bookingDate":"1992-01-28","transactionAmount":{"currency":"EUR","amount":"-75.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE347700771005934444"},"debtorName":"Jane Doe","debtorAccount":{"iban":"EE787700771005998888"},"remittanceInformationUnstructured":"Payment"},{"entryReference":"202106301378679415-303289656","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"660.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Jane Doe","debtorAccount":{"iban":"EE347700771005934444"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"},{"entryReference":"202106301378706076-303310033","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"500.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Jane Doe","debtorAccount":{"iban":"EE347700771005934444"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"}],"_links":{"account":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff"}}}}
+{"account":{"iban":"EE787700771005998888"},"transactions":{"booked":[{"entryReference":"202106281378178164-302887546","bookingDate":"1992-01-28","transactionAmount":{"currency":"EUR","amount":"-75.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE347700771005934444"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE787700771005998888"},"remittanceInformationUnstructured":"Payment"},{"entryReference":"202106301378679415-303289656","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"660.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE347700771005934444"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"},{"entryReference":"202106301378706076-303310033","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"500.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE347700771005934444"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"}],"_links":{"account":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff"}}}}

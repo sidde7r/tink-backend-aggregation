@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.ErrorResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -25,13 +26,16 @@ public final class IngBaseAuthenticator implements OAuth2Authenticator {
 
     private final IngBaseApiClient client;
     private final PersistentStorage persistentStorage;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public IngBaseAuthenticator(
             IngBaseApiClient apiClient,
             PersistentStorage persistentStorage,
-            CredentialsRequest credentialsRequest) {
+            CredentialsRequest credentialsRequest,
+            LocalDateTimeSource localDateTimeSource) {
         this.client = apiClient;
         this.persistentStorage = persistentStorage;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
@@ -42,7 +46,8 @@ public final class IngBaseAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
         final OAuth2Token token = client.getToken(code);
-        persistentStorage.put(StorageKeys.AUTHENTICATION_TIME, System.currentTimeMillis());
+        persistentStorage.put(
+                StorageKeys.AUTHENTICATION_TIME, localDateTimeSource.getSystemCurrentTimeMillis());
         return token;
     }
 

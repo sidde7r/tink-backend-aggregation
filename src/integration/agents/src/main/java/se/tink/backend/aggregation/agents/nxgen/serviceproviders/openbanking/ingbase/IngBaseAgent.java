@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 import com.google.common.collect.ImmutableSet;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -65,6 +67,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     protected final IngBaseApiClient apiClient;
     private final IngPaymentApiClient paymentApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
@@ -105,6 +108,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                                 .strongAuthenticationState(strongAuthenticationState)
                                 .build(),
                         agentComponentProvider);
+        localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -154,7 +158,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final IngBaseAuthenticator ingBaseAuthenticator =
-                new IngBaseAuthenticator(apiClient, persistentStorage, request);
+                new IngBaseAuthenticator(
+                        apiClient, persistentStorage, request, localDateTimeSource);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
@@ -200,7 +205,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
                                 new IngBaseTransactionsFetcher(
-                                        apiClient, this::getTransactionsFromDate))));
+                                        apiClient,
+                                        this::getTransactionsFromDate,
+                                        localDateTimeSource))));
     }
 
     @Override
@@ -247,11 +254,15 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     protected LocalDate getTransactionsFromDate() {
         final Long authenticationTime =
                 persistentStorage.get(StorageKeys.AUTHENTICATION_TIME, Long.TYPE).orElse(0L);
-        final long authenticationAge = System.currentTimeMillis() - authenticationTime;
+        final long authenticationAge =
+                localDateTimeSource.getSystemCurrentTimeMillis() - authenticationTime;
         if (authenticationAge < Transaction.FULL_HISTORY_MAX_AGE) {
             return earliestTransactionHistoryDate();
         }
-        return LocalDate.now().minusDays(Transaction.DEFAULT_HISTORY_DAYS);
+        return localDateTimeSource
+                .now(ZoneOffset.UTC)
+                .toLocalDate()
+                .minusDays(Transaction.DEFAULT_HISTORY_DAYS);
     }
 
     /*

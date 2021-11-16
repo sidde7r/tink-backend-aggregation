@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.function.Supplier;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -14,11 +16,15 @@ public class IngBaseTransactionsFetcher
 
     private final IngBaseApiClient apiClient;
     private final Supplier<LocalDate> fromDateSupplier;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public IngBaseTransactionsFetcher(
-            IngBaseApiClient apiClient, Supplier<LocalDate> fromDateSupplier) {
+            IngBaseApiClient apiClient,
+            Supplier<LocalDate> fromDateSupplier,
+            LocalDateTimeSource localDateTimeSource) {
         this.apiClient = apiClient;
         this.fromDateSupplier = fromDateSupplier;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
@@ -33,7 +39,7 @@ public class IngBaseTransactionsFetcher
 
         if (Objects.isNull(key)) {
             final LocalDate fromDate = fromDateSupplier.get();
-            final LocalDate toDate = LocalDate.now();
+            final LocalDate toDate = localDateTimeSource.now(ZoneOffset.UTC).toLocalDate();
             return apiClient.fetchTransactions(transactionsUrl, fromDate, toDate);
         }
         return apiClient.fetchTransactionsPage(key);

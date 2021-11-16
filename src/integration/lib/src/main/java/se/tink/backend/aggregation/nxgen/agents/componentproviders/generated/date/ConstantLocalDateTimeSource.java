@@ -31,4 +31,9 @@ public final class ConstantLocalDateTimeSource implements LocalDateTimeSource {
     public Instant getInstant() {
         return CONSTANT_UTC_INSTANT;
     }
+
+    @Override
+    public long getSystemCurrentTimeMillis() {
+        return CONSTANT_UTC_INSTANT.toEpochMilli();
+    }
 }

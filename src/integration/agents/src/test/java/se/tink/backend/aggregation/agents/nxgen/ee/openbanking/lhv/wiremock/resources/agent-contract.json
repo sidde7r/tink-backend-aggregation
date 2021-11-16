@@ -1,282 +1,262 @@
 {
-    "accounts": [
-        {
-            "accountNumber": "EE347700771005934444",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "EUR",
-                "doubleValue": 22.33,
-                "scale": 2,
-                "exactValue": 22.33,
-                "unscaledValue": 2233
-            },
-            "currencyCode": "EUR",
-            "availableBalance": {
-                "currencyCode": "EUR",
-                "doubleValue": 22.33,
-                "scale": 2,
-                "exactValue": 22.33,
-                "unscaledValue": 2233
-            },
-            "bankId": "EE347700771005934444",
-            "excluded": false,
-            "favored": false,
-            "name": "Jane Doe",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[]",
-            "closed": false,
-            "holderName": "Jane Doe",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Jane Doe",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 22.33
+    "accounts" : [ {
+        "accountNumber" : "EE347700771005934444",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 2233,
+            "exactValue" : 22.33,
+            "doubleValue" : 22.33
         },
-        {
-            "accountNumber": "EE787700771005998888",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "EUR",
-                "doubleValue": 22.33,
-                "scale": 2,
-                "exactValue": 22.33,
-                "unscaledValue": 2233
-            },
-            "currencyCode": "EUR",
-            "availableBalance": {
-                "currencyCode": "EUR",
-                "doubleValue": 22.33,
-                "scale": 2,
-                "exactValue": 22.33,
-                "unscaledValue": 2233
-            },
-            "bankId": "EE787700771005998888",
-            "excluded": false,
-            "favored": false,
-            "name": "Jane Doe",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[]",
-            "closed": false,
-            "holderName": "Jane Doe",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Jane Doe",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 22.33
-        }
-    ],
-    "transactions": [
-        {
-            "amount": -75.0,
-            "date": 696596400000,
-            "description": "Payment",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "202106281378178164-302887546"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-28",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-28",
-                        "instant": null
-                    }
-                }
-            ]
+        "currencyCode" : "EUR",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 5555533,
+            "exactValue" : 55555.33,
+            "doubleValue" : 55555.33
         },
-        {
-            "amount": 660.0,
-            "date": 696769200000,
-            "description": "1",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "202106301378679415-303289656"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-30",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-30",
-                        "instant": null
-                    }
-                }
-            ]
+        "bankId" : "EE347700771005934444",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Naruto",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Jane Doe",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Jane Doe",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "amount": 500.0,
-            "date": 696769200000,
-            "description": "1",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "202106301378706076-303310033"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-30",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-30",
-                        "instant": null
-                    }
-                }
-            ]
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 22.33
+    }, {
+        "accountNumber" : "EE787700771005998888",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 543233,
+            "exactValue" : 5432.33,
+            "doubleValue" : 5432.33
         },
-        {
-            "amount": -75.0,
-            "date": 696596400000,
-            "description": "Payment",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "202106281378178164-302887546"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-28",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-28",
-                        "instant": null
-                    }
-                }
-            ]
+        "currencyCode" : "EUR",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 77733,
+            "exactValue" : 777.33,
+            "doubleValue" : 777.33
         },
-        {
-            "amount": 660.0,
-            "date": 696769200000,
-            "description": "1",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "202106301378679415-303289656"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-30",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-30",
-                        "instant": null
-                    }
-                }
-            ]
+        "bankId" : "EE787700771005998888",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "My account",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Jane Doe",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Jane Doe",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "amount": 500.0,
-            "date": 696769200000,
-            "description": "1",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "202106301378706076-303310033"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-30",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-30",
-                        "instant": null
-                    }
-                }
-            ]
-        }
-    ]
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 5432.33
+    } ],
+    "transactions" : [ {
+        "amount" : -75.0,
+        "date" : 696596400000,
+        "description" : "Payment",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106281378178164-302887546"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-28",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-28",
+                "instant" : null
+            }
+        } ],
+        "merchantName" : "Jane Doe",
+        "transactionReference" : "202106281378178164-302887546"
+    }, {
+        "amount" : 660.0,
+        "date" : 696769200000,
+        "description" : "1",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106301378679415-303289656"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "merchantName" : "Jane Doe",
+        "transactionReference" : "202106301378679415-303289656"
+    }, {
+        "amount" : 500.0,
+        "date" : 696769200000,
+        "description" : "1",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106301378706076-303310033"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "merchantName" : "Jane Doe",
+        "transactionReference" : "202106301378706076-303310033"
+    }, {
+        "amount" : -75.0,
+        "date" : 696596400000,
+        "description" : "Payment",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106281378178164-302887546"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-28",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-28",
+                "instant" : null
+            }
+        } ],
+        "merchantName" : "Jane Doe",
+        "transactionReference" : "202106281378178164-302887546"
+    }, {
+        "amount" : 660.0,
+        "date" : 696769200000,
+        "description" : "1",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106301378679415-303289656"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "merchantName" : "Jane Doe",
+        "transactionReference" : "202106301378679415-303289656"
+    }, {
+        "amount" : 500.0,
+        "date" : 696769200000,
+        "description" : "1",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106301378706076-303310033"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "merchantName" : "Jane Doe",
+        "transactionReference" : "202106301378706076-303310033"
+    } ]
 }

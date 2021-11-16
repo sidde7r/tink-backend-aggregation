@@ -1,0 +1,35 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST /oauth2/token
+Accept: application/json
+Digest: SHA-256=ETfBMrE9KTCQ96JvKzTK8PI4hMknV0CfKXe8a2uH/hA=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="Iz0PVOf6PjRCuVK0C7ap3G1h7j2UC635/B2gJvfvCAPKnFpmrrr+sNp38gh18VRq29UmauDaxhKijmW7+KmdiPm2DfToGT87dJ3YMXXWPnl1ilpdX4xcIdYTZt3HtlY01ym0JfL06xJSrHILa3h2qjmXYWsJpGET0hxo51TT4AMcSHkHpYCuhoBd94OkYuFPrjPCnAemjueOGPyH6ztn3UbK2jUkA2GuRaKy3tDlu0XChqXGI3N3cP/PN8DLGs5/scDp4U1IQ6ZLwj1TLTRP9dF7FG7TqbqNhjz6HOiGdEV8gPZVhX5cxrTi7h2vjTsJxDgf4dbXuUhvfQMDEYVuqQ=="
+Authorization: Bearer access_token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=refresh_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 02 Nov 2021 11:35:11 GMT
+Date: Tue, 02 Nov 2021 11:35:11 GMT
+Content-Type: application/json;charset=utf-8
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 66e7fd49-764c-4b64-953f-fcb3b03ca49a
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="pqkWTFNCjiWvha+vEnxzAwoSPHH9u8tGIKdJLhS6B9N20BJWdln/lHZxRFpIlQTVjpIltbV9dowTuaXp8DQKz3acRRLJ70PKTTfbeyI4OYnMCmWJiNcEVBowJ+U2y9t5cdvWOg27dnGjkfgL+l9pxjUG/I1FuCK7AWbyiJWpORuo4xPNZltiHwXvF4V552AuAtRWgvI8xoXMJfvpH2WCsZeW7DG5D3lF1Qo3OiarimTzy9JyJ3qc1PdY0ZRt8F+eIttejzOecwOdAC7C+N62xX5sLVbAVLWLyCkLIilEBsP2eV8q5+cxeJ2lmHtQUYtsuqS8eUInQKSJHEtnR/teXB7hgwyB7tRozj92tNX51xFJxw9WsMB3f2YjYcdlLvxAasvnsxXI3FTLsRNpNzMa+XVN3gcCUJU1zlQIt5UwSUR9lYYWYuTWYjv5Fdk+524AKaW4HLlP6o6p5SD5QQcTraoxTd8euPJJd73OgeJusG1qdbtxEF9zJcoQtlDpBi64"
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: deny
+Content-Security-Policy: ***
+Content-Length: 3382
+
+{
+  "access_token": "access_token",
+  "token_type": "bearer",
+  "expires_in": 900,
+  "scope": "payment-accounts:transactions:view payment-accounts:balances:view"
+}

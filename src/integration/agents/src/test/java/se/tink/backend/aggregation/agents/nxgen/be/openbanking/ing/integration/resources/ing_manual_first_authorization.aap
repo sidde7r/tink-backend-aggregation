@@ -37,7 +37,7 @@ Content-Length: 3492
       "x5t": "26e5d9329369bf1e5d3198cb4f4da45c9de040cf"
     }
   ],
-  "client_id": "0440f53f-93e0-4ebf-95a6-64cfd2d52a90"
+  "client_id": "123_CLIENT_ID"
 }
 
 REQUEST 2
@@ -46,7 +46,7 @@ Accept: application/json
 Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 Date: Fri, 10 Apr 1992 00:00:00 GMT
 X-ING-ReqID: 00000000-0000-4000-0000-000000000000
-Signature: keyId="0440f53f-93e0-4ebf-95a6-64cfd2d52a90",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
 Authorization: Bearer access_token
 
 RESPONSE 2
@@ -54,7 +54,7 @@ RESPONSE 2
 Date: Mon, 11 Oct 2021 21:31:56 GMT
 Date: Mon, 11 Oct 2021 21:31:56 GMT
 Content-Type: application/json;charset=utf-8
-X-ING-ReqID: a5f16518-9e80-4721-bc45-7a90055a3a9e
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
 X-ING-Response-ID: 56a731bb-16e0-44c6-844e-a6e7c5f1c61d
 Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="k/VCNiLrHafR8dAzj3TJVaYZOViqytZyIgqVCqJW9cP8rFFrbS+nDhDSAXJbCfO518IuzfPm+y+beA53GDIiS/oFE7qyP6/VHhM7vVebsFDkykBS2DbE46cSQcbjlEmM5ZmZaOlV7hNoLpabLYikQwPK4SondX2OO0gjV2MUKjpWwpxsmpHNI8TAZ/FR2rS/NtZqVO2L+f8WoVw6vBKWM4O4HT0l5fPHDVi2QoQp1fxmVvuOeQ3SLxoxSkHy/PRvCXsJlAPMisCPCuZ0U/WkMxbBrqi5hcirU9aiFSLOQi9Xi+QMowaPlxN8eDkC6yfi1PITNsvltBBot5eWVxCz8gxKRnlsK7wiOKGCdP811ovwy4mI5vbyJESdHRYEIvAITzh4whdfHIbzyvMLIkoYL/OuZNiyCRxh58xL58BuOMMghEWYOW8mvfodJ+izxtlK6B8/sMfZLGxSlmDh+oJ6UbS36Bq/FfWcpm0rD+syAQRVc8IGC13/j/9NYiENttWO"
 Content-Security-Policy: ***
@@ -70,7 +70,7 @@ Accept: application/json
 Digest: SHA-256=ETfBMrE9KTCQ96JvKzTK8PI4hMknV0CfKXe8a2uH/hA=
 Date: Fri, 10 Apr 1992 00:00:00 GMT
 X-ING-ReqID: 00000000-0000-4000-0000-000000000000
-Signature: keyId="0440f53f-93e0-4ebf-95a6-64cfd2d52a90",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Signature: keyId="123_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
 Authorization: Bearer access_token
 Content-Type: application/x-www-form-urlencoded
 
@@ -81,7 +81,7 @@ RESPONSE 3
 Date: Mon, 11 Oct 2021 21:32:22 GMT
 Date: Mon, 11 Oct 2021 21:32:24 GMT
 Content-Type: application/json;charset=utf-8
-X-ING-ReqID: 0023900f-74d3-4c2c-b837-d2d9273ff297
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
 X-ING-Response-ID: 5f50cbf3-5a88-4a8f-9ef3-0b19de1394b6
 Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="mB7k6RynNJkDjqM8XeL8FZbjy4lMWVURklTQJi7tOK/cNAjx/Kf8u90wvuyZcq84zL1HILKonv7cmOh0FtesA/706qsUyoDXE2vDRf28zIruxkKcnbKEpCLZ6wxsSQSSwS+uZklUYzilC+1OV9gJ4+GU6BmU5nsv9MxrpMj1OzjU6VEt5MJ69DAe/yoYYX70eTIVzpiTuVEsoLkC5JJD7Kj1/bnRdyHR4VuTTrN/hUgwvxVXT2Om3cwj4vBumtVyTGipduhrcKvInaKEMT/SFJpxAOFSePjjPFBIIk2UKRvWE44ke0FFN2EcEZvbeGTMORzcXtzalKGZwGUW/jn6KH1T9WZ34e8bUHsmPbea8Pn52buWjUYM/gVs2cCkyugp05DkS0CUnpEI9eK6GrVc9ZQOlRkl5UprA4mcq7DUGR4cy+qomFZDS/cwIETiiBhzd1Ii348w1Q4F7dbwuymF8C6UCISGepouMiztGWtMJsWrHVc5hRR+HaTzXKqnDksc"
 X-Content-Type-Options: nosniff

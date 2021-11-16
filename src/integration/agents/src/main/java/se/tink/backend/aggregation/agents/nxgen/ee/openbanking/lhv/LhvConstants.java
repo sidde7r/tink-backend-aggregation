@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv;
 
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public class LhvConstants {
 
@@ -31,10 +34,6 @@ public class LhvConstants {
     public static class AuthenticationParams {
 
         public static final String DEVICE_NAME = "Tink";
-    }
-
-    public static class AccountTypes {
-        public static final String CURRENT = "cacc";
     }
 
     public static class QueryKey {
@@ -122,4 +121,17 @@ public class LhvConstants {
     public static class Values {
         public static final long HISTORY_MAX_DAYS = 90;
     }
+
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "CARD",
+                            "CACC")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "Investment account")
+                    .build();
 }
