@@ -115,9 +115,9 @@ Transfer-Encoding: chunked
         "currency": "EUR",
         "amount": "-279.70"
       },
-      "bookingDate": "2021-08-26",
-      "valueDate": "2021-08-26",
-      "transactionDate": "2021-08-25",
+      "bookingDate": "2021-08-26T00:00:00Z",
+      "valueDate": "2021-08-26T00:00:00Z",
+      "transactionDate": "2021-08-25T00:00:00Z",
       "remittanceInformation": {
         "unstructured": [
           "Payment1"
@@ -132,9 +132,9 @@ Transfer-Encoding: chunked
         "currency": "EUR",
         "amount": "-158.30"
       },
-      "bookingDate": "2021-08-25",
-      "valueDate": "2021-08-25",
-      "transactionDate": "2021-08-25",
+      "bookingDate": "2021-08-25T00:00:00Z",
+      "valueDate": "2021-08-25T00:00:00Z",
+      "transactionDate": "2021-08-25T00:00:00Z",
       "remittanceInformation": {
         "unstructured": [
           "Payment2"
@@ -149,9 +149,9 @@ Transfer-Encoding: chunked
         "currency": "EUR",
         "amount": "-38.60"
       },
-      "bookingDate": "2021-08-25",
-      "valueDate": "2021-08-25",
-      "transactionDate": "2021-08-25",
+      "bookingDate": "2021-08-25T00:00:00Z",
+      "valueDate": "2021-08-25T00:00:00Z",
+      "transactionDate": "2021-08-25T00:00:00Z",
       "remittanceInformation": {
         "unstructured": [
           "Payment3"
@@ -166,9 +166,9 @@ Transfer-Encoding: chunked
         "currency": "EUR",
         "amount": "-10.18"
       },
-      "bookingDate": "2021-08-24",
-      "valueDate": "2021-08-24",
-      "transactionDate": "2021-08-24",
+      "bookingDate": "2021-08-24T00:00:00Z",
+      "valueDate": "2021-08-24T00:00:00Z",
+      "transactionDate": "2021-08-24T00:00:00Z",
       "remittanceInformation": {
         "unstructured": [
           "Payment4"
@@ -226,9 +226,9 @@ Transfer-Encoding: chunked
         "currency": "EUR",
         "amount": "-8.50"
       },
-      "bookingDate": "2021-08-03",
-      "valueDate": "2021-08-03",
-      "transactionDate": "2021-08-02",
+      "bookingDate": "2021-08-03T00:00:00Z",
+      "valueDate": "2021-08-03T00:00:00Z",
+      "transactionDate": "2021-08-02T00:00:00Z",
       "remittanceInformation": {
         "unstructured": [
           "Payment5"
@@ -243,9 +243,9 @@ Transfer-Encoding: chunked
         "currency": "EUR",
         "amount": "-8.00"
       },
-      "bookingDate": "2021-08-03",
-      "valueDate": "2021-08-03",
-      "transactionDate": "2021-08-02",
+      "bookingDate": "2021-08-03T00:00:00Z",
+      "valueDate": "2021-08-03T00:00:00Z",
+      "transactionDate": "2021-08-02T00:00:00Z",
       "remittanceInformation": {
         "unstructured": [
           "Payment6"

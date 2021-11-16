@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateOffsetDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
@@ -26,13 +26,13 @@ public class TransactionEntity {
 
     private TransactionStatusEntity status;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonDeserialize(using = LocalDateOffsetDeserializer.class)
     private LocalDate bookingDate;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonDeserialize(using = LocalDateOffsetDeserializer.class)
     private LocalDate valueDate;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonDeserialize(using = LocalDateOffsetDeserializer.class)
     private LocalDate transactionDate;
 
     private RemittanceInformationEntity remittanceInformation;

@@ -33,7 +33,7 @@ RESPONSE 3
 200
 Content-Type: application/json
 
-{"transactions":[{"resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_1","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","valueDate":"2018-02-12","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v2.0/accounts"},"balances":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/balances"},"last":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"next":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"}}}
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_1","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12T00:00:00Z","valueDate":"2018-02-12T00:00:00Z","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v2.0/accounts"},"balances":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/balances"},"last":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"next":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"}}}
 
 REQUEST 4
 GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2
@@ -45,7 +45,7 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"transactions":[{"resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_2","transactionAmount":{"currency":"EUR","amount":"13.25"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2018-02-13","valueDate":"2018-02-13","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"parent-list":{"href":"/cm/stet-psd2-api/v2.0/accounts"},"balances":{"href":"v2.0/accounts/DUMMY_RESOURCE_ID_1/balances"},"last":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"next":null}}
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_2","transactionAmount":{"currency":"EUR","amount":"13.25"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2018-02-13T00:00:00Z","valueDate":"2018-02-13T00:00:00Z","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"parent-list":{"href":"/cm/stet-psd2-api/v2.0/accounts"},"balances":{"href":"v2.0/accounts/DUMMY_RESOURCE_ID_1/balances"},"last":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"next":null}}
 
 REQUEST 5
 GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_2/transactions
@@ -57,7 +57,7 @@ RESPONSE 5
 200
 Content-Type: application/json
 
-{"transactions":[{"creditDebitIndicator":"DBIT","status":"PDNG","resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_3","transactionAmount":{"currency":"EUR","amount":"-28.50"},"transactionDate":"2020-06-30","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_A"]}},{"creditDebitIndicator":"DBIT","status":"BOOK","resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_4","transactionAmount":{"currency":"EUR","amount":"-46.00"},"bookingDate":"2020-06-30","transactionDate":"2020-06-21","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_B"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_2/transactions?page=1"},"balances":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_2/balances"},"first":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_2/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v2.0/accounts"}}}
+{"transactions":[{"creditDebitIndicator":"DBIT","status":"PDNG","resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_3","transactionAmount":{"currency":"EUR","amount":"-28.50"},"transactionDate":"2020-06-30T00:00:00Z","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_A"]}},{"creditDebitIndicator":"DBIT","status":"BOOK","resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_4","transactionAmount":{"currency":"EUR","amount":"-46.00"},"bookingDate":"2020-06-30","transactionDate":"2020-06-21","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_B"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_2/transactions?page=1"},"balances":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_2/balances"},"first":{"href":"/cm/stet-psd2-api/v2.0/accounts/DUMMY_RESOURCE_ID_2/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v2.0/accounts"}}}
 
 REQUEST 6
 GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v2.0/trusted-beneficiaries
