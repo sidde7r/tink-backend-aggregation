@@ -1,0 +1,387 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "************5364",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "NOK",
+                "doubleValue": 50000.0,
+                "exactValue": 50000.0,
+                "scale": 1,
+                "unscaledValue": 500000
+            },
+            "exactBalance": {
+                "currencyCode": "NOK",
+                "doubleValue": 1157.99,
+                "exactValue": 1157.99,
+                "scale": 2,
+                "unscaledValue": 115799
+            },
+            "currencyCode": "NOK",
+            "bankId": "5364",
+            "excluded": false,
+            "favored": false,
+            "name": "Nordea Gold",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"masked-pan://************5364\"]",
+            "closed": false,
+            "holderName": "John Doe",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "John Doe",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 50000.0,
+            "balance": 1157.99
+        },
+        {
+            "accountNumber": "NO8865804469529",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "NOK",
+                "doubleValue": 0.15,
+                "exactValue": 0.15,
+                "scale": 2,
+                "unscaledValue": 15
+            },
+            "currencyCode": "NOK",
+            "availableBalance": {
+                "currencyCode": "NOK",
+                "doubleValue": 0.15,
+                "exactValue": 0.15,
+                "scale": 2,
+                "unscaledValue": 15
+            },
+            "creditLimit": {
+                "currencyCode": "NOK",
+                "doubleValue": 0.0,
+                "exactValue": 0.0,
+                "scale": 2,
+                "unscaledValue": 0
+            },
+            "bankId": "NO8865804469529",
+            "excluded": false,
+            "favored": false,
+            "name": "SPAREKONTO",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://NDEANOKK/NO8865804469529\",\"bban://65804469529\"]",
+            "closed": false,
+            "holderName": "John Doe",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "John Doe",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 0.15
+        },
+        {
+            "accountNumber": "NO3765804475200",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "NOK",
+                "doubleValue": 0.22,
+                "exactValue": 0.22,
+                "scale": 2,
+                "unscaledValue": 22
+            },
+            "currencyCode": "NOK",
+            "availableBalance": {
+                "currencyCode": "NOK",
+                "doubleValue": 0.22,
+                "exactValue": 0.22,
+                "scale": 2,
+                "unscaledValue": 22
+            },
+            "creditLimit": {
+                "currencyCode": "NOK",
+                "doubleValue": 0.0,
+                "exactValue": 0.0,
+                "scale": 2,
+                "unscaledValue": 0
+            },
+            "bankId": "NO3765804475200",
+            "excluded": false,
+            "favored": false,
+            "name": "BRUKSKONTO",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://NDEANOKK/NO3765804475200\",\"bban://65804475200\"]",
+            "closed": false,
+            "holderName": "John Doe",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "John Doe",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 0.22
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -748.01,
+            "date": 700225200000,
+            "description": "RENTETRANSAKSJON",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "CREDIT_CARD_HOLDER": "RENTETRANSAKSJON"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1700.93,
+            "date": 701002800000,
+            "description": "Innbetaling",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "CREDIT_CARD_HOLDER": "Innbetaling"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -692.93,
+            "date": 700225200000,
+            "description": "RENTETRANSAKSJON",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "CREDIT_CARD_HOLDER": "RENTETRANSAKSJON"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1700.83,
+            "date": 701694000000,
+            "description": "Innbetaling",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "CREDIT_CARD_HOLDER": "Innbetaling"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -820.83,
+            "date": 700398000000,
+            "description": "RENTETRANSAKSJON",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "CREDIT_CARD_HOLDER": "RENTETRANSAKSJON"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1800.01,
+            "date": 699102000000,
+            "description": "Innbetaling",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "CREDIT_CARD_HOLDER": "Innbetaling"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -388.0,
+            "date": 696423600000,
+            "description": "JOHN DOE,UTFØRT AV: JOHN DOE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "000000001594992470"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-26",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "1992-01-26",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "Kontoregulering",
+            "transactionReference": "000000001594992470",
+            "providerMarket": "NO"
+        },
+        {
+            "amount": 138.0,
+            "date": 694263600000,
+            "description": "JOHN DOE,UTFØRT AV: JOHN DOE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "000000001568036796"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "1992-01-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "Kontoregulering",
+            "transactionReference": "000000001568036796",
+            "providerMarket": "NO"
+        },
+        {
+            "amount": 250.0,
+            "date": 694263600000,
+            "description": "JOHN DOE,UTFØRT AV: JOHN DOE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "000000001568036795"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "1992-01-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "Kontoregulering",
+            "transactionReference": "000000001568036795",
+            "providerMarket": "NO"
+        },
+        {
+            "amount": 0.12,
+            "date": 694177200000,
+            "description": "Kontoregulering",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "000000001505285923"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "1991-12-31",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "Kontoregulering",
+            "transactionReference": "000000001505285923",
+            "providerMarket": "NO"
+        }
+    ]
+}

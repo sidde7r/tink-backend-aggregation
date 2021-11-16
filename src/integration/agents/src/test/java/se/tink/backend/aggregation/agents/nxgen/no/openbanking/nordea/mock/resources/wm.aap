@@ -1,0 +1,435 @@
+REQUEST 1
+POST https://open.nordea.com/personal/v5/authorize
+Content-Type: application/json
+
+{
+  "country": "NO",
+  "scope": [
+    "CARDS_TRANSACTIONS",
+    "ACCOUNTS_DETAILS",
+    "CARDS_INFORMATION",
+    "ACCOUNTS_BALANCES",
+    "ACCOUNTS_BASIC",
+    "ACCOUNTS_TRANSACTIONS"
+  ],
+  "state": "00000000-0000-4000-0000-000000000000",
+  "duration": 129600,
+  "redirect_uri": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+  "max_tx_history": 12,
+  "account_list": [
+    "ALL_WITH_CARDS"
+  ],
+  "skip_account_selection": true
+}
+
+RESPONSE 1
+302
+Location: someRedirectUrl
+
+REQUEST 2
+POST https://open.nordea.com/personal/v5/authorize/token
+Content-Type: application/x-www-form-urlencoded
+
+code=dummyCode&grant_type=authorization_code&redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"dummyToken","expires_in":64800,"token_type":"Bearer","refresh_token":"dummyRefreshToken"}}
+
+REQUEST 3
+GET https://open.nordea.com/personal/v5/accounts
+Content-Type: application/json
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "0a1662c32d8c160a",
+    "creation_date_time": "1992-03-12T11:25:53.739453Z",
+    "http_code": 200
+  },
+  "response": {
+    "accounts": [
+      {
+        "country": "NO",
+        "account_numbers": [
+          {
+            "value": "65804475200",
+            "_type": "BBAN_NO"
+          },
+          {
+            "value": "NO3765804475200",
+            "_type": "IBAN"
+          }
+        ],
+        "currency": "NOK",
+        "account_name": "JOHN DOE",
+        "product": "BRUKSKONTO",
+        "account_type": "Current",
+        "available_balance": "0.22",
+        "booked_balance": "0.22",
+        "bank": {
+          "name": "Nordea",
+          "bic": "NDEANOKK",
+          "country": "NO"
+        },
+        "status": "OPEN",
+        "credit_limit": "0.00",
+        "latest_transaction_booking_date": "1992-03-28",
+        "_links": [
+          {
+            "rel": "details",
+            "href": "/v5/accounts/NOtRmKkXdkoqEHMUa-hCuTGw"
+          },
+          {
+            "rel": "transactions",
+            "href": "/v5/accounts/NOtRmKkXdkoqEHMUa-hCuTGw/transactions"
+          }
+        ],
+        "_id": "NOtRmKkXdkoqEHMUa-hCuTGw"
+      },
+      {
+        "country": "NO",
+        "account_numbers": [
+          {
+            "value": "65804469529",
+            "_type": "BBAN_NO"
+          },
+          {
+            "value": "NO8865804469529",
+            "_type": "IBAN"
+          }
+        ],
+        "currency": "NOK",
+        "account_name": "JOHN DOE",
+        "product": "SPAREKONTO",
+        "account_type": "Savings",
+        "available_balance": "0.15",
+        "booked_balance": "0.15",
+        "bank": {
+          "name": "Nordea",
+          "bic": "NDEANOKK",
+          "country": "NO"
+        },
+        "status": "OPEN",
+        "credit_limit": "0.00",
+        "latest_transaction_booking_date": "1992-01-26",
+        "_links": [
+          {
+            "rel": "details",
+            "href": "/v5/accounts/NOe2Uv62Bu__T32BH6Ye-CIw"
+          },
+          {
+            "rel": "transactions",
+            "href": "/v5/accounts/NOe2Uv62Bu__T32BH6Ye-CIw/transactions"
+          }
+        ],
+        "_id": "NOe2Uv62Bu__T32BH6Ye-CIw"
+      }
+    ],
+    "_links": [
+      {
+        "rel": "self",
+        "href": "/v5/accounts"
+      }
+    ]
+  }
+}
+
+REQUEST 4
+GET https://open.nordea.com/personal/v5/assets
+Content-Type: application/json
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "06473b022d93160a",
+    "creation_date_time": "1992-03-12T11:25:54.161676Z",
+    "http_code": 200
+  },
+  "response": {
+    "accounts": [
+      {
+        "currency": "NOK",
+        "account_number": "65804475200",
+        "account_id": "NO65804475200-NOK",
+        "iban": "NO3765804475200"
+      },
+      {
+        "currency": "NOK",
+        "account_number": "65804469529",
+        "account_id": "NO65804469529-NOK",
+        "iban": "NO8865804469529"
+      }
+    ],
+    "cards": [
+      {
+        "card_id": "CS1-FxISqHzz3ULZPVu9LVyvtA"
+      }
+    ],
+    "scopes": [
+      "CARDS_TRANSACTIONS",
+      "ACCOUNTS_DETAILS",
+      "PAYMENTS_MULTIPLE",
+      "CARDS_INFORMATION",
+      "ACCOUNTS_TRANSACTIONS",
+      "ACCOUNTS_BASIC",
+      "ACCOUNTS_BALANCES"
+    ]
+  }
+}
+
+REQUEST 5
+GET https://open.nordea.com/personal/v5/cards
+Content-Type: application/json
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "06473b0c2d93160a",
+    "creation_date_time": "1992-03-12T11:25:55.075736Z",
+    "http_code": 200
+  },
+  "response": {
+    "cards": [
+      {
+        "id": "CS1-FxISqHzz3ULZPVu9LVyvtA",
+        "masked_credit_card_number": "5269 **** **** 5364",
+        "product_name": "Nordea Gold",
+        "cardholder_name": "JOHN DOE",
+        "card_ownership_type": "OWN"
+      }
+    ]
+  }
+}
+
+REQUEST 6
+GET https://open.nordea.com/personal/v5/cards/CS1-FxISqHzz3ULZPVu9LVyvtA
+Content-Type: application/json
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "0a1665a82d8c160a",
+    "creation_date_time": "1992-03-12T11:26:26.085583Z",
+    "http_code": 200
+  },
+  "response": {
+    "id": "CS1-FxISqHzz3ULZPVu9LVyvtA",
+    "masked_credit_card_number": "5269 **** **** 5364",
+    "product_name": "Nordea Gold",
+    "cardholder_name": "JOHN DOE",
+    "credit_limit": "50000",
+    "credit_available_balance": "1157.99",
+    "credit_booked_balance": "46842.01"
+  }
+}
+
+REQUEST 7
+GET https://open.nordea.com/personal/v5/accounts/NOtRmKkXdkoqEHMUa-hCuTGw/transactions?from_date=1991-04-11&to_date=1992-04-10
+Content-Type: application/json
+
+RESPONSE 7
+200
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "0a1665bd2d8c160a",
+    "creation_date_time": "1992-03-12T11:26:27.299462Z",
+    "http_code": 200
+  },
+  "response": {
+    "transactions": [],
+    "account_number": {
+      "value": "65804475200",
+      "_type": "BBAN_NO"
+    },
+    "_links": [
+      {
+        "rel": "self",
+        "href": "/v5/accounts/NOtRmKkXdkoqEHMUa-hCuTGw/transactions?from_date\u003d1991-04-11\u0026to_date\u003d1992-04-10"
+      }
+    ]
+  }
+}
+
+REQUEST 8
+GET https://open.nordea.com/personal/v5/accounts/NOe2Uv62Bu__T32BH6Ye-CIw/transactions?from_date=1991-04-11&to_date=1992-04-10
+Content-Type: application/json
+
+RESPONSE 8
+200
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "0a1665cb2d8c160a",
+    "creation_date_time": "1992-03-12T11:26:27.959031Z",
+    "http_code": 200
+  },
+  "response": {
+    "transactions": [
+      {
+        "transaction_id": "000000001594992470",
+        "currency": "NOK",
+        "booking_date": "1992-01-26",
+        "value_date": "1992-01-26",
+        "type_description": "Kontoregulering",
+        "narrative": "NETTBANK DATO 26.03.2021 KL. 06.50.05",
+        "message": "NETTBANK DATO 26.03.2021 KL. 06.50.05",
+        "status": "billed",
+        "reference": "000000001594992470",
+        "own_message": "NETTBANK DATO 26.03.2021 KL. 06.50.05",
+        "counterparty_name": "JOHN DOE,UTFØRT AV: JOHN DOE",
+        "transaction_date": "1992-01-26",
+        "payment_date": "1992-01-26",
+        "original_currency": "NOK",
+        "original_currency_amount": "-388.00",
+        "amount": "-388.00"
+      },
+      {
+        "transaction_id": "000000001568036796",
+        "currency": "NOK",
+        "booking_date": "1992-01-01",
+        "value_date": "1992-01-01",
+        "type_description": "Kontoregulering",
+        "narrative": "NETTBANK DATO 01.03.2021 KL. 09.32.17",
+        "message": "NETTBANK DATO 01.03.2021 KL. 09.32.17",
+        "status": "billed",
+        "reference": "000000001568036796",
+        "own_message": "NETTBANK DATO 01.03.2021 KL. 09.32.17",
+        "counterparty_name": "JOHN DOE,UTFØRT AV: JOHN DOE",
+        "transaction_date": "1992-01-01",
+        "payment_date": "1992-01-01",
+        "original_currency": "NOK",
+        "original_currency_amount": "138.00",
+        "amount": "138.00"
+      },
+      {
+        "transaction_id": "000000001568036795",
+        "currency": "NOK",
+        "booking_date": "1992-01-01",
+        "value_date": "1992-01-01",
+        "type_description": "Kontoregulering",
+        "narrative": "NETTBANK DATO 01.03.2021 KL. 09.31.57",
+        "message": "NETTBANK DATO 01.03.2021 KL. 09.31.57",
+        "status": "billed",
+        "reference": "000000001568036795",
+        "own_message": "NETTBANK DATO 01.03.2021 KL. 09.31.57",
+        "counterparty_name": "JOHN DOE,UTFØRT AV: JOHN DOE",
+        "transaction_date": "1992-01-01",
+        "payment_date": "1992-01-01",
+        "original_currency": "NOK",
+        "original_currency_amount": "250.00",
+        "amount": "250.00"
+      },
+      {
+        "transaction_id": "000000001505285923",
+        "currency": "NOK",
+        "booking_date": "1991-12-31",
+        "value_date": "1992-01-01",
+        "type_description": "Kontoregulering",
+        "status": "billed",
+        "reference": "000000001505285923",
+        "transaction_date": "1991-12-31",
+        "payment_date": "1991-12-31",
+        "original_currency": "NOK",
+        "original_currency_amount": "0.12",
+        "balance_after_transaction": "171.00",
+        "amount": "0.12"
+      }
+    ],
+    "account_number": {
+      "value": "65804469529",
+      "_type": "BBAN_NO"
+    },
+    "_links": [
+      {
+        "rel": "self",
+        "href": "/v5/accounts/NOe2Uv62Bu__T32BH6Ye-CIw/transactions?from_date\u003d1991-04-11\u0026to_date\u003d1992-04-10"
+      }
+    ]
+  }
+}
+
+REQUEST 9
+GET https://open.nordea.com/personal/v5/cards/CS1-FxISqHzz3ULZPVu9LVyvtA/transactions
+Content-Type: application/json
+
+RESPONSE 9
+200
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "0a1666f02d8c160a",
+    "creation_date_time": "1992-03-12T11:26:44.582187Z",
+    "http_code": 200
+  },
+  "response": {
+    "transactions": [
+      {
+        "id": "2131411320037840",
+        "beneficiary": "RENTETRANSAKSJON",
+        "amount": "-748.01",
+        "currency": "NOK",
+        "transaction_date": "1992-03-10",
+        "booking_date": "1992-03-10"
+      },
+      {
+        "id": "2129201320028775",
+        "beneficiary": "Innbetaling",
+        "amount": "1700.93",
+        "currency": "NOK",
+        "transaction_date": "1992-03-19",
+        "booking_date": "1992-03-19"
+      },
+      {
+        "id": "2128311320013594",
+        "beneficiary": "RENTETRANSAKSJON",
+        "amount": "-692.93",
+        "currency": "NOK",
+        "transaction_date": "1992-03-10",
+        "booking_date": "1992-03-08"
+      },
+      {
+        "id": "2127001320076889",
+        "beneficiary": "Innbetaling",
+        "amount": "1700.83",
+        "currency": "NOK",
+        "transaction_date": "1992-03-27",
+        "booking_date": "1992-03-27"
+      },
+      {
+        "id": "2125511320038177",
+        "beneficiary": "RENTETRANSAKSJON",
+        "amount": "-820.83",
+        "currency": "NOK",
+        "transaction_date": "1992-03-12",
+        "booking_date": "1992-03-10"
+      },
+      {
+        "id": "2123901320029564",
+        "beneficiary": "Innbetaling",
+        "amount": "1800.01",
+        "currency": "NOK",
+        "transaction_date": "1992-02-26",
+        "booking_date": "1992-02-27"
+      }
+    ]
+  }
+}
