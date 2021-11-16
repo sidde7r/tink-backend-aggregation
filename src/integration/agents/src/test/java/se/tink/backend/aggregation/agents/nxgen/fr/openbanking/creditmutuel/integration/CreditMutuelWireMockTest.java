@@ -44,7 +44,6 @@ public class CreditMutuelWireMockTest {
                                 MarketCode.FR, "fr-creditmutuel-oauth2", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .addCallbackData("psuAF", "DUMMY_PSU_AUTH_CODE")
                         .withHttpDebugTrace()
                         .withPayment(
                                 createRealDomesticPayment(

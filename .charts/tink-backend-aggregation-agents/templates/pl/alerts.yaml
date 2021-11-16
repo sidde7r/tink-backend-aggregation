@@ -23,9 +23,9 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Authentication failures is over 90% (<{ $value }>) for the last 1h.
+        description: {{ .Values.kibanaProviderLinkAbs1h }}
+          {{ .Values.grafanaProviderLinkAbs1h }}
+        summary: Authentication failures is <{ $value | humanizePercentage }> for the last 1h.
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationErrorRateOver90%PL
@@ -34,16 +34,16 @@ spec:
         (count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="PL", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 0.9)
         # At least this many attempts.
-            and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h])) by (className,provider) > 10
+            and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 10
       for: 15m
       labels:
         severity: urgent
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
-          {{ .Values.grafanaLink }}
-        summary: Authentication failures is over 90% (<{ $value }>) for the last 12h
+        description: {{ .Values.kibanaProviderLinkAbs12h }}
+          {{ .Values.grafanaProviderLinkAbs12h }}
+        summary: Authentication failures is <{ $value | humanizePercentage }> for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh alerts
@@ -57,9 +57,9 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Refresh failures is over 20% (<{ $value }>) for the last 1h
+        description: {{ .Values.kibanaProviderLinkAbs1h }}
+          {{ .Values.grafanaProviderLinkAbs1h }}
+        summary: Refresh failures is <{ $value | humanizePercentage }> for the last 1h
         tags: {{ .Values.tags }}
 
     #-------------------------------------------------------------------------------------------------------------------
@@ -79,9 +79,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 20% (<{ $value }>) for the last 1h
+        description: {{ .Values.kibanaProviderLinkAbs1h }}
+          {{ .Values.grafanaProviderLinkAbs1h }}
+        summary: Authentication failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 1h
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUnknownErrorRateOver20%PL
@@ -97,9 +97,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
-          {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for the last 12h
+        description: {{ .Values.kibanaProviderLinkAbs12h }}
+          {{ .Values.grafanaProviderLinkAbs12h }}
+        summary: Authentication failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh alerts
@@ -113,9 +113,9 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for the last 1h
+        description: {{ .Values.kibanaProviderLinkAbs1h }}
+          {{ .Values.grafanaProviderLinkAbs1h }}
+        summary: Refresh failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 1h
         tags: {{ .Values.tags }}
 
     #-------------------------------------------------------------------------------------------------------------------
@@ -136,9 +136,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink4h }}
-          {{ .Values.grafanaLink }}
-        summary: Manual authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
+        description: {{ .Values.kibanaProviderLinkAbs4h }}
+          {{ .Values.grafanaProviderLinkAbs4h }}
+        summary: Manual authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: AutoAuthenticationBankSiteErrorRateOver90%PL
@@ -155,17 +155,16 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink4h }}
-          {{ .Values.grafanaLink }}
-        summary: Auto authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
+        description: {{ .Values.kibanaProviderLinkAbs4h }}
+          {{ .Values.grafanaProviderLinkAbs4h }}
+        summary: Auto authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
         tags: {{ .Values.tags }}
-
 
     - alert: LongTermAuthenticationBankSiteErrorRateOver90%PL
       expr: |
         # Failed logins (due to bank site errors) over 90%
         count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PL"}[12h])) BY (className,provider)
-        # All login attempts the last 6 hours
+        # All login attempts the last 12 hours
           / count(sum_over_time(tink_agent_login_total{action="login", market="PL"}[12h])) BY (className,provider) > 0.90
         # At least this many attempts.
         and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 2
@@ -175,9 +174,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
-          {{ .Values.grafanaLink }}
-        summary: Authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 12h
+        description: {{ .Values.kibanaProviderLinkAbs12h }}
+          {{ .Values.grafanaProviderLinkAbs12h }}
+        summary: Authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh alerts
@@ -193,9 +192,9 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink4h }}
-          {{ .Values.grafanaLink }}
-        summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
+        description: {{ .Values.kibanaProviderLinkAbs4h }}
+          {{ .Values.grafanaProviderLinkAbs4h }}
+        summary: Refresh failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: LongTermRefreshBankSiteErrorRateOver90%PL
@@ -208,9 +207,9 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
-          {{ .Values.grafanaLink }}
-        summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for the last 12h
+        description: {{ .Values.kibanaProviderLinkAbs12h }}
+          {{ .Values.grafanaProviderLinkAbs12h }}
+        summary: Refresh failures due to bank site errors is <{ $value | humanizePercentage }> for the last 12h
         tags: {{ .Values.tags }}
 
 
@@ -221,20 +220,21 @@ spec:
     - alert: AuthenticationUserCancellationRateOver95%PL
       expr: |
         # Failed logins (due to user cancellation) over 95%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome=~"cancelled|cancelled_due_to_third_party_app_timeout", market="PL"}[2h])) BY (className,provider)
-        # All login attempts the last 3 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PL"}[2h])) BY (className,provider) > 0.95
+        count(sum_over_time(tink_agent_login_total{action="login",outcome=~"cancelled|cancelled_due_to_third_party_app_timeout", market="PL"}[4h])) BY (className,provider)
+        # All login attempts the last 4 hours
+        # All login attempts the last 4 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PL"}[4h])) BY (className,provider) > 0.95
         # At least this many attempts.
-           and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[2h])) by (className,provider) > 10
+           and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[4h])) by (className,provider) > 10
       for: 15m
       labels:
         severity: urgent
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink4h }}
-          {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is over 75% (<{ $value }>) for the last 2h
+        description: {{ .Values.kibanaProviderLinkAbs4h }}
+          {{ .Values.grafanaProviderLinkAbs4h }}
+        summary: Authentication failures due to user cancelletion is <{ $value | humanizePercentage }> for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRateOver95%PL
@@ -251,7 +251,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
-          {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is over 95% (<{ $value }>) for the last 12h. Please check if a redirect url is correct.
+        description: {{ .Values.kibanaProviderLinkAbs12h }}
+          {{ .Values.grafanaProviderLinkAbs12h }}
+        summary: Authentication failures due to user cancelletion is <{ $value | humanizePercentage }> for the last 12h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}

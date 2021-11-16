@@ -1,0 +1,159 @@
+REQUEST 1
+POST https://oauth2-apiii.e-i.com/cic/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator : Tink Testing
+
+client_id=DUMMY_ID&grant_type=refresh_token&scope=aisp
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"bearer","expires_in":900,"scope":"aisp", "refreshToken":"DUMMY_REFRESH_TOKEN"}
+
+REQUEST 2
+GET https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v2.0/accounts
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Refreshtoken accessToken
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{
+  "accounts": [
+    {
+      "resourceId": "505d64c554c1796d23016d50ccebd9b97a94977ac92a03776f233b9eeb8915d8",
+      "accountId": {
+        "iban": "YY64COJH41059545330222956960771321",
+        "currency": "EUR"
+      },
+      "name": "33022 295696077 13 COMPTE DE MR ET MME DUPONT",
+      "cashAccountType": "CACC",
+      "currency": "EUR",
+      "balances": [
+        {
+          "name": "Solde comptable au 12/01/2017",
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "123.45"
+          },
+          "balanceType": "CLBD"
+        }
+      ],
+      "_links": {
+        "balances": {
+          "href": "v2.0/accounts/505d64c554c1796d23016d50ccebd9b97a94977ac92a03776f233b9eeb8915d8/balances"
+        },
+        "transactions": {
+          "href": "v2.0/accounts/505d64c554c1796d23016d50ccebd9b97a94977ac92a03776f233b9eeb8915d8/transactions"
+        }
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "v2.0/accounts"
+    },
+    "endUserIdentity": {
+      "href": "v2.0/end-user-identity"
+    },
+    "beneficiaries": {
+      "href": "v2.0/trusted-beneficiaries"
+    }
+  }
+}
+
+REQUEST 3
+GET https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v2.0/trusted-beneficiaries
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Refreshtoken accessToken
+
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+  "beneficiaries": [
+    {
+      "id": "MyBeneficiaryId",
+      "isTrusted": true,
+      "creditorAgent": {
+        "bicFi": "BNKAFRPPXXX"
+      },
+      "creditor": {
+        "name": "MyPreferedPisp",
+        "postalAddress": {
+          "country": "FR",
+          "addressLine": [
+            "18 rue de la DSP2",
+            "75008 PARIS"
+          ]
+        }
+      },
+      "creditorAccount": {
+        "iban": "YY64COJH41059545330222956960771321"
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "v2.0/beneficiaries"
+    },
+    "parent-list": {
+      "href": "v2.0/accounts"
+    },
+    "last": {
+      "href": "v2.0/beneficiaries?page=last"
+    },
+    "next": null
+  }
+}
+
+REQUEST 4
+GET https://oauth2-apiii.e-i.com/cic/stet-psd2-api/v2.0/accounts/505d64c554c1796d23016d50ccebd9b97a94977ac92a03776f233b9eeb8915d8/transactions
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Refreshtoken accessToken
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{
+  "transactions": [
+    {
+      "resourceId": "1587d16aa40834b8e-1698718bf566f52c46a63e4b66dbd1dcb524c4f999c6e4a69d85aa9149898ec8",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "12.25"
+      },
+      "creditDebitIndicator": "CRDT",
+      "status": "BOOK",
+      "bookingDate": "2018-02-12",
+      "transactionDate": "2018-02-12",
+      "valueDate": "2018-02-12",
+      "remittanceInformation": {
+        "unstructured": [
+          "SEPA CREDIT TRANSFER from PSD2Company"
+        ]
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "v2.0/accounts/Alias1/transactions"
+    },
+    "parent-list": {
+      "href": "v2.0/accounts"
+    },
+    "balances": {
+      "href": "v2.0/accounts/Alias1/balances"
+    },
+    "next": null
+  }
+}

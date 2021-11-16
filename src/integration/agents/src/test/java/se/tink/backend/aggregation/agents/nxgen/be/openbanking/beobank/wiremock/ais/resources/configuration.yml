@@ -4,5 +4,6 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyId
         keyId: dummyKey
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
   eidasProxy:
     localEidasDev: true

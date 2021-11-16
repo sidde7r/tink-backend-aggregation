@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
@@ -28,6 +30,43 @@ public class CicWireMockTest {
 
     private static final String CONFIGURATION_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/cic/integration/resources/configuration.yml";
+
+    @Test
+    public void shouldAutoRefresh() throws Exception {
+        // given
+        String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/cic/integration/resources/cic_accounts_transfers.aap";
+
+        String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/cic/integration/resources/contract.json";
+
+        AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-cic-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
+                        .withAgentTestModule(new CicWireMockTestModule())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addPersistentStorageData("oauth2_access_token", getToken())
+                        .enableHttpDebugTrace()
+                        .build();
+
+        AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 
     @Test(expected = LoginException.class)
     public void testBlockedAccess() throws Exception {
@@ -154,7 +193,6 @@ public class CicWireMockTest {
                 AgentWireMockPaymentTest.builder(MarketCode.FR, "fr-cic-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .addCallbackData("psuAF", "DUMMY_PSU_AUTH_CODE")
                         .withHttpDebugTrace()
                         .withPayment(
                                 createMockedDomesticPayment(
@@ -180,7 +218,6 @@ public class CicWireMockTest {
                 AgentWireMockPaymentTest.builder(MarketCode.FR, "fr-cic-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .addCallbackData("psuAF", "DUMMY_PSU_AUTH_CODE")
                         .withHttpDebugTrace()
                         .withPayment(
                                 createMockedDomesticPayment(

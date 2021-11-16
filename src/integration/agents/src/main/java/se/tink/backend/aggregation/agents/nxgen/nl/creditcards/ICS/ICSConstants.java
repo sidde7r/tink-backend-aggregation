@@ -102,5 +102,8 @@ public class ICSConstants {
     public static class HttpClient {
         public static final int MAX_RETRIES = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 3000;
+        public static final int RATE_LIMIT_MAX_RETRIES = 5;
+        public static final int RATE_LIMIT_RETRY_MS_MIN = 1500;
+        public static final int RATE_LIMIT_RETRY_MS_MAX = 6500;
     }
 }

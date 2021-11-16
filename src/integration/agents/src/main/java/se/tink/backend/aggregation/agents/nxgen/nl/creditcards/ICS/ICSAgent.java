@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.MAX_RETRIES;
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_MAX_RETRIES;
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_RETRY_MS_MAX;
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_RETRY_MS_MIN;
+import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
 import com.google.inject.Inject;
@@ -7,12 +12,13 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSApiClientConfigurator;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRateLimitFilterProperties;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRetryFilterProperties;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -27,10 +33,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 @AgentCapabilities({CREDIT_CARDS})
 public final class ICSAgent extends NextGenerationAgent
@@ -73,14 +75,15 @@ public final class ICSAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new BankServiceInternalErrorFilter());
-        client.addFilter(
-                new ICSRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new AccessExceededFilter());
-        client.addFilter(new TimeoutFilter());
-        client.addFilter(
-                new TerminatedHandshakeRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        new ICSApiClientConfigurator()
+                .applyFilters(
+                        client,
+                        new ICSRetryFilterProperties(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS),
+                        new ICSRateLimitFilterProperties(
+                                RATE_LIMIT_RETRY_MS_MIN,
+                                RATE_LIMIT_RETRY_MS_MAX,
+                                RATE_LIMIT_MAX_RETRIES),
+                        provider.getName());
     }
 
     @Override

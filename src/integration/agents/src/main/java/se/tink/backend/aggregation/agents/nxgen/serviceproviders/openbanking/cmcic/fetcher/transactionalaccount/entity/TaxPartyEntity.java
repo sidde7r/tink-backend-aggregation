@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 public class TaxPartyEntity {
     @JsonProperty("taxIdentification")
@@ -16,36 +20,4 @@ public class TaxPartyEntity {
 
     @JsonProperty("authorisation")
     private TitleAndNameEntity authorisation = null;
-
-    public String getTaxIdentification() {
-        return taxIdentification;
-    }
-
-    public void setTaxIdentification(String taxIdentification) {
-        this.taxIdentification = taxIdentification;
-    }
-
-    public String getRegistrationIdentification() {
-        return registrationIdentification;
-    }
-
-    public void setRegistrationIdentification(String registrationIdentification) {
-        this.registrationIdentification = registrationIdentification;
-    }
-
-    public String getTaxType() {
-        return taxType;
-    }
-
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
-    }
-
-    public TitleAndNameEntity getAuthorisation() {
-        return authorisation;
-    }
-
-    public void setAuthorisation(TitleAndNameEntity authorisation) {
-        this.authorisation = authorisation;
-    }
 }

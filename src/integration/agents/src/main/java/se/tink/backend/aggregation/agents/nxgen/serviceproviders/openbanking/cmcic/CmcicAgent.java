@@ -56,12 +56,13 @@ public abstract class CmcicAgent extends NextGenerationAgent
                 RefreshBeneficiariesExecutor,
                 RefreshCreditCardAccountsExecutor {
 
-    private final CmcicApiClient apiClient;
+    protected final CmcicApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AgentConfiguration<CmcicConfiguration> agentConfiguration;
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final CmcicRepository cmcicRepository;
 
     protected CmcicAgent(
             AgentComponentProvider componentProvider,
@@ -78,12 +79,13 @@ public abstract class CmcicAgent extends NextGenerationAgent
 
         this.client.setResponseStatusHandler(new CmicResponseStatusHandler());
         this.client.addFilter(new TimeoutFilter());
+        this.cmcicRepository = new CmcicRepository(this.persistentStorage, this.sessionStorage);
 
         this.apiClient =
                 new CmcicApiClient(
                         this.client,
-                        new CmcicRepository(this.persistentStorage, this.sessionStorage),
-                        this.agentConfiguration.getProviderSpecificConfiguration(),
+                        this.cmcicRepository,
+                        this.agentConfiguration,
                         digestProvider,
                         signatureProvider,
                         codeChallengeProvider,
@@ -109,7 +111,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
                 new PaymentController(
                         new CmcicPaymentExecutor(
                                 apiClient,
-                                sessionStorage,
+                                cmcicRepository,
                                 agentConfiguration,
                                 supplementalInformationHelper,
                                 strongAuthenticationState,

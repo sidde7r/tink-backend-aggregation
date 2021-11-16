@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 public class TaxRecordEntity {
     @JsonProperty("type")
@@ -31,76 +35,4 @@ public class TaxRecordEntity {
 
     @JsonProperty("additionalInformation")
     private String additionalInformation = null;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getCategoryDetails() {
-        return categoryDetails;
-    }
-
-    public void setCategoryDetails(String categoryDetails) {
-        this.categoryDetails = categoryDetails;
-    }
-
-    public String getDebtorStatus() {
-        return debtorStatus;
-    }
-
-    public void setDebtorStatus(String debtorStatus) {
-        this.debtorStatus = debtorStatus;
-    }
-
-    public String getCertificateIdentification() {
-        return certificateIdentification;
-    }
-
-    public void setCertificateIdentification(String certificateIdentification) {
-        this.certificateIdentification = certificateIdentification;
-    }
-
-    public String getFormsCode() {
-        return formsCode;
-    }
-
-    public void setFormsCode(String formsCode) {
-        this.formsCode = formsCode;
-    }
-
-    public TaxPeriodEntity getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(TaxPeriodEntity period) {
-        this.period = period;
-    }
-
-    public TaxAmountEntity getTaxAmount() {
-        return taxAmount;
-    }
-
-    public void setTaxAmount(TaxAmountEntity taxAmount) {
-        this.taxAmount = taxAmount;
-    }
-
-    public String getAdditionalInformation() {
-        return additionalInformation;
-    }
-
-    public void setAdditionalInformation(String additionalInformation) {
-        this.additionalInformation = additionalInformation;
-    }
 }

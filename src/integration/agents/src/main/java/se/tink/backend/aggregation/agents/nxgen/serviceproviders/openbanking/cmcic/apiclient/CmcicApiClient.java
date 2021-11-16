@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls.BASE_API_PATH;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls.BENEFICIARIES_PATH;
 
+import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ConfirmationResourceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestCreation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentRequestResourceEntity;
@@ -33,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -43,8 +43,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@RequiredArgsConstructor
 public class CmcicApiClient implements FrAispApiClient {
+
+    private static final String EMPTY_BODY = "{}";
 
     private final TinkHttpClient client;
     private final CmcicRepository cmcicRepository;
@@ -54,6 +55,174 @@ public class CmcicApiClient implements FrAispApiClient {
     private final CmcicCodeChallengeProvider codeChallengeProvider;
     private final CmcicAgentConfig cmcicAgentConfig;
     private final CmcicRequestValuesProvider cmcicRequestValuesProvider;
+    private final String redirectUrl;
+
+    public CmcicApiClient(
+            TinkHttpClient client,
+            CmcicRepository cmcicRepository,
+            AgentConfiguration<CmcicConfiguration> agentConfiguration,
+            CmcicDigestProvider digestProvider,
+            CmcicSignatureProvider signatureProvider,
+            CmcicCodeChallengeProvider codeChallengeProvider,
+            CmcicAgentConfig cmcicAgentConfig,
+            CmcicRequestValuesProvider cmcicRequestValuesProvider) {
+        this.client = client;
+        this.cmcicRepository = cmcicRepository;
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
+        this.digestProvider = digestProvider;
+        this.signatureProvider = signatureProvider;
+        this.codeChallengeProvider = codeChallengeProvider;
+        this.cmcicAgentConfig = cmcicAgentConfig;
+        this.cmcicRequestValuesProvider = cmcicRequestValuesProvider;
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
+    }
+
+    @Override
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
+        final String basePath = cmcicAgentConfig.getBasePath();
+        return getTrustedBeneficiaries(
+                String.format("%s%s%s", basePath, BASE_API_PATH, BENEFICIARIES_PATH));
+    }
+
+    @Override
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
+        final String baseUrl = cmcicAgentConfig.getBaseUrl();
+
+        try {
+            final HttpResponse response =
+                    createAispRequestInSession(baseUrl, path).get(HttpResponse.class);
+            if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
+                return Optional.empty();
+            }
+            return Optional.of(response.getBody(TrustedBeneficiariesResponseDto.class));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+                return Optional.empty();
+            }
+            throw e;
+        }
+    }
+
+    public URL getAuthorizePisURL(URL url, String state) {
+        return authorizePisRequest(client.request(url), state);
+    }
+
+    public URL getAuthorizeUrl(String state) {
+        return authorizeRequest(
+                client.request(cmcicAgentConfig.getAuthBaseUrl())
+                        .queryParam(QueryKeys.STATE, state));
+    }
+
+    public EndUserIdentityResponse getEndUserIdentity() {
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
+
+        return createAispRequestInSession(baseUrl, basePath + Urls.FETCH_END_USER_IDENTITY)
+                .get(EndUserIdentityResponse.class);
+    }
+
+    public HalPaymentRequestEntity fetchPayment(String uniqueId) {
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
+
+        return createPispRequestInSession(
+                        baseUrl, basePath + Urls.PAYMENT_REQUESTS + "/" + uniqueId)
+                .type(MediaType.APPLICATION_JSON)
+                .get(HalPaymentRequestEntity.class);
+    }
+
+    public HalPaymentRequestEntity confirmPayment(String uniqueId) {
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
+        return createPispRequestInSession(
+                        new URL(baseUrl),
+                        String.format(
+                                "%s%s/%s/%s",
+                                basePath,
+                                Urls.PAYMENT_REQUESTS,
+                                uniqueId,
+                                Urls.PIS_CONFIRMATION_PATH),
+                        EMPTY_BODY)
+                .type(MediaType.APPLICATION_JSON)
+                .post(HalPaymentRequestEntity.class, EMPTY_BODY);
+    }
+
+    public void fetchPisOauthToken() {
+        if (!isValidPisOauthToken()) {
+            fetchAndSavePisOauthToken();
+        }
+    }
+
+    public HalPaymentRequestCreation makePayment(
+            PaymentRequestResourceEntity paymentRequestResourceEntity) {
+
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
+
+        String body = SerializationUtils.serializeToString(paymentRequestResourceEntity);
+
+        HttpResponse response =
+                createPispRequestInSession(new URL(baseUrl), basePath + Urls.PAYMENT_REQUESTS, body)
+                        .type(MediaType.APPLICATION_JSON)
+                        .body(body)
+                        .post(HttpResponse.class);
+
+        cmcicRepository.storePaymentId(getPaymentId(response.getHeaders().get("location")));
+
+        return response.getBody(HalPaymentRequestCreation.class);
+    }
+
+    private String getPaymentId(List<String> headers) {
+        if (!headers.isEmpty()) {
+            String paymentId = headers.get(0);
+            int i = paymentId.lastIndexOf("/");
+            return paymentId.substring(i + 1);
+        }
+        throw new IllegalStateException("No payment id");
+    }
+
+    public OAuth2Token exchangeCodeForToken(String code) {
+        final AuthorizationCodeTokenRequest request =
+                new AuthorizationCodeTokenRequest(
+                        configuration.getClientId(),
+                        FormValues.AUTHORIZATION_CODE,
+                        code,
+                        cmcicRepository.getCodeVerifier(),
+                        redirectUrl);
+        return executeTokenRequest(request);
+    }
+
+    public OAuth2Token refreshToken(String refreshToken) throws SessionException {
+        final RefreshTokenTokenRequest request =
+                new RefreshTokenTokenRequest(
+                        configuration.getClientId(), refreshToken, FormValues.REFRESH_TOKEN);
+        return executeTokenRequestAndCheckTokenNotExpired(request);
+    }
+
+    public FetchAccountsResponse fetchAccounts() {
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
+
+        return createAispRequestInSession(baseUrl, basePath + Urls.FETCH_ACCOUNTS_PATH)
+                .get(FetchAccountsResponse.class);
+    }
+
+    public FetchTransactionsResponse fetchTransactions(Account account, URL nextUrl) {
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
+
+        String path =
+                Optional.ofNullable(nextUrl)
+                        .map(URL::get)
+                        .orElseGet(
+                                () ->
+                                        basePath
+                                                + String.format(
+                                                        Urls.FETCH_TRANSACTIONS_PATH,
+                                                        account.getApiIdentifier()));
+
+        return createAispRequestInSession(baseUrl, path).get(FetchTransactionsResponse.class);
+    }
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -135,11 +304,17 @@ public class CmcicApiClient implements FrAispApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, requestId);
     }
 
-    public URL getAuthorizeUrl(String state) {
-        return client.request(cmcicAgentConfig.getAuthBaseUrl())
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
+    private URL authorizeRequest(RequestBuilder request) {
+        return request.queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge())
+                .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
+                .getUrl();
+    }
+
+    private URL authorizePisRequest(RequestBuilder request, String state) {
+        return request.queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge())
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
@@ -150,61 +325,6 @@ public class CmcicApiClient implements FrAispApiClient {
         final String codeVerifier = codeChallengeProvider.generateCodeVerifier();
         cmcicRepository.storeCodeVerifier(codeVerifier);
         return codeChallengeProvider.generateCodeChallengeForCodeVerifier(codeVerifier);
-    }
-
-    public FetchAccountsResponse fetchAccounts() {
-        String baseUrl = cmcicAgentConfig.getBaseUrl();
-        String basePath = cmcicAgentConfig.getBasePath();
-
-        return createAispRequestInSession(baseUrl, basePath + Urls.FETCH_ACCOUNTS_PATH)
-                .get(FetchAccountsResponse.class);
-    }
-
-    public FetchTransactionsResponse fetchTransactions(Account account, URL nextUrl) {
-        String baseUrl = cmcicAgentConfig.getBaseUrl();
-        String basePath = cmcicAgentConfig.getBasePath();
-
-        String path =
-                Optional.ofNullable(nextUrl)
-                        .map(URL::get)
-                        .orElseGet(
-                                () ->
-                                        basePath
-                                                + String.format(
-                                                        Urls.FETCH_TRANSACTIONS_PATH,
-                                                        account.getApiIdentifier()));
-
-        return createAispRequestInSession(baseUrl, path).get(FetchTransactionsResponse.class);
-    }
-
-    public HalPaymentRequestCreation makePayment(
-            PaymentRequestResourceEntity paymentRequestResourceEntity) {
-
-        String baseUrl = cmcicAgentConfig.getBaseUrl();
-        String basePath = cmcicAgentConfig.getBasePath();
-
-        String body = SerializationUtils.serializeToString(paymentRequestResourceEntity);
-
-        return createPispRequestInSession(new URL(baseUrl), basePath + Urls.PAYMENT_REQUESTS, body)
-                .type(MediaType.APPLICATION_JSON)
-                .post(HalPaymentRequestCreation.class, body);
-    }
-
-    public OAuth2Token getAispToken(String code) {
-        final AuthorizationCodeTokenRequest request =
-                new AuthorizationCodeTokenRequest(
-                        configuration.getClientId(),
-                        FormValues.AUTHORIZATION_CODE,
-                        code,
-                        cmcicRepository.getCodeVerifier());
-        return executeTokenRequest(request);
-    }
-
-    public OAuth2Token refreshToken(String refreshToken) throws SessionException {
-        final RefreshTokenTokenRequest request =
-                new RefreshTokenTokenRequest(
-                        configuration.getClientId(), refreshToken, FormValues.REFRESH_TOKEN);
-        return executeTokenRequestAndCheckTokenNotExpired(request);
     }
 
     private OAuth2Token executeTokenRequest(AbstractForm request) {
@@ -222,12 +342,6 @@ public class CmcicApiClient implements FrAispApiClient {
         return createOAuth2Token(tokenResponse);
     }
 
-    public void fetchPisOauthToken() {
-        if (!isValidPisOauthToken()) {
-            fetchAndSavePisOauthToken();
-        }
-    }
-
     private boolean isValidPisOauthToken() {
         return cmcicRepository.findPispToken().map(OAuth2Token::isValid).orElse(false);
     }
@@ -236,44 +350,6 @@ public class CmcicApiClient implements FrAispApiClient {
         PisTokenRequest pisTokenRequest = new PisTokenRequest(configuration.getClientId());
         OAuth2Token token = executeTokenRequest(pisTokenRequest);
         cmcicRepository.storePispToken(token);
-    }
-
-    public HalPaymentRequestEntity fetchPayment(String uniqueId) {
-        String baseUrl = cmcicAgentConfig.getBaseUrl();
-        String basePath = cmcicAgentConfig.getBasePath();
-
-        return createPispRequestInSession(
-                        baseUrl, basePath + Urls.PAYMENT_REQUESTS + "/" + uniqueId)
-                .type(MediaType.APPLICATION_JSON)
-                .get(HalPaymentRequestEntity.class);
-    }
-
-    public HalPaymentRequestEntity confirmPayment(
-            String uniqueId, ConfirmationResourceEntity confirmationResourceEntity) {
-        String baseUrl = cmcicAgentConfig.getBaseUrl();
-        String basePath = cmcicAgentConfig.getBasePath();
-        String body = SerializationUtils.serializeToString(confirmationResourceEntity);
-        return createPispRequestInSession(
-                        new URL(baseUrl),
-                        String.format(
-                                "%s%s%s%s%s%s",
-                                basePath,
-                                Urls.PAYMENT_REQUESTS,
-                                "/",
-                                uniqueId,
-                                "/",
-                                Urls.PIS_CONFIRMATION_PATH),
-                        body)
-                .type(MediaType.APPLICATION_JSON)
-                .post(HalPaymentRequestEntity.class, body);
-    }
-
-    public EndUserIdentityResponse getEndUserIdentity() {
-        String baseUrl = cmcicAgentConfig.getBaseUrl();
-        String basePath = cmcicAgentConfig.getBasePath();
-
-        return createAispRequestInSession(baseUrl, basePath + Urls.FETCH_END_USER_IDENTITY)
-                .get(EndUserIdentityResponse.class);
     }
 
     private TokenResponse getTokenResponse(AbstractForm request, URL tokenUrl) {
@@ -315,31 +391,5 @@ public class CmcicApiClient implements FrAispApiClient {
 
     private static boolean hasRefreshTokenExpired(HttpResponseException ex) {
         return ex.getMessage().toLowerCase().contains("refresh token has expired");
-    }
-
-    @Override
-    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
-        final String basePath = cmcicAgentConfig.getBasePath();
-        return getTrustedBeneficiaries(
-                String.format("%s%s%s", basePath, BASE_API_PATH, BENEFICIARIES_PATH));
-    }
-
-    @Override
-    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
-        final String baseUrl = cmcicAgentConfig.getBaseUrl();
-
-        try {
-            final HttpResponse response =
-                    createAispRequestInSession(baseUrl, path).get(HttpResponse.class);
-            if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
-                return Optional.empty();
-            }
-            return Optional.of(response.getBody(TrustedBeneficiariesResponseDto.class));
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
-                return Optional.empty();
-            }
-            throw e;
-        }
     }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.consent.generators.nl.ics.IcsConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
@@ -32,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -44,6 +44,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
             4. Fetch OAUTH2 token
             5. Fetch accounts & transactions
 */
+@RequiredArgsConstructor
 public class ICSApiClient {
 
     private final TinkHttpClient client;
@@ -53,25 +54,6 @@ public class ICSApiClient {
     private final ICSConfiguration configuration;
     private final String customerIpAddress;
     private final AgentComponentProvider componentProvider;
-
-    public ICSApiClient(
-            final TinkHttpClient client,
-            final SessionStorage sessionStorage,
-            final PersistentStorage persistentStorage,
-            final String redirectUri,
-            final ICSConfiguration configuration,
-            final String customerIpAddress,
-            AgentComponentProvider componentProvider) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
-        this.redirectUri = redirectUri;
-        this.configuration = configuration;
-        this.customerIpAddress = customerIpAddress;
-        this.componentProvider = componentProvider;
-
-        this.client.addFilter(new BankServiceInternalErrorFilter());
-    }
 
     public ICSConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)

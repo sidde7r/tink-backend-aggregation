@@ -17,8 +17,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PaymentResponseEntity {
 
     private String resourceId;
+    private String paymentInformationId;
     private BeneficiaryEntity beneficiary;
-    private PaymentInformationStatusCodeEntity paymentInformationStatusCode;
+    private PaymentInformationStatusEntity paymentInformationStatus;
     private StatusReasonInformationEntity statusReasonInformation;
     private AccountIdentificationEntity debtorAccount;
 }

@@ -52,8 +52,7 @@ public class CicAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder.build()
-                .testTinkLinkPayment(
-                        createRealDomesticPayment(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER));
+                .testTinkLinkPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER));
     }
 
     private Payment createRealDomesticPayment(PaymentScheme paymentScheme) {

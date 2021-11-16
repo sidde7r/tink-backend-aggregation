@@ -18,7 +18,7 @@ Content-Length: 349
 {"access_token":"DUMMY_ACCESS_TOKEN","token_type":"bearer","expires_in":"900","scope":"aisp","refresh_token":"DUMMY_REFRESH_TOKEN"}
 
 REQUEST 2
-GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v1.1/accounts
+GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v2.0/accounts
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 Host: oauth2-apiii.e-i.com
@@ -69,23 +69,23 @@ Content-Length: 1478
       ],
       "_links": {
         "balances": {
-          "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
+          "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
         },
         "transactions": {
-          "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
+          "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
         }
       }
     }
   ],
   "_links": {
     "self": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts"
     }
   }
 }
 
 REQUEST 3
-GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions
+GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 Host: oauth2-apiii.e-i.com
@@ -178,25 +178,25 @@ Transfer-Encoding: chunked
   ],
   "_links": {
     "self": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions?page=1"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions?page=1"
     },
     "balances": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
     },
     "first": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
     },
     "parent-list": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts"
     },
     "next": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2"
     }
   }
 }
 
 REQUEST 4
-GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2
+GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 Host: oauth2-apiii.e-i.com
@@ -255,16 +255,16 @@ Transfer-Encoding: chunked
   ],
   "_links": {
     "self": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2"
     },
     "balances": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
     },
     "first": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
     },
     "parent-list": {
-      "href": "/beobank/stet-psd2-api/v1.1/accounts"
+      "href": "/beobank/stet-psd2-api/v2.0/accounts"
     }
   }
 }

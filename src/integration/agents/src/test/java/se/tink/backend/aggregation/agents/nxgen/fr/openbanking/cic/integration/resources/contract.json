@@ -1,0 +1,77 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "YY64COJH41059545330222956960771321",
+      "exactAvailableCredit": null,
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 123.45,
+        "unscaledValue": 12345,
+        "scale": 2,
+        "doubleValue": 123.45
+      },
+      "currencyCode": "EUR",
+      "bankId": "YY64COJH41059545330222956960771321",
+      "excluded": false,
+      "favored": false,
+      "name": "COMPTE DE",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "holderName": "Mr Et Mme Dupont",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Mr Et Mme Dupont",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 123.45
+    }
+  ],
+  "transactions": [
+    {
+      "amount": 12.25,
+      "credentialsId": null,
+      "date": 1518433200000,
+      "description": "SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "userId": null,
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1587d16aa40834b8e-1698718bf566f52c46a63e4b66dbd1dcb524c4f999c6e4a69d85aa9149898ec8"
+      },
+      "mutability": null,
+      "transactionAmount": null,
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2018-02-12",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": null,
+      "merchantName": null,
+      "merchantCategoryCode": null,
+      "transactionReference": null,
+      "providerMarket": null
+    }
+  ]
+}

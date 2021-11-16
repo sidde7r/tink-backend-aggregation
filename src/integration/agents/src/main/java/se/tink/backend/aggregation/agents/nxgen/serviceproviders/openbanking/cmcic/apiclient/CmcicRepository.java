@@ -14,7 +14,35 @@ public class CmcicRepository {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
 
-    void storePispToken(OAuth2Token token) {
+    public String getPaymentId() {
+        return sessionStorage.get(StorageKeys.PAYMENT_ID);
+    }
+
+    public void storeAuthorizationCode(String authorizationCode) {
+        sessionStorage.put(StorageKeys.AUTHORIZATION_CODE, authorizationCode);
+    }
+
+    public String getAuthorizationCode() {
+        return sessionStorage.get(StorageKeys.AUTHORIZATION_CODE);
+    }
+
+    public String getState() {
+        return sessionStorage.get(StorageKeys.STATE);
+    }
+
+    public void storeState(String state) {
+        sessionStorage.put(StorageKeys.STATE, state);
+    }
+
+    public void storeAuthorizationUrl(String authorizeUrl) {
+        sessionStorage.put(StorageKeys.AUTH_URL, authorizeUrl);
+    }
+
+    public String getAuthorizationUrl() {
+        return sessionStorage.get(StorageKeys.AUTH_URL);
+    }
+
+    public void storePispToken(OAuth2Token token) {
         sessionStorage.put(StorageKeys.PISP_TOKEN, token);
     }
 
@@ -35,5 +63,9 @@ public class CmcicRepository {
 
     String getCodeVerifier() {
         return sessionStorage.get(StorageKeys.CODE_VERIFIER);
+    }
+
+    void storePaymentId(String paymentId) {
+        sessionStorage.put(StorageKeys.PAYMENT_ID, paymentId);
     }
 }

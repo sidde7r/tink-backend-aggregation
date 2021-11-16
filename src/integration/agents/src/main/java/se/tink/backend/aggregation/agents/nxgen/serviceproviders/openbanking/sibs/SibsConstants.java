@@ -117,7 +117,7 @@ public final class SibsConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Filters {
         public static final int NUMBER_OF_RETRIES = 5;
-        public static final long RATE_LIMIT_RETRY_MS_MIN = 1000;
-        public static final long RATE_LIMIT_RETRY_MS_MAX = 3000;
+        public static final long RATE_LIMIT_RETRY_MS_MIN = 1500;
+        public static final long RATE_LIMIT_RETRY_MS_MAX = 6500;
     }
 }

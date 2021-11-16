@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 public class RemittanceInformationEntity {
     @JsonProperty("unstructured")
@@ -11,20 +15,4 @@ public class RemittanceInformationEntity {
 
     @JsonProperty("structured")
     private List<StructuredRemittanceInformationEntity> structured = null;
-
-    public List<String> getUnstructured() {
-        return unstructured;
-    }
-
-    public void setUnstructured(List<String> unstructured) {
-        this.unstructured = unstructured;
-    }
-
-    public List<StructuredRemittanceInformationEntity> getStructured() {
-        return structured;
-    }
-
-    public void setStructured(List<StructuredRemittanceInformationEntity> structured) {
-        this.structured = structured;
-    }
 }

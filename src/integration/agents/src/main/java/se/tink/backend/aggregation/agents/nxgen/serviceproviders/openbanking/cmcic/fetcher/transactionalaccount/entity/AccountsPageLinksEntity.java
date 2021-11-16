@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class AccountsPageLinksEntity {
     @JsonProperty("self")
@@ -13,16 +15,4 @@ public class AccountsPageLinksEntity {
 
     @JsonProperty("beneficiaries")
     private GenericLinkEntity beneficiaries = null;
-
-    public GenericLinkEntity getSelf() {
-        return self;
-    }
-
-    public GenericLinkEntity getEndUserIdentity() {
-        return endUserIdentity;
-    }
-
-    public GenericLinkEntity getBeneficiaries() {
-        return beneficiaries;
-    }
 }
