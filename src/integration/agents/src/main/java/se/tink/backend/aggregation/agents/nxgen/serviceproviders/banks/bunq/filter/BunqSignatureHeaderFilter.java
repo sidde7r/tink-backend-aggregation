@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.Bunq
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -17,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BunqSignatureHeaderFilter extends Filter {

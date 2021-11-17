@@ -12,7 +12,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class KbcOtpUtils {
 

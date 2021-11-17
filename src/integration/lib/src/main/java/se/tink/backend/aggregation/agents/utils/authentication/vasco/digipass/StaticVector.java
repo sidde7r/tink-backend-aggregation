@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils.DataUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils.XfadUtils;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class StaticVector {
     private final byte[] vector;

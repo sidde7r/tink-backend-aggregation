@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 @Slf4j
 public class NemIdTokenParser {

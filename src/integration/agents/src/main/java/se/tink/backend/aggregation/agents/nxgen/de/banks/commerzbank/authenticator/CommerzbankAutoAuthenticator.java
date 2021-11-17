@@ -18,9 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticat
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorMessageEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CommerzbankAutoAuthenticator implements AutoAuthenticator {

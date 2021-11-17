@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.helper;
 
 import java.nio.ByteBuffer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class FortisOTPCalculator {
 

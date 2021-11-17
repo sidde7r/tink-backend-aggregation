@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.utils.srp.ClientEvidenceMessageResponse;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class ActivationUtilsTest {
     // https://integration-proxy.global-production.tink.network/analyze?query=filename%3A%22fi_op%20bank_28.0.1_reg_login_full_hashlogs%22%20AND%20operation%3A%22srp_exchange%22

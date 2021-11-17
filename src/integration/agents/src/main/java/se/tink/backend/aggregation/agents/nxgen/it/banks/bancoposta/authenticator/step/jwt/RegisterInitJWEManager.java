@@ -9,7 +9,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.JWT.Claims;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 @RequiredArgsConstructor
 public class RegisterInitJWEManager {

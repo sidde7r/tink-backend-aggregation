@@ -2,7 +2,7 @@ load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "cryptography",
+    name = "hash",
     srcs = glob(
         ["*.java"],
         exclude = [
@@ -11,20 +11,16 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "//third_party:commons_codec_commons_codec",
     ],
 )
 
 junit_test(
-    name = "cryptography_test",
+    name = "hash_test",
     srcs = glob(["*Test.java"]),
-    data = [
-        "//data:cryptography_test",
-    ],
     deps = [
-        "//src/libraries/cryptography",
+        "//src/libraries/cryptography/hash",
+        "//src/libraries/encoding",
         "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_bouncycastle_bcpkix_jdk15on",
     ],
 )

@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.libraries.cryptography.hash.Hash;
 
 /*
  * This class is used in masking log files stored in s3.

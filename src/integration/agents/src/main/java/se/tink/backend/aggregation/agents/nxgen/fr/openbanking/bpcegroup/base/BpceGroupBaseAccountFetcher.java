@@ -31,7 +31,7 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
 
     @Override
     public Collection<T> fetchAccounts() {
-        final List<AccountEntity> accountEntitiesFirstCallResult = getAccounts();
+        final List<AccountEntity> accountEntitiesFirstCallResult = getAccounts(false);
 
         if (accountEntitiesFirstCallResult.isEmpty()) {
             return Collections.emptyList();
@@ -49,8 +49,19 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
                 .collect(Collectors.toList());
     }
 
-    private List<AccountEntity> getAccounts() {
-        AccountsResponse accountsResponse = apiClient.fetchAccounts();
+    private List<AccountEntity> recordConsentAndRefetchAccounts(
+            List<AccountEntity> accountEntities) {
+        recordCustomerConsent(accountEntities);
+
+        return getAccounts(true);
+    }
+
+    private List<AccountEntity> getAccounts(boolean forceNewFetch) {
+        AccountsResponse accountsResponse =
+                forceNewFetch
+                        ? apiClient.fetchAccounts()
+                        : apiClient.fetchAccountsFromCacheIfPossible();
+
         return accountsResponse.getAccounts().stream()
                 .map(
                         accountEntity ->
@@ -73,13 +84,6 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
         return Optional.ofNullable(apiClient.fetchBalances(resourceId))
                 .map(BalancesResponse::getBalances)
                 .orElseGet(Collections::emptyList);
-    }
-
-    private List<AccountEntity> recordConsentAndRefetchAccounts(
-            List<AccountEntity> accountEntities) {
-        recordCustomerConsent(accountEntities);
-
-        return getAccounts();
     }
 
     private void recordCustomerConsent(List<AccountEntity> accountEntities) {

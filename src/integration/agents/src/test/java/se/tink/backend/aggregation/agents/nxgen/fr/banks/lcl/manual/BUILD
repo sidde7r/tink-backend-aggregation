@@ -18,7 +18,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/lcl",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/libraries/encoding",
     ],
 )

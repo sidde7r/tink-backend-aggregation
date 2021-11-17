@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import java.net.URI;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Signature;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.libraries.cryptography.hash.Hash;
 
 public final class SignatureUtil {
 

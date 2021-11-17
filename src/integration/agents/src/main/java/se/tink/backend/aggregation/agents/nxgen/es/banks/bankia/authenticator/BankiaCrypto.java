@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator;
 
 import java.security.interfaces.RSAPublicKey;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class BankiaCrypto {
     public static String encryptPassword(String plainTextPassword, String encryptionKey) {

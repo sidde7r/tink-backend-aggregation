@@ -38,12 +38,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.identity.rpc.ContactInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.savingsaccount.entity.SavingsAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.handler.NorwegianRedirectHandler;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public final class NorwegianApiClient {
 

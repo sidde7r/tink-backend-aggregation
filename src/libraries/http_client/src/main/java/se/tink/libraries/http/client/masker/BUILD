@@ -6,7 +6,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
+        "//src/libraries/cryptography/hash",
         "//src/libraries/request_tracing",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",

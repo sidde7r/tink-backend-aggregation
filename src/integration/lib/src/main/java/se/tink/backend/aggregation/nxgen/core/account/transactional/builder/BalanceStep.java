@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional.builder;
 
 import javax.annotation.Nonnull;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Deprecated
 public interface BalanceStep<S> {
@@ -13,5 +13,5 @@ public interface BalanceStep<S> {
      * @return The next step of the builder
      */
     @Deprecated
-    AliasStep<S> setBalance(@Nonnull Amount balance);
+    AliasStep<S> setBalance(@Nonnull ExactCurrencyAmount balance);
 }

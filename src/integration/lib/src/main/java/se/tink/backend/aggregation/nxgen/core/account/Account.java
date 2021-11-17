@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -342,11 +341,10 @@ public abstract class Account {
         }
 
         @Deprecated
-        protected final void applyBalance(@Nonnull Amount balance) {
+        protected final void applyBalance(@Nonnull ExactCurrencyAmount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
 
-            this.exactBalance =
-                    ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency());
+            this.exactBalance = balance;
         }
 
         protected final void applyAlias(String alias) {

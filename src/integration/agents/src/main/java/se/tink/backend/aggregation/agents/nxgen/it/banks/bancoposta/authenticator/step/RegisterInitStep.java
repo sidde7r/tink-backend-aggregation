@@ -21,12 +21,12 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticato
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.RegisterResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.jwt.RegisterInitJWEManager;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.libraries.cryptography.hash.Hash;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;
 import se.tink.libraries.serialization.utils.SerializationUtils;

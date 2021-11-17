@@ -8,8 +8,8 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.signature.LclSignatureProvider;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor

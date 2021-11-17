@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.libraries.cryptography.hash.Hash;
 
 class DigestGenerator {
 

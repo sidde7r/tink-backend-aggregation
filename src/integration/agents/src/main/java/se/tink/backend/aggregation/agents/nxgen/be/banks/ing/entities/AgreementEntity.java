@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.cryptography.hash.Hash;
 
 @Data
 @JsonObject

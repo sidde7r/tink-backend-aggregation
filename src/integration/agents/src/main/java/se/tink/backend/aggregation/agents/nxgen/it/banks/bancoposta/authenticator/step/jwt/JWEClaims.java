@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.JWT.Claims;
 import se.tink.backend.aggregation.agents.utils.crypto.HOTP;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.cryptography.hash.Hash;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class JWEClaims {
 

@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.utils.encoding;
+package se.tink.libraries.encoding;
 
-import com.google.common.base.Charsets;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
@@ -51,7 +51,7 @@ public class EncodingUtils {
     }
 
     public static String getString(byte[] binaryData) {
-        return new String(binaryData, Charsets.UTF_8);
+        return new String(binaryData, StandardCharsets.UTF_8);
     }
 
     public static String decodeUrl(String urlEncodedString) {

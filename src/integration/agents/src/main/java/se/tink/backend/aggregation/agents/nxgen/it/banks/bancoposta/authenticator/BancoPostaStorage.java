@@ -7,8 +7,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Storage;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BancoPostaStorage {

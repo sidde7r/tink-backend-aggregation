@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.Assets
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.InvestmentPlanDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.InvestmentPlanDto;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.InvestmentPlansOverviewResponse;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.investment.InvestmentBalanceStep;
@@ -28,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class KbcInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
 

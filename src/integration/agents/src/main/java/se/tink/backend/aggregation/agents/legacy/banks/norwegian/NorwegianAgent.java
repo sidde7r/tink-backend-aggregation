@@ -57,7 +57,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.constants.CommonHeaders;
@@ -68,6 +67,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 /**

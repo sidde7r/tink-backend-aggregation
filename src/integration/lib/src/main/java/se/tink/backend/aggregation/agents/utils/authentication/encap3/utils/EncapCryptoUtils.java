@@ -12,8 +12,8 @@ import org.apache.commons.codec.binary.Hex;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.cryptography.hash.Hash;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class EncapCryptoUtils {
     public static String encrypAesCbc(byte[] bytesKey, byte[] bytesIv, byte[] inputData) {

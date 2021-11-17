@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Alia
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BalanceStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.OtherBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 /**
  * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
@@ -75,7 +75,7 @@ public class OtherAccount extends TransactionalAccount {
         }
 
         @Override
-        public AliasStep<OtherBuildStep> setBalance(@Nonnull Amount balance) {
+        public AliasStep<OtherBuildStep> setBalance(@Nonnull ExactCurrencyAmount balance) {
             applyBalance(balance);
             return this;
         }

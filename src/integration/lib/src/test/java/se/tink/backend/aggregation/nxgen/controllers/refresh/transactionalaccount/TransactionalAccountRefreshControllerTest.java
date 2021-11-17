@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshContro
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.metrics.core.MetricId;
 
@@ -75,7 +74,8 @@ public class TransactionalAccountRefreshControllerTest {
 
     @Test
     public void ensureNullTransactionsList_isConverted_toEmptyList() {
-        List<TransactionalAccount> accounts = ImmutableList.of(Mockito.mock(CheckingAccount.class));
+        List<TransactionalAccount> accounts =
+                ImmutableList.of(Mockito.mock(TransactionalAccount.class));
         Mockito.when(accountFetcher.fetchAccounts()).thenReturn(accounts);
         Mockito.when(
                         transactionFetcher.fetchTransactionsFor(

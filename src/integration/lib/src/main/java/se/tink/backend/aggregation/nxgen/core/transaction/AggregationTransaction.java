@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType
 import se.tink.backend.aggregation.agents.models.TransactionMutability;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -197,12 +196,6 @@ public abstract class AggregationTransaction {
         private String merchantCategoryCode;
         private String transactionReference;
         private String providerMarket;
-
-        @Deprecated
-        public Builder setAmount(Amount amount) {
-            this.amount = ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency());
-            return this;
-        }
 
         public Builder setAmount(ExactCurrencyAmount amount) {
             this.amount = amount;

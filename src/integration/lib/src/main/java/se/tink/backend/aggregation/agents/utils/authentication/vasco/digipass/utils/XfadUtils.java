@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.u
 
 import com.google.common.base.Preconditions;
 import java.util.Arrays;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class XfadUtils {
     // The layout of xfad is the following:

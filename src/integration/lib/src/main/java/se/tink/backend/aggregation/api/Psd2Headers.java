@@ -6,9 +6,9 @@ import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.UUID;
 import javax.security.auth.x500.X500Principal;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils.CANameEncoding;
+import se.tink.libraries.cryptography.hash.Hash;
 
 public final class Psd2Headers {
 

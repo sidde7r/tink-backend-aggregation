@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class BpceGroupApiClientTest {
 
@@ -84,7 +85,8 @@ public class BpceGroupApiClientTest {
                         configurationMock,
                         REDIRECT_URL,
                         bpceGroupSignatureHeaderGeneratorMock,
-                        USER_IP_ADDRESS);
+                        USER_IP_ADDRESS,
+                        new TemporaryStorage());
     }
 
     @Test

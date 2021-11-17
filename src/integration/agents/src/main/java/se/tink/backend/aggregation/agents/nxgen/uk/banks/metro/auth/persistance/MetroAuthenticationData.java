@@ -20,8 +20,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.encoding.EncodingUtils;
 
 @NoArgsConstructor
 @AllArgsConstructor

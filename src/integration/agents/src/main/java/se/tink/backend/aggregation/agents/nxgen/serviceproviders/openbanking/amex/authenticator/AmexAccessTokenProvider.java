@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.token.TokenResponseDto;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessTokenProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
+import se.tink.libraries.cryptography.hash.Hash;
 
 @RequiredArgsConstructor
 public class AmexAccessTokenProvider implements AccessTokenProvider<HmacToken> {

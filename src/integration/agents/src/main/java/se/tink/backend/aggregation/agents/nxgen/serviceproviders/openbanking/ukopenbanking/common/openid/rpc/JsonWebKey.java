@@ -6,8 +6,8 @@ import com.google.common.base.Strings;
 import java.security.PublicKey;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.encoding.EncodingUtils;
 
 // According to rfc7517
 

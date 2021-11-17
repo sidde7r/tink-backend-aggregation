@@ -9,7 +9,6 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class Transaction extends AggregationTransaction {
@@ -121,12 +120,6 @@ public class Transaction extends AggregationTransaction {
         private boolean pending;
         private String externalId;
         private FieldsMigrations fieldsMigrations;
-
-        @Deprecated
-        @Override
-        public Builder setAmount(Amount amount) {
-            return (Builder) super.setAmount(amount);
-        }
 
         @Override
         public Builder setAmount(ExactCurrencyAmount amount) {

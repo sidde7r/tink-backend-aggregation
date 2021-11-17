@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
 import se.tink.backend.aggregation.agents.utils.crypto.TripleDES;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.libraries.cryptography.hash.Hash;
 
 public class CryptoUtils {
     private static final int ITERATIONS = 1024;

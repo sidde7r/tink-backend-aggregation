@@ -15,10 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.entities.BpiMetaData;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.storage.LclPersistentStorage;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LclAuthenticator implements PasswordAuthenticator {

@@ -51,6 +51,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
@@ -102,7 +103,8 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         componentProvider
                                 .getCredentialsRequest()
                                 .getUserAvailability()
-                                .getOriginatingUserIpOrDefault());
+                                .getOriginatingUserIpOrDefault(),
+                        new TemporaryStorage());
 
         this.bpceGroupPaymentApiClient =
                 new BpceGroupPaymentApiClient(

@@ -5,7 +5,7 @@ junit_test(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
+        "//src/libraries/cryptography/hash",
         "//src/libraries/jersey_utils/src/main/java/se/tink/libraries/jersey/utils/masker",
         "//src/libraries/request_tracing",
         "//third_party:com_sun_jersey_jersey_client",

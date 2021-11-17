@@ -4,8 +4,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiApiCl
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.SolveChallengeRequest;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.libraries.cryptography.hash.Hash;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class SpankkiAuthUtils {
 

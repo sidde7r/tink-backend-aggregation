@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.libraries.cryptography.hash.Hash;
 
 public class MacSignatureCreator {
 

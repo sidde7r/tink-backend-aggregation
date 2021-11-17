@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.SwedbankFallbackConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.SwedbankFallbackConstants.HeadersToSign;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
@@ -17,6 +16,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SignatureUtils implements SignatureProvider {

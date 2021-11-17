@@ -11,12 +11,12 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.pe
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.EasyPinActivateResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.helper.FortisKeyDecryptor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.helper.FortisOTPCalculator;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
+import se.tink.libraries.encoding.EncodingUtils;
 
 @RequiredArgsConstructor
 public class EasyPinActivationStep

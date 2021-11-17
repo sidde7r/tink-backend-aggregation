@@ -14,7 +14,6 @@ import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.UniversoConstants.HeaderFormats;
 import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.configuration.UniversoProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -24,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @FilterOrder(category = FilterPhases.REQUEST_HANDLE, order = Integer.MIN_VALUE)

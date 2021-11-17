@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValuesProvider;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -43,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ArgentaApiClient {

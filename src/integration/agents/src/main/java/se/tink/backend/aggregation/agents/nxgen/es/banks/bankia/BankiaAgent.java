@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investme
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.BankiaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.BankiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.session.BankiaSessionHandler;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -45,6 +44,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.libraries.encoding.EncodingUtils;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,

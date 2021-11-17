@@ -17,12 +17,12 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.GetSignResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.crypto.IngCryptoUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngRequestFactory;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.CallbackProcessorMultiData;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SupplementalFieldsAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
+import se.tink.libraries.encoding.EncodingUtils;
 
 public class PreSignStep extends SupplementalFieldsAuthenticationStep {
 

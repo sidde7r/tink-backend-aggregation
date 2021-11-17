@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class CreditCardTransaction extends Transaction {
@@ -114,12 +113,6 @@ public final class CreditCardTransaction extends Transaction {
         public Builder setCreditCard(CreditCard creditCard) {
             this.creditCard = creditCard;
             return this;
-        }
-
-        @Deprecated
-        @Override
-        public Builder setAmount(Amount amount) {
-            return (Builder) super.setAmount(amount);
         }
 
         @Override
