@@ -31,9 +31,11 @@ import se.tink.libraries.aggregation_agent_api_client.src.configuration.ClientCo
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.ClientConfiguration.ClientConfigurationBuilder;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.Configuration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.EidasConfiguration;
-import se.tink.libraries.aggregation_agent_api_client.src.configuration.EidasConfiguration.EidasConfigurationBuilder;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.ServiceConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.TlsConfiguration;
+import se.tink.libraries.aggregation_agent_api_client.src.eidas.signer.FakeQSealSignerClient;
+import se.tink.libraries.aggregation_agent_api_client.src.eidas.signer.QSealSignerClient;
+import se.tink.libraries.aggregation_agent_api_client.src.eidas.signer.QSealSignerClientImpl;
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
 import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableKey;
 
@@ -66,12 +68,25 @@ public class HttpApiClientBuilder {
     }
 
     public HttpApiClient build() {
+
+        Configuration.ConfigurationBuilder configurationBuilder =
+                Configuration.builder().clientConfiguration(buildClientConfiguration());
+
+        QSealSignerClient qSealSignerClient;
+        if (shouldUseEidas()) {
+            // Eidas should not be used at all if the server is mocked.
+            qSealSignerClient = new FakeQSealSignerClient();
+        } else {
+            EidasConfiguration eidasConfiguration = buildEidasConfig();
+            qSealSignerClient = buildEidasSignerClient(eidasConfiguration);
+
+            buildEidasProxyServiceConfiguration()
+                    .ifPresent(configurationBuilder::eidasProxyServiceConfiguration);
+            configurationBuilder.eidasConfiguration(eidasConfiguration);
+        }
+
         HttpApiClient httpApiClient =
-                new HttpApiClient(
-                        Configuration.builder()
-                                .clientConfiguration(buildClientConfiguration())
-                                .eidasConfiguration(setupEidasConfig())
-                                .build());
+                new HttpApiClient(configurationBuilder.build(), qSealSignerClient);
 
         this.persistentStorage.subscribeOnInsertion(
                 data -> {
@@ -159,31 +174,45 @@ public class HttpApiClientBuilder {
         }
     }
 
-    private EidasConfiguration setupEidasConfig() {
+    private QSealSignerClientImpl buildEidasSignerClient(EidasConfiguration eidasConfiguration) {
+        InternalEidasProxyConfiguration internalEidasProxyConfiguration =
+                this.eidasProxyConfiguration.toInternalConfig();
+        String eidasHost = removeSchema(internalEidasProxyConfiguration.getHost());
+        return new QSealSignerClientImpl(
+                eidasConfiguration,
+                ServiceConfiguration.builder().host(eidasHost).port(443).build());
+    }
+
+    private Optional<ServiceConfiguration> buildEidasProxyServiceConfiguration() {
+        if (!shouldUseEidasProxy()) {
+            return Optional.empty();
+        }
+
+        InternalEidasProxyConfiguration internalEidasProxyConfiguration =
+                eidasProxyConfiguration.toInternalConfig();
+
+        String eidasHost = removeSchema(internalEidasProxyConfiguration.getHost());
+
+        return Optional.of(ServiceConfiguration.builder().host(eidasHost).port(444).build());
+    }
+
+    private EidasConfiguration buildEidasConfig() {
         InternalEidasProxyConfiguration internalEidasProxyConfiguration =
                 eidasProxyConfiguration.toInternalConfig();
 
         TlsConfiguration tlsConfiguration = getTlsConfiguration(internalEidasProxyConfiguration);
+        return EidasConfiguration.builder()
+                .appId(eidasIdentity.getAppId())
+                .certificateId(eidasIdentity.getCertId())
+                .clusterId(eidasIdentity.getClusterId())
+                .requesterAgentClass(eidasIdentity.getRequester())
+                .requesterProviderId(eidasIdentity.getProviderId())
+                .tlsConfiguration(tlsConfiguration)
+                .build();
+    }
 
-        String eidasHost = removeSchema(internalEidasProxyConfiguration.getHost());
-
-        EidasConfigurationBuilder eidasConfigurationBuilder =
-                EidasConfiguration.builder()
-                        .appId(eidasIdentity.getAppId())
-                        .certificateId(eidasIdentity.getCertId())
-                        .clusterId(eidasIdentity.getClusterId())
-                        .requesterAgentClass(eidasIdentity.getRequester())
-                        .requesterProviderId(eidasIdentity.getProviderId())
-                        .tlsConfiguration(tlsConfiguration)
-                        .signingService(
-                                ServiceConfiguration.builder().host(eidasHost).port(443).build());
-
-        if (shouldUseEidasProxy()) {
-            eidasConfigurationBuilder.proxyService(
-                    ServiceConfiguration.builder().host(eidasHost).port(444).build());
-        }
-
-        return eidasConfigurationBuilder.build();
+    private boolean shouldUseEidas() {
+        return mockServerUrl != null;
     }
 
     private boolean shouldUseEidasProxy() {
