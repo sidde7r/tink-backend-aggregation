@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 @RequiredArgsConstructor
 public class BpceGroupApiClient implements FrAispApiClient {
@@ -48,12 +49,15 @@ public class BpceGroupApiClient implements FrAispApiClient {
             "/accounts/{" + ACCOUNT_RESOURCE_ID_KEY + "}/transactions";
     private static final String ENDPOINT_TRANSACTIONS_PAGE = ENDPOINT_TRANSACTIONS + "?page=";
 
+    private static final String ACCOUNT_RESPONSE_KEY = "accountResponse";
+
     private final TinkHttpClient httpClient;
     private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
     private final BpceGroupConfiguration bpceGroupConfiguration;
     private final String redirectUrl;
     private final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator;
     private final String userIpAddress;
+    private final TemporaryStorage tempStorage;
 
     public URL getAuthorizeUrl(String state) {
         return httpClient
@@ -117,7 +121,24 @@ public class BpceGroupApiClient implements FrAispApiClient {
         final RequestBuilder requestBuilder =
                 httpClient.request(createUrlWithBasePath(ENDPOINT_ACCOUNTS));
 
-        return sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, AccountsResponse.class);
+        AccountsResponse accountsResponse =
+                sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, AccountsResponse.class);
+
+        return storeAndGetAccountsResponse(accountsResponse);
+    }
+
+    public AccountsResponse fetchAccountsFromCacheIfPossible() {
+        final RequestBuilder requestBuilder =
+                httpClient.request(createUrlWithBasePath(ENDPOINT_ACCOUNTS));
+
+        return getStoredAccountResponse()
+                .orElseGet(
+                        () ->
+                                storeAndGetAccountsResponse(
+                                        sendRequestAndGetResponse(
+                                                requestBuilder,
+                                                HttpMethod.GET,
+                                                AccountsResponse.class)));
     }
 
     public BalancesResponse fetchBalances(String resourceId) {
@@ -215,5 +236,20 @@ public class BpceGroupApiClient implements FrAispApiClient {
         BpceErrorResponse bpceErrorResponse = response.getBody(BpceErrorResponse.class);
         return response.getStatus() == HttpStatus.SC_NOT_IMPLEMENTED
                 && bpceErrorResponse.isNotImplemented();
+    }
+
+    /**
+     * To avoid double calling for accounts in cases when user is requesting refresh for all
+     * refreshable items, we need to store it temporarily as it will contain all accounts (checking,
+     * savings, cards etc.) anyway. This is preventing us as well against TMRQ error which we can
+     * hit as BPCE have specific calculation for access without PSU being present.
+     */
+    private AccountsResponse storeAndGetAccountsResponse(AccountsResponse accountsResponse) {
+        tempStorage.put(ACCOUNT_RESPONSE_KEY, accountsResponse);
+        return accountsResponse;
+    }
+
+    private Optional<AccountsResponse> getStoredAccountResponse() {
+        return tempStorage.get(ACCOUNT_RESPONSE_KEY, AccountsResponse.class);
     }
 }

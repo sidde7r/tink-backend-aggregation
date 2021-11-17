@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.rpc.BalancesResponse;
@@ -36,16 +37,20 @@ public class BpceGroupTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchAccounts() {
+    public void shouldFetchAccountsTwice() {
         // given
         when(bpceGroupApiClientMock.fetchAccounts()).thenReturn(getAccountsResponse());
+        when(bpceGroupApiClientMock.fetchAccountsFromCacheIfPossible())
+                .thenReturn(getAccountsResponse());
 
         // when
         final Collection<TransactionalAccount> result =
                 bpceGroupTransactionalAccountFetcher.fetchAccounts();
 
         // then
-        verify(bpceGroupApiClientMock, times(2)).fetchAccounts();
+        InOrder inOrder = Mockito.inOrder(bpceGroupApiClientMock);
+        inOrder.verify(bpceGroupApiClientMock).fetchAccountsFromCacheIfPossible();
+        inOrder.verify(bpceGroupApiClientMock).fetchAccounts();
         verify(bpceGroupApiClientMock).recordCustomerConsent(any());
         verify(bpceGroupApiClientMock).fetchBalances(RESOURCE_ID);
         assertThat(result).hasSize(1);
@@ -56,13 +61,15 @@ public class BpceGroupTransactionalAccountFetcherTest {
         // given
         when(bpceGroupApiClientMock.fetchAccounts())
                 .thenReturn(getAccountsResponseForCardAccount());
+        when(bpceGroupApiClientMock.fetchAccountsFromCacheIfPossible())
+                .thenReturn(getAccountsResponseForCardAccount());
 
         // when
         final Collection<TransactionalAccount> result =
                 bpceGroupTransactionalAccountFetcher.fetchAccounts();
 
         // then
-        verify(bpceGroupApiClientMock).fetchAccounts();
+        verify(bpceGroupApiClientMock).fetchAccountsFromCacheIfPossible();
         verify(bpceGroupApiClientMock, never()).recordCustomerConsent(any());
         verify(bpceGroupApiClientMock, never()).fetchBalances(RESOURCE_ID);
         assertThat(result).isEmpty();
@@ -73,13 +80,15 @@ public class BpceGroupTransactionalAccountFetcherTest {
         // given
         when(bpceGroupApiClientMock.fetchAccounts())
                 .thenReturn(getAccountsResponseWhenNoConsentIsNeeded());
+        when(bpceGroupApiClientMock.fetchAccountsFromCacheIfPossible())
+                .thenReturn(getAccountsResponseWhenNoConsentIsNeeded());
 
         // when
         final Collection<TransactionalAccount> result =
                 bpceGroupTransactionalAccountFetcher.fetchAccounts();
 
         // then
-        verify(bpceGroupApiClientMock).fetchAccounts();
+        verify(bpceGroupApiClientMock).fetchAccountsFromCacheIfPossible();
         verify(bpceGroupApiClientMock, never()).recordCustomerConsent(any());
         verify(bpceGroupApiClientMock).fetchBalances(RESOURCE_ID);
         ArrayList<TransactionalAccount> transactionalAccounts = new ArrayList<>(result);

@@ -28,6 +28,8 @@ public class BpceGroupCreditCardFetcherTest {
 
         // given
         when(apiClient.fetchAccounts()).thenReturn(getAccountsResponseForCardAccount());
+        when(apiClient.fetchAccountsFromCacheIfPossible())
+                .thenReturn(getAccountsResponseForCardAccount());
 
         // when
         Collection<CreditCardAccount> result = fetcher.fetchAccounts();
@@ -41,6 +43,7 @@ public class BpceGroupCreditCardFetcherTest {
 
         // given
         when(apiClient.fetchAccounts()).thenReturn(getMultipleAccounts());
+        when(apiClient.fetchAccountsFromCacheIfPossible()).thenReturn(getMultipleAccounts());
 
         // when
         Collection<CreditCardAccount> result = fetcher.fetchAccounts();
