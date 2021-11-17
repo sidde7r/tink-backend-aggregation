@@ -31,6 +31,8 @@ java_library(
         "//src/libraries/account_data_cache",
         "//src/libraries/agent-storage",
         "//src/libraries/i18n",
+        "//src/libraries/serialization",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_findbugs_jsr305",

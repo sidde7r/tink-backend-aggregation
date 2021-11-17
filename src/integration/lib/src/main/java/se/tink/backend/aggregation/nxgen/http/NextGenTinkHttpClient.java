@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -107,6 +108,7 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificates
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.VerifyHostname;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.har_logger.src.model.HarEntry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -134,6 +136,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private LoggingStrategy loggingStrategy = LoggingStrategy.DEFAULT;
     private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
+    private final Consumer<HarEntry> harEntryConsumer;
 
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
     private ExecutionTimeLoggingFilter executionTimeLoggingFilter;
@@ -245,6 +248,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
         this.rawHttpTrafficLogger = builder.getRawHttpTrafficLogger();
         this.jsonHttpTrafficLogger = builder.getJsonHttpTrafficLogger();
+        this.harEntryConsumer = builder.getHarEntryConsumer();
 
         this.aggregatorIdentifier =
                 Optional.ofNullable(builder.getAggregatorIdentifier())
@@ -297,6 +301,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private final LoggingMode loggingMode;
         private RawHttpTrafficLogger rawHttpTrafficLogger;
         private JsonHttpTrafficLogger jsonHttpTrafficLogger;
+        private Consumer<HarEntry> harEntryConsumer;
 
         private String aggregatorIdentifier;
         private SignatureKeyPair signatureKeyPair;
@@ -393,19 +398,21 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     private void setupLogging() {
-        if (loggingStrategy == LoggingStrategy.DEFAULT) {
-            setupDefaultLogging();
-            return;
+        switch (loggingStrategy) {
+            case DEFAULT:
+                setupDefaultLogging();
+                break;
+            case EXPERIMENTAL:
+                setupExperimentalLogging();
+                break;
+            case DISABLED:
+                log.info("Default logging disabled");
+                break;
+            default:
+                log.warn("Unexpected logging strategy: {}", loggingStrategy);
         }
-        if (loggingStrategy == LoggingStrategy.EXPERIMENTAL) {
-            setupExperimentalLogging();
-            return;
-        }
-        if (loggingStrategy == LoggingStrategy.DISABLED) {
-            log.info("Default logging disabled");
-            return;
-        }
-        log.warn("Unexpected logging strategy: {}", loggingStrategy);
+
+        requestExecutor.setHarEntryConsumer(this.harEntryConsumer);
     }
 
     private void setupDefaultLogging() {

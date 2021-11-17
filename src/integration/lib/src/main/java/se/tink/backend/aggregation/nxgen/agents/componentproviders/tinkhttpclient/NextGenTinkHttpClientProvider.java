@@ -47,6 +47,7 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
                         .setAggregatorIdentifier(aggregatorIdentifier)
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setJsonHttpTrafficLogger(context.getJsonHttpTrafficLogger())
+                        .setHarEntryConsumer(context.getHarLogCollector())
                         .setSignatureKeyPair(signatureKeyPair)
                         .build();
 

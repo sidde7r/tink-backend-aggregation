@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.RawBank
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
 import se.tink.libraries.unleash.UnleashClient;
 import src.libraries.interaction_counter.InteractionCounter;
 import src.libraries.interaction_counter.local.LocalInteractionCounter;
@@ -35,6 +36,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     private LogMasker logMasker;
     private RawHttpTrafficLogger rawHttpTrafficLogger;
     private JsonHttpTrafficLogger jsonHttpTrafficLogger;
+    private HarLogCollector harLogCollector;
     protected RawBankDataEventAccumulator rawBankDataEventAccumulator;
     protected String correlationId;
     private RefreshableItem refreshableItemInProgress;
@@ -200,6 +202,16 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public void setJsonHttpTrafficLogger(JsonHttpTrafficLogger jsonHttpTrafficLogger) {
         this.jsonHttpTrafficLogger = jsonHttpTrafficLogger;
+    }
+
+    @Override
+    public HarLogCollector getHarLogCollector() {
+        return harLogCollector;
+    }
+
+    @Override
+    public void setHarLogCollector(HarLogCollector harLogCollector) {
+        this.harLogCollector = harLogCollector;
     }
 
     @Override

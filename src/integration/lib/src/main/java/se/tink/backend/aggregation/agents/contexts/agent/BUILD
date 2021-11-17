@@ -21,6 +21,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/interaction_counter",
         "//src/libraries/interaction_counter/local",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_google_guava_guava",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/unleash",
