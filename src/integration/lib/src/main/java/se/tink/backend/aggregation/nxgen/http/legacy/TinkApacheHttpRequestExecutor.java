@@ -13,7 +13,9 @@ import io.opentracing.propagation.TextMap;
 import io.opentracing.tag.Tags;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
@@ -23,6 +25,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -46,8 +49,11 @@ import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtBodyEntity;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtHeaderEntity;
 import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultApacheRequestLoggingAdapter;
+import se.tink.backend.aggregation.nxgen.http.log.adapter.TinkApacheHttpRequestLoggingAdapter;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
+import se.tink.libraries.har_logger.src.model.HarEntry;
+import se.tink.libraries.har_logger.src.model.HarRequest;
 import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.tracing.lib.api.Tracing;
@@ -112,6 +118,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
     private Span span;
     private Scope scope;
+    private Consumer<HarEntry> harEntryConsumer;
 
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
         this.eidasProxyConfiguration = eidasProxyConfiguration;
@@ -149,6 +156,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         this.requestLoggingAdapter = requestLoggingAdapter;
     }
 
+    public void setHarEntryConsumer(Consumer<HarEntry> harEntryConsumer) {
+        this.harEntryConsumer = harEntryConsumer;
+    }
+
     @Override
     public HttpResponse execute(HttpRequest request, HttpClientConnection conn, HttpContext context)
             throws IOException, HttpException {
@@ -172,12 +183,33 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         if (shouldUseEidasProxy) {
             try {
                 createClientTraceSpan(request);
-                return super.execute(request, conn, context);
+                return executeAndLogHar(request, conn, context);
             } finally {
                 endTraceSpan();
             }
         }
-        return super.execute(request, conn, context);
+
+        return executeAndLogHar(request, conn, context);
+    }
+
+    private HttpResponse executeAndLogHar(
+            HttpRequest request, HttpClientConnection conn, HttpContext context)
+            throws IOException, HttpException {
+        HttpResponse response = null;
+        final Instant requestTime = Instant.now();
+        Instant responseTime = null;
+        try {
+            response = super.execute(request, conn, context);
+            responseTime = Instant.now();
+            return response;
+        } finally {
+            if (responseTime == null) {
+                responseTime = Instant.now();
+            }
+            if (!isHttpProxyRequest(request)) {
+                logHar(request, requestTime, response, responseTime);
+            }
+        }
     }
 
     private void addEidasProxyHeaders(HttpRequest request) {
@@ -379,6 +411,31 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private void log(HttpRequest httpRequest) {
         if (requestLoggingAdapter != null) {
             requestLoggingAdapter.logRequest(httpRequest);
+        }
+    }
+
+    private void logHar(
+            HttpRequest request, Instant requestTime, HttpResponse response, Instant responseTime) {
+        if (harEntryConsumer == null) {
+            return;
+        }
+        try {
+            final long responseTimeElapsed = ChronoUnit.MILLIS.between(requestTime, responseTime);
+            final HarRequest harRequest =
+                    TinkApacheHttpRequestLoggingAdapter.mapRequest(request, requestTime);
+            final HarEntry entry;
+            if (response == null) {
+                entry = new HarEntry(harRequest, responseTimeElapsed);
+            } else {
+                entry =
+                        new HarEntry(
+                                harRequest,
+                                TinkApacheHttpRequestLoggingAdapter.mapResponse(response),
+                                responseTimeElapsed);
+            }
+            harEntryConsumer.accept(entry);
+        } catch (RuntimeException | IOException e) {
+            log.error("Error logging HAR entry", e);
         }
     }
 
