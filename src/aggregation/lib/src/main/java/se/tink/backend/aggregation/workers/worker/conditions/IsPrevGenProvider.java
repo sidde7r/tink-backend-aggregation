@@ -4,7 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
+import se.tink.backend.aggregation.agents.agentfactory.impl.AgentClassFactory;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 
 public class IsPrevGenProvider implements Predicate<Provider> {

@@ -8,7 +8,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/impl",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/module",

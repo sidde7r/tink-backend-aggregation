@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.agentfactory;
+package se.tink.backend.aggregation.agents.agentfactory.impl;
 
 import com.google.inject.Inject;
 import java.lang.reflect.Constructor;
@@ -9,7 +9,7 @@ public final class AgentFactoryUtils {
         throw new AssertionError();
     }
 
-    static boolean hasInjectAnnotatedConstructor(Class cls) {
+    public static boolean hasInjectAnnotatedConstructor(Class cls) {
 
         Constructor[] constructors = cls.getDeclaredConstructors();
         for (Constructor constructor : constructors) {

@@ -5,5 +5,6 @@ junit_test(
     srcs = glob(["*.java"]),
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/impl",
     ],
 )

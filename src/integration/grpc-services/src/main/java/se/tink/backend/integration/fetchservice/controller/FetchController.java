@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
+import se.tink.backend.aggregation.agents.agentfactory.impl.AgentClassFactory;
 import se.tink.backend.aggregation.agents.grpc.FakeIntegrationArgumentsCreator;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 

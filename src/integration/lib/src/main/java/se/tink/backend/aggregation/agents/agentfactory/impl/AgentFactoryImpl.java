@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.agentfactory;
+package se.tink.backend.aggregation.agents.agentfactory.impl;
 
 import com.google.common.base.Objects;
 import com.google.inject.Guice;

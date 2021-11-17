@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.framework.modules.wiremocked;
 
 import com.google.inject.AbstractModule;
-import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
-import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
+import se.tink.backend.aggregation.agents.agentfactory.impl.AgentFactoryImpl;
+import se.tink.backend.aggregation.agents.agentfactory.impl.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
