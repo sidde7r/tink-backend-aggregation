@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.agentfactory;
+package se.tink.backend.aggregation.agents.agentfactory.impl;
 
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.agent.Agent;

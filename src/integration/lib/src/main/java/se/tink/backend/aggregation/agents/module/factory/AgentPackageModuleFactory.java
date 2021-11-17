@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
+import se.tink.backend.aggregation.agents.agentfactory.impl.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.module.AgentComponentProviderModule;
 import se.tink.backend.aggregation.agents.module.AgentRequestScopeModule;

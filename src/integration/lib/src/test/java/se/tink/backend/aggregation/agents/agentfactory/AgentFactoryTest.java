@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.agentfactory;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.agentfactory.impl.AgentFactoryUtils;
 import se.tink.backend.aggregation.agents.agentfactory.testclasses.ClassWithInjectAnnotation;
 import se.tink.backend.aggregation.agents.agentfactory.testclasses.ClassWithNoInjectAnnotation;
 

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.agentfactory;
+package se.tink.backend.aggregation.agents.agentfactory.impl;
 
 import com.google.inject.Module;
 import java.util.Set;

@@ -16,7 +16,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/impl",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/loader",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/framework/validation",

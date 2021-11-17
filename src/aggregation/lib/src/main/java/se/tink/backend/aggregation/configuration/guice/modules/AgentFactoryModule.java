@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
-import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
+import se.tink.backend.aggregation.agents.agentfactory.impl.AgentFactoryImpl;
+import se.tink.backend.aggregation.agents.agentfactory.impl.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.agents.module.loader.AgentDependencyModuleLoader;
 import se.tink.backend.aggregation.agents.module.loader.AgentDependencyModuleLoaderForProduction;

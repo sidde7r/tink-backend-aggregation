@@ -13,6 +13,7 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/impl",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents",
         "//third_party:com_google_guava_guava",
     ],

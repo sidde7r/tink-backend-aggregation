@@ -10,6 +10,7 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/impl",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",

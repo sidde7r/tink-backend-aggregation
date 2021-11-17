@@ -30,6 +30,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/impl",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/testclasses",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/utils",
         "//src/integration/tpp_secrets_service/client",
