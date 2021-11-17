@@ -162,7 +162,9 @@ public class SdcApiClient {
                                 .queryParam(DATE_FROM, FORMATTER_DAILY.format(fromDate))
                                 .queryParam(DATE_TO, FORMATTER_DAILY.format(toDate))
                                 .get(TransactionsResponse.class)
-                                .setProviderMarket(providerMarket));
+                                .setProviderMarket(providerMarket)
+                                .setFromDate(fromDate)
+                                .setToDate(toDate));
     }
 
     private RequestBuilder createRequestInSession(URL url) {
