@@ -1,0 +1,97 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "IT91P0300203280746638577617",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 1029.37,
+                "exactValue": 1029.37,
+                "scale": 2,
+                "unscaledValue": 102937
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 1029.37,
+                "exactValue": 1029.37,
+                "scale": 2,
+                "unscaledValue": 102937
+            },
+            "bankId": "IT91P0300203280746638577617",
+            "excluded": false,
+            "favored": false,
+            "name": "Conto Corrente Arancio",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"bban://P0300203280746638577617\",\"iban://IT91P0300203280746638577617\"]",
+            "closed": false,
+            "holderName": "Name Surname",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Name Surname",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "Secondname Secondsurname",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "Thirdname Thirdsurname",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 1029.37
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -16.8,
+            "date": 1636455600000,
+            "description": "1234 transaction remittanceinfo unnnnstructured    anoother",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "ASSICURAZIONE VITA E INV",
+                "MESSAGE": "1234 transaction remittanceinfo unnnnstructured    anoother",
+                "TRANSFER_ACCOUNT_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.5,
+            "date": 1636369200000,
+            "description": "1234 transaction remittanceinfo unnnnstructured",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "Canone annuo tenuta del conto",
+                "MESSAGE": "1234 transaction remittanceinfo unnnnstructured",
+                "TRANSFER_ACCOUNT_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}

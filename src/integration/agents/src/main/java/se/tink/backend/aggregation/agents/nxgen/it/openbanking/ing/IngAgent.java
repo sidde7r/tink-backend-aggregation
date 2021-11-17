@@ -5,6 +5,10 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
@@ -13,6 +17,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
@@ -24,6 +29,9 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
         })
 public final class IngAgent extends IngBaseAgent {
 
+    private static final Pattern HOLDER_NAME_SPLITTER =
+            Pattern.compile("[,;]", Pattern.CASE_INSENSITIVE);
+
     @Inject
     public IngAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
@@ -32,6 +40,15 @@ public final class IngAgent extends IngBaseAgent {
     @Override
     public LocalDate earliestTransactionHistoryDate() {
         // All transaction information since the payment account was opened
-        return LocalDate.now().minusYears(7);
+        return localDateTimeSource.now(ZoneId.of("CET")).toLocalDate().minusYears(7);
+    }
+
+    @Override
+    public List<Party> convertHolderNamesToParties(String holderNames) {
+        return HOLDER_NAME_SPLITTER
+                .splitAsStream(holderNames)
+                .map(String::trim)
+                .map(name -> new Party(name, Party.Role.HOLDER))
+                .collect(Collectors.toList());
     }
 }

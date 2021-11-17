@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -130,6 +131,7 @@ public class AccountEntity {
                                         .withAccountNumber(iban)
                                         .withAccountName(product)
                                         .addIdentifier(new IbanIdentifier(iban))
+                                        .addIdentifier(new BbanIdentifier(iban.substring(4)))
                                         .build())
                         .addParties(marketConfiguration.convertHolderNamesToParties(name))
                         .setApiIdentifier(resourceId)
