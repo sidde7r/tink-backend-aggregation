@@ -22,7 +22,7 @@ public class DanskebankAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-danskebank-oauth2")
-                .loadCredentialsBefore(false)
+                .loadCredentialsBefore(true)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())

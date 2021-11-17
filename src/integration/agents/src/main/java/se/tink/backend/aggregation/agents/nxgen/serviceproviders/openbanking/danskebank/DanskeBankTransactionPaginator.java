@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
-import java.lang.invoke.MethodHandles;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.TransactionConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -32,9 +31,6 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
     private static final int RETRY_FAILED_TRANSACTION_MAX_ATTEMPTS = 3;
     private final RetryExecutor retryExecutor = new RetryExecutor();
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     DanskeBankTransactionPaginator(
             AgentComponentProvider componentProvider,
@@ -89,7 +85,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
             return TransactionKeyPaginatorResponseImpl.createEmpty();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
-                return recover401Or403ResponseErrorStatus(account, e);
+                return recover401Or403ResponseErrorStatus(account, key, e);
             }
             throw e;
         }
@@ -111,18 +107,24 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
 
     @Override
     protected TransactionKeyPaginatorResponse<String> recover401Or403ResponseErrorStatus(
-            S account, HttpResponseException e) {
-        String key;
-        logger.error(
-                "Trying to fetch transactions again for last 89 days. Got 401 in previous request",
-                e);
+            S account, String key, HttpResponseException e) {
 
-        key =
-                ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
-                                account.getApiIdentifier())
-                        + FROM_BOOKING_DATE_TIME
-                        + ISO_OFFSET_DATE_TIME.format(
-                                localDateTimeSource.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+        if (isFirstPage()) {
+            key =
+                    ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
+                                    account.getApiIdentifier())
+                            + FROM_BOOKING_DATE_TIME
+                            + ISO_OFFSET_DATE_TIME.format(
+                                    localDateTimeSource
+                                            .now(Time.DEFAULT_ZONE_ID)
+                                            .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+        }
+        log.warn(
+                "Retry fetching transactions for key {}. Got {} in previous request with the below exception\n{}",
+                key,
+                e.getResponse().getStatus(),
+                ExceptionUtils.getStackTrace(e));
+
         return fetchTransactions(account, key);
     }
 }

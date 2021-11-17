@@ -60,7 +60,7 @@ public class MonzoTransactionPaginator<T, S extends Account>
             return fetchTransactions(account, key);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
-                return recover401Or403ResponseErrorStatus(account, e);
+                return recover401Or403ResponseErrorStatus(account, key, e);
             }
             throw e;
         }

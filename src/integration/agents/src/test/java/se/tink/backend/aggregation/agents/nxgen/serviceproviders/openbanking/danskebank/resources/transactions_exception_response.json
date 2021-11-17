@@ -1,0 +1,10 @@
+{
+  "Code": "403 Forbidden",
+  "Message": "Reauthenticate",
+  "Errors": [
+    {
+      "ErrorCode": "UK.OBIE.Reauthenticate",
+      "Message": "Reauthentication required to process the request."
+    }
+  ]
+}

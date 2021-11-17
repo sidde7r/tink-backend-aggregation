@@ -33,6 +33,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
         "//src/libraries/agent-storage",

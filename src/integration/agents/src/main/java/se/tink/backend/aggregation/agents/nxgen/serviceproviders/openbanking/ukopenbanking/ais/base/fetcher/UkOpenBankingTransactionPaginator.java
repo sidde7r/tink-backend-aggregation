@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_OFFSET;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_ZONE_ID;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -107,7 +108,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             return fetchTransactions(account, key);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
-                return recover401Or403ResponseErrorStatus(account, e);
+                return recover401Or403ResponseErrorStatus(account, key, e);
             }
             throw e;
         }
@@ -123,30 +124,38 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         return response;
     }
 
+    /**
+     * Sometimes during fetching transactions, we can receive 401 or 403 error responses for the
+     * second or third requests (I mean `nextPage` requests) and it is a cause of duplicated
+     * transactions because collecting transactions we keep on the higher level and we are not able
+     * to check if we have duplicated transactions so we decided to prepare retry with the last used
+     * key. But if it will be the first request for example for 23 months and we will receive 401 or
+     * 403 error code then we prepare a new request for the last 90 days of transactions.
+     */
     protected TransactionKeyPaginatorResponse<String> recover401Or403ResponseErrorStatus(
-            AccountType account, HttpResponseException e) {
-        /*
-        There will be cases when credentials are already created and we try to use refresh tokens
-        to fetch the transactions. Since the call to fetchTransactions will try to fetch
-        transactions for last 23 months and this might result in 401 so if that is the case then
-        we should try to fetch the transactions for last 89 days which should work.
-        401 is to cover Danske as they send 401 instead of 403.
-         */
-        String key;
+            AccountType account, String key, HttpResponseException e) {
+        if (isFirstPage()) {
+            key =
+                    ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
+                                    account.getApiIdentifier())
+                            + FROM_BOOKING_DATE_TIME
+                            + ISO_OFFSET_DATE_TIME.format(
+                                    localDateTimeSource
+                                            .now(DEFAULT_ZONE_ID)
+                                            .atOffset(DEFAULT_OFFSET)
+                                            .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+        }
         log.warn(
-                "Trying to fetch transactions again for last 89 days. Got 401 in previous request \n{}",
+                "Retry fetching transactions for key {}. Got {} in previous request with the below exception\n{}",
+                key,
+                e.getResponse().getStatus(),
                 ExceptionUtils.getStackTrace(e));
 
-        key =
-                ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
-                                account.getApiIdentifier())
-                        + FROM_BOOKING_DATE_TIME
-                        + ISO_OFFSET_DATE_TIME.format(
-                                localDateTimeSource
-                                        .now()
-                                        .atOffset(DEFAULT_OFFSET)
-                                        .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
         return fetchTransactions(account, key);
+    }
+
+    protected boolean isFirstPage() {
+        return paginationCount == 1;
     }
 
     protected String initialisePaginationKeyIfNull(AccountType account, String key) {
