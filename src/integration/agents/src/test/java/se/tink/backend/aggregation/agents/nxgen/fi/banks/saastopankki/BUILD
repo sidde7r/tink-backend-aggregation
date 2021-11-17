@@ -25,7 +25,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/context",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/utils/currency",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/agents/agenttest",
         "//src/libraries/agent-storage",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:commons_io_commons_io",
