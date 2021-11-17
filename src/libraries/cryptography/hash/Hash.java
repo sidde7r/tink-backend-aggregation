@@ -11,6 +11,13 @@ import org.apache.commons.codec.binary.Hex;
 public class Hash {
 
     private static final Base64.Encoder BASE64 = Base64.getEncoder();
+    private static final String SHA1 = "SHA-1";
+    private static final String SHA256 = "SHA-256";
+    private static final String SHA512 = "SHA-512";
+    private static final String HMAC_SHA1 = "HmacSHA1";
+    private static final String HMAC_SHA256 = "HmacSHA256";
+    private static final String HMAC_SHA512 = "HmacSHA512";
+    private static final String MD5 = "MD5";
 
     private Hash() {}
 
@@ -25,7 +32,7 @@ public class Hash {
     }
 
     public static String sha1AsHex(final byte[]... datas) {
-        return Hex.encodeHexString(hashFunction("SHA-1", datas));
+        return Hex.encodeHexString(hashFunction(SHA1, datas));
     }
 
     public static String sha1AsHex(String data) {
@@ -33,7 +40,7 @@ public class Hash {
     }
 
     public static String sha256AsHex(final byte[]... datas) {
-        return Hex.encodeHexString(hashFunction("SHA-256", datas));
+        return Hex.encodeHexString(hashFunction(SHA256, datas));
     }
 
     public static String sha256AsHex(final String data) {
@@ -50,15 +57,15 @@ public class Hash {
      */
     @Deprecated
     public static byte[] sha256(final String data) {
-        return hashFunction("SHA-256", data.getBytes());
+        return hashFunction(SHA256, data.getBytes());
     }
 
     public static byte[] sha1(final byte[]... datas) {
-        return hashFunction("SHA-1", datas);
+        return hashFunction(SHA1, datas);
     }
 
     public static byte[] sha256(final byte[]... datas) {
-        return hashFunction("SHA-256", datas);
+        return hashFunction(SHA256, datas);
     }
 
     public static String sha256Base64(final byte[]... datas) {
@@ -70,31 +77,31 @@ public class Hash {
     }
 
     public static byte[] hmacSha1(byte[] key, byte[] data) {
-        return hmac("HmacSHA1", key, data);
+        return hmac(HMAC_SHA1, key, data);
     }
 
     public static byte[] hmacSha256(byte[] key, byte[] data) {
-        return hmac("HmacSHA256", key, data);
+        return hmac(HMAC_SHA256, key, data);
     }
 
     public static byte[] hmacSha512(byte[] key, byte[] data) {
-        return hmac("HmacSHA512", key, data);
+        return hmac(HMAC_SHA512, key, data);
     }
 
     public static byte[] sha512(final String data) {
-        return hashFunction("SHA-512", data.getBytes());
+        return hashFunction(SHA512, data.getBytes());
     }
 
     public static byte[] sha512(final byte[]... data) {
-        return hashFunction("SHA-512", data);
+        return hashFunction(SHA512, data);
     }
 
     public static byte[] md5(final String data) {
-        return hashFunction("MD5", data.getBytes());
+        return hashFunction(MD5, data.getBytes());
     }
 
     public static byte[] md5(final byte[]... datas) {
-        return hashFunction("MD5", datas);
+        return hashFunction(MD5, datas);
     }
 
     private static byte[] hashFunction(String algorithm, final byte[]... datas) {
