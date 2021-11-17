@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -27,6 +28,7 @@ public class LinksEntity {
     @JsonDeserialize(using = LinkDeserializer.class)
     private String scaOAuth;
 
+    @Setter
     @JsonDeserialize(using = LinkDeserializer.class)
     private String scaRedirect;
 

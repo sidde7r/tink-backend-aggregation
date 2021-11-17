@@ -38,6 +38,11 @@ public class SpardaRedirectHelperTest {
     public void setup() {
         mockAuthApiClient = mock(SpardaAuthApiClient.class);
         mockStorage = mock(SpardaStorage.class);
+        SpardaRedirectUrlBuilder urlBuilder =
+                new SpardaRedirectUrlBuilder(
+                        new MockRandomValueGenerator(),
+                        new StrongAuthenticationState(TEST_STATE),
+                        mockStorage);
 
         redirectHelper =
                 new SpardaRedirectHelper(
@@ -46,9 +51,8 @@ public class SpardaRedirectHelperTest {
                         null,
                         TEST_CLIENT_ID,
                         TEST_REDIRECT_URL,
-                        new StrongAuthenticationState(TEST_STATE),
                         new ConstantLocalDateTimeSource(),
-                        new MockRandomValueGenerator());
+                        urlBuilder);
     }
 
     @Test
