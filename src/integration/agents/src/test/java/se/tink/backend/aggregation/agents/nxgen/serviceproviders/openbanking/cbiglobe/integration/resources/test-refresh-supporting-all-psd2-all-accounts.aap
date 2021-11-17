@@ -76,7 +76,7 @@ RESPONSE 5
 200
 Content-Type: application/json
 
-{"accounts":[{"iban":"dummyIban","bban":"dummyBban","currency":"EUR","resourceId":"dummyAccountId","name":"dummyName","product":"dummyProduct","bic":"dummyBic","usage":"PRIV","_links":{"account":{"href":"/accounts/dummyResourceId"},"balances":{"href":"/accounts/dummyResourceId/balances"},"transactions":{"href":"/accounts/dummyResourceId/transactions"}}}]}
+{"accounts":[{"iban":"DE61500105174939947488","bban":"500105174939947488","currency":"EUR","resourceId":"dummyAccountId","name":"dummyName","product":"dummyProduct","bic":"dummyBic","usage":"PRIV","_links":{"account":{"href":"/accounts/dummyResourceId"},"balances":{"href":"/accounts/dummyResourceId/balances"},"transactions":{"href":"/accounts/dummyResourceId/transactions"}}}]}
 
 REQUEST 6
 GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/dummyAccountId/balances
@@ -90,7 +90,7 @@ RESPONSE 6
 200
 Content-Type: application/json
 
-{"account":{"iban":"dummyIban","bban":"dummyBban","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"authorised","referenceDate":"2020-11-30"},{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"closingBooked","referenceDate":"2020-11-30"},{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"expected","referenceDate":"2020-11-30"}]}
+{"account":{"iban":"DE61500105174939947488","bban":"500105174939947488","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"authorised","referenceDate":"2020-11-30"},{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"closingBooked","referenceDate":"2020-11-30"},{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"expected","referenceDate":"2020-11-30"}]}
 
 REQUEST 7
 GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.4.0/accounts/dummyAccountId/transactions?booking_status=both&offset=1
