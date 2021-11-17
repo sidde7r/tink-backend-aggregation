@@ -10,9 +10,4 @@ public interface AgentFactory {
     /** Creates an agent from a credentials request and an agent context. */
     Agent create(CredentialsRequest request, AgentContext context)
             throws ReflectiveOperationException;
-
-    /** Creates an agent from an agent class, a credentials request and an agent context. */
-    Agent create(
-            Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context)
-            throws ReflectiveOperationException;
 }

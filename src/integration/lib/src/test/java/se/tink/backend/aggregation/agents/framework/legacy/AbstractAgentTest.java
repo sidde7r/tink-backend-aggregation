@@ -149,8 +149,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
      */
     protected void testAgentPersistentLoggedIn(Credentials credentials) throws Exception {
         AgentTestContext testContext = new AgentTestContext(credentials);
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         Assert.assertTrue(agent instanceof PersistentLogin);
         PersistentLogin persistentAgent = (PersistentLogin) agent;
@@ -165,8 +164,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         // Create a new agent to simulate that we are creating the agent in another request
         persistentAgent =
                 (PersistentLogin)
-                        factory.create(
-                                cls, createRefreshInformationRequest(credentials), testContext);
+                        factory.create(createRefreshInformationRequest(credentials), testContext);
 
         persistentAgent.loadLoginSession();
 
@@ -181,8 +179,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
          * banks backend
          */
         AgentTestContext testContext = new AgentTestContext(credentials);
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         Assert.assertTrue(agent instanceof PersistentLogin);
         PersistentLogin persistentAgent = (PersistentLogin) agent;
@@ -196,7 +193,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         agent.logout();
 
         // Create a new agent to simulate that we are creating the agent in another request
-        agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        agent = factory.create(createRefreshInformationRequest(credentials), testContext);
         persistentAgent = (PersistentLogin) agent;
 
         // Load the invalid Session
@@ -225,8 +222,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
             Credentials credentials, Class<?> sessionType) throws Exception {
         AgentTestContext testContext = new AgentTestContext(credentials);
 
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         // Assert that we have some kind of session serialized
         Assert.assertNotNull(credentials.getPersistentSession(sessionType));
@@ -246,8 +242,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
             throws Exception {
         testContext = new AgentTestContext(credentials);
 
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         try {
             Assert.assertTrue("Agent could not login successfully", agent.login());
@@ -310,8 +305,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         AgentTestContext testContext = new AgentTestContext(credentials);
         testContext.setTestContext(true);
 
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         try {
             Assert.assertTrue("Agent could not login successfully", agent.login());
@@ -378,8 +372,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     protected void testAgentAuthenticationError(Credentials credentials) throws Exception {
         AgentTestContext testContext = new AgentTestContext(credentials);
 
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         try {
             Assert.assertFalse("Agent could not login successfully", agent.login());
@@ -398,8 +391,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         // Create a regular agent.
         AgentTestContext testContext = new AgentTestContext(credentials);
 
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         try {
             Assert.assertTrue("Agent could not login successfully", agent.login());
@@ -440,8 +432,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         // Create a regular agent.
 
         AgentTestContext testContext = new AgentTestContext(credentials);
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         try {
             Assert.assertTrue("Agent could not login successfully", agent.login());
@@ -478,8 +469,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
         AgentTestContext testContext = new AgentTestContext(credentials);
 
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
+        Agent agent = factory.create(createRefreshInformationRequest(credentials), testContext);
 
         SignableOperation signableOperation = new SignableOperation(transfer);
         try {

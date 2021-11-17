@@ -97,7 +97,7 @@ public class AgentFactoryImpl implements AgentFactory {
      *     exist, its {@link SignatureKeyPair } constructor.
      */
     @Deprecated
-    public Agent create(
+    private Agent create(
             Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context)
             throws ReflectiveOperationException {
 

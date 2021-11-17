@@ -12,11 +12,4 @@ public class FakeAgentFactoryImpl implements AgentFactory {
             throws ReflectiveOperationException {
         return null;
     }
-
-    @Override
-    public Agent create(
-            Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context)
-            throws ReflectiveOperationException {
-        return null;
-    }
 }

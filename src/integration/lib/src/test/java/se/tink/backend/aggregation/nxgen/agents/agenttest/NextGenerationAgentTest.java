@@ -56,6 +56,6 @@ public abstract class NextGenerationAgentTest<T extends NextGenerationAgent>
             throws Exception {
         testContext = new AgentTestContext(refreshInformationRequest.getCredentials());
         testContext.setTestContext(true);
-        return factory.create(cls, refreshInformationRequest, testContext);
+        return factory.create(refreshInformationRequest, testContext);
     }
 }
