@@ -35,6 +35,12 @@ public class LaBanquePostalePaymentSigner {
     }
 
     public void setPsuAuthenticationFactor(Map<String, String> callback) {
-        this.psuAuthenticationFactor = callback.get(PSU_AUTHORIZATION_FACTOR_KEY);
+        String psuAuthFactorKey = callback.get(PSU_AUTHORIZATION_FACTOR_KEY);
+        log.info(
+                "[PAYMENT SIGNER] Callback size {}. Is containing {}: {}",
+                callback.size(),
+                PSU_AUTHORIZATION_FACTOR_KEY,
+                callback.containsKey(PSU_AUTHORIZATION_FACTOR_KEY));
+        this.psuAuthenticationFactor = psuAuthFactorKey;
     }
 }
