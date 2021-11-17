@@ -83,7 +83,7 @@ public class RabobankWiremockTest {
         // and
         AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(path("agent-contract-simple.json"));
+                        .parseContractOnBasisOfFile(path("agent-contract-one-account.json"));
 
         // when
         agentWireMockRefreshTest.executeRefresh();
