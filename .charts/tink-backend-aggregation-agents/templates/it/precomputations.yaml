@@ -1,0 +1,14 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-precomputations-it
+  namespace: agents
+spec:
+  rules:
+
+    # Precompute IT metrics
+    - record: sum:all_manual_attempts:failed:delta4h:className
+      expr: sum by (className) (increase (tink_agent_login_total{ environment="production",market="IT", outcome="failed", action="login-manual"}[4h]))
+
+    - record: sum:className:production:login-manual:delta4h
+      expr: sum by (className) (increase (tink_agent_login_total{ environment="production",market="IT", action="login-manual"}[4h]))

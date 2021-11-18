@@ -173,6 +173,24 @@ spec:
           the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
+    - alert: manual_login_error_rate_over_50%_in_de
+      expr: |
+        ( sum:all_manual_attempts:failed:delta4h:className
+        / sum:className:production:login-manual:delta4h ) > 0.5
+        and sum:className:production:login-manual:delta4h > 20
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-nazguls
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+          {{ .Values.grafanaLink }}
+        summary: Manual login error rate more than 50% ( <{ $value * 100}> ) % for agent <{ $labels.className }>
+          the last 4 hours.
+        tags: {{ .Values.tags }}
+
+
     - alert: manual_login_error_rate_over_50%_due_to_bank_side_error_de
       expr: |
         (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action="login-manual"}[1h]))

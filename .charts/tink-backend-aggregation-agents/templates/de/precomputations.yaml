@@ -45,3 +45,9 @@ spec:
 
   - record: sum:className_type:not_partially_completed:delta60m
     expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m]))
+
+  - record: sum:all_manual_attempts:failed:delta4h:className
+    expr: sum by (className) (increase (tink_agent_login_total{ environment="production",market="DE", outcome="failed", action="login-manual"}[4h]))
+
+  - record: sum:className:production:login-manual:delta4h
+    expr: sum by (className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[4h]))
