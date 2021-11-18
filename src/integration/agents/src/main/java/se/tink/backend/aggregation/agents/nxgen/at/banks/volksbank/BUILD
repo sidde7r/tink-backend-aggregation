@@ -24,6 +24,7 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/encoding",
         "//src/libraries/strings",
+        "//third_party:com_google_inject_guice",
         "//third_party:commons_codec_commons_codec",
         "//third_party:org_jsoup_jsoup",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
