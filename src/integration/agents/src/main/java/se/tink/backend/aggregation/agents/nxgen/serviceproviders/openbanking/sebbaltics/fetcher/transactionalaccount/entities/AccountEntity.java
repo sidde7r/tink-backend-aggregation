@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsConstants.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -30,17 +29,10 @@ public class AccountEntity {
     private LinkEntity links;
 
     public Optional<TransactionalAccount> toTinkAccount(SebBalticsApiClient apiClient) {
-        return (cashAccountType.toLowerCase().contains(AccountTypes.CURRENT))
-                ? parseAccount(TransactionalAccountType.CHECKING, apiClient)
-                : parseAccount(TransactionalAccountType.SAVINGS, apiClient);
-    }
-
-    private Optional<TransactionalAccount> parseAccount(
-            TransactionalAccountType accountType, SebBalticsApiClient apiClient) {
         List<BalanceEntity> balances = apiClient.fetchAccountBalances(resourceId).getBalances();
 
         return TransactionalAccount.nxBuilder()
-                .withType(accountType)
+                .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
                 .withBalance(getBalanceModule(balances))
                 .withId(
