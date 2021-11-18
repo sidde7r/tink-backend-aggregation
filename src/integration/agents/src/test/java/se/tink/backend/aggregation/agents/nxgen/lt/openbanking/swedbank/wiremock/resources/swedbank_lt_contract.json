@@ -10,6 +10,13 @@
       "doubleValue" : 894.83
     },
     "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 29483,
+      "exactValue" : 294.83,
+      "doubleValue" : 294.83
+    },
     "bankId" : "LT681234598765432108",
     "excluded" : false,
     "favored" : false,
@@ -19,7 +26,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[\"iban://LT681234598765432108\"]",
+    "identifiers" : "[\"iban://HABALT22/LT681234598765432108\",\"iban://LT681234598765432108\"]",
     "closed" : false,
     "accountHolder" : {
       "accountId" : null,
@@ -41,6 +48,13 @@
       "doubleValue" : 503.53
     },
     "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 50353,
+      "exactValue" : 503.53,
+      "doubleValue" : 503.53
+    },
     "bankId" : "LT411234598765432109",
     "excluded" : false,
     "favored" : false,
@@ -50,7 +64,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[\"iban://LT411234598765432109\"]",
+    "identifiers" : "[\"iban://HABALT22/LT411234598765432109\",\"iban://LT411234598765432109\"]",
     "closed" : false,
     "accountHolder" : {
       "accountId" : null,
@@ -87,6 +101,7 @@
         "instant" : null
       }
     } ],
+    "transactionReference" : "2021061112345687-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -1145.0,
@@ -113,6 +128,8 @@
         "instant" : null
       }
     } ],
+    "merchantName" : "Owner name",
+    "transactionReference" : "2021061112345687-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -500.0,
@@ -139,6 +156,8 @@
         "instant" : null
       }
     } ],
+    "merchantName" : "Owner name",
+    "transactionReference" : "202106111234568d-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -711.36,
@@ -165,6 +184,8 @@
         "instant" : null
       }
     } ],
+    "merchantName" : "RIMAS LITVINAS",
+    "transactionReference" : "202106151234568-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -475.26,
@@ -191,6 +212,8 @@
         "instant" : null
       }
     } ],
+    "merchantName" : "RIMAS LITVINAS",
+    "transactionReference" : "202106151234568-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -0.7,
@@ -217,6 +240,7 @@
         "instant" : null
       }
     } ],
+    "transactionReference" : "202109041234568-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -30.0,
@@ -243,6 +267,8 @@
         "instant" : null
       }
     } ],
+    "merchantName" : "SWEDBANK LIFE INSURANCE SE LIETUVOS FILIALAS",
+    "transactionReference" : "202109051234568-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -98.26,
@@ -269,6 +295,7 @@
         "instant" : null
       }
     } ],
+    "transactionReference" : "202109061234568-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -1880.0,
@@ -295,6 +322,7 @@
         "instant" : null
       }
     } ],
+    "transactionReference" : "202109081234568-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -329.0,
@@ -321,6 +349,7 @@
         "instant" : null
       }
     } ],
+    "transactionReference" : "202109081234568-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -141.0,
@@ -347,6 +376,7 @@
         "instant" : null
       }
     } ],
+    "transactionReference" : "202109081234568-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -330.1,
@@ -373,6 +403,8 @@
         "instant" : null
       }
     } ],
+    "merchantName" : "USER NAME",
+    "transactionReference" : "2021070512345678-1",
     "providerMarket" : "LT"
   }, {
     "amount" : 660.2,
@@ -399,6 +431,7 @@
         "instant" : null
       }
     } ],
+    "transactionReference" : "2021070512345678-1",
     "providerMarket" : "LT"
   }, {
     "amount" : -35.27,
@@ -425,6 +458,7 @@
         "instant" : null
       }
     } ],
+    "transactionReference" : "2021080712345678-1",
     "providerMarket" : "LT"
   } ]
 }
