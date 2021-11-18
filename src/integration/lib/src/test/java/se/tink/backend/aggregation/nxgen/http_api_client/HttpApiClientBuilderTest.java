@@ -14,15 +14,14 @@ import java.util.Map;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
-import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
 import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableKey;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
 
 public class HttpApiClientBuilderTest {
 
@@ -61,8 +60,7 @@ public class HttpApiClientBuilderTest {
                         .setEidasIdentity(eidasIdentity)
                         .setEidasProxyConfiguration(eidasProxyConfiguration)
                         .setLogMasker(new FakeLogMasker())
-                        .setRawHttpTrafficLogger(
-                                mock(RawHttpTrafficLogger.class, Answers.RETURNS_DEEP_STUBS))
+                        .setHarEntryConsumer(new HarLogCollector())
                         .setAggregator(AggregatorInfo.getAggregatorForTesting())
                         .setUseEidasProxy(false);
     }
