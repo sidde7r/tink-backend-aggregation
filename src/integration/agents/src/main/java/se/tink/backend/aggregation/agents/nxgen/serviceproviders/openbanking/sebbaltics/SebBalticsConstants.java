@@ -103,5 +103,7 @@ public class SebBalticsConstants {
     public static class TransactionType {
         public static final String UPCOMING = "upcoming";
         public static final String RESERVED = "reserved";
+        public static final String DEBIT = "debit";
+        public static final String CREDIT = "credit";
     }
 }
