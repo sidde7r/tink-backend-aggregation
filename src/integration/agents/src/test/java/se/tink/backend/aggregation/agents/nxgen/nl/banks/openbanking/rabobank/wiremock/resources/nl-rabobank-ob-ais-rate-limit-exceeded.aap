@@ -1,0 +1,118 @@
+
+------------------------------------------------------------------
+REQUEST 1
+GET https://somehost/openapi/oauth2/consents/fffff
+Accept: application/json
+
+------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+  "consentId": "fffff",
+  "status": "valid",
+  "validUntil": "2021-04-12",
+  "access": {
+    "ais.balances.read": [
+      {
+        "iban": "NL30RABO0000000000",
+        "currency": "EUR"
+      }
+    ],
+    "ais.transactions.read-90days": [
+      {
+        "iban": "NL30RABO0000000000",
+        "currency": "EUR"
+      }
+    ],
+    "ais.transactions.read-history": [
+      {
+        "iban": "NL30RABO0000000000",
+        "currency": "EUR"
+      }
+    ]
+  }
+}
+
+------------------------------------------------------------------
+REQUEST 2
+GET https://api.rabobank.nl/openapi/payments/account-information/ais/accounts
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json
+
+{
+  "accounts": [
+    {
+      "resourceId": "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2",
+      "iban": "NL30RABO0000000000",
+      "currency": "EUR",
+      "status": "enabled",
+      "ownerName": "Monty Python",
+      "_links": {
+        "balances": {
+          "href": "/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/balances"
+        },
+        "transactions": {
+          "href": "/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/transactions"
+        }
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://somehost/openapi/payments/account-information/ais/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/balances
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET should-retry
+429
+Content-Type: application/problem+json
+
+{
+  "httpcode": "429",
+  "httpmessage": "too many requests",
+  "moreinformation": "rate limit exceeded"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH should-retry
+GET https://somehost/openapi/payments/account-information/ais/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/balances
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"account":{"iban":"NL30RABO0000000000","currency":"EUR"},"balances":[{"balanceAmount":{"amount":"0.01","currency":"EUR"},"balanceType":"expected","lastChangeDateTime":"1992-01-05T19:56:43.861Z"}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://somehost/openapi/payments/account-information/ais/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/transactions?bookingStatus=booked&dateFrom=1992-01-11T23%3A00%3A00.000Z&dateTo=1992-04-09T22%3A00%3A00.000Z&size=500
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json
+
+{"account":{"iban":"NL30RABO0000000000","currency":"EUR"},"transactions":{"booked":[{"entryReference":"757","bookingDate":"2021-04-12","valueDate":"2021-04-12","transactionAmount":{"currency":"EUR","amount":"-4.15"},"creditorAccount":{},"creditorName":"Bakkerij Nieuw Fes ROTTERDAM","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Betaalautomaat 15:39 pasnr. 011","raboBookingDateTime":"2021-04-12T13:39:22.190024Z","raboDetailedTransactionType":"2","raboTransactionTypeName":"bc"},{"entryReference":"756","endToEndId":"6493.14388248","mandateId":"ALL0012937194.01","creditorId":"NL66ZZZ290379290000","bookingDate":"2021-04-07","valueDate":"2021-04-07","transactionAmount":{"currency":"EUR","amount":"-6.33"},"creditorAccount":{"iban":"NL67INGB0005338373"},"creditorName":"Allianz Direct","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Kenmerk: 2000000036280197 / Periode: 2021-04-01 - 2021-05-01 / NL71RABO0346234166","raboBookingDateTime":"2021-04-07T06:50:36.401925Z","raboDetailedTransactionType":"64","raboTransactionTypeName":"ei"},{"entryReference":"755","endToEndId":"06-04-2021 16:00 0050005369130938","bookingDate":"2021-04-06","valueDate":"2021-04-07","transactionAmount":{"currency":"EUR","amount":"-60.0"},"creditorAccount":{"iban":"NL05INGB0702278378"},"creditorName":"Wehkamp Finance","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"72000000000000000523876330071171476 0050005369130938 72000000000000000523876330071171476 Wehkamp Finance x4166 pasnr.011","purposeCode":"EPAY","raboBookingDateTime":"2021-04-06T14:01:25.252768Z","raboDetailedTransactionType":"25","raboTransactionTypeName":"id"},{"entryReference":"754","endToEndId":"000000048673181","bookingDate":"2021-04-06","valueDate":"2021-04-06","transactionAmount":{"currency":"EUR","amount":"120.0"},"creditorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"debtorAccount":{"iban":"NL69ABNA0644512326"},"debtorName":"GEM RDAM SERVICEORG","remittanceInformationUnstructured":"Akin, HA. 1122864 Individuele InkomensToeslag","raboBookingDateTime":"2021-04-06T13:58:08.344471Z","raboDetailedTransactionType":"541","raboTransactionTypeName":"cb"},{"entryReference":"753","bookingDate":"2021-04-02","valueDate":"2021-04-01","transactionAmount":{"currency":"EUR","amount":"-1.9"},"creditorAccount":{},"creditorName":"Kosten","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Rabo DirectPakket                  Periode 01-04-2021 t/m 30-04-2021","raboBookingDateTime":"2021-04-02T11:51:20.274486Z","raboDetailedTransactionType":"93","raboTransactionTypeName":"db"},{"entryReference":"752","endToEndId":"TK00303671","mandateId":"MANIJS009396","creditorId":"NL18ZZZ241082910000","bookingDate":"2021-04-01","valueDate":"2021-04-01","transactionAmount":{"currency":"EUR","amount":"-752.68"},"creditorAccount":{"iban":"NL42RABO0330574426"},"creditorName":"Stichting Woonbron","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Incasso  Huur Periode: 01-04-2021 tot 01-05-2021","raboBookingDateTime":"2021-04-01T02:12:05.408337Z","raboDetailedTransactionType":"65","raboTransactionTypeName":"ei"},{"entryReference":"751","bookingDate":"2021-03-31","valueDate":"2021-03-31","transactionAmount":{"currency":"EUR","amount":"-1.0"},"creditorAccount":{},"creditorName":"CCV*CIGO KOP VAN ZUID ROTTERDAM","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Betaalautomaat 16:01 pasnr. 011    Apple Pay","raboBookingDateTime":"2021-03-31T14:01:57.143176Z","raboDetailedTransactionType":"2","raboTransactionTypeName":"bc"},{"entryReference":"750","endToEndId":"90044004","mandateId":"6337215","creditorId":"NL97ZZZ534852620000","bookingDate":"2021-03-31","valueDate":"2021-03-31","transactionAmount":{"currency":"EUR","amount":"-50.0"},"creditorAccount":{"iban":"NL86ABNA0511919131"},"creditorName":"BUDGETENERGIE B V","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Termijn april (kenmerk: 1200-0000-0420-7848)","raboBookingDateTime":"2021-03-31T06:44:14.415402Z","raboDetailedTransactionType":"64","raboTransactionTypeName":"ei"},{"entryReference":"749","endToEndId":"2021-03-24T18:18:57-000000000000024","mandateId":"2019100001","creditorId":"NL68ZZZ411333400000","bookingDate":"2021-03-26","valueDate":"2021-03-26","transactionAmount":{"currency":"EUR","amount":"-10.0"},"creditorAccount":{"iban":"NL81INGB0004332134"},"creditorName":"STICHTING AKTIEF ORANJEBOOM","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"GIFT MAART 2021","raboBookingDateTime":"2021-03-26T07:09:03.151375Z","raboDetailedTransactionType":"64","raboTransactionTypeName":"ei"},{"entryReference":"748","bookingDate":"2021-03-25","valueDate":"2021-03-25","transactionAmount":{"currency":"EUR","amount":"-1.5"},"creditorAccount":{},"creditorName":"Bakkerij OZ Sultan ROTTERDAM","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Betaalautomaat 15:40 pasnr. 011    Apple Pay","raboBookingDateTime":"2021-03-25T14:41:00.116442Z","raboDetailedTransactionType":"2","raboTransactionTypeName":"bc"},{"entryReference":"747","bookingDate":"2021-03-25","valueDate":"2021-03-25","transactionAmount":{"currency":"EUR","amount":"-50.0"},"creditorAccount":{},"creditorName":"Geldmaat PRETORIALAAN ROTTERDAM","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Geldautomaat 15:26 pasnr. 011","raboBookingDateTime":"2021-03-25T14:27:12.249145Z","raboDetailedTransactionType":"23","raboTransactionTypeName":"ga"},{"entryReference":"746","endToEndId":"ARNLNL2101321368","mandateId":"B0008195475-0346234166-01","creditorId":"NL12T2N333034180000","bookingDate":"2021-03-25","valueDate":"2021-03-25","transactionAmount":{"currency":"EUR","amount":"-30.0"},"creditorAccount":{"iban":"NL06COBA0637053753"},"creditorName":"TELE2","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"ARNLNL2101321368","raboBookingDateTime":"2021-03-25T07:03:25.578652Z","raboDetailedTransactionType":"64","raboTransactionTypeName":"ei"},{"entryReference":"745","bookingDate":"2021-03-24","valueDate":"2021-03-24","transactionAmount":{"currency":"EUR","amount":"-15.26"},"creditorAccount":{},"creditorName":"Action 1335 Rotterdam","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Betaalautomaat 14:59 pasnr. 011    Apple Pay","raboBookingDateTime":"2021-03-24T13:59:20.762005Z","raboDetailedTransactionType":"2","raboTransactionTypeName":"bc"},{"entryReference":"744","bookingDate":"2021-03-24","valueDate":"2021-03-24","transactionAmount":{"currency":"EUR","amount":"-2.1"},"creditorAccount":{},"creditorName":"Bakkerij Prins ROTTERDAM","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Betaalautomaat 13:54 pasnr. 011","raboBookingDateTime":"2021-03-24T12:54:47.026152Z","raboDetailedTransactionType":"2","raboTransactionTypeName":"bc"},{"entryReference":"743","endToEndId":"440058329010","mandateId":"1040000643670","creditorId":"NL10ZZZ302086370000","bookingDate":"2021-03-24","valueDate":"2021-03-24","transactionAmount":{"currency":"EUR","amount":"-57.99"},"creditorAccount":{"iban":"NL58INGB0000003050"},"creditorName":"Zilveren Kruis Zorgverzekeringen  NV","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Overeengekomen betalingsregeling - PZK040190441","raboBookingDateTime":"2021-03-24T07:19:40.257458Z","raboDetailedTransactionType":"64","raboTransactionTypeName":"ei"},{"entryReference":"742","endToEndId":"440058329009","mandateId":"1280000649030","creditorId":"NL10ZZZ302086370000","bookingDate":"2021-03-24","valueDate":"2021-03-24","transactionAmount":{"currency":"EUR","amount":"-17.01"},"creditorAccount":{"iban":"NL58INGB0000003050"},"creditorName":"Zilveren Kruis Zorgverzekeringen  NV","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Overeengekomen betalingsregeling - SZK040190441","raboBookingDateTime":"2021-03-24T07:19:40.257051Z","raboDetailedTransactionType":"64","raboTransactionTypeName":"ei"},{"entryReference":"741","endToEndId":"440058329008","mandateId":"1040000643670","creditorId":"NL10ZZZ302086370000","bookingDate":"2021-03-24","valueDate":"2021-03-24","transactionAmount":{"currency":"EUR","amount":"-114.9"},"creditorAccount":{"iban":"NL58INGB0000003050"},"creditorName":"Zilveren Kruis Zorgverzekeringen  NV","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Premie Zilveren Kruis Relatienummer 040190441 Periode 01-04-2021 - 01-05-2021","raboBookingDateTime":"2021-03-24T07:19:14.634218Z","raboDetailedTransactionType":"64","raboTransactionTypeName":"ei"},{"entryReference":"740","endToEndId":"000000048410986","bookingDate":"2021-03-23","valueDate":"2021-03-23","transactionAmount":{"currency":"EUR","amount":"967.9"},"creditorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"debtorAccount":{"iban":"NL69ABNA0644512326"},"debtorName":"GEM RDAM SERVICEORG","remittanceInformationUnstructured":"Akin, HA.                                                       1122864                         Betaling aan klant (restbetaling","raboBookingDateTime":"2021-03-23T12:57:53.226885Z","raboDetailedTransactionType":"541","raboTransactionTypeName":"cb"},{"entryReference":"739","endToEndId":"22-03-2021 18:23 0050005334304700","bookingDate":"2021-03-22","valueDate":"2021-03-23","transactionAmount":{"currency":"EUR","amount":"-51.03"},"creditorAccount":{"iban":"NL58INGB0000003050"},"creditorName":"Zilveren Kruis Zorgverzekeringen N.V","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"040190441 0050005334304700 aflossing BR zorgkosten Zilveren Kruis Zorgverzekeringen NV x4166 pasnr.011","purposeCode":"EPAY","raboBookingDateTime":"2021-03-22T17:24:50.679037Z","raboDetailedTransactionType":"25","raboTransactionTypeName":"id"},{"entryReference":"738","endToEndId":"22-03-2021 18:00 0050005334246569","bookingDate":"2021-03-22","valueDate":"2021-03-23","transactionAmount":{"currency":"EUR","amount":"-50.0"},"creditorAccount":{"iban":"NL05INGB0702278378"},"creditorName":"Wehkamp Finance","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"12000000000000000518782050071171476 0050005334246569 12000000000000000518782050071171476 Wehkamp Finance x4166 pasnr.011","purposeCode":"EPAY","raboBookingDateTime":"2021-03-22T17:01:17.324031Z","raboDetailedTransactionType":"25","raboTransactionTypeName":"id"},{"entryReference":"737","endToEndId":"22-03-2021 12:26 0020004916422850","bookingDate":"2021-03-22","valueDate":"2021-03-22","transactionAmount":{"currency":"EUR","amount":"-1205.36"},"creditorAccount":{"iban":"NL62RABO0150334583"},"creditorName":"Stichting Woonbron","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"21032212265bf20c 0020004916422850 Uw huurbetaling x4166 pasnr.011","purposeCode":"EPAY","raboBookingDateTime":"2021-03-22T11:28:42.789531Z","raboDetailedTransactionType":"25","raboTransactionTypeName":"id"},{"entryReference":"650","endToEndId":"753U000773743787","mandateId":"102654295U","creditorId":"NL85ZZZ140522640000","bookingDate":"2021-01-15","valueDate":"2021-01-15","transactionAmount":{"currency":"EUR","amount":"-54.65"},"creditorAccount":{"iban":"NL93INGB0007939833"},"creditorName":"VODAFONE LIBERTEL BV","debtorAccount":{"iban":"NL71RABO0346234166","currency":"EUR"},"remittanceInformationUnstructured":"Klant Nr XXXXXX437/XXXXXX395 Januari Factuur Nr 315124138876 zie vodafone.nl/my","raboBookingDateTime":"2021-01-15T07:17:35.021854Z","raboDetailedTransactionType":"64","raboTransactionTypeName":"ei"}],"_links":{"account":{"href":"/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2"}}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://somehost/openapi/payments/account-information/ais/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2/transactions?bookingStatus=booked&size=500
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json
+
+{"account":{"iban":"NL30RABO0000000000","currency":"EUR"},"transactions":{"booked":[],"_links":{"account":{"href":"/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf2"}}}}

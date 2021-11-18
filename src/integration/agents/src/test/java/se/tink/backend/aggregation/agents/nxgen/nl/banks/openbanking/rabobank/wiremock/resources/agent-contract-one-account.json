@@ -1,0 +1,484 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "NL30RABO0000000000",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 0.01,
+        "scale": 2,
+        "unscaledValue": 1,
+        "doubleValue": 0.01
+      },
+      "currencyCode": "EUR",
+      "bankId": "NL30RABO0000000000",
+      "excluded": false,
+      "favored": false,
+      "name": "NL30RABO0000000000",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"iban://NL30RABO0000000000\"]",
+      "closed": false,
+      "holderName": "Monty Python",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Monty Python",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 0.01
+    }
+  ],
+  "transactions": [
+    {
+      "amount": -4.15,
+      "date": 1618221600000,
+      "description": "Bakkerij Nieuw Fes ROTTERDAM",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bakkerij Nieuw Fes ROTTERDAM",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "bc",
+        "MESSAGE": "Betaalautomaat 15:39 pasnr. 011"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -6.33,
+      "date": 1617789600000,
+      "description": "Allianz Direct",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Allianz Direct",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL67INGB0005338373",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "Kenmerk: 2000000036280197 / Periode: 2021-04-01 - 2021-05-01 / NL71RABO0346234166"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -60.0,
+      "date": 1617703200000,
+      "description": "Wehkamp Finance",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Wehkamp Finance",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL05INGB0702278378",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "id",
+        "MESSAGE": "72000000000000000523876330071171476 0050005369130938 72000000000000000523876330071171476 Wehkamp Finance x4166 pasnr.011"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 120.0,
+      "date": 1617703200000,
+      "description": "GEM RDAM SERVICEORG",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "GEM RDAM SERVICEORG",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "cb",
+        "MESSAGE": "Akin, HA. 1122864 Individuele InkomensToeslag"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -1.9,
+      "date": 1617357600000,
+      "description": "Kosten",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Kosten",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "db",
+        "MESSAGE": "Rabo DirectPakket Periode 01-04-2021 t/m 30-04-2021"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -752.68,
+      "date": 1617271200000,
+      "description": "Stichting Woonbron",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Stichting Woonbron",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL42RABO0330574426",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "Incasso Huur Periode: 01-04-2021 tot 01-05-2021"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -1.0,
+      "date": 1617184800000,
+      "description": "CCV*CIGO KOP VAN ZUID ROTTERDAM",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "CCV*CIGO KOP VAN ZUID ROTTERDAM",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "bc",
+        "MESSAGE": "Betaalautomaat 16:01 pasnr. 011 Apple Pay"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -50.0,
+      "date": 1617184800000,
+      "description": "BUDGETENERGIE B V",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BUDGETENERGIE B V",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL86ABNA0511919131",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "Termijn april (kenmerk: 1200-0000-0420-7848)"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -10.0,
+      "date": 1616756400000,
+      "description": "STICHTING AKTIEF ORANJEBOOM",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "STICHTING AKTIEF ORANJEBOOM",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL81INGB0004332134",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "GIFT MAART 2021"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -1.5,
+      "date": 1616670000000,
+      "description": "Bakkerij OZ Sultan ROTTERDAM",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bakkerij OZ Sultan ROTTERDAM",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "bc",
+        "MESSAGE": "Betaalautomaat 15:40 pasnr. 011 Apple Pay"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -50.0,
+      "date": 1616670000000,
+      "description": "Geldmaat PRETORIALAAN ROTTERDAM",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Geldmaat PRETORIALAAN ROTTERDAM",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ga",
+        "MESSAGE": "Geldautomaat 15:26 pasnr. 011"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -30.0,
+      "date": 1616670000000,
+      "description": "TELE2",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "TELE2",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL06COBA0637053753",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "ARNLNL2101321368"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -15.26,
+      "date": 1616583600000,
+      "description": "Action 1335 Rotterdam",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Action 1335 Rotterdam",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "bc",
+        "MESSAGE": "Betaalautomaat 14:59 pasnr. 011 Apple Pay"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -2.1,
+      "date": 1616583600000,
+      "description": "Bakkerij Prins ROTTERDAM",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bakkerij Prins ROTTERDAM",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "bc",
+        "MESSAGE": "Betaalautomaat 13:54 pasnr. 011"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -57.99,
+      "date": 1616583600000,
+      "description": "Zilveren Kruis Zorgverzekeringen  NV",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Zilveren Kruis Zorgverzekeringen  NV",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL58INGB0000003050",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "Overeengekomen betalingsregeling - PZK040190441"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -17.01,
+      "date": 1616583600000,
+      "description": "Zilveren Kruis Zorgverzekeringen  NV",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Zilveren Kruis Zorgverzekeringen  NV",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL58INGB0000003050",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "Overeengekomen betalingsregeling - SZK040190441"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -114.9,
+      "date": 1616583600000,
+      "description": "Zilveren Kruis Zorgverzekeringen  NV",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Zilveren Kruis Zorgverzekeringen  NV",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL58INGB0000003050",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "Premie Zilveren Kruis Relatienummer 040190441 Periode 01-04-2021 - 01-05-2021"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 967.9,
+      "date": 1616497200000,
+      "description": "GEM RDAM SERVICEORG",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "GEM RDAM SERVICEORG",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "cb",
+        "MESSAGE": "Akin, HA. 1122864 Betaling aan klant (restbetaling"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -51.03,
+      "date": 1616410800000,
+      "description": "Zilveren Kruis Zorgverzekeringen N.V",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Zilveren Kruis Zorgverzekeringen N.V",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL58INGB0000003050",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "id",
+        "MESSAGE": "040190441 0050005334304700 aflossing BR zorgkosten Zilveren Kruis Zorgverzekeringen NV x4166 pasnr.011"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -50.0,
+      "date": 1616410800000,
+      "description": "Wehkamp Finance",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Wehkamp Finance",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL05INGB0702278378",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "id",
+        "MESSAGE": "12000000000000000518782050071171476 0050005334246569 12000000000000000518782050071171476 Wehkamp Finance x4166 pasnr.011"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -1205.36,
+      "date": 1616410800000,
+      "description": "Stichting Woonbron",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Stichting Woonbron",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL62RABO0150334583",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "id",
+        "MESSAGE": "21032212265bf20c 0020004916422850 Uw huurbetaling x4166 pasnr.011"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -54.65,
+      "date": 1610708400000,
+      "description": "VODAFONE LIBERTEL BV",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "VODAFONE LIBERTEL BV",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL93INGB0007939833",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "ei",
+        "MESSAGE": "Klant Nr XXXXXX437/XXXXXX395 Januari Factuur Nr 315124138876 zie vodafone.nl/my"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    }
+  ]
+}

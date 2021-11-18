@@ -1,12 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
+import static java.util.Collections.singletonList;
+import static org.apache.http.HttpStatus.SC_BAD_GATEWAY;
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
+import static org.apache.http.HttpStatus.SC_SERVICE_UNAVAILABLE;
+
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import java.util.List;
 import java.util.regex.Pattern;
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 
 public class RabobankConstants {
+
+    private static final int SC_TOO_MANY_REQUESTS = 429;
 
     public static final String UUID_PATTERN =
             "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
@@ -28,11 +35,11 @@ public class RabobankConstants {
         public static final String BOOKING_STATUS_INVALID =
                 "currently only bookingstatus booked is allowed";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final ImmutableList<Integer> ERROR_RESPONSES =
-                ImmutableList.of(
-                        HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                        HttpStatus.SC_BAD_GATEWAY,
-                        HttpStatus.SC_SERVICE_UNAVAILABLE);
+        public static final List<Integer> ERROR_RESPONSES =
+                ImmutableList.of(SC_INTERNAL_SERVER_ERROR, SC_BAD_GATEWAY, SC_SERVICE_UNAVAILABLE);
+        public static final List<Integer> STATUS_CODES_FOR_RETRY =
+                ImmutableList.copyOf(
+                        Iterables.concat(ERROR_RESPONSES, singletonList(SC_TOO_MANY_REQUESTS)));
         public static final String NOT_SUBSCRIBED = "Not registered to plan";
         public static final String ERROR_MESSAGE = "Error message: ";
         public static final String TOKEN_URL_NOT_FOUND =
