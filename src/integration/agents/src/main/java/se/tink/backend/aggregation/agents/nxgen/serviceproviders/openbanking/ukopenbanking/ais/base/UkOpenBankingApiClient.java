@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator.ISO_OFFSET_DATE_TIME;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator.ISO_DATE_TIME_FORMATTER;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -165,10 +165,10 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                                 aisConfig.getInitialTransactionsPaginationKey(accountId))
                         .queryParam(
                                 FROM_BOOKING_DATE_TIME_KEY,
-                                ISO_OFFSET_DATE_TIME.format(fromBookingDateTime))
+                                ISO_DATE_TIME_FORMATTER.format(fromBookingDateTime))
                         .queryParam(
                                 TO_BOOKING_DATE_TIME_KEY,
-                                ISO_OFFSET_DATE_TIME.format(toBookingDateTime));
+                                ISO_DATE_TIME_FORMATTER.format(toBookingDateTime));
 
         return createAisRequest(url).get(responseType);
     }

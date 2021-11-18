@@ -111,23 +111,8 @@ public class UkOpenBankingTransactionPaginatorTest {
     @Test
     public void testRequestTimeProperlySaved() {
         when(unleashClient.isToggleEnable(Mockito.any())).thenReturn(false);
-        TransactionalAccount account =
-                TransactionalAccount.nxBuilder()
-                        .withType(TransactionalAccountType.CHECKING)
-                        .withPaymentAccountFlag()
-                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(123.45)))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier("UN123")
-                                        .withAccountNumber("UN123")
-                                        .withAccountName("AN123")
-                                        .addIdentifier(new OtherIdentifier("ID123"))
-                                        .build())
-                        .setApiIdentifier("BI123")
-                        .build()
-                        .orElse(null);
 
-        paginator.getTransactionsFor(account, null);
+        paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null);
 
         verify(persistentStorage)
                 .put(eq("fetchedTxUntil:BI123"), persistentStorageCaptor.capture());
@@ -154,7 +139,6 @@ public class UkOpenBankingTransactionPaginatorTest {
     }
 
     @Test
-    // should parse localdate as offsetDateTime
     public void shouldRecoverResponseWhen403CodeAppearedAndTryToFetchTransactionsFromLast89Days() {
         // given
         HttpResponse http403Response = mock(HttpResponse.class);
@@ -174,23 +158,7 @@ public class UkOpenBankingTransactionPaginatorTest {
     public void getTransactionsForShouldFetch24MonthsInstead23WhenUnleashIsActive() {
         when(unleashClient.isToggleEnable(Mockito.any())).thenReturn(true);
 
-        TransactionalAccount account =
-                TransactionalAccount.nxBuilder()
-                        .withType(TransactionalAccountType.CHECKING)
-                        .withPaymentAccountFlag()
-                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(123.45)))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier("UN123")
-                                        .withAccountNumber("UN123")
-                                        .withAccountName("AN123")
-                                        .addIdentifier(new OtherIdentifier("ID123"))
-                                        .build())
-                        .setApiIdentifier("BI123")
-                        .build()
-                        .orElse(null);
-
-        paginator.getTransactionsFor(account, null);
+        paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null);
 
         verify(apiClient)
                 .fetchAccountTransactions(
@@ -208,7 +176,7 @@ public class UkOpenBankingTransactionPaginatorTest {
 
         @Override
         public LocalDateTime now(ZoneId zoneId) {
-            return null;
+            return currentTime;
         }
 
         @Override

@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_OFFSET;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_ZONE_ID;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -36,26 +34,25 @@ import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeap
 public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends Account>
         implements TransactionKeyPaginator<AccountType, String> {
 
-    private static final int PAGINATION_LIMIT =
-            50; // Limits number of pages fetched in order to reduce loading.
-    private static final long DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS = 23;
+    public static final DateTimeFormatter ISO_DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     // we can decrease this to 15 days also in future.
     protected static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
     protected static final String FROM_BOOKING_DATE_TIME = "?fromBookingDateTime=";
+    private static final int PAGINATION_LIMIT =
+            50; // Limits number of pages fetched in order to reduce loading.
+    private static final long DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS = 23;
     private static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
-    public static final DateTimeFormatter ISO_OFFSET_DATE_TIME =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    protected final LocalDateTimeSource localDateTimeSource;
     protected final UkOpenBankingApiClient apiClient;
     protected final Class<ResponseType> responseType;
     private final TransactionConverter<ResponseType, AccountType> transactionConverter;
-
+    private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
+    private final PersistentStorage persistentStorage;
     private String lastAccount;
     private int paginationCount;
     private UnleashClient unleashClient;
     private Toggle toggle;
-    private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
-    private final PersistentStorage persistentStorage;
-    protected final LocalDateTimeSource localDateTimeSource;
 
     /**
      * @param apiClient Ukob api client
@@ -107,8 +104,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         try {
             return fetchTransactions(account, key);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
-                return recover401Or403ResponseErrorStatus(account, key, e);
+            if (shouldRecoverFetchingTransactions(e.getResponse().getStatus())) {
+                return recoverFetchingTransactions(account, key, e);
             }
             throw e;
         }
@@ -116,37 +113,39 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
     protected TransactionKeyPaginatorResponse<String> fetchTransactions(
             AccountType account, String key) {
-        LocalDateTime requestTime = localDateTimeSource.now();
+        LocalDateTime requestTime = localDateTimeSource.now(DEFAULT_ZONE_ID);
         TransactionKeyPaginatorResponse<String> response =
                 transactionConverter.toPaginatorResponse(
                         apiClient.fetchAccountTransactions(key, responseType), account);
-        setFetchingTransactionsUntil(account.getApiIdentifier(), requestTime);
+        setFetchedTransactionsUntil(account.getApiIdentifier(), requestTime);
         return response;
     }
 
     /**
-     * Sometimes during fetching transactions, we can receive 401 or 403 error responses for the
-     * second or third requests (I mean `nextPage` requests) and it is a cause of duplicated
-     * transactions because collecting transactions we keep on the higher level and we are not able
-     * to check if we have duplicated transactions so we decided to prepare retry with the last used
-     * key. But if it will be the first request for example for 23 months and we will receive 401 or
-     * 403 error code then we prepare a new request for the last 90 days of transactions.
+     * The below method covers two cases when we got 401 or 403 in the response from banks:
+     *
+     * <p>1. When we try to use refresh tokens to fetch the transactions and our logic calculated
+     * that we should fetch transactions from the last 23 months we will receive 401 or 403
+     * responses from the bank because during refresh we should fetch only the last 90 days. So to
+     * avoid finishing fetching transactions with some ERROR we want to create a new 'key' with
+     * setting fromBookingDate to the last 90 days.
+     *
+     * <p>2. When during fetching transactions (after initial transactions request; I mean when
+     * 'nextPage' is in use) we receive an error with status 401 or 403 then we want to retry the
+     * last request to avoid duplicates transactions.
      */
-    protected TransactionKeyPaginatorResponse<String> recover401Or403ResponseErrorStatus(
+    protected TransactionKeyPaginatorResponse<String> recoverFetchingTransactions(
             AccountType account, String key, HttpResponseException e) {
         if (isFirstPage()) {
-            key =
-                    ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
-                                    account.getApiIdentifier())
-                            + FROM_BOOKING_DATE_TIME
-                            + ISO_OFFSET_DATE_TIME.format(
-                                    localDateTimeSource
-                                            .now(DEFAULT_ZONE_ID)
-                                            .atOffset(DEFAULT_OFFSET)
-                                            .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+            log.warn(
+                    "[UKOpenBanking Transaction Paginator] The first request fetching transactions has been failed with key {}.",
+                    key);
+            LocalDateTime time =
+                    localDateTimeSource.now(DEFAULT_ZONE_ID).minusDays(DEFAULT_MAX_ALLOWED_DAYS);
+            key = createRequestPaginationKey(account, time);
         }
         log.warn(
-                "Retry fetching transactions for key {}. Got {} in previous request with the below exception\n{}",
+                "[UKOpenBanking Transaction Paginator] Recover fetching transactions for key {}. Got {} in previous request with the below exception\n{}",
                 key,
                 e.getResponse().getStatus(),
                 ExceptionUtils.getStackTrace(e));
@@ -154,13 +153,9 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         return fetchTransactions(account, key);
     }
 
-    protected boolean isFirstPage() {
-        return paginationCount == 1;
-    }
-
     protected String initialisePaginationKeyIfNull(AccountType account, String key) {
         if (key == null) {
-            final OffsetDateTime fromDate = calculateFromBookingDate(account.getApiIdentifier());
+            final LocalDateTime fromDate = calculateFromBookingDate(account.getApiIdentifier());
 
             /*
             We need to send in fromDate when fetching transactions to improve the performance
@@ -171,12 +166,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             This is according to Article 10 of UkOpenBanking
             https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1009778990/How+the+OBIE+Standard+can+be+used+in+relation+to+RTS+Article+10
              */
-
-            key =
-                    ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
-                                    account.getApiIdentifier())
-                            + FROM_BOOKING_DATE_TIME
-                            + ISO_OFFSET_DATE_TIME.format(fromDate);
+            key = createRequestPaginationKey(account, fromDate);
         }
         return key;
     }
@@ -195,29 +185,15 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         paginationCount++;
     }
 
-    private void setFetchingTransactionsUntil(String accountId, LocalDateTime requestTime) {
-        final String fetchedUntilDate = requestTime.format(DateTimeFormatter.ISO_DATE_TIME);
-        persistentStorage.put(FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
-    }
+    protected LocalDateTime calculateFromBookingDate(String accountId) {
+        final Optional<LocalDateTime> dateOfLastTransactionFetching =
+                getFetchedTransactionsUntil(accountId);
 
-    private Optional<OffsetDateTime> fetchedTransactionsUntil(String accountId) {
-        String dateString = persistentStorage.get(FETCHED_TRANSACTIONS_UNTIL + accountId);
-        return Optional.ofNullable(dateString)
-                .map(
-                        date ->
-                                LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
-                                        .atOffset(DEFAULT_OFFSET));
-    }
-
-    protected OffsetDateTime calculateFromBookingDate(String accountId) {
-        final Optional<OffsetDateTime> dateOfLastTransactionFetching =
-                fetchedTransactionsUntil(accountId);
-
-        final OffsetDateTime now = localDateTimeSource.now().atOffset(DEFAULT_OFFSET);
-        final OffsetDateTime startingDateForFetchingRecentTransactions =
+        final LocalDateTime now = localDateTimeSource.now(DEFAULT_ZONE_ID);
+        final LocalDateTime startingDateForFetchingRecentTransactions =
                 now.minusDays(DEFAULT_MAX_ALLOWED_DAYS);
 
-        final OffsetDateTime startingDateForFetchingAsMuchAsPossible =
+        final LocalDateTime startingDateForFetchingAsMuchAsPossible =
                 calculateBiggestStartingDateForFetching(now);
 
         log.info(
@@ -239,8 +215,34 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         }
     }
 
-    private OffsetDateTime calculateBiggestStartingDateForFetching(OffsetDateTime now) {
-        OffsetDateTime startingDateForFetchingAsMuchAsPossible;
+    protected boolean shouldRecoverFetchingTransactions(int status) {
+        return status == 401 || status == 403;
+    }
+
+    protected String createRequestPaginationKey(AccountType account, LocalDateTime fromDate) {
+        return ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
+                        account.getApiIdentifier())
+                + FROM_BOOKING_DATE_TIME
+                + ISO_DATE_TIME_FORMATTER.format(fromDate);
+    }
+
+    private void setFetchedTransactionsUntil(String accountId, LocalDateTime requestTime) {
+        final String fetchedUntilDate = requestTime.format(DateTimeFormatter.ISO_DATE_TIME);
+        persistentStorage.put(FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
+    }
+
+    private Optional<LocalDateTime> getFetchedTransactionsUntil(String accountId) {
+        String dateString = persistentStorage.get(FETCHED_TRANSACTIONS_UNTIL + accountId);
+        return Optional.ofNullable(dateString)
+                .map(date -> LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME));
+    }
+
+    private boolean isFirstPage() {
+        return paginationCount == 1;
+    }
+
+    private LocalDateTime calculateBiggestStartingDateForFetching(LocalDateTime now) {
+        LocalDateTime startingDateForFetchingAsMuchAsPossible;
         boolean is24Months = unleashClient.isToggleEnable(toggle);
         if (is24Months) {
             startingDateForFetchingAsMuchAsPossible = now.minusMonths(24);

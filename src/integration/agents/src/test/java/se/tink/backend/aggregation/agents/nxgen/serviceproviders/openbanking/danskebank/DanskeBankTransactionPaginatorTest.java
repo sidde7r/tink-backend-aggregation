@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -55,11 +54,6 @@ import se.tink.libraries.unleash.UnleashClient;
 @RunWith(MockitoJUnitRunner.class)
 public class DanskeBankTransactionPaginatorTest {
 
-    @Mock private AgentComponentProvider componentProvider;
-    @Mock private UnleashClient unleashClient;
-    @Mock private CompositeAgentContext context;
-    @Mock private Provider provider;
-
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/danskebank/resources";
     private static final String NEXT_PAGE_OF_TRANSACTIONS =
@@ -69,17 +63,25 @@ public class DanskeBankTransactionPaginatorTest {
     private static final String LAST_90_DAYS_PATH =
             "/some/path?fromBookingDateTime=2020-03-05T00:00:00Z";
 
+    private final ArgumentCaptor<String> persistentStorageCaptor =
+            ArgumentCaptor.forClass(String.class);
+
+    @Mock private AgentComponentProvider componentProvider;
+    @Mock private UnleashClient unleashClient;
+    @Mock private CompositeAgentContext context;
+    @Mock private Provider provider;
+
     private DanskeBankTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
             paginator;
     private PersistentStorage persistentStorage;
 
     private UkOpenBankingApiClient apiClient;
 
-    private final ArgumentCaptor<String> persistentStorageCaptor =
-            ArgumentCaptor.forClass(String.class);
-
     @Before
     public void init() {
+        DelaySimulatingLocalDateTimeSource localDateTimeSource =
+                new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2020-06-02T00:00:00"));
+
         UkOpenBankingAisConfig ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
         when(ukOpenBankingAisConfig.getInitialTransactionsPaginationKey("BI123"))
                 .thenReturn("/some/path");
@@ -87,9 +89,6 @@ public class DanskeBankTransactionPaginatorTest {
         when(context.getAppId()).thenReturn("mockedAppId");
         when(componentProvider.getUnleashClient()).thenReturn(unleashClient);
         when(provider.getName()).thenReturn("providerName");
-
-        DelaySimulatingLocalDateTimeSource localDateTimeSource =
-                new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2020-06-02T00:00:00"));
 
         apiClient = mock(UkOpenBankingApiClient.class);
         when(apiClient.fetchAccountTransactions(any(), eq(AccountTransactionsV31Response.class)))
@@ -153,10 +152,7 @@ public class DanskeBankTransactionPaginatorTest {
         when(apiClient.fetchAccountTransactions(
                         eq(LAST_23_MONTHS_TRANSACTIONS_PATH),
                         eq(AccountTransactionsV31Response.class)))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_one_page.json").toFile(),
-                                AccountTransactionsV31Response.class));
+                .thenReturn(serializeTransactions("transactions_one_page.json"));
 
         // when
         TransactionKeyPaginatorResponse<String> result =
@@ -171,13 +167,10 @@ public class DanskeBankTransactionPaginatorTest {
     }
 
     @Test
-    public void shouldFetchOnePageOfTransactionsFromLast90DaysWithRetryAfterException() {
+    public void shouldRecoverFetchingTransactionsAfter401ErrorResponseByReplacingKeyToLast90Days() {
         // given
         HttpResponseException httpResponseException = mockErrorResponse();
-        AccountTransactionsV31Response response =
-                SerializationUtils.deserializeFromString(
-                        Paths.get(TEST_DATA_PATH, "transactions_one_page.json").toFile(),
-                        AccountTransactionsV31Response.class);
+
         when(apiClient.fetchAccountTransactions(
                         eq(LAST_23_MONTHS_TRANSACTIONS_PATH),
                         eq(AccountTransactionsV31Response.class)))
@@ -185,7 +178,7 @@ public class DanskeBankTransactionPaginatorTest {
 
         when(apiClient.fetchAccountTransactions(
                         eq(LAST_90_DAYS_PATH), eq(AccountTransactionsV31Response.class)))
-                .thenReturn(response);
+                .thenReturn(serializeTransactions("transactions_one_page.json"));
 
         // when
         TransactionKeyPaginatorResponse<String> result =
@@ -205,18 +198,11 @@ public class DanskeBankTransactionPaginatorTest {
         when(apiClient.fetchAccountTransactions(
                         eq(LAST_23_MONTHS_TRANSACTIONS_PATH),
                         eq(AccountTransactionsV31Response.class)))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_with_next_key.json")
-                                        .toFile(),
-                                AccountTransactionsV31Response.class));
+                .thenReturn(serializeTransactions("transactions_with_next_key.json"));
 
         when(apiClient.fetchAccountTransactions(
                         eq(NEXT_PAGE_OF_TRANSACTIONS), eq(AccountTransactionsV31Response.class)))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_one_page.json").toFile(),
-                                AccountTransactionsV31Response.class));
+                .thenReturn(serializeTransactions("transactions_one_page.json"));
 
         // when
         TransactionKeyPaginatorResponse<String> result =
@@ -234,25 +220,18 @@ public class DanskeBankTransactionPaginatorTest {
     }
 
     @Test
-    public void shouldFetchMultiplePagesOfTransactionsWithRetryAfterException() {
+    public void shouldRetryFetchingMultiplePagesOfTransactionsAfter401ErrorResponse() {
         // given
         HttpResponseException httpResponseException = mockErrorResponse();
         when(apiClient.fetchAccountTransactions(
                         eq(LAST_23_MONTHS_TRANSACTIONS_PATH),
                         eq(AccountTransactionsV31Response.class)))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_with_next_key.json")
-                                        .toFile(),
-                                AccountTransactionsV31Response.class));
+                .thenReturn(serializeTransactions("transactions_with_next_key.json"));
 
         when(apiClient.fetchAccountTransactions(
                         eq(NEXT_PAGE_OF_TRANSACTIONS), eq(AccountTransactionsV31Response.class)))
                 .thenThrow(httpResponseException)
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_one_page.json").toFile(),
-                                AccountTransactionsV31Response.class));
+                .thenReturn(serializeTransactions("transactions_one_page.json"));
 
         // when
         TransactionKeyPaginatorResponse<String> result =
@@ -270,7 +249,7 @@ public class DanskeBankTransactionPaginatorTest {
     }
 
     @Test
-    public void shouldThrowExceptionAfterRetry() {
+    public void shouldThrowExceptionAfterTryingRetryFetchingTransactions() {
         // given
         HttpResponseException httpResponseException = mockErrorResponse();
         when(apiClient.fetchAccountTransactions(any(), eq(AccountTransactionsV31Response.class)))
@@ -431,14 +410,14 @@ public class DanskeBankTransactionPaginatorTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponseException.getResponse().getStatus()).thenReturn(403);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_exception_response.json")
-                                        .toFile(),
-                                ErrorResponse.class));
+        when(httpResponse.getStatus()).thenReturn(403);
         return httpResponseException;
+    }
+
+    private AccountTransactionsV31Response serializeTransactions(String pathToFile) {
+        return SerializationUtils.deserializeFromString(
+                Paths.get(TEST_DATA_PATH, pathToFile).toFile(),
+                AccountTransactionsV31Response.class);
     }
 
     private static class DelaySimulatingLocalDateTimeSource implements LocalDateTimeSource {
