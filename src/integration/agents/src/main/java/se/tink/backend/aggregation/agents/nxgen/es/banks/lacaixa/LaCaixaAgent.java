@@ -6,6 +6,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.time.Clock;
+import java.time.ZoneId;
 import java.util.Base64;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -22,7 +24,9 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.RetryFilterValues;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaMultifactorAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.ImaginBankProxyAuthenticatior;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaManualAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaMultifactorAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.identitydata.LaCaixaIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.LaCaixaInvestmentFetcher;
@@ -44,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.cryptography.hash.Hash;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, MORTGAGE_AGGREGATION})
@@ -56,7 +61,6 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
                 RefreshSavingsAccountsExecutor {
 
     private final LaCaixaApiClient apiClient;
-    private final StatelessProgressiveAuthenticator authenticator;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -67,7 +71,6 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
         super(componentProvider);
         configureHttpClient(client);
         apiClient = new LaCaixaApiClient(client, getInstallationId(request.getCredentials()));
-        authenticator = new LaCaixaMultifactorAuthenticator(apiClient, context.getLogMasker());
 
         LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(apiClient);
         investmentRefreshController =
@@ -102,7 +105,23 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
-        return authenticator;
+        ImaginBankProxyAuthenticatior imaginBankProxyAuthenticatior =
+                new ImaginBankProxyAuthenticatior(apiClient, logMasker);
+        LaCaixaManualAuthenticator laCaixaManualAuthenticator =
+                new LaCaixaManualAuthenticator(
+                        apiClient,
+                        persistentStorage,
+                        logMasker,
+                        supplementalInformationFormer,
+                        new TemporaryStorage(),
+                        catalog,
+                        credentials,
+                        supplementalInformationHelper);
+
+        Clock clock = Clock.system(ZoneId.of("Europe/Madrid"));
+
+        return new LaCaixaMultifactorAuthenticatorController(
+                imaginBankProxyAuthenticatior, laCaixaManualAuthenticator, clock);
     }
 
     @Override
