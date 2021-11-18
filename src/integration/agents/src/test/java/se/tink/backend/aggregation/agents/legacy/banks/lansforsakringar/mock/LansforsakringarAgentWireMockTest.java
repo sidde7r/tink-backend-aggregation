@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarDateUtil;
@@ -26,6 +27,7 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@Ignore
 public class LansforsakringarAgentWireMockTest {
 
     private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");

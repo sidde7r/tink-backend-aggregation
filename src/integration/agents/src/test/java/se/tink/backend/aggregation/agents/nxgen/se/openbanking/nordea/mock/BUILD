@@ -7,6 +7,7 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea/mock/resources",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea"],
     deps = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea/mock/module",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
