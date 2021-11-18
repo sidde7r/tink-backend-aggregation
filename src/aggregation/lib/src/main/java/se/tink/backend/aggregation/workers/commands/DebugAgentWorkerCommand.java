@@ -34,6 +34,7 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private static final LogTag LOG_TAG = LogTag.from("[DebugAgentWorkerCommand]");
+    private static final String TRYHARD_APPID = "addcb9c598fc4fef8497a64b142333e7";
 
     private final AgentWorkerCommandContext context;
     private final AgentHttpLogsStorageHandler logsStorageHandler;
@@ -233,7 +234,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     private boolean shouldWriteHarLog() {
-        return "oxford-preprod".equalsIgnoreCase(context.getClusterId());
+        return getDebugLogHarFrequencyFromConfig() > RandomUtils.randomInt(100)
+                || TRYHARD_APPID.equals(context.getAppId());
     }
 
     private boolean shouldLogCommonRequest() {
@@ -271,6 +273,13 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         return Optional.ofNullable(agentsServiceConfiguration)
                 .map(AgentsServiceConfiguration::getAggregationWorker)
                 .map(AggregationWorkerConfiguration::getDebugLogFrequencyPercent)
+                .orElse(0);
+    }
+
+    private int getDebugLogHarFrequencyFromConfig() {
+        return Optional.ofNullable(agentsServiceConfiguration)
+                .map(AgentsServiceConfiguration::getAggregationWorker)
+                .map(AggregationWorkerConfiguration::getDebugLogHarFrequencyPercent)
                 .orElse(0);
     }
 
