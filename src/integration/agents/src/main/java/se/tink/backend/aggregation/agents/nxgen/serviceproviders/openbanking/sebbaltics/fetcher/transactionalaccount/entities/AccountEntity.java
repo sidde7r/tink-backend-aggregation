@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsConstants.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -37,10 +37,12 @@ public class AccountEntity {
 
     private Optional<TransactionalAccount> parseAccount(
             TransactionalAccountType accountType, SebBalticsApiClient apiClient) {
+        List<BalanceEntity> balances = apiClient.fetchAccountBalances(resourceId).getBalances();
+
         return TransactionalAccount.nxBuilder()
                 .withType(accountType)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getAvailableBalance(apiClient, resourceId)))
+                .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -55,16 +57,25 @@ public class AccountEntity {
                 .build();
     }
 
-    private ExactCurrencyAmount getAvailableBalance(
-            SebBalticsApiClient apiClient, String accountId) {
+    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
 
-        BalanceResponse balanceResponse = apiClient.fetchAccountBalances(accountId);
-
-        return Optional.ofNullable(balanceResponse.getBalances()).orElse(Collections.emptyList())
-                .stream()
-                .filter(BalanceEntity::isAvailableBalance)
+    private ExactCurrencyAmount getBookedBalance(List<BalanceEntity> balances) {
+        return balances.stream()
+                .filter(BalanceEntity::isBookedBalance)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElseThrow(() -> new IllegalStateException("Could not get balance"));
+                .orElseThrow(() -> new IllegalStateException("Could not get booked balance."));
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceEntity> balanceResponse) {
+        return balanceResponse.stream()
+                .filter(BalanceEntity::isAvailableBalance)
+                .findFirst()
+                .map(BalanceEntity::toAmount);
     }
 }
