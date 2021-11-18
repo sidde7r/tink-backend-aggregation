@@ -248,6 +248,13 @@ public final class SwedbankConstants {
         public static final String MSG = "MSG";
     }
 
+    public static final class MarketCode {
+        public static final String SE = "SE";
+        public static final String LV = "LV";
+        public static final String LT = "LT";
+        public static final String EE = "EE";
+    }
+
     public static final class Transactions {
         public static final Pattern SALARY_PATTERN = Pattern.compile(".*(l[oö]n|salary).*");
     }
@@ -294,6 +301,8 @@ public final class SwedbankConstants {
             return this.userMessage;
         }
     }
+
+    public static final List<String> BALTICS = ImmutableList.of("LV", "LT", "EE");
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
