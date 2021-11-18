@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.MarketCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalanceAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalancesItem;
@@ -21,6 +23,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class AccountEntity {
     private String bankId;
     private String bban;
@@ -35,36 +38,8 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links;
 
-    public String getIban() {
-        return iban;
-    }
-
     public String getBankId() {
-        return Optional.ofNullable(bankId).orElse("");
-    }
-
-    public String getBban() {
-        return bban;
-    }
-
-    public String getCashAccountType() {
-        return cashAccountType;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public AccountLinksEntity getLinks() {
-        return links;
-    }
-
-    public String getName() {
-        return name;
+        return Optional.ofNullable(bankId).orElse(StringUtils.EMPTY);
     }
 
     private String getAccountName() {
@@ -76,18 +51,23 @@ public class AccountEntity {
     // this is market specific code to ensure we don't change unique identifier if EE, LT and LV
     // start sending bban
     private String getUniqueIdentifier(String market) {
-        return market.equalsIgnoreCase("SE") ? bban : iban;
+        return market.equalsIgnoreCase(MarketCode.SE) ? bban : iban;
     }
 
     private Collection<AccountIdentifier> getIdentifiers(String market) {
         List<AccountIdentifier> identifiers = new ArrayList<>();
 
-        // iban is presented for SE, EE
-        // TODO: check LV and LT
+        String bic = getBic(market);
+
+        // iban is presented for SE, EE, LV, LT
         identifiers.add(new IbanIdentifier(iban));
 
+        if (!bic.equals(StringUtils.EMPTY)) {
+            identifiers.add(new IbanIdentifier(bic, iban));
+        }
+
         // SwedishIdentifier is only for SE
-        if (market.equalsIgnoreCase("SE")) {
+        if (market.equalsIgnoreCase(MarketCode.SE)) {
             identifiers.add(new SwedishIdentifier(bban));
         }
         return identifiers;
@@ -100,8 +80,6 @@ public class AccountEntity {
     public List<BalancesItem> getBalances() {
         return balances;
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(AccountEntity.class);
 
     public Optional<TransactionalAccount> toTinkAccount(
             List<BalancesItem> balances, String market) {
@@ -126,5 +104,17 @@ public class AccountEntity {
                 .map(BalanceAmount::getAmount)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Could not fetch balance"));
+    }
+
+    // Currently SE is not using bic
+    private static String getBic(String market) {
+        if (market.equalsIgnoreCase(MarketCode.LV)) {
+            return BICProduction.LATVIA;
+        } else if (market.equalsIgnoreCase(MarketCode.LT)) {
+            return BICProduction.LITHUANIA;
+        } else if (market.equalsIgnoreCase(MarketCode.EE)) {
+            return BICProduction.ESTONIA;
+        }
+        return StringUtils.EMPTY;
     }
 }
