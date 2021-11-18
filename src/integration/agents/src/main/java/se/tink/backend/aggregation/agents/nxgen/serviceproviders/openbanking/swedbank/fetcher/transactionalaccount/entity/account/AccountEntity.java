@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.MarketCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalanceAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalancesItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -85,7 +85,7 @@ public class AccountEntity {
             List<BalancesItem> balances, String market) {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(SwedbankConstants.ACCOUNT_TYPE_MAPPER, product)
-                .withBalance(BalanceModule.of(getAvailableBalance(balances)))
+                .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier(market))
@@ -98,12 +98,26 @@ public class AccountEntity {
                 .build();
     }
 
-    private ExactCurrencyAmount getAvailableBalance(List<BalancesItem> balances) {
+    private BalanceModule getBalanceModule(List<BalancesItem> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
+
+    private ExactCurrencyAmount getBookedBalance(List<BalancesItem> balances) {
         return balances.stream()
-                .map(BalancesItem::getBalanceAmount)
-                .map(BalanceAmount::getAmount)
+                .filter(BalancesItem::isBooked)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Could not fetch balance"));
+                .map(BalancesItem::toTinkAmount)
+                .orElseThrow(() -> new IllegalStateException("Could not get booked balance."));
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalancesItem> balances) {
+        return balances.stream()
+                .filter(BalancesItem::isAvailable)
+                .findFirst()
+                .map(BalancesItem::toTinkAmount);
     }
 
     // Currently SE is not using bic
