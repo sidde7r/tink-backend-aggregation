@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
@@ -20,6 +21,30 @@ public class OnlineTransactionEntity extends TransactionEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction(boolean isPending, String providerMarket) {
+        if (SwedbankConstants.BALTICS.contains(providerMarket)) {
+            return toTinkBalticTransaction(isPending, providerMarket);
+        } else return toTinkSwedishTransaction(isPending, providerMarket);
+    }
+
+    @JsonIgnore
+    public Transaction toTinkBalticTransaction(boolean isPending, String providerMarket) {
+
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(transactionAmount.toTinkAmount())
+                        .setDate(Optional.ofNullable(transactionDate).orElse(valueDate))
+                        .setDescription(getDescription())
+                        .setPending(isPending)
+                        .setTransactionDates(getTinkTransactionDates(valueDate, bookingDate))
+                        .setProviderMarket(providerMarket)
+                        .setMerchantName(creditorName)
+                        .setTransactionReference(transactionId);
+
+        return (Transaction) builder.build();
+    }
+
+    @JsonIgnore
+    public Transaction toTinkSwedishTransaction(boolean isPending, String providerMarket) {
 
         Builder builder =
                 Transaction.builder()
