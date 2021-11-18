@@ -5,7 +5,6 @@ import java.util.List;
 import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.pojo.FieldPathPart;
 import se.tink.backend.aggregation.nxgen.raw_data_events.type_detection.RawBankDataFieldTypeDetectionStrategy;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
-import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 
 public class MaskedPanFieldTypeDetectionStrategy implements RawBankDataFieldTypeDetectionStrategy {
 
@@ -14,8 +13,7 @@ public class MaskedPanFieldTypeDetectionStrategy implements RawBankDataFieldType
         if (!JsonNodeType.STRING.equals(type)) {
             return false;
         }
-        MaskedPanIdentifier identifier = new MaskedPanIdentifier(value);
-        return identifier.isValid() && isProbablyMaskedPan(value);
+        return isProbablyMaskedPan(value);
     }
 
     @Override
@@ -25,6 +23,11 @@ public class MaskedPanFieldTypeDetectionStrategy implements RawBankDataFieldType
     }
 
     private static boolean isProbablyMaskedPan(String input) {
+        // Any string with more than 10 digits is potentially an unmasked PAN and treated as such
+        if (input.replaceAll("[^\\d]", "").length() > 10) {
+            return false;
+        }
+
         for (int i = 0; i < input.length(); i++) {
             char c = input.toLowerCase().charAt(i);
             if (!Character.isDigit(c) && c != ' ' && c != 'x' && c != '*' && c != '-') {

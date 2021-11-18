@@ -10,7 +10,10 @@ public final class LaBanquePostaleConstants {
     public static class Urls {
         public static final String BASE_URL = "https://api.labanquepostale.com/v1";
         public static final String OAUTH_BASE_URL = "https://oauth2.labanquepostale.com";
-        public static final String OAUTH = "/authorize";
+        public static final String PERSONAL_OAUTH = "/pph/authorize";
+        public static final String BUSINESS_OAUTH = "/pmo/authorize";
+        public static final String PERSONAL_TOKEN = "/pph/token";
+        public static final String BUSINESS_TOKEN = "/pmo/token";
         static final String GET_TOKEN = "/token";
         public static final String FETCH_ACCOUNTS = "/accounts";
         static final String FETCH_BALANCES = "/accounts/%s/balances";
@@ -65,6 +68,7 @@ public final class LaBanquePostaleConstants {
         public static final String TEMP_UNAVAILABLE =
                 "This service is temporarily unavailable. Please try again later.";
         public static final String BAD_REDIRECT = "badredirect";
+        public static final String CERTICODE_INACTIVE = "SCA_PSU_METHOD_ERROR";
     }
 
     public static class QueryValues {

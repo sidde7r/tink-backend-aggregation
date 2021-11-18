@@ -1,5 +1,5 @@
 REQUEST 0
-POST https://oauth2.labanquepostale.com/token
+POST https://oauth2.labanquepostale.com/pph/token
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 X-Aggregator : Tink Testing

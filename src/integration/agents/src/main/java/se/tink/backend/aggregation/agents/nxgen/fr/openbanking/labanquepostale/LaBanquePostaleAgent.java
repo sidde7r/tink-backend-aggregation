@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleAccountSegmentSpecifier;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
@@ -73,6 +74,8 @@ public final class LaBanquePostaleAgent
     private final AgentConfiguration<LaBanquePostaleConfiguration> agentConfiguration;
     private final LaBanquePostaleTransactionalAccountConverter transactionalAccountConverter;
     private final LaBanquePostaleCreditCardConverter creditCardConverter;
+    private final LaBanquePostaleUserState userState;
+    private final LaBanquePostaleAccountSegmentSpecifier accountSegmentSpecifier;
     private final LogMasker logMasker;
 
     @Inject
@@ -88,6 +91,10 @@ public final class LaBanquePostaleAgent
                         .getAgentConfiguration(LaBanquePostaleConfiguration.class);
 
         this.qsealcSigner = qsealcSigner;
+        this.userState = new LaBanquePostaleUserState(getPersistentStorage());
+        this.accountSegmentSpecifier =
+                new LaBanquePostaleAccountSegmentSpecifier(
+                        supplementalInformationHelper, userState, request);
         this.apiClient = createApiClient();
         this.transactionalAccountConverter = new LaBanquePostaleTransactionalAccountConverter();
         this.creditCardConverter = new LaBanquePostaleCreditCardConverter();
@@ -141,6 +148,7 @@ public final class LaBanquePostaleAgent
                 request,
                 getConfiguration().getRedirectUrl(),
                 getConfiguration().getQsealc(),
+                userState,
                 logMasker);
     }
 
@@ -151,6 +159,7 @@ public final class LaBanquePostaleAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+        accountSegmentSpecifier.specifyAccountSegment();
         final OAuth2AuthenticationController oAuth2Authenticator =
                 new LaBanquePostaleOAuth2AuthenticationController(
                         persistentStorage,

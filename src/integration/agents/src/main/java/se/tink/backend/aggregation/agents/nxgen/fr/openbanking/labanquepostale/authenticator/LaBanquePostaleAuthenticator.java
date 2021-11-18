@@ -43,7 +43,8 @@ public class LaBanquePostaleAuthenticator extends BerlinGroupAuthenticator
             throw ThirdPartyAppError.TIMED_OUT.exception();
         } else if (ErrorMessages.TEMP_UNAVAILABLE.equals(errorType)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
-        } else if (ErrorMessages.BAD_REDIRECT.equals(errorType)) {
+        } else if (ErrorMessages.BAD_REDIRECT.equals(errorType)
+                || ErrorMessages.CERTICODE_INACTIVE.equals(errorType)) {
             throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
                     new LocalizableKey(
                             "You are not registered to CerticodePlus. In order to register you need to download La Banque Postale app from the App Store or Google Play, activate Certicode Plus and try again."));
