@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import com.google.common.base.Strings;
+import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -9,10 +11,13 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.StatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.VerifySignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardTransactionsRequest;
@@ -252,5 +257,31 @@ public class LaCaixaApiClient {
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    public ScaResponse initiateEnrolment() {
+        return createRequest(Urls.INIT_ENROLMENT).get(ScaResponse.class);
+    }
+
+    public HttpResponse initiateAuthSignature() {
+        try {
+            return createRequest(Urls.INIT_AUTH_SIGNATURE).post(HttpResponse.class);
+        } catch (HttpResponseException e) {
+            return e.getResponse();
+        }
+    }
+
+    public VerifySignatureResponse verifyAuthSignature() {
+        return createRequest(Urls.VERIFY_AUTH_SIGNATURE).get(VerifySignatureResponse.class);
+    }
+
+    public ScaResponse authorizeSCA(String code) {
+        final AuthenticationRequest body = new AuthenticationRequest(code);
+        return createRequest(Urls.AUTHORIZE_SCA).post(ScaResponse.class, body);
+    }
+
+    public StatusResponse finalizeEnrolment(@Nullable String code) {
+        final AuthenticationRequest body = new AuthenticationRequest(Strings.nullToEmpty(code));
+        return createRequest(Urls.FINALIZE_ENROLMENT).post(StatusResponse.class, body);
     }
 }
