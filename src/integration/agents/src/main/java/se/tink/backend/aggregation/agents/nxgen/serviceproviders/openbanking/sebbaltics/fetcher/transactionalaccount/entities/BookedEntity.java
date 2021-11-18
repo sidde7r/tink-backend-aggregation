@@ -22,10 +22,10 @@ public class BookedEntity {
     private String creditorName;
     private String endToEndIdentification;
     private String instructedIdentification;
-    private CreditorIdEntity creditorId;
+    private IdEntity creditorId;
     private String creditorAddress;
     private String ultimateCreditor;
-    private CreditorIdEntity ultimateCreditorId;
+    private IdEntity ultimateCreditorId;
     private String purposeCode;
     private String remittanceInformationUnstructured;
     private String id;

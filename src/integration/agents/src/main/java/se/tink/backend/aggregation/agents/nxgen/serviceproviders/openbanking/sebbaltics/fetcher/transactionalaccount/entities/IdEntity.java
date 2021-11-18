@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CreditorIdEntity {
+public class IdEntity {
     private String id;
     private String type;
     private String schemeNameCode;
