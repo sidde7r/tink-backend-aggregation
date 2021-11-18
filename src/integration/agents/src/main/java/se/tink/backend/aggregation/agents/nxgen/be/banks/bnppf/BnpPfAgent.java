@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
@@ -12,17 +13,15 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.authenticator.BnpPfAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.fetcher.BnpPfTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.filter.BnpPfHttpFilter;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class BnpPfAgent extends NextGenerationAgent
@@ -33,9 +32,9 @@ public final class BnpPfAgent extends NextGenerationAgent
     private final BnpPfApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public BnpPfAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public BnpPfAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         configureHttpClient(client);
         apiClient = new BnpPfApiClient(client);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
