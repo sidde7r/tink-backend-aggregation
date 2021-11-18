@@ -21,7 +21,7 @@ public class ClientLoggingFilter extends ClientFilter {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final ImmutableSet<String> WHITELISTED_HEADER_KEYS =
-            ImmutableSet.of("uber-trace-id");
+            ImmutableSet.of("uber-trace-id", "tpp-x-request-id", "x-request-id");
 
     private final WhitelistHeaderMasker whitelistHeaderMasker;
 
