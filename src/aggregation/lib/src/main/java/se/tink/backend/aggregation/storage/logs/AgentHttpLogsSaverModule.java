@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
 
 @RequiredArgsConstructor
 public class AgentHttpLogsSaverModule extends AbstractModule {
@@ -26,6 +27,7 @@ public class AgentHttpLogsSaverModule extends AbstractModule {
         bind(LogMasker.class).toInstance(commandContext.getLogMasker());
         bind(RawHttpTrafficLogger.class).toInstance(commandContext.getRawHttpTrafficLogger());
         bind(JsonHttpTrafficLogger.class).toInstance(commandContext.getJsonHttpTrafficLogger());
+        bind(HarLogCollector.class).toInstance(commandContext.getHarLogCollector());
         bind(Credentials.class).toInstance(commandContext.getRequest().getCredentials());
         bind(Provider.class).toInstance(commandContext.getRequest().getProvider());
         bindConstant()

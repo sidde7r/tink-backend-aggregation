@@ -99,6 +99,36 @@ public class AgentHttpLogsSaver {
         }
     }
 
+    /**
+     * Store HAR logs
+     *
+     * @return path to saved file
+     */
+    public SaveLogsResult saveHarLogs(RawHttpLogsCatalog catalog) {
+        Optional<SaveLogsStatus> maybeShouldNotSaveLogsStatus =
+                checkForCommonReasonNotToSaveLogs(rawHttpTrafficLogger);
+        if (maybeShouldNotSaveLogsStatus.isPresent()) {
+            return SaveLogsResult.of(maybeShouldNotSaveLogsStatus.get());
+        }
+
+        Optional<String> maybeLogContent = logsCache.getHarLogContent();
+        if (!maybeLogContent.isPresent()) {
+            return SaveLogsResult.of(SaveLogsStatus.NO_LOGS);
+        }
+
+        String logContent = maybeLogContent.get();
+        try {
+            String filePath = getRawLogFilePath(logContent, catalog).replace(".log", ".har");
+            String storageDescription =
+                    logsStorageHandler.storeLog(logContent, filePath, HttpLogType.RAW_FORMAT);
+            return SaveLogsResult.saved(storageDescription);
+
+        } catch (IOException | RuntimeException e) {
+            log.error("Could not store har logs, catalog: {}", catalog, e);
+            return SaveLogsResult.of(SaveLogsStatus.ERROR);
+        }
+    }
+
     private Optional<SaveLogsStatus> checkForCommonReasonNotToSaveLogs(
             HttpTrafficLogger trafficLogger) {
         if (!logsStorageHandler.isEnabled()) {

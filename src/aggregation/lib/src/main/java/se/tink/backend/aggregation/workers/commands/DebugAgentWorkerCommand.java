@@ -166,6 +166,17 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         } else {
             logSkippingJsonLogs(jsonLogsResult.getStatus());
         }
+
+        if (shouldWriteHarLog()) {
+            SaveLogsResult harLogsResult = logsSaver.saveHarLogs(RawHttpLogsCatalog.DEFAULT);
+            if (harLogsResult.isSaved()) {
+                logResultsBuilder
+                        .append(format("%nFlushed transfer (%s) http archive: ", transferId))
+                        .append(harLogsResult.getStorageDescription());
+            } else {
+                logSkippingHarLogs(harLogsResult.getStatus());
+            }
+        }
     }
 
     private boolean shouldLogTransferRequest(TransferRequest transferRequest) {
@@ -208,6 +219,21 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         } else {
             logSkippingJsonLogs(jsonLogsResult.getStatus());
         }
+
+        if (shouldWriteHarLog()) {
+            SaveLogsResult harLogsResult = logsSaver.saveHarLogs(RawHttpLogsCatalog.DEFAULT);
+            if (harLogsResult.isSaved()) {
+                logResultsBuilder
+                        .append("\nFlushed http archive: ")
+                        .append(harLogsResult.getStorageDescription());
+            } else {
+                logSkippingHarLogs(harLogsResult.getStatus());
+            }
+        }
+    }
+
+    private boolean shouldWriteHarLog() {
+        return false;
     }
 
     private boolean shouldLogCommonRequest() {
@@ -258,5 +284,9 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private static void logSkippingJsonLogs(SaveLogsStatus status) {
         log.warn("{} Skipping JSON http logs: {}", LOG_TAG, status);
+    }
+
+    private static void logSkippingHarLogs(SaveLogsStatus status) {
+        log.warn("{} Skipping har logs: {}", LOG_TAG, status);
     }
 }

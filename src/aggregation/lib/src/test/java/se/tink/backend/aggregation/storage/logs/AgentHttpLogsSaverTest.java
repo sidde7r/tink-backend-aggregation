@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLog
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.HttpLogType;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
 
 @RunWith(JUnitParamsRunner.class)
 public class AgentHttpLogsSaverTest {
@@ -34,6 +35,7 @@ public class AgentHttpLogsSaverTest {
 
     private RawHttpTrafficLogger rawHttpTrafficLogger;
     private JsonHttpTrafficLogger jsonHttpTrafficLogger;
+    private HarLogCollector harLogCollector;
 
     private AgentHttpLogsSaver logsSaver;
 
@@ -45,6 +47,7 @@ public class AgentHttpLogsSaverTest {
 
         rawHttpTrafficLogger = mock(RawHttpTrafficLogger.class);
         jsonHttpTrafficLogger = mock(JsonHttpTrafficLogger.class);
+        harLogCollector = mock(HarLogCollector.class);
 
         recreateLogsSaver();
     }
@@ -56,7 +59,8 @@ public class AgentHttpLogsSaverTest {
                         logsCache,
                         s3StoragePathsProvider,
                         rawHttpTrafficLogger,
-                        jsonHttpTrafficLogger);
+                        jsonHttpTrafficLogger,
+                        harLogCollector);
     }
 
     @Test
