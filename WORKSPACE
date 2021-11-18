@@ -141,7 +141,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "b3bc5a56ed860979ad5fd0b91d4c0396a679a622",
+    commit = "668661547f9cd7f36bd6b47036c339a0e29f183a",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -3979,4 +3979,11 @@ http_archive(
     name = "rules_python",
     sha256 = "778197e26c5fbeb07ac2a2c5ae405b30f6cb7ad1f5510ea6fdac03bded96cc6f",
     url = "https://github.com/bazelbuild/rules_python/releases/download/0.2.0/rules_python-0.2.0.tar.gz",
+)
+
+# For publishing maven artifacts (required due to usage in tink-backend)
+git_repository(
+    name = "graknlabs_bazel_distribution",
+    commit = "19ec01a93637c5cc180ee523f25b190a79adcc35",
+    remote = "https://github.com/graknlabs/bazel-distribution",
 )
