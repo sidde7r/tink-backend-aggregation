@@ -7,6 +7,7 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sbab/wiremock/resources",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sbab"],
     deps = [
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
