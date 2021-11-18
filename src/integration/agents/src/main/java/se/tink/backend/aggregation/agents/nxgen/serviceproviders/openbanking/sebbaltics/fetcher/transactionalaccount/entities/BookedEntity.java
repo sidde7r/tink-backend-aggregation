@@ -18,10 +18,16 @@ public class BookedEntity {
     private LocalDate valueDate;
     private String entryReference;
     private String transactionPaymentInfId;
+    private String debtorName;
+    private AccountNumberEntity debtorAccount;
     private AccountNumberEntity creditorAccount;
     private String creditorName;
     private String endToEndIdentification;
     private String instructedIdentification;
+    private IdEntity debtorId;
+    private String debtorAddress;
+    private String ultimateDebtor;
+    private IdEntity ultimateDebtorId;
     private IdEntity creditorId;
     private String creditorAddress;
     private String ultimateCreditor;
