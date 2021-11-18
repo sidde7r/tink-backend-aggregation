@@ -72,7 +72,6 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class Endpoints {
-
         public static final String AUTHORIZATION = "/as/authorization.oauth2";
         public static final String TOKEN = "/as/token.oauth2";
 
@@ -220,6 +219,11 @@ public abstract class LansforsakringarConstants {
 
     public class ErrorCodes {
         public static final String SERVER = "server";
+    }
+
+    public static class ConsentStatus {
+        public static final String VALID = "valid";
+        public static final String REJECTED = "rejected";
     }
 
     public static class PaymentValue {

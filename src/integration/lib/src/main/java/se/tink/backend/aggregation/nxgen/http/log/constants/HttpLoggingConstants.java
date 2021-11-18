@@ -35,6 +35,7 @@ public final class HttpLoggingConstants {
                     "jws-signature",
                     "language",
                     "last-modified",
+                    "page_erreur",
                     "pragma",
                     "proxy-connection",
                     "psu-corporate-id",

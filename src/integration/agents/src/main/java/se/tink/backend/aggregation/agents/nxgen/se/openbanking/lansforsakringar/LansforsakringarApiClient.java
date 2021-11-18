@@ -11,7 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
@@ -404,10 +406,18 @@ public class LansforsakringarApiClient {
 
     public boolean isConsentValid() {
         try {
-            return getConsentStatus() != null;
+            ConsentStatusResponse consentStatus = getConsentStatus();
+            if (consentStatus == null) {
+                return false;
+            }
+            consentStatus.checkConsentRejected();
+            return consentStatus.isConsentValid();
         } catch (HttpResponseException e) {
             log.error("Bank thrown an error when fetching consent status", e);
             throw SessionError.SESSION_EXPIRED.exception();
+        } catch (LoginException e) {
+            log.error("ConsentStatus was returned as REJECTED from bank", e);
+            throw LoginError.NOT_CUSTOMER.exception();
         } catch (RuntimeException e) {
             log.error("Unexpected error occurred when fetching consent status.", e);
             throw SessionError.SESSION_EXPIRED.exception();

@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import junitparams.JUnitParamsRunner;
@@ -11,9 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class LansforsakringarApiClientTest {
@@ -34,7 +40,7 @@ public class LansforsakringarApiClientTest {
     }
 
     @Test
-    public void shouldReturnThatConsentIsNotValidWhenIdIsNull() {
+    public void shouldReturnFalseWhenConsentIdIsNull() {
         // when
         when(storageHelper.getConsentId()).thenReturn(null);
         // then
@@ -52,8 +58,47 @@ public class LansforsakringarApiClientTest {
     }
 
     @Test
-    public void shouldReturnThatConsentIsNotValidWhenThereIsNoConsentResponse() {
-        assertFalse(apiClient.isConsentValid());
+    public void shouldThrowConsentInvalidIfBankRejectsConsent() {
+        LansforsakringarApiClient spyClient = spy(apiClient);
+        doReturn(getConsentStatus("\"REJECTED\"")).when(spyClient).getConsentStatus();
+
+        assertThatThrownBy(spyClient::isConsentValid)
+                .isInstanceOf(LoginError.NOT_CUSTOMER.exception().getClass());
+    }
+
+    @Test
+    public void shouldReturnFalseIfConsentStatusIsRandomString() {
+        LansforsakringarApiClient spyClient = spy(apiClient);
+        doReturn(getConsentStatus("\"random string\"")).when(spyClient).getConsentStatus();
+
+        boolean result = spyClient.isConsentValid();
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void shouldReturnTureIfConsentStatusIsValidButRandomlyCapitalized() {
+        LansforsakringarApiClient spyClient = spy(apiClient);
+        doReturn(getConsentStatus("\"VaLiD\"")).when(spyClient).getConsentStatus();
+
+        boolean result = spyClient.isConsentValid();
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void shouldReturnFalseIfConsentStatusIsNull() {
+        LansforsakringarApiClient spyClient = spy(apiClient);
+        doReturn(null).when(spyClient).getConsentStatus();
+
+        boolean result = spyClient.isConsentValid();
+
+        assertFalse(result);
+    }
+
+    ConsentStatusResponse getConsentStatus(String status) {
+        return SerializationUtils.deserializeFromString(
+                "{\"consentStatus\": " + status + "}", ConsentStatusResponse.class);
     }
 
     private RuntimeException getRuntime() {
