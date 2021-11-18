@@ -41,7 +41,6 @@ public class BookedEntity {
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
                         .setTransactionDates(getTinkTransactionDates())
-                        .setProprietaryFinancialInstitutionType(purposeCode)
                         .setProviderMarket(providerMarket);
 
         return (Transaction) builder.build();
