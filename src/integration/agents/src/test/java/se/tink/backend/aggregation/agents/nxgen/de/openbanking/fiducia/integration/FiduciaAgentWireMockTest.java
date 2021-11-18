@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalDate;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -74,6 +75,7 @@ public class FiduciaAgentWireMockTest {
     }
 
     @Test
+    @Ignore
     public void testSepaPayment() throws Exception {
         // given
 
