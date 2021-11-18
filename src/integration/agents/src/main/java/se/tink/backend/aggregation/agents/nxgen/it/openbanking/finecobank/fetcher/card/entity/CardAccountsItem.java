@@ -6,6 +6,8 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
@@ -26,6 +28,7 @@ public class CardAccountsItem {
     private String name;
     private String currency;
     private CreditLimitEntity creditLimit;
+    private String ownerName;
 
     public String getResourceId() {
         return resourceId;
@@ -82,6 +85,7 @@ public class CardAccountsItem {
                                                 maskedPan))
                                 .build())
                 .setApiIdentifier(resourceId)
+                .addParties(new Party(ownerName, Role.HOLDER))
                 .build();
     }
 

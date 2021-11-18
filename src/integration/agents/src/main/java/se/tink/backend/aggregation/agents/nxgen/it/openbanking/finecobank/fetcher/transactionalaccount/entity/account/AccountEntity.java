@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -18,6 +20,7 @@ public class AccountEntity {
     private String resourceId;
     private String iban;
     private String name;
+    private String ownerName;
     private List<BalanceEntity> balances;
 
     @JsonIgnore
@@ -41,6 +44,7 @@ public class AccountEntity {
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(iban)
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
+                .addParties(new Party(ownerName, Role.HOLDER))
                 .build();
     }
 }

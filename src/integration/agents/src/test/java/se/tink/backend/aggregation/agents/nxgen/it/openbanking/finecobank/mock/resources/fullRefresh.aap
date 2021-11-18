@@ -110,7 +110,7 @@ Server: Microsoft-IIS/8.5
 Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
 Content-Length: 564
 
-{"accounts":[{"resourceId":"A9D1BA8559E1974DE021676322801228","iban":"**HASHED:sB**","currency":"EUR","name":"Main account EUR","product":"Main account EUR","balances":[{"balanceAmount":{"currency":"EUR","amount":"57022.67"},"balanceType":"interimAvailable","creditLimitIncluded":true},{"balanceAmount":{"currency":"EUR","amount":"57047.57"},"balanceType":"interimBooked","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":"57020.09"},"balanceType":"forwardAvailable","referenceDate":"2021-07-31","creditLimitIncluded":true}]}]}
+{"accounts":[{"resourceId":"A9D1BA8559E1974DE021676322801228","iban":"**HASHED:sB**","currency":"EUR","name":"Main account EUR","ownerName": "Name Surname","product":"Main account EUR","balances":[{"balanceAmount":{"currency":"EUR","amount":"57022.67"},"balanceType":"interimAvailable","creditLimitIncluded":true},{"balanceAmount":{"currency":"EUR","amount":"57047.57"},"balanceType":"interimBooked","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":"57020.09"},"balanceType":"forwardAvailable","referenceDate":"2021-07-31","creditLimitIncluded":true}]}]}
 
 REQUEST 5
 GET https://api.finecobank.com/v1/card-accounts?withBalance=true
@@ -138,7 +138,7 @@ Server: Microsoft-IIS/8.5
 Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
 Content-Length: 364
 
-{"cardAccounts":[{"resourceId":"A884B5497562E06ED8C1328177FC7E2F","maskedPan":"123456789","currency":"EUR","name":"4030 **** **** 3552","product":"FINECO CARD VISA MULTIFUNZIONE CHIP","status":"enabled","creditLimit":{"currency":"EUR","amount":"2600.0"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"2600.0"},"balanceType":"interimAvailable"}]}]}
+{"cardAccounts":[{"resourceId":"A884B5497562E06ED8C1328177FC7E2F","maskedPan":"123456789","currency":"EUR","name":"4030 **** **** 3552","ownerName": "Name Surname","product":"FINECO CARD VISA MULTIFUNZIONE CHIP","status":"enabled","creditLimit":{"currency":"EUR","amount":"2600.0"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"2600.0"},"balanceType":"interimAvailable"}]}]}
 
 REQUEST 13
 GET https://api.finecobank.com/v1/accounts/A9D1BA8559E1974DE021676322801228/transactions?withBalance=true&bookingStatus=booked&dateFrom=1992-01-11&dateTo=1992-04-09

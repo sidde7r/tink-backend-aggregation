@@ -32,7 +32,12 @@
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
-                "identities": []
+                "identities": [
+                    {
+                        "name": "Name Surname",
+                        "role": "HOLDER"
+                    }
+                ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
@@ -71,7 +76,12 @@
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
-                "identities": []
+                "identities": [
+                    {
+                        "name": "Name Surname",
+                        "role": "HOLDER"
+                    }
+                ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
