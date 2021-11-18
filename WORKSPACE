@@ -3980,3 +3980,10 @@ http_archive(
     sha256 = "778197e26c5fbeb07ac2a2c5ae405b30f6cb7ad1f5510ea6fdac03bded96cc6f",
     url = "https://github.com/bazelbuild/rules_python/releases/download/0.2.0/rules_python-0.2.0.tar.gz",
 )
+
+# For publishing maven artifacts (required due to usage in tink-backend)
+git_repository(
+    name = "graknlabs_bazel_distribution",
+    commit = "19ec01a93637c5cc180ee523f25b190a79adcc35",
+    remote = "https://github.com/graknlabs/bazel-distribution",
+)
