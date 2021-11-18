@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator;
 
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.FinancialService;
@@ -12,6 +13,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.HasRefreshScope;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@Slf4j
 public class LaBanquePostaleAccountSegmentSpecifier {
     private static final String ACCOUNT_SEGMENT_FIELD_NAME = "accountSegment";
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -50,6 +52,7 @@ public class LaBanquePostaleAccountSegmentSpecifier {
                                 FinancialService.FinancialServiceSegment.PERSONAL)
                         && financialServiceSegments.contains(
                                 FinancialService.FinancialServiceSegment.BUSINESS)) {
+                    log.info("FinancialServiceSegment passed: {}", financialServiceSegments);
                     requestForSupplementalInformation();
                 }
             } else {
