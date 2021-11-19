@@ -13,10 +13,10 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.libraries.metrics.core.MetricId;
 
-public class RefreshItemPostProcessingAgentWorkedCommand extends AgentWorkerCommand
+public class RefreshPostProcessingAgentWorkedCommand extends AgentWorkerCommand
         implements MetricsCommand {
     private static final Logger log =
-            LoggerFactory.getLogger(RefreshItemPostProcessingAgentWorkedCommand.class);
+            LoggerFactory.getLogger(RefreshPostProcessingAgentWorkedCommand.class);
 
     private static final String METRIC_NAME = "agent_refresh";
     private static final String METRIC_ACTION = "post_process";
@@ -24,7 +24,7 @@ public class RefreshItemPostProcessingAgentWorkedCommand extends AgentWorkerComm
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
-    public RefreshItemPostProcessingAgentWorkedCommand(
+    public RefreshPostProcessingAgentWorkedCommand(
             AgentWorkerCommandContext context, AgentWorkerCommandMetricState metrics) {
         this.context = context;
         this.metrics = metrics.init(this);
@@ -43,7 +43,7 @@ public class RefreshItemPostProcessingAgentWorkedCommand extends AgentWorkerComm
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
 
             try {
-                context.getAgent().postProcess(context.getAccountDataCache());
+                context.getAgent().afterRefreshPostProcess(context.getAccountDataCache());
                 action.completed();
             } catch (Exception e) {
                 action.failed();
@@ -66,9 +66,7 @@ public class RefreshItemPostProcessingAgentWorkedCommand extends AgentWorkerComm
     public List<MetricId.MetricLabels> getCommandTimerName(AgentWorkerOperationMetricType type) {
         MetricId.MetricLabels typeName =
                 new MetricId.MetricLabels()
-                        .add(
-                                "class",
-                                RefreshItemPostProcessingAgentWorkedCommand.class.getSimpleName())
+                        .add("class", RefreshPostProcessingAgentWorkedCommand.class.getSimpleName())
                         .add("command", type.getMetricName());
 
         return Lists.newArrayList(typeName);

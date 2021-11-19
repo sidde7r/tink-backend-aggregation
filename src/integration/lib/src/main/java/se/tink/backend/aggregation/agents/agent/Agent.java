@@ -26,7 +26,7 @@ public interface Agent {
         visitor.visit(this);
     }
 
-    default void postProcess(AccountDataCache cache) {
+    default void afterRefreshPostProcess(AccountDataCache cache) {
         // NOOP
     }
 }
