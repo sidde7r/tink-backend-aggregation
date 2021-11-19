@@ -255,6 +255,12 @@ public final class SwedbankConstants {
         public static final String EE = "EE";
     }
 
+    public static final class BalanceType {
+        public static final String BOOKED = "interimBooked";
+        public static final String AVAILABLE = "interimAvailable";
+        public static final String AUTHORISED = "authorised";
+    }
+
     public static final class Transactions {
         public static final Pattern SALARY_PATTERN = Pattern.compile(".*(l[oö]n|salary).*");
     }
