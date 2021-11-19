@@ -65,8 +65,38 @@
             "date": "2018-02-12",
             "instant": null
           }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2018-02-12",
+            "instant": null
+          }
         }
       ],
+      "proprietaryFinancialInstitutionType": null,
+      "merchantName": null,
+      "merchantCategoryCode": null,
+      "transactionReference": null,
+      "providerMarket": null
+    },
+    {
+      "amount": -100.00,
+      "credentialsId": null,
+      "date": 1638529200000,
+      "description": "VIR SEPA COMPTE DU LOVE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": true,
+      "timestamp": 0,
+      "type": "TRANSFER",
+      "userId": null,
+      "upcoming": false,
+      "externalSystemIds": {},
+      "mutability": null,
+      "transactionAmount": null,
+      "transactionDates": [],
       "proprietaryFinancialInstitutionType": null,
       "merchantName": null,
       "merchantCategoryCode": null,
