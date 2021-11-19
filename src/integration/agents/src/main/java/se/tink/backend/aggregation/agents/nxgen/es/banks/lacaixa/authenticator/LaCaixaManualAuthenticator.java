@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstant
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.PinScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.SmsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResultResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.step.CodeCardStep;
@@ -107,8 +108,22 @@ public class LaCaixaManualAuthenticator {
                         sessionResponse.getSeed(), sessionResponse.getIterations(), password);
         logMasker.addNewSensitiveValuesToMasker(Collections.singleton(pin));
 
+        LoginRequest loginRequest = new LoginRequest(username, pin);
+
+        LoginResultResponse loginResultResponse = apiClient.checkLoginResult(loginRequest);
+
+        if (!"OK".equalsIgnoreCase(loginResultResponse.getLoginResultInfo())) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        String isScaNeeded = apiClient.checkIfScaNeeded();
+
+        if ("N".equalsIgnoreCase(isScaNeeded)) {
+            return AuthenticationStepResponse.authenticationSucceeded();
+        }
+
         // Construct login request from username and hashed password
-        apiClient.login(new LoginRequest(username, pin));
+        apiClient.login(loginRequest);
         return AuthenticationStepResponse.executeNextStep();
     }
 

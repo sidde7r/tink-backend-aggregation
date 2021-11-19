@@ -57,4 +57,9 @@ public class UserDataResponse {
     public String getSecondSurName() {
         return dataMap.get(LaCaixaConstants.UserData.SECOND_SUR_NAME);
     }
+
+    @JsonIgnore
+    public String isScaNeeded() {
+        return dataMap.get(LaCaixaConstants.UserData.IS_ENROLLMENT_NEEDED);
+    }
 }
