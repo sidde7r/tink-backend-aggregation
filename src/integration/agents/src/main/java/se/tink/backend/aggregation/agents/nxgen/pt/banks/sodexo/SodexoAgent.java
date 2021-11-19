@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.fetchers.SodexoT
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.filter.SodexoClientConfigurator;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -22,9 +23,10 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public class SodexoAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
 
-    private SodexoApiClient sodexoApiClient;
-    private TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private SodexoStorage sodexoStorage;
+    private final SodexoApiClient sodexoApiClient;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final SodexoStorage sodexoStorage;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public SodexoAgent(final AgentComponentProvider componentProvider) {
@@ -40,6 +42,7 @@ public class SodexoAgent extends NextGenerationAgent implements RefreshCheckingA
                         updateController,
                         new SodexoAccountsFetcher(sodexoApiClient, sodexoStorage),
                         new SodexoTransactionsFetcher(sodexoApiClient));
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     private void configureHttpClient() {
@@ -54,7 +57,7 @@ public class SodexoAgent extends NextGenerationAgent implements RefreshCheckingA
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new SodexoAuthenticator(sodexoApiClient, sodexoStorage));
+                new SodexoAuthenticator(sodexoApiClient, sodexoStorage, randomValueGenerator));
     }
 
     @Override
