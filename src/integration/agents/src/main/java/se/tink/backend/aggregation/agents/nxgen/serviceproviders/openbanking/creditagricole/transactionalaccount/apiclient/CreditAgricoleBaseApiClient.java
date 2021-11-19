@@ -63,8 +63,15 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return createGetRequest(CreditAgricoleBaseConstants.ApiServices.ACCOUNTS)
-                .get(GetAccountsResponse.class);
+        try {
+            return createGetRequest(CreditAgricoleBaseConstants.ApiServices.ACCOUNTS)
+                    .get(GetAccountsResponse.class);
+        } catch (HttpResponseException ex) {
+            if (isNoAccountsAvailableException(ex)) {
+                throw LoginError.NO_ACCOUNTS.exception();
+            }
+            throw ex;
+        }
     }
 
     public void putConsents(final List<AccountIdEntity> accountsToConsent) {
@@ -195,5 +202,11 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
     private static PutConsentsRequest buildBody(
             final List<AccountIdEntity> listOfNecessaryConsents) {
         return new PutConsentsRequest(listOfNecessaryConsents, listOfNecessaryConsents, true, true);
+    }
+
+    private boolean isNoAccountsAvailableException(HttpResponseException exception) {
+        HttpResponse response = exception.getResponse();
+        return response.getStatus() == 404
+                && response.getBody(ErrorResponse.class).isNoAccountsAvailable();
     }
 }

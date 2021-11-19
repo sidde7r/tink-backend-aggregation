@@ -169,6 +169,15 @@ public class CreditAgricoleBaseApiClientTest {
         assertThat(returnedResponse).isEqualTo(expectedResponse);
     }
 
+    @Test(expected = LoginException.class)
+    public void shouldThrowLoginExceptionWhenNoAccountsError() {
+        // given
+        HttpResponseException exception = noAccountsException();
+        setUpHttpClientMockForApiException(ACCOUNTS_URL, exception);
+        // when
+        apiClient.getAccounts();
+    }
+
     @Test
     public void ifFetchTransactionsReturns204_EmptyResponseIsReturned() {
         // given
@@ -310,6 +319,20 @@ public class CreditAgricoleBaseApiClientTest {
     }
 
     private void setUpHttpClientMockForApi(String urlString, Object response) {
+        RequestBuilder requestBuilder = buildRequestBuilderMock();
+
+        when(requestBuilder.get(any())).thenReturn(response);
+        when(httpClientMock.request(new URL(urlString))).thenReturn(requestBuilder);
+    }
+
+    private void setUpHttpClientMockForApiException(
+            String urlString, HttpResponseException exception) {
+        RequestBuilder requestBuilder = buildRequestBuilderMock();
+        when(requestBuilder.get(any())).thenThrow(exception);
+        when(httpClientMock.request(new URL(urlString))).thenReturn(requestBuilder);
+    }
+
+    private RequestBuilder buildRequestBuilderMock() {
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
 
         when(requestBuilderMock.header(
@@ -322,10 +345,7 @@ public class CreditAgricoleBaseApiClientTest {
                 .thenReturn(requestBuilderMock);
 
         when(requestBuilderMock.accept(MediaType.APPLICATION_JSON)).thenReturn(requestBuilderMock);
-
-        when(requestBuilderMock.get(any())).thenReturn(response);
-
-        when(httpClientMock.request(new URL(urlString))).thenReturn(requestBuilderMock);
+        return requestBuilderMock;
     }
 
     private void setUpHttpClientMockForTransactionsFetch(URL url, HttpResponse response) {
@@ -406,6 +426,25 @@ public class CreditAgricoleBaseApiClientTest {
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 "{\"error\":\"invalid_request\",\"error_description\":\"Compte inexistant ou bloque, Veuillez contacter votre conseiller\"}",
+                                ErrorResponse.class));
+        return exception;
+    }
+
+    private HttpResponseException noAccountsException() {
+        HttpResponseException exception = mock(HttpResponseException.class);
+        HttpResponse response = mock(HttpResponse.class);
+        when(exception.getResponse()).thenReturn(response);
+        when(response.getStatus()).thenReturn(404);
+        when(response.getBody(ErrorResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\n"
+                                        + "  \"timestamp\": \"2021-11-18T11:19:22.917+0100\",\n"
+                                        + "  \"status\": 404,\n"
+                                        + "  \"error\": \"Not found, no account available\",\n"
+                                        + "  \"message\": \"No account available\",\n"
+                                        + "  \"path\": \"/accounts\"\n"
+                                        + "}",
                                 ErrorResponse.class));
         return exception;
     }
