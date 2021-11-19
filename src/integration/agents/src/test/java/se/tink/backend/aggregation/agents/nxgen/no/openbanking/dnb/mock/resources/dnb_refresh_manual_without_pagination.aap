@@ -90,7 +90,7 @@ x-request-id: 00000000-0000-4000-0000-000000000000
 {
   "accounts": [
     {
-      "iban": "NO1010101010987",
+      "iban": "NO9386011117947",
       "bban": "9999999999",
       "currency": "NOK",
       "name": "SPAREKONTO",
@@ -106,7 +106,7 @@ x-request-id: 00000000-0000-4000-0000-000000000000
       "ownerName": "OWNER NAME"
     },
     {
-      "iban": "NO3216549870321",
+      "iban": "NO8330001234567",
       "bban": "1111111111",
       "currency": "NOK",
       "name": "BRUKSKONTO",
@@ -143,6 +143,7 @@ x-request-id: 00000000-0000-4000-0000-000000000000
 
 {
   "account": {
+    "iban": "NO9386011117947",
     "bban": "9999999999",
     "currency": "NOK"
   },
@@ -190,6 +191,7 @@ x-request-id: 00000000-0000-4000-0000-000000000000
 
 {
   "account": {
+    "iban": "NO8330001234567",
     "bban": "1111111111",
     "currency": "NOK"
   },
@@ -334,6 +336,7 @@ Transfer-Encoding: chunked
 
 {
   "account": {
+    "iban": "NO9386011117947",
     "bban": "9999999999"
   },
   "transactions": {
