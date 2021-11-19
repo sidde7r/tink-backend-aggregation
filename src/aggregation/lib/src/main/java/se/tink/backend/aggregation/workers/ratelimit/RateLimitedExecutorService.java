@@ -113,7 +113,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.pt.openbanking.novobancoacores.NovoBancoAcoresAgent", 0.025)
                     .put("nxgen.pt.openbanking.santander.SantanderAgent", 0.025)
                     .put("nxgen.pt.openbanking.unicre.UnicreAgent", 0.025)
-                    .put("nxgen.fr.openbanking.bpcegroup.BpceGroupAgent", 0.075)
+                    .put("nxgen.fr.openbanking.bpcegroup.BpceGroupAgent", 0.05)
                     .put("nxgen.serviceproviders.openbanking.revolut.RevolutEEAAgent", 0.033)
                     .build();
 
