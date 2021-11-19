@@ -142,6 +142,15 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
         return Optional.of(localDate);
     }
 
+    @JsonIgnore
+    public Optional<AvailableDateInformation> getAvailableDateInformationOf(
+            TransactionDateType type) {
+        return getTransactionDates().stream()
+                .filter(transactionDate -> type.equals(transactionDate.getType()))
+                .findFirst()
+                .map(TransactionDate::getValue);
+    }
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -156,6 +165,10 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
 
     public boolean isPending() {
         return pending;
+    }
+
+    public boolean isBooked() {
+        return !isPending();
     }
 
     public boolean isUpcoming() {

@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObConsentGenerator;
@@ -83,6 +84,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         return createAisRequest(aisConfig.getAccountBalanceRequestURL(accountId))
                 .get(AccountBalanceV31Response.class)
                 .getData()
+                .map(this::logBalanceSnapshotTime)
                 .orElse(Collections.emptyList());
     }
 
@@ -237,5 +239,15 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private void saveConsentCreationDate(Instant creationDate) {
         persistentStorage.put(
                 PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE, creationDate);
+    }
+
+    private List<AccountBalanceEntity> logBalanceSnapshotTime(
+            List<AccountBalanceEntity> accountBalanceEntities) {
+        log.info(
+                "[BALANCE SNAPSHOT TIME] Balance snapshot time for specific account: {}",
+                accountBalanceEntities.stream()
+                        .map(AccountBalanceEntity::getDateTime)
+                        .collect(Collectors.toList()));
+        return accountBalanceEntities;
     }
 }
