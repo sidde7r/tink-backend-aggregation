@@ -84,9 +84,11 @@ public class DeutscheBankTransactionalAccountFetcherTest {
         assertThat(account.getType().name()).isEqualTo(type.name());
         assertThat(account.getName()).isEqualTo("NAME");
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(12.12));
-        assertThat(account.getParties()).hasSize(1);
+        assertThat(account.getParties()).hasSize(2);
         assertThat(account.getParties().get(0).getName()).isEqualTo("Name Surname");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(Party.Role.HOLDER);
+        assertThat(account.getParties().get(1).getName()).isEqualTo("Diffname Diffsurname");
+        assertThat(account.getParties().get(1).getRole()).isEqualTo(Party.Role.HOLDER);
     }
 
     @Test
@@ -119,7 +121,7 @@ public class DeutscheBankTransactionalAccountFetcherTest {
 
     private static FetchAccountsResponse getAccountsResponse(String accountType) {
         return SerializationUtils.deserializeFromString(
-                "{\"accounts\" : [{\"iban\" : \"PL666\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"ownerName\" : \"Name Surname\", \"currency\" : \"EUR\", \"product\" : \""
+                "{\"accounts\" : [{\"iban\" : \"PL666\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"ownerName\" : \"Name Surname; Diffname Diffsurname \", \"currency\" : \"EUR\", \"product\" : \""
                         + accountType
                         + "\"}]}",
                 FetchAccountsResponse.class);

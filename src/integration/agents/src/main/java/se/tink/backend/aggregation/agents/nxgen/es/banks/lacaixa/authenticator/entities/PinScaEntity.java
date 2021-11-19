@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class Pin1ScaEntity {
+public class PinScaEntity {
     @JsonProperty("iteraciones")
     private int iterations;
 

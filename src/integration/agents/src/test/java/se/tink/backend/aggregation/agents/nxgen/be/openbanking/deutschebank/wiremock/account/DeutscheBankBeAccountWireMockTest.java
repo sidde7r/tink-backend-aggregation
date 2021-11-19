@@ -69,6 +69,7 @@ public class DeutscheBankBeAccountWireMockTest {
                         .testAutoAuthentication()
                         .addRefreshableItems(refreshableItems.toArray(new RefreshableItem[0]))
                         .addPersistentStorageData("Consent-ID", "consentId")
+                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =

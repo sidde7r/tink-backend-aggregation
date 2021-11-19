@@ -67,7 +67,6 @@ public final class DeutscheBankConstants {
 
     public static class StorageKeys {
         public static final String CONSENT_ID = "Consent-ID";
-        public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
     }
 
     public static class QueryKeys {

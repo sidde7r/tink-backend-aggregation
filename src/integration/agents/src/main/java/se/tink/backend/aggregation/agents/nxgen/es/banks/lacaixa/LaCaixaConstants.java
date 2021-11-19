@@ -157,6 +157,7 @@ public final class LaCaixaConstants {
         public static final String DEVICE_NAME = "Tink";
         public static final String SCA_TYPE_APP = "MOTP";
         public static final String SCA_TYPE_PIN = "PIN1_SCA";
+        public static final String SCA_TYPE_PIN_BANKIA = "PIN2_BANKIA";
         public static final String SCA_TYPE_SMS = "OTPSMS";
         public static final String SCA_TYPE_CODECARD = "TCO";
         public static final String SIGNING_URL = "caixabanksign://app2app";
