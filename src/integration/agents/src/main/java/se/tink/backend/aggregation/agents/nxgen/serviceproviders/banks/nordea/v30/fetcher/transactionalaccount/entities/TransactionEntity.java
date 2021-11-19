@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -50,7 +51,10 @@ public class TransactionEntity {
                         .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setPending(!booked)
                         .setDescription(title)
-                        .setDate(bookingDate);
+                        .setDate(bookingDate)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                transactionId);
 
         if (nordeaConfiguration.isBusinessAgent()) {
             transaction.setPayload(
