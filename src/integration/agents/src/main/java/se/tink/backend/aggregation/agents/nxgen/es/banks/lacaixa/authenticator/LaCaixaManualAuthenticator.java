@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstant
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.CaixaPayloadValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.TemporaryStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.Pin1ScaEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.PinScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.SmsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.ScaResponse;
@@ -134,6 +134,9 @@ public class LaCaixaManualAuthenticator {
             case AuthenticationParams.SCA_TYPE_PIN:
                 // Password again
                 return handlePasswordSca(response.getPin1Sca());
+            case AuthenticationParams.SCA_TYPE_PIN_BANKIA:
+                // Password again
+                return handlePasswordSca(response.getPin2ScaBankia());
             case AuthenticationParams.SCA_TYPE_SMS:
                 // SCA with OTP SMS
                 authStorage.put(TemporaryStorage.SCA_SMS, response.getSms());
@@ -147,10 +150,10 @@ public class LaCaixaManualAuthenticator {
         }
     }
 
-    private AuthenticationStepResponse handlePasswordSca(Pin1ScaEntity pin1Sca) {
+    private AuthenticationStepResponse handlePasswordSca(PinScaEntity pinSca) {
         final String password = credentials.getField(Key.PASSWORD);
         final String code =
-                LaCaixaPasswordHash.hash(pin1Sca.getSeed(), pin1Sca.getIterations(), password);
+                LaCaixaPasswordHash.hash(pinSca.getSeed(), pinSca.getIterations(), password);
         logMasker.addNewSensitiveValuesToMasker(Collections.singleton(code));
         final ScaResponse response = apiClient.authorizeSCA(code);
         return handleScaResponse(response);
