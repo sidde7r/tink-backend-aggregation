@@ -16,6 +16,10 @@ public class BalanceEntity {
         return balanceType.equalsIgnoreCase(Accounts.AVAILABLE_BALANCE);
     }
 
+    public boolean isBookedBalance() {
+        return balanceType.equalsIgnoreCase(Accounts.BOOKED_BALANCE);
+    }
+
     public ExactCurrencyAmount toAmount() {
         return Optional.ofNullable(balanceAmount)
                 .map(balance -> new ExactCurrencyAmount(balance.getAmount(), balance.getCurrency()))
