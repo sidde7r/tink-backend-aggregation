@@ -31,7 +31,7 @@ public final class SodexoConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class Headers {
         static final String X_APP_VERSION = "x-app-version";
-        static final String X_APP_VERSION_VALUE = "2.1.0";
+        static final String X_APP_VERSION_VALUE = "2.3.1";
         static final String CONTENT_TYPE = "Content-Type";
         static final String CONTENT_TYPE_X_FORM = "application/x-www-form-urlencoded";
         static final String AUTHORIZATION = "Authorization";

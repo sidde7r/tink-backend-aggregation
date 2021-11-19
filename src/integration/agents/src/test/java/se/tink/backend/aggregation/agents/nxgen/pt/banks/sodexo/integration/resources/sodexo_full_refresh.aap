@@ -1,6 +1,6 @@
 REQUEST 1
 POST https://mobile.sodexobeneficios.pt/api/v2/sign-in-registered/
-x-app-version: 2.1.0
+x-app-version: 2.3.1
 Content-Type: application/x-www-form-urlencoded
 X-Aggregator: Tink Testing
 
@@ -12,7 +12,7 @@ Date: Thu, 18 Nov 2021 11:13:23 GMT
 Server: Apache/2.4.51 (Amazon) OpenSSL/1.0.2k-fips PHP/7.1.33
 Strict-Transport-Security: max-age=63072000; includeSubDomains
 X-Powered-By: PHP/7.1.33
-X-APP-Version: 2.1.0
+X-APP-Version: 2.3.1
 Vary: Accept-Encoding,User-Agent
 Keep-Alive: timeout=5, max=100
 Connection: Keep-Alive
@@ -22,7 +22,7 @@ Content-Type: application/json
 
 REQUEST 2
 POST https://mobile.sodexobeneficios.pt/api/v2/reset-pin/
-x-app-version: 2.1.0
+x-app-version: 2.3.1
 Authorization: Bearer token.test.test2
 Content-Type: application/x-www-form-urlencoded
 X-Aggregator: Tink Testing
@@ -35,7 +35,7 @@ Date: Thu, 18 Nov 2021 11:13:24 GMT
 Server: Apache/2.4.51 (Amazon) OpenSSL/1.0.2k-fips PHP/7.1.33
 Strict-Transport-Security: max-age=63072000; includeSubDomains
 X-Powered-By: PHP/7.1.33
-X-APP-Version: 2.1.0
+X-APP-Version: 2.3.1
 Vary: User-Agent
 Content-Length: 52
 Keep-Alive: timeout=5, max=99
@@ -46,7 +46,7 @@ Content-Type: application/json
 
 REQUEST 3
 POST https://mobile.sodexobeneficios.pt/api/v2/sign-in/
-x-app-version: 2.1.0
+x-app-version: 2.3.1
 Authorization: Bearer userToken.test.test2
 Content-Type: application/x-www-form-urlencoded
 X-Aggregator: Tink Testing
@@ -59,7 +59,7 @@ Date: Thu, 18 Nov 2021 11:13:24 GMT
 Server: Apache/2.4.51 (Amazon) OpenSSL/1.0.2k-fips PHP/7.1.33
 Strict-Transport-Security: max-age=63072000; includeSubDomains
 X-Powered-By: PHP/7.1.33
-X-APP-Version: 2.1.0
+X-APP-Version: 2.3.1
 Vary: Accept-Encoding,User-Agent
 Keep-Alive: timeout=5, max=98
 Connection: Keep-Alive
@@ -69,7 +69,7 @@ Content-Type: application/json
 
 REQUEST 4
 POST https://mobile.sodexobeneficios.pt/api/v2/get-detailed-balance/
-x-app-version: 2.1.0
+x-app-version: 2.3.1
 Authorization: Bearer token.test.test2
 X-Aggregator: Tink Testing
 
@@ -79,7 +79,7 @@ Date: Thu, 18 Nov 2021 11:13:24 GMT
 Server: Apache/2.4.51 (Amazon) OpenSSL/1.0.2k-fips PHP/7.1.33
 Strict-Transport-Security: max-age=63072000; includeSubDomains
 X-Powered-By: PHP/7.1.33
-X-APP-Version: 2.1.0
+X-APP-Version: 2.3.1
 Vary: Accept-Encoding,User-Agent
 Keep-Alive: timeout=5, max=97
 Connection: Keep-Alive
@@ -89,7 +89,7 @@ Content-Type: application/json
 
 REQUEST 5
 POST https://mobile.sodexobeneficios.pt/api/v2/get-transactions/0/
-x-app-version: 2.1.0
+x-app-version: 2.3.1
 Authorization: Bearer token.test.test2
 X-Aggregator: Tink Testing
 
@@ -99,7 +99,7 @@ Date: Thu, 18 Nov 2021 11:13:27 GMT
 Server: Apache/2.4.51 (Amazon) OpenSSL/1.0.2k-fips PHP/7.1.33
 Strict-Transport-Security: max-age=63072000; includeSubDomains
 X-Powered-By: PHP/7.1.33
-X-APP-Version: 2.1.0
+X-APP-Version: 2.3.1
 Vary: Accept-Encoding,User-Agent
 Keep-Alive: timeout=5, max=96
 Connection: Keep-Alive
