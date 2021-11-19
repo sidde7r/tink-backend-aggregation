@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants;
@@ -98,5 +99,6 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
 
     public static class Time {
         public static final ZoneOffset DEFAULT_OFFSET = ZoneOffset.UTC;
+        public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("UTC");
     }
 }

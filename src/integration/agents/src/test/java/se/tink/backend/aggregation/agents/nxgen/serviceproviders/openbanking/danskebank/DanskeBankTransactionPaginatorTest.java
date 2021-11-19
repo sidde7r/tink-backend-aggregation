@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -41,6 +42,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -51,16 +54,22 @@ import se.tink.libraries.unleash.UnleashClient;
 @RunWith(MockitoJUnitRunner.class)
 public class DanskeBankTransactionPaginatorTest {
 
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/danskebank/resources";
+    private static final String NEXT_PAGE_OF_TRANSACTIONS =
+            "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/BI123/transactions?fromBookingDateTime=2019-07-23T00:00:00&toBookingDateTime=2021-06-23T00:00:00&pg=df5dde55-234b-4732-9a32-b623e0e1bb11&int=b95e85fc-3706-4e9c-abb2-d911dabb27fb";
+    private static final String LAST_23_MONTHS_TRANSACTIONS_PATH =
+            "/some/path?fromBookingDateTime=2018-07-02T00:00:00Z";
+    private static final String LAST_90_DAYS_PATH =
+            "/some/path?fromBookingDateTime=2020-03-05T00:00:00Z";
+
+    private final ArgumentCaptor<String> persistentStorageCaptor =
+            ArgumentCaptor.forClass(String.class);
+
     @Mock private AgentComponentProvider componentProvider;
     @Mock private UnleashClient unleashClient;
     @Mock private CompositeAgentContext context;
     @Mock private Provider provider;
-
-    private static final String TEST_DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/danskebank/resources";
-
-    private static final String LAST_23_MONTHS_TRANSACTIONS_PATH =
-            "/some/path?fromBookingDateTime=2018-07-02T00:00:00Z";
 
     private DanskeBankTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
             paginator;
@@ -68,11 +77,11 @@ public class DanskeBankTransactionPaginatorTest {
 
     private UkOpenBankingApiClient apiClient;
 
-    private final ArgumentCaptor<String> persistentStorageCaptor =
-            ArgumentCaptor.forClass(String.class);
-
     @Before
     public void init() {
+        DelaySimulatingLocalDateTimeSource localDateTimeSource =
+                new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2020-06-02T00:00:00"));
+
         UkOpenBankingAisConfig ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
         when(ukOpenBankingAisConfig.getInitialTransactionsPaginationKey("BI123"))
                 .thenReturn("/some/path");
@@ -80,9 +89,6 @@ public class DanskeBankTransactionPaginatorTest {
         when(context.getAppId()).thenReturn("mockedAppId");
         when(componentProvider.getUnleashClient()).thenReturn(unleashClient);
         when(provider.getName()).thenReturn("providerName");
-
-        DelaySimulatingLocalDateTimeSource localDateTimeSource =
-                new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2020-06-02T00:00:00"));
 
         apiClient = mock(UkOpenBankingApiClient.class);
         when(apiClient.fetchAccountTransactions(any(), eq(AccountTransactionsV31Response.class)))
@@ -137,8 +143,7 @@ public class DanskeBankTransactionPaginatorTest {
 
         verify(apiClient)
                 .fetchAccountTransactions(
-                        eq("/some/path?fromBookingDateTime=2020-03-05T00:00:00Z"),
-                        eq(AccountTransactionsV31Response.class));
+                        eq(LAST_90_DAYS_PATH), eq(AccountTransactionsV31Response.class));
     }
 
     @Test
@@ -147,10 +152,33 @@ public class DanskeBankTransactionPaginatorTest {
         when(apiClient.fetchAccountTransactions(
                         eq(LAST_23_MONTHS_TRANSACTIONS_PATH),
                         eq(AccountTransactionsV31Response.class)))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_one_page.json").toFile(),
-                                AccountTransactionsV31Response.class));
+                .thenReturn(serializeTransactions("transactions_one_page.json"));
+
+        // when
+        TransactionKeyPaginatorResponse<String> result =
+                paginator.getTransactionsFor(getTestAccount(), null);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        new TransactionKeyPaginatorResponseImpl<String>(
+                                getExpectedLastPageTransactions(), null));
+    }
+
+    @Test
+    public void shouldRecoverFetchingTransactionsAfter401ErrorResponseByReplacingKeyToLast90Days() {
+        // given
+        HttpResponseException httpResponseException = mockErrorResponse();
+
+        when(apiClient.fetchAccountTransactions(
+                        eq(LAST_23_MONTHS_TRANSACTIONS_PATH),
+                        eq(AccountTransactionsV31Response.class)))
+                .thenThrow(httpResponseException);
+
+        when(apiClient.fetchAccountTransactions(
+                        eq(LAST_90_DAYS_PATH), eq(AccountTransactionsV31Response.class)))
+                .thenReturn(serializeTransactions("transactions_one_page.json"));
 
         // when
         TransactionKeyPaginatorResponse<String> result =
@@ -170,20 +198,11 @@ public class DanskeBankTransactionPaginatorTest {
         when(apiClient.fetchAccountTransactions(
                         eq(LAST_23_MONTHS_TRANSACTIONS_PATH),
                         eq(AccountTransactionsV31Response.class)))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_with_next_key.json")
-                                        .toFile(),
-                                AccountTransactionsV31Response.class));
+                .thenReturn(serializeTransactions("transactions_with_next_key.json"));
 
         when(apiClient.fetchAccountTransactions(
-                        eq(
-                                "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/BI123/transactions?fromBookingDateTime=2019-07-23T00:00:00&toBookingDateTime=2021-06-23T00:00:00&pg=df5dde55-234b-4732-9a32-b623e0e1bb11&int=b95e85fc-3706-4e9c-abb2-d911dabb27fb"),
-                        eq(AccountTransactionsV31Response.class)))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "transactions_one_page.json").toFile(),
-                                AccountTransactionsV31Response.class));
+                        eq(NEXT_PAGE_OF_TRANSACTIONS), eq(AccountTransactionsV31Response.class)))
+                .thenReturn(serializeTransactions("transactions_one_page.json"));
 
         // when
         TransactionKeyPaginatorResponse<String> result =
@@ -198,6 +217,50 @@ public class DanskeBankTransactionPaginatorTest {
                                         (List<Transaction>) getExpectedFirstPageTransactions(),
                                         (List<Transaction>) getExpectedLastPageTransactions()),
                                 null));
+    }
+
+    @Test
+    public void shouldRetryFetchingMultiplePagesOfTransactionsAfter401ErrorResponse() {
+        // given
+        HttpResponseException httpResponseException = mockErrorResponse();
+        when(apiClient.fetchAccountTransactions(
+                        eq(LAST_23_MONTHS_TRANSACTIONS_PATH),
+                        eq(AccountTransactionsV31Response.class)))
+                .thenReturn(serializeTransactions("transactions_with_next_key.json"));
+
+        when(apiClient.fetchAccountTransactions(
+                        eq(NEXT_PAGE_OF_TRANSACTIONS), eq(AccountTransactionsV31Response.class)))
+                .thenThrow(httpResponseException)
+                .thenReturn(serializeTransactions("transactions_one_page.json"));
+
+        // when
+        TransactionKeyPaginatorResponse<String> result =
+                paginator.getTransactionsFor(getTestAccount(), null);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        new TransactionKeyPaginatorResponseImpl<String>(
+                                ListUtils.union(
+                                        (List<Transaction>) getExpectedFirstPageTransactions(),
+                                        (List<Transaction>) getExpectedLastPageTransactions()),
+                                null));
+    }
+
+    @Test
+    public void shouldThrowExceptionAfterTryingRetryFetchingTransactions() {
+        // given
+        HttpResponseException httpResponseException = mockErrorResponse();
+        when(apiClient.fetchAccountTransactions(any(), eq(AccountTransactionsV31Response.class)))
+                .thenThrow(httpResponseException);
+
+        // when
+        Throwable thrown =
+                catchThrowable(() -> paginator.getTransactionsFor(getTestAccount(), null));
+
+        // then
+        assertThat(thrown).isInstanceOf(HttpResponseException.class);
     }
 
     private Collection<Transaction> getExpectedFirstPageTransactions() {
@@ -343,6 +406,20 @@ public class DanskeBankTransactionPaginatorTest {
                 .orElse(null);
     }
 
+    private HttpResponseException mockErrorResponse() {
+        HttpResponseException httpResponseException = mock(HttpResponseException.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getStatus()).thenReturn(403);
+        return httpResponseException;
+    }
+
+    private AccountTransactionsV31Response serializeTransactions(String pathToFile) {
+        return SerializationUtils.deserializeFromString(
+                Paths.get(TEST_DATA_PATH, pathToFile).toFile(),
+                AccountTransactionsV31Response.class);
+    }
+
     private static class DelaySimulatingLocalDateTimeSource implements LocalDateTimeSource {
 
         private LocalDateTime currentTime;
@@ -353,7 +430,7 @@ public class DanskeBankTransactionPaginatorTest {
 
         @Override
         public LocalDateTime now(ZoneId zoneId) {
-            return null;
+            return currentTime;
         }
 
         @Override
