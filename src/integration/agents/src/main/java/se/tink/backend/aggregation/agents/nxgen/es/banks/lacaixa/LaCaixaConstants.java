@@ -130,6 +130,7 @@ public final class LaCaixaConstants {
         public static final URL AUTHORIZE_SCA = new URL(BASE + "autorizacion/autorizacionSCA");
         public static final URL FINALIZE_ENROLMENT =
                 new URL(BASE + "login/enrolmentDispositivo/autorizacion/resultado");
+        public static final URL CHECK_LOGIN_RESULT = new URL(BASE + "login/loginResultado");
     }
 
     public static class DefaultRequestParams {

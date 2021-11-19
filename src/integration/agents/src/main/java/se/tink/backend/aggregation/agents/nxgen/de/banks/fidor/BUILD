@@ -20,6 +20,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/agent-storage",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",

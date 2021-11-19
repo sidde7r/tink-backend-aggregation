@@ -1,26 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox;
 
+import com.google.inject.Inject;
 import java.time.Duration;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authenticator.AhoiSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.configuration.AhoiSandboxConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetcher.transactionalaccount.AhoiSandboxTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetcher.transactionalaccount.AhoiSandboxTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class AhoiSandboxAgent extends NextGenerationAgent
@@ -29,9 +28,9 @@ public final class AhoiSandboxAgent extends NextGenerationAgent
     private final AhoiSandboxApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public AhoiSandboxAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public AhoiSandboxAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         configureHttpClient(client);
 
         apiClient = new AhoiSandboxApiClient(client, persistentStorage);
