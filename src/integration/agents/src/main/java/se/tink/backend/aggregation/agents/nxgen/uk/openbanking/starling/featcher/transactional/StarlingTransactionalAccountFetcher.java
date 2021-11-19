@@ -16,14 +16,12 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.StarlingAccountHolderType;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public class StarlingTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    private static final String ACCOUNT_CREATION_DATE_TIME = "accountCreationDateTime";
     private final StarlingApiClient apiClient;
 
     public StarlingTransactionalAccountFetcher(StarlingApiClient apiClient) {
@@ -57,7 +55,7 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(balance.getAmount().toExactCurrencyAmount()))
+                .withBalance(AccountBalanceResponse.createBalanceModule(balance))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(identifiers.getIban())

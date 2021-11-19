@@ -1,8 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc;
 
+import java.util.Optional;
+import lombok.Getter;
+import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 
+@Getter
 @JsonObject
 public class AccountBalanceResponse {
 
@@ -13,27 +19,20 @@ public class AccountBalanceResponse {
     private AmountEntity acceptedOverdraft;
     private AmountEntity amount;
 
-    public AmountEntity getClearedBalance() {
-        return clearedBalance;
-    }
+    public static BalanceModule createBalanceModule(AccountBalanceResponse balance) {
+        BalanceBuilderStep balanceBuilder;
 
-    public AmountEntity getEffectiveBalance() {
-        return effectiveBalance;
-    }
+        if (balance.getClearedBalance() != null) {
+            balanceBuilder =
+                    BalanceModule.builder()
+                            .withBalance(balance.getClearedBalance().toExactCurrencyAmount());
+        } else {
+            throw new AccountRefreshException("Balance cannot be found.");
+        }
+        Optional.ofNullable(balance.getEffectiveBalance())
+                .map(AmountEntity::toExactCurrencyAmount)
+                .ifPresent(balanceBuilder::setAvailableBalance);
 
-    public AmountEntity getPendingTransactions() {
-        return pendingTransactions;
-    }
-
-    public AmountEntity getAvailableToSpend() {
-        return availableToSpend;
-    }
-
-    public AmountEntity getAcceptedOverdraft() {
-        return acceptedOverdraft;
-    }
-
-    public AmountEntity getAmount() {
-        return amount;
+        return balanceBuilder.build();
     }
 }

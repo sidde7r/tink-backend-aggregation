@@ -10,6 +10,13 @@
             "doubleValue" : 33.94
         },
         "currencyCode" : "GBP",
+        "availableBalance" : {
+            "currencyCode" : "GBP",
+            "exactValue" : 33.94,
+            "scale" : 2,
+            "unscaledValue" : 3394,
+            "doubleValue" : 33.94
+        },
         "bankId" : "GB73SRLG6083722222222",
         "excluded" : false,
         "favored" : false,
