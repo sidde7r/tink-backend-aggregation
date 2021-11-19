@@ -11,7 +11,7 @@ import lombok.Getter;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ISOInstantDeserializerTest {
+public class UkObInstantDeserializerTest {
     private ObjectMapper mapper;
 
     private static final String DEFAULT_TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITHOUT_MILLISECONDS =
