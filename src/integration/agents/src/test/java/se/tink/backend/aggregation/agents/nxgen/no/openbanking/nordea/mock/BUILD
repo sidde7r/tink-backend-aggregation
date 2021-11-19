@@ -10,9 +10,11 @@ junit_test(
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/nordea"],
     deps = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/nordea/mock/module",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//third_party:com_github_tomakehurst_wiremock",
