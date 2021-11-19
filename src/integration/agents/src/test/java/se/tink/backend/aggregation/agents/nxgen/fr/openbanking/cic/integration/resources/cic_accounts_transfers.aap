@@ -142,6 +142,20 @@ Content-Type: application/json
           "SEPA CREDIT TRANSFER from PSD2Company"
         ]
       }
+    },
+    {
+      "creditDebitIndicator": "DBIT",
+      "status": "OTHR",
+      "transactionAmount": {
+      "currency": "EUR",
+      "amount": -100.00
+      },
+      "expectedBookingDate": "2021-12-03T00:00:00Z",
+      "remittanceInformation": {
+      "unstructured": [
+        "VIR SEPA COMPTE DU LOVE"
+       ]
+      }
     }
   ],
   "_links": {
