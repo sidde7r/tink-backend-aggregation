@@ -67,7 +67,8 @@ public class SodexoApiClientTest {
         // then
         assertThat(throwable)
                 .isExactlyInstanceOf(LoginException.class)
-                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+                .hasMessage(
+                        "Cause: LoginError.INCORRECT_CREDENTIALS. Http status: 409. Error body: null");
     }
 
     @Test
