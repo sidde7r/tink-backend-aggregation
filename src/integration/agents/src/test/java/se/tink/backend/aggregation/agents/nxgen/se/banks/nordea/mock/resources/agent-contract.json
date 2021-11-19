@@ -4,10 +4,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "unscaledValue" : 1020074,
-            "scale" : 2,
             "exactValue" : 10200.74,
-            "doubleValue" : 10200.74
+            "doubleValue" : 10200.74,
+            "scale" : 2,
+            "unscaledValue" : 1020074
         },
         "currencyCode" : "SEK",
         "bankId" : "PBI018957077596",
@@ -21,6 +21,11 @@
         "userModifiedType" : false,
         "identifiers" : "[]",
         "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
         "flags" : "[]",
         "balances" : [ ],
         "availableCredit" : 0.0,
@@ -30,10 +35,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "unscaledValue" : -4763500,
-            "scale" : 2,
             "exactValue" : -47635.0,
-            "doubleValue" : -47635.0
+            "doubleValue" : -47635.0,
+            "scale" : 2,
+            "unscaledValue" : -4763500
         },
         "currencyCode" : "SEK",
         "bankId" : "2402",
@@ -65,10 +70,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "unscaledValue" : 83,
-            "scale" : 2,
             "exactValue" : 0.83,
-            "doubleValue" : 0.83
+            "doubleValue" : 0.83,
+            "scale" : 2,
+            "unscaledValue" : 83
         },
         "currencyCode" : "SEK",
         "bankId" : "2345",
@@ -100,10 +105,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "unscaledValue" : 128690,
-            "scale" : 1,
             "exactValue" : 12869.0,
-            "doubleValue" : 12869.0
+            "doubleValue" : 12869.0,
+            "scale" : 1,
+            "unscaledValue" : 128690
         },
         "currencyCode" : "SEK",
         "bankId" : "1234",
@@ -135,10 +140,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "unscaledValue" : 115177192,
-            "scale" : 2,
             "exactValue" : 1151771.92,
-            "doubleValue" : 1151771.92
+            "doubleValue" : 1151771.92,
+            "scale" : 2,
+            "unscaledValue" : 115177192
         },
         "currencyCode" : "SEK",
         "bankId" : "NLP15078324364",
@@ -152,6 +157,11 @@
         "userModifiedType" : false,
         "identifiers" : "[]",
         "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
         "flags" : "[]",
         "balances" : [ ],
         "availableCredit" : 0.0,
@@ -161,10 +171,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "unscaledValue" : 4050748,
-            "scale" : 2,
             "exactValue" : 40507.48,
-            "doubleValue" : 40507.48
+            "doubleValue" : 40507.48,
+            "scale" : 2,
+            "unscaledValue" : 4050748
         },
         "currencyCode" : "SEK",
         "bankId" : "NLP15078324372",
@@ -178,6 +188,11 @@
         "userModifiedType" : false,
         "identifiers" : "[]",
         "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
         "flags" : "[]",
         "balances" : [ ],
         "availableCredit" : 0.0,
@@ -195,7 +210,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -289.0,
         "date" : 1606129200000,
@@ -208,7 +224,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -348.0,
         "date" : 1605092400000,
@@ -221,7 +238,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -429.0,
         "date" : 1604660400000,
@@ -234,7 +252,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -149.39,
         "date" : 1604574000000,
@@ -247,7 +266,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -180.0,
         "date" : 1604314800000,
@@ -260,7 +280,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 1080.0,
         "date" : 1604055600000,
@@ -273,7 +294,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -159.0,
         "date" : 1603796400000,
@@ -286,7 +308,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 499.9,
         "date" : 1603274400000,
@@ -299,7 +322,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -499.9,
         "date" : 1603188000000,
@@ -312,7 +336,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1050.0,
         "date" : 1602324000000,
@@ -325,7 +350,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1200.0,
         "date" : 1602324000000,
@@ -338,7 +364,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -120.89,
         "date" : 1601892000000,
@@ -351,7 +378,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 510.0,
         "date" : 1601460000000,
@@ -364,7 +392,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -159.0,
         "date" : 1600941600000,
@@ -377,7 +406,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1200.0,
         "date" : 1600682400000,
@@ -390,7 +420,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -139.36,
         "date" : 1599300000000,
@@ -403,7 +434,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -319.0,
         "date" : 1599213600000,
@@ -416,7 +448,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 2296.7,
         "date" : 1598868000000,
@@ -429,7 +462,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1499.0,
         "date" : 1598608800000,
@@ -442,7 +476,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1554.0,
         "date" : 1596708000000,
@@ -455,7 +490,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -142.95,
         "date" : 1596621600000,
@@ -468,7 +504,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 950.0,
         "date" : 1596189600000,
@@ -481,7 +518,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -930.0,
         "date" : 1595584800000,
@@ -494,7 +532,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -126.0,
         "date" : 1594720800000,
@@ -507,7 +546,8 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -12869.0,
         "date" : 1620986400000,
@@ -519,8 +559,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "B002021-05-142021-05-14-11.20.38.747172"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 12869.58,
         "date" : 1620986400000,
@@ -532,8 +575,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "B002021-05-142021-05-11-16.02.03.987356"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -500.0,
         "date" : 1620813600000,
@@ -545,8 +591,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "B002021-05-122021-05-12-20.05.10.215020"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 200.0,
         "date" : 1620813600000,
@@ -558,8 +607,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "B002021-05-122021-05-12-20.03.39.844575"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 300.0,
         "date" : 1620813600000,
@@ -571,8 +623,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "B002021-05-122021-05-12-17.18.50.941175"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -170.82,
         "date" : 1620640800000,
@@ -584,8 +639,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "B002021-05-102021-05-10-06.44.04.835394"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     } ],
     "identityData" : {
         "nameElements" : [ {
@@ -598,16 +656,16 @@
         "dateOfBirth" : {
             "year" : 2001,
             "month" : "MAY",
+            "era" : "CE",
+            "monthValue" : 5,
+            "dayOfMonth" : 3,
             "dayOfWeek" : "THURSDAY",
             "leapYear" : false,
             "dayOfYear" : 123,
             "chronology" : {
-                "calendarType" : "iso8601",
-                "id" : "ISO"
-            },
-            "era" : "CE",
-            "monthValue" : 5,
-            "dayOfMonth" : 3
+                "id" : "ISO",
+                "calendarType" : "iso8601"
+            }
         }
     }
 }
