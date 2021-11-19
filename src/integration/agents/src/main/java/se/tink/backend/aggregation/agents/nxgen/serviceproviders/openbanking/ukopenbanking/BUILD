@@ -17,6 +17,8 @@ java_library(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/identity_data",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/balance:calculation",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/balance/calculators/serviceproviders/ukob",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
@@ -34,7 +36,9 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:io_reactivex_rxjava3_rxjava",
+        "@maven//:no_finn_unleash_unleash_client_java",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/unleash",
     ],
 )
 
