@@ -107,12 +107,8 @@ public class LaCaixaManualAuthenticator {
                         sessionResponse.getSeed(), sessionResponse.getIterations(), password);
         logMasker.addNewSensitiveValuesToMasker(Collections.singleton(pin));
 
-        LoginRequest loginRequest = new LoginRequest(username, pin);
-
-        apiClient.checkLoginResult(loginRequest);
-
         // Construct login request from username and hashed password
-        apiClient.login(loginRequest);
+        apiClient.login(new LoginRequest(username, pin));
         return AuthenticationStepResponse.executeNextStep();
     }
 

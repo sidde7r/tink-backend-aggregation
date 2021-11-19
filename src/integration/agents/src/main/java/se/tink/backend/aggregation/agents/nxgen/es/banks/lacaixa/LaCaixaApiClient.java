@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstant
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResultResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
@@ -284,13 +283,5 @@ public class LaCaixaApiClient {
     public StatusResponse finalizeEnrolment(@Nullable String code) {
         final AuthenticationRequest body = new AuthenticationRequest(Strings.nullToEmpty(code));
         return createRequest(Urls.FINALIZE_ENROLMENT).post(StatusResponse.class, body);
-    }
-
-    public void checkLoginResult(LoginRequest loginRequest) {
-        try {
-            createRequest(Urls.CHECK_LOGIN_RESULT).post(LoginResultResponse.class, loginRequest);
-        } catch (HttpResponseException ex) {
-            log.info("exception during check login result");
-        }
     }
 }
