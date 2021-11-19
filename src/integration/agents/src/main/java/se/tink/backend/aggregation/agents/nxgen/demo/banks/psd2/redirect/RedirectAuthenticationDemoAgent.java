@@ -17,6 +17,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +30,6 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.CreditCard;
@@ -43,7 +43,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executo
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MarketRegex;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
@@ -66,7 +66,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
 @AgentCapabilities({
@@ -97,9 +96,9 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
     private final String provider;
     private final boolean redirectToOxfordPreprod;
 
-    public RedirectAuthenticationDemoAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public RedirectAuthenticationDemoAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
         this.provider = request.getProvider().getName();
         this.redirectToOxfordPreprod = Objects.equals("oxford-preprod", context.getClusterId());
