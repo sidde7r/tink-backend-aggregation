@@ -1,0 +1,7 @@
+agentsServiceConfiguration:
+  integrations:
+    94b3a4f4f6cf4f26b8051921b3a8c0f3:
+      tink:
+        qsealKeyUrl: https://cdn.tink.se/eidas/tink-qsealc.pem
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network

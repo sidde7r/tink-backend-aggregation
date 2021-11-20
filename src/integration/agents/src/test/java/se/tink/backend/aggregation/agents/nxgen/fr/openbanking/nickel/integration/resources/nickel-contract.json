@@ -1,0 +1,162 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "FR7616598000011234567890181",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": null,
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "exactValue": 5.33,
+                "unscaledValue": 533,
+                "doubleValue": 5.33
+            },
+            "currencyCode": "EUR",
+            "availableBalance": null,
+            "creditLimit": null,
+            "bankId": "FR7616598000011234567890181",
+            "certainDate": null,
+            "credentialsId": null,
+            "excluded": false,
+            "favored": false,
+            "name": "FR7616598000011234567890181",
+            "ownership": 1.0,
+            "payload": null,
+            "type": "CHECKING",
+            "userId": null,
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "transferDestinations": null,
+            "details": null,
+            "closed": false,
+            "holderName": "Jane Doe",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Jane Doe",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "financialInstitutionId": null,
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 5.33
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -19.08,
+            "credentialsId": null,
+            "date": 1637665200000,
+            "description": "Transport Achat TAXI FARE (21:35:32)",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "userId": null,
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "494e8440-4ca5-11ec-9490-3d06c2a7650a"
+            },
+            "mutability": null,
+            "transactionAmount": null,
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-11-25",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-11-23",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "EXECUTION_DATE",
+                    "value": {
+                        "date": "2021-11-23",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": null,
+            "merchantName": null,
+            "merchantCategoryCode": null,
+            "transactionReference": null,
+            "providerMarket": null,
+            "booked": true
+        },
+        {
+            "amount": -7.5,
+            "credentialsId": null,
+            "date": 1636974000000,
+            "description": "Achat BOOKS (11:31:03)",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "userId": null,
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "842e6070-4607-11ec-bb13-3d2ca13268bd"
+            },
+            "mutability": null,
+            "transactionAmount": null,
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-11-17",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-11-15",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "EXECUTION_DATE",
+                    "value": {
+                        "date": "2021-11-15",
+                        "instant": null
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": null,
+            "merchantName": null,
+            "merchantCategoryCode": null,
+            "transactionReference": null,
+            "providerMarket": null,
+            "booked": true
+        }
+    ],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FIRST_NAME",
+                "value": "JANE"
+            },
+            {
+                "type": "SURNAME",
+                "value": "DOE"
+            }
+        ]
+    }
+}
