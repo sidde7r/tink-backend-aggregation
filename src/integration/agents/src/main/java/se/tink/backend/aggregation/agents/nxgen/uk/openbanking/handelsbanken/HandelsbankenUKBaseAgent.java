@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.handelsbanken;
 
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.handelsbanken.HandelsbankenConstants.Time.DEFAULT_ZONE_ID;
+
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
@@ -60,9 +62,9 @@ public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
     @Override
     protected LocalDate getMaxPeriodTransactions() {
         return localDateTimeSource
-                .getInstant()
-                .atOffset(HandelsbankenConstants.Time.DEFAULT_OFFSET)
+                .now(DEFAULT_ZONE_ID)
                 .minusMonths(HandelsbankenConstants.MAX_FETCH_PERIOD_MONTHS)
+                .plusDays(1)
                 .toLocalDate();
     }
 
