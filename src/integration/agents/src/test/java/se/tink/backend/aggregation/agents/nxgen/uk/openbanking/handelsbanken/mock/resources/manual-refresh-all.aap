@@ -209,7 +209,7 @@ Content-Type: application/json
 
 -------
 REQUEST 10
-GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-03-10&dateTo=1991-04-16
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/acc1/transactions?dateFrom=1991-03-11&dateTo=1991-04-16
 Accept: application/json
 Content-Type: application/json
 
