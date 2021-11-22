@@ -28,6 +28,13 @@ public class ErrorResponse {
         return Optional.ofNullable(getBodyAsExpectedType(httpResponseException.getResponse()));
     }
 
+    public static Optional<ErrorResponse> fromHttpResponse(HttpResponse httpResponse) {
+        if (!httpResponse.hasBody()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(getBodyAsExpectedType(httpResponse));
+    }
+
     private static ErrorResponse getBodyAsExpectedType(HttpResponse response) {
         try {
             return response.getBody(ErrorResponse.class);
