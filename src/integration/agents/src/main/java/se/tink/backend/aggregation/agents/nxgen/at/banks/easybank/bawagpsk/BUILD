@@ -21,6 +21,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/pair",
         "//src/libraries/serialization",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_commons_commons_lang3",

@@ -3,13 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.SebKortAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.fetcher.SEBKortAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.fetcher.SEBKortTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.session.SebKortSessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SebKortAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
     private final SebKortApiClient apiClient;
@@ -25,12 +23,8 @@ public class SebKortAgent extends NextGenerationAgent implements RefreshCreditCa
 
     private final CreditCardRefreshController creditCardRefreshController;
 
-    protected SebKortAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            SebKortConfiguration config) {
-        super(request, context, signatureKeyPair);
+    protected SebKortAgent(AgentComponentProvider componentProvider, SebKortConfiguration config) {
+        super(componentProvider);
 
         this.client.addFilter(new TimeoutFilter());
         this.apiClient = new SebKortApiClient(client, sessionStorage, config);

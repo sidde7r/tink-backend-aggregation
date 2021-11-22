@@ -22,6 +22,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/cryptography/hash",
         "//third_party:com_google_code_findbugs_jsr305",
+        "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_csv",
         "//third_party:org_apache_commons_commons_lang3",
