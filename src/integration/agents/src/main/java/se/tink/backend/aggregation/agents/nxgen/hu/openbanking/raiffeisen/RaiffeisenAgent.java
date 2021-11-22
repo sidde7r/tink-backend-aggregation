@@ -1,19 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.RaiffeisenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.fetcher.transactionalaccount.RaiffeiesenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.fetcher.transactionalaccount.RaiffeisenAccountFetcher;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class RaiffeisenAgent extends NextGenerationAgent
@@ -30,9 +29,9 @@ public final class RaiffeisenAgent extends NextGenerationAgent
     private final RaiffeisenApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public RaiffeisenAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public RaiffeisenAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
         apiClient = new RaiffeisenApiClient(client, sessionStorage);
 
