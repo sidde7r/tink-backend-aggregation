@@ -32,5 +32,6 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_apache_httpcomponents_httpcore",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

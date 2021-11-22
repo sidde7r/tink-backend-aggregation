@@ -10,6 +10,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisC
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.module.FakeUnleashWithEnabledTogglesModule;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
@@ -32,10 +33,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.libraries.unleash.UnleashClient;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
-        modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
+        modules = {
+            UkOpenBankingLocalKeySignerModuleForDecoupledMode.class,
+            FakeUnleashWithEnabledTogglesModule.class
+        })
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
 @AgentPisCapability(capabilities = FASTER_PAYMENTS, markets = "GB")
 public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
@@ -56,9 +61,10 @@ public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
     @Inject
     public BarclaysV31Agent(
-            AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
+            AgentComponentProvider componentProvider, UnleashClient unleashClient, UkOpenBankingFlowFacade flowFacade) {
         super(
                 componentProvider,
+                unleashClient,
                 flowFacade,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
