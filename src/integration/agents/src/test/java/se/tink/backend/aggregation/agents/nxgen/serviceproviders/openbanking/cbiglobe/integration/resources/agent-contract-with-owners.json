@@ -29,17 +29,17 @@
             "userModifiedType": false,
             "identifiers": "[\"iban://DE61500105174939947488?name=dummyName\",\"bban://500105174939947488\"]",
             "closed": false,
-            "holderName": "Philip Cole",
+            "holderName": "Name Surname",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "Philip Cole",
+                        "name": "Name Surname",
                         "role": "HOLDER"
                     },
                     {
-                        "name": "Marriana Gustav",
+                        "name": "Imie Nazwisko",
                         "role": "HOLDER"
                     }
                 ]
