@@ -12,6 +12,7 @@ public abstract class AbstractTransactionEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     protected Date date;
 
+    protected String id;
     protected String description;
     protected String text;
     protected String currency;
