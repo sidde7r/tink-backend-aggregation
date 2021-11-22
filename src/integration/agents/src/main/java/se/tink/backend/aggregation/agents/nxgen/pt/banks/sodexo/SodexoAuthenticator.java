@@ -1,18 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SodexoAuthenticator implements PasswordAuthenticator {
 
-    private SodexoApiClient sodexoApiClient;
-    private SodexoStorage sodexoStorage;
-    private RandomValueGenerator randomValueGenerator;
+    private final SodexoApiClient sodexoApiClient;
+    private final SodexoStorage sodexoStorage;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Override
     public void authenticate(String username, String password)

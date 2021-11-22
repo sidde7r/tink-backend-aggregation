@@ -13,8 +13,8 @@ public final class SodexoConstants {
     static class Urls {
         static final String BASE_URL = "https://mobile.sodexobeneficios.pt";
         static final URL PRELOGIN_STATUS = new URL(BASE_URL + "/api/v2/get-prelogin-status/");
-        static final URL SING_IN_REGISTER = new URL(BASE_URL + "/api/v2/sign-in-registered/");
-        static final URL SING_IN = new URL(BASE_URL + "/api/v2/sign-in/");
+        static final URL SIGN_IN_REGISTER = new URL(BASE_URL + "/api/v2/sign-in-registered/");
+        static final URL SIGN_IN = new URL(BASE_URL + "/api/v2/sign-in/");
         static final URL RESET_PIN = new URL(BASE_URL + "/api/v2/reset-pin/");
         static final URL BALANCE = new URL(BASE_URL + "/api/v2/get-detailed-balance/");
         static final URL GET_TRANSACTION = new URL(BASE_URL + "/api/v2/get-transactions/0/");

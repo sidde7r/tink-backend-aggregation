@@ -8,6 +8,7 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
 public class SodexoWireMockTest {
+
     private static final String RESOURCE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/sodexo/integration/resources/";
     private static final String CONTRACT_FILE_PATH = RESOURCE_PATH + "agent-contract.json";
@@ -27,16 +28,17 @@ public class SodexoWireMockTest {
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCredentialField("username", "123456789")
                         .addCredentialField("password", "coco_jumbo_i_do_przodu")
-                        .enableDataDumpForContractFile()
                         .build();
+
+        // and
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(CONTRACT_FILE_PATH);
 
         // when
         agentWireMockRefreshTest.executeRefresh();
 
         // then
-        final AgentContractEntity expected =
-                new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(CONTRACT_FILE_PATH);
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
@@ -60,16 +62,17 @@ public class SodexoWireMockTest {
                         .addPersistentStorageData("NAME", "TestName")
                         .addPersistentStorageData("SURNAME", "TestSurname")
                         .addPersistentStorageData("CARD_NUMBER", "1234")
-                        .enableDataDumpForContractFile()
                         .build();
+
+        // and
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(CONTRACT_FILE_PATH);
 
         // when
         agentWireMockRefreshTest.executeRefresh();
 
         // then
-        final AgentContractEntity expected =
-                new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(CONTRACT_FILE_PATH);
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 }

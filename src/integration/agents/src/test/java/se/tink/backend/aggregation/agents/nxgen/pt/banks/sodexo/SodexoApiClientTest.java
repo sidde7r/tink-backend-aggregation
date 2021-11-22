@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.SetupPinResponse;
@@ -67,8 +68,7 @@ public class SodexoApiClientTest {
         // then
         assertThat(throwable)
                 .isExactlyInstanceOf(LoginException.class)
-                .hasMessage(
-                        "Cause: LoginError.INCORRECT_CREDENTIALS. Http status: 409. Error body: null");
+                .hasFieldOrPropertyWithValue("error", LoginError.INCORRECT_CREDENTIALS);
     }
 
     @Test

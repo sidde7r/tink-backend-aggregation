@@ -43,7 +43,7 @@ public class SodexoApiClient {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(nif, password);
 
         try {
-            return request(Urls.SING_IN_REGISTER)
+            return request(Urls.SIGN_IN_REGISTER)
                     .header(Headers.CONTENT_TYPE, Headers.CONTENT_TYPE_X_FORM)
                     .post(AuthenticationResponse.class, authenticationRequest);
         } catch (HttpResponseException e) {
@@ -62,7 +62,7 @@ public class SodexoApiClient {
     public AuthenticationResponse authenticateWithPin(String pin) {
         AuthenticationPinRequest authenticationPinRequest = new AuthenticationPinRequest(pin);
         try {
-            return requestWithUserToken(Urls.SING_IN)
+            return requestWithUserToken(Urls.SIGN_IN)
                     .header(Headers.CONTENT_TYPE, Headers.CONTENT_TYPE_X_FORM)
                     .post(AuthenticationResponse.class, authenticationPinRequest);
         } catch (HttpResponseException e) {
