@@ -13,6 +13,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
+/**
+ * This is a placeholder agent that only serves to define capabilities for the PayPal Ob Agent. The
+ * actual implementation exists only as standalone agent, but the current implementation of provider
+ * capabilities demands that we point the provider to an agent in AS with capabilities annotation.
+ *
+ * <p>TODO: AAP-1241 Remove placeholder when agent platform supports defining capabilities on its
+ * own.
+ */
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public class PayPalObAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
 
