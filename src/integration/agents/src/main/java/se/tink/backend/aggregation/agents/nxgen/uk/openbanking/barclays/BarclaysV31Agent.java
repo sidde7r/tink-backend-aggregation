@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.FakeUnleashWithEnabledTogglesModule;
+import se.tink.backend.aggregation.agents.module.ProdUnleashModule;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
@@ -35,7 +36,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.libraries.unleash.UnleashClient;
 
-@AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
+@AgentDependencyModulesForProductionMode(
+        modules = {UkOpenBankingFlowModule.class, ProdUnleashModule.class})
 @AgentDependencyModulesForDecoupledMode(
         modules = {
             UkOpenBankingLocalKeySignerModuleForDecoupledMode.class,
