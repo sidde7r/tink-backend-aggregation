@@ -123,7 +123,6 @@ public class LaCaixaManualAuthenticator {
         }
 
         // Construct login request from username and hashed password
-        apiClient.login(loginRequest);
         return AuthenticationStepResponse.executeNextStep();
     }
 
