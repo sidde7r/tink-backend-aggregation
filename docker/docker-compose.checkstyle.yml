@@ -2,11 +2,11 @@ version: '2'
 services:
   app:
     image: "gcr.io/tink-containers/google-java-format:1.7"
-    working_dir: /tink-backend
+    working_dir: /tink-backend-aggregation
     entrypoint: ''
     volumes:
       - "${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}"
-      - ..:/tink-backend
+      - ..:/tink-backend-aggregation
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker:ro

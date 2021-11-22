@@ -6,12 +6,12 @@ services:
       - S3_BUCKET=tink-bazel-cache-build-production
   app:
     image: "gcr.io/tink-containers/bazel:3.7.2.11"
-    working_dir: /tink-backend
+    working_dir: /tink-backend-aggregation
     links:
       - bazels3cache
     volumes:
       - "${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}"
-      - ..:/tink-backend
+      - ..:/tink-backend-aggregation
       - /var/lib/buildkite-agent/.cache/bazel:/root/.cache/bazel
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent:ro
       - /var/run/docker.sock:/var/run/docker.sock
