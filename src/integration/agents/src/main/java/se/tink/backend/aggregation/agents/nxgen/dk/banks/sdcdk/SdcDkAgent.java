@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,7 +19,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk.SdcDkConstants.Secret;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk.parser.SdcDkTransactionParser;
@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.filter.SdcExceptionFilter;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
@@ -44,7 +44,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustPinnedCertificateStrategy;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /*
  * Configure market specific client, this is DK
@@ -60,13 +59,11 @@ public final class SdcDkAgent extends SdcAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SdcDkAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    @Inject
+    public SdcDkAgent(AgentComponentProvider componentProvider) {
         super(
-                request,
-                context,
-                signatureKeyPair,
-                new SdcDkConfiguration(request.getProvider()),
+                componentProvider,
+                new SdcDkConfiguration(componentProvider.getCredentialsRequest().getProvider()),
                 new SdcDkTransactionParser());
 
         creditCardRefreshController = constructCreditCardRefreshController();
