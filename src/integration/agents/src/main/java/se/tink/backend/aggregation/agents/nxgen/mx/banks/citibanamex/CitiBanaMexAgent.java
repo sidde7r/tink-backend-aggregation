@@ -1,18 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.authenticator.CitiBanaMexAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.fetcher.transactional.CitiBanaMexTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.fetcher.transactional.CitiBanaMexTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.fetcher.transactional.CitiBanaMexUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.session.CitiBanaMexSessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class CitiBanaMexAgent extends NextGenerationAgent
@@ -30,9 +29,9 @@ public final class CitiBanaMexAgent extends NextGenerationAgent
     private final CitiBanaMexApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public CitiBanaMexAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public CitiBanaMexAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.apiClient = new CitiBanaMexApiClient(client, sessionStorage);
         configureHttpClient(client);
 
