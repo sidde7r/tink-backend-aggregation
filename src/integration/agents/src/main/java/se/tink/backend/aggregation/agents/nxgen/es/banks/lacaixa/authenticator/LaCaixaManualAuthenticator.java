@@ -21,10 +21,12 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.CaixaPayloadValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.TemporaryStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.PinScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.SmsEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.ErrorLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResultResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.ScaResponse;
@@ -43,9 +45,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
@@ -53,7 +56,7 @@ public class LaCaixaManualAuthenticator {
     private final LaCaixaApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final LogMasker logMasker;
-    private final Storage authStorage;
+    private final SessionStorage authStorage;
     private final Credentials credentials;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
@@ -68,14 +71,13 @@ public class LaCaixaManualAuthenticator {
             PersistentStorage persistentStorage,
             LogMasker logMasker,
             SupplementalInformationFormer supplementalInformationFormer,
-            Storage authStorage,
             Catalog catalog,
             Credentials credentials,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.logMasker = logMasker;
-        this.authStorage = authStorage;
+        this.authStorage = new SessionStorage();
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
 
@@ -110,10 +112,11 @@ public class LaCaixaManualAuthenticator {
 
         LoginRequest loginRequest = new LoginRequest(username, pin);
 
-        LoginResultResponse loginResultResponse = apiClient.checkLoginResult(loginRequest);
+        LoginResultResponse loginResultResponse = checkLoginResult(loginRequest);
 
         if (!"OK".equalsIgnoreCase(loginResultResponse.getLoginResultInfo())) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.DEFAULT_MESSAGE.exception(
+                    "Login failed without exception, unknown issue");
         }
 
         String isScaNeeded = apiClient.checkIfScaNeeded();
@@ -124,6 +127,27 @@ public class LaCaixaManualAuthenticator {
 
         // Construct login request from username and hashed password
         return AuthenticationStepResponse.executeNextStep();
+    }
+
+    private LoginResultResponse checkLoginResult(LoginRequest loginRequest) {
+        try {
+            return apiClient.checkLoginResult(loginRequest);
+        } catch (HttpResponseException ex) {
+            if (ex.getResponse() != null
+                    && ex.getResponse().getBody(ErrorLoginResponse.class) != null) {
+                ErrorLoginResponse response = ex.getResponse().getBody(ErrorLoginResponse.class);
+                handleLoginError(response);
+            }
+            throw ex;
+        }
+    }
+
+    private void handleLoginError(ErrorLoginResponse response) {
+        if (ErrorCodes.INCORRECT_CREDENTIALS.equalsIgnoreCase(response.getResultCode())) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+        throw LoginError.DEFAULT_MESSAGE.exception(
+                "Unknown error status code: " + response.getResultCode());
     }
 
     private AuthenticationStepResponse initiateEnrolment() {

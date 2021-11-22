@@ -48,7 +48,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.cryptography.hash.Hash;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, MORTGAGE_AGGREGATION})
@@ -65,6 +64,7 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final StatelessProgressiveAuthenticator authenticator;
 
     @Inject
     public LaCaixaAgent(AgentComponentProvider componentProvider) {
@@ -86,6 +86,27 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+
+        authenticator = constructAuthenticator();
+    }
+
+    private StatelessProgressiveAuthenticator constructAuthenticator() {
+        ImaginBankProxyAuthenticatior imaginBankProxyAuthenticatior =
+                new ImaginBankProxyAuthenticatior(apiClient, logMasker);
+        LaCaixaManualAuthenticator laCaixaManualAuthenticator =
+                new LaCaixaManualAuthenticator(
+                        apiClient,
+                        persistentStorage,
+                        logMasker,
+                        supplementalInformationFormer,
+                        catalog,
+                        credentials,
+                        supplementalInformationHelper);
+
+        Clock clock = Clock.system(ZoneId.of("Europe/Madrid"));
+
+        return new LaCaixaMultifactorAuthenticatorController(
+                imaginBankProxyAuthenticatior, laCaixaManualAuthenticator, clock);
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -105,23 +126,7 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
-        ImaginBankProxyAuthenticatior imaginBankProxyAuthenticatior =
-                new ImaginBankProxyAuthenticatior(apiClient, logMasker);
-        LaCaixaManualAuthenticator laCaixaManualAuthenticator =
-                new LaCaixaManualAuthenticator(
-                        apiClient,
-                        persistentStorage,
-                        logMasker,
-                        supplementalInformationFormer,
-                        new TemporaryStorage(),
-                        catalog,
-                        credentials,
-                        supplementalInformationHelper);
-
-        Clock clock = Clock.system(ZoneId.of("Europe/Madrid"));
-
-        return new LaCaixaMultifactorAuthenticatorController(
-                imaginBankProxyAuthenticatior, laCaixaManualAuthenticator, clock);
+        return authenticator;
     }
 
     @Override
