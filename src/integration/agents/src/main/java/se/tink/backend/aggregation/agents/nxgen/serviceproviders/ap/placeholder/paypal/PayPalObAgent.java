@@ -14,41 +14,39 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
-public class PayPalObAgent extends NextGenerationAgent
-    implements RefreshCheckingAccountsExecutor {
+public class PayPalObAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
 
-  private static final String PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED =
-      "Placeholder agent should never be instantiated.";
+    private static final String PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED =
+            "Placeholder agent should never be instantiated.";
 
-  @Inject
-  protected PayPalObAgent(
-      AgentComponentProvider componentProvider) {
-    super(componentProvider);
-    throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
-  }
+    @Inject
+    protected PayPalObAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
 
-  @Override
-  protected Authenticator constructAuthenticator() {
-    throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
-  }
+    @Override
+    protected Authenticator constructAuthenticator() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
 
-  @Override
-  public SessionHandler constructSessionHandler() {
-    throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
-  }
+    @Override
+    public SessionHandler constructSessionHandler() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
 
-  @Override
-  public void accept(AgentVisitor visitor) {
-    throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
-  }
+    @Override
+    public void accept(AgentVisitor visitor) {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
 
-  @Override
-  public FetchAccountsResponse fetchCheckingAccounts() {
-    throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
-  }
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
 
-  @Override
-  public FetchTransactionsResponse fetchCheckingTransactions() {
-    throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
-  }
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
 }
