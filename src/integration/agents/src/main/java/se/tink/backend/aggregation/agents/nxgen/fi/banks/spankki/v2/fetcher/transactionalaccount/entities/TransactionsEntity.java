@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -38,6 +39,9 @@ public class TransactionsEntity {
                 .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .setDate(bookingDate)
                 .setDescription(recieverName)
+                .addExternalSystemIds(
+                        TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                        transactionId)
                 .build();
     }
 }
