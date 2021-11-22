@@ -59,6 +59,13 @@ public final class DkbConstants {
     }
 
     @NoArgsConstructor(access = PRIVATE)
+    public static class ScaStatus {
+
+        public static final String STARTED = "started";
+        public static final String SCA_METHOD_SELECTED = "scaMethodSelected";
+    }
+
+    @NoArgsConstructor(access = PRIVATE)
     public static class StorageKeys {
 
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;

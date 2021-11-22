@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ScaStatus;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
@@ -253,12 +254,12 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         // This method tries its best to throw appropriate exception when an unclear, unexpected
         // response comes from DKB. This could be improved if DKB starts returning error message.
         // Related to NZG-725
-        if ("started".equalsIgnoreCase(authorization.getScaStatus())
+        if (ScaStatus.STARTED.equalsIgnoreCase(authorization.getScaStatus())
                 && (authorization.getScaMethods() == null
                         || authorization.getScaMethods().isEmpty())) {
             throw LoginError.NO_AVAILABLE_SCA_METHODS.exception(
                     "[DKB Auth] Authorization body was not correct! Missing scaMethods when there should be some.");
-        } else if ("scaMethodSelected".equalsIgnoreCase(authorization.getScaStatus())
+        } else if (ScaStatus.SCA_METHOD_SELECTED.equalsIgnoreCase(authorization.getScaStatus())
                 && (authorization.getChosenScaMethod() == null
                         || authorization.getChosenScaMethod().getName() == null)) {
             throw BankServiceError.DEFAULT_MESSAGE.exception(
