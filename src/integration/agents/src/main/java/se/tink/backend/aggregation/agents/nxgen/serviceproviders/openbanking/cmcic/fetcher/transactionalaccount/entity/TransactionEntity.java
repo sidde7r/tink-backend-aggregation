@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
@@ -65,7 +66,7 @@ public class TransactionEntity {
 
     private LocalDate getDate(boolean pending) {
         if (pending) {
-            return expectedBookingDate;
+            return ObjectUtils.firstNonNull(expectedBookingDate, transactionDate, valueDate);
         }
         return Optional.ofNullable(bookingDate).orElse(transactionDate);
     }
