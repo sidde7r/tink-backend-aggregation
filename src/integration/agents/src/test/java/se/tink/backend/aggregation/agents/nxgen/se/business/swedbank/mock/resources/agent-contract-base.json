@@ -41,7 +41,7 @@
             "type" : "BUSINESS",
             "identities" : [ {
                 "name" : "My Company Ab",
-                "role": "HOLDER"
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[]",
@@ -90,7 +90,7 @@
             "type" : "BUSINESS",
             "identities" : [ {
                 "name" : "My Company Ab",
-                "role": "HOLDER"
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
@@ -112,7 +112,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 10.0,
         "date" : 1600855200000,
@@ -127,7 +128,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1.5,
         "date" : 1600855200000,
@@ -142,7 +144,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1000.0,
         "date" : 1600682400000,
@@ -157,7 +160,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -500.0,
         "date" : 1600768800000,
@@ -170,7 +174,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : false
     }, {
         "amount" : -50.0,
         "date" : 1600768800000,
@@ -182,8 +187,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "162686835"
+        },
+        "transactionDates" : [ ],
+        "booked" : false
     } ],
     "identityData" : {
         "nameElements" : [ {

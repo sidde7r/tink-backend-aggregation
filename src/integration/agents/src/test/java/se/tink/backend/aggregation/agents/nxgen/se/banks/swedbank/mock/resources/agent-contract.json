@@ -41,7 +41,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Wiremock Agent",
-                "role": "HOLDER"
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
@@ -90,7 +90,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Wiremock Agent",
-                "role": "HOLDER"
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
@@ -139,7 +139,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Wiremock Agent",
-                "role": "HOLDER"
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[]",
@@ -160,8 +160,479 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "0"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1566295200000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1566295200000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "2"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1566295200000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "3"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1566295200000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "4"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1566295200000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "5"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1566295200000,
+        "description" : "Övf via internet 83279",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "6"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1566208800000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "7"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1566208800000,
+        "description" : "Övf via internet 83279",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "8"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1565776800000,
+        "description" : "Övf via internet 83279",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "9"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 1.0,
+        "date" : 1565690400000,
+        "description" : "Överföring",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "10"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 1.0,
+        "date" : 1565604000000,
+        "description" : "Överföring",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "11"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1565604000000,
+        "description" : "Övf via internet 83279",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "12"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1565604000000,
+        "description" : "Övf via internet 83279",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "13"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1565604000000,
+        "description" : "Övf via internet 83279",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "14"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1565344800000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "15"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1565258400000,
+        "description" : "Övf via internet 83279",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "16"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.0,
+        "date" : 1565085600000,
+        "description" : "1kr",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "17"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -5.0,
+        "date" : 1562148000000,
+        "description" : "Övf via internet 83279",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "18"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 300.0,
+        "date" : 1552042800000,
+        "description" : "Tv-avgift",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "19"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 100.0,
+        "date" : 1485255600000,
+        "description" : "Egen överföring",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "20"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -19004.0,
+        "date" : 1468922400000,
+        "description" : "Överföring Johannes",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "21"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 19000.0,
+        "date" : 1468836000000,
+        "description" : "Överföring",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "22"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.5,
+        "date" : 1348999200000,
+        "description" : "GOOGLE *Sarah No",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "23"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.5,
+        "date" : 1348999200000,
+        "description" : "GOOGLE *Full Fat",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "24"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.5,
+        "date" : 1348826400000,
+        "description" : "GOOGLE *KEMCO",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "25"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1.5,
+        "date" : 1348826400000,
+        "description" : "GOOGLE *Rovio Mo",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "26"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -100.0,
         "date" : 1485255600000,
@@ -175,7 +646,316 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "27"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 0.02,
+        "date" : 1451559600000,
+        "description" : "Sparränta",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "28"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 0.17,
+        "date" : 1420023600000,
+        "description" : "Sparränta",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "29"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 0.51,
+        "date" : 1388487600000,
+        "description" : "Sparränta",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "30"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -45.0,
+        "date" : 1356951600000,
+        "description" : "Prel skatt",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "31"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 152.94,
+        "date" : 1356951600000,
+        "description" : "Sparränta",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "32"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -79028.66,
+        "date" : 1333533600000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "33"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 24000.0,
+        "date" : 1333015200000,
+        "description" : "Övf via internet 222222222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "34"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -8000.0,
+        "date" : 1330772400000,
+        "description" : "Övf via internet 222222222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "35"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 4000.0,
+        "date" : 1330772400000,
+        "description" : "Övf via internet 222222222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "36"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 20000.0,
+        "date" : 1330167600000,
+        "description" : "Övf via internet 222222222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "37"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -11070.0,
+        "date" : 1329649200000,
+        "description" : "Övf via internet",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "38"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -5000.0,
+        "date" : 1328353200000,
+        "description" : "Övf via internet 222222222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "39"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 40000.0,
+        "date" : 1327921200000,
+        "description" : "Övf via internet 222222222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "40"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 15000.0,
+        "date" : 1325588400000,
+        "description" : "Övf via internet 222222222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "41"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -42.0,
+        "date" : 1325329200000,
+        "description" : "Prel skatt",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "42"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : 140.42,
+        "date" : 1325329200000,
+        "description" : "Sparränta",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "43"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -683.0,
+        "date" : 1319277600000,
+        "description" : "Övf via internet 222222222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "44"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     } ]
 }

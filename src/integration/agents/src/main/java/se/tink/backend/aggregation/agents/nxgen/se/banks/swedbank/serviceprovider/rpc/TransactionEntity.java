@@ -8,6 +8,7 @@ import java.util.Optional;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,7 +20,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @Getter
 @JsonObject
 public class TransactionEntity extends AbstractTransactionEntity {
-    private String id;
     private String expenseControlIncluded;
     private LabelingsEntity labelings;
     private CategorizationsEntity categorizations;
@@ -50,7 +50,9 @@ public class TransactionEntity extends AbstractTransactionEntity {
                                 SerializationUtils.serializeToString(getTransactionDetails()))
                         .setDescription(
                                 SwedbankBaseConstants.Description.clean(
-                                        getTransactionDescription()));
+                                        getTransactionDescription()))
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, id);
 
         if (SwedbankBaseConstants.Description.PENDING_TRANSACTIONS.contains(
                 getTransactionDescription())) {

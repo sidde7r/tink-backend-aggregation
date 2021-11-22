@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import com.google.common.base.Strings;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -30,6 +31,8 @@ public class ReservedTransactionEntity extends AbstractTransactionEntity {
                                 SwedbankBaseConstants.Description.clean(
                                         getTransactionDescription()))
                         .setPending(true)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, id)
                         .build());
     }
 }
