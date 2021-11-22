@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.RevolutAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.RevolutMultifactorAuthenticator;
@@ -28,8 +28,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.f
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.filter.RevolutHeadersFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.rpc.BaseUserResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.session.RevolutSessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, INVESTMENTS})
 public final class RevolutAgent extends NextGenerationAgent
@@ -54,9 +53,9 @@ public final class RevolutAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
 
-    public RevolutAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public RevolutAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         configureHttpClient(client);
 
         RevolutConfiguration configuration =
