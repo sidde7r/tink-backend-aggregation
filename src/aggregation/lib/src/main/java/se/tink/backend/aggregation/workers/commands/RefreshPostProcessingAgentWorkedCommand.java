@@ -43,6 +43,7 @@ public class RefreshPostProcessingAgentWorkedCommand extends AgentWorkerCommand
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
 
             try {
+                log.info("[REFRESH POST PROCESSING] Running post processing after refresh");
                 context.getAgent().afterRefreshPostProcess(context.getAccountDataCache());
                 action.completed();
             } catch (Exception e) {

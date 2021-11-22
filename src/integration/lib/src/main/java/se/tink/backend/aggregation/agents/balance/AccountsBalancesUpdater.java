@@ -52,7 +52,7 @@ public class AccountsBalancesUpdater {
         calculatedAvailableBalance.ifPresent(account::setAvailableBalance);
 
         log.info(
-                "[AVAILABLE BALANCE] Buggy {}, calculated {}",
+                "[ACCOUNTS BALANCES UPDATER] Available balance replaced by calculated: {} -> {}",
                 buggyAvailableBalance,
                 calculatedAvailableBalance);
     }
@@ -71,7 +71,7 @@ public class AccountsBalancesUpdater {
                 });
 
         log.info(
-                "[BOOKED BALANCE] Buggy {}, calculated {}",
+                "[ACCOUNTS BALANCES UPDATER] Buggy booked balance potentially replaced by calculated: {} -> {}",
                 buggyBookedBalance,
                 calculatedBookedBalance);
     }
