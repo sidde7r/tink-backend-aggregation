@@ -5,10 +5,10 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "GBP",
-        "unscaledValue": 3000,
-        "doubleValue": 30.0,
+        "unscaledValue": 2500,
+        "doubleValue": 25.0,
         "scale": 2,
-        "exactValue": 30.0
+        "exactValue": 25.0
       },
       "currencyCode": "GBP",
       "availableBalance": {
@@ -43,10 +43,38 @@
       "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "balances": [],
       "availableCredit": 0.0,
-      "balance": 30.0
+      "balance": 25.0
     }
   ],
   "transactions": [
+    {
+      "amount" : 5.0,
+      "date" : 1580382000000,
+      "description" : "DUMMY_VALUE",
+      "internalPayload" : { },
+      "originalAmount" : 0.0,
+      "payload" : { },
+      "pending" : true,
+      "timestamp" : 0,
+      "type" : "DEFAULT",
+      "upcoming" : false,
+      "externalSystemIds" : { },
+      "transactionDates" : [ {
+        "type" : "BOOKING_DATE",
+        "value" : {
+          "date" : "2020-01-30",
+          "instant" : "2020-01-30T16:00:00.000Z"
+        }
+      }, {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-01-30",
+          "instant" : null
+        }
+      } ],
+      "providerMarket" : "UK",
+      "booked" : false
+    },
     {
       "amount": 20.0,
       "date": 1579604400000,

@@ -63,7 +63,9 @@ public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
     @Inject
     public BarclaysV31Agent(
-            AgentComponentProvider componentProvider, UnleashClient unleashClient, UkOpenBankingFlowFacade flowFacade) {
+            AgentComponentProvider componentProvider,
+            UnleashClient unleashClient,
+            UkOpenBankingFlowFacade flowFacade) {
         super(
                 componentProvider,
                 unleashClient,
