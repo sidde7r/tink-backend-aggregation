@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,6 @@ public class AccountsResponse {
     private List<AccountEntity> accounts;
 
     public List<AccountEntity> getAccounts() {
-        return accounts;
+        return accounts != null ? accounts : Collections.emptyList();
     }
 }

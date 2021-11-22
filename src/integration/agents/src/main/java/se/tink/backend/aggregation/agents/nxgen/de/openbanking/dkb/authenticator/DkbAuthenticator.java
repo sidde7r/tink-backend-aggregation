@@ -16,6 +16,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
@@ -235,6 +236,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
 
     private void authorizeConsent(String consentId) throws AuthenticationException {
         Authorization consentAuth = authApiClient.startConsentAuthorization(consentId);
+        validateAuthorizationResponse(consentAuth);
         Authorization consentAuthWithSelectedMethod =
                 selectConsentAuthorizationMethodIfNeeded(consentId, consentAuth);
         consentAuthWithSelectedMethod.checkIfChallengeDataIsAllowed();
@@ -245,6 +247,23 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
                 ObjectUtils.firstNonNull(
                         consentAuthWithSelectedMethod.getChosenScaMethod().getAuthenticationType(),
                         consentAuthWithSelectedMethod.getChosenScaMethod().getName()));
+    }
+
+    private void validateAuthorizationResponse(Authorization authorization) {
+        // This method tries its best to throw appropriate exception when an unclear, unexpected
+        // response comes from DKB. This could be improved if DKB starts returning error message.
+        // Related to NZG-725
+        if ("started".equalsIgnoreCase(authorization.getScaStatus())
+                && (authorization.getScaMethods() == null
+                        || authorization.getScaMethods().isEmpty())) {
+            throw LoginError.NO_AVAILABLE_SCA_METHODS.exception(
+                    "[DKB Auth] Authorization body was not correct! Missing scaMethods when there should be some.");
+        } else if ("scaMethodSelected".equalsIgnoreCase(authorization.getScaStatus())
+                && (authorization.getChosenScaMethod() == null
+                        || authorization.getChosenScaMethod().getName() == null)) {
+            throw BankServiceError.DEFAULT_MESSAGE.exception(
+                    "[DKB Auth] Authorization body was not correct! chosenScaMethod came without any expected data.");
+        }
     }
 
     private Authorization selectConsentAuthorizationMethodIfNeeded(
@@ -269,6 +288,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
                         consentId,
                         previousResult.getAuthorisationId(),
                         selectedAuthMethod.getIdentifier());
+        validateAuthorizationResponse(authorization);
         setMissingAuthenticationType(selectedAuthMethod, authorization);
         return authorization;
     }

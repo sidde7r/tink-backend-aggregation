@@ -1,0 +1,10 @@
+{
+    "scaStatus": "started",
+    "authorisationId": "authorisationId",
+    "scaMethods": [],
+    "_links": {
+        "scaStatus": {
+            "href": "/v1/consents/consentId/authorisations/authorisationId"
+        }
+    }
+}

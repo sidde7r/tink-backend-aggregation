@@ -1,0 +1,14 @@
+{
+    "chosenScaMethod": {},
+    "challengeData": {
+        "data": [
+            null
+        ]
+    },
+    "_links": {
+        "scaStatus": {
+            "href": "/v1/consents/consentId/authorisations/authorisationId"
+        }
+    },
+    "scaStatus": "scaMethodSelected"
+}

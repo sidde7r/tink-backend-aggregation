@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,6 +76,7 @@ public class DkbSupplementalDataProvider {
 
     private Optional<String> extractStartCode(List<String> challengeData) {
         return challengeData.stream()
+                .filter(Objects::nonNull)
                 .filter(s -> EXTRACT_STARTCODE_PATTERN.matcher(s).find())
                 .map(
                         s -> {
