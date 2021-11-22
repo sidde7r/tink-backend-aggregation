@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -15,7 +14,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -48,11 +46,9 @@ import se.tink.libraries.metrics.core.MetricId;
 
 public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
+
     private static final Logger log =
             LoggerFactory.getLogger(EmitEventsAfterRefreshAgentWorkerCommand.class);
-
-    private static final MetricId DATA_TRACKER_V2_LATENCY_METRIC_ID =
-            MetricId.newId("data_tracker_v2_latency_in_seconds");
 
     private static final String METRIC_NAME = "data_availability_tracker_refresh";
     private static final String METRIC_ACTION = "send_refresh_data_to_data_availability_tracker";
@@ -116,7 +112,6 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
                 if (!Strings.isNullOrEmpty(market)) {
-                    Stopwatch watchDataTrackerV1AndV2ElapsedTime = Stopwatch.createStarted();
                     List<DataTrackerEvent> events = new ArrayList<>();
                     context.getCachedAccountsWithFeatures()
                             .forEach(
@@ -130,6 +125,7 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
 
                     List<Message> messages =
                             new ArrayList<>(dataTrackerEventProducer.toMessages(events));
+
                     List<Account> refreshedAccounts =
                             context.getCachedAccountsWithFeatures().stream()
                                     .map(p -> p.first)
@@ -146,11 +142,6 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
                     messages.addAll(rawBankDataEventAccumulator.getEventList());
 
                     eventSender.sendMessages(messages);
-                    trackLatency(
-                            DATA_TRACKER_V2_LATENCY_METRIC_ID,
-                            watchDataTrackerV1AndV2ElapsedTime
-                                    .stop()
-                                    .elapsed(TimeUnit.MILLISECONDS));
                     action.completed();
                 } else {
                     action.cancelled();
@@ -163,10 +154,6 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
             metrics.stop();
         }
         return AgentWorkerCommandResult.CONTINUE;
-    }
-
-    private void trackLatency(MetricId metricId, long durationMs) {
-        metrics.getMetricRegistry().histogram(metricId, BUCKETS).update(durationMs / 1000.0);
     }
 
     private List<DataTrackerEvent> processAccountForDataTracker(
@@ -213,7 +200,6 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
             // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE and
             // in terms of "date" and "timestamp" field. This is because we want to emit
             // events for such transactions where we will be able to emit their timestamps
-
             if (originalTransactions.isEmpty()) {
                 log.info("Original Transactions is Empty");
             } else {
