@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.entity;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,7 +16,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
+@Slf4j
 @JsonObject
+@SuppressWarnings("unused")
 public class AccountEntity {
 
     private String cashAccountType;
@@ -30,6 +35,7 @@ public class AccountEntity {
     private List<BalancesEntity> balances;
 
     public Optional<TransactionalAccount> toTinkAccount() {
+        logDataCompleteness();
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
@@ -47,6 +53,12 @@ public class AccountEntity {
                         links.getTransactions().getHref())
                 .addHolderName(Optional.ofNullable(ownerName).orElse(""))
                 .build();
+    }
+
+    private void logDataCompleteness() {
+        if (isBlank(ownerName)) {
+            log.warn("missing owner name in account entity received from bank");
+        }
     }
 
     private BalanceModule getBalanceModule() {
