@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
@@ -21,6 +22,7 @@ public class AccountEntityTest {
 
     private AccountEntity accountEntity;
     private SebBalticsApiClient apiClient;
+    @Mock private String bankBic;
 
     @Before
     public void setUp() {
@@ -33,7 +35,7 @@ public class AccountEntityTest {
         // when
         when(apiClient.fetchAccountBalances(Mockito.anyString())).thenReturn(getBalanceResponse());
         Optional<TransactionalAccount> optionalTransactionalAccount =
-                accountEntity.toTinkAccount(apiClient);
+                accountEntity.toTinkAccount(apiClient, bankBic);
 
         // then
         assertTrue(optionalTransactionalAccount.isPresent());
@@ -60,7 +62,7 @@ public class AccountEntityTest {
                 .thenReturn(getEmptyBalanceResponse());
 
         // then
-        assertThatThrownBy(() -> accountEntity.toTinkAccount(apiClient))
+        assertThatThrownBy(() -> accountEntity.toTinkAccount(apiClient, bankBic))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Could not get balance");
     }
