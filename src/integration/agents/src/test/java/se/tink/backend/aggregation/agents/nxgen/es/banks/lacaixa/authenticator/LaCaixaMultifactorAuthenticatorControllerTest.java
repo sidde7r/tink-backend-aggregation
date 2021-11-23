@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.i18n.Catalog;
 
 public class LaCaixaMultifactorAuthenticatorControllerTest {
@@ -34,7 +33,6 @@ public class LaCaixaMultifactorAuthenticatorControllerTest {
                         mock(PersistentStorage.class),
                         mock(LogMasker.class),
                         mock(SupplementalInformationFormer.class),
-                        mock(Storage.class),
                         mock(Catalog.class),
                         mock(Credentials.class),
                         mock(SupplementalInformationHelper.class));

@@ -225,4 +225,8 @@ public final class LaCaixaConstants {
         public static final String IOS_APP_STORE_URL =
                 "https://apps.apple.com/es/app/caixabank-sign/id1328811481";
     }
+
+    public static class ErrorCodes {
+        public static final String INCORRECT_CREDENTIALS = "0250";
+    }
 }
