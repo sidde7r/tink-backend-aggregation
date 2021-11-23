@@ -1,279 +1,297 @@
 {
-  "accounts" : [ {
-    "accountNumber" : "BE54000000000000",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "EUR",
-      "exactValue" : 0.05,
-      "scale" : 2,
-      "unscaledValue" : 5,
-      "doubleValue" : 0.05
-    },
-    "currencyCode" : "EUR",
-    "availableBalance" : {
-      "currencyCode" : "EUR",
-      "exactValue" : 0.05,
-      "scale" : 2,
-      "unscaledValue" : 5,
-      "doubleValue" : 0.05
-    },
-    "bankId" : "BE54000000000000",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "ING Lion Account",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"iban://BE54000000000000\"]",
-    "closed" : false,
-    "holderName" : "Testfirstname Testsurname",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Testfirstname Testsurname",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 0.05
-  } ],
-  "transactions" : [ {
-    "amount" : -3.0,
-    "date" : 1633687200000,
-    "description" : "transaction description test",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "transaction description test",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "",
-      "TRANSFER_ACCOUNT_EXTERNAL" : ""
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 3.0,
-    "date" : 1633687200000,
-    "description" : "Mysterious Debtor",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "Mysterious Debtor",
-      "TRANSFER_ACCOUNT_EXTERNAL" : "BE54000000000001"
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -2.75,
-    "date" : 1633600800000,
-    "description" : "transaction description test 12345",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "transaction description test 12345",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "",
-      "TRANSFER_ACCOUNT_EXTERNAL" : ""
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 0.75,
-    "date" : 1633600800000,
-    "description" : "Mysterious Debtor",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "Mysterious Debtor",
-      "TRANSFER_ACCOUNT_EXTERNAL" : "BE54000000000000"
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -2.6,
-    "date" : 1633514400000,
-    "description" : "transaction description test AABCDEFG",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "transaction description test AABCDEFG",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "",
-      "TRANSFER_ACCOUNT_EXTERNAL" : ""
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 3.6,
-    "date" : 1633514400000,
-    "description" : "Mysterious Debtor",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "Mysterious Debtor",
-      "TRANSFER_ACCOUNT_EXTERNAL" : "BE54000000000000"
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -0.95,
-    "date" : 1633341600000,
-    "description" : "very strange transaction description - testing",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "very strange transaction description - testing",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "",
-      "TRANSFER_ACCOUNT_EXTERNAL" : ""
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 2.0,
-    "date" : 1633341600000,
-    "description" : "Mysterious Debtor",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "Mysterious Debtor",
-      "TRANSFER_ACCOUNT_EXTERNAL" : "BE54000000000000"
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 0.0,
-    "date" : 1633082400000,
-    "description" : "fish and chips",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "fish and chips",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "",
-      "TRANSFER_ACCOUNT_EXTERNAL" : ""
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -7.0,
-    "date" : 1632391200000,
-    "description" : "tomek tomek doing shopping",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "tomek tomek doing shopping",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "",
-      "TRANSFER_ACCOUNT_EXTERNAL" : "BE54000000000001"
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 7.0,
-    "date" : 1632304800000,
-    "description" : "Mysterious Debtor",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "Mysterious Debtor",
-      "TRANSFER_ACCOUNT_EXTERNAL" : "BE54000000000000"
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -15.5,
-    "date" : 1631872800000,
-    "description" : "test - transaction description",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "test - transaction description",
-      "DETAILS" : "Other",
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "",
-      "TRANSFER_ACCOUNT_EXTERNAL" : "BE54000000000001"
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 15.5,
-    "date" : 1631872800000,
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : {
-      "MESSAGE" : "",
-      "DETAILS" : null,
-      "TRANSFER_ACCOUNT_NAME_EXTERNAL" : "",
-      "TRANSFER_ACCOUNT_EXTERNAL" : ""
-    },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  } ]
+    "accounts": [
+        {
+            "accountNumber": "BE54000000000000",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 0.05,
+                "scale": 2,
+                "unscaledValue": 5,
+                "doubleValue": 0.05
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 0.05,
+                "scale": 2,
+                "unscaledValue": 5,
+                "doubleValue": 0.05
+            },
+            "bankId": "BE54000000000000",
+            "excluded": false,
+            "favored": false,
+            "name": "ING Lion Account",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"bban://000000000000\",\"iban://BE54000000000000\"]",
+            "closed": false,
+            "holderName": "Testfirstname Testsurname",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Testfirstname Testsurname",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 0.05
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -3.0,
+            "date": 1633687200000,
+            "description": "transaction description test",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "transaction description test",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 3.0,
+            "date": 1633687200000,
+            "description": "Mysterious Debtor",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Mysterious Debtor",
+                "TRANSFER_ACCOUNT_EXTERNAL": "BE54000000000001"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -2.75,
+            "date": 1633600800000,
+            "description": "transaction description test 12345",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "transaction description test 12345",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 0.75,
+            "date": 1633600800000,
+            "description": "Mysterious Debtor",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Mysterious Debtor",
+                "TRANSFER_ACCOUNT_EXTERNAL": "BE54000000000000"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -2.6,
+            "date": 1633514400000,
+            "description": "transaction description test AABCDEFG",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "transaction description test AABCDEFG",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 3.6,
+            "date": 1633514400000,
+            "description": "Mysterious Debtor",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Mysterious Debtor",
+                "TRANSFER_ACCOUNT_EXTERNAL": "BE54000000000000"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -0.95,
+            "date": 1633341600000,
+            "description": "very strange transaction description - testing",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "very strange transaction description - testing",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 2.0,
+            "date": 1633341600000,
+            "description": "Mysterious Debtor",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Mysterious Debtor",
+                "TRANSFER_ACCOUNT_EXTERNAL": "BE54000000000000"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 0.0,
+            "date": 1633082400000,
+            "description": "fish and chips",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "fish and chips",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.0,
+            "date": 1632391200000,
+            "description": "tomek tomek doing shopping",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "tomek tomek doing shopping",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_EXTERNAL": "BE54000000000001"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 7.0,
+            "date": 1632304800000,
+            "description": "Mysterious Debtor",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Mysterious Debtor",
+                "TRANSFER_ACCOUNT_EXTERNAL": "BE54000000000000"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -15.5,
+            "date": 1631872800000,
+            "description": "test - transaction description",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "test - transaction description",
+                "DETAILS": "Other",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_EXTERNAL": "BE54000000000001"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 15.5,
+            "date": 1631872800000,
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "",
+                "DETAILS": null,
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
 }

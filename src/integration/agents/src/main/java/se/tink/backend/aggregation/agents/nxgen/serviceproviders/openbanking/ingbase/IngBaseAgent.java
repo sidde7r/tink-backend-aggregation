@@ -67,7 +67,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     protected final IngBaseApiClient apiClient;
     private final IngPaymentApiClient paymentApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final LocalDateTimeSource localDateTimeSource;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);

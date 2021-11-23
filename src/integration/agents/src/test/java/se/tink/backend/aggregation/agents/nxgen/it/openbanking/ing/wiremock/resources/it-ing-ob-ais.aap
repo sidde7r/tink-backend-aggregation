@@ -1,0 +1,247 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.ing.com/oauth2/token
+Accept: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+X-Frame-Options: deny
+X-Content-Type-Options: nosniff
+Expires: 0
+X-ING-Response-ID: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: ***
+Content-Length: 3587
+
+{
+  "access_token": "accessToken",
+  "expires_in": 905,
+  "scope": "payment-accounts:orders:create granting",
+  "token_type": "Bearer",
+  "keys": [
+    {
+      "kty": "RSA",
+      "n": "3l3rdz4hyJkMx5ChddZmQft6_YsRfBkyA2ftXy1cOcqSm6Wtywt1ztVYATFHBOaX_tr7C5LXtMcghjoRbUfUHoy-egpC2B4wZ45YxWbBvLtG6QyCQH8kqLqjeGzDgpnJfDuhZP8i0lXPZwkWpF8J9XuB0DgVDrDXiS0wPB_I4mCW9s4ZMOdMA7aJMN2qhGo4DJqTn2aPjnzyx1OaeiRZC6YiyLU9QJJpWanFk69bZRu9Lpox8j4y5O2TW8bDmkKb0P_WXZVcSYgkX0Ed9Da0jCBl9cbqXdp7Ww4B8f8y9oBgK58VHlPvaufORw8IyaJ4Q6WezsHSq_Dmp2WFbV4z_qNS-ZpEGGdpkPtaYODTXU1p_3gTmNGBuAN0jLE9DaQZJswKj9-oBJifpHbOMnv2f__jBdjNvtDxe_LJPMj1B6XUetqoq8k9fU_XiHxz3mSBvzRqf-d-fD_evr4i_nxqEvsT_5D1nGvts8XQaSPehtlpFTym35KR83qoo04VPkdV",
+      "e": "AQAB",
+      "use": "sig",
+      "alg": "RS256",
+      "x5t": "26e5d9329369bf1e5d3198cb4f4da45c9de040cf"
+    }
+  ],
+  "client_id": "59ef5930-3c5b-464a-9b44-577e93712f12"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://api.ing.com/oauth2/authorization-server-url?redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&scope=payment-accounts%3Abalances%3Aview+payment-accounts%3Atransactions%3Aview&country_code=IT
+Accept: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer accessToken
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Wed, 17 Nov 2021 08:03:09 GMT
+Date: Wed, 17 Nov 2021 08:03:09 GMT
+Content-Type: application/json;charset=utf-8
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 72e1ff0d-8877-4903-aeb0-6d1d6c8b1c76
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+
+{
+  "location": "https://myaccount.ing.com/granting/e29d22daf39efb1195f014f7bf3ca2ec4e3fc7a868385e3d415ba5995cf2041e/IT"
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://api.ing.com/oauth2/token
+Accept: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer accessToken
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&code=dummyCode&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 9f3e4696-8e87-4b7a-803d-1ed834a5aae0
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="PSJPNSxcCwmMmTo4juRHdmQiGLmAqGseTwRDPlY+rBeeEDmEuA1h9ngBTzqCZagZU2Pj5p8dhByFzdAmQpdl39BWHGgFGFKgfyoYLsNPCnZHpMeRP08F9CQ1hwNVkZL3YnuU7+ng7E8ZA8LysT+MmKyybf1QnWDSaHzjYjJJEbaIkghKK8LpUlJe7LRmn+nTfkT8s3ZNzZu1rCbzMtfkPhdnTrefqYXWH6+5bOjqW++dJybS4yNLXDgaPWxrJSZ5hqpCChqIOiAPBZ3mVSEIlXUQfxqZP/DhpjYOF1NRBvKhVIs3tVls4M9xkj4ZiruSAWuZuNUT5DmwA/8erDiiYyDw7cfE8uRt639xmkSIetCVKdF+p62zc/peb/lBwj3YkyqhEJiVlrX6DczjWVLN2LO0qWrXRNTObfo/TG16oHlpcUaEKLScDd+P7IwSzmt+ZL5FTwAY0rjR68OD+sEKfwm+e/99nWKS0sA1y2WavLgPKrcHWCtPHUxbMu2K0S+L"
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: deny
+Content-Security-Policy: ***
+Content-Length: 5204
+
+{"access_token":"accessToken","refresh_token":"refreshToken","token_type":"Bearer","expires_in":900,"scope":"payment-accounts:balances:view","refresh_token_expires_in":905}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.ing.com/v3/accounts
+Accept: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer accessToken
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 57e2ee2a-49f8-4cd8-8196-c29e7eab3b39
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 794
+
+{
+  "accounts": [
+    {
+      "resourceId": "77fe3028-8115-4e46-bf22-091d216ba81f",
+      "iban": "IT91P0300203280746638577617",
+      "maskedPan": "",
+      "name": "Name Surname,SecondName SecondSurname ; ThirdName ThirdSurname",
+      "currency": "EUR",
+      "product": "Conto Corrente Arancio",
+      "_links": {
+        "balances": {
+          "href": "/v3/accounts/77fe3028-8115-4e46-bf22-091d216ba81f/balances?currency\u003dEUR"
+        },
+        "transactions": {
+          "href": "/v2/accounts/77fe3028-8115-4e46-bf22-091d216ba81f/transactions?currency\u003dEUR"
+        }
+      }
+    },
+    {
+      "resourceId": "ecb469e2-df1a-4475-b71b-876c66c103fd",
+      "iban": "",
+      "maskedPan": "515859******7101",
+      "name": "Credit Card",
+      "currency": "EUR",
+      "product": "Carta di Credito Mastercard Gold",
+      "_links": {
+        "balances": {
+          "href": "/v3/accounts/ecb469e2-df1a-4475-b71b-876c66c103fd/balances?currency\u003dEUR"
+        },
+        "transactions": {
+          "href": "/v1/card-accounts/ecb469e2-df1a-4475-b71b-876c66c103fd/transactions?currency\u003dEUR"
+        }
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.ing.com/v3/accounts/77fe3028-8115-4e46-bf22-091d216ba81f/balances?currency=EUR
+Accept: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer accessToken
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: e470983d-f9a9-48fd-b6b4-ba938fd0e7d9
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 346
+
+{
+  "account": {
+    "iban": "IT91P0300203280746638577617",
+    "maskedPan": "",
+    "currency": "EUR"
+  },
+  "balances": [
+    {
+      "balanceType": "expected",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 1029.37
+      },
+      "lastChangeDateTime": "2021-11-17T09:24:03Z"
+    },
+    {
+      "balanceType": "interimBooked",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 1029.37
+      },
+      "lastChangeDateTime": "2021-11-17T09:24:03Z"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.ing.com/v2/accounts/77fe3028-8115-4e46-bf22-091d216ba81f/transactions?currency=EUR&dateFrom=1985-04-10&dateTo=1992-04-10&limit=50
+Accept: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer accessToken
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 5465
+
+{
+  "account": {
+    "iban": "IT91P0300203280746638577617",
+    "currency": "EUR"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "3673",
+        "endToEndId": "0",
+        "bookingDate": "2021-11-09",
+        "valueDate": "2021-11-09",
+        "executionDateTime": "2021-11-09T00:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -16.80
+        },
+        "transactionType": "ASSICURAZIONE VITA E INV",
+        "remittanceInformationUnstructured": "1234 transaction remittanceinfo unnnnstructured    anoother"
+      },
+      {
+        "transactionId": "3672",
+        "endToEndId": "0",
+        "bookingDate": "2021-11-08",
+        "valueDate": "2021-10-31",
+        "executionDateTime": "2021-11-08T00:00:00Z",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": -1.50
+        },
+        "transactionType": "Canone annuo tenuta del conto",
+        "remittanceInformationUnstructured": "1234 transaction remittanceinfo unnnnstructured"
+      }
+    ],
+    "pending": [],
+    "info": [],
+    "_links": {}
+  }
+}

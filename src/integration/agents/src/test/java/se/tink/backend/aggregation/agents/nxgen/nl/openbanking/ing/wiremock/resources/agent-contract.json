@@ -27,7 +27,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"iban://NL98INGB1234567890\"]",
+            "identifiers": "[\"bban://INGB1234567890\",\"iban://NL98INGB1234567890\"]",
             "closed": false,
             "holderName": "Mw L Lastname1",
             "accountHolder": {
