@@ -20,6 +20,14 @@
           },
           "balanceType": "interimAvailable",
           "creditLimitIncluded": true
+        },
+        {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": 8.23
+          },
+          "balanceType": "interimBooked",
+          "creditLimitIncluded": null
         }
       ],
       "_links": {
