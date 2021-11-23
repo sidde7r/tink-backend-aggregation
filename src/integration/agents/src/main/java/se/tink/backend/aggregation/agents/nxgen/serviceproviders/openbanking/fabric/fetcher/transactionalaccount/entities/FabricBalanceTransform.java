@@ -11,9 +11,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class FabricBalanceTransform {
 
     private static final List<String> bookedBalancePriority =
-            Arrays.asList("closingBooked", "openingBooked", "interimAvailable", "expected");
+            Arrays.asList("closingbooked", "openingbooked", "interimavailable", "expected");
     private static final List<String> availableBalancePriority =
-            Arrays.asList("interimAvailable", "expected", "forwardAvailable");
+            Arrays.asList("interimavailable", "expected", "forwardavailable");
 
     private FabricBalanceTransform() {}
 
@@ -38,10 +38,12 @@ public class FabricBalanceTransform {
             final List<BalanceEntity> balances, final List<String> balancePriority) {
 
         return balances.stream()
-                .filter(balance -> balancePriority.contains(balance.getBalanceType()))
+                .filter(balance -> balancePriority.contains(balance.getBalanceType().toLowerCase()))
                 .min(
                         Comparator.comparing(
-                                balance -> balancePriority.indexOf(balance.getBalanceType())))
+                                balance ->
+                                        balancePriority.indexOf(
+                                                balance.getBalanceType().toLowerCase())))
                 .map(balance -> balance.getBalanceAmount().toAmount());
     }
 }

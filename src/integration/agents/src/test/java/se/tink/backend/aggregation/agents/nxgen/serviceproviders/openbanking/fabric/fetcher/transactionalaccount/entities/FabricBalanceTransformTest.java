@@ -17,7 +17,7 @@ public class FabricBalanceTransformTest {
             SerializationUtils.deserializeFromString(
                     "{"
                             + "\"balanceAmount\": {\"currency\": \"EUR\", \"amount\": \"20.00\"},"
-                            + "\"balanceType\": \"closingBooked\""
+                            + "\"balanceType\": \"CLosingBooked\""
                             + "}",
                     BalanceEntity.class);
 
@@ -25,7 +25,7 @@ public class FabricBalanceTransformTest {
             SerializationUtils.deserializeFromString(
                     "{"
                             + "\"balanceAmount\": {\"currency\": \"EUR\", \"amount\": \"30.00\"},"
-                            + "\"balanceType\": \"openingBooked\""
+                            + "\"balanceType\": \"opENingBooked\""
                             + "}",
                     BalanceEntity.class);
 
@@ -41,7 +41,7 @@ public class FabricBalanceTransformTest {
             SerializationUtils.deserializeFromString(
                     "{"
                             + "\"balanceAmount\": {\"currency\": \"EUR\", \"amount\": \"50.00\"},"
-                            + "\"balanceType\": \"expected\""
+                            + "\"balanceType\": \"EXPECTED\""
                             + "}",
                     BalanceEntity.class);
 
