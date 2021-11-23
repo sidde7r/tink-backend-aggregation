@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import com.google.inject.Inject;
 import java.time.LocalDate;
 import java.util.List;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -13,9 +14,8 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoIdentityData;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
@@ -37,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent
@@ -55,9 +54,9 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
     private CreditCardRefreshController creditCardRefreshController;
     private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public NextGenerationDemoAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public NextGenerationDemoAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
     }

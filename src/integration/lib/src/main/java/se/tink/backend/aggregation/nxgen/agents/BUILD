@@ -46,6 +46,7 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_iban4j_iban4j",
