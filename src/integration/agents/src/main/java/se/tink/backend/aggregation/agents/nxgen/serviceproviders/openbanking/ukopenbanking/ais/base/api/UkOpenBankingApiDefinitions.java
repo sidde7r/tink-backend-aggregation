@@ -3,64 +3,29 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Enums;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.strings.StringUtils;
 
+@Slf4j
 public class UkOpenBankingApiDefinitions {
 
-    /** Enums are specified as long form of ISO 20022 */
-    public enum BankTransactionCode {
-        ISSUED_CREDIT_TRANSFERS,
-        ISSUED_CASH_CONCENTRATION,
-        ISSUED_DIRECT_DEBITS,
-        ISSUED_CHEQUES,
-        MERCHANT_CARD_TRANSACTIONS,
-        CUSTOMER_CARD_TRANSACTIONS,
-        DRAFTS_OF_ORDERS,
-        BILL_OF_ORDERS,
-        ISSUED_REAL_TIME_CREDIT_TRANSFER,
-        RECEIVED_CREDIT_TRANSFERS,
-        RECEIVED_CASH_CONCENTRATION,
-        RECEIVED_DIRECT_DEBITS,
-        RECEIVED_CHEQUES,
-        LOCK_BOX,
-        COUNTER_TRANSACTIONS,
-        RECEIVED_REAL_TIME_CREDIT_TRANSFER,
-        NOT_AVAILABLE,
-        OTHER,
-        MISCELLANEOUS_CREDIT_OPERATIONS,
-        MISCELLANEOUS_DEBIT_OPERATIONS;
-
-        private static final ImmutableSet<BankTransactionCode> OUTGOING_TRANSACTION_CODES =
-                ImmutableSet.<BankTransactionCode>builder()
-                        .add(ISSUED_CREDIT_TRANSFERS)
-                        .add(ISSUED_CASH_CONCENTRATION)
-                        .add(ISSUED_DIRECT_DEBITS)
-                        .add(ISSUED_CHEQUES)
-                        .add(CUSTOMER_CARD_TRANSACTIONS)
-                        .add(MERCHANT_CARD_TRANSACTIONS)
-                        .add(DRAFTS_OF_ORDERS)
-                        .add(BILL_OF_ORDERS)
-                        .add(ISSUED_REAL_TIME_CREDIT_TRANSFER)
-                        .build();
-
-        @JsonCreator
-        private static BankTransactionCode fromString(String key) {
-            return (key != null)
-                    ? BankTransactionCode.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    : null;
-        }
-
-        public boolean isOutGoing() {
-            return OUTGOING_TRANSACTION_CODES.contains(this);
-        }
+    public static <E extends Enum<E>> E parseToEnumClass(Class<E> eClass, String key) {
+        return Enums.getIfPresent(eClass, key)
+                .toJavaUtil()
+                .orElseGet(
+                        () -> {
+                            log.warn(
+                                    "[UkOpenBankingApiDefinitions] Unmapped value for {} class is equal: {}",
+                                    eClass.getName(),
+                                    key);
+                            return null;
+                        });
     }
 
     public enum UkObBalanceType {
@@ -80,11 +45,10 @@ public class UkOpenBankingApiDefinitions {
         PREVIOUSLY_CLOSED_BOOKED;
 
         @JsonCreator
-        private static UkObBalanceType fromString(String key) {
-            return (!Strings.isNullOrEmpty(key))
-                    ? UkObBalanceType.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    : null;
+        public static UkObBalanceType fromString(String key) {
+            return parseToEnumClass(
+                    UkObBalanceType.class,
+                    CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key));
         }
     }
 
@@ -99,13 +63,11 @@ public class UkOpenBankingApiDefinitions {
                 ImmutableList.of(CREDIT, PRE_AGREED, TEMPORARY, EMERGENCY, AVAILABLE);
 
         @JsonCreator
-        private static ExternalLimitType fromString(String key) {
-            return (!Strings.isNullOrEmpty(key))
-                    ? ExternalLimitType.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(
-                                    CaseFormat.UPPER_UNDERSCORE,
-                                    StringUtils.removeNonAlphaNumeric(key)))
-                    : null;
+        public static ExternalLimitType fromString(String key) {
+            return parseToEnumClass(
+                    ExternalLimitType.class,
+                    CaseFormat.UPPER_CAMEL.to(
+                            CaseFormat.UPPER_UNDERSCORE, StringUtils.removeNonAlphaNumeric(key)));
         }
     }
 
@@ -115,11 +77,8 @@ public class UkOpenBankingApiDefinitions {
         REJECTED;
 
         @JsonCreator
-        private static EntryStatusCode fromString(String key) {
-            return (key != null)
-                    ? EntryStatusCode.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    : null;
+        public static EntryStatusCode fromString(String key) {
+            return parseToEnumClass(EntryStatusCode.class, key.toUpperCase());
         }
     }
 
@@ -133,9 +92,7 @@ public class UkOpenBankingApiDefinitions {
 
         @JsonCreator
         public static TransactionMutability fromString(String key) {
-            return Optional.ofNullable(key)
-                    .map(k -> valueOf(key.toUpperCase()))
-                    .orElse(TransactionMutability.UNDEFINED);
+            return parseToEnumClass(TransactionMutability.class, key.toUpperCase());
         }
 
         public boolean isMutable() {
@@ -147,7 +104,6 @@ public class UkOpenBankingApiDefinitions {
      * https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937623722/Namespaced+Enumerations+-+v3.1#NamespacedEnumerations-v3.1-OBExternalAccountIdentification4Code
      */
     public enum ExternalAccountIdentification4Code {
-        // todo remove unnecessary mapping
         BBAN,
         IBAN,
         PAYM,
@@ -164,78 +120,29 @@ public class UkOpenBankingApiDefinitions {
                                 .<ExternalAccountIdentification4Code, String>genericBuilder()
                                 .put(NWB_CURRENCY_ACCOUNT, "UK.NWB.CurrencyAccount")
                                 .put(RBS_CURRENCY_ACCOUNT, "UK.RBS.CurrencyAccount")
-                                .put(ExternalAccountIdentification4Code.BBAN, "UK.OBIE.BBAN")
+                                .put(BBAN, "UK.OBIE.BBAN")
                                 .put(
-                                        ExternalAccountIdentification4Code
-                                                .DANSKE_BANK_ACCOUNT_NUMBER,
+                                        DANSKE_BANK_ACCOUNT_NUMBER,
                                         "DK.DanskeBank.AccountNumber",
                                         "SE.DanskeBank.AccountNumber")
-                                .put(ExternalAccountIdentification4Code.IBAN, "UK.OBIE.IBAN")
-                                .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
-                                .put(
-                                        ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
-                                        "UK.OBIE.SortCodeAccountNumber")
-                                .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN", "PAN")
-                                .put(
-                                        ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER,
-                                        "UK.Santander.SavingsRollNumber")
+                                .put(IBAN, "UK.OBIE.IBAN")
+                                .put(PAYM, "UK.OBIE.Paym")
+                                .put(SORT_CODE_ACCOUNT_NUMBER, "UK.OBIE.SortCodeAccountNumber")
+                                .put(PAN, "UK.OBIE.PAN", "PAN")
+                                .put(SAVINGS_ROLL_NUMBER, "UK.Santander.SavingsRollNumber")
                                 .build();
 
         @JsonCreator
-        private static ExternalAccountIdentification4Code fromString(String key) {
-
-            return (key != null)
+        public static ExternalAccountIdentification4Code fromString(String key) {
+            return (!Strings.isNullOrEmpty(key))
                     ? ACCOUNT_IDENTIFIER_TYPE_MAPPER
                             .translate(key)
                             .orElseThrow(
                                     () ->
-                                            new IllegalStateException(
+                                            new IllegalArgumentException(
                                                     String.format(
-                                                            "%s unknown ExternalAccountIdentification4Code!",
+                                                            "[UkOpenBankingApiDefinitions] %s value is unknown for ExternalAccountIdentification4Code class!",
                                                             key)))
-                    : null;
-        }
-
-        @JsonValue
-        public String toValue() {
-            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
-        }
-    }
-
-    public enum ExternalPaymentContext1Code {
-        BILL_PAYMENT,
-        ECOMMERCE_GOODS,
-        ECOMMERCE_SERVICES,
-        PERSON_TO_PERSON,
-        OTHER;
-
-        @JsonCreator
-        private static ExternalPaymentContext1Code fromString(String key) {
-            return (key != null)
-                    ? ExternalPaymentContext1Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    : null;
-        }
-
-        @JsonValue
-        public String toValue() {
-            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
-        }
-    }
-
-    public enum TransactionIndividualStatus1Code {
-        ACCEPTED_CUSTOMER_PROFILE,
-        ACCEPTED_SETTLEMENT_COMPLETED,
-        ACCEPTED_SETTLEMENT_IN_PROCESS,
-        ACCEPTED_TECHNICAL_VALIDATION,
-        PENDING,
-        REJECTED;
-
-        @JsonCreator
-        private static TransactionIndividualStatus1Code fromString(String key) {
-            return (key != null)
-                    ? TransactionIndividualStatus1Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
                     : null;
         }
 
@@ -250,8 +157,8 @@ public class UkOpenBankingApiDefinitions {
         CREDIT;
 
         @JsonCreator
-        private static CreditDebitIndicator fromString(String key) {
-            return key != null ? CreditDebitIndicator.valueOf(key.toUpperCase()) : null;
+        public static CreditDebitIndicator fromString(String key) {
+            return parseToEnumClass(CreditDebitIndicator.class, key.toUpperCase());
         }
     }
 
@@ -261,8 +168,8 @@ public class UkOpenBankingApiDefinitions {
         SOLE;
 
         @JsonCreator
-        private static PartyType fromString(String key) {
-            return (key != null) ? PartyType.valueOf(key.toUpperCase()) : null;
+        public static PartyType fromString(String key) {
+            return parseToEnumClass(PartyType.class, key.toUpperCase());
         }
     }
 
@@ -274,20 +181,15 @@ public class UkOpenBankingApiDefinitions {
 
         @JsonCreator
         public static ConsentStatus fromString(String key) {
-            return Optional.ofNullable(key)
-                    .map(ConsentStatus::mapStringToEnum)
+            return Enums.getIfPresent(
+                            ConsentStatus.class,
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    .toJavaUtil()
                     .orElseThrow(
                             () ->
                                     SessionError.CONSENT_INVALID.exception(
-                                            "Unknown consent status: " + key));
-        }
-
-        private static ConsentStatus mapStringToEnum(String key) {
-            try {
-                return valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key));
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
+                                            "[UkOpenBankingApiDefinitions] Unknown consent status: "
+                                                    + key));
         }
     }
 

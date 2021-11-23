@@ -24,24 +24,6 @@ public class AccountBalanceEntityTest {
     }
 
     @Test
-    public void shouldMapUppercaseCredit() {
-        // given
-        AccountBalanceEntity creditBalance = BalanceFixtures.balanceUppercaseCredit();
-
-        // then
-        Assert.assertEquals(CreditDebitIndicator.CREDIT, creditBalance.getCreditDebitIndicator());
-    }
-
-    @Test
-    public void shouldMapLowercaseCredit() {
-        // given
-        AccountBalanceEntity creditBalance = BalanceFixtures.balanceLowercaseCredit();
-
-        // then
-        Assert.assertEquals(CreditDebitIndicator.CREDIT, creditBalance.getCreditDebitIndicator());
-    }
-
-    @Test
     public void shouldMapCorrectlyDebitIndicatorAmountAndCurrency() {
         // given
         AccountBalanceEntity debitBalance = BalanceFixtures.balanceDebit();
@@ -50,24 +32,6 @@ public class AccountBalanceEntityTest {
         assertThat(debitBalance.getAmount().getExactValue())
                 .isEqualByComparingTo(BigDecimal.valueOf(-222.051234d));
         assertThat(debitBalance.getAmount().getCurrencyCode()).isEqualTo("EUR");
-        Assert.assertEquals(CreditDebitIndicator.DEBIT, debitBalance.getCreditDebitIndicator());
-    }
-
-    @Test
-    public void shouldMapUppercaseDebit() {
-        // given
-        AccountBalanceEntity debitBalance = BalanceFixtures.balanceUppercaseDebit();
-
-        // then
-        Assert.assertEquals(CreditDebitIndicator.DEBIT, debitBalance.getCreditDebitIndicator());
-    }
-
-    @Test
-    public void shouldMapLowercaseDebit() {
-        // given
-        AccountBalanceEntity debitBalance = BalanceFixtures.balanceLowercaseDebit();
-
-        // then
         Assert.assertEquals(CreditDebitIndicator.DEBIT, debitBalance.getCreditDebitIndicator());
     }
 
