@@ -98,6 +98,11 @@ public class LuminorConstants {
         public static final int FREQUENCY = 4;
     }
 
+    public static class BalanceType {
+        public static final String BOOKED = "interimBooked";
+        public static final String AVAILABLE = "interimAvailable";
+    }
+
     public static class Language {
         public static final String ENGLISH = "en";
     }
