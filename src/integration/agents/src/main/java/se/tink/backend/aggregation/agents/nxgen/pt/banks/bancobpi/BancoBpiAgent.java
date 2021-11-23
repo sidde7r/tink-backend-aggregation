@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -9,7 +10,6 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.BancoBpiAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.account.BancoBpiTransactionFetcher;
@@ -18,9 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.credit
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.creditcard.BancoBpiCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.investment.BancoBpiInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.loan.BancoBpiLoanAccountFetcher;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
@@ -33,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class BancoBpiAgent extends SubsequentProgressiveGenerationAgent
@@ -50,9 +48,9 @@ public final class BancoBpiAgent extends SubsequentProgressiveGenerationAgent
     private InvestmentRefreshController investmentRefreshController;
     private BancoBpiClientApi bancoBpiApi;
 
-    public BancoBpiAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
+    @Inject
+    public BancoBpiAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
     }
 
     @Override
