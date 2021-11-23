@@ -228,5 +228,8 @@ public final class LaCaixaConstants {
 
     public static class ErrorCodes {
         public static final String INCORRECT_CREDENTIALS = "0250";
+        public static final String ACCESS_DEACTIVATED = "0207";
+        public static final String ATTEMPS_EXCEEDED = "0246";
+        public static final String UNKNOWN_ISSUE = "1575";
     }
 }
