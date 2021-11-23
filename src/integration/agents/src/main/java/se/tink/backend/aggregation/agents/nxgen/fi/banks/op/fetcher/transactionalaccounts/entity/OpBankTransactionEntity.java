@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -45,12 +47,18 @@ public class OpBankTransactionEntity {
 
     @JsonIgnore
     public Transaction toTransaction() {
-        return Transaction.builder()
-                .setAmount(ExactCurrencyAmount.inEUR(AgentParsingUtils.parseAmount(amount)))
-                .setDescription(getDescription())
-                .setDate(getDate())
-                .setPending(dateOfValue == null)
-                .build();
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(ExactCurrencyAmount.inEUR(AgentParsingUtils.parseAmount(amount)))
+                        .setDescription(getDescription())
+                        .setDate(getDate())
+                        .setPending(dateOfValue == null);
+
+        if (!Strings.isNullOrEmpty(archiveId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, archiveId);
+        }
+        return builder.build();
     }
 
     @JsonIgnore
