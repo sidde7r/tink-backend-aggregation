@@ -458,6 +458,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/swedbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/volvofinans",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/other/csn",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/ap/placeholder/paypal:paypalOb",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bankdata",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bec",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/creditagricole",
