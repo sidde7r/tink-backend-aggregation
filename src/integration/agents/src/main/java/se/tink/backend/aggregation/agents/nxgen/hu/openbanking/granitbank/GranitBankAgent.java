@@ -1,17 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.granitbank;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.FintechblocksAgent;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class GranitBankAgent extends FintechblocksAgent {
 
-    public GranitBankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public GranitBankAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
     }
 
     protected String getIntegrationName() {

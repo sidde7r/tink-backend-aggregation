@@ -2,15 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.inve
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class PortfolioHoldingsResponse {
     private List<FundAccountEntity> fundAccounts;
     private List<EndowmentInsuranceEntity> endowmentInsurances;
@@ -20,39 +23,16 @@ public class PortfolioHoldingsResponse {
     private String serverTime;
     private AmountEntity totalValue;
 
-    public List<FundAccountEntity> getFundAccounts() {
-        return fundAccounts;
-    }
-
-    public List<EndowmentInsuranceEntity> getEndowmentInsurances() {
-        return endowmentInsurances;
-    }
-
-    public List<EquityTraderEntity> getEquityTraders() {
-        return equityTraders;
-    }
-
-    public List<SavingsAccountEntity> getSavingsAccounts() {
-        return savingsAccounts;
-    }
-
-    public List<InvestmentSavingsAccountEntity> getInvestmentSavings() {
-        return investmentSavings;
-    }
-
-    public String getServerTime() {
-        return serverTime;
-    }
-
-    public AmountEntity getTotalValue() {
-        return totalValue;
-    }
-
     public boolean hasInvestments() {
-        return (endowmentInsurances != null && !endowmentInsurances.isEmpty())
-                || (equityTraders != null && !equityTraders.isEmpty())
-                || (fundAccounts != null && !fundAccounts.isEmpty())
-                || (investmentSavings != null && !investmentSavings.isEmpty());
+        return (isNotNullNorEmpty(endowmentInsurances))
+                || (isNotNullNorEmpty(equityTraders))
+                || (isNotNullNorEmpty(fundAccounts))
+                || (isNotNullNorEmpty(investmentSavings));
+    }
+
+    private boolean isNotNullNorEmpty(
+            List<? extends AbstractInvestmentAccountEntity> holdingsList) {
+        return holdingsList != null && !holdingsList.isEmpty();
     }
 
     @JsonIgnore
@@ -73,7 +53,7 @@ public class PortfolioHoldingsResponse {
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .flatMap(accounts -> accounts.stream())
+                .flatMap(Collection::stream)
                 .map(AbstractAccountEntity::getFullyFormattedNumber)
                 .collect(Collectors.toList());
     }

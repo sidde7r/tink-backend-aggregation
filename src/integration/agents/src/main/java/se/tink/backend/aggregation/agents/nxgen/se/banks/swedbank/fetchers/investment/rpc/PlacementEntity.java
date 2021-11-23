@@ -6,28 +6,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 @JsonObject
+@Getter
 public class PlacementEntity {
     private String type;
     private String name;
     private List<SubPlacementEntity> subPlacements;
-
-    public String getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<SubPlacementEntity> getSubPlacements() {
-        return subPlacements;
-    }
 
     @JsonIgnore
     private List<SubPlacementEntity> getSubPlacementsOrEmptyList() {

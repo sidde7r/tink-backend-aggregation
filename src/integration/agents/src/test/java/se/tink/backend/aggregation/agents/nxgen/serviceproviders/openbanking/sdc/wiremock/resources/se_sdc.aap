@@ -1,3 +1,4 @@
+
 REQUEST 1
 POST https://auth.sdc.dk/Token
 Accept: application/json
@@ -5,1448 +6,223 @@ Content-Type: application/json
 
 {"code":"dummyCode","scope":"psd2.aisp","ssn":null,"ipidfr":"","grant_type":"authorization_code","redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","client_id":"dummyClient","client_secret":"dummySecret"}
 
------------------------------------------------------------------------------------
 RESPONSE 1
 200
-Date: Thu, 19 Aug 2021 02:22:32 GMT
-Date: Thu, 19 Aug 2021 02:22:33 GMT
+Date: Tue, 13 Apr 2021 16:19:54 GMT
+Date: Tue, 13 Apr 2021 16:19:53 GMT
 Content-Type: application/json;charset=utf-8
+Server: Kestrel
+Strict-Transport-Security: max-age=2592000
 X-Powered-By: ASP.NET
-Content-Length: 2883
 
-{
-  "access_token": "dummyAccessToken",
-  "refresh_token": "dummyRefreshToken"
-}
+{"access_token":"dummyAccessToken","refresh_token":"dummyRefreshToken"}
 
------------------------------------------------------------------------------------
 REQUEST 2
 GET https://api-proxy.sdc.dk/api/psd2/v2/accounts
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 2
 200
-Date: Thu, 19 Aug 2021 02:22:33 GMT
-Date: Thu, 19 Aug 2021 02:22:35 GMT
+Date: Tue, 13 Apr 2021 16:19:55 GMT
+Date: Tue, 13 Apr 2021 16:19:55 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-X-Powered-By: ASP.NET
-Content-Length: 774
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "accounts": [
-    {
-      "resourceId": "123456789012345",
-      "iban": "SE0111100000002233304444",
-      "bban": "11102233304444",
-      "currency": "SEK",
-      "cashAccountType": "CACC",
-      "name": "Privatkonto",
-      "bic": "SPSDSE23",
-      "usage": "PRIV",
-      "ownerName": "User user",
-      "balances": [],
-      "_links": {
-        "balances": {
-          "href": "/v2/accounts/123456789012345/balances"
-        },
-        "transactions": {
-          "href": "/v2/accounts/123456789012345/transactions"
-        }
-      }
-    },
-    {
-      "resourceId": "987654321987654",
-      "iban": "SE2233300000002233322333",
-      "bban": "33302233322333",
-      "currency": "SEK",
-      "cashAccountType": "CACC",
-      "name": "E-sparkonto",
-      "bic": "SPSDSE23",
-      "usage": "PRIV",
-      "ownerName": "User user",
-      "balances": [],
-      "_links": {
-        "balances": {
-          "href": "/v2/accounts/987654321987654/balances"
-        },
-        "transactions": {
-          "href": "/v2/accounts/987654321987654/transactions"
-        }
-      }
-    }
-  ]
-}
+{"accounts":[{"resourceId":"123456789012345","iban":"SE6361210001234567","bban":"93350001234567","currency":"SEK","cashAccountType":"CACC","name":"Kronekonto","bic":"KRONSE22","usage":"PRIV", "ownerName": "John X", "balances":[],"_links":{"balances":{"href":"/v2/accounts/123456789012345/balances"},"transactions":{"href":"/v2/accounts/123456789012345/transactions"}}}]}
 
------------------------------------------------------------------------------------
 REQUEST 3
 GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/balances
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 3
 200
-Date: Thu, 19 Aug 2021 02:22:35 GMT
-Date: Thu, 19 Aug 2021 02:22:36 GMT
+Date: Tue, 13 Apr 2021 16:19:56 GMT
+Date: Tue, 13 Apr 2021 16:19:55 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Content-Length: 388
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "account": {
-    "iban": "SE0111100000002233304444",
-    "bban": "11102233304444",
-    "currency": "SEK"
-  },
-  "balances": [
-    {
-      "balanceType": "closingBooked",
-      "balanceAmount": {
-        "currency": "SEK",
-        "amount": "5608.07"
-      },
-      "creditLimitIncluded": true,
-      "referenceDate": "2021-08-19"
-    },
-    {
-      "balanceType": "interimAvailable",
-      "balanceAmount": {
-        "currency": "SEK",
-        "amount": "5320.47"
-      },
-      "creditLimitIncluded": true,
-      "referenceDate": "2021-08-19"
-    }
-  ]
-}
+{"account":{"iban":"SE6361210001234567","currency":"SEK"},"balances":[{"balanceType":"closingBooked","balanceAmount":{"currency":"SEK","amount":"20000.37"},"referenceDate":"2021-04-13+02:00"},{"balanceType":"available","balanceAmount":{"currency":"SEK","amount":"20000.37"},"referenceDate":"2021-04-13+02:00"}]}
 
------------------------------------------------------------------------------------
 REQUEST 4
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/balances
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=booked&dateFrom=1992-03-10&dateTo=1992-04-10
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
-RESPONSE 4
+RESPONSE 4 SET TRANSACTIONS_1
 200
-Date: Thu, 19 Aug 2021 02:22:36 GMT
-Date: Thu, 19 Aug 2021 02:22:37 GMT
+Date: Tue, 13 Apr 2021 16:19:59 GMT
+Date: Tue, 13 Apr 2021 16:20:00 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Content-Length: 390
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "account": {
-    "iban": "SE2233300000002233322333",
-    "bban": "33302233322333",
-    "currency": "SEK"
-  },
-  "balances": [
-    {
-      "balanceType": "closingBooked",
-      "balanceAmount": {
-        "currency": "SEK",
-        "amount": "47682.42"
-      },
-      "creditLimitIncluded": true,
-      "referenceDate": "2021-08-19"
-    },
-    {
-      "balanceType": "interimAvailable",
-      "balanceAmount": {
-        "currency": "SEK",
-        "amount": "47682.42"
-      },
-      "creditLimitIncluded": true,
-      "referenceDate": "2021-08-19"
-    }
-  ]
-}
+{"account":{"iban":"SE6361210001234567","currency":"SEK"},"transactions":{"booked":[{"transactionId":"123456789012345@Homebank@1992-04-12@1992-04-11-16.10.58.984005","entryReference":"1992-04-11-16.10.58.984005","creditorAccount":{"bban":"932300012345678"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"","currency":"SEK"},"transactionAmount":{"currency":"SEK","amount":"-100.55"},"bookingDate":"1992-04-12","valueDate":"1992-04-12","remittanceInformationUnstructured":"Purchase","_links":{"transactionDetails":{"href":""}}},{"transactionId":"123456789012345@Homebank@1992-03-29@1992-03-27-16.21.51.930603","entryReference":"1992-03-27-16.21.51.930603","creditorAccount":{"bban":"93230001234567"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"SE6361210001234567","currency":"SEK"},"transactionAmount":{"currency":"SEK","amount":"5000"},"bookingDate":"1992-03-29","valueDate":"1992-03-29","remittanceInformationUnstructured":"Overførsel","_links":{"transactionDetails":{"href":""}}}],"pending":[],"_links":{"account":{"href":""}}},"balances":[]}
 
------------------------------------------------------------------------------------
 REQUEST 5
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1992-03-10&dateTo=1992-04-10
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=booked&dateFrom=1992-02-09&dateTo=1992-03-09
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 5
 200
-Date: Thu, 19 Aug 2021 02:22:37 GMT
-Date: Thu, 19 Aug 2021 02:22:41 GMT
+Date: Tue, 13 Apr 2021 16:20:00 GMT
+Date: Tue, 13 Apr 2021 16:20:01 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "account": {
-    "iban": "SE0111100000002233304444",
-    "bban": "11102233304444",
-    "currency": "SEK"
-  },
-  "transactions": {
-    "booked": [
-      {
-        "transactionId": "123456789012345@KPASC717@2021-08-18@2021-08-18-22.09.53.293689",
-        "entryReference": "2021-08-18-22.09.53.293689",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-601.67"
-        },
-        "bookingDate": "2021-08-18",
-        "valueDate": "2021-08-18",
-        "remittanceInformationUnstructuredArray": [
-          "CIRCLE K FLEDIE, BJERRED"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASA717@2021-08-18@2021-08-18-22.05.40.263898",
-        "entryReference": "2021-08-18-22.05.40.263898",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-62"
-        },
-        "bookingDate": "2021-08-18",
-        "valueDate": "2021-08-18",
-        "remittanceInformationUnstructuredArray": [
-          "AUTOMAT FLYINGE, FLYINGE"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@ZBDSV413@2021-08-17@2021-08-17-03.47.02.254377",
-        "entryReference": "2021-08-17-03.47.02.254377",
-        "creditorAccount": {
-          "bban": "12345678122456",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-129"
-        },
-        "bookingDate": "2021-08-17",
-        "valueDate": "2021-08-17",
-        "remittanceInformationUnstructuredArray": [
-          "Autogiro K*Viasat AB"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@ZBDSV413@2021-08-17@2021-08-17-03.47.02.214552",
-        "entryReference": "2021-08-17-03.47.02.214552",
-        "creditorAccount": {
-          "bban": "9876543210333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-200"
-        },
-        "bookingDate": "2021-08-17",
-        "valueDate": "2021-08-17",
-        "remittanceInformationUnstructuredArray": [
-          "Autogiro Dreams"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASB717@2021-08-09@2021-08-07-22.13.48.754430",
-        "entryReference": "2021-08-07-22.13.48.754430",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-539.87"
-        },
-        "bookingDate": "2021-08-09",
-        "valueDate": "2021-08-09",
-        "remittanceInformationUnstructuredArray": [
-          "SHELL AUTOMAT L, LJUNGBY"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      }
-    ],
-    "pending": [],
-    "information": [],
-    "_links": {
-      "account": {
-        "href": ""
-      },
-      "next": {
-        "href": ""
-      }
-    }
-  },
-  "balances": []
-}
+{"account":{"iban":"SE6361210001234567","currency":"SEK"},"transactions":{"booked":[{"transactionId":"123456789012345@Homebank@1992-03-11@1992-03-11-16.10.58.984005","entryReference":"1992-03-11-16.10.58.984005","creditorAccount":{"bban":"932300012345678"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"","currency":"SEK"},"transactionAmount":{"currency":"SEK","amount":"-100.55"},"bookingDate":"1992-03-12","valueDate":"1992-03-12","remittanceInformationUnstructured":"Purchase","_links":{"transactionDetails":{"href":""}}},{"transactionId":"123456789012345@Homebank@1992-03-07@1992-03-07-16.21.51.930603","entryReference":"1992-03-07-16.21.51.930603","creditorAccount":{"bban":"93230001234567"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"SE6361210001234567","currency":"SEK"},"transactionAmount":{"currency":"SEK","amount":"5000"},"bookingDate":"1992-03-07","valueDate":"1992-03-07","remittanceInformationUnstructured":"Overførsel","_links":{"transactionDetails":{"href":""}}}],"pending":[],"_links":{"account":{"href":""}}},"balances":[]}
 
------------------------------------------------------------------------------------
 REQUEST 6
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1992-02-09&dateTo=1992-03-09
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=booked&dateFrom=1992-01-08&dateTo=1992-02-08
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 6
 200
-Date: Thu, 19 Aug 2021 02:22:41 GMT
-Date: Thu, 19 Aug 2021 02:22:44 GMT
+Date: Tue, 13 Apr 2021 16:20:01 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "account": {
-    "iban": "SE0111100000002233304444",
-    "bban": "11102233304444",
-    "currency": "SEK"
-  },
-  "transactions": {
-    "booked": [
-      {
-        "transactionId": "123456789012345@KPASA717@2021-07-19@2021-07-19-23.43.16.661133",
-        "entryReference": "2021-07-19-23.43.16.661133",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-153.29"
-        },
-        "bookingDate": "2021-07-19",
-        "valueDate": "2021-07-19",
-        "remittanceInformationUnstructuredArray": [
-          "COOP STATIONSSTADEN, KÄVLINGE"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@ZIDS2123@2021-07-19@2021-07-19-10.40.07.266031",
-        "entryReference": "2021-07-19-10.40.07.266031",
-        "creditorName": "User user",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorAccount": {
-          "bban": "12345678912345",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "1325"
-        },
-        "bookingDate": "2021-07-19",
-        "valueDate": "2021-07-21",
-        "remittanceInformationUnstructuredArray": [
-          "Insättning från annan bank BARNBDR"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASB717@2021-07-12@2021-07-12-22.16.41.403414",
-        "entryReference": "2021-07-12-22.16.41.403414",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-65.7"
-        },
-        "bookingDate": "2021-07-12",
-        "valueDate": "2021-07-12",
-        "remittanceInformationUnstructuredArray": [
-          "ICA NARA HARLOSA, HARLOSA"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASC717@2021-07-12@2021-07-11-22.55.24.636368",
-        "entryReference": "2021-07-11-22.55.24.636368",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-946.3"
-        },
-        "bookingDate": "2021-07-12",
-        "valueDate": "2021-07-12",
-        "remittanceInformationUnstructuredArray": [
-          "MQ MARQET MALMO, MALMO"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASA717@2021-07-12@2021-07-10-23.14.34.981878",
-        "entryReference": "2021-07-10-23.14.34.981878",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-138"
-        },
-        "bookingDate": "2021-07-12",
-        "valueDate": "2021-07-12",
-        "remittanceInformationUnstructuredArray": [
-          "RESTAURANG KINA, MALMO"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASC717@2021-07-12@2021-07-10-23.13.06.318703",
-        "entryReference": "2021-07-10-23.13.06.318703",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-42.68"
-        },
-        "bookingDate": "2021-07-12",
-        "valueDate": "2021-07-12",
-        "remittanceInformationUnstructuredArray": [
-          "ICA NARA HARLOSA, HARLOSA"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASC717@2021-07-12@2021-07-10-23.13.06.251331",
-        "entryReference": "2021-07-10-23.13.06.251331",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-37.8"
-        },
-        "bookingDate": "2021-07-12",
-        "valueDate": "2021-07-12",
-        "remittanceInformationUnstructuredArray": [
-          "ICA SUPERMARKET VARNHEM, MALMO"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASA717@2021-07-05@2021-07-03-22.12.09.033032",
-        "entryReference": "2021-07-03-22.12.09.033032",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-21.9"
-        },
-        "bookingDate": "2021-07-05",
-        "valueDate": "2021-07-05",
-        "remittanceInformationUnstructuredArray": [
-          "ICA NARA HARLOSA, HARLOSA"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      }
-    ],
-    "pending": [],
-    "information": [],
-    "_links": {
-      "account": {
-        "href": ""
-      },
-      "next": {
-        "href": ""
-      }
-    }
-  },
-  "balances": []
-}
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
 
------------------------------------------------------------------------------------
 REQUEST 7
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1992-01-08&dateTo=1992-02-08
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=booked&dateFrom=1991-12-07&dateTo=1992-01-07
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 7
 200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
+Date: Tue, 13 Apr 2021 16:20:01 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
-
-{
-  "account": {
-    "iban": "SE0111100000002233304444",
-    "bban": "11102233304444",
-    "currency": "SEK"
-  },
-  "transactions": {
-    "booked": [
-      {
-        "transactionId": "123456789012345@KPASA717@2021-06-17@2021-06-17-22.37.31.504701",
-        "entryReference": "2021-06-17-22.37.31.504701",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-23.9"
-        },
-        "bookingDate": "2021-06-17",
-        "valueDate": "2021-06-17",
-        "remittanceInformationUnstructuredArray": [
-          "COOP BINTJEVÄGEN, KÄVLINGE"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASA717@2021-06-17@2021-06-17-22.37.31.393003",
-        "entryReference": "2021-06-17-22.37.31.393003",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-262.65"
-        },
-        "bookingDate": "2021-06-17",
-        "valueDate": "2021-06-17",
-        "remittanceInformationUnstructuredArray": [
-          "COOP BINTJEVÄGEN, KÄVLINGE"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@Homebank@2021-06-17@2021-06-17-14.18.58.379635",
-        "entryReference": "2021-06-17-14.18.58.379635",
-        "creditorAccount": {
-          "bban": "987654321444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-258"
-        },
-        "bookingDate": "2021-06-17",
-        "valueDate": "2021-06-17",
-        "remittanceInformationUnstructuredArray": [
-          "PG 932602-6 SANDVIKS FÖRLAG..."
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@Homebank@2021-06-17@2021-06-17-14.18.36.832409",
-        "entryReference": "2021-06-17-14.18.36.832409",
-        "creditorAccount": {
-          "bban": "9876543214445",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-8549"
-        },
-        "bookingDate": "2021-06-17",
-        "valueDate": "2021-06-17",
-        "remittanceInformationUnstructuredArray": [
-          "BG 5023-0119 Verahill AB"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASB717@2021-06-15@2021-06-15-22.36.47.990548",
-        "entryReference": "2021-06-15-22.36.47.990548",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-68.85"
-        },
-        "bookingDate": "2021-06-15",
-        "valueDate": "2021-06-15",
-        "remittanceInformationUnstructuredArray": [
-          "COOP STATIONSSTADEN, KÄVLINGE"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASA717@2021-06-14@2021-06-12-22.43.06.760518",
-        "entryReference": "2021-06-12-22.43.06.760518",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-210"
-        },
-        "bookingDate": "2021-06-14",
-        "valueDate": "2021-06-14",
-        "remittanceInformationUnstructuredArray": [
-          "LAGER 157 CENTER SYD, LODDEKOPINGE"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@7F000001@2021-06-11@2021-06-11-15.58.55.010052",
-        "entryReference": "2021-06-11-15.58.55.010052",
-        "creditorName": "User user",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorAccount": {
-          "bban": "98765432101234",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "5000"
-        },
-        "bookingDate": "2021-06-11",
-        "valueDate": "2021-06-12",
-        "remittanceInformationUnstructuredArray": [
-          "Swish från Mats Pålsson"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASC717@2021-06-02@2021-06-02-22.46.56.540216",
-        "entryReference": "2021-06-02-22.46.56.540216",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-756"
-        },
-        "bookingDate": "2021-06-02",
-        "valueDate": "2021-06-02",
-        "remittanceInformationUnstructuredArray": [
-          "CUBUS C63, LÖDDEKÖPING, LÖDDEKÖPINGE"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "123456789012345@KPASA717@2021-06-01@2021-06-01-22.22.04.187919",
-        "entryReference": "2021-06-01-22.22.04.187919",
-        "creditorAccount": {
-          "bban": "33322444411333",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-89"
-        },
-        "bookingDate": "2021-06-01",
-        "valueDate": "2021-06-01",
-        "remittanceInformationUnstructuredArray": [
-          "MCDONALDS 246 L, LUND"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      }
-    ],
-    "pending": [],
-    "information": [],
-    "_links": {
-      "account": {
-        "href": ""
-      },
-      "next": {
-        "href": ""
-      }
-    }
-  },
-  "balances": []
-}
-
------------------------------------------------------------------------------------
-REQUEST 7a
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1991-12-07&dateTo=1992-01-07
-Accept: application/json
-Content-Type: application/json
-
------------------------------------------------------------------------------------
-RESPONSE 7a
-200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
-Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
-
-{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
-
------------------------------------------------------------------------------------
-REQUEST 7b
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1991-11-06&dateTo=1991-12-06
-Accept: application/json
-Content-Type: application/json
-
------------------------------------------------------------------------------------
-RESPONSE 7b
-200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
-Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
-
-{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
-
------------------------------------------------------------------------------------
-REQUEST 7c
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1991-10-05&dateTo=1991-11-05
-Accept: application/json
-Content-Type: application/json
-
------------------------------------------------------------------------------------
-RESPONSE 7c
-200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
-Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
-
-{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
-
------------------------------------------------------------------------------------
-REQUEST 7d
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1991-09-04&dateTo=1991-10-04
-Accept: application/json
-Content-Type: application/json
-
------------------------------------------------------------------------------------
-RESPONSE 7d
-200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
-Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
 
 {"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
 
 REQUEST 8
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1992-03-10&dateTo=1992-04-10
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1992-03-10&dateTo=1992-04-10
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 8
 200
-Date: Thu, 19 Aug 2021 02:22:49 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Content-Length: 725
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "account": {
-    "iban": "SE2233300000002233322333",
-    "bban": "33302233322333",
-    "currency": "SEK"
-  },
-  "transactions": {
-    "booked": [
-      {
-        "transactionId": "987654321987654@Homebank@2021-08-12@2021-08-12-14.07.41.120342",
-        "entryReference": "2021-08-12-14.07.41.120342",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-2500"
-        },
-        "bookingDate": "2021-08-12",
-        "valueDate": "2021-08-12",
-        "remittanceInformationUnstructuredArray": [
-          "Konto 1110 223.330.444-4"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      }
-    ],
-    "pending": [],
-    "information": [],
-    "_links": {
-      "account": {
-        "href": ""
-      },
-      "next": {
-        "href": ""
-      }
-    }
-  },
-  "balances": []
-}
+{"account":{"iban":"SE6361210001234567","currency":"SEK"},"transactions":{"booked":[{"transactionId":"123456789012345@Homebank@1992-04-12@1992-04-11-16.10.58.984005","entryReference":"1992-04-11-16.10.58.984005","creditorAccount":{"bban":"932300012345678"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"","currency":"SEK"},"transactionAmount":{"currency":"SEK","amount":"-100.55"},"bookingDate":"1992-04-12","valueDate":"1992-04-12","remittanceInformationUnstructured":"Purchase","_links":{"transactionDetails":{"href":""}}},{"transactionId":"123456789012345@Homebank@1992-03-29@1992-03-27-16.21.51.930603","entryReference":"1992-03-27-16.21.51.930603","creditorAccount":{"bban":"93230001234567"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"SE6361210001234567","currency":"SEK"},"transactionAmount":{"currency":"SEK","amount":"5000"},"bookingDate":"1992-03-29","valueDate":"1992-03-29","remittanceInformationUnstructured":"Overførsel","_links":{"transactionDetails":{"href":""}}}],"pending":[],"_links":{"account":{"href":""}}},"balances":[]}
 
------------------------------------------------------------------------------------
 REQUEST 9
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1992-02-09&dateTo=1992-03-09
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1992-02-09&dateTo=1992-03-09
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 9
 200
-Date: Thu, 19 Aug 2021 02:22:50 GMT
-Date: Thu, 19 Aug 2021 02:22:53 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Content-Length: 2767
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "account": {
-    "iban": "SE2233300000002233322333",
-    "bban": "33302233322333",
-    "currency": "SEK"
-  },
-  "transactions": {
-    "booked": [
-      {
-        "transactionId": "987654321987654@Homebank@2021-07-12@2021-07-10-15.20.41.624964",
-        "entryReference": "2021-07-10-15.20.41.624964",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-5000"
-        },
-        "bookingDate": "2021-07-12",
-        "valueDate": "2021-07-10",
-        "remittanceInformationUnstructuredArray": [
-          "Konto 1110 223.330.444-4"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "987654321987654@Homebank@2021-07-05@2021-07-04-14.31.01.046573",
-        "entryReference": "2021-07-04-14.31.01.046573",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-1000"
-        },
-        "bookingDate": "2021-07-05",
-        "valueDate": "2021-07-04",
-        "remittanceInformationUnstructuredArray": [
-          "Konto 1110 223.330.444-4"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "987654321987654@Homebank@2021-06-21@2021-06-20-10.20.59.594266",
-        "entryReference": "2021-06-20-10.20.59.594266",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-6000"
-        },
-        "bookingDate": "2021-06-21",
-        "valueDate": "2021-06-20",
-        "remittanceInformationUnstructuredArray": [
-          "Konto 1110 223.330.444-4"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      }
-    ],
-    "pending": [],
-    "information": [],
-    "_links": {
-      "account": {
-        "href": ""
-      },
-      "next": {
-        "href": ""
-      }
-    }
-  },
-  "balances": []
-}
+{"account":{"iban":"SE6361210001234567","currency":"SEK"},"transactions":{"booked":[{"transactionId":"123456789012345@Homebank@1992-03-11@1992-03-11-16.10.58.984005","entryReference":"1992-03-11-16.10.58.984005","creditorAccount":{"bban":"932300012345678"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"","currency":"SEK"},"transactionAmount":{"currency":"SEK","amount":"-100.55"},"bookingDate":"1992-03-12","valueDate":"1992-03-12","remittanceInformationUnstructured":"Purchase","_links":{"transactionDetails":{"href":""}}},{"transactionId":"123456789012345@Homebank@1992-03-07@1992-03-07-16.21.51.930603","entryReference":"1992-03-07-16.21.51.930603","creditorAccount":{"bban":"93230001234567"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"SE6361210001234567","currency":"SEK"},"transactionAmount":{"currency":"SEK","amount":"5000"},"bookingDate":"1992-03-07","valueDate":"1992-03-07","remittanceInformationUnstructured":"Overførsel","_links":{"transactionDetails":{"href":""}}}],"pending":[],"_links":{"account":{"href":""}}},"balances":[]}
 
------------------------------------------------------------------------------------
 REQUEST 10
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1992-01-08&dateTo=1992-02-08
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1992-01-08&dateTo=1992-02-08
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 10
 200
-Date: Thu, 19 Aug 2021 02:22:54 GMT
-Date: Thu, 19 Aug 2021 02:22:57 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Content-Length: 1239
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "account": {
-    "iban": "SE2233300000002233322333",
-    "bban": "33302233322333",
-    "currency": "SEK"
-  },
-  "transactions": {
-    "booked": [
-      {
-        "transactionId": "987654321987654@Homebank@2021-05-31@2021-05-31-12.51.08.744400",
-        "entryReference": "2021-05-31-12.51.08.744400",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-10000"
-        },
-        "bookingDate": "2021-05-31",
-        "valueDate": "2021-05-31",
-        "remittanceInformationUnstructuredArray": [
-          "Konto 1110 223.330.444-4"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "987654321987654@Homebank@2021-05-24@2021-05-23-11.12.18.052029",
-        "entryReference": "2021-05-23-11.12.18.052029",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-6000"
-        },
-        "bookingDate": "2021-05-24",
-        "valueDate": "2021-05-23",
-        "remittanceInformationUnstructuredArray": [
-          "Konto 1110 223.330.444-4"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      }
-    ],
-    "pending": [],
-    "information": [],
-    "_links": {
-      "account": {
-        "href": ""
-      },
-      "next": {
-        "href": ""
-      }
-    }
-  },
-  "balances": []
-}
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
 
------------------------------------------------------------------------------------
 REQUEST 11
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1991-12-07&dateTo=1992-01-07
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1991-12-07&dateTo=1992-01-07
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 11
 200
-Date: Thu, 19 Aug 2021 02:22:57 GMT
-Date: Thu, 19 Aug 2021 02:22:58 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Content-Length: 1729
+Server: Jetty(9.4.z-SNAPSHOT)
 
-{
-  "account": {
-    "iban": "SE2233300000002233322333",
-    "bban": "33302233322333",
-    "currency": "SEK"
-  },
-  "transactions": {
-    "booked": [
-      {
-        "transactionId": "987654321987654@Homebank@2021-05-04@2021-05-04-21.47.06.495841",
-        "entryReference": "2021-05-04-21.47.06.495841",
-        "creditorName": "User user",
-        "creditorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "4000"
-        },
-        "bookingDate": "2021-05-04",
-        "valueDate": "2021-05-04",
-        "remittanceInformationUnstructuredArray": [
-          "ÖVERFÖRING"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "987654321987654@Homebank@2021-04-21@2021-04-21-08.51.05.423749",
-        "entryReference": "2021-04-21-08.51.05.423749",
-        "creditorName": "User user",
-        "creditorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "debtorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "8000"
-        },
-        "bookingDate": "2021-04-21",
-        "valueDate": "2021-04-21",
-        "remittanceInformationUnstructuredArray": [
-          "ÖVERFÖRING"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      }
-    ],
-    "pending": [],
-    "information": [],
-    "_links": {
-      "account": {
-        "href": ""
-      },
-      "next": {
-        "href": ""
-      }
-    }
-  },
-  "balances": []
-}
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
 
------------------------------------------------------------------------------------
 REQUEST 12
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1991-11-06&dateTo=1991-12-06
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=booked&dateFrom=1991-11-06&dateTo=1991-12-06
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
 RESPONSE 12
 200
-Date: Thu, 19 Aug 2021 02:22:59 GMT
-Date: Thu, 19 Aug 2021 02:22:59 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Content-Length: 1239
-
-{
-  "account": {
-    "iban": "SE2233300000002233322333",
-    "bban": "33302233322333",
-    "currency": "SEK"
-  },
-  "transactions": {
-    "booked": [
-      {
-        "transactionId": "987654321987654@Homebank@2021-04-06@2021-04-03-10.52.09.837102",
-        "entryReference": "2021-04-03-10.52.09.837102",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-5000"
-        },
-        "bookingDate": "2021-04-06",
-        "valueDate": "2021-04-03",
-        "remittanceInformationUnstructuredArray": [
-          "Konto 1110 223.330.444-4"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      },
-      {
-        "transactionId": "987654321987654@Homebank@2021-03-26@2021-03-26-09.43.00.061756",
-        "entryReference": "2021-03-26-09.43.00.061756",
-        "creditorAccount": {
-          "bban": "11102233304444",
-          "currency": "SEK"
-        },
-        "debtorName": "User user",
-        "debtorAccount": {
-          "bban": "33302233322333",
-          "currency": "SEK"
-        },
-        "transactionAmount": {
-          "currency": "SEK",
-          "amount": "-43000"
-        },
-        "bookingDate": "2021-03-26",
-        "valueDate": "2021-03-26",
-        "remittanceInformationUnstructuredArray": [
-          "Konto 1110 223.330.444-4"
-        ],
-        "_links": {
-          "transactionDetails": {
-            "href": ""
-          }
-        }
-      }
-    ],
-    "pending": [],
-    "information": [],
-    "_links": {
-      "account": {
-        "href": ""
-      },
-      "next": {
-        "href": ""
-      }
-    }
-  },
-  "balances": []
-}
------------------------------------------------------------------------------------
-REQUEST 12a
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1991-10-05&dateTo=1991-11-05
-Accept: application/json
-Content-Type: application/json
-
------------------------------------------------------------------------------------
-RESPONSE 12a
-200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
-Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
 
 {"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
 
------------------------------------------------------------------------------------
-REQUEST 12b
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1991-09-04&dateTo=1991-10-04
+REQUEST 13
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=booked&dateFrom=1991-10-05&dateTo=1991-11-05
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
-RESPONSE 12b
+RESPONSE 13
 200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
 
 {"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
 
-
------------------------------------------------------------------------------------
-REQUEST 12c
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1991-08-03&dateTo=1991-09-03
+REQUEST 14
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1991-11-06&dateTo=1991-12-06
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
-RESPONSE 12c
+RESPONSE 14
 200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
 
 {"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
 
------------------------------------------------------------------------------------
-REQUEST 12d
-GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/987654321987654/transactions?bookingStatus=both&dateFrom=1991-07-02&dateTo=1991-08-02
+REQUEST 15
+GET https://api-proxy.sdc.dk/api/psd2/v2/accounts/123456789012345/transactions?bookingStatus=both&dateFrom=1991-10-05&dateTo=1991-11-05
 Accept: application/json
 Content-Type: application/json
 
------------------------------------------------------------------------------------
-RESPONSE 12d
+RESPONSE 15
 200
-Date: Thu, 19 Aug 2021 02:22:45 GMT
-Date: Thu, 19 Aug 2021 02:22:49 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Date: Tue, 13 Apr 2021 16:20:02 GMT
+Cache-Control: private
 Content-Type: application/json;charset=utf-8
-Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
 
 {"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
-

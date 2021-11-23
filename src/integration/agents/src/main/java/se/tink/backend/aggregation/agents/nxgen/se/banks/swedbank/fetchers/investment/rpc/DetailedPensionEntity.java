@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +12,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -29,9 +29,6 @@ import se.tink.libraries.strings.StringUtils;
 @Slf4j
 @JsonObject
 public class DetailedPensionEntity {
-
-    @JsonIgnore private static final String API_CLIENT_ERROR_MESSAGE = "No API client provided.";
-
     private String fullyFormattedNumber;
     private List<Object> settlements;
     private AmountEntity totalValue;
@@ -122,7 +119,7 @@ public class DetailedPensionEntity {
                 .findFirst();
     }
 
-    public PortfolioModule toTinkPortfolioModule(SwedbankSEApiClient apiClient) {
+    private PortfolioModule toTinkPortfolioModule(SwedbankSEApiClient apiClient) {
 
         return PortfolioModule.builder()
                 .withType(getTinkPortfolioType())
@@ -141,7 +138,7 @@ public class DetailedPensionEntity {
     }
 
     private List<InstrumentModule> toTinkInstruments(SwedbankSEApiClient apiClient) {
-        Preconditions.checkNotNull(apiClient, API_CLIENT_ERROR_MESSAGE);
+        Preconditions.checkNotNull(apiClient, ErrorMessage.API_CLIENT_ERROR_MESSAGE);
 
         return Optional.ofNullable(placements).orElseGet(Collections::emptyList).stream()
                 .map(placementEntity -> placementEntity.toTinkPensionInstruments(apiClient))

@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class TotalEquitiesEntity {
     private AmountEntity value;
@@ -13,36 +15,4 @@ public class TotalEquitiesEntity {
     private AmountEntity marketValue;
     private AmountEntity sumSettlements;
     private String changePercent;
-
-    public AmountEntity getValue() {
-        return value;
-    }
-
-    public AmountEntity getAcquisitionValue() {
-        return acquisitionValue;
-    }
-
-    public AmountEntity getBuyingPower() {
-        return buyingPower;
-    }
-
-    public AmountEntity getTotalValueInclCash() {
-        return totalValueInclCash;
-    }
-
-    public AmountEntity getChangeAbsolute() {
-        return changeAbsolute;
-    }
-
-    public AmountEntity getMarketValue() {
-        return marketValue;
-    }
-
-    public AmountEntity getSumSettlements() {
-        return sumSettlements;
-    }
-
-    public String getChangePercent() {
-        return changePercent;
-    }
 }

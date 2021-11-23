@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.common.AmountEntity;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserialize
 import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
+@Getter
 public class TransactionEntity {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)

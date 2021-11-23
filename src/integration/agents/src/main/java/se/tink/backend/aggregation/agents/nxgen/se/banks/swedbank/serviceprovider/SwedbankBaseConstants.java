@@ -464,6 +464,7 @@ public class SwedbankBaseConstants {
         public static final String EQUITY_TRADERS_STRING = "Equity traders";
         public static final String ISK_STRING = "Investment savings";
         public static final String ENDOWMENT_INSURANCE_STRING = "Endowment insurance";
+        public static final String API_CLIENT_ERROR_MESSAGE = "No API client provided.";
     }
 
     public static class UserMessage {

@@ -19,6 +19,8 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.io.File;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -212,8 +214,15 @@ public class SdcApiClientTest {
                             client ->
                                     client.getTransactionsFor(
                                             "SAMPLE_ACCOUNT_ID_321",
-                                            mock(Date.class),
-                                            mock(Date.class),
+                                            Date.from(
+                                                    LocalDateTime.now()
+                                                            .minusDays(30)
+                                                            .atZone(ZoneId.systemDefault())
+                                                            .toInstant()),
+                                            Date.from(
+                                                    LocalDateTime.now()
+                                                            .atZone(ZoneId.systemDefault())
+                                                            .toInstant()),
                                             "SAMPLE_PROVIDER_MARKET",
                                             "both"))
         };
