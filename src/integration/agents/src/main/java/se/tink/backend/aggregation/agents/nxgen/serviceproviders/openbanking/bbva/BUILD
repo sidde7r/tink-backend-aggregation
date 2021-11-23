@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -27,4 +28,18 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-minion-maintainer",
+        "@tink-ab/aggregation-nazguls-maintainer",
+        "@tink-ab/aggregation-teletubbies-maintainer",
+        "@tink-ab/aggregation-llamas-maintainer",
+        "@tink-ab/aggregation-penguins-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

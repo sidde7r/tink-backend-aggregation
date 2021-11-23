@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -40,4 +41,12 @@ java_library(
         "@aggregation//:joda_time_joda_time",
         "@tink_backend//src/libraries/account_identifier",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-llamas-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
