@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class SebLVAgentTest {
+public class SebLVAgentWiremockTest {
 
     private static final String CONFIGURATION_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/lv/openbanking/seb/wiremock/resources/configuration.yml";

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.lt.openbanking.seb.wiremock;
+package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.seb.wiremock;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -9,26 +9,26 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class SebLTWireMockTest {
+public class SebEEAgentWiremockTest {
 
     private static final String CONFIGURATION_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/lt/openbanking/seb/wiremock/resources/configuration.yml";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/seb/wiremock/resources/configuration.yml";
 
     @Test
     public void testRefresh() throws Exception {
 
         final String wireMockServerFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/lt/openbanking/seb/wiremock/resources/log.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/seb/wiremock/resources/logs.aap";
         final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/lt/openbanking/seb/wiremock/resources/agent-contract.json";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/seb/wiremock/resources/agent-contract.json";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
-                        .withMarketCode(MarketCode.LT)
-                        .withProviderName("lt-seb-ob")
+                        .withMarketCode(MarketCode.EE)
+                        .withProviderName("ee-seb-ob")
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withConfigFile(configuration)
                         .testFullAuthentication()
