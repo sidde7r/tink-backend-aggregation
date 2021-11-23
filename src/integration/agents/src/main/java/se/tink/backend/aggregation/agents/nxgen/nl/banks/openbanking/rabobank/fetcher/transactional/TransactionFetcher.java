@@ -17,6 +17,7 @@ public final class TransactionFetcher implements TransactionDatePaginator<Transa
 
     private final RabobankApiClient apiClient;
     private final Date dateLimit;
+    private final boolean isUserPresent;
 
     @Override
     public PaginatorResponse getTransactionsFor(
@@ -24,6 +25,14 @@ public final class TransactionFetcher implements TransactionDatePaginator<Transa
 
         if (whenTransactionConsentNotGranted(account) || fromDate.before(dateLimit)) {
             return PaginatorResponseImpl.createEmpty(false);
+        }
+
+        if (!isUserPresent) {
+            return PaginatorResponseImpl.create(
+                    apiClient
+                            .getTransactions(account, calculateFromDate(fromDate), toDate, false)
+                            .getTinkTransactions(),
+                    false);
         }
 
         return apiClient.getTransactions(account, calculateFromDate(fromDate), toDate, false);

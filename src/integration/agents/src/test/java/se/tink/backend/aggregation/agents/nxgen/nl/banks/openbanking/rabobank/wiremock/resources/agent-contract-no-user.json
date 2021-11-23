@@ -1,0 +1,102 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "NL71RABO0346234166",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 11.04,
+        "scale": 2,
+        "unscaledValue": 1104,
+        "doubleValue": 11.04
+      },
+      "currencyCode": "EUR",
+      "bankId": "NL71RABO0346234166",
+      "excluded": false,
+      "favored": false,
+      "name": "NL71RABO0346234166",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"iban://NL71RABO0346234166\"]",
+      "closed": false,
+      "holderName": "H.a. Akin",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "H.a. Akin",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 11.04
+    },
+    {
+      "accountNumber": "NL49RABO0136957838",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 1.23,
+        "scale": 2,
+        "unscaledValue": 123,
+        "doubleValue": 1.23
+      },
+      "currencyCode": "EUR",
+      "bankId": "NL49RABO0136957838",
+      "excluded": false,
+      "favored": false,
+      "name": "NL49RABO0136957838",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"iban://NL49RABO0136957838\"]",
+      "closed": false,
+      "holderName": "Firstname Lastname",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Firstname Lastname",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 1.23
+    }
+  ],
+  "transactions": [
+    {
+      "amount": -4.15,
+      "date": 1618221600000,
+      "description": "Bakkerij Nieuw Fes ROTTERDAM",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bakkerij Nieuw Fes ROTTERDAM",
+        "TRANSFER_ACCOUNT_EXTERNAL": "NL71RABO0346234166",
+        "TRANSFER_PROVIDER": null,
+        "DETAILS": "bc",
+        "MESSAGE": "Betaalautomaat 15:39 pasnr. 011"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    }
+  ]
+}

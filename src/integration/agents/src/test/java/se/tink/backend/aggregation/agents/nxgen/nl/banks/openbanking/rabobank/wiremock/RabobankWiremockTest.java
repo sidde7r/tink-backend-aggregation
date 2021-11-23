@@ -63,6 +63,36 @@ public class RabobankWiremockTest {
     }
 
     @Test
+    public void shouldAutoRefresh() throws Exception {
+        // given
+        AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.NL)
+                        .withProviderName("nl-rabobank-ob")
+                        .withWireMockServer(WIRE_MOCK_TEST_SERVER)
+                        .withWireMockFilePath(path("nl-rabobank-ob-ais.aap"))
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addPersistentStorageData(CONSENT_ID, "fffff")
+                        .addPersistentStorageData(OAUTH_2_TOKEN, oauth2Token)
+                        .withAgentTestModule(new RabobankWiremockTestModule())
+                        .build();
+
+        // and
+        AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(path("agent-contract-no-user.json"));
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
     public void shouldSuccessfullyRetryOnRateLimitExceeded() throws Exception {
         // given
         AgentWireMockRefreshTest agentWireMockRefreshTest =

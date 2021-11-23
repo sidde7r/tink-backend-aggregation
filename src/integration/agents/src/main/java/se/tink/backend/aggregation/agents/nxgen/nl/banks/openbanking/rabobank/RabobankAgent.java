@@ -41,6 +41,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.DateLimitTransactionPaginatorHelperFactory;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -172,7 +174,8 @@ public final class RabobankAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             LocalDateTimeSource localDateTimeSource) {
-        Date transactionDateLimit =
+
+        Date dateLimit =
                 Date.from(
                         (localDateTimeSource
                                 .now()
@@ -180,17 +183,21 @@ public final class RabobankAgent
                                 .atZone(ZoneId.systemDefault())
                                 .toInstant()));
 
+        TransactionPaginationHelper paginationHelper =
+                new DateLimitTransactionPaginatorHelperFactory().create(request, dateLimit);
+
         TransactionDatePaginator<TransactionalAccount> transactionFetcher =
                 isSandbox()
                         ? new SandboxTransactionFetcher(apiClient)
-                        : new TransactionFetcher(apiClient, transactionDateLimit);
+                        : new TransactionFetcher(
+                                apiClient, dateLimit, getUserIpInformation().isUserPresent());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 new TransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
-                        transactionPaginationHelper,
+                        paginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
