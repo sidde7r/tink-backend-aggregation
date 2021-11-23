@@ -10,9 +10,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class SebBalticsTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final SebBalticsApiClient apiClient;
+    private final String bicCode;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts().toTinkAccount(apiClient);
+        return apiClient.fetchAccounts().toTinkAccount(apiClient, bicCode);
     }
 }

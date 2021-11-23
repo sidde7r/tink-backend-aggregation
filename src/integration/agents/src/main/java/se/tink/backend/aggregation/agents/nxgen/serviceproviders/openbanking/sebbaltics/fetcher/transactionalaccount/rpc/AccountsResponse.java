@@ -19,11 +19,12 @@ public class AccountsResponse {
     private List<AccountEntity> accounts;
 
     @JsonIgnore
-    public Collection<TransactionalAccount> toTinkAccount(SebBalticsApiClient apiClient) {
+    public Collection<TransactionalAccount> toTinkAccount(
+            SebBalticsApiClient apiClient, String bicCode) {
         return Optional.ofNullable(accounts)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
-                .map(accountEntity -> accountEntity.toTinkAccount(apiClient))
+                .map(accountEntity -> accountEntity.toTinkAccount(apiClient, bicCode))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
