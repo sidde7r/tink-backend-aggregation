@@ -214,6 +214,8 @@ clients:
     aggregatorIdentifier: "BNL Gruppo BNP Paribas"
   it-bancoposta-production:
     aggregatorIdentifier: "BancoPosta"
+  it-monese-production:
+    aggregatorIdentifier: "Monese"
   it-poste-testing:
     aggregatorIdentifier: "Poste Italiane"
   it-postepay-production:
