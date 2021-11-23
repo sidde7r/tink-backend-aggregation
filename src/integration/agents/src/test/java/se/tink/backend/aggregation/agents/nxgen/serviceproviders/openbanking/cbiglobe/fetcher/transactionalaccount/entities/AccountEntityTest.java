@@ -11,6 +11,8 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -285,11 +287,12 @@ public class AccountEntityTest {
         AccountEntity accountEntity = genAccountEntity("CASH", " Name1 Surname1 , CompanyName");
 
         // when
-        List<String> holderNames = accountEntity.getHolderNames();
+        List<Party> holderNames = accountEntity.parseOwnerNames();
 
         // then
         assertThat(holderNames.size()).isEqualTo(2);
-        assertThat(holderNames).contains("Name1 Surname1", "CompanyName");
+        assertThat(holderNames).contains(new Party("Name1 Surname1", Role.HOLDER));
+        assertThat(holderNames).contains(new Party("CompanyName", Role.HOLDER));
     }
 
     @Test
@@ -298,11 +301,11 @@ public class AccountEntityTest {
         AccountEntity accountEntity = genAccountEntity("CASH", " owner ");
 
         // when
-        List<String> holderNames = accountEntity.getHolderNames();
+        List<Party> holderNames = accountEntity.parseOwnerNames();
 
         // then
         assertThat(holderNames.size()).isEqualTo(1);
-        assertThat(holderNames).contains("owner");
+        assertThat(holderNames.get(0)).isEqualTo(new Party("owner", Role.HOLDER));
     }
 
     @Test
@@ -311,10 +314,10 @@ public class AccountEntityTest {
         AccountEntity accountEntity = genAccountEntity("CASH");
 
         // when
-        List<String> holderNames = accountEntity.getHolderNames();
+        List<Party> holderNames = accountEntity.parseOwnerNames();
 
         // then
-        assertThat(holderNames.isEmpty()).isTrue();
+        assertThat(holderNames).isEmpty();
     }
 
     private AccountEntity genAccountEntity(String cashAccountType) {
@@ -322,6 +325,12 @@ public class AccountEntityTest {
     }
 
     private AccountEntity genAccountEntity(String cashAccountType, String ownerName) {
-        return new AccountEntity("123", "456", "asdf", "someName", cashAccountType, ownerName);
+        return new AccountEntity(
+                "500105174939947488",
+                "DE61500105174939947488",
+                "asdf",
+                "someName",
+                cashAccountType,
+                ownerName);
     }
 }

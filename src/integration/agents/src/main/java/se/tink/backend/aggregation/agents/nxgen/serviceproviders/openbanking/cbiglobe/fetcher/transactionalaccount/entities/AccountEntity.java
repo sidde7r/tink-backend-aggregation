@@ -13,14 +13,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -48,25 +50,26 @@ public class AccountEntity {
     }
 
     public Optional<TransactionalAccount> toTinkAccount(BalancesResponse balancesResponse) {
-        TransactionalBuildStep transactionalBuildStep =
-                TransactionalAccount.nxBuilder()
-                        .withTypeAndFlagsFrom(
-                                CbiGlobeConstants.ACCOUNT_TYPE_MAPPER,
-                                Optional.ofNullable(cashAccountType).orElse("CASH"),
-                                TransactionalAccountType.CHECKING)
-                        .withBalance(getBalanceModule(balancesResponse))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(iban)
-                                        .withAccountNumber(getAccountNumber())
-                                        .withAccountName(getName())
-                                        .addIdentifier(
-                                                AccountIdentifier.create(
-                                                        AccountIdentifierType.IBAN, iban, name))
-                                        .build())
-                        .setApiIdentifier(resourceId);
-        getHolderNames().forEach(transactionalBuildStep::addHolderName);
-        return transactionalBuildStep.build();
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(
+                        CbiGlobeConstants.ACCOUNT_TYPE_MAPPER,
+                        Optional.ofNullable(cashAccountType).orElse("CASH"),
+                        TransactionalAccountType.CHECKING)
+                .withBalance(getBalanceModule(balancesResponse))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(getName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.IBAN, iban, name))
+                                .addIdentifier(
+                                        new BbanIdentifier(bban != null ? bban : iban.substring(4)))
+                                .build())
+                .setApiIdentifier(resourceId)
+                .addParties(parseOwnerNames())
+                .build();
     }
 
     private BalanceModule getBalanceModule(BalancesResponse balancesResponse) {
@@ -112,13 +115,14 @@ public class AccountEntity {
         return iban == null || resourceId == null;
     }
 
-    List<String> getHolderNames() {
+    List<Party> parseOwnerNames() {
         if (ownerName == null) {
             return Collections.emptyList();
         }
 
         return Arrays.stream(ownerName.split(","))
                 .map(StringUtils::trim)
+                .map(owner -> new Party(owner, Role.HOLDER))
                 .collect(Collectors.toList());
     }
 }

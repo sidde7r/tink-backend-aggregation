@@ -15,7 +15,7 @@ public class CbiGlobeAgentSupportingAllPsd2AllAccountsWithOwnerNameWiremockTest 
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/integration/resources/test-refresh-supporting-all-psd2-all-accounts-with-owner-name.aap";
 
     private static String CONTRACT_FILE_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/integration/resources/agent-contract.json";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/integration/resources/agent-contract-with-owners.json";
 
     private static String CONFIGURATION_FILE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/integration/resources/configuration.yml";
@@ -33,6 +33,7 @@ public class CbiGlobeAgentSupportingAllPsd2AllAccountsWithOwnerNameWiremockTest 
                         .addCallbackData("code", "acc&trans")
                         .addCallbackData("result", "success")
                         .withConfigurationFile(configuration)
+                        .dumpContentForContractFile()
                         .build();
 
         AgentContractEntity expected =

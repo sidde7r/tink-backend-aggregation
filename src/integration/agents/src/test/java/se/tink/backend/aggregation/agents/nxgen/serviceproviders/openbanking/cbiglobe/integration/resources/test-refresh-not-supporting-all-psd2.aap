@@ -92,7 +92,7 @@ RESPONSE 6
 200
 Content-Type: application/json
 
-{"accounts":[{"iban":"dummyIban","bban":"dummyBban","currency":"EUR","resourceId":"dummyAccountId","name":"dummyName","product":"dummyProduct","bic":"dummyBic","usage":"PRIV","_links":{"account":{"href":"/accounts/dummyResourceId"},"balances":{"href":"/accounts/dummyResourceId/balances"},"transactions":{"href":"/accounts/dummyResourceId/transactions"}}}]}
+{"accounts":[{"iban":"DE61500105174939947488","bban":"500105174939947488","currency":"EUR","resourceId":"dummyAccountId","name":"dummyName","product":"dummyProduct","bic":"dummyBic","usage":"PRIV","_links":{"account":{"href":"/accounts/dummyResourceId"},"balances":{"href":"/accounts/dummyResourceId/balances"},"transactions":{"href":"/accounts/dummyResourceId/transactions"}}}]}
 
 REQUEST 7
 POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents
@@ -101,7 +101,7 @@ Authorization: Bearer dummyToken
 tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=trans&result=success
 tpp-nok-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=trans&result=failure
 
-{"access":{"balances":[{"accountId": "dummyAccountId", "iban":"dummyIban"}],"transactions":[{"accountId": "dummyAccountId", "iban":"dummyIban"}]},"recurringIndicator":"true","frequencyPerDay":"4", "validUntil":"1992-07-08"}
+{"access":{"balances":[{"accountId": "dummyAccountId", "iban":"DE61500105174939947488"}],"transactions":[{"accountId": "dummyAccountId", "iban":"DE61500105174939947488"}]},"recurringIndicator":"true","frequencyPerDay":"4", "validUntil":"1992-07-08"}
 
 RESPONSE 7
 201

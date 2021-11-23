@@ -6,11 +6,18 @@
             "exactBalance": {
                 "currencyCode": "EUR",
                 "scale": 2,
-                "unscaledValue": 9011,
                 "exactValue": 90.11,
+                "unscaledValue": 9011,
                 "doubleValue": 90.11
             },
             "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "exactValue": 90.11,
+                "unscaledValue": 9011,
+                "doubleValue": 90.11
+            },
             "bankId": "DE61500105174939947488",
             "excluded": false,
             "favored": false,
@@ -22,10 +29,20 @@
             "userModifiedType": false,
             "identifiers": "[\"iban://DE61500105174939947488?name=dummyName\",\"bban://500105174939947488\"]",
             "closed": false,
+            "holderName": "Name Surname",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
-                "identities": []
+                "identities": [
+                    {
+                        "name": "Name Surname",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "Imie Nazwisko",
+                        "role": "HOLDER"
+                    }
+                ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
