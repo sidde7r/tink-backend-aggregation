@@ -64,6 +64,34 @@
         } ],
         "providerMarket" : "DK"
     }, {
+        "amount" : -90.99,
+        "date" : 700225200000,
+        "description" : "Purchase",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "123456789012345@Homebank@1992-03-10@1992-03-10-16.10.58.984005"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-03-10",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-03-10",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "DK"
+    }, {
         "amount" : 5000.0,
         "date" : 699966000000,
         "description" : "Overførsel",
