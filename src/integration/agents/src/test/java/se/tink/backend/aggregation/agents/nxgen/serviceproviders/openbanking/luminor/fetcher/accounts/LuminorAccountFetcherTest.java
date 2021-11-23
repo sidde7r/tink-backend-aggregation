@@ -53,7 +53,7 @@ public class LuminorAccountFetcherTest {
                 accountsResponse.getAccounts().get(0).toTinkAccount().orElse(null);
 
         // then
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(getExpectedAccountsResponse());
+        assertThat(result).isEqualTo(getExpectedAccountsResponse());
     }
 
     @Test

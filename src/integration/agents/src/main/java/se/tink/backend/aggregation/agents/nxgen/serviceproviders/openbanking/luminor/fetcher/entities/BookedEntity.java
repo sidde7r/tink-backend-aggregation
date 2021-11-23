@@ -16,17 +16,14 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 public class BookedEntity {
     private String transactionId;
     private String creditorName;
+    private String bankTransactionCode;
     private IbanAccountEntity creditorAccount;
-
     private String debtorName;
     private IbanAccountEntity debtorAccount;
-
     private TransactionAmountEntity transactionAmount;
-
     private LocalDate bookingDate;
     private LocalDate valueDate;
     private String remittanceInformationUnstructured;
-
     private RemittanceInformationStructuredEntity remittanceInformationStructured;
 
     @JsonIgnore
@@ -46,8 +43,7 @@ public class BookedEntity {
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
                         .setMerchantName(creditorName)
-                        .setProprietaryFinancialInstitutionType(
-                                getRemittanceInformationStructured().getReferenceType())
+                        .setProprietaryFinancialInstitutionType(bankTransactionCode)
                         .setTransactionReference(
                                 getRemittanceInformationStructured().getReference());
         return (Transaction) builder.build();

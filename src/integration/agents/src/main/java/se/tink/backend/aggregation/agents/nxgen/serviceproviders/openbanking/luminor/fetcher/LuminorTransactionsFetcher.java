@@ -34,7 +34,7 @@ public class LuminorTransactionsFetcher implements TransactionDatePaginator<Tran
         String formattedFromDate = DATE_FORMAT.format(localDateFromDate);
         String formattedToDate = DATE_FORMAT.format(localDateToDate);
         return apiClient.getTransactions(
-                account.getAccountNumber(), formattedFromDate, formattedToDate);
+                account.getApiIdentifier(), formattedFromDate, formattedToDate);
     }
 
     private LocalDate get90DaysBackOnly() {
