@@ -59,7 +59,7 @@ public class TransactionsResponse implements PaginatorResponse {
 
     private boolean isWithinRequestedDateRange(
             TransactionEntity transaction, LocalDate fromDate, LocalDate toDate) {
-        return fromDate.isBefore(transaction.getBookingDate())
-                && toDate.isAfter(transaction.getBookingDate());
+        return !transaction.getBookingDate().isBefore(fromDate)
+                && !transaction.getBookingDate().isAfter(toDate);
     }
 }
