@@ -32,10 +32,9 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains;
 X-Request-Id: 00000000-0000-4000-0000-000000000000
 Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'self';
 Feature-Policy: accelerometer 'none'; ambient-light-sensor 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'self'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'; picture-in-picture 'none'; document-write 'none'; image-compression 'none'; legacy-image-formats 'none'; max-downscaling-image 'none'; unsized-media 'none'; vertical-scroll 'none'; animations 'none'; autoplay 'none'
-Content-Length: 449
 Server: Jetty(9.4.z-SNAPSHOT)
 
-{"accounts":[{"resourceId":"1ab233435ab010001a223cd","iban":"BE92199493742823","bban":"199493742823","currency":"EUR","product":"Test account name","balances":[{"balanceAmount":{"amount":"1234.56","currency":"EUR"},"balanceType":"interimBooked","referenceDate":"2021-09-07"}],"cashAccountType":"CACC","_links":{"balances":{"href":"/v1/accounts/1ab233435ab010001a223cd/balances"},"transactions":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions"}}}]}
+{"accounts":[{"resourceId":"1ab233435ab010001a223cd","iban":"BE92199493742823","bban":"199493742823","currency":"EUR","product":"Test account name","ownerName":"Monty Python","balances":[{"balanceAmount":{"amount":"1234.56","currency":"EUR"},"balanceType":"interimBooked","referenceDate":"2021-09-07"}],"cashAccountType":"CACC","_links":{"balances":{"href":"/v1/accounts/1ab233435ab010001a223cd/balances"},"transactions":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions"}}}]}
 
 REQUEST 2
 GET https://api.payments.argenta.be/berlingroup/v1/accounts/1ab233435ab010001a223cd/transactions?dateFrom=1992-01-12&bookingStatus=both

@@ -5,8 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonObject
 @Getter
+@JsonObject
+@SuppressWarnings("FieldMayBeFinal")
 public class IbanEntity {
 
     private String iban;
