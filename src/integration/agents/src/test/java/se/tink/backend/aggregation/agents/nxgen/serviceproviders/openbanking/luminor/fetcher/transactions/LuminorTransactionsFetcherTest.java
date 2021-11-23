@@ -68,7 +68,8 @@ public class LuminorTransactionsFetcherTest {
                 Objects.requireNonNull(result).getAmount());
         Assert.assertEquals(("Invoice x29876"), Objects.requireNonNull(result).getDescription());
         Assert.assertEquals(
-                ("SCOR"), Objects.requireNonNull(result).getProprietaryFinancialInstitutionType());
+                ("PMNT-FAKE-OTHR"),
+                Objects.requireNonNull(result).getProprietaryFinancialInstitutionType());
         Assert.assertEquals(
                 ("RF18539FAKE47034"), Objects.requireNonNull(result).getTransactionReference());
         Assert.assertEquals(("Fake PersonName"), Objects.requireNonNull(result).getMerchantName());
