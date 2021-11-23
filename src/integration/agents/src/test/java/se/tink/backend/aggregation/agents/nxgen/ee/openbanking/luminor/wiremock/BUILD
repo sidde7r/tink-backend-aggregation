@@ -2,16 +2,14 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "wiremock",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(["*.java"]),
     data = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/luminor/wiremock/resources",
     ],
-    tags = [
-        "external",
-        "manual",
-    ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/luminor",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
