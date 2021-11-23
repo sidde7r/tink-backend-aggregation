@@ -1335,10 +1335,6 @@ public class AgentWorkerOperationFactory {
         }
 
         commands.add(
-                new RefreshPostProcessingAgentWorkedCommand(
-                        context, createCommandMetricState(request, clientInfo)));
-
-        commands.add(
                 new TransactionRefreshScopeFilteringCommand(
                         context.getAccountDataCache(), request));
 
