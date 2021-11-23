@@ -23,6 +23,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/date",
         "//src/libraries/strings",
+        "//third_party:com_google_inject_guice",
         "//third_party:org_apache_httpcomponents_httpcore",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@tink_backend//src/libraries/account_identifier",
