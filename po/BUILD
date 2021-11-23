@@ -91,3 +91,17 @@ java_library(
     ],
     visibility = ["//visibility:public"],
 )
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-minion-maintainer",
+        "@tink-ab/aggregation-nazguls-maintainer",
+        "@tink-ab/aggregation-teletubbies-maintainer",
+        "@tink-ab/aggregation-llamas-maintainer",
+        "@tink-ab/aggregation-penguins-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
