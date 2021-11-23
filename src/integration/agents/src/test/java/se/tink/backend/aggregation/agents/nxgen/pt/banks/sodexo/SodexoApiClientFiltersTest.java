@@ -33,10 +33,6 @@ public class SodexoApiClientFiltersTest {
     private static final int TEST_MAX_RETRIES_NUMBER = 2;
     private static final int NO_OF_FILTER_RETRIES = 3;
     private static final URL TEST_URL = new URL("https://sodexo.pt/test");
-    private static final String CONNECTION_RESET_MESSAGE = "connection reset";
-    private static final String CONNECT_TIMED_OUT_MESSAGE = "connect timed out";
-    private static final String READ_TIMED_OUT_MESSAGE = "read timed out";
-    private static final String FAILED_TO_RESPOND_MESSAGE = "failed to respond";
 
     @Mock private Filter callFilter;
     @Mock private HttpResponse response;
@@ -77,24 +73,24 @@ public class SodexoApiClientFiltersTest {
     private Object[] parametersForShouldRetryAndThrowOnTimeoutErrors() {
         return new Object[][] {
             {
-                CONNECTION_RESET_MESSAGE,
+                "connection reset",
                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                        new HttpClientException(CONNECTION_RESET_MESSAGE, null))
+                        new HttpClientException("connection reset", null))
             },
             {
-                CONNECT_TIMED_OUT_MESSAGE,
+                "connect timed out",
                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                        new HttpClientException(CONNECT_TIMED_OUT_MESSAGE, null))
+                        new HttpClientException("connect timed out", null))
             },
             {
-                READ_TIMED_OUT_MESSAGE,
+                "read timed out",
                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                        new HttpClientException(READ_TIMED_OUT_MESSAGE, null))
+                        new HttpClientException("read timed out", null))
             },
             {
-                FAILED_TO_RESPOND_MESSAGE,
+                "failed to respond",
                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                        new HttpClientException(FAILED_TO_RESPOND_MESSAGE, null))
+                        new HttpClientException("failed to respond", null))
             },
         };
     }
