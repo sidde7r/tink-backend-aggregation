@@ -1,0 +1,87 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "TestNameTestSurname1234",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 1234.99,
+                "scale": 2,
+                "unscaledValue": 123499,
+                "exactValue": 1234.99
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 1234.99,
+                "scale": 2,
+                "unscaledValue": 123499,
+                "exactValue": 1234.99
+            },
+            "bankId": "TestNameTestSurname1234",
+            "excluded": false,
+            "favored": false,
+            "name": "TestNameTestSurname1234",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 1234.99
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 123.0,
+            "date": 1635242400000,
+            "description": "CARREGAMENTO DE BENEFÍCIO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 44.44,
+            "date": 1624701600000,
+            "description": "Some test transaction",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 98.76,
+            "date": 1613732400000,
+            "description": "Another transaction",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}

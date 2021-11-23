@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Slf4j
 @RequiredArgsConstructor
 public class SodexoApiClient {
 
@@ -41,7 +43,7 @@ public class SodexoApiClient {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(nif, password);
 
         try {
-            return request(Urls.SING_IN_REGISTER)
+            return request(Urls.SIGN_IN_REGISTER)
                     .header(Headers.CONTENT_TYPE, Headers.CONTENT_TYPE_X_FORM)
                     .post(AuthenticationResponse.class, authenticationRequest);
         } catch (HttpResponseException e) {
@@ -60,7 +62,7 @@ public class SodexoApiClient {
     public AuthenticationResponse authenticateWithPin(String pin) {
         AuthenticationPinRequest authenticationPinRequest = new AuthenticationPinRequest(pin);
         try {
-            return requestWithUserToken(Urls.SING_IN)
+            return requestWithUserToken(Urls.SIGN_IN)
                     .header(Headers.CONTENT_TYPE, Headers.CONTENT_TYPE_X_FORM)
                     .post(AuthenticationResponse.class, authenticationPinRequest);
         } catch (HttpResponseException e) {
@@ -99,7 +101,11 @@ public class SodexoApiClient {
 
     private LoginException mapAuthenticationException(HttpResponseException exception) {
         if (isIncorrectCredentialsResponseStatus(exception)) {
-            return LoginError.INCORRECT_CREDENTIALS.exception();
+            HttpResponse response = exception.getResponse();
+            return LoginError.INCORRECT_CREDENTIALS.exception(
+                    String.format(
+                            "Cause: LoginError.INCORRECT_CREDENTIALS. Http status: %s. Error body: %s",
+                            response.getStatus(), response.getBody(String.class)));
         } else {
             throw exception;
         }
