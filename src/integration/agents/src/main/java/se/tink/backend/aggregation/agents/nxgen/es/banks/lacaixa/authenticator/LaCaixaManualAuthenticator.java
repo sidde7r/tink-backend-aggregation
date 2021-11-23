@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
@@ -143,11 +144,19 @@ public class LaCaixaManualAuthenticator {
     }
 
     private void handleLoginError(ErrorLoginResponse response) {
-        if (ErrorCodes.INCORRECT_CREDENTIALS.equalsIgnoreCase(response.getResultCode())) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        switch (response.getResultCode()) {
+            case ErrorCodes.INCORRECT_CREDENTIALS:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            case ErrorCodes.ATTEMPS_EXCEEDED:
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            case ErrorCodes.ACCESS_DEACTIVATED:
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
+            case ErrorCodes.UNKNOWN_ISSUE:
+                throw LoginError.DEFAULT_MESSAGE.exception("Unknown reason of login failure");
+            default:
+                throw LoginError.DEFAULT_MESSAGE.exception(
+                        "Unknown error status code: " + response.getResultCode());
         }
-        throw LoginError.DEFAULT_MESSAGE.exception(
-                "Unknown error status code: " + response.getResultCode());
     }
 
     private AuthenticationStepResponse initiateEnrolment() {
