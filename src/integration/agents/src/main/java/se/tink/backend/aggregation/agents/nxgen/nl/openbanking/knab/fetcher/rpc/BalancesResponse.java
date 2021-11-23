@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class BalancesResponse {
     private AccountEntity account;
     private List<BalanceEntity> balances;

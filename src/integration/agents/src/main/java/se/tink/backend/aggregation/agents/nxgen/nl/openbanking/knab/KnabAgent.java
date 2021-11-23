@@ -3,23 +3,24 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
+import org.apache.http.client.config.CookieSpecs;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.KnabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuration.KnabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.filter.KnabFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.filter.KnabRetryFilter;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.session.KnabSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.time.KnabTimeProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -35,10 +36,17 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshake
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
-public final class KnabAgent extends NextGenerationAgent
+public class KnabAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
+    private static final int MAX_RETRIES = 3;
+
+    private static final int RETRY_SLEEP_MILLISECONDS = 3000;
+
+    private final KnabStorage storage;
+
     private final KnabApiClient apiClient;
+
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
@@ -46,23 +54,30 @@ public final class KnabAgent extends NextGenerationAgent
         super(componentProvider);
 
         configureHttpClient(client);
-        this.apiClient =
-                new KnabApiClient(client, persistentStorage, request.getCredentials(), userIp);
-        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        storage = new KnabStorage(persistentStorage);
+
+        apiClient =
+                new KnabApiClient(
+                        client,
+                        componentProvider.getRandomValueGenerator(),
+                        new KnabTimeProvider(componentProvider.getLocalDateTimeSource()),
+                        storage,
+                        userIp);
+
+        transactionalAccountRefreshController =
+                createTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
     }
 
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BankServiceInternalErrorFilter());
-        client.addFilter(
-                new KnabRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new KnabRetryFilter(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new GatewayTimeoutFilter());
-        client.addFilter(
-                new TerminatedHandshakeRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new TerminatedHandshakeRetryFilter(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new KnabFailureFilter());
-        client.addFilter(
-                new ConnectionTimeoutRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new ConnectionTimeoutRetryFilter(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS));
+        client.setCookieSpec(CookieSpecs.STANDARD);
     }
 
     @Override
@@ -72,7 +87,9 @@ public final class KnabAgent extends NextGenerationAgent
         final AgentConfiguration<KnabConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(KnabConfiguration.class);
 
-        this.apiClient.setConfiguration(agentConfiguration);
+        this.apiClient.applyConfiguration(
+                agentConfiguration.getProviderSpecificConfiguration(),
+                agentConfiguration.getRedirectUrl());
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
@@ -82,11 +99,7 @@ public final class KnabAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new KnabAuthenticator(
-                                supplementalInformationHelper,
-                                strongAuthenticationState,
-                                apiClient,
-                                persistentStorage),
+                        new KnabAuthenticator(strongAuthenticationState, apiClient, storage),
                         credentials,
                         strongAuthenticationState);
 
@@ -118,7 +131,8 @@ public final class KnabAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController createTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
@@ -127,11 +141,12 @@ public final class KnabAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
                                         new KnabTransactionFetcher(apiClient))
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new KnabSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 }

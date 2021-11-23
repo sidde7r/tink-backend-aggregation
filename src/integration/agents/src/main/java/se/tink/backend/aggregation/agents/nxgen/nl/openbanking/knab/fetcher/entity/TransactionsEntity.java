@@ -6,6 +6,7 @@ import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class TransactionsEntity {
 
     private List<TransactionEntity> booked;

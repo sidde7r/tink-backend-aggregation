@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.enti
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class AccountsResponse {
 
     private List<AccountEntity> accounts;

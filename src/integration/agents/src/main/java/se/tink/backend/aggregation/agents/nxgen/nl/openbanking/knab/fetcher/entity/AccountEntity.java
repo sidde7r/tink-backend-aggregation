@@ -14,6 +14,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class AccountEntity {
 
     private String resourceId;

@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.Formats;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.time.annotations.KnabDateJsonFormat;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class TransactionEntity {
 
     private AccountInfoEntity creditorAccount;
@@ -17,11 +17,9 @@ public class TransactionEntity {
     private AmountEntity transactionAmount;
     private String entryReference;
 
-    @JsonFormat(pattern = Formats.DATE_FORMAT)
-    private Date bookingDate;
+    @KnabDateJsonFormat private Date bookingDate;
 
-    @JsonFormat(pattern = Formats.DATE_FORMAT)
-    private Date valueDate;
+    @KnabDateJsonFormat private Date valueDate;
 
     private String creditorName;
     private String debtorName;

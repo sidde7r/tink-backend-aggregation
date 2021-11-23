@@ -1,0 +1,406 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://login.knab.nl/connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&client_id=0000000&client_secret=0000000000000-000-0000000000000000000000&refresh_token=0000000000000000000000000000000000000000000000000000000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+Set-Cookie: AWSALB=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000; Expires=Tue, Fri, 20 Apr 1992 10:20:30 GMT; Path=/
+Set-Cookie: AWSALBCORS=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000; Expires=Tue, Fri, 20 Apr 1992 10:20:30 GMT; Path=/; SameSite=None; Secure
+Expires: -1
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Referrer-Policy: no-referrer
+
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw",
+  "expires_in": 3600,
+  "token_type": "Bearer",
+  "refresh_token": "0000000000000000000000000000000000000000000000000000000000000000",
+  "scope": "psd2 offline_access AIS:00000000-0000-5000-0000-000000000000"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://tpp-loket.knab.nl/openbanking/v2/consents/00000000-0000-5000-0000-000000000000/status
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+{
+  "consentStatus": "valid"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://tpp-loket.knab.nl/openbanking/v1/accounts?withBalance=true
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+Consent-ID: 00000000-0000-5000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+
+{
+  "accounts": [
+    {
+      "resourceId": "1000000",
+      "usage": "PRIV",
+      "iban": "NL54KNAB0000000000",
+      "currency": "EUR",
+      "name": "M. Python",
+      "product": "Current Account",
+      "cashAccountType": "CACC",
+      "_links": {
+        "balances": {
+          "href": "/accounts/1000000/balances"
+        },
+        "transactions": {
+          "href": "/accounts/1000000/transactions"
+        }
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://tpp-loket.knab.nl/openbanking/v1/accounts/1000000/balances
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+Consent-ID: 00000000-0000-5000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "iban": "NL54KNAB0000000000"
+  },
+  "balances": [
+    {
+      "balanceType": "interimAvailable",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "100.00"
+      }
+    },
+    {
+      "balanceType": "interimBooked",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "100.00"
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://tpp-loket.knab.nl/openbanking/v1/accounts/1000000/transactions?withBalance=true&bookingStatus=booked&dateFrom=1992-01-12&dateTo=1992-04-10
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+Consent-ID: 00000000-0000-5000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "iban": "NL54KNAB0000000000"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "110"
+        },
+        "dayStartBalance": {
+          "currency": "EUR",
+          "amount": "-10"
+        },
+        "debtorAccount": {
+          "bban": "00000001"
+        },
+        "transactionId": "C0K00AG00R0000PK000003",
+        "reversalIndicator": false,
+        "bookingDate": "1992-01-12",
+        "valueDate": "1992-01-12",
+        "transactionDate": "1992-01-12",
+        "debtorName": " ",
+        "remittanceInformationUnstructured": "Betaalverzoek geld van R. H. van Rijn",
+        "entryReference": "0000003",
+        "endToEndId": "0000000000000000",
+        "proprietaryBankTransactionCode": "Incoming transfer"
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "/accounts/1000000"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://tpp-loket.knab.nl/openbanking/v1/accounts/1000000/transactions?withBalance=true&bookingStatus=booked&dateFrom=1991-10-14&dateTo=1992-01-11
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+Consent-ID: 00000000-0000-5000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "iban": "NL54KNAB0000000000"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "creditorAccount": {
+          "bban": "00000000"
+        },
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-5"
+        },
+        "dayStartBalance": {
+          "currency": "EUR",
+          "amount": "-5"
+        },
+        "transactionId": "C0K00AG00R0000PK000002",
+        "reversalIndicator": false,
+        "bookingDate": "1992-01-11",
+        "valueDate": "1992-01-11",
+        "transactionDate": "1992-01-11",
+        "creditorName": "Knab",
+        "remittanceInformationUnstructured": "Pakketkosten",
+        "entryReference": "0000002",
+        "proprietaryBankTransactionCode": "Subscription fee"
+      },
+      {
+        "creditorAccount": {
+          "bban": "00000000"
+        },
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-5"
+        },
+        "dayStartBalance": {
+          "currency": "EUR",
+          "amount": "0"
+        },
+        "transactionId": "C0K00AG00R0000PK000001",
+        "reversalIndicator": false,
+        "bookingDate": "1992-01-11",
+        "valueDate": "1992-01-11",
+        "transactionDate": "1992-01-11",
+        "creditorName": "Knab",
+        "remittanceInformationUnstructured": "Pakketkosten",
+        "entryReference": "0000001",
+        "proprietaryBankTransactionCode": "Subscription fee"
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "/accounts/1000000"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://tpp-loket.knab.nl/openbanking/v1/accounts/1000000/transactions?withBalance=true&bookingStatus=booked&dateFrom=1991-07-16&dateTo=1991-10-13
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+Consent-ID: 00000000-0000-5000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "iban": "NL54KNAB0000000000"
+  },
+  "transactions": {
+    "booked": [],
+    "_links": {
+      "account": {
+        "href": "/accounts/1000000"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://tpp-loket.knab.nl/openbanking/v1/accounts/1000000/transactions?withBalance=true&bookingStatus=booked&dateFrom=1991-04-17&dateTo=1991-07-15
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+Consent-ID: 00000000-0000-5000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "iban": "NL54KNAB0000000000"
+  },
+  "transactions": {
+    "booked": [],
+    "_links": {
+      "account": {
+        "href": "/accounts/1000000"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+GET https://tpp-loket.knab.nl/openbanking/v1/accounts/1000000/transactions?withBalance=true&bookingStatus=booked&dateFrom=1991-01-17&dateTo=1991-04-16
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+Consent-ID: 00000000-0000-5000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "iban": "NL54KNAB0000000000"
+  },
+  "transactions": {
+    "booked": [],
+    "_links": {
+      "account": {
+        "href": "/accounts/1000000"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://tpp-loket.knab.nl/openbanking/v1/accounts/1000000/transactions?withBalance=true&bookingStatus=booked&dateFrom=1990-10-19&dateTo=1991-01-16
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDAwMDAwIiwibmFtZSI6Ik1vbnR5IFB5dGhvbiIsImlhdCI6MTAwMDAwMDAwMH0.EJNJYpNffFpBdGbGoUo7emARuRT1iu2mbavJhCUGRYw
+Consent-ID: 00000000-0000-5000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+apigw-requestid: JmE6IEZBS0UgMQ==
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "iban": "NL54KNAB0000000000"
+  },
+  "transactions": {
+    "booked": [],
+    "_links": {
+      "account": {
+        "href": "/accounts/1000000"
+      }
+    }
+  }
+}
