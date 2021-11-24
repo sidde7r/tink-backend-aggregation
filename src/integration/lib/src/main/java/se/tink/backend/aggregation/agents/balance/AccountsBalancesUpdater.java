@@ -61,11 +61,6 @@ public class AccountsBalancesUpdater {
             ExactCurrencyAmount buggyBookedBalance = account.getExactBalance();
             Optional<ExactCurrencyAmount> calculatedBookedBalance =
                     bookedBalanceCalculator.calculateBookedBalance(granularBalances, transactions);
-            calculatedBookedBalance.ifPresent(
-                    balance -> {
-                        account.setExactBalance(balance);
-                        account.setBalance(balance.getDoubleValue());
-                    });
 
             log.info(
                     "[ACCOUNTS BALANCES UPDATER] Buggy booked balance potentially replaced by calculated: {} -> {}",
@@ -88,7 +83,6 @@ public class AccountsBalancesUpdater {
             Optional<ExactCurrencyAmount> calculatedAvailableBalance =
                     availableBalanceCalculator.calculateAvailableBalance(
                             granularBalances, transactions);
-            calculatedAvailableBalance.ifPresent(account::setAvailableBalance);
 
             log.info(
                     "[ACCOUNTS BALANCES UPDATER] Available balance potentially replaced by calculated: {} -> {}",

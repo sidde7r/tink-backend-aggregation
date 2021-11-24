@@ -284,6 +284,16 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
                 "CreditDebitIndicator": "Credit",
                 "DateTime": "2020-01-30T12:44:09Z",
                 "Type": "Expected"
+            },
+            {
+                "AccountId": "DUMMY_ACCOUNT_ID",
+                "Amount": {
+                    "Amount": "0.00",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "DateTime": null,
+                "Type": "InterimCleared"
             }
         ]
     },
@@ -308,26 +318,6 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 {
     "Data": {
         "Transaction": [
-            {
-                "AccountId": "DUMMY_ACCOUNT_ID",
-                "Amount": {
-                    "Amount": "5.00",
-                    "Currency": "GBP"
-                },
-                "Balance": {
-                    "Amount": {
-                        "Amount": "5.00",
-                        "Currency": "GBP"
-                    },
-                    "CreditDebitIndicator": "Credit",
-                    "Type": "Information"
-                },
-                "BookingDateTime": "2020-01-30T16:00:00Z",
-                "CreditDebitIndicator": "Credit",
-                "Status": "Pending",
-                "TransactionInformation": "DUMMY_VALUE",
-                "ValueDateTime": "2020-01-30T00:00:00.000Z"
-            },
             {
                 "AccountId": "DUMMY_ACCOUNT_ID",
                 "Amount": {
