@@ -285,19 +285,6 @@ public class AgentWorkerOperationFactory {
         List<RefreshableItem> nonAccountItems =
                 items.stream().filter(i -> !accountItems.contains(i)).collect(Collectors.toList());
 
-        for (RefreshableItem item : nonAccountItems) {
-            commands.add(
-                    new RefreshItemAgentWorkerCommand(
-                            context,
-                            item,
-                            createCommandMetricState(request, clientInfo),
-                            refreshEventProducer));
-        }
-
-        commands.add(
-                new RefreshPostProcessingAgentWorkedCommand(
-                        context, createCommandMetricState(request, clientInfo)));
-
         if (accountItems.size() > 0) {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
@@ -318,6 +305,19 @@ public class AgentWorkerOperationFactory {
 
             commands.add(new FetcherInstrumentationAgentWorkerCommand(context, itemsToRefresh));
         }
+
+        for (RefreshableItem item : nonAccountItems) {
+            commands.add(
+                    new RefreshItemAgentWorkerCommand(
+                            context,
+                            item,
+                            createCommandMetricState(request, clientInfo),
+                            refreshEventProducer));
+        }
+
+        commands.add(
+                new RefreshPostProcessingAgentWorkedCommand(
+                        context, createCommandMetricState(request, clientInfo)));
 
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
@@ -1652,6 +1652,9 @@ public class AgentWorkerOperationFactory {
                     new SendAccountRestrictionEventsWorkerCommand(
                             context, accountInformationServiceEventsProducer));
             commands.add(
+                    new SendAccountsToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request, clientInfo)));
+            commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
@@ -1680,10 +1683,6 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new RefreshPostProcessingAgentWorkedCommand(
-                        context, createCommandMetricState(request, clientInfo)));
-
-        commands.add(
-                new SendAccountsToUpdateServiceAgentWorkerCommand(
                         context, createCommandMetricState(request, clientInfo)));
 
         commands.add(
