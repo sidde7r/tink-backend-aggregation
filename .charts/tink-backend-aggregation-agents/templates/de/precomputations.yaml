@@ -7,47 +7,47 @@ spec:
   rules:
 
   # Precompute DE metrics
-  - record: sum:refreshes_DE:delta60m
+  - record: sum:DE:refreshes:delta60m
     expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))
 
-  - record: sum:all_manual_attempts:not_failed_DE:delta60m:action_className
+  - record: sum:DE:all_manual_attempts:not_failed:delta60m:action_className
     expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
 
-  - record: sum:all_manual_attempts:delta60m:action_className
+  - record: sum:DE:all_manual_attempts:delta60m:action_className
     expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className)
 
-  - record: sum:all_manual_attempts:not_failed_DE:delta60m:className
+  - record: sum:DE:all_manual_attempts:not_failed:delta60m:className
     expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (className)
 
-  - record: sum:all_manual_attempts:delta60m:className
+  - record: sum:DE:all_manual_attempts:delta60m:className
     expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (className)
 
-  - record: sum:all_manual_attempts:not_unavailable:delta60m:action_className
+  - record: sum:DE:all_manual_attempts:not_unavailable:delta60m:action_className
     expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
 
-  - record: sum:className:production:login-manual:delta1h
+  - record: sum:DE:className:production:login-manual:delta1h
     expr: sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h]))
 
-  - record: sum:className:production:login-auto-and-cron:delta1h
+  - record: sum:DE:className:production:login-auto-and-cron:delta1h
     expr: sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h]))
 
-  - record: sum:all_manual_attempts:not_cancelled_unavaible_failed:delta6h
+  - record: sum:DE:all_manual_attempts:not_cancelled_unavaible_failed:delta6h
     expr: sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.allErrorsAuth }}, market="DE"}[6h])) BY (className)
 
-  - record: sum:all_manual_attempts:delta6h
+  - record: sum:DE:all_manual_attempts:delta6h
     expr: sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className)
 
-  - record: sum:all_manual_attempts:not_cancelled:delta6h
+  - record: sum:DE:all_manual_attempts:not_cancelled:delta6h
     expr: sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }},{{ .Values.authErrorsAuth }}, market="DE"}[6h])) BY (className)
 
-  - record: sum:className_type:not_failed_unavailable_partially_completed:delta60m
+  - record: sum:DE:className_type:not_failed_unavailable_partially_completed:delta60m
     expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m]))
 
-  - record: sum:className_type:not_partially_completed:delta60m
+  - record: sum:DE:className_type:not_partially_completed:delta60m
     expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m]))
 
-  - record: sum:all_manual_attempts:failed:delta4h:className
+  - record: sum:DE:all_manual_attempts:failed:delta4h:className
     expr: sum by (className) (increase (tink_agent_login_total{ environment="production",market="DE", outcome="failed", action="login-manual"}[4h]))
 
-  - record: sum:className:production:login-manual:delta4h
+  - record: sum:DE:className:production:login-manual:delta4h
     expr: sum by (className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[4h]))
