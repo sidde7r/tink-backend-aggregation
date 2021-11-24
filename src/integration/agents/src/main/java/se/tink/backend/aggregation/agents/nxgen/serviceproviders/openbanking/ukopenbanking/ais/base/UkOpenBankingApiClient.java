@@ -231,6 +231,16 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .body(permissionRequest);
     }
 
+    protected List<AccountBalanceEntity> logBalanceSnapshotTime(
+            List<AccountBalanceEntity> accountBalanceEntities) {
+        log.info(
+                "[BALANCE SNAPSHOT TIME] Balance snapshot time for specific account: {}",
+                accountBalanceEntities.stream()
+                        .map(AccountBalanceEntity::getDateTime)
+                        .collect(Collectors.toList()));
+        return accountBalanceEntities;
+    }
+
     private void saveIntentId(String intentId) {
         persistentStorage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, intentId);
@@ -239,15 +249,5 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private void saveConsentCreationDate(Instant creationDate) {
         persistentStorage.put(
                 PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE, creationDate);
-    }
-
-    private List<AccountBalanceEntity> logBalanceSnapshotTime(
-            List<AccountBalanceEntity> accountBalanceEntities) {
-        log.info(
-                "[BALANCE SNAPSHOT TIME] Balance snapshot time for specific account: {}",
-                accountBalanceEntities.stream()
-                        .map(AccountBalanceEntity::getDateTime)
-                        .collect(Collectors.toList()));
-        return accountBalanceEntities;
     }
 }

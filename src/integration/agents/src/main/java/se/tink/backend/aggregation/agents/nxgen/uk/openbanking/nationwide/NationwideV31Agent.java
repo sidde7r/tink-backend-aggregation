@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
@@ -25,6 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingJwtSignatureHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256SignatureCreator;
@@ -35,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.pis.co
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.pis.filter.NationwidePisRequestFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
@@ -57,6 +61,8 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    private final AgentComponentProvider componentProvider;
+
     @Inject
     public NationwideV31Agent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
@@ -68,6 +74,7 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
                         NationwideConstants.PIS_API_URL, NationwideConstants.WELL_KNOWN_URL),
                 createPisRequestFilter(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
+        this.componentProvider = componentProvider;
     }
 
     @Override
@@ -78,6 +85,26 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
                 createCreditCardAccountMapper(),
                 localDateTimeSource,
                 apiClient);
+    }
+
+    @Override
+    protected UkOpenBankingApiClient createApiClient(
+            TinkHttpClient httpClient,
+            JwtSigner signer,
+            SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
+            ClientInfo providerConfiguration) {
+
+        return new NationwideApiClient(
+                httpClient,
+                signer,
+                softwareStatement,
+                redirectUrl,
+                providerConfiguration,
+                randomValueGenerator,
+                persistentStorage,
+                aisConfig,
+                componentProvider);
     }
 
     private CreditCardAccountMapper createCreditCardAccountMapper() {
