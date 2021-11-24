@@ -1,16 +1,23 @@
 {
   "accounts" : [ {
-    "accountNumber" : "123456789",
+    "accountNumber" : "LT551592381537588511",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "EUR",
-      "exactValue" : 1852.48,
-      "scale" : 2,
+      "doubleValue" : 1852.48,
       "unscaledValue" : 185248,
-      "doubleValue" : 1852.48
+      "scale" : 2,
+      "exactValue" : 1852.48
     },
     "currencyCode" : "EUR",
-    "bankId" : "123456789",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "doubleValue" : 1852.48,
+      "unscaledValue" : 185248,
+      "scale" : 2,
+      "exactValue" : 1852.48
+    },
+    "bankId" : "LT551592381537588511",
     "excluded" : false,
     "favored" : false,
     "name" : "Firstname Lastname Banko sąskaita",
@@ -20,7 +27,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[]",
+    "identifiers" : "[\"iban://CBVILT2X/LT551592381537588511\"]",
     "closed" : false,
     "holderName" : "Firstname Lastname",
     "accountHolder" : {
@@ -62,7 +69,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "JONAS SATKAUSKAS",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 10.0,
     "date" : 1624615200000,
@@ -90,7 +99,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "Firstname Lastname",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 2.5,
     "date" : 1624701600000,
@@ -118,7 +129,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "SEB bankas",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 1.6,
     "date" : 1624960800000,
@@ -146,7 +159,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "UAB \"TELE2\"",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 92.45,
     "date" : 1625824800000,
@@ -174,7 +189,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "ADB  \"Gjensidige\"",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 8.0,
     "date" : 1626084000000,
@@ -202,7 +219,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "HDS RETAIL GP DOO BEOG\\BUDIMSKA 2             \\BEOGRAD      \\11000     SRBSRB",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 10.0,
     "date" : 1626256800000,
@@ -230,7 +249,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "Firstname Lastname",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 6.14,
     "date" : 1626429600000,
@@ -258,7 +279,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "HDS RETAIL GP DOO BEOG\\BUDIMSKA 2             \\BEOGRAD      \\11000     SRBSRB",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 6.33,
     "date" : 1626688800000,
@@ -286,7 +309,9 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "HDS RETAIL GP DOO BEOG\\BUDIMSKA 2             \\BEOGRAD      \\11000     SRBSRB",
+    "providerMarket" : "LT",
+    "booked" : true
   }, {
     "amount" : 10.5,
     "date" : 1626861600000,
@@ -314,6 +339,8 @@
         "instant" : null
       }
     } ],
-    "providerMarket" : "LT"
+    "merchantName" : "UAB TERASA\\VILNIAUS G. 28-120\\VILNIUS\\UNKNOWN      LTU",
+    "providerMarket" : "LT",
+    "booked" : true
   } ]
 }

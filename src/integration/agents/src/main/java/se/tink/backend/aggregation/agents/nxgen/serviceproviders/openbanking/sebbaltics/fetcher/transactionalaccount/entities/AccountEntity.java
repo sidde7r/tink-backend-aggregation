@@ -28,7 +28,8 @@ public class AccountEntity {
     @JsonProperty("_links")
     private LinkEntity links;
 
-    public Optional<TransactionalAccount> toTinkAccount(SebBalticsApiClient apiClient) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            SebBalticsApiClient apiClient, String bicCode) {
         List<BalanceEntity> balances = apiClient.fetchAccountBalances(resourceId).getBalances();
 
         return TransactionalAccount.nxBuilder()
@@ -40,7 +41,7 @@ public class AccountEntity {
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
                                 .withAccountName(name)
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(new IbanIdentifier(bicCode, iban))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .addHolderName(ownerName)

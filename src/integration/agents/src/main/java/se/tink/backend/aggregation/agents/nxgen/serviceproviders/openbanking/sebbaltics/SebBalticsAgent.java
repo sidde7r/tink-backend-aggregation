@@ -111,7 +111,7 @@ public class SebBalticsAgent extends SubsequentProgressiveGenerationAgent
 
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         SebBalticsTransactionalAccountFetcher accountFetcher =
-                new SebBalticsTransactionalAccountFetcher(apiClient);
+                new SebBalticsTransactionalAccountFetcher(apiClient, bankBic);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

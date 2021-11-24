@@ -68,14 +68,14 @@ RESPONSE 6
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"iban":"123456789","currency":"EUR","name":"Firstname Lastname Arvelduskonto"}]}
+{"accounts":[{"iban":"EE171000555555555555","currency":"EUR","name":"Firstname Lastname Arvelduskonto"}]}
 
 REQUEST 7
 POST https://api.ob.baltics.sebgroup.com/v2/consents
 Accept: application/json
 Content-Type: application/json
 
-{"access":{"accounts":[{"iban":"123456789"}],"balances":[{"iban":"123456789"}],"transactions":[{"iban":"123456789"}]},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4}
+{"access":{"accounts":[{"iban":"EE171000555555555555"}],"balances":[{"iban":"EE171000555555555555"}],"transactions":[{"iban":"EE171000555555555555"}]},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4}
 
 RESPONSE 7
 201
@@ -135,7 +135,7 @@ RESPONSE 12
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"resourceId":"123resourceid","iban":"123456789","currency":"EUR","cashAccountType":"currentAccount","ownerName":"Firstname Lastname","name":"Firstname Lastname Arvelduskonto","_links":{"self":{"href":"/v2/accounts"},"account":{"href":"/v2/accounts/123resourceid"},"balances":{"href":"/v2/accounts/123resourceid/balances"},"transactions":{"href":"/v2/accounts/123resourceid/transactions"}}}]}
+{"accounts":[{"resourceId":"123resourceid","iban":"EE171000555555555555","currency":"EUR","cashAccountType":"currentAccount","ownerName":"Firstname Lastname","name":"Firstname Lastname Arvelduskonto","_links":{"self":{"href":"/v2/accounts"},"account":{"href":"/v2/accounts/123resourceid"},"balances":{"href":"/v2/accounts/123resourceid/balances"},"transactions":{"href":"/v2/accounts/123resourceid/transactions"}}}]}
 
 REQUEST 13
 GET https://api.ob.baltics.sebgroup.com/v2/accounts/123resourceid/balances
@@ -146,7 +146,7 @@ RESPONSE 13
 200
 Content-Type: application/json;charset=utf-8
 
-{"account":{"resourceId":"123resourceid","iban":"123456789"},"balances":[{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"267.77"}},{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"267.77"}}],"_links":{"self":{"href":"/v2/accounts/123resourceid/balances"},"account":{"href":"/v2/accounts/123resourceid"},"transactions":{"href":"/v2/accounts/123resourceid/transactions"}}}
+{"account":{"resourceId":"123resourceid","iban":"EE171000555555555555"},"balances":[{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"267.77"}},{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"267.77"}}],"_links":{"self":{"href":"/v2/accounts/123resourceid/balances"},"account":{"href":"/v2/accounts/123resourceid"},"transactions":{"href":"/v2/accounts/123resourceid/transactions"}}}
 
 REQUEST 14
 GET https://api.ob.baltics.sebgroup.com/v2/accounts/123resourceid/transactions
@@ -157,4 +157,4 @@ RESPONSE 14
 200
 Content-Type: application/json;charset=utf-8
 
-{"account":{"resourceId":"123resourceid","iban":"123456789"},"transactions":{"pending":[],"booked":[{"transactionId":"2826829654","transactionAmount":{"currency":"EUR","amount":250.88},"type":"credit","bookingDate":"2021-07-07","valueDate":"2021-07-07","entryReference":"16256505069812346007","instructedIdentification":"56","endToEndIdentification":null,"transactionReferenceNumber":"RO2940224680L02","debtorName":"GREENY OÜ","debtorId":{"id":"10084914","type":"orgId","schemeNameCode":"COID"},"debtorAccount":{"iban":"987654321"},"remittanceInformationUnstructured":"Juhat.liikmetasu"}]},"_links":{"self":{"href":"/v2/accounts/123resourceid/transactions"},"account":{"href":"/v2/accounts/123resourceid"}}}
+{"account":{"resourceId":"123resourceid","iban":"EE171000555555555555"},"transactions":{"pending":[],"booked":[{"transactionId":"2826829654","transactionAmount":{"currency":"EUR","amount":250.88},"type":"credit","bookingDate":"2021-07-07","valueDate":"2021-07-07","entryReference":"16256505069812346007","instructedIdentification":"56","endToEndIdentification":null,"transactionReferenceNumber":"RO2940224680L02","debtorName":"GREENY OÜ","debtorId":{"id":"10084914","type":"orgId","schemeNameCode":"COID"},"debtorAccount":{"iban":"987654321"},"remittanceInformationUnstructured":"Juhat.liikmetasu"}]},"_links":{"self":{"href":"/v2/accounts/123resourceid/transactions"},"account":{"href":"/v2/accounts/123resourceid"}}}

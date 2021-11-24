@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.fetcher.transactionalaccount.entities.AccountEntity;
@@ -18,6 +19,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class AccountsResponseTest {
     SebBalticsApiClient apiClient;
     AccountsResponse accountsResponse;
+    @Mock String bankBic;
 
     @Before
     public void setUp() {
@@ -31,7 +33,8 @@ public class AccountsResponseTest {
         ReflectionTestUtils.setField(accountsResponse, "accounts", getEmptyListOfAccounts());
 
         // then
-        Assert.assertEquals(Collections.emptyList(), accountsResponse.toTinkAccount(apiClient));
+        Assert.assertEquals(
+                Collections.emptyList(), accountsResponse.toTinkAccount(apiClient, bankBic));
     }
 
     @Test
@@ -43,7 +46,7 @@ public class AccountsResponseTest {
         when(apiClient.fetchAccountBalances(Mockito.any())).thenReturn(getBalanceResponse());
 
         // then
-        Assert.assertFalse(accountsResponse.toTinkAccount(apiClient).isEmpty());
+        Assert.assertFalse(accountsResponse.toTinkAccount(apiClient, bankBic).isEmpty());
     }
 
     private List<AccountEntity> getEmptyListOfAccounts() {

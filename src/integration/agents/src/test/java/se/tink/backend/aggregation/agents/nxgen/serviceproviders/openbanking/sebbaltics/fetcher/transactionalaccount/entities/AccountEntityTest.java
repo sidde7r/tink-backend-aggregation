@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
@@ -21,6 +22,7 @@ public class AccountEntityTest {
 
     private AccountEntity accountEntity;
     private SebBalticsApiClient apiClient;
+    @Mock private String bankBic;
 
     @Before
     public void setUp() {
@@ -33,7 +35,7 @@ public class AccountEntityTest {
         // when
         when(apiClient.fetchAccountBalances(Mockito.anyString())).thenReturn(getBalanceResponse());
         Optional<TransactionalAccount> optionalTransactionalAccount =
-                accountEntity.toTinkAccount(apiClient);
+                accountEntity.toTinkAccount(apiClient, bankBic);
 
         // then
         assertTrue(optionalTransactionalAccount.isPresent());
@@ -60,16 +62,16 @@ public class AccountEntityTest {
                 .thenReturn(getEmptyBalanceResponse());
 
         // then
-        assertThatThrownBy(() -> accountEntity.toTinkAccount(apiClient))
+        assertThatThrownBy(() -> accountEntity.toTinkAccount(apiClient, bankBic))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Could not get balance");
+                .hasMessage("Could not get booked balance.");
     }
 
     private AccountEntity getAccountEntity() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "      \"resourceId\": \"123resourceid\",\n"
-                        + "      \"iban\": \"123456789\",\n"
+                        + "      \"iban\": \"EE171000555555555555\",\n"
                         + "      \"currency\": \"EUR\",\n"
                         + "      \"cashAccountType\": \"currentAccount\",\n"
                         + "      \"ownerName\": \"Firstname Lastname\",\n"
@@ -131,6 +133,31 @@ public class AccountEntityTest {
     }
 
     private BalanceResponse getEmptyBalanceResponse() {
-        return SerializationUtils.deserializeFromString("{}", BalanceResponse.class);
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"account\":\n"
+                        + "    {\n"
+                        + "        \"resourceId\": \"123resourceid\",\n"
+                        + "        \"iban\": \"EE171000555555555555\"\n"
+                        + "    },\n"
+                        + "    \"balances\":\n"
+                        + "    [],\n"
+                        + "    \"_links\":\n"
+                        + "    {\n"
+                        + "        \"self\":\n"
+                        + "        {\n"
+                        + "            \"href\": \"/v2/accounts/123resourceid/balances\"\n"
+                        + "        },\n"
+                        + "        \"account\":\n"
+                        + "        {\n"
+                        + "            \"href\": \"/v2/accounts/123resourceid\"\n"
+                        + "        },\n"
+                        + "        \"transactions\":\n"
+                        + "        {\n"
+                        + "            \"href\": \"/v2/accounts/123resourceid/transactions\"\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}",
+                BalanceResponse.class);
     }
 }
