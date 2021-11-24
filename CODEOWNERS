@@ -165,6 +165,7 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/creditcards/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/other/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/other/ @tink-ab/aggregation-thundercats-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/ap/placeholder/paypal @tink-ab/aggregation-minion-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/brokers/nordnet/ @tink-ab/aggregation-thundercats-maintainer
