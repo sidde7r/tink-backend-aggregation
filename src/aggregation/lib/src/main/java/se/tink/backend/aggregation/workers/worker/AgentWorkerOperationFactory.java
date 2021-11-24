@@ -1727,6 +1727,21 @@ public class AgentWorkerOperationFactory {
             ControllerWrapper controllerWrapper,
             ClientInfo clientInfo) {
 
+        if (isBalanceCalculationEnabled(context.getAppId())) {
+            return createWhitelistRefreshableItemsCommandsWithChanges(
+                    request, context, itemsToRefresh, controllerWrapper, clientInfo);
+        } else {
+            return createWhitelistRefreshableItemsCommandsWithoutChanges(
+                    request, context, itemsToRefresh, controllerWrapper, clientInfo);
+        }
+    }
+
+    private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsCommandsWithChanges(
+            CredentialsRequest request,
+            AgentWorkerCommandContext context,
+            Set<RefreshableItem> itemsToRefresh,
+            ControllerWrapper controllerWrapper,
+            ClientInfo clientInfo) {
         // Convert legacy items to corresponding new refreshable items
         itemsToRefresh = convertLegacyItems(itemsToRefresh);
 
@@ -1813,6 +1828,121 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new RefreshPostProcessingAgentWorkedCommand(
                         context, createCommandMetricState(request, clientInfo)));
+
+        commands.add(
+                new SendAccountsToUpdateServiceAgentWorkerCommand(
+                        context, createCommandMetricState(request, clientInfo)));
+
+        commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        context.getAccountDataCache(), request));
+
+        if (accountItems.size() > 0) {
+            commands.add(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request, clientInfo),
+                            dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
+        }
+
+        // === END REFRESHING ===
+        return commands.build();
+    }
+
+    private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsCommandsWithoutChanges(
+            CredentialsRequest request,
+            AgentWorkerCommandContext context,
+            Set<RefreshableItem> itemsToRefresh,
+            ControllerWrapper controllerWrapper,
+            ClientInfo clientInfo) {
+        // Convert legacy items to corresponding new refreshable items
+        itemsToRefresh = convertLegacyItems(itemsToRefresh);
+
+        // Sort the refreshable items
+        List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
+        log.info(
+                "Items to refresh (sorted): {}",
+                items.stream().map(Enum::name).collect(Collectors.joining(", ")));
+
+        ImmutableList.Builder<AgentWorkerCommand> commands = ImmutableList.builder();
+
+        Set<RefreshableItem> accountItems =
+                items.stream().filter(RefreshableItem::isAccount).collect(Collectors.toSet());
+
+        // === START REFRESHING ===
+        if (accountItems.size() > 0) {
+            // Start refreshing all account items
+            commands.addAll(
+                    createRefreshAccountsCommands(request, context, accountItems, clientInfo));
+
+            commands.add(
+                    new SendAccountSourceInfoEventWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
+            commands.add(
+                    new Psd2PaymentAccountRestrictionWorkerCommand(
+                            context,
+                            request,
+                            regulatoryRestrictions,
+                            psd2PaymentAccountClassifier,
+                            accountInformationServiceEventsProducer,
+                            controllerWrapper));
+            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+            commands.add(new AccountSegmentRestrictionWorkerCommand(context));
+            commands.add(new RequestedAccountsRestrictionWorkerCommand(context));
+            // If this is an optIn request we request the caller do supply supplemental information
+            // with the
+            // accounts they want to whitelist.
+            if (request instanceof ConfigureWhitelistInformationRequest) {
+                commands.add(
+                        new RequestUserOptInAccountsAgentWorkerCommand(
+                                context,
+                                (ConfigureWhitelistInformationRequest) request,
+                                controllerWrapper,
+                                loginAgentEventProducer));
+                commands.add(
+                        new SetCredentialsStatusAgentWorkerCommand(
+                                context, CredentialsStatus.UPDATING));
+            }
+
+            // Update the accounts on system side
+            commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+            // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+            // accounts have been made
+            commands.add(
+                    new SendAccountRestrictionEventsWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
+            commands.add(
+                new SendAccountsToUpdateServiceAgentWorkerCommand(
+                    context, createCommandMetricState(request, clientInfo)));
+            commands.add(
+                    new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request, clientInfo),
+                            psd2PaymentAccountClassifier,
+                            controllerWrapper,
+                            false));
+
+            /* Special command; see {@link AbnAmroSpecificCase} for more information. */
+            if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
+                    && Objects.equals("nl-abnamro", request.getProvider().getName())) {
+                commands.add(new AbnAmroSpecificCase(context));
+            }
+        }
+
+        // Add all refreshable items that aren't accounts to refresh them.
+        items.stream()
+                .filter(i -> !accountItems.contains(i))
+                .forEach(
+                        item ->
+                                commands.add(
+                                        new RefreshItemAgentWorkerCommand(
+                                                context,
+                                                item,
+                                                createCommandMetricState(request, clientInfo),
+                                                refreshEventProducer)));
 
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
