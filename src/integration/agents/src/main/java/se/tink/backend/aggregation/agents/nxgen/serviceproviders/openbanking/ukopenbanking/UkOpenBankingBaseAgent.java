@@ -584,7 +584,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     @Override
     public void afterRefreshPostProcess(AccountDataCache cache) {
 
-        if (isBalanceCalculationEnabled()) {
+        if (isBalanceCalculationEnabled() && cache != null) {
             accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(
                     cache.getFilteredAccountData());
         }
