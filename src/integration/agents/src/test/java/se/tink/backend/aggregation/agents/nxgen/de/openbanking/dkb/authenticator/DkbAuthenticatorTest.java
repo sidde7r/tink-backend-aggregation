@@ -17,6 +17,7 @@ import org.mockito.internal.matchers.VarargMatcher;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationMethod;
@@ -82,7 +83,57 @@ public class DkbAuthenticatorTest {
                 .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
     }
 
+    @Test
+    public void should_throw_login_exception_when_unexpected_auth_response_that_has_no_methods() {
+        TinkHttpClient tinkHttpClient =
+                mockHttpClient(
+                        "consent_authorisation_created_no_methods.json",
+                        "consent_authorisation_selected.json");
+
+        Credentials credentials = createCredentials(null);
+        DkbAuthenticator dkbAuthenticator =
+                createDkbAuthenticator(
+                        tinkHttpClient, credentials, new DkbStorage(new PersistentStorage()));
+
+        // when
+        Throwable throwable = catchThrowable(() -> dkbAuthenticator.authenticate(credentials));
+
+        // then
+        assertThat(throwable)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage(
+                        "[DKB Auth] Authorization body was not correct! Missing scaMethods when there should be some.");
+    }
+
+    @Test
+    public void
+            should_throw_bank_exception_when_unexpected_auth_response_that_has_no_details_about_method() {
+        TinkHttpClient tinkHttpClient =
+                mockHttpClient(
+                        "consent_authorisation.json",
+                        "consent_authorisation_selected_no_method.json");
+
+        Credentials credentials = createCredentials(null);
+        DkbAuthenticator dkbAuthenticator =
+                createDkbAuthenticator(
+                        tinkHttpClient, credentials, new DkbStorage(new PersistentStorage()));
+
+        // when
+        Throwable throwable = catchThrowable(() -> dkbAuthenticator.authenticate(credentials));
+
+        // then
+        assertThat(throwable)
+                .isExactlyInstanceOf(BankServiceException.class)
+                .hasMessage(
+                        "[DKB Auth] Authorization body was not correct! chosenScaMethod came without any expected data.");
+    }
+
     static TinkHttpClient mockHttpClient() {
+        return mockHttpClient("consent_authorisation.json", "consent_authorisation_selected.json");
+    }
+
+    static TinkHttpClient mockHttpClient(
+            String startAuthResponseFile, String selectMethodResponseFile) {
         TinkHttpClient tinkHttpClient = mock(TinkHttpClient.class);
 
         mockRequest(
@@ -117,7 +168,7 @@ public class DkbAuthenticatorTest {
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations",
                 null,
                 Authorization.class,
-                "consent_authorisation.json",
+                startAuthResponseFile,
                 200);
 
         AuthorizationMethod authorizationMethod = new AuthorizationMethod("authenticationMethodId");
@@ -127,7 +178,7 @@ public class DkbAuthenticatorTest {
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations/authorisationId",
                 authorizationMethod,
                 Authorization.class,
-                "consent_authorisation_selected.json",
+                selectMethodResponseFile,
                 200);
 
         AuthorizationOtp authorizationOtp = new AuthorizationOtp("code");
