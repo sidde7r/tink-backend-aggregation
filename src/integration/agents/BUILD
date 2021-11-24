@@ -501,7 +501,7 @@ codeowners(
         "src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/nordea/",
     ],
     teams = [
-        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-llamas-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

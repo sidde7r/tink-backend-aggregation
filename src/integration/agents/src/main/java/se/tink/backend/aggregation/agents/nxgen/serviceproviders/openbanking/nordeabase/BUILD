@@ -1,17 +1,6 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
-codeowners(
-    name = "paycon-owners",
-    patterns = [
-        "executor/payment/",
-    ],
-    teams = [
-        "@tink-ab/payments-connectivity-maintainer",
-    ],
-    visibility = ["//:__pkg__"],
-)
-
 java_library(
     name = "nordeabase",
     srcs = glob(["**/*.java"]),
@@ -70,7 +59,7 @@ java_library(
 codeowners(
     name = "owners",
     teams = [
-        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-llamas-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

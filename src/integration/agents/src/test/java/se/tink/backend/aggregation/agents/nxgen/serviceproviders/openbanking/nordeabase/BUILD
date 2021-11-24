@@ -30,7 +30,7 @@ junit_test(
 codeowners(
     name = "owners",
     teams = [
-        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-llamas-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
