@@ -168,16 +168,16 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/brokers/nordnet/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/nordea/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/nordea/ @tink-ab/aggregation-thundercats-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/nordea/ @tink-ab/aggregation-llamas-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/nordea/ @tink-ab/aggregation-llamas-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbase/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbase/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbank/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbank/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbankbaltics/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/nordeabase/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/nordeabase/ @tink-ab/aggregation-thundercats-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/nordeabase/ @tink-ab/aggregation-llamas-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/nordeabase/ @tink-ab/aggregation-llamas-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/citadele/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/handelsbanken/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbaltics/ @tink-ab/aggregation-thundercats-maintainer
@@ -197,7 +197,6 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank/executors/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/handelsbanken/executor/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/lansforsakringar/executor/ @tink-ab/payments-connectivity-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/nordea/v30/executors/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/serviceprovider/executors/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/handelsbanken/executor/payment/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/icabanken/executor/payment/ @tink-ab/payments-connectivity-maintainer
@@ -205,7 +204,6 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sbab/executor/payment/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sebopenbanking/executor/payment/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/skandia/executor/payment/ @tink-ab/payments-connectivity-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/nordeabase/executor/payment/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/hsbc/pis/signature/HsbcSignatureCreator.java @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken/executor/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/ @tink-ab/aggregation-toros-maintainer
