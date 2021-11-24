@@ -34,7 +34,7 @@ public interface GranularBalancesMapper {
                                                             balance.getAmount(),
                                                             balance.getDateTime())));
         } catch (Exception e) {
-            log.warn("[GRANULAR BALANCES] Balance type mapping failed");
+            log.warn("[GRANULAR BALANCES] Balance type mapping failed", e);
         }
 
         return granularBalances;
