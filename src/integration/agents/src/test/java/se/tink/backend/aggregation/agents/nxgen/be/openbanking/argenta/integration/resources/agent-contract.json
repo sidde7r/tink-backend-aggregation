@@ -22,10 +22,16 @@
             "userModifiedType": false,
             "identifiers": "[\"iban://BE92199493742823\"]",
             "closed": false,
+            "holderName": "Monty Python",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
-                "identities": []
+                "identities": [
+                    {
+                        "name": "Monty Python",
+                        "role": "HOLDER"
+                    }
+                ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],

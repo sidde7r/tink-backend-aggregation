@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@SuppressWarnings("unused")
 public class LinksEntity {
 
     private Href self;

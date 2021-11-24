@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal", "unused"})
 public class ScaMethodEntity {
 
     private String authenticationType;
@@ -19,6 +20,6 @@ public class ScaMethodEntity {
        2. remove "_" in option "NO_PREFERENCE"
     */
     public String toString() {
-        return StringUtils.capitalize(authenticationType.replaceAll("_", " ").toLowerCase());
+        return StringUtils.capitalize(authenticationType.replace("_", " ").toLowerCase());
     }
 }
