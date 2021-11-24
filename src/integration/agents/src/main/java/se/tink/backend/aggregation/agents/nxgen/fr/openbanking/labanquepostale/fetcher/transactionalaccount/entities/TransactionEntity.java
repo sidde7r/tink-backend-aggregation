@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -22,11 +23,15 @@ public class TransactionEntity {
                 .setPending(!isBooked())
                 .setAmount(transactionAmount.toAmount(creditDebitIndicator))
                 .setDate(bookingDate)
-                .setDescription(remittanceInformation.get(0))
+                .setDescription(getDescription())
                 .build();
     }
 
     public boolean isBooked() {
         return status.equals("BOOK");
+    }
+
+    private String getDescription() {
+        return Optional.ofNullable(remittanceInformation).map(v -> String.join(" ", v)).orElse("");
     }
 }

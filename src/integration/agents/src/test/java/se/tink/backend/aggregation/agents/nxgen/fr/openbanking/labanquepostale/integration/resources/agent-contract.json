@@ -27,7 +27,7 @@
     {
       "amount":100.0,
       "date":1591351200000,
-      "description":"DUMMY_DESCRIPTION",
+      "description":"DUMMY_DESCRIPTION REFERENCE : 0190156000097016",
       "internalPayload":{},
       "originalAmount":0.0,
       "payload":{},
