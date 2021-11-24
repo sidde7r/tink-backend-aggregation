@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -37,8 +38,10 @@ public class OnlineTransactionEntity extends TransactionEntity {
                         .setPending(isPending)
                         .setTransactionDates(getTinkTransactionDates(valueDate, bookingDate))
                         .setProviderMarket(providerMarket)
-                        .setMerchantName(creditorName)
-                        .setTransactionReference(transactionId);
+                        .setProprietaryFinancialInstitutionType(bankTransactionCode)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                transactionId);
 
         return (Transaction) builder.build();
     }
