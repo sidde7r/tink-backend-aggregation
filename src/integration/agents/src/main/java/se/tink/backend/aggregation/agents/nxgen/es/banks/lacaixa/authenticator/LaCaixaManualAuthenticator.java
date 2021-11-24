@@ -202,7 +202,19 @@ public class LaCaixaManualAuthenticator {
         final String code =
                 LaCaixaPasswordHash.hash(pinSca.getSeed(), pinSca.getIterations(), password);
         logMasker.addNewSensitiveValuesToMasker(Collections.singleton(code));
-        final ScaResponse response = apiClient.authorizeSCA(code);
+        ScaResponse response;
+        try {
+            response = apiClient.authorizeSCA(code);
+        } catch (HttpResponseException ex) {
+            if (ex.getResponse() != null
+                    && ex.getResponse().getBody(ErrorLoginResponse.class) != null) {
+                ErrorLoginResponse errorResponse =
+                        ex.getResponse().getBody(ErrorLoginResponse.class);
+                handleLoginError(errorResponse);
+            }
+            throw ex;
+        }
+
         return handleScaResponse(response);
     }
 
