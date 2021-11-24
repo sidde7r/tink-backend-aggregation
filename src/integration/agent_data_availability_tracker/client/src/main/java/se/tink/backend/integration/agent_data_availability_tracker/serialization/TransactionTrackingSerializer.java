@@ -1,6 +1,5 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -111,12 +110,11 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
 
         for (TransactionDateType type : TransactionDateType.values()) {
             String key = "transactionDate_" + type.toString();
-            Optional<Instant> maybeInstant =
+            Optional<AvailableDateInformation> maybeDate =
                     getTransactionDateByType(transaction.getTransactionDates(), type)
-                            .map(TransactionDate::getValue)
-                            .map(AvailableDateInformation::getInstant);
-            if (maybeInstant.isPresent()) {
-                listBuilder.putListed(key, DATE_FORMATTER.format(maybeInstant.get()));
+                            .map(TransactionDate::getValue);
+            if (maybeDate.isPresent()) {
+                listBuilder.putRedacted(key, maybeDate.get().toString());
             } else {
                 listBuilder.putNull(key);
             }

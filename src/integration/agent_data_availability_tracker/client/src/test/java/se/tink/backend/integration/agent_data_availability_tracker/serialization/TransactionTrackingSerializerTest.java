@@ -75,7 +75,7 @@ public class TransactionTrackingSerializerTest {
                 "null",
                 getFieldEntry(entries, "Transaction<CHECKING>.transactionAmount").getValue());
         Assert.assertEquals(
-                dateFormatter.format(instant),
+                "VALUE_NOT_LISTED",
                 getFieldEntry(entries, "Transaction<CHECKING>.transactionDate_BOOKING_DATE")
                         .getValue());
         Assert.assertEquals(
