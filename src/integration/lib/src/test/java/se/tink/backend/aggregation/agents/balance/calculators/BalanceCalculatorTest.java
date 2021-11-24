@@ -63,9 +63,9 @@ public class BalanceCalculatorTest {
     public void shouldReturnEmptyOptionalWhenCalculationNotFound(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances) {
         // when
-        Optional<Pair<AccountBalanceType, Calculation>> balanceTypeWithCalculation = calculator
-            .findFirstPossibleCalculation(
-                granularBalances, prioritizedCalculationsExample);
+        Optional<Pair<AccountBalanceType, Calculation>> balanceTypeWithCalculation =
+                calculator.findFirstPossibleCalculation(
+                        granularBalances, prioritizedCalculationsExample);
 
         // then
         assertThat(balanceTypeWithCalculation).isNotPresent();
@@ -83,7 +83,8 @@ public class BalanceCalculatorTest {
         // then
         assertThat(balanceTypeWithCalculation).isPresent();
         assertThat(balanceTypeWithCalculation.get().getLeft()).isEqualTo(EXPECTED);
-        assertThat(balanceTypeWithCalculation.get().getRight()).isEqualTo(subtractPendingTransactions);
+        assertThat(balanceTypeWithCalculation.get().getRight())
+                .isEqualTo(subtractPendingTransactions);
     }
 
     private Object[] onlyBalancesThatCanNotBeInputForExampleCalculationList() {

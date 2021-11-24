@@ -24,8 +24,10 @@ public class BalanceCalculator {
         Optional<Pair<AccountBalanceType, Calculation>> balanceTypeWithCalculation =
                 findFirstPossibleCalculation(granularBalances, prioritizedCalculations);
 
-        if(!balanceTypeWithCalculation.isPresent()) {
-            log.info("[BALANCE CALCULATOR] Not found any possible calculations for given balances: {}" , granularBalances.keySet());
+        if (!balanceTypeWithCalculation.isPresent()) {
+            log.info(
+                    "[BALANCE CALCULATOR] Not found any possible calculations for given balances: {}",
+                    granularBalances.keySet());
             return Optional.empty();
         }
 

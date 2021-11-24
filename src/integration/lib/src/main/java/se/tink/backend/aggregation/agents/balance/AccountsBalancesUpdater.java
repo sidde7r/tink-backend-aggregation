@@ -55,7 +55,8 @@ public class AccountsBalancesUpdater {
 
         if (ACCOUNT_TYPES_SUPPORTING_BOOKED_CALCULATIONS.contains(account.getType())) {
             log.info(
-                "[ACCOUNTS BALANCES UPDATER] Found account type {}. Trying to run booked balance calculation", account.getType());
+                    "[ACCOUNTS BALANCES UPDATER] Found account type {}. Trying to run booked balance calculation",
+                    account.getType());
 
             ExactCurrencyAmount buggyBookedBalance = account.getExactBalance();
             Optional<ExactCurrencyAmount> calculatedBookedBalance =
@@ -80,7 +81,8 @@ public class AccountsBalancesUpdater {
 
         if (ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS.contains(account.getType())) {
             log.info(
-                "[ACCOUNTS BALANCES UPDATER] Found account type {}. Trying to run available balance calculation", account.getType());
+                    "[ACCOUNTS BALANCES UPDATER] Found account type {}. Trying to run available balance calculation",
+                    account.getType());
 
             ExactCurrencyAmount buggyAvailableBalance = account.getAvailableBalance();
             Optional<ExactCurrencyAmount> calculatedAvailableBalance =
@@ -94,5 +96,4 @@ public class AccountsBalancesUpdater {
                     calculatedAvailableBalance);
         }
     }
-
 }

@@ -270,65 +270,64 @@ public class AgentWorkerOperationFactory {
 
         if (isBalanceCalculationEnabled(context.getAppId())) {
             return createOrderedRefreshableItemsCommandsWithChanges(
-                request, context, itemsToRefresh, controllerWrapper, clientInfo);
+                    request, context, itemsToRefresh, controllerWrapper, clientInfo);
         } else {
             return createOrderedRefreshableItemsCommandsWithoutChanges(
-                request, context, itemsToRefresh, controllerWrapper, clientInfo);
+                    request, context, itemsToRefresh, controllerWrapper, clientInfo);
         }
-
     }
 
     private List<AgentWorkerCommand> createOrderedRefreshableItemsCommandsWithChanges(
-        CredentialsRequest request,
-        AgentWorkerCommandContext context,
-        Set<RefreshableItem> itemsToRefresh,
-        ControllerWrapper controllerWrapper,
-        ClientInfo clientInfo) {
+            CredentialsRequest request,
+            AgentWorkerCommandContext context,
+            Set<RefreshableItem> itemsToRefresh,
+            ControllerWrapper controllerWrapper,
+            ClientInfo clientInfo) {
         itemsToRefresh = convertLegacyItems(itemsToRefresh);
 
         // Sort the refreshable items
         List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
 
         log.info(
-            "Items to refresh (sorted): {}",
-            items.stream().map(Enum::name).collect(Collectors.joining(", ")));
+                "Items to refresh (sorted): {}",
+                items.stream().map(Enum::name).collect(Collectors.joining(", ")));
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         List<RefreshableItem> accountItems =
-            items.stream().filter(RefreshableItem::isAccount).collect(Collectors.toList());
+                items.stream().filter(RefreshableItem::isAccount).collect(Collectors.toList());
 
         List<RefreshableItem> nonAccountItems =
-            items.stream().filter(i -> !accountItems.contains(i)).collect(Collectors.toList());
+                items.stream().filter(i -> !accountItems.contains(i)).collect(Collectors.toList());
 
         for (RefreshableItem item : nonAccountItems) {
             commands.add(
-                new RefreshItemAgentWorkerCommand(
-                    context,
-                    item,
-                    createCommandMetricState(request, clientInfo),
-                    refreshEventProducer));
+                    new RefreshItemAgentWorkerCommand(
+                            context,
+                            item,
+                            createCommandMetricState(request, clientInfo),
+                            refreshEventProducer));
         }
 
         commands.add(
-            new RefreshPostProcessingAgentWorkedCommand(
-                context, createCommandMetricState(request, clientInfo)));
+                new RefreshPostProcessingAgentWorkedCommand(
+                        context, createCommandMetricState(request, clientInfo)));
 
         if (accountItems.size() > 0) {
             commands.add(
-                new SendAccountsToUpdateServiceAgentWorkerCommand(
-                    context, createCommandMetricState(request, clientInfo)));
+                    new SendAccountsToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
-                new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
-                    context,
-                    createCommandMetricState(request, clientInfo),
-                    psd2PaymentAccountClassifier,
-                    controllerWrapper,
-                    false));
+                    new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request, clientInfo),
+                            psd2PaymentAccountClassifier,
+                            controllerWrapper,
+                            false));
 
             /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
-                && Objects.equals("nl-abnamro", request.getProvider().getName())) {
+                    && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
             }
 
@@ -336,18 +335,18 @@ public class AgentWorkerOperationFactory {
         }
 
         commands.add(
-            new TransactionRefreshScopeFilteringCommand(
-                context.getAccountDataCache(), request));
+                new TransactionRefreshScopeFilteringCommand(
+                        context.getAccountDataCache(), request));
 
         if (accountItems.size() > 0) {
             commands.add(
-                new EmitEventsAfterRefreshAgentWorkerCommand(
-                    context,
-                    createCommandMetricState(request, clientInfo),
-                    dataTrackerEventProducer,
-                    accountHolderRefreshedEventProducer,
-                    items,
-                    eventSender));
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request, clientInfo),
+                            dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -356,16 +355,16 @@ public class AgentWorkerOperationFactory {
         // We need to reselect and send accounts to system
         if (shouldAddExtraCommands.test(request.getProvider())) {
             commands.add(
-                new SendAccountSourceInfoEventWorkerCommand(
-                    context, accountInformationServiceEventsProducer));
+                    new SendAccountSourceInfoEventWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
             commands.add(
-                new Psd2PaymentAccountRestrictionWorkerCommand(
-                    context,
-                    request,
-                    regulatoryRestrictions,
-                    psd2PaymentAccountClassifier,
-                    accountInformationServiceEventsProducer,
-                    controllerWrapper));
+                    new Psd2PaymentAccountRestrictionWorkerCommand(
+                            context,
+                            request,
+                            regulatoryRestrictions,
+                            psd2PaymentAccountClassifier,
+                            accountInformationServiceEventsProducer,
+                            controllerWrapper));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountSegmentRestrictionWorkerCommand(context));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
@@ -373,26 +372,26 @@ public class AgentWorkerOperationFactory {
             // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
             // accounts have been made
             commands.add(
-                new SendAccountRestrictionEventsWorkerCommand(
-                    context, accountInformationServiceEventsProducer));
+                    new SendAccountRestrictionEventsWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
             commands.add(
-                new SendAccountsToUpdateServiceAgentWorkerCommand(
-                    context, createCommandMetricState(request, clientInfo)));
+                    new SendAccountsToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
-                new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
-                    context,
-                    createCommandMetricState(request, clientInfo),
-                    psd2PaymentAccountClassifier,
-                    controllerWrapper,
-                    false));
+                    new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request, clientInfo),
+                            psd2PaymentAccountClassifier,
+                            controllerWrapper,
+                            false));
             commands.add(
-                new EmitEventsAfterRefreshAgentWorkerCommand(
-                    context,
-                    createCommandMetricState(request, clientInfo),
-                    dataTrackerEventProducer,
-                    accountHolderRefreshedEventProducer,
-                    items,
-                    eventSender));
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request, clientInfo),
+                            dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
         }
 
         return commands;
@@ -1915,8 +1914,8 @@ public class AgentWorkerOperationFactory {
                     new SendAccountRestrictionEventsWorkerCommand(
                             context, accountInformationServiceEventsProducer));
             commands.add(
-                new SendAccountsToUpdateServiceAgentWorkerCommand(
-                    context, createCommandMetricState(request, clientInfo)));
+                    new SendAccountsToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
                             context,
