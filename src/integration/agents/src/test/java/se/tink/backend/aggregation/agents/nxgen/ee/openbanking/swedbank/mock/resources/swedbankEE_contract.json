@@ -1,1458 +1,1808 @@
 {
-  "accounts" : [ {
-    "accountNumber" : "EE032311123456789015",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "EUR",
-      "exactValue" : 3665.99,
-      "scale" : 2,
-      "unscaledValue" : 366599,
-      "doubleValue" : 3665.99
+  "accounts": [
+    {
+      "accountNumber": "EE032311123456789015",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "scale": 2,
+        "unscaledValue": 366599,
+        "exactValue": 3665.99,
+        "doubleValue": 3665.99
+      },
+      "currencyCode": "EUR",
+      "availableBalance": {
+        "currencyCode": "EUR",
+        "scale": 2,
+        "unscaledValue": 367689,
+        "exactValue": 3676.89,
+        "doubleValue": 3676.89
+      },
+      "bankId": "EE032311123456789015",
+      "excluded": false,
+      "favored": false,
+      "name": "CURRENT",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"iban://HABAEE2X/EE032311123456789015\",\"iban://EE032311123456789015\"]",
+      "closed": false,
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": []
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 3665.99
     },
-    "currencyCode" : "EUR",
-    "availableBalance" : {
-      "currencyCode" : "EUR",
-      "exactValue" : 3676.89,
-      "scale" : 2,
-      "unscaledValue" : 367689,
-      "doubleValue" : 3676.89
+    {
+      "accountNumber": "EE182311987654321015",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "scale": 2,
+        "unscaledValue": 174456,
+        "exactValue": 1744.56,
+        "doubleValue": 1744.56
+      },
+      "currencyCode": "EUR",
+      "availableBalance": {
+        "currencyCode": "EUR",
+        "scale": 2,
+        "unscaledValue": 39581,
+        "exactValue": 395.81,
+        "doubleValue": 395.81
+      },
+      "bankId": "EE182311987654321015",
+      "excluded": false,
+      "favored": false,
+      "name": "LIMIT",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"iban://HABAEE2X/EE182311987654321015\",\"iban://EE182311987654321015\"]",
+      "closed": false,
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": []
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 1744.56
+    }
+  ],
+  "transactions": [
+    {
+      "amount": -245.0,
+      "date": 1618999200000,
+      "description": "18522050 2021/SM/1170; 2021/SM/1170",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021042100264444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-04-21",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-04-21",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
     },
-    "bankId" : "EE032311123456789015",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "CURRENT",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"iban://HABAEE2X/EE032311123456789015\",\"iban://EE032311123456789015\"]",
-    "closed" : false,
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ ]
+    {
+      "amount": -8.66,
+      "date": 1622541600000,
+      "description": "111222******4444 29.05.21  HIIU RIMI SM ISETEENIN 11612 TALLINN      ",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060101874444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-01",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-01",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
     },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 3665.99
-  }, {
-    "accountNumber" : "EE182311987654321015",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "EUR",
-      "exactValue" : 1744.56,
-      "scale" : 2,
-      "unscaledValue" : 174456,
-      "doubleValue" : 1744.56
+    {
+      "amount": -500.0,
+      "date": 1622973600000,
+      "description": "SEB Money Transfer",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060600024444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-06",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-06",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
     },
-    "currencyCode" : "EUR",
-    "availableBalance" : {
-      "currencyCode" : "EUR",
-      "exactValue" : 395.81,
-      "scale" : 2,
-      "unscaledValue" : 39581,
-      "doubleValue" : 395.81
+    {
+      "amount": -20.0,
+      "date": 1622973600000,
+      "description": "Prangli notid",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060601424444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-06",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-06",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
     },
-    "bankId" : "EE182311987654321015",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "LIMIT",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"iban://HABAEE2X/EE182311987654321015\",\"iban://EE182311987654321015\"]",
-    "closed" : false,
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ ]
+    {
+      "amount": -17.5,
+      "date": 1623060000000,
+      "description": "111222******4444 04.06.21  V&V BALTICS            12618 TALLINN      ",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060701534444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-07",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-07",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
     },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 1744.56
-  } ],
-  "transactions" : [ {
-    "amount" : -245.0,
-    "date" : 1618999200000,
-    "description" : "18522050 2021/SM/1170; 2021/SM/1170",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-04-21",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-04-21",
-        "instant" : null
-      }
-    } ],
-    "merchantName" : "RAHANDUSMINISTEERIUM",
-    "transactionReference" : "2021042100264444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -8.66,
-    "date" : 1622541600000,
-    "description" : "111222******4444 29.05.21  HIIU RIMI SM ISETEENIN 11612 TALLINN      ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-01",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-01",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021060101874444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -500.0,
-    "date" : 1622973600000,
-    "description" : "SEB Money Transfer",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-06",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-06",
-        "instant" : null
-      }
-    } ],
-    "merchantName" : "TRIOGAMES OÜ",
-    "transactionReference" : "2021060600024444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -20.0,
-    "date" : 1622973600000,
-    "description" : "Prangli notid",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-06",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-06",
-        "instant" : null
-      }
-    } ],
-    "merchantName" : "LAUR HALDMA",
-    "transactionReference" : "2021060601424444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -17.5,
-    "date" : 1623060000000,
-    "description" : "111222******4444 04.06.21  V&V BALTICS            12618 TALLINN      ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-07",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-07",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021060701534444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 3805.0,
-    "date" : 1623146400000,
-    "description" : "Valjamakse Betsafe",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-08",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-08",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021060801054444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 3200.0,
-    "date" : 1623146400000,
-    "description" : "raha",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-08",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-08",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021060801064444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -172.39,
-    "date" : 1623146400000,
-    "description" : "Krediidi tagasimakse",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-08",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-08",
-        "instant" : null
-      }
-    } ],
-    "merchantName" : "Name Name",
-    "transactionReference" : "2021060801064444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -300.0,
-    "date" : 1623146400000,
-    "description" : "SEB Money Transfer",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-08",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-08",
-        "instant" : null
-      }
-    } ],
-    "merchantName" : "TRIOGAMES OÜ",
-    "transactionReference" : "2021060802774444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 536.7,
-    "date" : 1623232800000,
-    "description" : "Withdrawal",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-09",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-09",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021060900984444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -10.63,
-    "date" : 1624701600000,
-    "description" : "RD/EL; Ostukorv nr 12671754",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-26",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-26",
-        "instant" : null
-      }
-    } ],
-    "merchantName" : "AS EESTI LIINIRONGID",
-    "transactionReference" : "2021062600064444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -2.5,
-    "date" : 1624701600000,
-    "description" : "111222******4444 24.06.21  PUHAJARVE RANNAKOHVIK  67408 OTEPAA LINN  ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-26",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-26",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021062600744444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -10.0,
-    "date" : 1624701600000,
-    "description" : "111222******4444 23.06.21  KAARIKU SPORDIKESKUS/H 67301 VALGAMAA",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-26",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-26",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021062600814444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -171.98,
-    "date" : 1624874400000,
-    "description" : "Krediidi tagasimakse",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-28",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-28",
-        "instant" : null
-      }
-    } ],
-    "merchantName" : "Name Name",
-    "transactionReference" : "2021062800264444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -12.9,
-    "date" : 1625911200000,
-    "description" : "Krediitkaardi 111222******3333 kuutasu",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-07-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-07-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021071000034444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -250.0,
-    "date" : 1625911200000,
-    "description" : "K111222******4444 HAN00383 10.07.21 03:26 (567377)",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-07-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-07-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021071000584444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -250.0,
-    "date" : 1625997600000,
-    "description" : "111222******4444 10.07.21  OLYMPIC TARTU             Tartu linn    00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-07-11",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-07-11",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021071102024444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -1.3,
-    "date" : 1625997600000,
-    "description" : "111222******4444 09.07.21  CIRCLE K PEETRI        EE 75312 HARJUMAA     ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-07-11",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-07-11",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021071102494444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -99.99,
-    "date" : 1626170400000,
-    "description" : "Arve nr 1223",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-07-13",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-07-13",
-        "instant" : null
-      }
-    } ],
-    "merchantName" : "TALLINN, KIVINUKA TN 8 KÜ",
-    "transactionReference" : "2021071300184444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 10.9,
-    "date" : 1626084000000,
-    "description" : "OST 111222******4444 12.07.21 11:57 10.90 EUR (613900) GELATO ITALIANO ROCCA TALLINN ESTEE",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : true,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-07-12",
-        "instant" : null
-      }
-    } ],
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 102.41,
-    "date" : 1618826400000,
-    "description" : "Krediidi tagasimakse",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-04-19",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-04-19",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021041900464444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 445.0,
-    "date" : 1620122400000,
-    "description" : "Krediidi tagasimakse",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-04",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-04",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021050400354444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -6.0,
-    "date" : 1620640800000,
-    "description" : "111222******3333 09.04.21  RADIO RESTORAN,TERASE \\\\TALLINN           \\EST",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001804444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -7.0,
-    "date" : 1620640800000,
-    "description" : "111222******3333 08.04.21  RADIO RESTORAN,TERASE \\\\TALLINN           \\EST",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001804444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -6.0,
-    "date" : 1620640800000,
-    "description" : "111222******3333 07.04.21  RADIO RESTORAN,TERASE \\\\TALLINN           \\EST",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001804444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -11.99,
-    "date" : 1620640800000,
-    "description" : "111222******3333 06.04.21  Maxima EET520         \\\\Tallinn      \\",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001804444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -11.0,
-    "date" : 1620640800000,
-    "description" : "111222******3333 06.04.21  Etsy.com - MarketCzech\\\\Dublin       \\",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001804444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -6.0,
-    "date" : 1620640800000,
-    "description" : "111222******3333 06.04.21  RADIO RESTORAN,TERASE \\\\TALLINN           \\EST",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001804444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -19.22,
-    "date" : 1620640800000,
-    "description" : "111222******3333 05.04.21  Prisma Sikupilli      \\\\TALLINNA     \\12918",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001814444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -2.8,
-    "date" : 1620640800000,
-    "description" : "111222******3333 17.04.21  SIRIUS KIIRTOIT KALDA TEE 50707 TARTU",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001934444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -9.98,
-    "date" : 1620640800000,
-    "description" : "111222******3333 22.04.21  KADAKA SELVER             TALLINN       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001944444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -6.5,
-    "date" : 1620640800000,
-    "description" : "111222******3333 22.04.21  RESTORAN ARMUDU           Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-05-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021051001944444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -4.59,
-    "date" : 1623319200000,
-    "description" : "111222******3333 30.04.21  TORUPILLI SELVER ISETEENI Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061001844444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -4.99,
-    "date" : 1623319200000,
-    "description" : "111222******3333 30.04.21  TORUPILLI SELVER          TALLINN       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061001844444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -15.52,
-    "date" : 1623319200000,
-    "description" : "111222******3333 07.05.21  HIIU RIMI SM ISETEENINDUS Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061001884444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -1.35,
-    "date" : 1623319200000,
-    "description" : "111222******3333 27.05.21  R-KIOSK SADAMA D TERMINAL Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002014444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -7.0,
-    "date" : 1623319200000,
-    "description" : "111222******3333 27.05.21  SNUS EMPIRE SADAMA        Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002014444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -3.51,
-    "date" : 1623319200000,
-    "description" : "111222******3333 27.05.21  KADAKA SELVER ISETEENINDU TALLINN       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002014444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -242.1,
-    "date" : 1623319200000,
-    "description" : "111222******3333 26.05.21  DIIVANIPARADIIS           TALLINN       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002024444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -14.0,
-    "date" : 1623319200000,
-    "description" : "111222******3333 24.05.21  SNUS EMPIRE SADAMA        Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002024444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -9.44,
-    "date" : 1623319200000,
-    "description" : "111222******3333 28.05.21  HIIU RIMI SM ISETEENINDUS Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002034444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -30.0,
-    "date" : 1623319200000,
-    "description" : "111222******3333 26.05.21  MON REPOS REST,NARVA MNT 10127 TALLINN",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002034444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -6.57,
-    "date" : 1623319200000,
-    "description" : "111222******3333 24.05.21  VIIMSI DELICE ISETEENINDU HAABNEEME ALE 00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002034444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -5.63,
-    "date" : 1623319200000,
-    "description" : "111222******3333 27.05.21  Prisma Rocca al Mare 12918 TALLINNA",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002054444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -3.33,
-    "date" : 1623319200000,
-    "description" : "111222******3333 30.05.21  WILLI LIHAMAAILM          Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002064444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -7.71,
-    "date" : 1623319200000,
-    "description" : "111222******3333 30.05.21  HIIU RIMI SM ISETEENINDUS Tallinn       00000",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002064444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -1.96,
-    "date" : 1623319200000,
-    "description" : "111222******3333 29.05.21  NOMME TURG,TURUPLATS 8 11614 TALLINN",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002064444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : -5.0,
-    "date" : 1623319200000,
-    "description" : "111222******3333 29.05.21  STOCKMANN TALLINN 10145 TALLINN",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-10",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061002064444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 29.82,
-    "date" : 1623405600000,
-    "description" : "Krediidi tagasimakse",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-11",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-11",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061100294444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 99.25,
-    "date" : 1623664800000,
-    "description" : "Krediidi tagasimakse",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-14",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-14",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021061400934444-1",
-    "providerMarket" : "EE"
-  }, {
-    "amount" : 171.98,
-    "date" : 1624874400000,
-    "description" : "Krediidi tagasimakse",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2021-06-28",
-        "instant" : null
-      }
-    }, {
-      "type" : "BOOKING_DATE",
-      "value" : {
-        "date" : "2021-06-28",
-        "instant" : null
-      }
-    } ],
-    "transactionReference" : "2021062800264444-1",
-    "providerMarket" : "EE"
-  } ]
+    {
+      "amount": 3805.0,
+      "date": 1623146400000,
+      "description": "Valjamakse Betsafe",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060801054444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-08",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-08",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": 3200.0,
+      "date": 1623146400000,
+      "description": "raha",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060801064444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-08",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-08",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -172.39,
+      "date": 1623146400000,
+      "description": "Krediidi tagasimakse",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060801064444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-08",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-08",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -300.0,
+      "date": 1623146400000,
+      "description": "SEB Money Transfer",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060802774444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-08",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-08",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": 536.7,
+      "date": 1623232800000,
+      "description": "Withdrawal",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021060900984444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-09",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-09",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -10.63,
+      "date": 1624701600000,
+      "description": "RD/EL; Ostukorv nr 12671754",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021062600064444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-26",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-26",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -2.5,
+      "date": 1624701600000,
+      "description": "111222******4444 24.06.21  PUHAJARVE RANNAKOHVIK  67408 OTEPAA LINN  ",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021062600744444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-26",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-26",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -10.0,
+      "date": 1624701600000,
+      "description": "111222******4444 23.06.21  KAARIKU SPORDIKESKUS/H 67301 VALGAMAA",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021062600814444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-26",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-26",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -171.98,
+      "date": 1624874400000,
+      "description": "Krediidi tagasimakse",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021062800264444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-28",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-28",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -12.9,
+      "date": 1625911200000,
+      "description": "Krediitkaardi 111222******3333 kuutasu",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021071000034444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-07-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-07-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -250.0,
+      "date": 1625911200000,
+      "description": "K111222******4444 HAN00383 10.07.21 03:26 (567377)",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021071000584444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-07-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-07-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -250.0,
+      "date": 1625997600000,
+      "description": "111222******4444 10.07.21  OLYMPIC TARTU             Tartu linn    00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021071102024444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-07-11",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-07-11",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -1.3,
+      "date": 1625997600000,
+      "description": "111222******4444 09.07.21  CIRCLE K PEETRI        EE 75312 HARJUMAA     ",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021071102494444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-07-11",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-07-11",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -99.99,
+      "date": 1626170400000,
+      "description": "Arve nr 1223",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021071300184444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-07-13",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-07-13",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": 10.9,
+      "date": 1626084000000,
+      "description": "OST 111222******4444 12.07.21 11:57 10.90 EUR (613900) GELATO ITALIANO ROCCA TALLINN ESTEE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": true,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-07-12",
+            "instant": null
+          }
+        }
+      ],
+      "providerMarket": "EE",
+      "booked": false
+    },
+    {
+      "amount": 102.41,
+      "date": 1618826400000,
+      "description": "Krediidi tagasimakse",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021041900464444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-04-19",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-04-19",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": 445.0,
+      "date": 1620122400000,
+      "description": "Krediidi tagasimakse",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021050400354444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-04",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-04",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -6.0,
+      "date": 1620640800000,
+      "description": "111222******3333 09.04.21  RADIO RESTORAN,TERASE \\\\TALLINN           \\EST",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001804444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -7.0,
+      "date": 1620640800000,
+      "description": "111222******3333 08.04.21  RADIO RESTORAN,TERASE \\\\TALLINN           \\EST",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001804444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -6.0,
+      "date": 1620640800000,
+      "description": "111222******3333 07.04.21  RADIO RESTORAN,TERASE \\\\TALLINN           \\EST",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001804444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -11.99,
+      "date": 1620640800000,
+      "description": "111222******3333 06.04.21  Maxima EET520         \\\\Tallinn      \\",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001804444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -11.0,
+      "date": 1620640800000,
+      "description": "111222******3333 06.04.21  Etsy.com - MarketCzech\\\\Dublin       \\",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001804444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -6.0,
+      "date": 1620640800000,
+      "description": "111222******3333 06.04.21  RADIO RESTORAN,TERASE \\\\TALLINN           \\EST",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001804444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -19.22,
+      "date": 1620640800000,
+      "description": "111222******3333 05.04.21  Prisma Sikupilli      \\\\TALLINNA     \\12918",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001814444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -2.8,
+      "date": 1620640800000,
+      "description": "111222******3333 17.04.21  SIRIUS KIIRTOIT KALDA TEE 50707 TARTU",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001934444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -9.98,
+      "date": 1620640800000,
+      "description": "111222******3333 22.04.21  KADAKA SELVER             TALLINN       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001944444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -6.5,
+      "date": 1620640800000,
+      "description": "111222******3333 22.04.21  RESTORAN ARMUDU           Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021051001944444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-05-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -4.59,
+      "date": 1623319200000,
+      "description": "111222******3333 30.04.21  TORUPILLI SELVER ISETEENI Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061001844444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -4.99,
+      "date": 1623319200000,
+      "description": "111222******3333 30.04.21  TORUPILLI SELVER          TALLINN       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061001844444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -15.52,
+      "date": 1623319200000,
+      "description": "111222******3333 07.05.21  HIIU RIMI SM ISETEENINDUS Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061001884444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -1.35,
+      "date": 1623319200000,
+      "description": "111222******3333 27.05.21  R-KIOSK SADAMA D TERMINAL Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002014444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -7.0,
+      "date": 1623319200000,
+      "description": "111222******3333 27.05.21  SNUS EMPIRE SADAMA        Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002014444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -3.51,
+      "date": 1623319200000,
+      "description": "111222******3333 27.05.21  KADAKA SELVER ISETEENINDU TALLINN       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002014444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -242.1,
+      "date": 1623319200000,
+      "description": "111222******3333 26.05.21  DIIVANIPARADIIS           TALLINN       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002024444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -14.0,
+      "date": 1623319200000,
+      "description": "111222******3333 24.05.21  SNUS EMPIRE SADAMA        Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002024444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -9.44,
+      "date": 1623319200000,
+      "description": "111222******3333 28.05.21  HIIU RIMI SM ISETEENINDUS Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002034444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -30.0,
+      "date": 1623319200000,
+      "description": "111222******3333 26.05.21  MON REPOS REST,NARVA MNT 10127 TALLINN",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002034444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -6.57,
+      "date": 1623319200000,
+      "description": "111222******3333 24.05.21  VIIMSI DELICE ISETEENINDU HAABNEEME ALE 00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002034444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -5.63,
+      "date": 1623319200000,
+      "description": "111222******3333 27.05.21  Prisma Rocca al Mare 12918 TALLINNA",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002054444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -3.33,
+      "date": 1623319200000,
+      "description": "111222******3333 30.05.21  WILLI LIHAMAAILM          Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002064444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -7.71,
+      "date": 1623319200000,
+      "description": "111222******3333 30.05.21  HIIU RIMI SM ISETEENINDUS Tallinn       00000",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002064444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -1.96,
+      "date": 1623319200000,
+      "description": "111222******3333 29.05.21  NOMME TURG,TURUPLATS 8 11614 TALLINN",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002064444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": -5.0,
+      "date": 1623319200000,
+      "description": "111222******3333 29.05.21  STOCKMANN TALLINN 10145 TALLINN",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061002064444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-10",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": 29.82,
+      "date": 1623405600000,
+      "description": "Krediidi tagasimakse",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061100294444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-11",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-11",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": 99.25,
+      "date": 1623664800000,
+      "description": "Krediidi tagasimakse",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021061400934444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-14",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-14",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    },
+    {
+      "amount": 171.98,
+      "date": 1624874400000,
+      "description": "Krediidi tagasimakse",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "2021062800264444-1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2021-06-28",
+            "instant": null
+          }
+        },
+        {
+          "type": "BOOKING_DATE",
+          "value": {
+            "date": "2021-06-28",
+            "instant": null
+          }
+        }
+      ],
+      "proprietaryFinancialInstitutionType": "PMNT",
+      "providerMarket": "EE",
+      "booked": true
+    }
+  ]
 }
