@@ -12,3 +12,11 @@ java_library(
         "//third_party:com_google_inject_guice",
     ],
 )
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-minion-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
