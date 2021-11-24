@@ -7,7 +7,66 @@ psu-id: dummy_psu_id
 Content-Type: application/xml
 X-Aggregator: Tink Testing
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?> <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> </Document>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Document xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 schema.xsd" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</MsgId>
+            <CreDtTm>1992-04-10T00:00:00</CreDtTm>
+            <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>1.0</CtrlSum>
+            <InitgPty>
+                <Id>
+                    <OrgId>
+                        <Othr>
+                            <Id>123</Id>
+                            <SchmeNm>
+                                <Prtry>PISP</Prtry>
+                            </SchmeNm>
+                        </Othr>
+                    </OrgId>
+                </Id>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>1.0</CtrlSum>
+            <ReqdExctnDt>2021-06-08</ReqdExctnDt>
+            <Dbtr>
+                <Nm>NOT_PROVIDED</Nm>
+            </Dbtr>
+            <DbtrAcct>
+                <Id/>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC>GENODEF1M03</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+            <ChrgBr>SLEV</ChrgBr>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <EndToEndId>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="EUR">1.0</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Creditor Name</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id/>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>SepaReferenceToCreditor 1234</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>
+
 
 RESPONSE 1
 201
