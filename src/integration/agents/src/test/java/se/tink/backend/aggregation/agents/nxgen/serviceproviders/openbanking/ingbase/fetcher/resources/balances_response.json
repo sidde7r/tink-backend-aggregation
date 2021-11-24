@@ -1,0 +1,23 @@
+{
+  "account": {
+    "iban": "BE54000000000000",
+    "maskedPan": "",
+    "currency": "EUR"
+  },
+  "balances": [
+    {
+      "balanceType": "expected",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 0.05
+      }
+    },
+    {
+      "balanceType": "interimBooked",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 0.05
+      }
+    }
+  ]
+}

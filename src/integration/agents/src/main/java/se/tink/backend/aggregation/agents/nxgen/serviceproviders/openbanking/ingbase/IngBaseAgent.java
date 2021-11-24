@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HttpClient.MAX_ATTEMPTS;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
+
 import com.google.common.collect.ImmutableSet;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
@@ -23,9 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseSignatureInvalidFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseTinkClientConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentExecutor;
@@ -48,12 +49,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -71,7 +66,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
 
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
-        configureHttpClient(client);
+        new IngBaseTinkClientConfigurator()
+                .configureClient(client, MAX_ATTEMPTS, RETRY_SLEEP_MILLISECONDS);
         String psuIpAddress =
                 agentComponentProvider
                         .getCredentialsRequest()
@@ -110,26 +106,6 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         agentComponentProvider);
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    private void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(
-                new IngRetryFilter(
-                        IngBaseConstants.HttpClient.MAX_ATTEMPTS,
-                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        IngBaseConstants.HttpClient.MAX_ATTEMPTS,
-                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(
-                new TerminatedHandshakeRetryFilter(
-                        IngBaseConstants.HttpClient.MAX_ATTEMPTS,
-                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new IngBaseSignatureInvalidFilter());
-        client.addFilter(new TimeoutFilter());
-        client.addFilter(new BankServiceInternalErrorFilter());
-        client.addFilter(new IngBaseGatewayTimeoutFilter());
-        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
 
     @Override
