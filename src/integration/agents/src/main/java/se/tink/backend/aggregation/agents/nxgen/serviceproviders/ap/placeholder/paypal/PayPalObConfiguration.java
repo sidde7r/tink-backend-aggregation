@@ -11,8 +11,8 @@ import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfigurati
 
 /**
  * This is a configuration class to make other processes able to discover the secrets configuration
- * and to be compatible. E.g.: processes like upload secrets require this kind of class to work properly.
- * This Configuration class belongs to a dummy agent.
+ * and to be compatible. E.g.: processes like upload secrets require this kind of class to work
+ * properly. This Configuration class belongs to a dummy agent.
  */
 @JsonObject
 public class PayPalObConfiguration implements ClientConfiguration {
