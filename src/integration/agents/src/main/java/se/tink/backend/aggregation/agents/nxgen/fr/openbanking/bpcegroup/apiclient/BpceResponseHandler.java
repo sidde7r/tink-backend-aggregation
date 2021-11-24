@@ -18,7 +18,7 @@ public class BpceResponseHandler extends DefaultResponseStatusHandler {
         if (isBankInternalError(httpResponse)
                 || isBankTechnicalError(httpResponse)
                 || isHtmlErrorPage(httpResponse)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(httpResponse.getBody(String.class));
         } else if (isNoAvailableAccountsError(httpResponse)) {
             throw LoginError.NO_ACCOUNTS.exception();
         }
