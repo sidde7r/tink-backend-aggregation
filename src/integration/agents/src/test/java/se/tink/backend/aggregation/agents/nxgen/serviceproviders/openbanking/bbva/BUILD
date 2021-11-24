@@ -28,6 +28,7 @@ codeowners(
         "@tink-ab/aggregation-teletubbies-maintainer",
         "@tink-ab/aggregation-llamas-maintainer",
         "@tink-ab/aggregation-penguins-maintainer",
+        "@tink-ab/aggregation-toros-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

@@ -26,60 +26,94 @@
 /docker @tink-ab/aggregation-agent-platform-maintainer
 WORKSPACE @tink-ab/aggregation-agent-platform-maintainer
 BUILD @tink-ab/aggregation-agent-platform-maintainer
-/data/agents/at/ @tink-ab/aggregation-penguins-maintainer
-/data/agents/dk/ @tink-ab/aggregation-teletubbies-maintainer
-/data/agents/it/ @tink-ab/aggregation-nazguls-maintainer
-/data/agents/se/ @tink-ab/aggregation-thundercats-maintainer
-/data/agents/uk/ @tink-ab/aggregation-fluffy-maintainer
-/data/secret/preprod/ss/es/ @tink-ab/aggregation-thundercats-maintainer
-/data/secret/preprod/ss/fi/ @tink-ab/aggregation-llamas-maintainer
-/data/secret/preprod/ss/fr/ @tink-ab/aggregation-penguins-maintainer
-/data/secret/preprod/ss/nl/ @tink-ab/aggregation-minion-maintainer
-/data/secret/preprod/ss/se/ @tink-ab/aggregation-thundercats-maintainer
-/data/secret/production/ss/at/ @tink-ab/aggregation-penguins-maintainer
-/data/secret/production/ss/be/ @tink-ab/aggregation-minion-maintainer
-/data/secret/production/ss/de/ @tink-ab/aggregation-nazguls-maintainer
-/data/secret/production/ss/dk/ @tink-ab/aggregation-teletubbies-maintainer
-/data/secret/production/ss/es/ @tink-ab/aggregation-thundercats-maintainer
-/data/secret/production/ss/fi/ @tink-ab/aggregation-llamas-maintainer
-/data/secret/production/ss/fr/ @tink-ab/aggregation-penguins-maintainer
-/data/secret/production/ss/ie/ @tink-ab/aggregation-fluffy-maintainer
-/data/secret/production/ss/it/ @tink-ab/aggregation-nazguls-maintainer
-/data/secret/production/ss/nl/ @tink-ab/aggregation-minion-maintainer
-/data/secret/production/ss/no/ @tink-ab/aggregation-teletubbies-maintainer
-/data/secret/production/ss/pl/ @tink-ab/aggregation-teletubbies-maintainer
-/data/secret/production/ss/pt/ @tink-ab/aggregation-minion-maintainer
-/data/secret/production/ss/se/ @tink-ab/aggregation-thundercats-maintainer
-/data/secret/production/ss/uk/ @tink-ab/aggregation-fluffy-maintainer
-/data/secret/registration-responses/ @tink-ab/aggregation-fluffy-maintainer
-/data/secret/staging/ss/at/ @tink-ab/aggregation-penguins-maintainer
-/data/secret/staging/ss/be/ @tink-ab/aggregation-minion-maintainer
-/data/secret/staging/ss/de/ @tink-ab/aggregation-nazguls-maintainer
-/data/secret/staging/ss/dk/ @tink-ab/aggregation-teletubbies-maintainer
-/data/secret/staging/ss/es/ @tink-ab/aggregation-thundercats-maintainer
-/data/secret/staging/ss/fi/ @tink-ab/aggregation-llamas-maintainer
-/data/secret/staging/ss/fr/ @tink-ab/aggregation-penguins-maintainer
-/data/secret/staging/ss/it/ @tink-ab/aggregation-nazguls-maintainer
-/data/secret/staging/ss/nl/ @tink-ab/aggregation-minion-maintainer
-/data/secret/staging/ss/no/ @tink-ab/aggregation-teletubbies-maintainer
-/data/secret/staging/ss/pt/ @tink-ab/aggregation-minion-maintainer
-/data/secret/staging/ss/se/ @tink-ab/aggregation-thundercats-maintainer
-/data/secret/staging/ss/uk/ @tink-ab/aggregation-fluffy-maintainer
-/po/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bankdata/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bec/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
+/data/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/data/agents/ie/* @tink-ab/aggregation-fluffy-maintainer
+/data/secret/production/ss/ie/* @tink-ab/aggregation-fluffy-maintainer
+/data/secret/preprod/ss/ie/* @tink-ab/aggregation-fluffy-maintainer
+/data/secret/staging/ss/ie/* @tink-ab/aggregation-fluffy-maintainer
+/data/agents/uk/* @tink-ab/aggregation-fluffy-maintainer
+/data/secret/production/ss/uk/* @tink-ab/aggregation-fluffy-maintainer
+/data/secret/preprod/ss/uk/* @tink-ab/aggregation-fluffy-maintainer
+/data/secret/staging/ss/uk/* @tink-ab/aggregation-fluffy-maintainer
+/data/agents/dk/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/production/ss/dk/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/preprod/ss/dk/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/staging/ss/dk/* @tink-ab/aggregation-teletubbies-maintainer
+/data/agents/ee/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/production/ss/ee/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/preprod/ss/ee/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/staging/ss/ee/* @tink-ab/aggregation-thundercats-maintainer
+/data/agents/fi/* @tink-ab/aggregation-llamas-maintainer
+/data/secret/production/ss/fi/* @tink-ab/aggregation-llamas-maintainer
+/data/secret/preprod/ss/fi/* @tink-ab/aggregation-llamas-maintainer
+/data/secret/staging/ss/fi/* @tink-ab/aggregation-llamas-maintainer
+/data/agents/lv/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/production/ss/lv/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/preprod/ss/lv/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/staging/ss/lv/* @tink-ab/aggregation-thundercats-maintainer
+/data/agents/lt/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/production/ss/lt/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/preprod/ss/lt/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/staging/ss/lt/* @tink-ab/aggregation-thundercats-maintainer
+/data/agents/nl/* @tink-ab/aggregation-minion-maintainer
+/data/secret/production/ss/nl/* @tink-ab/aggregation-minion-maintainer
+/data/secret/preprod/ss/nl/* @tink-ab/aggregation-minion-maintainer
+/data/secret/staging/ss/nl/* @tink-ab/aggregation-minion-maintainer
+/data/agents/no/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/production/ss/no/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/preprod/ss/no/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/staging/ss/no/* @tink-ab/aggregation-teletubbies-maintainer
+/data/agents/se/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/production/ss/se/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/preprod/ss/se/* @tink-ab/aggregation-thundercats-maintainer
+/data/secret/staging/ss/se/* @tink-ab/aggregation-thundercats-maintainer
+/data/agents/be/* @tink-ab/aggregation-minion-maintainer
+/data/secret/production/ss/be/* @tink-ab/aggregation-minion-maintainer
+/data/secret/preprod/ss/be/* @tink-ab/aggregation-minion-maintainer
+/data/secret/staging/ss/be/* @tink-ab/aggregation-minion-maintainer
+/data/agents/pl/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/production/ss/pl/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/preprod/ss/pl/* @tink-ab/aggregation-teletubbies-maintainer
+/data/secret/staging/ss/pl/* @tink-ab/aggregation-teletubbies-maintainer
+/data/agents/pt/* @tink-ab/aggregation-minion-maintainer
+/data/secret/production/ss/pt/* @tink-ab/aggregation-minion-maintainer
+/data/secret/preprod/ss/pt/* @tink-ab/aggregation-minion-maintainer
+/data/secret/staging/ss/pt/* @tink-ab/aggregation-minion-maintainer
+/data/agents/de/* @tink-ab/aggregation-nazguls-maintainer
+/data/secret/production/ss/de/* @tink-ab/aggregation-nazguls-maintainer
+/data/secret/preprod/ss/de/* @tink-ab/aggregation-nazguls-maintainer
+/data/secret/staging/ss/de/* @tink-ab/aggregation-nazguls-maintainer
+/data/agents/it/* @tink-ab/aggregation-nazguls-maintainer
+/data/secret/production/ss/it/* @tink-ab/aggregation-nazguls-maintainer
+/data/secret/preprod/ss/it/* @tink-ab/aggregation-nazguls-maintainer
+/data/secret/staging/ss/it/* @tink-ab/aggregation-nazguls-maintainer
+/data/agents/at/* @tink-ab/aggregation-penguins-maintainer
+/data/secret/production/ss/at/* @tink-ab/aggregation-penguins-maintainer
+/data/secret/preprod/ss/at/* @tink-ab/aggregation-penguins-maintainer
+/data/secret/staging/ss/at/* @tink-ab/aggregation-penguins-maintainer
+/data/agents/fr/* @tink-ab/aggregation-penguins-maintainer
+/data/secret/production/ss/fr/* @tink-ab/aggregation-penguins-maintainer
+/data/secret/preprod/ss/fr/* @tink-ab/aggregation-penguins-maintainer
+/data/secret/staging/ss/fr/* @tink-ab/aggregation-penguins-maintainer
+/data/agents/es/* @tink-ab/aggregation-toros-maintainer
+/data/secret/production/ss/es/* @tink-ab/aggregation-toros-maintainer
+/data/secret/preprod/ss/es/* @tink-ab/aggregation-toros-maintainer
+/data/secret/staging/ss/es/* @tink-ab/aggregation-toros-maintainer
+/po/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bankdata/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bec/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bunq/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/creditagricole/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/crosskey/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/danskebank/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/euroinformation/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/euroinformation/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/revolut/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/samlink/ @tink-ab/aggregation-llamas-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/sdc/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bankdata/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bbva/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bec/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/citadele/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/sdc/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bankdata/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bbva/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bec/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/citadele/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fropenbanking/base/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/handelsbanken/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor/ @tink-ab/aggregation-thundercats-maintainer
@@ -88,26 +122,26 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbankbaltics/authentication/ @tink-ab/aggregation-thundercats-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fo/banks/sdcfo/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/mx/banks/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ro/banks/raiffeisen/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bankdata/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bbva/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bec/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/berlingroup/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bnpparibasfortisbase/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/common/signature/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fintechblocks/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fo/banks/sdcfo/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/mx/banks/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ro/banks/raiffeisen/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bankdata/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bbva/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bec/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/berlingroup/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bnpparibasfortisbase/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/common/signature/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fintechblocks/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fropenbanking/base/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/newday/ @tink-ab/aggregation-fluffy-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/paypal/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/paypal/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/samlink/ @tink-ab/aggregation-llamas-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/ @tink-ab/aggregation-teletubbies-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/ @tink-ab/aggregation-minion-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ro/banks/raiffeisen/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ro/banks/raiffeisen/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/ @tink-ab/aggregation-minion-maintainer
