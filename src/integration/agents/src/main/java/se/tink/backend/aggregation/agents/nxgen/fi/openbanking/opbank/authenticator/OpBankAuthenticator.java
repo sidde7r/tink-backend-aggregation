@@ -93,7 +93,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                                 null),
                         new ClaimEntity(
                                 new AuthorizationIdEntity(authorization.getAuthorizationId(), true),
-                                new AcrEntity(true, ImmutableList.of("urn:openbanking:psd2:sca"))));
+                                new AcrEntity(true, ImmutableList.of(TokenValues.ARC_VALUES))));
 
         return TokenBodyEntity.builder()
                 .aud(Urls.BASE_URL)
@@ -113,7 +113,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
 
     @SneakyThrows
     private URL buildAuthorizationURL(TokenBodyEntity tokenBody) {
-        String tokenBodyJson = SerializationUtils.serializeToString(tokenBody);
+        final String tokenBodyJson = SerializationUtils.serializeToString(tokenBody);
 
         String tokenHeadJson =
                 SerializationUtils.serializeToString(new TokenHeaderEntity(keyIdProvider.get()));

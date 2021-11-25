@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.NoCodeParamException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -47,10 +48,11 @@ public class OpBankPaymentController extends PaymentController {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        persistentStorage.put("State", strongAuthenticationState.getState());
+        persistentStorage.put(
+                OpBankConstants.StorageKeys.STATE, strongAuthenticationState.getState());
         PaymentResponse paymentResponse = super.create(paymentRequest);
 
-        URL authorizeUrl = URL.of(persistentStorage.get("URL"));
+        URL authorizeUrl = URL.of(persistentStorage.get(OpBankConstants.StorageKeys.URL));
 
         openThirdPartyApp(authorizeUrl);
         Map<String, String> callbackData =
@@ -68,7 +70,7 @@ public class OpBankPaymentController extends PaymentController {
             throw new NoCodeParamException(
                     "callbackData did not contain 'code' and no error was handled");
         }
-        persistentStorage.put("Code", code);
+        persistentStorage.put(OpBankConstants.StorageKeys.CODE, code);
 
         return paymentResponse;
     }

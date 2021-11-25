@@ -5,7 +5,6 @@ import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -46,7 +45,6 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@AllArgsConstructor
 public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final OpBankApiClient apiClient;
@@ -96,9 +94,12 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                         OpBankConstants.RefreshTokenFormKeys.DEFAULT_TOKEN_LIFETIME_UNIT));
 
         TokenBodyEntity tokenBody =
-                buildTokenBodyEntity(createPaymentResponse, persistentStorage.get("State"));
+                buildTokenBodyEntity(
+                        createPaymentResponse,
+                        persistentStorage.get(OpBankConstants.StorageKeys.STATE));
         PaymentResponse paymentResponse = createPaymentResponse.toTinkPayment(paymentRequest);
-        persistentStorage.put("URL", (buildAuthorizationURL(tokenBody).get()));
+        persistentStorage.put(
+                OpBankConstants.StorageKeys.URL, (buildAuthorizationURL(tokenBody).get()));
 
         return paymentResponse;
     }
@@ -106,7 +107,7 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
-        String code = persistentStorage.get("Code");
+        String code = persistentStorage.get(OpBankConstants.StorageKeys.CODE);
         OAuth2Token oAuth2Token = apiClient.exchangeToken(code).toOauth2Token();
         this.apiClient.submitPayment(
                 paymentMultiStepRequest.getPayment().getUniqueId(),
@@ -152,7 +153,9 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                         new ClaimEntity(
                                 new AuthorizationIdEntity(
                                         paymentResponse.getAuthorizationId(), true),
-                                new AcrEntity(true, ImmutableList.of("urn:openbanking:psd2:sca"))));
+                                new AcrEntity(
+                                        true,
+                                        ImmutableList.of(OpBankConstants.TokenValues.ARC_VALUES))));
 
         return TokenBodyEntity.builder()
                 .aud(OpBankConstants.Urls.BASE_URL)
@@ -172,7 +175,7 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
 
     @SneakyThrows
     private URL buildAuthorizationURL(TokenBodyEntity tokenBody) {
-        String tokenBodyJson = SerializationUtils.serializeToString(tokenBody);
+        final String tokenBodyJson = SerializationUtils.serializeToString(tokenBody);
 
         String tokenHeadJson =
                 SerializationUtils.serializeToString(new TokenHeaderEntity(keyIdProvider.get()));
