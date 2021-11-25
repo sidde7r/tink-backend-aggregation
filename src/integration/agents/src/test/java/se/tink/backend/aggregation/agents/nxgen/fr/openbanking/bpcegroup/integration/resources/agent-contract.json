@@ -1,116 +1,145 @@
 {
-  "accounts": [
-    {
-      "accountNumber": "DUMMY_IBAN",
-      "accountExclusion":"NONE",
-      "exactBalance":{
-        "currencyCode":"EUR",
-        "doubleValue":-479.46,
-        "scale":2,
-        "unscaledValue":-47946,
-        "exactValue":-479.46
-      },
-      "currencyCode":"EUR",
-      "bankId":"DUMMYIBAN",
-      "name":"DUMMY_NAME",
-      "ownership":1.0,
-      "type":"CHECKING",
-      "identifiers":"[]",
-      "closed":false,
-      "holderName":null,
-      "flags":"[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "availableCredit":0.0,
-      "balance":-479.46
-    }
-  ],
-  "transactions": [
-    {
-      "externalSystemIds" : {
-        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
-      },
-      "amount":-236.3,
-      "date":1592820000000,
-      "description":"DUMMY_DESCRIPTION_1",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false,
-      "transactionDates" : [ {
-        "type" : "VALUE_DATE",
-        "value" : {
-          "date" : "2020-06-22",
-          "instant" : null
+    "accounts": [
+        {
+            "accountNumber": "DUMMY_IBAN",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": -479.46,
+                "scale": 2,
+                "unscaledValue": -47946,
+                "exactValue": -479.46
+            },
+            "currencyCode": "EUR",
+            "bankId": "DUMMYIBAN",
+            "name": "DUMMY_NAME",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": null,
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "availableCredit": 0.0,
+            "balance": -479.46
         }
-      } ]
-    },
-    {
-      "externalSystemIds" : {
-        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
-      },
-      "amount":310.34,
-      "date":1592820000000,
-      "description":"DUMMY_DESCRIPTION_2",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false,
-      "transactionDates" : [ {
-        "type" : "VALUE_DATE",
-        "value" : {
-          "date" : "2020-06-22",
-          "instant" : null
+    ],
+    "transactions": [
+        {
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "DUMMY_RESOURCE_ID"
+            },
+            "amount": -236.3,
+            "date": 1592820000000,
+            "description": "DUMMY_DESCRIPTION_1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2020-06-22",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2020-06-22",
+                        "instant": null
+                    }
+                }
+            ]
+        },
+        {
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "DUMMY_RESOURCE_ID"
+            },
+            "amount": 310.34,
+            "date": 1592820000000,
+            "description": "DUMMY_DESCRIPTION_2",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2020-06-22",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2020-06-22",
+                        "instant": null
+                    }
+                }
+            ]
+        },
+        {
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "DUMMY_RESOURCE_ID"
+            },
+            "amount": -745.7,
+            "date": 1592820000000,
+            "description": "DUMMY_DESCRIPTION_4",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2020-06-22",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2020-06-22",
+                        "instant": null
+                    }
+                }
+            ]
+        },
+        {
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "DUMMY_RESOURCE_ID"
+            },
+            "amount": -45.98,
+            "date": 1593856800000,
+            "description": "DUMMY_DESCRIPTION_3",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2020-07-04",
+                        "instant": null
+                    }
+                }
+            ]
         }
-      } ]
-    },
-    {
-      "externalSystemIds" : {
-        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
-      },
-      "amount":-745.7,
-      "date":1592820000000,
-      "description":"DUMMY_DESCRIPTION_4",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false,
-      "transactionDates" : [ {
-        "type" : "VALUE_DATE",
-        "value" : {
-          "date" : "2020-06-22",
-          "instant" : null
-        }
-      } ]
-    },
-    {
-      "externalSystemIds" : {
-        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
-      },
-      "amount":-45.98,
-      "date":1593856800000,
-      "description":"DUMMY_DESCRIPTION_3",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":true,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false,
-      "transactionDates" : [ {
-        "type" : "VALUE_DATE",
-        "value" : {
-          "date" : "2020-06-22",
-          "instant" : null
-        }
-      } ]
-    }
-  ]
+    ]
 }
