@@ -2,39 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
-import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.AccountPermissionsDataResponseEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.RiskEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.BaseV31Response;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountPermissionResponse {
+public class AccountPermissionResponse
+        extends BaseV31Response<AccountPermissionsDataResponseEntity> {
+
     @JsonProperty("Data")
-    private AccountPermissionsDataResponseEntity data;
-
-    @JsonProperty("Risk")
-    private RiskEntity risk;
-
-    @JsonProperty("Links")
-    private Map<String, String> links;
-
-    @JsonProperty("Meta")
-    private Map<String, Object> meta;
-
-    public AccountPermissionsDataResponseEntity getData() {
-        return data;
-    }
-
-    public RiskEntity getRisk() {
-        return risk;
-    }
-
-    public Map<String, String> getLinks() {
-        return links;
-    }
-
-    public Map<String, Object> getMeta() {
-        return meta;
+    public void setData(AccountPermissionsDataResponseEntity data) {
+        this.data = data;
     }
 
     public String getConsentId() {

@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class BaseV31Response<T> {
 
-    private T data;
+    protected T data;
 
     private Map<String, String> links;
 

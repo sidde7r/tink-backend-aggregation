@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.AccountPermissionsDataResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -85,6 +86,11 @@ public class ConsentStatusValidator {
 
     private boolean isNotAuthorised(String consentId) {
         log.info("[CONSENT STATUS VALIDATOR] Checking status for consentId {}", consentId);
-        return apiClient.fetchConsent(consentId).getData().isNotAuthorised();
+        AccountPermissionsDataResponseEntity consent =
+                apiClient
+                        .fetchConsent(consentId)
+                        .getData()
+                        .orElseThrow(SessionError.CONSENT_REVOKED::exception);
+        return consent.isNotAuthorised();
     }
 }
