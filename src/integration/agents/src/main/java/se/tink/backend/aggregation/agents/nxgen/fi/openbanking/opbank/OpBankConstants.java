@@ -46,6 +46,9 @@ public final class OpBankConstants {
     }
 
     public static class StorageKeys {
+        public static final String URL = "URL";
+        public static final String STATE = "State";
+        public static final String CODE = "Code";
         public static final String ACCOUNT_ID = "accountId";
         public static final String CARD_ID = "cardId";
     }
@@ -77,6 +80,7 @@ public final class OpBankConstants {
         public static final int MAX_AGE = 86400;
         public static final String ACCOUNTS = "accounts";
         public static final String PAYMENTS = "payments";
+        public static final String ARC_VALUES = "urn:openbanking:psd2:sca";
     }
 
     public static class JWTHeaderValues {
@@ -104,8 +108,14 @@ public final class OpBankConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
+        public static final String REDIRECT_URI = "redirect_uri";
         public static final int DEFAULT_TOKEN_LIFETIME = 45;
         public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
+    }
+
+    public static class RefreshTokenFormValues {
+        public static final String CLIENT_CREDENTIALS = "client_credentials";
+        public static final String AUTHORIZATION_CODE = "authorization_code";
     }
 
     public static class Filters {
