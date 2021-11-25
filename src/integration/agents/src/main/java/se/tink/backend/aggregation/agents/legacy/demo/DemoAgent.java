@@ -15,6 +15,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +48,6 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.bankid.CredentialsSignicatBankIdAuthenticationHandler;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.demo.generators.DemoTransactionsGenerator;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -64,13 +64,12 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.demo.DemoCredentials.DemoUserFeature;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.enums.SwedishGiroType;
@@ -111,9 +110,9 @@ public final class DemoAgent extends AbstractAgent
     private final File accountsFile;
     private List<Account> accounts = null;
 
-    public DemoAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+    @Inject
+    public DemoAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider.getCredentialsRequest(), componentProvider.getContext());
 
         demoCredentials = DemoCredentials.byUsername(request.getCredentials().getUsername());
 
