@@ -1,5 +1,7 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -19,13 +21,12 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 public class TransactionTrackingSerializerTest {
 
     @Test
-    public void ensureTransactionGetsSerializedProperly() {
+    public void ensureTransactionGetsSerializedProperly() throws ParseException {
         // given
         final DateTimeFormatter dateFormatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
-
-        final Date date = new Date();
-        final Instant instant = Instant.now();
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2000-01-01");
+        final Instant instant = date.toInstant();
         final List<TransactionDate> transactionDates = new ArrayList<>();
         final TransactionDate bookingDate = new TransactionDate();
         final AvailableDateInformation availableDateInformation = new AvailableDateInformation();
@@ -75,16 +76,20 @@ public class TransactionTrackingSerializerTest {
                 "null",
                 getFieldEntry(entries, "Transaction<CHECKING>.transactionAmount").getValue());
         Assert.assertEquals(
-                "VALUE_NOT_LISTED",
-                getFieldEntry(entries, "Transaction<CHECKING>.transactionDate_BOOKING_DATE")
+                "null",
+                getFieldEntry(entries, "Transaction<CHECKING>.transactionDate_BOOKING_DATE.date")
+                        .getValue());
+        Assert.assertEquals(
+                instant.toString(),
+                getFieldEntry(entries, "Transaction<CHECKING>.transactionDate_BOOKING_DATE.instant")
                         .getValue());
         Assert.assertEquals(
                 "null",
-                getFieldEntry(entries, "Transaction<CHECKING>.transactionDate_VALUE_DATE")
+                getFieldEntry(entries, "Transaction<CHECKING>.transactionDate_VALUE_DATE.date")
                         .getValue());
         Assert.assertEquals(
                 "null",
-                getFieldEntry(entries, "Transaction<CHECKING>.transactionDate_EXECUTION_DATE")
+                getFieldEntry(entries, "Transaction<CHECKING>.transactionDate_EXECUTION_DATE.date")
                         .getValue());
     }
 
