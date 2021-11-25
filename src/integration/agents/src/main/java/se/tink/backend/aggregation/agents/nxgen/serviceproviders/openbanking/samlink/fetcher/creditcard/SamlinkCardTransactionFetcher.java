@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.BookingStatusParameter;
@@ -18,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SamlinkCardTransactionFetcher implements TransactionFetcher<CreditCardAccount> {
@@ -71,13 +74,23 @@ public class SamlinkCardTransactionFetcher implements TransactionFetcher<CreditC
     }
 
     private AggregationTransaction mapPending(CardTransactionEntity transaction) {
-        return Transaction.builder()
-                .setPending(true)
-                .setDescription(transaction.getTransactionDetails())
-                .setDate(
-                        Optional.ofNullable(transaction.getBookingDate())
-                                .orElse(transaction.getTransactionDate()))
-                .setAmount(transaction.getTransactionAmount().toAmount())
-                .build();
+        Builder builder =
+                Transaction.builder()
+                        .setPending(true)
+                        .setDescription(transaction.getTransactionDetails())
+                        .setDate(
+                                Optional.ofNullable(transaction.getBookingDate())
+                                        .orElse(transaction.getTransactionDate()))
+                        .setAmount(transaction.getTransactionAmount().toAmount());
+        setExternalId(builder, transaction);
+        return builder.build();
+    }
+
+    private void setExternalId(Builder builder, CardTransactionEntity transaction) {
+        if (!Strings.isNullOrEmpty(transaction.getCardTransactionId())) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                    transaction.getCardTransactionId());
+        }
     }
 }
