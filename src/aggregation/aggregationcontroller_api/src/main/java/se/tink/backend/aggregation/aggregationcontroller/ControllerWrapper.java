@@ -7,7 +7,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryClassification;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
@@ -41,11 +40,6 @@ public class ControllerWrapper {
         Preconditions.checkNotNull(configuration, "The host configuration cannot be null");
         // TODO: add more host configuration validation.
         return new ControllerWrapper(client, configuration);
-    }
-
-    public Response generateStatisticsAndActivityAsynchronously(
-            GenerateStatisticsAndActivitiesRequest request) {
-        return client.generateStatisticsAndActivityAsynchronously(configuration, request);
     }
 
     public Response updateTransactionsAsynchronously(UpdateTransactionsRequest request) {

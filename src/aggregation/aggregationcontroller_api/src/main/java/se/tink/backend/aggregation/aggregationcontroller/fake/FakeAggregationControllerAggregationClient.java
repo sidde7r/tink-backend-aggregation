@@ -22,7 +22,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryClassification;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
@@ -58,14 +57,6 @@ public class FakeAggregationControllerAggregationClient
         SimpleModule module = new SimpleModule();
         module.addDeserializer(ExactCurrencyAmount.class, new ExactCurrencyAmountDeserializer());
         mapper.registerModule(module);
-    }
-
-    @Override
-    public Response generateStatisticsAndActivityAsynchronously(
-            HostConfiguration hostConfiguration, GenerateStatisticsAndActivitiesRequest request) {
-        callFakeAggregationControllerForSendingData(
-                "generateStatisticsAndActivityAsynchronously", request);
-        return Response.ok().build();
     }
 
     @Override
