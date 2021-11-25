@@ -4,6 +4,7 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,15 +34,13 @@ import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.ics.retry.RetryerBuilder;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroIcsCredentials;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.user.rpc.User;
@@ -67,9 +66,9 @@ public final class IcsAgent extends AbstractAgent implements RefreshCreditCardAc
     // cache
     private Map<Account, List<Transaction>> accounts = new HashMap<>();
 
-    public IcsAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+    @Inject
+    public IcsAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider.getCredentialsRequest(), componentProvider.getContext());
 
         this.credentials = request.getCredentials();
         this.user = request.getUser();
