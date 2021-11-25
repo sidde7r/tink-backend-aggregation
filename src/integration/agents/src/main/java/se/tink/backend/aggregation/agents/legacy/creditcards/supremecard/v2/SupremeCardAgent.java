@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,7 +27,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.SupremeCardApiConstants.TimeoutConfig;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.AccountInfoResponse;
@@ -44,8 +44,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.NoRedirectStrategy;
 import se.tink.backend.aggregation.agents.utils.jersey.filter.JerseyTimeoutRetryFilter;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
@@ -61,9 +60,9 @@ public final class SupremeCardAgent extends AbstractAgent
     private AccountInfoEntity accountInfoEntity = null;
     private Account account = null;
 
-    public SupremeCardAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+    @Inject
+    public SupremeCardAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider.getCredentialsRequest(), componentProvider.getContext());
 
         this.apiAgent = createApiAgent();
         this.credentials = request.getCredentials();
