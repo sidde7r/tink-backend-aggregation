@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Function;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.BalanceType;
-import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -91,7 +91,7 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
             listBuilder.putRedacted(key + ".accountId", account.getAccountHolder().getAccountId());
             listBuilder.putRedacted(
                     key + ".identities", account.getAccountHolder().getIdentities().toString());
-            for (HolderIdentity holderIdentity : account.getAccountHolder().getIdentities()) {
+            for (AccountParty holderIdentity : account.getAccountHolder().getIdentities()) {
                 String holderIdentityKey =
                         key + ".identities<" + holderIdentity.getRole().name() + ">";
                 listBuilder.putRedacted(holderIdentityKey + ".name", holderIdentity.getName());

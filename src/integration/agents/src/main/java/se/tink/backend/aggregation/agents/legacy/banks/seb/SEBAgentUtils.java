@@ -19,8 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountHolderType;
+import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.model.SebCreditCard;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.model.SebCreditCardAccount;
@@ -350,7 +350,7 @@ public class SEBAgentUtils {
         AccountHolder accountHolder = new AccountHolder();
         accountHolder.setType(AccountHolderType.PERSONAL);
 
-        List<HolderIdentity> identities = new ArrayList<>();
+        List<AccountParty> identities = new ArrayList<>();
 
         if (!Strings.isNullOrEmpty(firstApplicantName)) {
             identities.add(toHolderIdentity(firstApplicantName));
@@ -365,18 +365,18 @@ public class SEBAgentUtils {
         return accountHolder;
     }
 
-    private static HolderIdentity toHolderIdentity(String holderName) {
-        HolderIdentity systemHolder = new HolderIdentity();
+    private static AccountParty toHolderIdentity(String holderName) {
+        AccountParty systemHolder = new AccountParty();
         systemHolder.setName(holderName);
         systemHolder.setRole(HolderRole.HOLDER);
         return systemHolder;
     }
 
-    public static Optional<String> getFirstHolder(List<HolderIdentity> holderIdentities) {
+    public static Optional<String> getFirstHolder(List<AccountParty> holderIdentities) {
         return holderIdentities.stream()
                 .filter(holderIdentity -> HolderRole.HOLDER.equals(holderIdentity.getRole()))
                 .findFirst()
-                .map(HolderIdentity::getName);
+                .map(AccountParty::getName);
     }
 
     static {

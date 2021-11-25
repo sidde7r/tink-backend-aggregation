@@ -15,10 +15,12 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Address;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountPartyAddressType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -262,7 +264,15 @@ public class TransactionalAccountBuilderTest {
                                         .setProductName("UltraSavings ZeroFX")
                                         .build())
                         .addHolderName("Jürgen Flughaubtkopf")
-                        .addParties(new Party("Millie-Jo Morales", Role.AUTHORIZED_USER))
+                        .addParties(
+                                new Party("Millie-Jo Morales", Role.AUTHORIZED_USER)
+                                        .withAddresses(
+                                                Address.of(
+                                                        AccountPartyAddressType.ADDRESS_BUSINESS,
+                                                        "Street 1",
+                                                        "1ABWZ",
+                                                        "Semmelshire",
+                                                        "UK")))
                         .setHolderType(AccountHolderType.PERSONAL)
                         .setApiIdentifier("2a3ffe-38320c")
                         .putInTemporaryStorage("box", box)
@@ -304,6 +314,11 @@ public class TransactionalAccountBuilderTest {
         assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
         assertThat(account.getParties().get(1).getName()).isEqualTo("Millie-Jo Morales");
         assertThat(account.getParties().get(1).getRole()).isEqualTo(Role.AUTHORIZED_USER);
+        assertThat(account.getParties().get(1).getAddresses().size()).isEqualTo(1);
+        assertThat(account.getParties().get(1).getAddresses().get(0).getStreet())
+                .isEqualTo("Street 1");
+        assertThat(account.getParties().get(1).getAddresses().get(0).getCity())
+                .isEqualTo("Semmelshire");
         assertThat(account.getHolderType()).isEqualTo(AccountHolderType.PERSONAL);
 
         assertThat(account.getApiIdentifier()).isEqualTo("2a3ffe-38320c");
