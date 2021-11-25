@@ -90,6 +90,23 @@ public class CustomerNotesListEntity {
     @JsonProperty("codigoDocumento")
     private String documentCode;
 
+    public CustomerNotesListEntity() {}
+
+    public CustomerNotesListEntity(
+            String valueDate,
+            String senderText,
+            String dateOfTransaction,
+            String sign,
+            String amountAmount,
+            String sequentialNumber) {
+        this.valueDate = valueDate;
+        this.senderText = senderText;
+        this.dateOfTransaction = dateOfTransaction;
+        this.sign = sign;
+        this.amountAmount = amountAmount;
+        this.sequentialNumber = sequentialNumber;
+    }
+
     public String getSequentialNumber() {
         return sequentialNumber;
     }

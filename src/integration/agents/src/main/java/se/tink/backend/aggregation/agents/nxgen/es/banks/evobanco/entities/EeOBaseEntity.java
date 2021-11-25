@@ -19,6 +19,14 @@ public abstract class EeOBaseEntity {
         return returnCode;
     }
 
+    public void setReturnCode(String returnCode) {
+        this.returnCode = returnCode;
+    }
+
+    public void setErrors(ErrorsEntity errors) {
+        this.errors = errors;
+    }
+
     public boolean isUnsuccessfulReturnCode() {
         return returnCode.equals(EvoBancoConstants.ReturnCodes.UNSUCCESSFUL_RETURN_CODE);
     }

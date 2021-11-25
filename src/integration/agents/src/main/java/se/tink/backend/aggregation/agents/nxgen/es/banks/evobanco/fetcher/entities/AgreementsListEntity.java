@@ -74,6 +74,8 @@ public class AgreementsListEntity {
     }
 
     public Optional<TransactionalAccount> toTinkAccount(String holderName) {
+        String panForDebitCardAccount =
+                cardData != null && cardData.getPanToken() != null ? cardData.getPanToken() : "";
         return EvoBancoConstants.ACCOUNT_TYPE_MAPPER
                 .translate(aliasbe)
                 .flatMap(
@@ -94,6 +96,8 @@ public class AgreementsListEntity {
                                                         .setProductName(accountType)
                                                         .build())
                                         .addParties(new Party(holderName, Party.Role.HOLDER))
+                                        .putInTemporaryStorage(
+                                                Storage.PAN_TOKEN, panForDebitCardAccount)
                                         .setApiIdentifier(agreement)
                                         .build());
     }

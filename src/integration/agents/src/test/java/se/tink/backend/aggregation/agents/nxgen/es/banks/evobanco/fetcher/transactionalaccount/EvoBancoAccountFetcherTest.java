@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,10 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -67,7 +71,7 @@ public class EvoBancoAccountFetcherTest {
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
 
         // then
-        assertThat(accounts).hasSize(2);
+        assertThat(accounts).hasSize(4);
     }
 
     private void assertSavingAccountValid(TransactionalAccount account) {
@@ -80,7 +84,7 @@ public class EvoBancoAccountFetcherTest {
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo("IBAN1");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("Depósito");
         assertThat(account.getIdModule().getProductName()).isEqualTo("I");
-        assertThat(account.getParties().get(0).getName()).isEqualTo("SZYMON MYSIAK");
+        assertThat(account.getParties().get(0).getName()).isEqualTo("Szymon Mysiak");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
     }
 
@@ -94,7 +98,49 @@ public class EvoBancoAccountFetcherTest {
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo("IBAN2");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("Cuenta Inteligente");
         assertThat(account.getIdModule().getProductName()).isEqualTo("I");
-        assertThat(account.getParties().get(0).getName()).isEqualTo("SZYMON MYSIAK");
+        assertThat(account.getParties().get(0).getName()).isEqualTo("Szymon Mysiak");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
+    }
+
+    @Test
+    public void shouldReturnTransactionsWhenIsTheTransactionPageForDebitCardAccount() {
+        // given
+        when(evoBancoApiClient.globalPosition())
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "accounts_correct_response.json")
+                                        .toFile(),
+                                GlobalPositionResponse.class));
+        when(evoBancoApiClient.fetchCardTransactionsResponse(anyString()))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "last_credit_card_transactions_page.json")
+                                        .toFile(),
+                                CardTransactionsResponse.class));
+        // when
+        Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
+        TransactionalAccount debitCardAccount =
+                accounts.stream()
+                        .filter(
+                                account ->
+                                        !""
+                                                .equals(
+                                                        account.getFromTemporaryStorage(
+                                                                EvoBancoConstants.Storage
+                                                                        .PAN_TOKEN)))
+                        .findFirst()
+                        .orElse(null);
+        String panToken =
+                debitCardAccount.getFromTemporaryStorage(EvoBancoConstants.Storage.PAN_TOKEN);
+        CardTransactionsResponse cardTransactionsResponse =
+                evoBancoApiClient.fetchCardTransactionsResponse(panToken);
+        TransactionsResponse trxResponse = cardTransactionsResponse.toTransactionsResponse();
+        Collection<? extends Transaction> transactions = trxResponse.getTinkTransactions();
+
+        // then
+        assertThat(accounts).hasSize(4);
+        assertThat(debitCardAccount).isNotNull();
+        assertThat(panToken).isEqualTo("9999999999996999");
+        assertThat(transactions).hasSize(27);
     }
 }
