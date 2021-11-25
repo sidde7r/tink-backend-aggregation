@@ -1,17 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.se.alandsbanken;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.banks.crosskey.CrossKeyAgent;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class AlandsBankenAgent extends CrossKeyAgent {
 
-    public AlandsBankenAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new AlandsBankenConfig());
+    @Inject
+    public AlandsBankenAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider, new AlandsBankenConfig());
 
         apiClient.setRootUrl("https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/");
         apiClient.setErrorHandler(new AlandsBankenErrorHandler());
