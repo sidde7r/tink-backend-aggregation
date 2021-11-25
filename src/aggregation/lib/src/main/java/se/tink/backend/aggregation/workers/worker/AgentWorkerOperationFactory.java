@@ -269,9 +269,11 @@ public class AgentWorkerOperationFactory {
             ClientInfo clientInfo) {
 
         if (isBalanceCalculationEnabled(context.getAppId())) {
+            log.info("[BALANCE CALCULATOR] Enabled");
             return createOrderedRefreshableItemsCommandsWithChanges(
                     request, context, itemsToRefresh, controllerWrapper, clientInfo);
         } else {
+            log.info("[BALANCE CALCULATOR] Disabled");
             return createOrderedRefreshableItemsCommandsWithoutChanges(
                     request, context, itemsToRefresh, controllerWrapper, clientInfo);
         }
@@ -1727,9 +1729,11 @@ public class AgentWorkerOperationFactory {
             ClientInfo clientInfo) {
 
         if (isBalanceCalculationEnabled(context.getAppId())) {
+            log.info("[BALANCE CALCULATOR] Enabled");
             return createWhitelistRefreshableItemsCommandsWithChanges(
                     request, context, itemsToRefresh, controllerWrapper, clientInfo);
         } else {
+            log.info("[BALANCE CALCULATOR] Disabled");
             return createWhitelistRefreshableItemsCommandsWithoutChanges(
                     request, context, itemsToRefresh, controllerWrapper, clientInfo);
         }
@@ -2040,11 +2044,18 @@ public class AgentWorkerOperationFactory {
     }
 
     private boolean isBalanceCalculationEnabled(String currentAppId) {
-        Toggle toggle =
-                Toggle.of("uk-balance-calculators")
-                        .context(UnleashContext.builder().userId(currentAppId).build())
-                        .build();
+        boolean balanceCalculationEnabled;
+        try {
+            Toggle toggle =
+                    Toggle.of("uk-balance-calculators")
+                            .context(UnleashContext.builder().userId(currentAppId).build())
+                            .build();
+            balanceCalculationEnabled = unleashClient.isToggleEnable(toggle);
+        } catch (Exception e) {
+            log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
+            balanceCalculationEnabled = false;
+        }
 
-        return unleashClient.isToggleEnable(toggle);
+        return balanceCalculationEnabled;
     }
 }
