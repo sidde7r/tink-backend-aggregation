@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.FidorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configuration.FidorConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.FidorAccountFetcher;
@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.tra
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class FidorAgent extends NextGenerationAgent
@@ -29,11 +29,9 @@ public final class FidorAgent extends NextGenerationAgent
     private final FidorApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public FidorAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    @Inject
+    public FidorAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         apiClient = new FidorApiClient(client, persistentStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
