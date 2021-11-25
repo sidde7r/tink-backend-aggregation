@@ -15,7 +15,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.identifiers.NorwegianIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
@@ -48,7 +49,8 @@ public class DnbAccountMapper {
                                     .withUniqueIdentifier(accountEntity.getBban())
                                     .withAccountNumber(accountEntity.getBban())
                                     .withAccountName(accountEntity.getName())
-                                    .addIdentifier(new NorwegianIdentifier(accountEntity.getBban()))
+                                    .addIdentifier(new IbanIdentifier(accountEntity.getIban()))
+                                    .addIdentifier(new BbanIdentifier(accountEntity.getBban()))
                                     .build())
                     .setApiIdentifier(accountEntity.getBban())
                     .addHolderName(accountEntity.getOwnerName())

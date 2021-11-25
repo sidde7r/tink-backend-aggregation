@@ -27,7 +27,7 @@
       "userModifiedExcluded": false,
       "userModifiedName": false,
       "userModifiedType": false,
-      "identifiers": "[]",
+      "identifiers": "[\"bban://98765432109\",\"iban://NO8330001234567\"]",
       "closed": false,
       "holderName": "Owner Name",
       "accountHolder": {
@@ -72,7 +72,7 @@
       "userModifiedExcluded": false,
       "userModifiedName": false,
       "userModifiedType": false,
-      "identifiers": "[]",
+      "identifiers": "[\"bban://12345678901\",\"iban://NO9386011117947\"]",
       "closed": false,
       "holderName": "Owner Name",
       "accountHolder": {

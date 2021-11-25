@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountEntity {
 
     private String bban;
+    private String iban;
     private String name;
     private String currency;
     private String ownerName;
