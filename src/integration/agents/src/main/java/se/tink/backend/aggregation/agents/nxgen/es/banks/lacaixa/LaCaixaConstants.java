@@ -30,7 +30,8 @@ public final class LaCaixaConstants {
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "CUENTA CORRIENTE",
                             "SERVICIO FAMILIAR",
-                            "CUENTA NO RESIDENTE")
+                            "CUENTA NO RESIDENTE",
+                            "")
                     .build();
 
     public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
