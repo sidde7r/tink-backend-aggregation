@@ -347,6 +347,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 }
             }
 
+            agent.afterRefreshPostProcess(context.getAccountDataCache());
+
             if (!RefreshableItem.hasAccounts(sortedItems)) {
                 Assert.assertTrue(context.getUpdatedAccounts().isEmpty());
             }

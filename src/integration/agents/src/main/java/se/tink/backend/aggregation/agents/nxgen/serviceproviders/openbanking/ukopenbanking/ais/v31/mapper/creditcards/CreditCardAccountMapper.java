@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.GranularBalancesMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
@@ -51,7 +52,9 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
                         .withCardDetails(
                                 CreditCardModule.builder()
                                         .withCardNumber(cardIdentifier.getIdentification())
-                                        .withBalance(balanceMapper.getAccountBalance(balances))
+                                        .withBalanceAndGranularBalances(
+                                                balanceMapper.getAccountBalance(balances),
+                                                GranularBalancesMapper.toGranularBalances(balances))
                                         .withAvailableCredit(
                                                 balanceMapper.getAvailableCredit(balances))
                                         .withCardAlias(displayName)

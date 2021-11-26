@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance;
 
 import com.google.common.base.Preconditions;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.apache.commons.lang3.tuple.Pair;
+import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceStep;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -12,8 +17,10 @@ public final class BalanceModule {
     private final ExactCurrencyAmount exactBalance;
     private final Double interestRate;
     private final ExactCurrencyAmount exactAvailableCredit;
-    private ExactCurrencyAmount exactAvailableBalance;
-    private ExactCurrencyAmount exactCreditLimit;
+    private final ExactCurrencyAmount exactAvailableBalance;
+    private final ExactCurrencyAmount exactCreditLimit;
+    private final Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>>
+            granularAccountBalances;
 
     private BalanceModule(Builder builder) {
         this.interestRate = builder.interestRate;
@@ -21,6 +28,7 @@ public final class BalanceModule {
         this.exactBalance = builder.exactBalance;
         this.exactAvailableBalance = builder.exactAvailableBalance;
         this.exactCreditLimit = builder.exactCreditLimit;
+        this.granularAccountBalances = builder.granularAccountBalances;
     }
 
     public static BalanceStep<BalanceBuilderStep> builder() {
@@ -51,6 +59,11 @@ public final class BalanceModule {
         return exactCreditLimit;
     }
 
+    public Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>>
+            getGranularAccountBalances() {
+        return granularAccountBalances;
+    }
+
     private static class Builder implements BalanceStep<BalanceBuilderStep>, BalanceBuilderStep {
 
         private Double interestRate;
@@ -58,6 +71,8 @@ public final class BalanceModule {
         private ExactCurrencyAmount exactBalance;
         private ExactCurrencyAmount exactAvailableBalance;
         private ExactCurrencyAmount exactCreditLimit;
+        private Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>>
+                granularAccountBalances = new HashMap<>();
 
         @Override
         public BalanceBuilderStep setInterestRate(double interestRate) {
@@ -77,6 +92,31 @@ public final class BalanceModule {
         public BalanceBuilderStep withBalance(@Nonnull ExactCurrencyAmount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
             this.exactBalance = balance;
+            return this;
+        }
+
+        @Override
+        public BalanceBuilderStep withGranularBalances(
+                @Nonnull
+                        Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>>
+                                granularAccountBalances) {
+            Preconditions.checkNotNull(
+                    granularAccountBalances, "Granular account balance map must not be null.");
+            this.granularAccountBalances = granularAccountBalances;
+            return this;
+        }
+
+        @Override
+        public BalanceBuilderStep withBalanceAndGranularBalances(
+                @Nonnull ExactCurrencyAmount balance,
+                @Nonnull
+                        Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>>
+                                granularAccountBalances) {
+            Preconditions.checkNotNull(balance, "Balance must not be null.");
+            Preconditions.checkNotNull(
+                    granularAccountBalances, "Granular account balance map must not be null.");
+            this.exactBalance = balance;
+            this.granularAccountBalances = granularAccountBalances;
             return this;
         }
 
