@@ -6,6 +6,9 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticatorController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.error.ConflictOnGetFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.error.ConflictOnGetRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.error.DeutscheKnownErrorsFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -61,6 +64,8 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         client.addFilter(new BankServiceDownExceptionFilter());
         client.addFilter(new NoHttpResponseErrorFilter());
         client.addFilter(new TerminatedHandshakeRetryFilter());
+        client.addFilter(new ConflictOnGetFilter());
+        client.addFilter(new ConflictOnGetRetryFilter(1, 3000));
     }
 
     protected abstract DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues);

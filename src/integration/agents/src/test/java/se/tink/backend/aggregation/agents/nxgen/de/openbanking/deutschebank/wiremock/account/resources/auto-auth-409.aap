@@ -1,0 +1,36 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://xs2a.db.com/ais/DE/DB/v1/consents/1234/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+409
+Date: Sat, 20 Nov 2021 09:13:20 GMT
+Date: Sat, 20 Nov 2021 09:13:44 GMT
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+Content-Length: 2
+
+{}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://xs2a.db.com/ais/DE/DB/v1/consents/1234/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+409
+Date: Sat, 20 Nov 2021 09:13:20 GMT
+Date: Sat, 20 Nov 2021 09:13:44 GMT
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+Content-Length: 2
+
+{}
