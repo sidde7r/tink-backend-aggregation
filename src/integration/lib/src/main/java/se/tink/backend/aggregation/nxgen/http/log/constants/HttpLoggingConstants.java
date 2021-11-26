@@ -24,6 +24,8 @@ public final class HttpLoggingConstants {
                     "content-security-policy",
                     "content-type",
                     "correlation-id",
+                    "cpaas-total-elements", // custom pagination in CBI Italy
+                    "cpaas-total-pages", // custom pagination in CBI Italy
                     "date",
                     "encoded-error-message",
                     "error-code",
