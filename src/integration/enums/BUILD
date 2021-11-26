@@ -18,7 +18,6 @@ java_library(
 
 codeowners(
     name = "integration_enums_owners",
-    pattern = "src/integration/enums/src/main/java/se/tink/libraries/enums",
     teams = [
         "@tink-ab/aggregation-agent-platform-maintainer",
     ],

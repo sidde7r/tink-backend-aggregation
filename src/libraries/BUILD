@@ -1,9 +1,9 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 codeowners(
-    name = "owners",
+    name = "libraries_default_owners",
     teams = [
-        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-agent-platform-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

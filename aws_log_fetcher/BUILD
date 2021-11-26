@@ -3,7 +3,7 @@ load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 codeowners(
     name = "owners",
     teams = [
-        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/engineering-productivity-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

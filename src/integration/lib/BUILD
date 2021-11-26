@@ -207,3 +207,13 @@ junit_test(
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
+
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)

@@ -34,3 +34,13 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
     ],
 )
+
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)

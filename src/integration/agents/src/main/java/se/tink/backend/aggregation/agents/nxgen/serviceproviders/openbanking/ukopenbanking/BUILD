@@ -44,11 +44,6 @@ java_library(
 
 codeowners(
     name = "owners",
-    patterns = [
-        "UkOpenBankingBaseAgent.java",
-        "ais/",
-        "common/",
-    ],
     teams = [
         "@tink-ab/aggregation-fluffy-maintainer",
     ],

@@ -14,3 +14,13 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )
+
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
