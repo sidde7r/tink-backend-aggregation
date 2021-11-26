@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import com.google.common.collect.Sets;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.http.DefaultResponseStatusHandler;
@@ -11,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 public class CmicResponseStatusHandler extends DefaultResponseStatusHandler {
 
     private static final Set<String> ACCESS_IS_REJECTED_ERRORS =
-            Sets.newHashSet("All access is rejected.", "No access is allowed");
+            Sets.newHashSet("All access is rejected", "No access is allowed");
 
     private static final String NO_ACCOUNTS = "The specified user has no payment accounts";
 
@@ -38,21 +39,25 @@ public class CmicResponseStatusHandler extends DefaultResponseStatusHandler {
     private boolean isAccessTokenBlocked(HttpResponse httpResponse) {
         String body = httpResponse.getBody(String.class);
         return (httpResponse.getStatus() == 403
-                && (ACCESS_IS_REJECTED_ERRORS.stream().anyMatch(body::contains)));
+                && (ACCESS_IS_REJECTED_ERRORS.stream()
+                        .anyMatch(m -> StringUtils.containsIgnoreCase(body, m))));
     }
 
     private boolean isServiceUnavailable(HttpResponse httpResponse) {
         String body = httpResponse.getBody(String.class);
-        return (httpResponse.getStatus() == 503 && (body.contains(SERVICE_UNAVAILABLE)));
+        return (httpResponse.getStatus() == 503
+                && (StringUtils.containsIgnoreCase(body, SERVICE_UNAVAILABLE)));
     }
 
     private boolean isNoAccountsError(HttpResponse httpResponse) {
         String body = httpResponse.getBody(String.class);
-        return (httpResponse.getStatus() == 403 && (body.contains(NO_ACCOUNTS)));
+        return (httpResponse.getStatus() == 403
+                && (StringUtils.containsIgnoreCase(body, NO_ACCOUNTS)));
     }
 
     private boolean isInternalServerError(HttpResponse httpResponse) {
         String body = httpResponse.getBody(String.class);
-        return (httpResponse.getStatus() == 500 && (body.contains(INTERNAL_ERROR)));
+        return (httpResponse.getStatus() == 500
+                && (StringUtils.containsIgnoreCase(body, INTERNAL_ERROR)));
     }
 }
