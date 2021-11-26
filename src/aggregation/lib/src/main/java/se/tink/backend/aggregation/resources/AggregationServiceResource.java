@@ -175,16 +175,29 @@ public class AggregationServiceResource implements AggregationService {
         final List<String> priorityIncluded =
                 Arrays.asList(CONFIGURE_WHITELIST, REFRESH, REFRESH_WHITELIST);
         for (String endpoint : allEndpoints) {
-            SERVICE_IMPLEMENTATION_LATENCY.label(ENDPOINT, endpoint);
-            USER_AVAILABILITY.label(METHOD, endpoint).label(IS_PRESENT, false);
-            USER_AVAILABILITY.label(METHOD, endpoint).label(IS_PRESENT, true);
+            metricRegistry.histogram(SERVICE_IMPLEMENTATION_LATENCY.label(ENDPOINT, endpoint));
+            metricRegistry.meter(
+                    USER_AVAILABILITY.label(METHOD, endpoint).label(IS_PRESENT, false));
+            metricRegistry.meter(USER_AVAILABILITY.label(METHOD, endpoint).label(IS_PRESENT, true));
             if (payments.contains(endpoint)) {
-                REFRESH_INCLUDED_IN_PAYMENT.label(METHOD, endpoint).label(REFRESH_INCLUDED, false);
-                REFRESH_INCLUDED_IN_PAYMENT.label(METHOD, endpoint).label(REFRESH_INCLUDED, true);
+                metricRegistry.meter(
+                        REFRESH_INCLUDED_IN_PAYMENT
+                                .label(METHOD, endpoint)
+                                .label(REFRESH_INCLUDED, false));
+                metricRegistry.meter(
+                        REFRESH_INCLUDED_IN_PAYMENT
+                                .label(METHOD, endpoint)
+                                .label(REFRESH_INCLUDED, true));
             }
             if (priorityIncluded.contains(endpoint)) {
-                REFRESH_PRIORITY.label(METHOD, endpoint).label(REFRESH_PRIORITY_PRESENT, false);
-                REFRESH_PRIORITY.label(METHOD, endpoint).label(REFRESH_PRIORITY_PRESENT, true);
+                metricRegistry.meter(
+                        REFRESH_PRIORITY
+                                .label(METHOD, endpoint)
+                                .label(REFRESH_PRIORITY_PRESENT, false));
+                metricRegistry.meter(
+                        REFRESH_PRIORITY
+                                .label(METHOD, endpoint)
+                                .label(REFRESH_PRIORITY_PRESENT, true));
             }
         }
     }
