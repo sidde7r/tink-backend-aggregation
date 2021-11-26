@@ -38,7 +38,6 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/ratelimit",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/refresh",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/serialization",
-        "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/rpc",

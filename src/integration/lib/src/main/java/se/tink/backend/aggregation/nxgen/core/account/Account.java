@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,10 +22,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import lombok.Getter;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.AccountPartyAddress;
@@ -64,7 +61,6 @@ public abstract class Account {
     protected String accountNumber;
     protected Set<AccountIdentifier> identifiers;
     protected String uniqueIdentifier;
-    protected Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularAccountBalances;
     // Unique identifier on the bank side, not to be confused with rpc Account.getBankId
     protected String apiIdentifier;
     protected TemporaryStorage temporaryStorage;
@@ -87,7 +83,6 @@ public abstract class Account {
                 balanceModule.getExactAvailableCredit().orElse(null));
         this.exactAvailableBalance = balanceModule.getExactAvailableBalance();
         this.exactCreditLimit = balanceModule.getExactCreditLimit();
-        this.granularAccountBalances = balanceModule.getGranularAccountBalances();
     }
     // Exists for interoperability only, do not ever use
     protected Account(
@@ -231,7 +226,7 @@ public abstract class Account {
         account.setCreditLimit(this.exactCreditLimit);
         account.setCapabilities(this.capabilities);
         account.setSourceInfo(this.sourceInfo);
-        account.setGranularAccountBalances(this.granularAccountBalances);
+
         AccountHolder accountHolder = new AccountHolder();
         accountHolder.setType(
                 Optional.ofNullable(holderType).orElse(inferHolderType(provider)).toSystemType());

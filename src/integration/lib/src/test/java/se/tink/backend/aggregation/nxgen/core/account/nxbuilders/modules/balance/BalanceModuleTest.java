@@ -5,12 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BalanceModuleTest {
@@ -117,62 +112,5 @@ public class BalanceModuleTest {
         assertThat(balance.getExactAvailableBalance().getCurrencyCode()).isEqualTo("DKK");
         assertThat(balance.getExactCreditLimit().getDoubleValue()).isEqualTo(10_000d);
         assertThat(balance.getExactCreditLimit().getCurrencyCode()).isEqualTo("DKK");
-    }
-
-    @Test
-    public void successfulBuildWithBalanceAndGranularAccountBalances() {
-        Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances =
-                new HashMap<>();
-        granularBalances.put(
-                AccountBalanceType.EXPECTED,
-                Pair.of(
-                        ExactCurrencyAmount.of(BigDecimal.valueOf(25506.32), "DKK"),
-                        Instant.ofEpochMilli(1)));
-
-        BalanceModule balance =
-                BalanceModule.builder()
-                        .withBalanceAndGranularBalances(
-                                ExactCurrencyAmount.of(20000.00, "DKK"), granularBalances)
-                        .build();
-
-        assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(20000.00);
-        assertThat(balance.getExactBalance().getCurrencyCode()).isEqualTo("DKK");
-        assertThat(
-                        balance.getGranularAccountBalances()
-                                .get(AccountBalanceType.EXPECTED)
-                                .getLeft()
-                                .getDoubleValue())
-                .isEqualTo(25506.32);
-        assertThat(balance.getGranularAccountBalances().get(AccountBalanceType.EXPECTED).getRight())
-                .isEqualTo(Instant.ofEpochMilli(1));
-    }
-
-    @Test
-    public void successfulBuildWithGranularAccountBalances() {
-        Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances =
-                new HashMap<>();
-        granularBalances.put(
-                AccountBalanceType.EXPECTED,
-                Pair.of(
-                        ExactCurrencyAmount.of(BigDecimal.valueOf(25506.32), "DKK"),
-                        Instant.ofEpochMilli(1)));
-
-        BalanceModule balance =
-                BalanceModule.builder().withGranularBalances(granularBalances).build();
-
-        assertThat(
-                        balance.getGranularAccountBalances()
-                                .get(AccountBalanceType.EXPECTED)
-                                .getLeft()
-                                .getDoubleValue())
-                .isEqualTo(25506.32);
-        assertThat(
-                        balance.getGranularAccountBalances()
-                                .get(AccountBalanceType.EXPECTED)
-                                .getLeft()
-                                .getCurrencyCode())
-                .isEqualTo("DKK");
-        assertThat(balance.getGranularAccountBalances().get(AccountBalanceType.EXPECTED).getRight())
-                .isEqualTo(Instant.ofEpochMilli(1));
     }
 }
