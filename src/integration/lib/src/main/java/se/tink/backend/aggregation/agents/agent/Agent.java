@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.agent;
 
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.libraries.account_data_cache.AccountDataCache;
 
 public interface Agent {
 
@@ -24,9 +23,5 @@ public interface Agent {
 
     default void accept(AgentVisitor visitor) {
         visitor.visit(this);
-    }
-
-    default void afterRefreshPostProcess(AccountDataCache cache) {
-        // NOOP
     }
 }

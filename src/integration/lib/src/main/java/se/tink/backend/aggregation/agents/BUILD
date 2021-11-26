@@ -86,7 +86,6 @@ java_library(
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/provider",
         "@tink_backend//src/libraries/strings",
-        "@tink_backend//src/libraries/unleash",
         "@tink_backend//src/libraries/uuid",
     ],
 )

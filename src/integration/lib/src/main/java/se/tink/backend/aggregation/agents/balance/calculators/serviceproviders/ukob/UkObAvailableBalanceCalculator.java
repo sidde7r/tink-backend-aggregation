@@ -18,14 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.agents.balance.Calculation;
-import se.tink.backend.aggregation.agents.balance.calculators.AvailableBalanceCalculator;
 import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculator;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
 @RequiredArgsConstructor
-public class UkObAvailableBalanceCalculator implements AvailableBalanceCalculator {
+public class UkObAvailableBalanceCalculator {
 
     private final BalanceCalculator calculator;
 
@@ -52,7 +51,7 @@ public class UkObAvailableBalanceCalculator implements AvailableBalanceCalculato
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
         log.info(
-                "[BALANCE CALCULATOR] Trying to calculate Available Balance if needed and possible");
+                "[UK OB AVAILABLE BALANCE CALCULATOR] Trying to calculate Available Balance if needed and possible");
         return calculator.findFirstPossibleCalculationAndEvaluateIt(
                 granularBalances, transactions, prioritizedCalculations);
     }

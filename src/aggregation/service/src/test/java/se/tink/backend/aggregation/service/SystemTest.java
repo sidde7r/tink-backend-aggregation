@@ -254,7 +254,7 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForRefreshEndpoint);
 
-        List<Map<String, Object>> givenAccounts =
+        List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
@@ -272,18 +272,7 @@ public class SystemTest {
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateIdentity", 50, 1));
 
-        // We assume that we have only one account in expected entities
-        String accountId = givenAccounts.get(0).get("id").toString();
-        List<String> distinctAccountIdsInTransactions =
-                givenTransactions.stream()
-                        .map(trx -> trx.get("accountId").toString())
-                        .distinct()
-                        .collect(Collectors.toList());
-
         // then
-        Assert.assertEquals(1, givenAccounts.size());
-        Assert.assertEquals(1, distinctAccountIdsInTransactions.size());
-        Assert.assertEquals(accountId, distinctAccountIdsInTransactions.get(0));
         Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
@@ -369,7 +358,7 @@ public class SystemTest {
         postSupplementalInformation(
                 aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);
 
-        List<Map<String, Object>> givenAccounts =
+        List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
@@ -382,18 +371,7 @@ public class SystemTest {
                                 50,
                                 1));
 
-        // We assume that we have only one account in expected entities
-        String accountId = givenAccounts.get(0).get("id").toString();
-        List<String> distinctAccountIdsInTransactions =
-                givenTransactions.stream()
-                        .map(trx -> trx.get("accountId").toString())
-                        .distinct()
-                        .collect(Collectors.toList());
-
         // then
-        Assert.assertEquals(1, givenAccounts.size());
-        Assert.assertEquals(1, distinctAccountIdsInTransactions.size());
-        Assert.assertEquals(accountId, distinctAccountIdsInTransactions.get(0));
         Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
@@ -435,7 +413,7 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForRefreshEndpoint);
 
-        List<Map<String, Object>> givenAccounts =
+        List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
@@ -497,7 +475,7 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForRefreshEndpoint);
 
-        List<Map<String, Object>> givenAccounts =
+        List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));

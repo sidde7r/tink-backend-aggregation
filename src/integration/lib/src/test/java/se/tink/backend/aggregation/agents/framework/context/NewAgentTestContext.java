@@ -290,10 +290,6 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
         return account;
     }
 
-    public AccountDataCache getAccountDataCache() {
-        return accountDataCache;
-    }
-
     @Override
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
         Preconditions.checkNotNull(

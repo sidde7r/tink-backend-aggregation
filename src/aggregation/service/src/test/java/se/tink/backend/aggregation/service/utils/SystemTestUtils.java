@@ -228,15 +228,13 @@ public class SystemTestUtils {
         }
     }
 
-    public static List<Map<String, Object>> parseAccounts(List<JsonNode> input) {
+    public static List<?> parseAccounts(List<JsonNode> input) {
         return input.stream()
                 .map(data -> data.get("account"))
                 .map(
                         account -> {
                             try {
-                                return mapper.readValue(
-                                        account.toString(),
-                                        new TypeReference<Map<String, Object>>() {});
+                                return mapper.readValue(account.toString(), Map.class);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }

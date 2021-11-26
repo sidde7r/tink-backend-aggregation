@@ -66,6 +66,7 @@ public class BarclaysAgentWireMockTest {
                         .testFullAuthentication()
                         .addRefreshableItems(refreshableItems.toArray(new RefreshableItem[0]))
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .enableHttpDebugTrace()
                         .build();
 
         final AgentContractEntity expected =
