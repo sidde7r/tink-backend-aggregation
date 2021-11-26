@@ -75,6 +75,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     @Override
     public HandelsbankenBaseApiClient constructApiClient() {
-        return new HandelsbankenFiApiClient(client, persistentStorage, getMarket());
+        return new HandelsbankenFiApiClient(
+                client, persistentStorage, getMarket(), getUserIpInformation());
     }
 }

@@ -53,7 +53,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     protected abstract String getMarket();
 
     public HandelsbankenBaseApiClient constructApiClient() {
-        return new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
+        return new HandelsbankenBaseApiClient(
+                client, persistentStorage, getMarket(), getUserIpInformation());
     }
 
     @Override
@@ -126,6 +127,12 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
                         new TransactionDatePaginationController.Builder<>(creditCardFetcher)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
+    }
+
+    protected HandelsbankenUserIpInformation getUserIpInformation() {
+        return new HandelsbankenUserIpInformation(
+                request.getUserAvailability().isUserPresent(),
+                request.getUserAvailability().getOriginatingUserIp());
     }
 
     @Override

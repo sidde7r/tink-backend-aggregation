@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.OAuth2Type;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Psu;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.StorageKeys;
@@ -64,12 +63,17 @@ public class HandelsbankenBaseApiClient {
     private HandelsbankenBaseConfiguration configuration;
     private String redirectUrl;
     private final String market;
+    private final String userIp;
 
     public HandelsbankenBaseApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, String market) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            String market,
+            HandelsbankenUserIpInformation userIpInformation) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.market = market;
+        this.userIp = userIpInformation.getUserIp();
     }
 
     public void setConfiguration(
@@ -113,7 +117,7 @@ public class HandelsbankenBaseApiClient {
                 .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
                 .header(HeaderKeys.COUNTRY, market)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
@@ -126,7 +130,7 @@ public class HandelsbankenBaseApiClient {
                 .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
                 .header(HeaderKeys.COUNTRY, market)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
@@ -208,7 +212,7 @@ public class HandelsbankenBaseApiClient {
                                 new SessionRequest(
                                         getConfiguration().getClientId(),
                                         Scope.AIS + ":" + consentId,
-                                        Psu.IP_ADDRESS,
+                                        userIp,
                                         personalId,
                                         BodyValues.PERSONAL_ID_TP))
                         .header(HeaderKeys.CONSENT_ID, consentId)
@@ -225,7 +229,7 @@ public class HandelsbankenBaseApiClient {
                                 new SessionRequest(
                                         getConfiguration().getClientId(),
                                         Scope.PIS + ":" + paymentId,
-                                        Psu.IP_ADDRESS,
+                                        userIp,
                                         personalId,
                                         BodyValues.PERSONAL_ID_TP))
                         .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -273,7 +277,7 @@ public class HandelsbankenBaseApiClient {
                             .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
                             .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                             .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
-                            .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
+                            .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
                             .header(HeaderKeys.COUNTRY, market)
                             .accept(MediaType.APPLICATION_JSON_TYPE)
                             .type(MediaType.APPLICATION_JSON);
@@ -358,7 +362,7 @@ public class HandelsbankenBaseApiClient {
                         .header(
                                 HeaderKeys.AUTHORIZATION,
                                 HandelsbankenBaseConstants.HeaderKeys.BEARER + code)
-                        .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
+                        .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
                         .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                         .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
                         .accept(MediaType.APPLICATION_JSON_TYPE)
