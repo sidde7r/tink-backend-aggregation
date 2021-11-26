@@ -5,7 +5,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryClassification;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
@@ -20,9 +19,6 @@ import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCre
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public interface AggregationControllerAggregationClient {
-
-    Response generateStatisticsAndActivityAsynchronously(
-            HostConfiguration hostConfiguration, GenerateStatisticsAndActivitiesRequest request);
 
     Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request);

@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -58,7 +57,6 @@ import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.enums.StatisticMode;
 import se.tink.libraries.giro.validation.LuhnCheck;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -191,11 +189,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return;
         }
 
-        if (credentials.getType() == CredentialsTypes.FRAUD) {
-            updateStatisticsAndActivities(credentials);
-            return;
-        }
-
         List<Transaction> transactionsToProcess = accountDataCache.getTransactionsToBeProcessed();
         if (transactionsToProcess.isEmpty()) {
             logAboutTransactionsEmpty(credentials);
@@ -225,20 +218,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return true;
         }
         return false;
-    }
-
-    private void updateStatisticsAndActivities(Credentials credentials) {
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                        .GenerateStatisticsAndActivitiesRequest
-                generateStatisticsReq =
-                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                                .GenerateStatisticsAndActivitiesRequest();
-        generateStatisticsReq.setUserId(request.getUser().getId());
-        generateStatisticsReq.setCredentialsId(credentials.getId());
-        generateStatisticsReq.setUserTriggered(request.isCreate());
-        generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
-
-        controllerWrapper.generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
     }
 
     private List<Transaction> prepareTransactionsForUpdateRequest(

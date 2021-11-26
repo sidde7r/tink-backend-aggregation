@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.api.RegulatoryClassi
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.UpdateService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryClassification;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
@@ -123,16 +122,6 @@ public class AggregationControllerAggregationClientImpl
             HostConfiguration hostConfiguration) {
         return buildInterClusterServiceFromInterface(
                 hostConfiguration, RegulatoryClassificationService.class);
-    }
-
-    @Override
-    public Response generateStatisticsAndActivityAsynchronously(
-            HostConfiguration hostConfiguration, GenerateStatisticsAndActivitiesRequest request) {
-        return requestExecuter(
-                () ->
-                        getProcessService(hostConfiguration)
-                                .generateStatisticsAndActivityAsynchronously(request),
-                "Generate Statistics and Activity Asynchronously");
     }
 
     @Override

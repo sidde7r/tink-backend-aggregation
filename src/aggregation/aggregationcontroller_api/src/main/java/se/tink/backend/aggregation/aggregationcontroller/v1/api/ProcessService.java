@@ -8,20 +8,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 
 @Path("/aggregation/controller/v1/system/process")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface ProcessService {
-    @POST
-    @Path("/statisticsandactivities/generate")
-    @TeamOwnership(Team.AGGREGATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response generateStatisticsAndActivityAsynchronously(
-            GenerateStatisticsAndActivitiesRequest request);
 
     @POST
     @Path("/transactions/update")
