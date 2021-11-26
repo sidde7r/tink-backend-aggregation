@@ -80,12 +80,35 @@ public class AggregationServiceResource implements AggregationService {
             MetricId.newId("aggregation_refresh_included_in_payment");
     private static final MetricId REFRESH_PRIORITY = MetricId.newId("aggregation_refresh_priority");
 
-    private static final String CONFIGURE_WHITELIST = "configure_whitelist";
-    private static final String REFRESH_WHITELIST = "refresh_whitelist";
-    private static final String REFRESH = "refresh";
     private static final String APP_ID = "app_id";
     private static final String OPERATION_ID = "operation_id";
     private static final String CREDENTIALS_ID = "credentials_id";
+
+    private static final String CREATE = "create";
+    private static final String UPDATE = "update";
+    private static final String PING = "ping";
+    private static final String STARTED = "started";
+    private static final String CONFIGURE_WHITELIST = "configure_whitelist";
+    private static final String REFRESH_WHITELIST = "refresh_whitelist";
+    private static final String REFRESH = "refresh";
+    private static final String AUTHENTICATE = "authenticate";
+    private static final String RECURRING_PAYMENT = "recurring_payment";
+    private static final String WHITELISTED_TRANSFER = "whitelisted_transfer";
+    private static final String UPDATE_RATELIMITS = "update_ratelimits";
+    private static final String SET_SUPPLEMENTAL = "set_supplemental";
+    private static final String REENCRYPT = "reencrypt";
+    private static final String GET_SECRETS_TEMPLATE = "get_secrets_template";
+    private static final String GET_SECRETS_SCHEMA = "get_secrets_schema";
+    private static final String VALIDATE_SECRETS = "validate_secrets";
+    private static final String CREATE_BENEFICIARY = "create_beneficiary";
+    private static final String TRANSFER = "transfer";
+    private static final String PAYMENT = "payment";
+
+    private static final String ENDPOINT = "endpoint";
+    private static final String METHOD = "method";
+    private static final String IS_PRESENT = "is_present";
+    private static final String REFRESH_INCLUDED = "refresh_included";
+    private static final String REFRESH_PRIORITY_PRESENT = "refresh_priority_present";
 
     private final MetricRegistry metricRegistry;
     @Context private HttpServletRequest httpRequest;
@@ -122,6 +145,48 @@ public class AggregationServiceResource implements AggregationService {
         this.metricRegistry = metricRegistry;
         this.requestAbortHandler = requestAbortHandler;
         this.refreshRequestDispatcher = refreshRequestDispatcher;
+        initMetrics();
+    }
+
+    private void initMetrics() {
+        final String[] allEndpoints = {
+            CREATE,
+            UPDATE,
+            PING,
+            STARTED,
+            CONFIGURE_WHITELIST,
+            AUTHENTICATE,
+            REFRESH,
+            REFRESH_WHITELIST,
+            UPDATE_RATELIMITS,
+            SET_SUPPLEMENTAL,
+            REENCRYPT,
+            GET_SECRETS_TEMPLATE,
+            GET_SECRETS_SCHEMA,
+            VALIDATE_SECRETS,
+            CREATE_BENEFICIARY,
+            TRANSFER,
+            PAYMENT,
+            RECURRING_PAYMENT,
+            WHITELISTED_TRANSFER,
+        };
+        final List<String> payments =
+                Arrays.asList(TRANSFER, RECURRING_PAYMENT, WHITELISTED_TRANSFER, PAYMENT);
+        final List<String> priorityIncluded =
+                Arrays.asList(CONFIGURE_WHITELIST, REFRESH, REFRESH_WHITELIST);
+        for (String endpoint : allEndpoints) {
+            SERVICE_IMPLEMENTATION_LATENCY.label(ENDPOINT, endpoint);
+            USER_AVAILABILITY.label(METHOD, endpoint).label(IS_PRESENT, false);
+            USER_AVAILABILITY.label(METHOD, endpoint).label(IS_PRESENT, true);
+            if (payments.contains(endpoint)) {
+                REFRESH_INCLUDED_IN_PAYMENT.label(METHOD, endpoint).label(REFRESH_INCLUDED, false);
+                REFRESH_INCLUDED_IN_PAYMENT.label(METHOD, endpoint).label(REFRESH_INCLUDED, true);
+            }
+            if (priorityIncluded.contains(endpoint)) {
+                REFRESH_PRIORITY.label(METHOD, endpoint).label(REFRESH_PRIORITY_PRESENT, false);
+                REFRESH_PRIORITY.label(METHOD, endpoint).label(REFRESH_PRIORITY_PRESENT, true);
+            }
+        }
     }
 
     private void attachTracingInformation(CredentialsRequest request, ClientInfo clientInfo) {
@@ -136,14 +201,14 @@ public class AggregationServiceResource implements AggregationService {
         metricRegistry
                 .meter(
                         USER_AVAILABILITY
-                                .label("method", method)
-                                .label("is_present", request.getUserAvailability() != null))
+                                .label(METHOD, method)
+                                .label(IS_PRESENT, request.getUserAvailability() != null))
                 .inc();
     }
 
     private void trackLatency(String endpoint, long durationMs) {
         metricRegistry
-                .histogram(SERVICE_IMPLEMENTATION_LATENCY.label("endpoint", endpoint), BUCKETS)
+                .histogram(SERVICE_IMPLEMENTATION_LATENCY.label(ENDPOINT, endpoint), BUCKETS)
                 .update(durationMs / 1000.0);
     }
 
@@ -160,7 +225,7 @@ public class AggregationServiceResource implements AggregationService {
 
             return createCredentialsOperation.getRequest().getCredentials();
         } finally {
-            trackLatency("create", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(CREATE, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -174,7 +239,7 @@ public class AggregationServiceResource implements AggregationService {
 
             return "pong";
         } finally {
-            trackLatency("ping", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(PING, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -184,7 +249,7 @@ public class AggregationServiceResource implements AggregationService {
         try {
             return startupChecksHandler.handle();
         } finally {
-            trackLatency("started", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(STARTED, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -284,12 +349,12 @@ public class AggregationServiceResource implements AggregationService {
         try {
             attachTracingInformation(request, clientInfo);
 
-            trackUserPresentFlagPresence("authenticate", request);
+            trackUserPresentFlagPresence(AUTHENTICATE, request);
             trackRefreshScopePresence("manual_authenticate", request);
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
         } finally {
-            trackLatency("authenticate", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(AUTHENTICATE, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -297,9 +362,9 @@ public class AggregationServiceResource implements AggregationService {
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
         try {
-            trackUserPresentFlagPresence("transfer", request);
-            trackRefreshScopePresence("transfer", request);
-            trackRefreshIncludedInPayment("transfer", !request.isSkipRefresh());
+            trackUserPresentFlagPresence(TRANSFER, request);
+            trackRefreshScopePresence(TRANSFER, request);
+            trackRefreshIncludedInPayment(TRANSFER, !request.isSkipRefresh());
             logger.info(
                     "Transfer Request received from main. skipRefresh is: {}",
                     request.isSkipRefresh());
@@ -307,7 +372,7 @@ public class AggregationServiceResource implements AggregationService {
                     agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
 
         } finally {
-            trackLatency("transfer", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(TRANSFER, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -315,9 +380,9 @@ public class AggregationServiceResource implements AggregationService {
     public void payment(final TransferRequest request, ClientInfo clientInfo) {
         Stopwatch sw = Stopwatch.createStarted();
         try {
-            trackUserPresentFlagPresence("payment", request);
-            trackRefreshScopePresence("payment", request);
-            trackRefreshIncludedInPayment("payment", !request.isSkipRefresh());
+            trackUserPresentFlagPresence(PAYMENT, request);
+            trackRefreshScopePresence(PAYMENT, request);
+            trackRefreshIncludedInPayment(PAYMENT, !request.isSkipRefresh());
             logger.info(
                     "Transfer Request received from main. skipRefresh is: {}",
                     request.isSkipRefresh());
@@ -329,7 +394,7 @@ public class AggregationServiceResource implements AggregationService {
                 logger.error("Error while calling createOperationExecutePayment", e);
             }
         } finally {
-            trackLatency("payment", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(PAYMENT, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -337,9 +402,9 @@ public class AggregationServiceResource implements AggregationService {
     public void recurringPayment(RecurringPaymentRequest request, ClientInfo clientInfo) {
         Stopwatch sw = Stopwatch.createStarted();
         try {
-            trackUserPresentFlagPresence("recurring_payment", request);
-            trackRefreshScopePresence("recurring_payment", request);
-            trackRefreshIncludedInPayment("recurring_payment", !request.isSkipRefresh());
+            trackUserPresentFlagPresence(RECURRING_PAYMENT, request);
+            trackRefreshScopePresence(RECURRING_PAYMENT, request);
+            trackRefreshIncludedInPayment(RECURRING_PAYMENT, !request.isSkipRefresh());
             logger.info("Recurring Payment Request received from main" + request);
             try {
                 agentWorker.execute(
@@ -349,7 +414,7 @@ public class AggregationServiceResource implements AggregationService {
                 logger.error("Error while calling createOperationRecurringPayment", e);
             }
         } finally {
-            trackLatency("recurring_payment", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(RECURRING_PAYMENT, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -358,14 +423,14 @@ public class AggregationServiceResource implements AggregationService {
             throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
         try {
-            trackUserPresentFlagPresence("whitelisted_transfer", request);
-            trackRefreshScopePresence("whitelisted_transfer", request);
-            trackRefreshIncludedInPayment("whitelisted_transfer", !request.isSkipRefresh());
+            trackUserPresentFlagPresence(WHITELISTED_TRANSFER, request);
+            trackRefreshScopePresence(WHITELISTED_TRANSFER, request);
+            trackRefreshIncludedInPayment(WHITELISTED_TRANSFER, !request.isSkipRefresh());
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(
                             request, clientInfo));
         } finally {
-            trackLatency("whitelisted_transfer", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(WHITELISTED_TRANSFER, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -382,7 +447,7 @@ public class AggregationServiceResource implements AggregationService {
 
             return updateCredentialsOperation.getRequest().getCredentials();
         } finally {
-            trackLatency("update", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(UPDATE, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -401,7 +466,7 @@ public class AggregationServiceResource implements AggregationService {
                     .getRateLimitedExecutorService()
                     .setRateLimiterFactory(constructProviderRateLimiterFactoryFromRequest(request));
         } finally {
-            trackLatency("update_ratelimits", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(UPDATE_RATELIMITS, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -412,7 +477,7 @@ public class AggregationServiceResource implements AggregationService {
             supplementalInformationController.setSupplementalInformation(
                     request.getCredentialsId(), request.getSupplementalInformation());
         } finally {
-            trackLatency("set_supplemental", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(SET_SUPPLEMENTAL, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -432,7 +497,7 @@ public class AggregationServiceResource implements AggregationService {
             return HttpResponseHelper.ok();
 
         } finally {
-            trackLatency("reencrypt", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(REENCRYPT, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -450,7 +515,7 @@ public class AggregationServiceResource implements AggregationService {
                             includeExamples)
                     .buildTemplate();
         } finally {
-            trackLatency("get_secrets_template", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(GET_SECRETS_TEMPLATE, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -463,7 +528,7 @@ public class AggregationServiceResource implements AggregationService {
                             this.getProviderFromName(providerName, clientInfo))
                     .buildJsonSchema();
         } finally {
-            trackLatency("get_secrets_schema", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(GET_SECRETS_SCHEMA, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -529,7 +594,7 @@ public class AggregationServiceResource implements AggregationService {
                             request.getAgentConfigParamNames(),
                             request.getExcludedAgentConfigParamNames());
         } finally {
-            trackLatency("validate_secrets", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(VALIDATE_SECRETS, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -538,7 +603,7 @@ public class AggregationServiceResource implements AggregationService {
             CreateBeneficiaryCredentialsRequest request, ClientInfo clientInfo) throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
         try {
-            trackUserPresentFlagPresence("create_beneficiary", request);
+            trackUserPresentFlagPresence(CREATE_BENEFICIARY, request);
             logger.info("Received create beneficiary request");
             // Only execute if feature is enabled with feature flag.
             Optional<AgentWorkerOperation> workerCommand =
@@ -549,7 +614,7 @@ public class AggregationServiceResource implements AggregationService {
                 logger.warn("Feature is not enabled/implemented.");
             }
         } finally {
-            trackLatency("create_beneficiary", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            trackLatency(CREATE_BENEFICIARY, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
@@ -606,7 +671,7 @@ public class AggregationServiceResource implements AggregationService {
     private MetricId getRefreshScopeLabels(String method, RefreshScope refreshScope) {
         MetricId metricId =
                 REFRESH_SCOPE_PRESENCE
-                        .label("method", method)
+                        .label(METHOD, method)
                         .label("refresh_scope_present", refreshScope != null);
         if (refreshScope == null) {
             return metricId;
@@ -628,8 +693,8 @@ public class AggregationServiceResource implements AggregationService {
         metricRegistry
                 .meter(
                         REFRESH_PRIORITY
-                                .label("method", method)
-                                .label("refresh_priority_present", refreshPriority != null))
+                                .label(METHOD, method)
+                                .label(REFRESH_PRIORITY_PRESENT, refreshPriority != null))
                 .inc();
     }
 
@@ -637,8 +702,8 @@ public class AggregationServiceResource implements AggregationService {
         metricRegistry
                 .meter(
                         REFRESH_INCLUDED_IN_PAYMENT
-                                .label("method", method)
-                                .label("refresh_included", refreshIncluded))
+                                .label(METHOD, method)
+                                .label(REFRESH_INCLUDED, refreshIncluded))
                 .inc();
     }
 
