@@ -46,13 +46,16 @@ public abstract class AbstractRetryFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
+        RuntimeException caughtException = null;
+
         for (int retryCount = 0; retryCount <= maxNumRetries; retryCount++) {
 
             try {
                 HttpResponse httpResponse = nextFilter(httpRequest);
                 if (shouldRetry(httpResponse) && !isLastAttempt(retryCount)) {
                     log.warn(
-                            "Filter received retryable response, retrying [{}/{}]",
+                            "[{}] Filter received retryable response, retrying [{}/{}]",
+                            getClassName(),
                             retryCount + 1,
                             maxNumRetries);
 
@@ -61,18 +64,27 @@ public abstract class AbstractRetryFilter extends Filter {
 
                     continue;
                 }
+
+                logFinalRetryResult(httpResponse, retryCount, caughtException);
                 return httpResponse;
             } catch (RuntimeException e) {
-
                 if (shouldRetry(e) && !isLastAttempt(retryCount)) {
                     log.warn(
-                            "Filter caught retryable exception, retrying [{}/{}]",
+                            "[{}] Filter caught retryable exception, retrying [{}/{}]",
+                            getClassName(),
                             retryCount + 1,
                             maxNumRetries,
                             e);
+                    caughtException = e;
                     continue;
                 }
-
+                if (shouldRetry(e)) {
+                    log.warn(
+                            "[{}] Failed to retry on exception after [{}] retries",
+                            getClassName(),
+                            retryCount,
+                            e);
+                }
                 throw e;
             }
         }
@@ -115,5 +127,30 @@ public abstract class AbstractRetryFilter extends Filter {
      */
     protected long getRetrySleepMilliseconds(int retry) {
         return retrySleepMilliseconds;
+    }
+
+    private void logFinalRetryResult(
+            HttpResponse httpResponse, int retryCount, RuntimeException caughtException) {
+        if (shouldRetry(httpResponse)) {
+            log.warn(
+                    "[{}] Failed to get a successful response after [{}] retries.",
+                    getClassName(),
+                    retryCount);
+        } else if (caughtException != null) {
+            log.info(
+                    "[{}] Successfully retried on exception after [{}] retries",
+                    getClassName(),
+                    retryCount,
+                    caughtException);
+        } else if (retryCount > 0) {
+            log.info(
+                    "[{}] Successfully retried on httpResponse after [{}] retries.",
+                    getClassName(),
+                    retryCount);
+        }
+    }
+
+    private String getClassName() {
+        return this.getClass().getSimpleName();
     }
 }
