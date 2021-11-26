@@ -1,3 +1,35 @@
+# EXPERIMENTAL APPROACH ALERTS V. 2.0
+#
+# Explanation:
+# When a time series appears for the first time, event associated with its creation
+# is missed by increase() since we don't have a reference point (no observable increase).
+# This is due to metrics not being zero-initialized.
+# The approach makes use of the following heuristics: if a time series is "old", that is
+# appeared more than an hour ago, increase() behaves correctly.
+# However, if a time series has appeared more recently, we want to be able to count the first event,
+# thus adding 1 to the result. Effectively, we want to calculate:
+#
+# if (time series is old) then increase(...) else increase(...) + 1
+#
+# Determining if a time series is "old" or not is done in an extremely hacky fashion
+# of counting a number of target scrapes within the last hour.
+# A series is considered to be "old" if and only if it contains at least
+# <query interval> / <scrape interval> = 1h / 10s = 360 data points
+# (361 is possible to due to off-by-one errors and scrape latencies)
+#
+# The expression above is equivalent to
+#   1 + increase(...) - (if "old" then 1 else 0)
+#   =
+#   1 + increase(...) - floor(<number_of_data_points> / 360)
+#
+# floor(increase(...)) is used instead of raw increase(...) to account for
+# its undesirable extrapolation behavior and floating-point inaccuracies
+#
+# All this operates under the assumption that counter resets are rare
+# (that is there is at most one counter reset within the last hour)
+# which is reasonable for short-term queries, but makes this approach
+# infeasible for long-term alerts.
+
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
@@ -6,78 +38,37 @@ metadata:
 spec:
   interval: 5m
   rules:
-    ## COUNTER VALUES WITH OFFSET ON OUTCOME
-    ## Offset is used to "travel back" 30minutes and get the value of counters after first 30 minutes in 1 hour
-    - record: sum:tink_agent_login_denmark:all:delta30m_with_offset_30m
+    - record: sum:dk_login_all_attempts:delta1h
       expr: |
-        (sum by (className, action) ((max_over_time(tink_agent_login_total{market="DK", provider_type!="test"}[30m] offset 30m)) or
-            0 * (sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", provider_type!="test"}[60m])
-            unless max_over_time(tink_agent_login_total{market="DK", provider_type!="test"}[30m] offset 30m)))))
-    - record: sum:tink_agent_login_denmark:unavailable:delta30m_with_offset_30m
+        sum by (className, action) (
+          1 + floor(increase(tink_agent_login_total{market="DK", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{market="DK", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:dk_login_all_errors:delta1h
       expr: |
-        (sum by (className, action) ((max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome="unavailable"}[30m] offset 30m)) or
-            0 * (sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome="unavailable"}[60m])
-            unless max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome="unavailable"}[30m] offset 30m)))))
-    - record: sum:tink_agent_login_denmark:temporary_errors:delta30m_with_offset_30m
+        sum by (className, action) (
+          1 + floor(increase(tink_agent_login_total{market="DK", outcome!="completed", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{market="DK", outcome!="completed", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:dk_login_unavailable:delta1h
       expr: |
-        (sum by (className, action) ((max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)) or
-            0 * (sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[60m])
-            unless max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)))))
-    - record: sum:tink_agent_login_denmark:all_errors:delta30m_with_offset_30m
+        sum by (className, action) (
+          1 + floor(increase(tink_agent_login_total{market="DK", outcome="unavailable", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{market="DK", outcome="unavailable", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:dk_login_temporary_errors:delta1h
       expr: |
-        (sum by (className, action) ((max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)) or
-            0 * (sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[60m])
-            unless max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[30m] offset 30m)))))
+        sum by (className, action) (
+          1 + floor(increase(tink_agent_login_total{market="DK", outcome=~"failed.*", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{market="DK", outcome=~"failed.*", provider_type!="test"}[1h]) / 360)
+        )
 
-    ## COUNTER VALUES DEPENDING ON THE OUTCOME
-    ## Delta60m = Means last hour
-    - record: sum:tink_agent_login_denmark:all:delta60m
-      expr: |
-        sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", provider_type!="test"}[60m]))
-    - record: sum:tink_agent_login_denmark:unavailable:delta60m
-      expr: |
-        sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome="unavailable"}[60m]))
-    - record: sum:tink_agent_login_denmark:temporary_errors:delta60m
-      expr: |
-        sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome=~"failed|failed_due_to_tink_infrastructure_failure"}[60m]))
-    - record: sum:tink_agent_login_denmark:all_errors:delta60m
-      expr: |
-        sum by (className, action) (max_over_time(tink_agent_login_total{market="DK", provider_type!="test", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"}[60m]))
-
-    ## REAL NUMBER OF OCCURRENCES OF CERTAIN EVENTS
-    ## This number is a difference between 60m - and 30m with 30m offset
-    - record: sum:tink_agent_login_denmark:effectively_all:delta30m
-      expr: |
-        sum:tink_agent_login_denmark:all:delta60m - sum:tink_agent_login_denmark:all:delta30m_with_offset_30m
-    - record: sum:tink_agent_login_denmark:effectively_all_unavailable:delta30m
-      expr: |
-        sum:tink_agent_login_denmark:unavailable:delta60m - sum:tink_agent_login_denmark:unavailable:delta30m_with_offset_30m
-    - record: sum:tink_agent_login_denmark:effectively_all_temporary_errors:delta30m
-      expr: |
-        sum:tink_agent_login_denmark:temporary_errors:delta60m - sum:tink_agent_login_denmark:temporary_errors:delta30m_with_offset_30m
-    - record: sum:tink_agent_login_denmark:effectively_all_errors:delta30m
-      expr: |
-        sum:tink_agent_login_denmark:all_errors:delta60m - sum:tink_agent_login_denmark:all_errors:delta30m_with_offset_30m
-
-    ## Percentage of occurrence of specific type of event comparing to number of all events
-    ## Service level is number of faulty refreshes comparing to all refreshes
-    - record: service_level:tink_agent_login_denmark:unavailable:delta30m
-      expr: |
-        (sum:tink_agent_login_denmark:effectively_all_unavailable:delta30m) / (sum:tink_agent_login_denmark:effectively_all:delta30m)
-    - record: service_level:tink_agent_login_denmark:temporary_error:delta30m
-      expr: |
-        (sum:tink_agent_login_denmark:effectively_all_temporary_errors:delta30m) / (sum:tink_agent_login_denmark:effectively_all:delta30m)
-    - record: service_level:tink_agent_login_denmark:all_errors:delta30m
-      expr: |
-        (sum:tink_agent_login_denmark:effectively_all_errors:delta30m) / (sum:tink_agent_login_denmark:effectively_all:delta30m)
-
-    #-------------------------------------------------------------------------------------------------------------------
-    # Login Errors
-    #-------------------------------------------------------------------------------------------------------------------
     - alert: LoginUnavailableErrorRateHigherThan20%DK
-      expr: |
-        service_level:tink_agent_login_denmark:unavailable:delta30m > 0.2
-          and sum:tink_agent_login_denmark:effectively_all:delta30m > 5
+      expr: sum:dk_login_unavailable:delta1h / (sum:dk_login_all_attempts:delta1h > 5) > 0.2
       for: 15m
       priority: P4
       labels:
@@ -85,12 +76,10 @@ spec:
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }} {{ .Values.grafanaClassLinkAbs1h }}
-        summary: Login unavailable rate is <{ $value | humanizePercentage }> for <{ $labels.className }> for the last 30m
+        summary: Login "unavailable" error rate over the last 1 hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: {{ .Values.tags }}
     - alert: LoginTemporaryErrorsRateHigherThan10%DK
-      expr: |
-        service_level:tink_agent_login_denmark:temporary_errors:delta30m > 0.1
-          and sum:tink_agent_login_denmark:effectively_all:delta30m > 5
+      expr: sum:dk_login_temporary_errors:delta1h / (sum:dk_login_all_attempts:delta1h > 5) > 0.2
       for: 15m
       priority: P4
       labels:
@@ -98,12 +87,10 @@ spec:
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }} {{ .Values.grafanaClassLinkAbs1h }}
-        summary: Login temporary errors rate is <{ $value | humanizePercentage }> for <{ $labels.className }> for the last 30m
+        summary: Login temporary errors rate over the last 1 hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: {{ .Values.tags }}
     - alert: LoginAllErrorsRateHigherThan90%DK
-      expr: |
-        service_level:tink_agent_login_denmark:all_errors:delta30m > 0.9
-          and sum:tink_agent_login_denmark:effectively_all:delta30m > 5
+      expr: sum:dk_login_all_errors:delta1h / (sum:dk_login_all_attempts:delta1h > 5) > 0.9
       for: 15m
       priority: P4
       labels:
@@ -111,5 +98,5 @@ spec:
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }} {{ .Values.grafanaClassLinkAbs1h }}
-        summary: Login all errors rate is <{ $value | humanizePercentage }> for <{ $labels.className }> for the last 30m
+        summary: Login error rate over the last 1 hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: {{ .Values.tags }}
