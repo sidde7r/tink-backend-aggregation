@@ -1,24 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator;
 
 import com.google.api.client.util.Base64;
-import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Crypto;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
 public class BecSecurityHelper {
@@ -26,29 +20,15 @@ public class BecSecurityHelper {
     private final PublicKey publicKey;
     private final byte[] symmetricKey;
 
-    public BecSecurityHelper(String signingCertificate, String publicKeySalt) {
-        publicKey = calculatePublicKey(signingCertificate, publicKeySalt);
+    public BecSecurityHelper() {
+        publicKey = getPublicKey();
         symmetricKey = generateSymmetricKey();
     }
 
-    private PublicKey calculatePublicKey(String signingCertificate, String publicKeySalt) {
-        try {
-            X509Certificate x509Certificate =
-                    (X509Certificate)
-                            CertificateFactory.getInstance(BecConstants.Crypto.X509)
-                                    .generateCertificate(
-                                            (new ByteArrayInputStream(
-                                                    signingCertificate.getBytes())));
-            byte[] signatureBytes = x509Certificate.getPublicKey().getEncoded();
-
-            X509EncodedKeySpec x509EncodedKeySpec =
-                    new X509EncodedKeySpec(
-                            blend(Base64.decodeBase64(publicKeySalt), signatureBytes));
-
-            return KeyFactory.getInstance("RSA").generatePublic(x509EncodedKeySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | CertificateException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
+    private PublicKey getPublicKey() {
+        byte[] publicKeyData =
+                se.tink.libraries.encoding.EncodingUtils.decodeBase64String(Crypto.PUBLIC_KEY);
+        return RSA.getPubKeyFromBytes(publicKeyData);
     }
 
     private byte[] generateSymmetricKey() {
@@ -64,7 +44,7 @@ public class BecSecurityHelper {
     }
 
     public String getKey() {
-        return toJsonString(RSA.encryptNonePkcs1((RSAPublicKey) publicKey, symmetricKey));
+        return toJsonString(RSA.encryptNoneOaepSha256Mgf1((RSAPublicKey) publicKey, symmetricKey));
     }
 
     public String encrypt(byte[] paramArrayOfByte) {
@@ -135,16 +115,6 @@ public class BecSecurityHelper {
             arrayOfByte3 = localCipher.doFinal(arrayOfByte4);
         }
         return arrayOfByte3;
-    }
-
-    private byte[] blend(byte[] byteA, byte[] byteB) {
-        int i = byteA.length;
-        int j = -1 + byteB.length;
-        byte[] blended = new byte[i];
-        for (int k = 0; k < i; k++) {
-            blended[k] = ((byte) (byteA[k] ^ byteB[(k % j)]));
-        }
-        return blended;
     }
 
     private String toJsonString(byte[] paramArrayOfByte) {

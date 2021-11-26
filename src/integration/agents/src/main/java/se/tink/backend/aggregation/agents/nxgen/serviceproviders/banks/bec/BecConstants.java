@@ -40,24 +40,21 @@ public final class BecConstants {
 
     public static final class Crypto {
         public static final String AES = "AES";
-        public static final String X509 = "X509";
-        public static final String SIGNING_CERTIFICATE_B64 =
-                "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUR3akNDQXFxZ0F3SUJBZ0lFVGI2YTBUQU5CZ2txaGtpRzl3MEJBUVFGQURDQm9qRUxNQWtHQTFVRUJoTUMKUkVzeEVUQVBCZ05WQkFnVENGSnZjMnRwYkdSbE1SNHdIQVlEVlFRS0V4VkNZVzVyWlhKdVpYTWdSVVJDSUVObApiblJ5WVd3eEhUQWJCZ05WQkFzVEZGUmxhMjVwYzJzZ2RXUjJMaUJ6ZFhCd2IzSjBNUjR3SEFZRFZRUURFeFZ0CmIySnBiR0poYm1zdWNISnZaQzVpWldNdVpHc3hJVEFmQmdrcWhraUc5dzBCQ1FFV0VtSmxZM056YkdObGNuUnoKUUdKbFl5NWthekFlRncweE1UQTFNREl4TVRVeE5EVmFGdzAwTVRBME1qUXhNVFV4TkRWYU1JR2lNUXN3Q1FZRApWUVFHRXdKRVN6RVJNQThHQTFVRUNCTUlVbTl6YTJsc1pHVXhIakFjQmdOVkJBb1RGVUpoYm10bGNtNWxjeUJGClJFSWdRMlZ1ZEhKaGJERWRNQnNHQTFVRUN4TVVWR1ZyYm1semF5QjFaSFl1SUhOMWNIQnZjblF4SGpBY0JnTlYKQkFNVEZXMXZZbWxzWW1GdWF5NXdjbTlrTG1KbFl5NWthekVoTUI4R0NTcUdTSWIzRFFFSkFSWVNZbVZqYzNOcwpZMlZ5ZEhOQVltVmpMbVJyTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFraTFqCm1mRHZlOGF1MnhEYlJGMGgyeGtXTjdJQ2h3eWc2V3ErcTU4R25SM1JxaWlicGlyRDY0ZzE4VHVXc2tkTTRlalYKVHU2NHNvSXRmcVlNM3phYjUvbTVhUlRGVmc2emNGYWtvQlhzUzJoaTNXYTZpWlgrN1NLVVZRclVpeEFiV1cvMApoQm55QXNhc3FSUnpjWGVRMitUQnUyeFVRNUkwMk5iQTVkbXM5N0dKVDZpSjM3Z0t6SElDVXhqakJ5Ry9iSWZRCkZqamw1bU1KbDRwcGN4ckloTkFYUDV6c24yYWU2aTVuWUJ3aWFhSjlVTU52MVpoTG84ZkRUSEttbkpDT1hYSlUKbDVJVU85RVhldHVLT3Y0R1F1Rm01WkYrK0hYSnNZeWhZN2ZUekkvZkllSW82QnpDOC9BY1JGTmx0VUZSMGtkdgpDc1doS2dhVEhsWDNtampubXdJREFRQUJNQTBHQ1NxR1NJYjNEUUVCQkFVQUE0SUJBUUFOVTc0WUtDdWlmSG9LCnArNVB2czVWTjJjZndQcStDVVgzN2RqUVc1QmYrbUZrSzE4TXdpSDl3K1BCUEtHSE9zS0RaL015cGtDYVhldmkKZlhubm4rQXpxZGdmZU1URFhkSExpTyt1ZEZ6MmV6SStPS1V1eWlpRUJmZVVkajFqK2o2dks5WUtoU0pOOTVWMwpTenBwZWVveGlBdnZ0Q09UZnNlK3l3SWJkaHNHS20zdnRybGtaMlpRV0c3K0xOTVkwdDR1ZU90amVzNnVNK29jCjFJSVNmc3JPai9wbklma2hkamhxQlJxVzkzWHZxdjdQZW9wNFFJdEdIM205N08wUXFaWmdZL2ZSbmRaRDd6RUQKcVFSNGVEenJBK3AvdkkxUE1TMG1WaC91UUhIeGFhcnRNRmdGV2hLWkFlVG5PUTJlSWdhVXJoN21JMzk2ak5hTwptQkY5aEUvaAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCgo=";
-        public static final String PUBLIC_KEY_SALT =
-                "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI/e+AAFbsYSUMkj1Hq6gloeE5iC/Vt8DmkwiPwxAHkXE19pkcrTiOPVeME4kvEUey4Qb2ty8zIjvy1SoxAKk0Nku0xu4EGyJn+/1CDRYp4xOZyfXHVk4y18+4amRrGgLFDh4wg3cesCaJ5ETxoM7lvqb/R+zsg3ZtweJsD1pBxxFdjc7B9BKfDnVUk08CPAZhM9DGZ5HpiBV//sz+TusDZTvWtYtZGBZP6Bc4ApKOd3fS6NFE2IP8c2vJ7j2oeP0aDh/WW8ad5BY/sW0iKTiqi3FFxf1ooDjBpfmCcmlEcST4cWZyPfu5p8SZXyKGZ3rtKRoPdMkYBHcLXDweHvSMgAAAAAx";
+        public static final String PUBLIC_KEY =
+                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqMJMtCR9EGfj88tptmwS+dTRRzemxCmCwrvdKuSgiwFAobUoTmNUM027rFvDMvGjQMC656UdQMbB6oXcFVCBR3J/ibfPylvrohbi+j8otvH4eQNvpzALG/PEnTC0uX/1hibyPAntuenuNlHWD32gkoWvxLyWEGEXFEMB7kvhojl+8CLheKuRMClaUNfHtIuRwRv2cU+bnWeEAde2tcAenta+9+caNpR6kXrxgTe/orFY5Sb7hkL8WRo4p991ZbOYlVJ2HSykD1c2EGPspgxF7apcepifgJXAr6FSPFcj4/jx5028Rf/wqlSptF20TyluCGjp7LjkkuV95g/Qn3IvnQIDAQAB";
     }
 
     public static final class Meta {
 
-        public static final String APP_TYPE = "mb0";
+        public static final String APP_TYPE = "mb1";
         public static final String APP_VERSION = "7.7.1-105";
         public static final String OS_VERSION = "Android 6.0";
         public static final String DEVICE_TYPE =
                 "HTC / HTC One_M8 / MRA58K release-keys / htc_europe / htc_m8 / htc / htc/htc_europe/htc_m8:6.0/MRA58K/662736.4:user/release-keys / htc_m8 / qcom";
         public static final String SCREEN_SIZE = "1440*2392";
 
-        public static final String LABEL = "MB0-000";
-        public static final String CIPHER = "AES/CBC/PKCS5Padding";
+        public static final String LABEL = "MB1-008";
+        public static final String CIPHER = "AES-CBC-PKCS5/RSA-OAEP-SHA256-MGP1";
     }
 
     public static final class Header {
