@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.detail;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;

@@ -5,6 +5,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.de.EmbeddedFieldBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 
@@ -16,8 +17,9 @@ public class PostbankPaymentAuthenticator extends PostbankAuthenticationControll
             Catalog catalog,
             SupplementalInformationController supplementalInformationController,
             PostbankAuthenticator authenticator,
-            Credentials credentials) {
-        super(catalog, supplementalInformationController, authenticator);
+            Credentials credentials,
+            EmbeddedFieldBuilder embeddedFieldBuilder) {
+        super(catalog, supplementalInformationController, authenticator, embeddedFieldBuilder);
         this.credentials = credentials;
     }
 

@@ -7,19 +7,9 @@
       "authenticationMethodId": "1"
     },
     {
-      "name": "Best signin",
-      "authenticationType": "PUSH_OTP",
+      "name": "Chip-TAN",
+      "authenticationType": "CHIP_OTP",
       "authenticationMethodId": "2"
-    },
-    {
-      "name": "iphone1",
-      "authenticationType": "PUSH_OTP",
-      "authenticationMethodId": "3"
-    },
-    {
-      "name": "iphone2",
-      "authenticationType": "PUSH_OTP",
-      "authenticationMethodId": "4"
     }
   ],
   "_links": {

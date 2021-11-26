@@ -16,6 +16,9 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.PostbankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.PostbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.PostbankPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.detail.PostbankEmbeddedFieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.detail.PostbankIconUrlMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.detail.PostbankPaymentsEmbeddedFieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.JwtGenerator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.PostbankJwtModule;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.payment.PostbankPaymentMapper;
@@ -74,7 +77,10 @@ public final class PostbankAgent extends DeutscheBankAgent
     protected Authenticator constructAuthenticator() {
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(
-                        catalog, supplementalInformationController, postbankAuthenticator);
+                        catalog,
+                        supplementalInformationController,
+                        postbankAuthenticator,
+                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()));
 
         return new AutoAuthenticationController(
                 request, context, postbankAuthenticationController, postbankAuthenticator);
@@ -87,7 +93,9 @@ public final class PostbankAgent extends DeutscheBankAgent
                         catalog,
                         supplementalInformationController,
                         postbankAuthenticator,
-                        credentials);
+                        credentials,
+                        new PostbankPaymentsEmbeddedFieldBuilder(
+                                catalog, new PostbankIconUrlMapper()));
 
         DeutscheBankPaymentApiClient apiClient =
                 new DeutscheBankPaymentApiClient(

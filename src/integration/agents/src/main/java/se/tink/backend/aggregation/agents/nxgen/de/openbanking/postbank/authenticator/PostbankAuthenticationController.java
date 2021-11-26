@@ -3,14 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +25,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.Postbank
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants.PollStatus;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.de.EmbeddedFieldBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -43,11 +37,10 @@ import se.tink.libraries.i18n.Catalog;
 @Slf4j
 public class PostbankAuthenticationController implements TypedAuthenticator {
 
-    private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
-
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
     protected final PostbankAuthenticator authenticator;
+    protected final EmbeddedFieldBuilder embeddedFieldBuilder;
 
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
@@ -139,13 +132,9 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
             return scaMethods.get(0);
         }
 
+        Field scaMethodField = embeddedFieldBuilder.getChooseScaMethodField(scaMethods);
         Map<String, String> supplementalInformation =
-                supplementalInformationController.askSupplementalInformationSync(
-                        CommonFields.Selection.build(
-                                catalog,
-                                null,
-                                GermanFields.SelectOptions.prepareSelectOptions(
-                                        scaMethods, new PostbankIconUrlMapper())));
+                supplementalInformationController.askSupplementalInformationSync(scaMethodField);
         String selectedValue = supplementalInformation.get(CommonFields.Selection.getFieldKey());
         if (StringUtils.isNumeric(selectedValue)) {
             int index = Integer.parseInt(selectedValue) - 1;
@@ -211,43 +200,26 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     }
 
     private String collectOtp(AuthorizationResponse authResponse) {
-        String scaMethodName = authResponse.getChosenScaMethod().getName();
-        String authenticationType = authResponse.getChosenScaMethod().getAuthenticationType();
-        ChallengeDataEntity challengeData = authResponse.getChallengeData();
-        List<Field> fields = new LinkedList<>();
-        extractStartcode(authResponse)
-                .ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
+        List<Field> fields =
+                embeddedFieldBuilder.getOtpFields(
+                        authResponse.getChosenScaMethod(), authResponse.getChallengeData());
 
-        TanBuilder tanBuilder =
-                GermanFields.Tan.builder(catalog)
-                        .authenticationType(authenticationType)
-                        .authenticationMethodName(scaMethodName);
-        if (challengeData != null) {
-            tanBuilder.otpMaxLength(challengeData.getOtpMaxLength());
-            tanBuilder.otpFormat(challengeData.getOtpFormat());
-        }
-        fields.add(tanBuilder.build());
+        String inputFieldName =
+                fields.stream()
+                        .filter(field -> !field.isImmutable())
+                        .map(Field::getName)
+                        .findFirst()
+                        .orElse(null);
 
         String otp =
                 supplementalInformationController
                         .askSupplementalInformationSync(fields.toArray(new Field[0]))
-                        .get(fields.get(fields.size() - 1).getName());
+                        .get(inputFieldName);
         if (otp == null) {
             throw SupplementalInfoError.NO_VALID_CODE.exception(
                     "Supplemental info did not come with otp code!");
         } else {
             return otp;
         }
-    }
-
-    private Optional<String> extractStartcode(AuthorizationResponse authResponse) {
-        return Optional.ofNullable(authResponse.getChallengeData())
-                .map(ChallengeDataEntity::getAdditionalInformation)
-                .map(this::extractStartCodeFromChallengeString);
-    }
-
-    private String extractStartCodeFromChallengeString(String challengeString) {
-        Matcher matcher = STARTCODE_CHIP_PATTERN.matcher(challengeString);
-        return matcher.find() ? matcher.group(1) : null;
     }
 }

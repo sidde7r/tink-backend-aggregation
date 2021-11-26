@@ -1,0 +1,21 @@
+{
+  "chosenScaMethod": {
+    "name": "Chip-TAN",
+    "authenticationType": "CHIP_OTP",
+    "authenticationMethodId": "2"
+  },
+  "scaStatus": "scaMethodSelected",
+  "scaMethods": [
+  ],
+  "challengeData": {
+    "additionalInformation": "1. Bitte legen Sie die Debitkarte in Ihren TAN-Generator und drücken Sie die TAN-Taste auf dem TAN-Generator.\n2. Tippen Sie den folgenden Startcode in Ihren TAN-Generator ein und drücken Sie die OK-Taste.\n                Startcode: 123456\n3. Geben Sie die Auftragsdaten in den TAN-Generator ein.\n                Ihre Eingabe:\n                     kontonummer: DE32701694660000123456\n                     betrag: 0,10\n                     \n4. Tragen Sie nun die erzeugte ChipTAN in das Eingabefeld ein und geben Sie den Auftrag frei.\nBitte geben Sie im Feld Konto/IBAN nur die ersten 10 Ziffern der IBAN ein. Beispiel: DE93 5001 AZ78 9012 3456 78 Eingabe: 9350017890"
+  },
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
+    },
+    "authoriseTransaction": {
+      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/authoriseTransaction"
+    }
+  }
+}
