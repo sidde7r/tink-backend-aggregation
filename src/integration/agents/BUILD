@@ -248,6 +248,21 @@ junit_test(
 )
 
 codeowners(
+    name = "common_agent_code_owners",
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+        "@tink-ab/aggregation-thundercats-maintainer",
+        "@tink-ab/aggregation-minion-maintainer",
+        "@tink-ab/aggregation-nazguls-maintainer",
+        "@tink-ab/aggregation-teletubbies-maintainer",
+        "@tink-ab/aggregation-llamas-maintainer",
+        "@tink-ab/aggregation-penguins-maintainer",
+        "@tink-ab/aggregation-toros-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "austrian_providers_owners",
     patterns = [
         "src/main/java/se/tink/backend/aggregation/agents/nxgen/at/",

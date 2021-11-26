@@ -10,3 +10,13 @@ java_library(
         "//third_party:lombok_libs",
     ],
 )
+
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)

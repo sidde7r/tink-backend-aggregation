@@ -34,3 +34,13 @@ java_library(
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
+
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
