@@ -2,21 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.ringkjobinglandb
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataAgent;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class RingkjobingLandbobankAgent extends BankdataAgent {
 
-    public RingkjobingLandbobankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    @Inject
+    public RingkjobingLandbobankAgent(AgentComponentProvider componentProvider) {
         super(
-                request,
-                context,
-                signatureKeyPair,
+                componentProvider,
                 RingkjobingLandbobankConstants.BASE_URL,
                 RingkjobingLandbobankConstants.BASE_AUTH_URL);
     }

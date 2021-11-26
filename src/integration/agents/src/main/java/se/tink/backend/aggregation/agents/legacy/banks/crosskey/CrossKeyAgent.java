@@ -22,17 +22,15 @@ import se.tink.backend.aggregation.agents.banks.crosskey.responses.BaseResponse;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyConfig;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyLoanDetails;
 import se.tink.backend.aggregation.agents.banks.crosskey.utils.CrossKeyUtils;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+public abstract class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     protected final CrossKeyApiClient apiClient;
     private final Credentials credentials;
 
@@ -48,12 +46,8 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     private final CrossKeyConfig config;
     private boolean hasRefreshed = false;
 
-    public CrossKeyAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            CrossKeyConfig config) {
-        super(request, context);
+    protected CrossKeyAgent(AgentComponentProvider componentProvider, CrossKeyConfig config) {
+        super(componentProvider.getCredentialsRequest(), componentProvider.getContext());
 
         this.config = config;
         credentials = request.getCredentials();

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.creditcards.rikskortet;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import jakarta.xml.ws.Binding;
 import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.handler.Handler;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.AccountDetails;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.ArrayOfTransactionDetails;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.MobileWSV2;
@@ -28,9 +28,8 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPUserAgentHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CREDIT_CARDS})
 public final class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -61,9 +60,9 @@ public final class RikskortetAgent extends AbstractAgent implements DeprecatedRe
     private Credentials credentials;
     private AccountDetails ad;
 
-    public RikskortetAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+    @Inject
+    public RikskortetAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider.getCredentialsRequest(), componentProvider.getContext());
         userAgentHandler = new SOAPUserAgentHandler(CommonHeaders.DEFAULT_USER_AGENT);
 
         try {

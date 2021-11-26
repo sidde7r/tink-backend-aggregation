@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.creditcards.okq8;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
@@ -18,7 +19,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.okq8.model.LoginFailedResponse;
 import se.tink.backend.aggregation.agents.creditcards.okq8.model.LoginRequest;
 import se.tink.backend.aggregation.agents.creditcards.okq8.model.LoginResponse;
@@ -29,9 +29,8 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CREDIT_CARDS})
 public final class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -56,9 +55,9 @@ public final class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefr
                 .acceptLanguage("sv-se");
     }
 
-    public OKQ8BankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+    @Inject
+    public OKQ8BankAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider.getCredentialsRequest(), componentProvider.getContext());
 
         client = clientFactory.createCookieClient(context.getRawHttpTrafficLogger());
         credentials = request.getCredentials();
