@@ -379,6 +379,10 @@ public class SwedbankBaseConstants {
         public static final String CHALLENGE = "challenge";
     }
 
+    public static final class ReturnValue {
+        public static final String EMPTY = "";
+    }
+
     public enum MenuItemKey {
         ACCOUNTS("EngagementOverview"),
         UPCOMING_TRANSACTIONS("UpcomingTransactions"),
@@ -465,6 +469,7 @@ public class SwedbankBaseConstants {
         public static final String ISK_STRING = "Investment savings";
         public static final String ENDOWMENT_INSURANCE_STRING = "Endowment insurance";
         public static final String API_CLIENT_ERROR_MESSAGE = "No API client provided.";
+        public static final String UNEXPECTED_TYPE_ERROR = "Unexpected transfer type: {}";
     }
 
     public static class UserMessage {
