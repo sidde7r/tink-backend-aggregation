@@ -64,7 +64,7 @@ public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
         return localDateTimeSource
                 .now(DEFAULT_ZONE_ID)
                 .minusMonths(HandelsbankenConstants.MAX_FETCH_PERIOD_MONTHS)
-                .plusDays(1)
+                .plusDays(2)
                 .toLocalDate();
     }
 
