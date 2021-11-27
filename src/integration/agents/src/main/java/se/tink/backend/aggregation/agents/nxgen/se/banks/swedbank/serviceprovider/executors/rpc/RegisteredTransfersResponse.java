@@ -38,8 +38,7 @@ public class RegisteredTransfersResponse {
     }
 
     public Optional<String> getIdToConfirm() {
-        return Optional.ofNullable(registeredTransactions)
-                .orElseGet(Collections::emptyList)
+        return Optional.ofNullable(registeredTransactions).orElseGet(Collections::emptyList)
                 .stream()
                 .map(TransferTransactionEntity::getTransactions)
                 .flatMap(Collection::stream)

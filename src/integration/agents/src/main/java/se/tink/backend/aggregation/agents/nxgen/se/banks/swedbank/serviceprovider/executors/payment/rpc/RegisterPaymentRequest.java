@@ -12,23 +12,20 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonObject
 public class RegisterPaymentRequest {
+    private final ReferenceEntity reference;
+    private final String ocrScanned;
+    private final String recipientId;
+    private final String type;
+    private final String fromAccountId;
 
     @JsonDouble(outputType = JsonType.STRING, decimalSeparator = ',')
     private final double amount;
 
-    private final ReferenceEntity reference;
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String einvoiceReference;
 
-    private final String ocrScanned;
-
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Stockholm")
     private final Date date;
-
-    private final String recipientId;
-    private final String type;
-    private final String fromAccountId;
 
     private RegisterPaymentRequest(
             double amount,
