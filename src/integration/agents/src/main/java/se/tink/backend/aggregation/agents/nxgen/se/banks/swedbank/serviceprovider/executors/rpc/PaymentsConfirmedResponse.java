@@ -8,27 +8,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
+@Getter
 public class PaymentsConfirmedResponse {
     private String currency;
     private String totalSum;
     private List<ConfirmedTransactionsEntity> confirmedTransactions;
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getTotalSum() {
-        return totalSum;
-    }
-
-    public List<ConfirmedTransactionsEntity> getConfirmedTransactions() {
-        return confirmedTransactions;
-    }
 
     @JsonIgnore
     public Collection<UpcomingTransaction> toTinkUpcomingTransactions(String accountNumber) {

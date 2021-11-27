@@ -1,21 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
+@Getter
 public class FromAccountEntity extends AbstractAccountEntity implements GeneralAccountEntity {
     private String currencyCode;
     private String amount;
-
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {

@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PayeeEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class PaymentEntity {
     private String type;
     private String status;
@@ -13,32 +15,4 @@ public class PaymentEntity {
     private String dateDependency;
     private String withdrawalDate;
     private String rejectionMessage;
-
-    public String getType() {
-        return type;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public ReferenceEntity getReference() {
-        return reference;
-    }
-
-    public PayeeEntity getPayee() {
-        return payee;
-    }
-
-    public String getDateDependency() {
-        return dateDependency;
-    }
-
-    public String getWithdrawalDate() {
-        return withdrawalDate;
-    }
-
-    public String getRejectionMessage() {
-        return rejectionMessage;
-    }
 }
