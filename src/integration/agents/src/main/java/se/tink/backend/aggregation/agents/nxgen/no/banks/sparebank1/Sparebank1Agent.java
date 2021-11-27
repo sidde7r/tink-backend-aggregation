@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
@@ -16,7 +15,6 @@ import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -48,13 +46,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, IDENTITY_DATA, INVESTMENTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, IDENTITY_DATA})
 public final class Sparebank1Agent extends NextGenerationAgent
         implements RefreshLoanAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor,
-                RefreshInvestmentAccountsExecutor {
+                RefreshIdentityDataExecutor {
     private final Sparebank1ApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
@@ -167,12 +164,10 @@ public final class Sparebank1Agent extends NextGenerationAgent
                                 new Sparebank1CreditCardTransactionFetcher(apiClient))));
     }
 
-    @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         return investmentRefreshController.fetchInvestmentAccounts();
     }
 
-    @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
         return investmentRefreshController.fetchInvestmentTransactions();
     }
