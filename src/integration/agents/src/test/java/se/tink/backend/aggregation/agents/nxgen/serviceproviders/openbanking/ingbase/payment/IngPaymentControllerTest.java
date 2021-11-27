@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration.Builder;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
@@ -73,30 +74,29 @@ public class IngPaymentControllerTest {
     private static final String CONNECTION_TIMEOUT_MESSAGE = "connect timed out";
     private static final String READ_TIMEOUT_MESSAGE = "read timed out";
     private static final String FAILED_TO_RESPOND_MESSAGE = "failed to respond";
-    private static final AgentError BANK_SIDE_FAILURE = BankServiceError.BANK_SIDE_FAILURE;
 
     private PaymentController paymentController;
     private SessionStorage sessionStorage;
     private PersistentStorage persistentStorage;
 
+    @Mock private AgentComponentProvider agentComponentProvider;
     @Mock private Filter callFilter;
     @Mock private HttpResponse response;
+    @Mock private MarketConfiguration marketConfiguration;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         setUpStorage();
-        final IngPaymentApiClient paymentApiClient = createIngPaymentApiClient();
-        final IngPaymentExecutor paymentExecutor = createIngPaymentExecutor(paymentApiClient);
+        configureBasicMocks();
+        IngPaymentExecutor paymentExecutor = createIngPaymentExecutor(createIngPaymentApiClient());
         paymentController = new PaymentController(paymentExecutor, paymentExecutor);
-        given(callFilter.handle(any())).willReturn(response);
     }
 
     @Test
     public void shouldCreatePaymentSuccessfully() {
-
         // given
-        prepareResponseForPaymentCreation();
+        prepareTestSetupAndResponseData();
 
         // when
         PaymentResponse paymentResponse =
@@ -107,35 +107,31 @@ public class IngPaymentControllerTest {
                 .usingRecursiveComparison()
                 .ignoringFields("payment.id")
                 .isEqualTo(getExpectedPaymentResponseOnCreate());
+        assertThat(sessionStorage).containsKey("PAYMENT_AUTHORIZATION_URL");
     }
 
     @Test
-    @Parameters(method = "prepareNoCallbackErrorData")
-    public void shouldThrowBankServiceErrorWhenNoCallback(int statusCode, AgentError agentError) {
-
+    @Parameters(method = "prepareBankServiceErrorData")
+    public void shouldThrowBankServiceErrorWhenBankRespondsWithSpecific5xxStatus(
+            int statusCode, AgentError agentError) {
         // given
         bankRespondsWithGivenStatus(statusCode);
 
+        // and
+        PaymentMultiStepRequest paymentMultiStepRequest = createPaymentMultiStepRequest();
+
         // expect
-        assertThatThrownBy(
-                        () ->
-                                paymentController.sign(
-                                        new PaymentMultiStepRequest(
-                                                createPayment(),
-                                                persistentStorage,
-                                                "INIT",
-                                                emptyList())))
+        assertThatThrownBy(() -> paymentController.sign(paymentMultiStepRequest))
                 .hasFieldOrPropertyWithValue("error", agentError);
     }
 
     @SuppressWarnings("unused")
-    private Object[] prepareNoCallbackErrorData() {
-        AgentError noBankService = BankServiceError.NO_BANK_SERVICE;
+    private Object[] prepareBankServiceErrorData() {
         return new Object[][] {
-            {500, BANK_SIDE_FAILURE},
-            {502, noBankService},
-            {503, noBankService},
-            {504, noBankService}
+            {500, BankServiceError.BANK_SIDE_FAILURE},
+            {502, BankServiceError.NO_BANK_SERVICE},
+            {503, BankServiceError.NO_BANK_SERVICE},
+            {504, BankServiceError.NO_BANK_SERVICE}
         };
     }
 
@@ -143,7 +139,6 @@ public class IngPaymentControllerTest {
     @Parameters(method = "prepareTimeoutErrorData")
     public void shouldThrowBankSideErrorWhenTimeout(
             String exceptionMessage, AgentError agentError) {
-
         // given
         given(callFilter.handle(any())).willThrow(new HttpClientException(exceptionMessage, null));
 
@@ -155,17 +150,22 @@ public class IngPaymentControllerTest {
     @SuppressWarnings("unused")
     private Object[] prepareTimeoutErrorData() {
         return new Object[][] {
-            {CONNECTION_RESET_MESSAGE, BANK_SIDE_FAILURE},
-            {CONNECTION_TIMEOUT_MESSAGE, BANK_SIDE_FAILURE},
-            {READ_TIMEOUT_MESSAGE, BANK_SIDE_FAILURE},
-            {FAILED_TO_RESPOND_MESSAGE, BANK_SIDE_FAILURE},
+            {CONNECTION_RESET_MESSAGE, BankServiceError.BANK_SIDE_FAILURE},
+            {CONNECTION_TIMEOUT_MESSAGE, BankServiceError.BANK_SIDE_FAILURE},
+            {READ_TIMEOUT_MESSAGE, BankServiceError.BANK_SIDE_FAILURE},
+            {FAILED_TO_RESPOND_MESSAGE, BankServiceError.BANK_SIDE_FAILURE},
         };
     }
 
     @Test
-    @Parameters(method = "prepareRetryErrorData")
+    @Parameters({
+        "Remote host terminated the handshake",
+        CONNECTION_RESET_MESSAGE,
+        CONNECTION_TIMEOUT_MESSAGE,
+        READ_TIMEOUT_MESSAGE,
+        FAILED_TO_RESPOND_MESSAGE
+    })
     public void shouldRetrySuccessfully(String exceptionMessage) {
-
         // given
         bankRespondsCorrectlyAfterSecondRequest(exceptionMessage);
 
@@ -174,26 +174,14 @@ public class IngPaymentControllerTest {
                 .isThrownBy(() -> paymentController.create(new PaymentRequest(createPayment())));
     }
 
-    @SuppressWarnings("unused")
-    private Object[] prepareRetryErrorData() {
-        return new Object[] {
-            "Remote host terminated the handshake",
-            CONNECTION_RESET_MESSAGE,
-            CONNECTION_TIMEOUT_MESSAGE,
-            READ_TIMEOUT_MESSAGE,
-            FAILED_TO_RESPOND_MESSAGE
-        };
-    }
-
     @Test
-    public void shouldThrowBankSideErrorWhenBankReturnsUnauthorizedStatus() {
-
+    public void shouldThrowBankSideErrorWhenInvalidSignature() {
         // given
-        bankRespondsWithUnauthorizedStatus();
+        bankRespondsWithUnauthorizedStatusAndInvalidSignature();
 
         // expect
         assertThatThrownBy(() -> paymentController.fetch(new PaymentRequest(createPayment())))
-                .hasFieldOrPropertyWithValue("error", BANK_SIDE_FAILURE);
+                .hasFieldOrPropertyWithValue("error", BankServiceError.BANK_SIDE_FAILURE);
     }
 
     @Test
@@ -203,7 +191,6 @@ public class IngPaymentControllerTest {
             boolean userHasClientId,
             boolean sessionHasAuthorizationUrl,
             String exceptionMessage) {
-
         // given
         setUpTestDataWithMissingKeyUserData(
                 userIsAuthenticated, userHasClientId, sessionHasAuthorizationUrl);
@@ -211,44 +198,21 @@ public class IngPaymentControllerTest {
         // and
         bankRespondsWithGivenStatus(200);
 
+        // and
+        PaymentMultiStepRequest paymentMultiStepRequest = createPaymentMultiStepRequest();
+
         // expect
-        assertThatThrownBy(
-                        () ->
-                                paymentController.sign(
-                                        new PaymentMultiStepRequest(
-                                                createPayment(),
-                                                persistentStorage,
-                                                "INIT",
-                                                emptyList())))
+        assertThatThrownBy(() -> paymentController.sign(paymentMultiStepRequest))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining(exceptionMessage);
     }
 
     @SuppressWarnings("unused")
     private Object[] prepareMissingKeyData() {
-        boolean userIsAuthenticated = true;
-        boolean userHasClientId = true;
-        boolean sessionHasAuthorizationUrl = true;
-
         return new Object[][] {
-            {
-                !userIsAuthenticated,
-                userHasClientId,
-                sessionHasAuthorizationUrl,
-                "Cannot find Token!"
-            },
-            {
-                userIsAuthenticated,
-                !userHasClientId,
-                sessionHasAuthorizationUrl,
-                "Cannot find client id!"
-            },
-            {
-                userIsAuthenticated,
-                userHasClientId,
-                !sessionHasAuthorizationUrl,
-                "Missing authorize payment url"
-            }
+            {false, true, true, "Cannot find Token!"},
+            {true, false, true, "Cannot find client id!"},
+            {true, true, false, "Missing authorize payment url"}
         };
     }
 
@@ -306,7 +270,7 @@ public class IngPaymentControllerTest {
         given(response.getBody(bodyClass)).willReturn(responseBody);
     }
 
-    private void bankRespondsWithUnauthorizedStatus() {
+    private void bankRespondsWithUnauthorizedStatusAndInvalidSignature() {
         bankRespondsWithGivenStatus(401);
         setUpResponseBody(String.class, "Signature could not be successfully verified");
     }
@@ -321,6 +285,11 @@ public class IngPaymentControllerTest {
 
     private void bankRespondsWithGivenStatus(int statusCode) {
         given(response.getStatus()).willReturn(statusCode);
+    }
+
+    private void prepareTestSetupAndResponseData() {
+        prepareResponseForPaymentCreation();
+        setUpTestDataWithMissingKeyUserData(true, true, false);
     }
 
     private void setUpTestDataWithMissingKeyUserData(
@@ -371,15 +340,13 @@ public class IngPaymentControllerTest {
 
     @SneakyThrows
     private IngPaymentApiClient createIngPaymentApiClient() {
-        ProviderSessionCacheController providerSessionCacheController =
-                new ProviderSessionCacheController(new MockSessionCacheProvider(new HashMap<>()));
-
         IngPaymentApiClient ingPaymentApiClient =
                 new IngPaymentApiClient(
                         createTinkHttpClient(),
                         persistentStorage,
-                        providerSessionCacheController,
-                        createMarketConfiguration(),
+                        new ProviderSessionCacheController(
+                                new MockSessionCacheProvider(new HashMap<>())),
+                        marketConfiguration,
                         mock(QsealcSigner.class),
                         IngApiInputData.builder()
                                 .userAuthenticationData(
@@ -388,44 +355,46 @@ public class IngPaymentControllerTest {
                                 .strongAuthenticationState(
                                         new StrongAuthenticationState("test_state"))
                                 .build(),
-                        createAgentComponentProvider());
+                        agentComponentProvider);
         ingPaymentApiClient.setConfiguration(prepareAgentConfiguration());
 
         return ingPaymentApiClient;
     }
 
-    private AgentComponentProvider createAgentComponentProvider() {
-        AgentComponentProvider agentComponentProvider = mock(AgentComponentProvider.class);
+    private void configureBasicMocks() {
+        setUpAgentComponentProvider();
+        setUpMarketConfiguration();
+        given(callFilter.handle(any())).willReturn(response);
+    }
+
+    private PaymentMultiStepRequest createPaymentMultiStepRequest() {
+        return new PaymentMultiStepRequest(createPayment(), persistentStorage, "INIT", emptyList());
+    }
+
+    private void setUpAgentComponentProvider() {
         given(agentComponentProvider.getRandomValueGenerator())
                 .willReturn(new MockRandomValueGenerator());
         given(agentComponentProvider.getLocalDateTimeSource())
                 .willReturn(new ConstantLocalDateTimeSource());
-
-        return agentComponentProvider;
     }
 
-    private AgentConfiguration prepareAgentConfiguration() {
-        AgentConfiguration<IngBaseConfiguration> agentConfiguration =
-                mock(AgentConfiguration.class);
-        given(agentConfiguration.getRedirectUrl()).willReturn("https://api.tink.test");
-        given(agentConfiguration.getQsealc()).willReturn(EIdasTinkCert.QSEALC);
-
-        return agentConfiguration;
-    }
-
-    private MarketConfiguration createMarketConfiguration() {
-        MarketConfiguration marketConfiguration = mock(MarketConfiguration.class);
+    private void setUpMarketConfiguration() {
         given(marketConfiguration.marketCode()).willReturn("AA");
+    }
 
-        return marketConfiguration;
+    private AgentConfiguration<IngBaseConfiguration> prepareAgentConfiguration() {
+        return new Builder<IngBaseConfiguration>()
+                .setRedirectUrl("https://api.tink.test")
+                .setQsealc(EIdasTinkCert.QSEALC)
+                .build();
     }
 
     private IngPaymentExecutor createIngPaymentExecutor(IngPaymentApiClient ingPaymentApiClient) {
-        IngPaymentMapper paymentMapper = new IngPaymentMapper(new BasePaymentMapper());
-        IngPaymentAuthenticator paymentAuthenticator = mock(IngPaymentAuthenticator.class);
-
         return new IngPaymentExecutor(
-                sessionStorage, ingPaymentApiClient, paymentAuthenticator, paymentMapper);
+                sessionStorage,
+                ingPaymentApiClient,
+                mock(IngPaymentAuthenticator.class),
+                new IngPaymentMapper(new BasePaymentMapper()));
     }
 
     private void setUpStorage() {
@@ -435,6 +404,6 @@ public class IngPaymentControllerTest {
                 StorageKeys.APPLICATION_TOKEN,
                 OAuth2Token.create("bearer", "test_access_token", "test_refresh_token", 899));
         persistentStorage.put(StorageKeys.CLIENT_ID, "some_client_id");
-        sessionStorage.put(StorageKeys.PAYMENT_AUTHORIZATION_URL, "http://auth.url.ing.com");
+        sessionStorage.put(StorageKeys.PAYMENT_AUTHORIZATION_URL, "https://auth.url.ing.com");
     }
 }
