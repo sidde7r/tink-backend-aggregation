@@ -15,15 +15,15 @@ public class CajamarConstants {
 
     public static final class LoginParameter {
         public static final String APP_NAME = "WEFFERENT";
-        public static final String APP_VERSION = "1.75.20";
+        public static final String APP_VERSION = "1.78.24";
         public static final String OS_NAME = "IOS";
-        public static final String OS_VERSION = "14.4.1";
-        public static final String DEVICE_ID = "1101031632144668764752299";
-        public static final String DEVICE_NAME = "iPhone 8";
+        public static final String OS_VERSION = "13.5.1";
+        public static final String DEVICE_ID = "1101031618568210367127699";
+        public static final String DEVICE_NAME = "iPhone X";
         public static final String PUSH_TOKEN =
-                "6544EF3CBDF4931A6E879D4F72BD5528321D0F1DBD3CD6300F76A2B9A074C307";
+                "C1B7FA2749829CAF94979E82E34C44D8749C7139EA1ACE85DA593CAE2609E6D6";
         public static final String LANGUAGE = "eng";
-        public static final Integer SCREEN_HEIGHT = 667;
+        public static final Integer SCREEN_HEIGHT = 812;
         public static final Integer SCREEN_WIDTH = 375;
     }
 
@@ -69,12 +69,13 @@ public class CajamarConstants {
 
     public static final class HeaderValues {
         public static final String USER_AGENT_VALUE =
-                "webankProduction/7520 CFNetwork/1220.1 Darwin/20.3.0";
+                "webankProduction/7824 CFNetwork/1126 Darwin/19.5.0";
     }
 
     public static final class HeaderKeys {
         public static final String USER_AGENT = "User-Agent";
         public static final String AUTHORIZATION = "Authorization";
+        public static final String DEVICE_ID_HEADER = "deviceid";
     }
 
     public static final class Fetchers {

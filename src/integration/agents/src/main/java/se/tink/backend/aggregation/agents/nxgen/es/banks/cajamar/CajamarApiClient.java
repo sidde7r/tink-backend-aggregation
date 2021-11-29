@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.LoginParameter.DEVICE_ID;
+
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
@@ -169,6 +171,7 @@ public class CajamarApiClient {
         return client.request(url)
                 .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT_VALUE)
                 .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.DEVICE_ID_HEADER, DEVICE_ID)
                 .accept(MediaType.WILDCARD);
     }
 
