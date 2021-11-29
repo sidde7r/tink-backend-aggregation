@@ -321,7 +321,7 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbaltics/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/ @tink-ab/aggregation-minion-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/ @tink-ab/aggregation-thundercats-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/ @tink-ab/aggregation-minion-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/entercard/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/amex/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/amex/ @tink-ab/aggregation-thundercats-maintainer
