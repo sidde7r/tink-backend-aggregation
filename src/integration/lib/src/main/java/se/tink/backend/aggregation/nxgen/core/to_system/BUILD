@@ -10,8 +10,11 @@ java_library(
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/typeguesser/accountholder",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
+        "//src/integration/models",
         "//src/integration/user:rpc",
+        "//src/libraries/date",
         "//third_party:com_google_guava_guava",
+        "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/serialization_utils",
     ],
 )

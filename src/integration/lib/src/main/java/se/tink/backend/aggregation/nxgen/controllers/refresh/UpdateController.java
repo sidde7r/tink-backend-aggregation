@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
 import se.tink.backend.aggregation.nxgen.core.to_system.AccountConverter;
+import se.tink.backend.aggregation.nxgen.core.to_system.LoanAccountConverter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.enums.MarketCode;
@@ -52,7 +53,7 @@ public class UpdateController {
         return updateAccount(
                 account,
                 AccountFeatures.createForLoan(
-                        account.getDetails().toSystemLoan(account, loanInterpreter)));
+                        LoanAccountConverter.toSystemLoan(loanInterpreter, account)));
     }
 
     public Pair<se.tink.backend.agents.rpc.Account, AccountFeatures> updateAccount(

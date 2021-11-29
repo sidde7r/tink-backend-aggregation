@@ -1,25 +1,15 @@
 package se.tink.backend.aggregation.nxgen.core.account.loan;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.date.DateUtils;
 
 public class LoanDetails {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private final ExactCurrencyAmount amortized;
     private final ExactCurrencyAmount monthlyAmortization;
     private final ExactCurrencyAmount initialBalance;
@@ -65,44 +55,8 @@ public class LoanDetails {
         return amortized;
     }
 
-    private Double calculateAmortizedValue(LoanAccount account) {
-        if (amortized != null) {
-            return amortized.getDoubleValue();
-        }
-
-        if (initialBalance != null) {
-            if (!Objects.equals(
-                    initialBalance.getCurrencyCode(),
-                    account.getExactBalance().getCurrencyCode())) {
-                logger.warn(
-                        String.format(
-                                "Detected Multiple loan currencies {balance: %s, initialBalance: %s}",
-                                account.getExactBalance().getCurrencyCode(),
-                                initialBalance.getCurrencyCode()));
-            }
-
-            return initialBalance.subtract(account.getExactBalance()).getDoubleValue();
-        }
-
-        return null;
-    }
-
     public ExactCurrencyAmount getExactMonthlyAmortization() {
         return monthlyAmortization;
-    }
-
-    private Double calculateMonthlyAmortizationValue(LoanAccount account) {
-        if (monthlyAmortization != null) {
-            return monthlyAmortization.getDoubleValue();
-        }
-        Double amortizedValue = calculateAmortizedValue(account);
-
-        if (initialDate == null || amortizedValue == null) {
-            return null;
-        }
-
-        long monthsAmortized = DateUtils.getCalendarMonthsBetween(initialDate, new Date());
-        return monthsAmortized != 0 ? amortizedValue / monthsAmortized : 0;
     }
 
     public ExactCurrencyAmount getInitialBalance() {
@@ -112,12 +66,6 @@ public class LoanDetails {
                                 ExactCurrencyAmount.of(
                                         initialBalance.getDoubleValue(),
                                         initialBalance.getCurrencyCode()))
-                .orElse(null);
-    }
-
-    private Double getInitialBalanceValue() {
-        return Optional.ofNullable(initialBalance)
-                .map(ExactCurrencyAmount::getDoubleValue)
                 .orElse(null);
     }
 
@@ -157,39 +105,6 @@ public class LoanDetails {
         }
 
         return coApplicant;
-    }
-
-    public Loan toSystemLoan(LoanAccount account, LoanInterpreter interpreter) {
-        Loan loan = new Loan();
-
-        loan.setBalance(account.getExactBalance().getDoubleValue());
-        loan.setInterest(account.getInterestRate());
-        loan.setName(account.getName());
-        loan.setLoanNumber(
-                Strings.isNullOrEmpty(loanNumber) ? account.getAccountNumber() : loanNumber);
-        loan.setAmortized(calculateAmortizedValue(account));
-        loan.setMonthlyAmortization(calculateMonthlyAmortizationValue(account));
-        loan.setInitialBalance(getInitialBalanceValue());
-        loan.setInitialDate(initialDate);
-        loan.setNumMonthsBound(numMonthsBound);
-        loan.setNextDayOfTermsChange(nextDayOfTermsChange);
-
-        Type type =
-                Type.DERIVE_FROM_NAME.equals(getType())
-                        ? interpreter.interpretLoanType(loan.getName())
-                        : getType();
-
-        loan.setType(type.toSystemType());
-
-        se.tink.backend.aggregation.agents.models.LoanDetails loanDetails =
-                new se.tink.backend.aggregation.agents.models.LoanDetails();
-        loanDetails.setLoanSecurity(security);
-        loanDetails.setCoApplicant(hasCoApplicant());
-        loanDetails.setApplicants(applicants);
-
-        loan.setLoanDetails(loanDetails);
-
-        return loan;
     }
 
     public enum Type {
