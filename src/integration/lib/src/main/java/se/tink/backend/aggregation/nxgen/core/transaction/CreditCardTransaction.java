@@ -10,8 +10,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.Card;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.card.Card;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class CreditCardTransaction extends Transaction {

@@ -14,6 +14,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/oauth2/constants",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/card",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/serializecontainer",
         "//src/integration/models",

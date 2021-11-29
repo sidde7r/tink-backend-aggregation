@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.core.account.creditcard;
+package se.tink.backend.aggregation.nxgen.core.card;
 
 public class Card {
     private final String cardHolder;
