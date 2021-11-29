@@ -6,7 +6,7 @@ import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.utils.masker.Base64DecodedMaskerValuesProvider;
-import se.tink.backend.aggregation.utils.masker.StringMasker;
+import se.tink.libraries.masker.StringMasker;
 
 public class Base64DecodedMaskerValuesProviderTest {
 

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.regex.Pattern;
+import se.tink.libraries.masker.MaskerPatternsProvider;
 
 public class SensitiveValuesCollectionMaskerPatternsProvider implements MaskerPatternsProvider {
 

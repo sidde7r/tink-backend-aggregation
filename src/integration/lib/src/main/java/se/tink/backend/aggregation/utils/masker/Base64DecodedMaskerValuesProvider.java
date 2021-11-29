@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import se.tink.libraries.masker.MaskerPatternsProvider;
 
 public class Base64DecodedMaskerValuesProvider implements MaskerPatternsProvider {
 

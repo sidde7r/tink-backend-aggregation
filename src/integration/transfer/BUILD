@@ -1,5 +1,6 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "enums",
@@ -22,10 +23,10 @@ java_library(
     ],
     deps = [
         "//src/integration/amount",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/integration/transfer:enums",
         "//src/integration/transfer/src/main/java/se/tink/libraries/transfer/iface",
         "//src/libraries/date",
+        "//src/libraries/masker",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:lombok_libs",

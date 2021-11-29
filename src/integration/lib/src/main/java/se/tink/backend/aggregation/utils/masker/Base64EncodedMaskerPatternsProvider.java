@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.libraries.masker.MaskerPatternsProvider;
 
 /**
  * Searches through strings after base64 encoded sensitive strings, masking them in the string if

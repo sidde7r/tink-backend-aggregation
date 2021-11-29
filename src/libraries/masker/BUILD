@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
 java_library_with_sources(
-    name = "hash",
+    name = "masker",
     srcs = glob(
         ["*.java"],
         exclude = [
@@ -10,19 +10,19 @@ java_library_with_sources(
         ],
     ),
     extdeps = [
-        "//third_party:commons_codec_commons_codec",
+        "@aggregation//:com_google_guava_guava",
     ],
     intdeps = [
+        "//src/libraries/cryptography/hash",
     ],
     visibility = ["//visibility:public"],
 )
 
 junit_test(
-    name = "hash_test",
+    name = "masker_test",
     srcs = glob(["*Test.java"]),
     deps = [
-        "//src/libraries/cryptography/hash",
-        "//src/libraries/encoding",
-        "//third_party:junit_junit",
+        ":masker",
+        "//third_party:org_assertj_assertj_core",
     ],
 )
