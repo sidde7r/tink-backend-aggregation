@@ -4,6 +4,9 @@ java_library(
     name = "nxgen",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/transaction",
+    ],
     deps = [
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -15,6 +18,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/card",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/transaction",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/serializecontainer",
         "//src/integration/models",
