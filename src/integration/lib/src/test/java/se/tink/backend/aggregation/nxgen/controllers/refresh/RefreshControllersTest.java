@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.to_system.AccountConverter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -90,7 +91,10 @@ public class RefreshControllersTest {
         Mockito.when(
                         transferDestinationFetcher.fetchTransferDestinationsFor(
                                 accounts.stream()
-                                        .map(a -> a.toSystemAccount(user, provider))
+                                        .map(
+                                                a ->
+                                                        AccountConverter.toSystemAccount(
+                                                                user, provider, a))
                                         .collect(Collectors.toList())))
                 .thenReturn(transferDestinations);
 

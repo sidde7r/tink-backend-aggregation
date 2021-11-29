@@ -24,18 +24,10 @@ import javax.annotation.Nonnull;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountHolder;
-import se.tink.backend.agents.rpc.AccountParty;
-import se.tink.backend.agents.rpc.AccountPartyAddress;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.HolderRole;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.utils.typeguesser.accountholder.AccountHolderTypeUtil;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Address;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
@@ -44,10 +36,7 @@ import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.enums.FeatureFlags;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
-import se.tink.libraries.user.rpc.User;
 
 @Getter
 public abstract class Account {
@@ -203,82 +192,7 @@ public abstract class Account {
         return getUniqueIdentifier().hashCode();
     }
 
-    public se.tink.backend.agents.rpc.Account toSystemAccount(User user, Provider provider) {
-        se.tink.backend.agents.rpc.Account account = new se.tink.backend.agents.rpc.Account();
-
-        account.setType(getType());
-        account.setName(this.name);
-        account.setAccountNumber(this.accountNumber);
-        account.setBalance(this.exactBalance.getDoubleValue());
-        account.setCurrencyCode(this.exactBalance.getCurrencyCode());
-        account.setExactBalance(this.exactBalance);
-        account.setIdentifiers(this.identifiers);
-        account.setBankId(this.uniqueIdentifier);
-        account.setHolderName(getFirstHolder().orElse(null));
-        account.setFlags(this.accountFlags);
-        account.setPayload(createPayload(user));
-        account.setAvailableCredit(
-                Optional.ofNullable(this.exactAvailableCredit)
-                        .map(ExactCurrencyAmount::getDoubleValue)
-                        .orElse(0.0));
-        account.setExactAvailableCredit(this.exactAvailableCredit);
-        account.setAvailableBalance(this.exactAvailableBalance);
-        account.setCreditLimit(this.exactCreditLimit);
-        account.setCapabilities(this.capabilities);
-        account.setSourceInfo(this.sourceInfo);
-
-        AccountHolder accountHolder = new AccountHolder();
-        accountHolder.setType(
-                Optional.ofNullable(holderType).orElse(inferHolderType(provider)).toSystemType());
-        accountHolder.setIdentities(
-                parties.stream().map(this::toSystemParty).collect(Collectors.toList()));
-        account.setAccountHolder(accountHolder);
-
-        account.setBalances(
-                balances != null
-                        ? balances.stream()
-                                .map(Balance::toSystemBalance)
-                                .collect(Collectors.toList())
-                        : ImmutableList.of());
-        return account;
-    }
-
-    public AccountParty toSystemParty(Party party) {
-        AccountParty systemParty = new AccountParty();
-        systemParty.setName(party.getName());
-        systemParty.setRole(toSystemPartyRole(party.getRole()));
-        systemParty.setAddresses(toSystemPartyAddress(party.getAddresses()));
-        return systemParty;
-    }
-
-    private HolderRole toSystemPartyRole(Role role) {
-        if (role == Role.UNKNOWN) {
-            return null;
-        }
-        return HolderRole.valueOf(role.name());
-    }
-
-    private List<AccountPartyAddress> toSystemPartyAddress(List<Address> addresses) {
-        if (addresses == null || addresses.isEmpty()) return null;
-
-        return addresses.stream()
-                .map(
-                        address ->
-                                new AccountPartyAddress(
-                                        address.getAddressType(),
-                                        address.getStreet(),
-                                        address.getPostalCode(),
-                                        address.getCity(),
-                                        address.getCountry()))
-                .collect(Collectors.toList());
-    }
-
-    private AccountHolderType inferHolderType(Provider provider) {
-        String accountHolderTypeAsString = AccountHolderTypeUtil.inferHolderType(provider).name();
-        return AccountHolderType.valueOf(accountHolderTypeAsString);
-    }
-
-    private Optional<String> getFirstHolder() {
+    public Optional<String> getFirstHolder() {
         return parties.stream()
                 .filter(party -> HOLDER.equals(party.getRole()))
                 .findFirst()
@@ -299,18 +213,6 @@ public abstract class Account {
 
     public <T> Optional<T> getFromTemporaryStorage(String key, TypeReference<T> valueType) {
         return temporaryStorage.get(key, valueType);
-    }
-
-    private String createPayload(User user) {
-        if (FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(user.getFlags())) {
-            payload.put("currency", exactBalance.getCurrencyCode());
-        }
-
-        if (payload.isEmpty()) {
-            return null;
-        }
-
-        return SerializationUtils.serializeToString(payload);
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project

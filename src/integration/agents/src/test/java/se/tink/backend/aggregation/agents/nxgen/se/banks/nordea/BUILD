@@ -15,6 +15,7 @@ junit_test(
         "//src/integration/enums",
         "//src/integration/identity_data",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/to_system",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
