@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.util.Sets;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -204,7 +203,6 @@ public class AccountV31FetcherTest {
     }
 
     @Test
-    @Ignore
     public void allFetchedDataIsPassedToMapper() {
         // given
         setUpWithoutBusiness();
@@ -221,6 +219,20 @@ public class AccountV31FetcherTest {
         accountFetcher.fetchAccounts();
         // then
         verify(accountMapper).map(account, ImmutableList.of(balance), parties);
+    }
+
+    @Test
+    public void shouldReturnEmptyAccountList() {
+        // given
+        setUpWithoutBusiness();
+        AccountEntity account = TransactionalAccountFixtures.currentAccountWithEmptyAccountId();
+        when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));
+
+        // when
+        Collection accounts = accountFetcher.fetchAccounts();
+
+        // then
+        assertThat(accounts).hasSize(0);
     }
 
     private void setUpWithoutBusiness() {
