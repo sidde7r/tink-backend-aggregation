@@ -2,7 +2,7 @@ load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "to_system",
-    srcs = glob(["*.java"]),
+    srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/amount",

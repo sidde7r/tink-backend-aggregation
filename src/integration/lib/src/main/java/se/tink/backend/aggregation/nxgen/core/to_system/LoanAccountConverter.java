@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
+import se.tink.backend.aggregation.nxgen.core.to_system.loan.LoanInterpreter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 

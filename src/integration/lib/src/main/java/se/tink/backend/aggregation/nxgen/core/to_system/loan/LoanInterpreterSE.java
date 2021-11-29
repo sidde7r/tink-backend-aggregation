@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.core.account.loan.util;
+package se.tink.backend.aggregation.nxgen.core.to_system.loan;
 
 import com.google.common.collect.ImmutableSet;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
