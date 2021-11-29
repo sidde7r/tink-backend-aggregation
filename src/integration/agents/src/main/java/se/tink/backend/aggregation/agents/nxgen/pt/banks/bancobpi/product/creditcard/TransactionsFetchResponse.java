@@ -61,7 +61,7 @@ public class TransactionsFetchResponse {
             transactions.add(
                     CreditCardTransaction.builder()
                             .setAmount(transactionAmount)
-                            .setCreditAccount(account)
+                            .setCreditAccount(account != null ? account.getAccountNumber() : null)
                             .setDate(LocalDate.parse(jsonTransaction.getString("DataTransaccao")))
                             .setDescription(jsonTransaction.getString("DescricaoTransaccao"))
                             .build());

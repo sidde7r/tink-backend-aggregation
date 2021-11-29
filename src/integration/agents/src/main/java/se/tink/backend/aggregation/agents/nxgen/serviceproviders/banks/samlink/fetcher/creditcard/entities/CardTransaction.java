@@ -26,7 +26,7 @@ public class CardTransaction {
                 .setAmount(amount.toTinkAmount())
                 .setDescription(details)
                 .setDate(date)
-                .setCreditAccount(account)
+                .setCreditAccount(account != null ? account.getAccountNumber() : null)
                 .build();
     }
 }

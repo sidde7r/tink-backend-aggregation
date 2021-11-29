@@ -74,7 +74,7 @@ public class MovementEntity {
     public CreditCardTransaction toTinkTransaction(CreditCardAccount account) {
         return (CreditCardTransaction)
                 CreditCardTransaction.builder()
-                        .setCreditAccount(account)
+                        .setCreditAccount(account != null ? account.getAccountNumber() : null)
                         .setDate(transactionDate, DATE_FORMATTER)
                         .setAmount(
                                 ExactCurrencyAmount.of(amount.negate(), LaCaixaConstants.CURRENCY))

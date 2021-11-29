@@ -59,7 +59,7 @@ public class SantanderCreditCardTransactionFetcher
 
         return CreditCardTransaction.builder()
                 .setAmount(transactionAmount)
-                .setCreditAccount(account)
+                .setCreditAccount(account != null ? account.getAccountNumber() : null)
                 .setDate(transactionDate)
                 .setDescription(transaction.get(Fields.Transaction.DESCRIPTION))
                 .build();

@@ -30,7 +30,7 @@ public class CardTransactionEntity {
     public CreditCardTransaction toTinkTransaction(CreditCardAccount account) {
         return (CreditCardTransaction)
                 CreditCardTransaction.builder()
-                        .setCreditAccount(account)
+                        .setCreditAccount(account != null ? account.getAccountNumber() : null)
                         .setAmount(ExactCurrencyAmount.of(movementAmount, getCurrency()))
                         .setDate(movementDate)
                         .setDescription(movementDescription)

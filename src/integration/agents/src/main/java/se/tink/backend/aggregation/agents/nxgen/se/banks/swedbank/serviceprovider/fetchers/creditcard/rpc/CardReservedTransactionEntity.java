@@ -20,7 +20,10 @@ public class CardReservedTransactionEntity extends CardTransactionEntity {
         return Optional.of(
                 CreditCardTransaction.builder()
                         .setAmount(getLocalAmount().toTinkAmount(defaultCurrency))
-                        .setCreditAccount(creditCardAccount)
+                        .setCreditAccount(
+                                creditCardAccount != null
+                                        ? creditCardAccount.getAccountNumber()
+                                        : null)
                         .setDate(getDate())
                         .setDescription(getDescription())
                         .setPending(true)

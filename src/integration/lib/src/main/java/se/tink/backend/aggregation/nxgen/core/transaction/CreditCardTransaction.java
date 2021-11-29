@@ -10,12 +10,11 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.card.Card;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class CreditCardTransaction extends Transaction {
-    private final CreditCardAccount creditAccount;
+    private final String creditCardAccountNumber;
     private final Card creditCard;
 
     private CreditCardTransaction(
@@ -23,7 +22,7 @@ public final class CreditCardTransaction extends Transaction {
             Date date,
             String description,
             boolean pending,
-            CreditCardAccount creditAccount,
+            String creditCardAccountNumber,
             Card creditCard,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
@@ -46,7 +45,7 @@ public final class CreditCardTransaction extends Transaction {
                 merchantCategoryCode,
                 transactionReference,
                 providerMarket);
-        this.creditAccount = creditAccount;
+        this.creditCardAccountNumber = creditCardAccountNumber;
         this.creditCard = creditCard;
     }
 
@@ -54,8 +53,8 @@ public final class CreditCardTransaction extends Transaction {
         return new Builder();
     }
 
-    public Optional<CreditCardAccount> getCreditAccount() {
-        return Optional.ofNullable(creditAccount);
+    public Optional<String> getCreditCardAccountNumber() {
+        return Optional.ofNullable(creditCardAccountNumber);
     }
 
     public Optional<Card> getCreditCard() {
@@ -73,12 +72,11 @@ public final class CreditCardTransaction extends Transaction {
         se.tink.backend.aggregation.agents.models.Transaction transaction =
                 super.toSystemTransaction(multiCurrencyEnabled);
 
-        getCreditAccount()
+        getCreditCardAccountNumber()
                 .ifPresent(
-                        creditAccount ->
+                        number ->
                                 transaction.setPayload(
-                                        TransactionPayloadTypes.SUB_ACCOUNT,
-                                        creditAccount.getAccountNumber()));
+                                        TransactionPayloadTypes.SUB_ACCOUNT, number));
 
         if (Objects.nonNull(creditCard) && Objects.nonNull(creditCard.getCardNumber())) {
             transaction.setPayload(
@@ -94,20 +92,12 @@ public final class CreditCardTransaction extends Transaction {
     }
 
     public static final class Builder extends Transaction.Builder {
-        private CreditCardAccount creditAccount;
+        private String creditCardAccountNumber;
         private Card creditCard;
 
-        private CreditCardAccount getCreditAccount() {
-            return creditAccount;
-        }
-
-        public Builder setCreditAccount(CreditCardAccount creditAccount) {
-            this.creditAccount = creditAccount;
+        public Builder setCreditAccount(String creditCardAccountNumber) {
+            this.creditCardAccountNumber = creditCardAccountNumber;
             return this;
-        }
-
-        public Card getCreditCard() {
-            return creditCard;
         }
 
         public Builder setCreditCard(Card creditCard) {
@@ -162,8 +152,8 @@ public final class CreditCardTransaction extends Transaction {
                     getDate(),
                     getDescription(),
                     isPending(),
-                    getCreditAccount(),
-                    getCreditCard(),
+                    creditCardAccountNumber,
+                    creditCard,
                     getExternalSystemIds(),
                     getMutable(),
                     getTransactionDates(),

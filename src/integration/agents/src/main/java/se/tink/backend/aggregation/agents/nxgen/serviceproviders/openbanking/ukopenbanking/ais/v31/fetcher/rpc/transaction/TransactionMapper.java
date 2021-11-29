@@ -60,7 +60,7 @@ public interface TransactionMapper {
             TransactionEntity transactionEntity, CreditCardAccount account) {
         Builder builder =
                 CreditCardTransaction.builder()
-                        .setCreditAccount(account)
+                        .setCreditAccount(account != null ? account.getAccountNumber() : null)
                         .setAmount(transactionEntity.getSignedAmount())
                         .setDescription(transactionEntity.getDescription())
                         .setPending(transactionEntity.isPending())

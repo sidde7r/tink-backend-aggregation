@@ -62,7 +62,7 @@ public class MonzoTransactionMapper implements TransactionMapper {
             TransactionEntity transactionEntity, CreditCardAccount account) {
         Builder builder =
                 CreditCardTransaction.builder()
-                        .setCreditAccount(account)
+                        .setCreditAccount(account != null ? account.getAccountNumber() : null)
                         .setAmount(transactionEntity.getSignedAmount())
                         .setPending(transactionEntity.isPending())
                         .setDate(transactionEntity.getDateOfTransaction())

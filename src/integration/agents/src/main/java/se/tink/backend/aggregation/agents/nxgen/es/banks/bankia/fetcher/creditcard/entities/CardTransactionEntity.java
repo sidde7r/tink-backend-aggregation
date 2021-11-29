@@ -37,7 +37,10 @@ public class CardTransactionEntity {
                         .setDate(date.toJavaLangDate())
                         .setDescription(getDescription())
                         .setRawDetails(this)
-                        .setCreditAccount(creditCardAccount)
+                        .setCreditAccount(
+                                creditCardAccount != null
+                                        ? creditCardAccount.getAccountNumber()
+                                        : null)
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)

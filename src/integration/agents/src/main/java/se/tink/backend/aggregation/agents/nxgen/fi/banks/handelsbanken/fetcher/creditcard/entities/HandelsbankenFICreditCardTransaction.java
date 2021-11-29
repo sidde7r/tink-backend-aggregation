@@ -24,7 +24,7 @@ public class HandelsbankenFICreditCardTransaction {
         return CreditCardTransaction.builder()
                 .setAmount(amount.toExactCurrencyAmount().negate())
                 .setDate(date)
-                .setCreditAccount(account)
+                .setCreditAccount(account != null ? account.getAccountNumber() : null)
                 .setDescription(description)
                 .build();
     }

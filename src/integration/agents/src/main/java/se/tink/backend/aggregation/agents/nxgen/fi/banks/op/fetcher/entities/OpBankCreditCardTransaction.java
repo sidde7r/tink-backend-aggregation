@@ -29,7 +29,7 @@ public class OpBankCreditCardTransaction {
                 .setDate(getTransactionDateParsed())
                 .setAmount(ExactCurrencyAmount.inEUR(AgentParsingUtils.parseAmount(amount)))
                 .setDescription(getDescription())
-                .setCreditAccount(account)
+                .setCreditAccount(account != null ? account.getAccountNumber() : null)
                 .build();
     }
 

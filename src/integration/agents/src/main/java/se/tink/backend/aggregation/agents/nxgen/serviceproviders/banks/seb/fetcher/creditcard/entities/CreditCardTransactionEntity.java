@@ -73,7 +73,12 @@ public class CreditCardTransactionEntity {
         } else {
             CreditCardTransaction.Builder builder = CreditCardTransaction.builder();
             setCommonFields(builder, date.get(), isPending);
-            return Optional.of(builder.setCreditAccount(creditCardAccount).build());
+            return Optional.of(
+                    builder.setCreditAccount(
+                                    creditCardAccount != null
+                                            ? creditCardAccount.getAccountNumber()
+                                            : null)
+                            .build());
         }
     }
 
