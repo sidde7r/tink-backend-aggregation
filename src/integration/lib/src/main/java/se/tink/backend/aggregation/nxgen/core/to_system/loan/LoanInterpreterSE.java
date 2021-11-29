@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public class LoanInterpreterSE extends LoanInterpreter {
 
-    private static ImmutableSet<NamePart> NAME_PARTS;
+    private static final ImmutableSet<NamePart> NAME_PARTS;
 
     static {
         NAME_PARTS =
