@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.TransactionType;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.Card;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -37,7 +37,7 @@ public class TransactionEntity {
                 ZonedDateTime.parse(transactionDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         return CreditCardTransaction.builder()
-                .setCreditCard(CreditCard.create(cardHolderName, cardNumber))
+                .setCreditCard(Card.create(cardHolderName, cardNumber))
                 .setDescription(description)
                 .setPending(isPending)
                 .setAmount(amount)

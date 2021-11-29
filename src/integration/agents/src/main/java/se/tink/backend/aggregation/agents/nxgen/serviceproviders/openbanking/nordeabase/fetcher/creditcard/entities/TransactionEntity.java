@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.Card;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -39,7 +39,7 @@ public class TransactionEntity {
     public CreditCardTransaction toTinkCreditCardTransaction() {
         return CreditCardTransaction.builder()
                 .setAmount(getTinkAmount())
-                .setCreditCard(CreditCard.create(beneficiary, maskedCreditCardNumber))
+                .setCreditCard(Card.create(beneficiary, maskedCreditCardNumber))
                 .setDescription(beneficiary)
                 .setPending(false)
                 .setDate(transactionDate)

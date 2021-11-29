@@ -10,13 +10,13 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.Card;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class CreditCardTransaction extends Transaction {
     private final CreditCardAccount creditAccount;
-    private final CreditCard creditCard;
+    private final Card creditCard;
 
     private CreditCardTransaction(
             ExactCurrencyAmount amount,
@@ -24,7 +24,7 @@ public final class CreditCardTransaction extends Transaction {
             String description,
             boolean pending,
             CreditCardAccount creditAccount,
-            CreditCard creditCard,
+            Card creditCard,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
             TransactionDates transactionDates,
@@ -58,7 +58,7 @@ public final class CreditCardTransaction extends Transaction {
         return Optional.ofNullable(creditAccount);
     }
 
-    public Optional<CreditCard> getCreditCard() {
+    public Optional<Card> getCreditCard() {
         return Optional.ofNullable(creditCard);
     }
 
@@ -95,7 +95,7 @@ public final class CreditCardTransaction extends Transaction {
 
     public static final class Builder extends Transaction.Builder {
         private CreditCardAccount creditAccount;
-        private CreditCard creditCard;
+        private Card creditCard;
 
         private CreditCardAccount getCreditAccount() {
             return creditAccount;
@@ -106,11 +106,11 @@ public final class CreditCardTransaction extends Transaction {
             return this;
         }
 
-        public CreditCard getCreditCard() {
+        public Card getCreditCard() {
             return creditCard;
         }
 
-        public Builder setCreditCard(CreditCard creditCard) {
+        public Builder setCreditCard(Card creditCard) {
             this.creditCard = creditCard;
             return this;
         }
