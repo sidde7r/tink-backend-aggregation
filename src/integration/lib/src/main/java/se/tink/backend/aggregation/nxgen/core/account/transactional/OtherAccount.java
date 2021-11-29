@@ -1,16 +1,8 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
-import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountIdentifierStep;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountNumberStep;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AliasStep;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BalanceStep;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.OtherBuildStep;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 /**
  * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
@@ -27,11 +19,6 @@ public class OtherAccount extends TransactionalAccount {
         LOG.info("Unknown_account_type - deprecated " + this.getName());
     }
 
-    private OtherAccount(OtherAccountBuilder builder) {
-        super(builder);
-        LOG.info("Unknown_account_type " + this.getName());
-    }
-
     /**
      * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
      *     <p>This will be removed as part of the improved step builder + agent builder refactoring
@@ -40,61 +27,6 @@ public class OtherAccount extends TransactionalAccount {
     @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultOtherAccountBuilder(uniqueIdentifier);
-    }
-
-    /**
-     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
-     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
-     *     project
-     */
-    @Deprecated
-    public static UniqueIdentifierStep<OtherBuildStep> builder() {
-        return new OtherAccountBuilder();
-    }
-
-    @Deprecated
-    private static class OtherAccountBuilder extends StepBuilder<OtherAccount, OtherBuildStep>
-            implements UniqueIdentifierStep<OtherBuildStep>,
-                    AccountNumberStep<OtherBuildStep>,
-                    BalanceStep<OtherBuildStep>,
-                    AliasStep<OtherBuildStep>,
-                    AccountIdentifierStep<OtherBuildStep>,
-                    OtherBuildStep {
-
-        @Override
-        public AccountNumberStep<OtherBuildStep> setUniqueIdentifier(
-                @Nonnull String uniqueIdentifier) {
-            applyUniqueIdentifier(uniqueIdentifier);
-            return this;
-        }
-
-        @Override
-        public BalanceStep<OtherBuildStep> setAccountNumber(@Nonnull String accountNumber) {
-            applyAccountNumber(accountNumber);
-            return this;
-        }
-
-        @Override
-        public AliasStep<OtherBuildStep> setBalance(@Nonnull ExactCurrencyAmount balance) {
-            applyBalance(balance);
-            return this;
-        }
-
-        @Override
-        public AccountIdentifierStep<OtherBuildStep> setAlias(@Nonnull String alias) {
-            applyAlias(alias);
-            return this;
-        }
-
-        @Override
-        public OtherAccount build() {
-            return new OtherAccount(this);
-        }
-
-        @Override
-        protected OtherBuildStep buildStep() {
-            return this;
-        }
     }
 
     @Override
