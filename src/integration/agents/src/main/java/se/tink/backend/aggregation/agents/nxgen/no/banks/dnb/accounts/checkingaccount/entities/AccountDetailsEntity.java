@@ -4,16 +4,17 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class AccountDetailsEntity {
     private String number;
     private String currency;
@@ -52,129 +53,26 @@ public class AccountDetailsEntity {
     private boolean bma;
     private boolean ipa;
 
-    public String getNumber() {
-        return number;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public String getProductNumber() {
-        return productNumber;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public String getProperty() {
-        return property;
-    }
-
-    public double getAvailableBalance() {
-        return availableBalance;
-    }
-
-    public double getAvailableBalanceNok() {
-        return availableBalanceNok;
-    }
-
-    public double getBookBalance() {
-        return bookBalance;
-    }
-
-    public double getBookBalanceNok() {
-        return bookBalanceNok;
-    }
-
-    public double getGranting() {
-        return granting;
-    }
-
-    public double getGrantingNok() {
-        return grantingNok;
-    }
-
-    public boolean isPayFrom() {
-        return payFrom;
-    }
-
-    public boolean isDelinquent() {
-        return delinquent;
-    }
-
-    public boolean isLoan() {
-        return loan;
-    }
-
-    public boolean isTransferFrom() {
-        return transferFrom;
-    }
-
-    public boolean isTransferTo() {
-        return transferTo;
-    }
-
-    public boolean isSavings() {
-        return savings;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public boolean isTaxes() {
-        return taxes;
-    }
-
-    public boolean isPrimary() {
-        return primary;
-    }
-
-    public boolean isOwn() {
-        return own;
-    }
-
-    public boolean isBsu() {
-        return bsu;
-    }
-
-    public boolean isBma() {
-        return bma;
-    }
-
-    public boolean isIpa() {
-        return ipa;
-    }
-
     public Optional<TransactionalAccount> toTransactionalAccount() {
         BalanceModule balance =
-                BalanceModule.of(ExactCurrencyAmount.of(availableBalanceNok, currency));
+                BalanceModule.builder()
+                        .withBalance(ExactCurrencyAmount.of(bookBalance, currency))
+                        .setAvailableBalance(ExactCurrencyAmount.of(availableBalance, currency))
+                        .build();
+
         IdModule id =
                 IdModule.builder()
                         .withUniqueIdentifier(number)
                         .withAccountNumber(number)
                         .withAccountName(getTinkAccountName())
-                        .addIdentifier(AccountIdentifier.create(AccountIdentifierType.NO, number))
+                        .addIdentifier(new BbanIdentifier(number))
                         .build();
         return TransactionalAccount.nxBuilder()
                 .withType(getType())
                 .withInferredAccountFlags()
                 .withBalance(balance)
                 .withId(id)
+                .addHolderName(ownerName)
                 .build();
     }
 
