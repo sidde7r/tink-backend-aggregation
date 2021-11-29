@@ -1,0 +1,11 @@
+build_flags:
+  --test_output=streamed
+
+directories:
+  tools/bzl/compile_srcjar
+
+test_sources:
+  tools/bzl/compile_srcjar/tests
+
+targets:
+  //tools/bzl/compile_srcjar/...
