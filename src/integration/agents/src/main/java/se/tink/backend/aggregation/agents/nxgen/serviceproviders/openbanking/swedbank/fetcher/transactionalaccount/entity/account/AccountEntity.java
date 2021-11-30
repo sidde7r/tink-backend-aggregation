@@ -98,6 +98,24 @@ public class AccountEntity {
                 .build();
     }
 
+    public Optional<TransactionalAccount> toBalticTinkAccount(
+            List<BalancesItem> balances, String market, String holderName) {
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(SwedbankConstants.ACCOUNT_TYPE_MAPPER, product)
+                .withBalance(getBalanceModule(balances))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getUniqueIdentifier(market))
+                                .withAccountNumber(getUniqueIdentifier(market))
+                                .withAccountName(getAccountName())
+                                .addIdentifiers(getIdentifiers(market))
+                                .build())
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban)
+                .setApiIdentifier(resourceId)
+                .addHolderName(holderName)
+                .build();
+    }
+
     private BalanceModule getBalanceModule(List<BalancesItem> balances) {
         BalanceBuilderStep balanceBuilderStep =
                 BalanceModule.builder().withBalance(getBookedBalance(balances));
