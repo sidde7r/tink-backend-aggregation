@@ -5,9 +5,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "unscaledValue" : 1000012,
-            "scale" : 2,
+            "exactValue" : 10000.12,
             "doubleValue" : 10000.12,
-            "exactValue" : 10000.12
+            "scale" : 2
         },
         "bankId" : "92527654321",
         "excluded" : false,
@@ -41,9 +41,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "unscaledValue" : 3000052,
-            "scale" : 2,
+            "exactValue" : 30000.52,
             "doubleValue" : 30000.52,
-            "exactValue" : 30000.52
+            "scale" : 2
         },
         "bankId" : "92521234567",
         "excluded" : false,
@@ -113,7 +113,11 @@
         "pending" : false,
         "timestamp" : 0,
         "type" : "TRANSFER",
-        "upcoming" : false
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "210214441"
+        },
+        "booked" : true
     }, {
         "amount" : -500.0,
         "date" : 1531872000000,
@@ -124,7 +128,11 @@
         "pending" : false,
         "timestamp" : 0,
         "type" : "WITHDRAWAL",
-        "upcoming" : false
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "210214431"
+        },
+        "booked" : true
     }, {
         "amount" : 50000.0,
         "date" : 1629331200000,
@@ -135,7 +143,11 @@
         "pending" : false,
         "timestamp" : 0,
         "type" : "TRANSFER",
-        "upcoming" : false
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "567890123"
+        },
+        "booked" : true
     }, {
         "amount" : -2500.0,
         "date" : 1627603200000,
@@ -146,7 +158,11 @@
         "pending" : false,
         "timestamp" : 0,
         "type" : "WITHDRAWAL",
-        "upcoming" : false
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "234567890"
+        },
+        "booked" : true
     }, {
         "amount" : -2500.0,
         "date" : 1627603200000,
@@ -157,7 +173,11 @@
         "pending" : false,
         "timestamp" : 0,
         "type" : "WITHDRAWAL",
-        "upcoming" : false
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "282189501"
+        },
+        "booked" : true
     }, {
         "amount" : 5000.0,
         "date" : 1627257600000,
@@ -168,7 +188,11 @@
         "pending" : false,
         "timestamp" : 0,
         "type" : "TRANSFER",
-        "upcoming" : false
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "345567789"
+        },
+        "booked" : true
     } ],
     "identityData" : {
         "nameElements" : [ {
@@ -179,15 +203,15 @@
             "year" : 1993,
             "month" : "DECEMBER",
             "era" : "CE",
-            "monthValue" : 12,
-            "dayOfMonth" : 5,
             "dayOfWeek" : "SUNDAY",
             "leapYear" : false,
             "dayOfYear" : 339,
             "chronology" : {
-                "id" : "ISO",
-                "calendarType" : "iso8601"
-            }
+                "calendarType" : "iso8601",
+                "id" : "ISO"
+            },
+            "monthValue" : 12,
+            "dayOfMonth" : 5
         }
     }
 }

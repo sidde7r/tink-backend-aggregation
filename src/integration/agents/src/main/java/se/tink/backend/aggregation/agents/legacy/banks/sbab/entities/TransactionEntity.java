@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.date.DateUtils;
@@ -48,7 +51,12 @@ public class TransactionEntity {
         try {
             Transaction transaction = new Transaction();
 
-            transaction.setId(id);
+            if (!Strings.isNullOrEmpty(id)) {
+                transaction.setId(id);
+                Map<TransactionExternalSystemIdType, String> idMap = new HashMap<>();
+                idMap.put(TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, id);
+                transaction.setExternalSystemIds(idMap);
+            }
 
             transaction.setDescription(
                     Stream.of(descriptionFrom, descriptionTo)
