@@ -5,9 +5,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "scale" : 2,
+            "exactValue" : 3.67,
             "unscaledValue" : 367,
-            "doubleValue" : 3.67,
-            "exactValue" : 3.67
+            "doubleValue" : 3.67
         },
         "currencyCode" : "SEK",
         "bankId" : "NORWEGIANSAVINGSACCOUNT",
@@ -36,16 +36,16 @@
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
             "scale" : 2,
+            "exactValue" : 94742.52,
             "unscaledValue" : 9474252,
-            "doubleValue" : 94742.52,
-            "exactValue" : 94742.52
+            "doubleValue" : 94742.52
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
             "scale" : 2,
+            "exactValue" : -5257.48,
             "unscaledValue" : -525748,
-            "doubleValue" : -5257.48,
-            "exactValue" : -5257.48
+            "doubleValue" : -5257.48
         },
         "currencyCode" : "SEK",
         "bankId" : "NORWEGIANCARD",
@@ -80,8 +80,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "a466d362-9633-4e04-b32f-2f177c28a3df"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -835.0,
         "date" : 698497200000,
@@ -93,8 +96,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "5ebea095-bf32-42bf-89b5-bd11993aa0ae"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 663.22,
         "date" : 694177200000,
@@ -106,8 +112,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "0377554c-9ba7-4eec-9d52-6bdbf3706474"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 464.42,
         "date" : 707047200000,
@@ -119,8 +128,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "7b744081-29cf-4cfe-88ab-6fdc162d2d7b"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -109.0,
         "date" : 706788000000,
@@ -132,8 +144,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "6771c29f-fc75-4258-b650-e540ce4e2a0e"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -109.0,
         "date" : 705837600000,
@@ -145,8 +160,10 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     } ],
     "identityData" : {
         "nameElements" : [ {
@@ -159,6 +176,7 @@
         "dateOfBirth" : {
             "year" : 1999,
             "month" : "JANUARY",
+            "era" : "CE",
             "dayOfWeek" : "FRIDAY",
             "leapYear" : false,
             "dayOfYear" : 1,
@@ -167,8 +185,7 @@
                 "calendarType" : "iso8601"
             },
             "monthValue" : 1,
-            "dayOfMonth" : 1,
-            "era" : "CE"
+            "dayOfMonth" : 1
         }
     }
 }
