@@ -1,710 +1,764 @@
 {
-  "accounts": [
-    {
-      "accountExclusion": "NONE",
-      "accountHolder": {
-        "accountId": null,
-        "identities": [
-          {
-            "name": "Test Testson",
-            "role": "HOLDER"
-          }
-        ],
-        "type": "PERSONAL"
-      },
-      "accountNumber": "55555555555",
-      "availableCredit": 0.0,
-      "balance": 0.97,
-      "balances": [],
-      "bankId": "55555555555",
-      "closed": false,
-      "currencyCode": "SEK",
-      "exactBalance": {
-        "currencyCode": "SEK",
-        "doubleValue": 0.97,
-        "exactValue": 0.97,
-        "scale": 2,
-        "unscaledValue": 97
-      },
-      "excluded": false,
-      "favored": false,
-      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "holderName": "Test Testson",
-      "identifiers": "[\"bban://12000000055555555555\", \"se://55555555555\"]",
-      "name": "Sparkonto XL",
-      "ownership": 1.0,
-      "type": "SAVINGS",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false
+  "accounts" : [ {
+    "accountNumber" : "55555555555",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 97,
+      "exactValue" : 0.97,
+      "doubleValue" : 0.97,
+      "scale" : 2
     },
-    {
-      "accountExclusion": "NONE",
-      "accountNumber": "4444444444",
-      "availableCredit": 0.0,
-      "balance": 0.0,
-      "balances": [],
-      "bankId": "4444444444",
-      "closed": false,
-      "currencyCode": "SEK",
-      "exactBalance": {
-        "currencyCode": "SEK",
-        "doubleValue": 0.0,
-        "exactValue": 0.0,
-        "scale": 1,
-        "unscaledValue": 0
-      },
-      "excluded": false,
-      "favored": false,
-      "flags": "[]",
-      "identifiers": "[]",
-      "name": "Depå",
-      "ownership": 1.0,
-      "type": "INVESTMENT",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false
+    "currencyCode" : "SEK",
+    "bankId" : "55555555555",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Sparkonto XL",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"bban://12000000055555555555\",\"se://55555555555\"]",
+    "closed" : false,
+    "holderName" : "Test Testson",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Test Testson",
+        "role" : "HOLDER"
+      } ]
     },
-    {
-      "accountExclusion": "NONE",
-      "accountHolder": {
-        "accountId": null,
-        "identities": [
-          {
-            "name": "Test Testson",
-            "role": "HOLDER"
-          }
-        ],
-        "type": "PERSONAL"
-      },
-      "accountNumber": "88888888888",
-      "availableCredit": 0.0,
-      "balance": 0.98,
-      "balances": [],
-      "bankId": "88888888888",
-      "closed": false,
-      "currencyCode": "SEK",
-      "exactBalance": {
-        "currencyCode": "SEK",
-        "doubleValue": 0.98,
-        "exactValue": 0.98,
-        "scale": 2,
-        "unscaledValue": 98
-      },
-      "excluded": false,
-      "favored": false,
-      "flags": "[\"DEPOT_CASH_BALANCE\",\"PSD2_PAYMENT_ACCOUNT\"]",
-      "holderName": "Test Testson",
-      "identifiers": "[\"bban://12000000088888888888\",\"se://88888888888\"]",
-      "name": "Investeringssparkto.",
-      "ownership": 1.0,
-      "type": "SAVINGS",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.97
+  }, {
+    "accountNumber" : "70626761838",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "exactValue" : 0,
+      "doubleValue" : 0.0,
+      "scale" : 0
     },
-    {
-      "accountExclusion": "NONE",
-      "accountHolder": {
-        "accountId": null,
-        "identities": [
-          {
-            "name": "Test Testson",
-            "role": "HOLDER"
-          }
-        ],
-        "type": "PERSONAL"
-      },
-      "accountNumber": "33333333333",
-      "availableCredit": 0.0,
-      "balance": 0.99,
-      "balances": [],
-      "bankId": "33333333333",
-      "closed": false,
-      "currencyCode": "SEK",
-      "exactBalance": {
-        "currencyCode": "SEK",
-        "doubleValue": 0.99,
-        "exactValue": 0.99,
-        "scale": 2,
-        "unscaledValue": 99
-      },
-      "excluded": false,
-      "favored": false,
-      "flags": "[\"DEPOT_CASH_BALANCE\",\"PSD2_PAYMENT_ACCOUNT\"]",
-      "holderName": "Test Testson",
-      "identifiers": "[\"bban://12000000033333333333\", \"se://33333333333\"]",
-      "name": "Depåkonto",
-      "ownership": 1.0,
-      "type": "SAVINGS",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : -1652013,
+      "exactValue" : -16520.13,
+      "doubleValue" : -16520.13,
+      "scale" : 2
     },
-    {
-      "accountExclusion": "NONE",
-      "accountHolder": {
-        "accountId": null,
-        "identities": [
-          {
-            "name": "Test Testson",
-            "role": "HOLDER"
-          }
-        ],
-        "type": "PERSONAL"
-      },
-      "accountNumber": "22222222222",
-      "availableCredit": 0.0,
-      "balance": 4.31,
-      "balances": [],
-      "bankId": "22222222222",
-      "closed": false,
-      "currencyCode": "SEK",
-      "exactAvailableCredit": {
-        "currencyCode": "SEK",
-        "doubleValue": 0.0,
-        "exactValue": 0,
-        "scale": 0,
-        "unscaledValue": 0
-      },
-      "exactBalance": {
-        "currencyCode": "SEK",
-        "doubleValue": 4.31,
-        "exactValue": 4.31,
-        "scale": 2,
-        "unscaledValue": 431
-      },
-      "excluded": false,
-      "favored": false,
-      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "holderName": "Test Testson",
-      "identifiers":"[\"bban://12000000022222222222\"]",
-      "name": "Danske Konto",
-      "ownership": 1.0,
-      "type": "CHECKING",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false
+    "currencyCode" : "SEK",
+    "bankId" : "70626761838",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Mastercard Guld",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"bban://42285670261463981921\",\"iban://DABASESX/SE9342285670261463981921\",\"masked-pan://123456XXXXXX1234\",\"se://70626761838\"]",
+    "closed" : false,
+    "holderName" : "Name Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Name Lastname",
+        "role" : "HOLDER"
+      } ]
     },
-    {
-      "accountExclusion": "NONE",
-      "accountHolder": {
-        "accountId": null,
-        "identities": [
-          {
-            "name": "Name Lastname",
-            "role": "HOLDER"
-          }
-        ],
-        "type": "PERSONAL"
-      },
-      "accountNumber": "70626761838",
-      "availableCredit": 0.0,
-      "balance": -16520.13,
-      "balances": [],
-      "bankId": "70626761838",
-      "closed": false,
-      "currencyCode": "SEK",
-      "exactAvailableCredit": {
-        "currencyCode": "SEK",
-        "doubleValue": 0.0,
-        "exactValue": 0,
-        "scale": 0,
-        "unscaledValue": 0
-      },
-      "exactBalance": {
-        "currencyCode": "SEK",
-        "doubleValue": -16520.13,
-        "exactValue": -16520.13,
-        "scale": 2,
-        "unscaledValue": -1652013
-      },
-      "excluded": false,
-      "favored": false,
-      "flags": "[]",
-      "holderName": "Name Lastname",
-      "identifiers": "[\"bban://42285670261463981921\",\"iban://DABASESX/SE9342285670261463981921\",\"masked-pan://123456XXXXXX1234\",\"se://70626761838\"]",
-      "name": "Mastercard Guld",
-      "ownership": 1.0,
-      "type": "CREDIT_CARD",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -16520.13
+  }, {
+    "accountNumber" : "4444444444",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0,
+      "scale" : 1
     },
-    {
-      "accountExclusion": "NONE",
-      "accountNumber": "9999999999",
-      "availableCredit": 0.0,
-      "balance": 0.0,
-      "balances": [],
-      "bankId": "9999999999",
-      "closed": false,
-      "currencyCode": "SEK",
-      "exactBalance": {
-        "currencyCode": "SEK",
-        "doubleValue": 0.0,
-        "exactValue": 0.0,
-        "scale": 1,
-        "unscaledValue": 0
-      },
-      "excluded": false,
-      "favored": false,
-      "flags": "[]",
-      "identifiers": "[]",
-      "name": "Investeringssparkont",
-      "ownership": 1.0,
-      "type": "INVESTMENT",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false
-    }
-  ],
-  "identityData": {
-    "dateOfBirth": {
-      "chronology": {
-        "calendarType": "iso8601",
-        "id": "ISO"
-      },
-      "dayOfMonth": 1,
-      "dayOfWeek": "FRIDAY",
-      "dayOfYear": 1,
-      "era": "CE",
-      "leapYear": false,
-      "month": "JANUARY",
-      "monthValue": 1,
-      "year": 1999
+    "currencyCode" : "SEK",
+    "bankId" : "4444444444",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Depå",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
     },
-    "nameElements": [
-      {
-        "type": "FIRST_NAME",
-        "value": "Test"
-      },
-      {
-        "type": "SURNAME",
-        "value": "Testson"
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "88888888888",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 98,
+      "exactValue" : 0.98,
+      "doubleValue" : 0.98,
+      "scale" : 2
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "88888888888",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Investeringssparkto.",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://88888888888\",\"bban://12000000088888888888\"]",
+    "closed" : false,
+    "holderName" : "Test Testson",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Test Testson",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"DEPOT_CASH_BALANCE\",\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.98
+  }, {
+    "accountNumber" : "33333333333",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 99,
+      "exactValue" : 0.99,
+      "doubleValue" : 0.99,
+      "scale" : 2
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "33333333333",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Depåkonto",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"bban://12000000033333333333\",\"se://33333333333\"]",
+    "closed" : false,
+    "holderName" : "Test Testson",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Test Testson",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"DEPOT_CASH_BALANCE\",\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.99
+  }, {
+    "accountNumber" : "22222222222",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "exactValue" : 0,
+      "doubleValue" : 0.0,
+      "scale" : 0
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 431,
+      "exactValue" : 4.31,
+      "doubleValue" : 4.31,
+      "scale" : 2
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 431,
+      "exactValue" : 4.31,
+      "doubleValue" : 4.31,
+      "scale" : 2
+    },
+    "bankId" : "22222222222",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Danske Konto",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"bban://12000000022222222222\"]",
+    "closed" : false,
+    "holderName" : "Test Testson",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Test Testson",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 4.31
+  }, {
+    "accountNumber" : "9999999999",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0,
+      "scale" : 1
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "9999999999",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Investeringssparkont",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  } ],
+  "transactions" : [ {
+    "amount" : -0.03,
+    "date" : 1615460400000,
+    "description" : "Till: 22222222222",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013367905344SEK20210311  2021-03-11-15.22.58.515501 0              ASE                           185<pe>20210311<pd><pf>3367905344<pg>2021-03-11-15.22.58.515501"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 1.0,
+    "date" : 1615460400000,
+    "description" : "2489-09-33557",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>380<pc>013367905344SEK20210311  2021-03-11-15.19.22.067148 0              ASE                           380<pe>20210311<pd><pf>3367905344<pg>2021-03-11-15.19.22.067148"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -13.09,
+    "date" : 1615460400000,
+    "description" : "ram pam pam",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>111<pc>011345345345SEK20210311  2021-03-11-15.20.58.515501 0              ASE                           185<pe>20210311<pd><pf>1234512345<pg>2021-03-11-15.20.58.515501"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -27.37,
+    "date" : 1615460400000,
+    "description" : "money money",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>380<pc>011234512345SEK20210311  2021-03-11-15.19.22.067148 0              ASE                           380<pe>20210311<pd><pf>1234512345<pg>2021-03-11-15.19.22.067148"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -0.01,
+    "date" : 1615460400000,
+    "description" : "Till: 22222222222",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013064050087SEK20210311  2021-03-11-15.23.12.011909 0              ASE                           185<pe>20210311<pd><pf>3064050087<pg>2021-03-11-15.23.12.011909"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 1.0,
+    "date" : 1615460400000,
+    "description" : "Test Testson",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>185<pc>013064050087SEK20210311  2021-03-11-15.07.30.855341 0              ASE                           185<pe>20210311<pd><pf>3064050087<pg>2021-03-11-15.07.30.855341"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -6.0,
+    "date" : 1597140000000,
+    "description" : "Till Danske Konto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013064050087SEK20200811  2020-08-11-22.49.22.554982 0              HSE                           185<pe>20200811<pd><pf>3064050087<pg>2020-08-11-22.49.22.554982"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 5.0,
+    "date" : 1592474400000,
+    "description" : "Från Danske Konto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>185<pc>013064050087SEK20200618  2020-06-18-10.54.59.056903 0              HSE                           185<pe>20200618<pd><pf>3064050087<pg>2020-06-18-10.54.59.056903"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 1.0,
+    "date" : 1583924400000,
+    "description" : "Från Danske Konto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>185<pc>013064050087SEK20200311  2020-03-11-10.33.21.749991 0              HSE                           185<pe>20200311<pd><pf>3064050087<pg>2020-03-11-10.33.21.749991"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -0.02,
+    "date" : 1615460400000,
+    "description" : "Till: 22222222222",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013367905360SEK20210311  2021-03-11-15.22.39.968577 0              ASE                           185<pe>20210311<pd><pf>3367905360<pg>2021-03-11-15.22.39.968577"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 1.0,
+    "date" : 1615460400000,
+    "description" : "Test Testson",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>185<pc>013367905360SEK20210311  2021-03-11-15.21.56.461300 0              ASE                           185<pe>20210311<pd><pf>3367905360<pg>2021-03-11-15.21.56.461300"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 0.01,
+    "date" : 1615460400000,
+    "description" : "Test Testson",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>185<pc>013064045148SEK20210311  2021-03-11-15.23.12.013045 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.23.12.013045"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 0.03,
+    "date" : 1615460400000,
+    "description" : "Test Testson",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>185<pc>013064045148SEK20210311  2021-03-11-15.22.58.516927 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.22.58.516927"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 0.02,
+    "date" : 1615460400000,
+    "description" : "Test Testson",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>185<pc>013064045148SEK20210311  2021-03-11-15.22.39.969789 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.22.39.969789"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1.0,
+    "date" : 1615460400000,
+    "description" : "Till: 88888888888",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013064045148SEK20210311  2021-03-11-15.21.56.460201 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.21.56.460201"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1.0,
+    "date" : 1615460400000,
+    "description" : "1212-05-16677",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>380<pc>013064045148SEK20210311  2021-03-11-15.19.22.063520 0              ASE                           380<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.19.22.063520<pz>U02021-03-11-15.19.22.063520 20210311     3064045148"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1.0,
+    "date" : 1615460400000,
+    "description" : "Till: 33333333333",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013064045148SEK20210311  2021-03-11-15.07.30.853822 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.07.30.853822"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -4.49,
+    "date" : 1598349600000,
+    "description" : "COOP VÄSTRA SKOGEN   ))))",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -3.57,
+    "date" : 1597744800000,
+    "description" : "COOP VÄSTRA SKOGEN   ))))",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>180<pc>013064045148SEK20200818  2020-08-18-04.48.22.839984 1KTKG1ZVAOAWC1DHSE                           180<pe>20200818<pd>KG1ZVAOAWC1D<pf>3064045148<pg>2020-08-18-04.48.22.839984<pz>U12020-08-18-04.48.22.839984 20200818     3064045148"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 10.0,
+    "date" : 1597658400000,
+    "description" : "ÖVERFÖRING",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>177<pc>013064045148SEK20200817  2020-08-17-10.36.50.583764 0              HSE                           177<pe>20200817<pd><pf>3064045148<pg>2020-08-17-10.36.50.583764<pz>U02020-08-17-10.36.50.583764 20200817     3064045148"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -4.69,
+    "date" : 1597658400000,
+    "description" : "COOP VÄSTRA SKOGEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>180<pc>013064045148SEK20200817  2020-08-15-04.16.13.706871 1KTEG015S77LK1RHSE                           180<pe>20200817<pd>EG015S77LK1R<pf>3064045148<pg>2020-08-15-04.16.13.706871<pz>U12020-08-15-04.16.13.706871 20200817     3064045148"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 6.0,
+    "date" : 1597140000000,
+    "description" : "Test Testson",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>185<pc>013064045148SEK20200811  2020-08-11-22.49.22.557078 0              HSE                           185<pe>20200811<pd><pf>3064045148<pg>2020-08-11-22.49.22.557078"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -5.0,
+    "date" : 1592474400000,
+    "description" : "Till Depåkonto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013064045148SEK20200618  2020-06-18-10.54.59.054190 0              HSE                           185<pe>20200618<pd><pf>3064045148<pg>2020-06-18-10.54.59.054190"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1.59,
+    "date" : 1584097200000,
+    "description" : "900-8004 SVENSKA RÖD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>SE<pb>D<pc>01306404514820200313  307L007136<pe>20200313<pd><pf>3064045148<pg><pz>I307L007136                               3064045148"
+    },
+    "transactionDates" : [ ],
+    "booked" : false
+  }, {
+    "amount" : -1.0,
+    "date" : 1584097200000,
+    "description" : "900-8004 SVENSKA RÖD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>SE<pb>D<pc>01306404514820200313  171L007134<pe>20200313<pd><pf>3064045148<pg><pz>I171L007134                               3064045148"
+    },
+    "transactionDates" : [ ],
+    "booked" : false
+  }, {
+    "amount" : -1.0,
+    "date" : 1584010800000,
+    "description" : "T6",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>FP<pb>D<pc>01045E0296799522233064045148SEK20200312  H1KYFOHA6YP6I1BSE<pe>20200312<pd><pf>3064045148<pg>"
+    },
+    "transactionDates" : [ ],
+    "booked" : false
+  }, {
+    "amount" : -1.0,
+    "date" : 1584010800000,
+    "description" : "T5",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>FP<pb>D<pc>01118E0296798928883064045148SEK20200312  H1KUFOG94W9XM1DSE<pe>20200312<pd><pf>3064045148<pg>"
+    },
+    "transactionDates" : [ ],
+    "booked" : false
+  }, {
+    "amount" : -1.0,
+    "date" : 1583924400000,
+    "description" : "Till Depåkonto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013064045148SEK20200311  2020-03-11-10.33.21.748782 0              HSE                           185<pe>20200311<pd><pf>3064045148<pg>2020-03-11-10.33.21.748782"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 10.0,
+    "date" : 1583924400000,
+    "description" : "ÖVERFÖRING",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BC<pb>177<pc>013064045148SEK20200311  2020-03-11-07.35.47.953402 0              HSE                           177<pe>20200311<pd><pf>3064045148<pg>2020-03-11-07.35.47.953402<pz>U02020-03-11-07.35.47.953402 20200311     3064045148"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -4350.0,
+    "date" : 1569492000000,
+    "description" : "Till: 92721984896",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "<pa>BO<pb>185<pc>013064045148SEK20190926  2019-09-26-03.30.59.115518 0              HSE                           185<pe>20190926<pd><pf>3064045148<pg>2019-09-26-03.30.59.115518"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FIRST_NAME",
+      "value" : "Test"
+    }, {
+      "type" : "SURNAME",
+      "value" : "Testson"
+    } ],
+    "dateOfBirth" : {
+      "year" : 1999,
+      "month" : "JANUARY",
+      "monthValue" : 1,
+      "dayOfMonth" : 1,
+      "dayOfWeek" : "FRIDAY",
+      "era" : "CE",
+      "leapYear" : false,
+      "dayOfYear" : 1,
+      "chronology" : {
+        "calendarType" : "iso8601",
+        "id" : "ISO"
       }
-    ]
-  },
-  "transactions": [
-    {
-      "amount": -0.02,
-      "date": 1615460400000,
-      "description": "Till: 22222222222",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -0.03,
-      "date": 1615460400000,
-      "description": "Till: 22222222222",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -0.01,
-      "date": 1615460400000,
-      "description": "Till: 22222222222",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 1.0,
-      "date": 1615460400000,
-      "description": "2489-09-33557",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 1.0,
-      "date": 1615460400000,
-      "description": "Test Testson",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 1.0,
-      "date": 1615460400000,
-      "description": "Test Testson",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 0.01,
-      "date": 1615460400000,
-      "description": "Test Testson",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 0.03,
-      "date": 1615460400000,
-      "description": "Test Testson",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 0.02,
-      "date": 1615460400000,
-      "description": "Test Testson",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.0,
-      "date": 1615460400000,
-      "description": "Till: 88888888888",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.0,
-      "date": 1615460400000,
-      "description": "1212-05-16677",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.0,
-      "date": 1615460400000,
-      "description": "Till: 33333333333",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 6.0,
-      "date": 1597140000000,
-      "description": "Test Testson",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -6.0,
-      "date": 1597140000000,
-      "description": "Till Danske Konto",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 5.0,
-      "date": 1592474400000,
-      "description": "Från Danske Konto",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 1.0,
-      "date": 1583924400000,
-      "description": "Från Danske Konto",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.0,
-      "date": 1584097200000,
-      "description": "900-8004 SVENSKA RÖD",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": true,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.59,
-      "date": 1584097200000,
-      "description": "900-8004 SVENSKA RÖD",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": true,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.0,
-      "date": 1584010800000,
-      "description": "T6",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": true,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.0,
-      "date": 1584010800000,
-      "description": "T5",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": true,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 10.0,
-      "date": 1597658400000,
-      "description": "ÖVERFÖRING",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 10.0,
-      "date": 1583924400000,
-      "description": "ÖVERFÖRING",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -4.69,
-      "date": 1597658400000,
-      "description": "COOP VÄSTRA SKOGEN",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -4.49,
-      "date": 1598349600000,
-      "description": "COOP VÄSTRA SKOGEN   ))))",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -3.57,
-      "date": 1597744800000,
-      "description": "COOP VÄSTRA SKOGEN   ))))",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -4350.00,
-      "date": 1569492000000,
-      "description": "Till: 92721984896",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -5.00,
-      "date": 1592474400000,
-      "description": "Till Depåkonto",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.00,
-      "date": 1583924400000,
-      "description": "Till Depåkonto",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -13.09,
-      "date": 1615460400000,
-      "description": "ram pam pam",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -27.37,
-      "date": 1615460400000,
-      "description": "money money",
-      "externalSystemIds": {},
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "transactionDates": [],
-      "type": "DEFAULT",
-      "upcoming": false
     }
-  ]
+  }
 }

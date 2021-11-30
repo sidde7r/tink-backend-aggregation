@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import java.text.ParseException;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
@@ -113,6 +115,11 @@ public class TransactionEntity {
                     ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(bookingDate));
         } catch (ParseException e) {
             throw new IllegalStateException(e);
+        }
+
+        if (!Strings.isNullOrEmpty(transactionKey)) {
+            transactionBuilder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionKey);
         }
 
         return transactionBuilder.build();
