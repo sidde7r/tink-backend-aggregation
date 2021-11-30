@@ -1,8 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
 
+import java.util.regex.Pattern;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 public final class PostbankConstants {
+
+    public static class Patterns {
+
+        public static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
+        public static final Pattern CHIP_TAN_INSTRUCTION_LINE_DELIMITER = Pattern.compile("(\\n)+");
+    }
 
     public static class InfoScreen {
         public static final LocalizableParametrizedKey INSTRUCTIONS =
