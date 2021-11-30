@@ -17,6 +17,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker:ro
       - /bazel-remote-cache:/cache
+      - /var/lib/buildkite-agent/git-mirrors:/var/lib/buildkite-agent/git-mirrors:ro
     environment:
       - SSH_AUTH_SOCK
       - VERSION
