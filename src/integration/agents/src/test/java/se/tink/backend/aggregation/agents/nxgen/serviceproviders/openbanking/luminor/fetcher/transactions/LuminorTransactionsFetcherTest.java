@@ -70,9 +70,6 @@ public class LuminorTransactionsFetcherTest {
         Assert.assertEquals(
                 ("PMNT-FAKE-OTHR"),
                 Objects.requireNonNull(result).getProprietaryFinancialInstitutionType());
-        Assert.assertEquals(
-                ("RF18539FAKE47034"), Objects.requireNonNull(result).getTransactionReference());
-        Assert.assertEquals(("Fake PersonName"), Objects.requireNonNull(result).getMerchantName());
         Assert.assertEquals(1, Objects.requireNonNull(result).getExternalSystemIds().size());
         assertThat(result.getExternalSystemIds())
                 .containsKey(TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID);

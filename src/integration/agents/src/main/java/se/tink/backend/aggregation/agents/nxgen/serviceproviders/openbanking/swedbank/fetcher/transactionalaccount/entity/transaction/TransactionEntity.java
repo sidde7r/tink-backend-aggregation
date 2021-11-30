@@ -16,7 +16,7 @@ public class TransactionEntity {
     protected String remittanceInformationUnstructured;
     protected String remittanceInformationStructured;
     protected String transactionId;
-    protected String creditorName;
+    protected String bankTransactionCode;
 
     public TransactionDates getTinkTransactionDates(LocalDate valueDate, LocalDate bookingDate) {
         TransactionDates.Builder builder = TransactionDates.builder();

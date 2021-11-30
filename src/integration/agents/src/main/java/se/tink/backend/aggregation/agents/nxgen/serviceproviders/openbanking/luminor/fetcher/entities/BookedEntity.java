@@ -42,10 +42,7 @@ public class BookedEntity {
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
-                        .setMerchantName(creditorName)
-                        .setProprietaryFinancialInstitutionType(bankTransactionCode)
-                        .setTransactionReference(
-                                getRemittanceInformationStructured().getReference());
+                        .setProprietaryFinancialInstitutionType(bankTransactionCode);
         return (Transaction) builder.build();
     }
 
