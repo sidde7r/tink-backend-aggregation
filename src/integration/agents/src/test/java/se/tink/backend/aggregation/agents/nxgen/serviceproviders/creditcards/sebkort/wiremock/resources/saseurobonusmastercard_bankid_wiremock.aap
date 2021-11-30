@@ -253,7 +253,6 @@ content-type: application/json;charset=UTF-8
 	"moreDataExists": false,
 	"transactions": [
 		{
-			"id": 202108200215322,
 			"date": "2021-08-20T00:00:00:000+0200",
 			"city": "STOCKHOLM",
 			"countryCode": "SE",

@@ -4,14 +4,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
-    private long id;
+    private Long id;
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
@@ -165,12 +167,20 @@ public class TransactionEntity {
         ExactCurrencyAmount negatedBillingAmount =
                 ExactCurrencyAmount.of(billingAmount.negate(), billingCurrencyCode);
 
-        return CreditCardTransaction.builder()
-                .setDate(this.getDate())
-                .setDescription(this.getSpecification())
-                .setAmount(negatedBillingAmount)
-                .setPending(isPending)
-                .build();
+        Builder builder =
+                CreditCardTransaction.builder()
+                        .setDate(this.getDate())
+                        .setDescription(this.getSpecification())
+                        .setAmount(negatedBillingAmount)
+                        .setPending(isPending);
+
+        if (id != null) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                    Long.toString(id));
+        }
+
+        return builder.build();
     }
 
     @JsonIgnore

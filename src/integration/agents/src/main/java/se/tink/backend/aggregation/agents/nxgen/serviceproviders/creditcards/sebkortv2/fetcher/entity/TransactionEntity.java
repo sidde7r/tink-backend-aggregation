@@ -3,14 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.card.Card;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
-    private long id;
+    private Long id;
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
@@ -162,12 +164,20 @@ public class TransactionEntity {
     private CreditCardTransaction toTinkTransaction(boolean isPending) {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of(-billingAmount, billingCurrencyCode);
 
-        return CreditCardTransaction.builder()
-                .setCreditCard(Card.create(nameOnCard, maskedCardNumber))
-                .setDate(date)
-                .setDescription(specification)
-                .setAmount(amount)
-                .setPending(isPending)
-                .build();
+        Builder builder =
+                CreditCardTransaction.builder()
+                        .setCreditCard(Card.create(nameOnCard, maskedCardNumber))
+                        .setDate(date)
+                        .setDescription(specification)
+                        .setAmount(amount)
+                        .setPending(isPending);
+
+        if (id != null) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                    Long.toString(id));
+        }
+
+        return builder.build();
     }
 }
