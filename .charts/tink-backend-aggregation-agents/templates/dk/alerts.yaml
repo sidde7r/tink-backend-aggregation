@@ -1,3 +1,33 @@
+# EXPERIMENTAL APPROACH ALERTS V. 2.0
+#
+# When a time series appears for the first time, event associated with its creation
+# is missed by increase() since we don't have a reference point (no observable increase).
+# This is due to metrics not being zero-initialized.
+# Assuming query interval of one hour, the approach makes use of the following heuristics:
+# if a time series is "old", that is appeared more than an hour ago, increase() behaves correctly.
+# However, if a time series has appeared more recently, we want to be able to count the first event,
+# thus adding 1 to the result. Effectively, we want to calculate:
+#
+# if (time series is old) then increase(...) else increase(...) + 1
+#
+# Determining if a time series is "old" or not is done in an extremely hacky fashion
+# of counting a number of target scrapes within the last hour.
+# A series is considered to be "old" if and only if it contains at least
+# <query interval> / <scrape interval> = 1h / 10s = 360 data points
+# (361 is possible to due to off-by-one errors and scrape latencies)
+#
+# The expression above is equivalent to
+#   1 + increase(...) - (if "old" then 1 else 0)
+#   =
+#   1 + increase(...) - floor(<number_of_data_points> / 360)
+#
+# floor(increase(...)) is used instead of raw increase(...) to account for
+# its undesirable extrapolation behavior and floating-point inaccuracies.
+#
+# One corner case where this approach fails: when a time series appeared more than
+# <query interval> ago, but there was a counter reset in the meantime.
+# This is an event rare enough not to significantly affect the end result.
+
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
@@ -5,115 +35,131 @@ metadata:
   namespace: agents
 spec:
   rules:
-    #-------------------------------------------------------------------------------------------------------------------
-    # All errors alerts
-    #-------------------------------------------------------------------------------------------------------------------
-    # Refresh urgent alerts
-    - alert: RefreshErrorRate100%DK
+    - record: sum:all_logins_dk:delta1h
       expr: |
-        # Failed refreshes is 100%
-        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome=~"unavailable|failed", market="DK", provider_type!="test"}[1h])) by (className, provider, type)
-            / count(sum_over_time(tink_agent_refresh_total{market="DK", provider_type!="test"}[1h])) by (className, provider, type) > 0.99)
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:all_logins_dk:delta4h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[4h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[4h]) / 1440)
+        )
+    - record: sum:all_refreshes_per_type_dk:delta1h
+      expr: |
+        sum by (className, type) (
+          1 + floor(increase(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:failed_logins_dk:delta1h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:unsuccessful_background_logins_dk:delta4h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}[4h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}[4h]) / 1440)
+        )
+    - record: sum:unsuccessful_on_demand_logins_dk:delta4h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}[4h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}[4h]) / 1440)
+        )
+    - record: sum:failed_refreshes_per_type_dk:delta1h
+      expr: |
+        sum by (className, type) (
+          1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}[1h]) / 360)
+        )
+
+    # =========== SHORT-TERM (1h) and MID-TERM (4h) ALERTS ===========
+    - alert: RefreshErrorRateAbove10%DK
+      expr: sum:failed_refreshes_per_type_dk:delta1h / sum:all_refreshes_per_type_dk:delta1h > 0.1
+      for: 15m
+      priority: P3
+      labels:
+        severity: ping
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: RefreshErrorRateAbove90%DK
+      expr: sum:failed_refreshes_per_type_dk:delta1h / (sum:all_refreshes_per_type_dk:delta1h > 2) > 0.9
       for: 15m
       priority: P1
       labels:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Refresh failures is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
 
-    #-------------------------------------------------------------------------------------------------------------------
-    # Unknown errors (due to RuntimeException) alerts
-    #-------------------------------------------------------------------------------------------------------------------
-    # Authentication urgent alerts
-    - alert: AuthenticationUnknownErrorRate100%DK
-      expr: |
-        # Failed logins (due to unknown RuntimeException) is 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="DK", provider_type!="test"}[1h])) by (className, provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h])) by (className, provider) > 0.99)
-        # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="DK", provider_type!="test"}[1h])) by (className, provider) > 1
+    - alert: LoginErrorRateAbove10%DK
+      expr: sum:failed_logins_dk:delta1h / sum:all_logins_dk:delta1h > 0.1
       for: 15m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Authentication failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
-        tags: {{ .Values.tags }}
-
-    - alert: AuthenticationTinkInfrastructureErrorRate100%DK
-      expr: |
-        # Failed logins over 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed_due_to_tink_infrastructure_failure", market="DK", provider_type!="test"}[1h])) by (className, provider)
-           / count(sum_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h])) by (className, provider) > 0.99)
-        # At least this many attempts.
-           and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed_due_to_tink_infrastructure_failure", market="DK", provider_type!="test"}[1h])) by (className, provider) > 5
-      for: 15m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Authentication failures due to Tink infrastructure errors is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 1 hour
-        tags: {{ .Values.tags }}
-
-    # Refresh urgent alerts
-    - alert: RefreshUnknownErrorRateIs100%DK
-      expr: |
-        # Failed refreshes (due to unknown RuntimeException) is 100%
-        count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="failed", market="DK", provider_type!="test"}[1h])) by (className, provider, type)
-            / count(sum_over_time(tink_agent_refresh_total{market="DK", provider_type!="test"}[1h])) by (className, provider, type) > 0.99
-      for: 15m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Refresh failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
-        tags: {{ .Values.tags }}
-
-    # Authentication ping alerts
-    - alert: AuthenticationUnknownErrorRateOver10%DK
-      expr: |
-        # Failed logins (due to unknown RuntimeException) over 10%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="DK", provider_type!="test"}[1h])) by (className, provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h])) by (className, provider) > 0.1)
-        # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="DK", provider_type!="test"}[1h])) by (className, provider) > 1
-      for: 15m
+      priority: P3
       labels:
         severity: ping
-        priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Authentication failures due to unknown RuntimeExceptions is (<{ $value | humanizePercentage }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Login error rate over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
 
-    # Refresh ping alerts
-    - alert: RefreshUnknownErrorRateOver10%DK
-      expr: |
-        # Failed refreshes (due to unknown RuntimeException) over 10%
-        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="failed", market="DK", provider_type!="test"}[1h])) by (className, provider, type)
-            / count(sum_over_time(tink_agent_refresh_total{market="DK", provider_type!="test"}[1h])) by (className, provider, type) > 0.1)
+    - alert: LoginErrorRateAbove90%DK
+      expr: sum:failed_logins_dk:delta1h / (sum:all_logins_dk:delta1h > 2) > 0.9
       for: 15m
+      priority: P1
+      labels:
+        severity: urgent
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Login error rate over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: BackgroundLoginErrorRateAbove90%DK
+      expr: sum:unsuccessful_background_logins_dk:delta4h / (sum:all_logins_dk:delta4h > 5) > 0.9
+      for: 15m
+      priority: P2
       labels:
         severity: ping
-        priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Refresh failures due to unknown RuntimeExceptions is 10% (<{ $value | humanizePercentage }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs4h }}
+          {{ .Values.grafanaClassLinkAbs4h }}
+        summary: Background login error rate over the last 4 hours is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: OnDemandLoginErrorRateAbove90%DK
+      expr: sum:unsuccessful_on_demand_logins_dk:delta4h / (sum:all_logins_dk:delta4h > 5) > 0.9
+      for: 15m
+      priority: P2
+      labels:
+        severity: ping
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs4h }}
+          {{ .Values.grafanaClassLinkAbs4h }}
+        summary: On-demand login error rate over the last 4 hours is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
