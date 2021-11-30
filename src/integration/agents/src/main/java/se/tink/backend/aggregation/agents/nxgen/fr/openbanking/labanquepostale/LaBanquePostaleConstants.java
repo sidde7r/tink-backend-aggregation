@@ -90,7 +90,10 @@ public final class LaBanquePostaleConstants {
     }
 
     public static class AppToAppRedirect {
-        public static final String APP_TO_APP_HEADER_VALUE = "REDIRECT-APP2APP-PPH";
+
+        // [PENG-401] temporarily changing PIS flow to web
+        // public static final String APP_TO_APP_HEADER_VALUE = "REDIRECT-APP2APP-PPH";
+        public static final String APP_TO_APP_HEADER_VALUE = "REDIRECT-APP2APP-WEB";
         public static final String APP_TO_APP_HEADER_NAME = "PSU-Workspace";
     }
 }
