@@ -9,6 +9,7 @@ directories:
   src/agent_sdk
   src/libraries
   src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account
+  src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication
 
 targets:
   //src/agent_sdk/runtime
