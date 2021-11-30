@@ -2,7 +2,7 @@ package se.tink.agent.sdk.storage;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Optional;
-import se.tink.agent.sdk.models.authentication.RefreshableAccessToken;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public interface Storage {
     String put(String key, Object value);
@@ -19,9 +19,9 @@ public interface Storage {
 
     <T> Optional<T> tryGet(String key, TypeReference<T> valueType);
 
-    void putAccessToken(RefreshableAccessToken token);
+    void putOauth2Token(OAuth2Token token);
 
-    Optional<RefreshableAccessToken> getAccessToken();
+    Optional<OAuth2Token> getOauth2Token();
 
-    Optional<RefreshableAccessToken> getAccessToken(String alternativeKey);
+    Optional<OAuth2Token> getOauth2Token(String alternativeKey);
 }
