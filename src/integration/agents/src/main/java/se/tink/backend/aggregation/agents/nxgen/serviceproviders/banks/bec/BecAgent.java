@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.encoding.EncodingUtils;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
 public final class BecAgent extends SubsequentProgressiveGenerationAgent
@@ -84,18 +83,10 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
 
     private BecApiClient createBecApiClient() {
         return new BecApiClient(
-                createSecurityHelper(),
+                new BecSecurityHelper(),
                 client,
                 new BecUrlConfiguration(request.getProvider().getPayload()),
                 catalog);
-    }
-
-    private BecSecurityHelper createSecurityHelper() {
-        return new BecSecurityHelper(
-                new String(
-                        EncodingUtils.decodeBase64String(
-                                BecConstants.Crypto.SIGNING_CERTIFICATE_B64)),
-                BecConstants.Crypto.PUBLIC_KEY_SALT);
     }
 
     private InvestmentRefreshController createInvestmentRefreshController() {

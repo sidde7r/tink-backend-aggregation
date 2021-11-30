@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class GeneralPayload {
     private String appType;
     private String appVersion;
+    private String appUrl;
     private String deviceId;
     private String deviceType;
     private String locale;
@@ -24,6 +25,7 @@ public class GeneralPayload {
             String userId, String pincode, String deviceId, String scaOption, String userLocale) {
         this.appType = Meta.APP_TYPE;
         this.appVersion = Meta.APP_VERSION;
+        this.appUrl = Meta.APP_URL;
         this.deviceId = deviceId;
         this.data = "";
         this.cics = "";
