@@ -3,10 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.acco
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -46,11 +49,19 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setAmount(ExactCurrencyAmount.inSEK(amount))
-                .setDate(postedDate)
-                .setDescription(memoText)
-                .build();
+
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(ExactCurrencyAmount.inSEK(amount))
+                        .setDate(postedDate)
+                        .setDescription(memoText);
+
+        if (!Strings.isNullOrEmpty(key)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, key);
+        }
+
+        return builder.build();
     }
 
     public String getKey() {
