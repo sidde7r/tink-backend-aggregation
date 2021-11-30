@@ -2,17 +2,24 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public final class BecConstants {
 
     public static final class ScaOptions {
         public static final String CODEAPP_OPTION = "codeapp";
         public static final String KEYCARD_OPTION = "keycard";
+        public static final List<String> NEM_ID_METHODS =
+                Arrays.asList(CODEAPP_OPTION, KEYCARD_OPTION);
+
+        public static final String MIT_ID_OPTION = "mitid";
+
         public static final String SCATOKEN_OPTION = "scatoken";
         public static final String DEFAULT_OPTION = "default";
     }
@@ -119,6 +126,9 @@ public final class BecConstants {
             public static final String RESET_TOKEN = "error auth response: Reset token";
             public static final String PIN_LOCKED = "Your chosen PIN code is locked.";
             public static final String NEMID_BLOCKED = "NemID is blocked. Contact support.";
+            public static final LocalizableKey MIT_ID_NOT_SUPPORTED_YET =
+                    new LocalizableKey(
+                            "We are sorry, but MitID authentication is not supported yet");
         }
     }
 

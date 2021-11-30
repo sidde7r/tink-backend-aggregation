@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator;
 
+import static org.apache.commons.collections4.CollectionUtils.containsAny;
+
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaOptionsEncryptedPayload;
@@ -77,13 +81,40 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
         ScaOptionsEncryptedPayload payload =
                 apiClient.getScaOptions(username, password, getDeviceId());
 
-        if (payload.getSecondFactorOptions().contains(ScaOptions.CODEAPP_OPTION))
+        List<String> secondFactorOptions = payload.getSecondFactorOptions();
+        validateScaOptions(secondFactorOptions);
+
+        if (secondFactorOptions.contains(ScaOptions.CODEAPP_OPTION)) {
             sessionStorage.put(StorageKeys.SCA_OPTION_KEY, ScaOptions.CODEAPP_OPTION);
-        else if (payload.getSecondFactorOptions().contains(ScaOptions.KEYCARD_OPTION))
+        } else if (secondFactorOptions.contains(ScaOptions.KEYCARD_OPTION)) {
             sessionStorage.put(StorageKeys.SCA_OPTION_KEY, ScaOptions.KEYCARD_OPTION);
-        else throw NemIdError.SECOND_FACTOR_NOT_REGISTERED.exception();
+        }
 
         return AuthenticationStepResponse.executeNextStep();
+    }
+
+    private void validateScaOptions(List<String> secondFactorOptions) {
+        log.info("[BEC] Starting SCA methods validation");
+
+        boolean nemIdAvailable = containsAny(secondFactorOptions, ScaOptions.NEM_ID_METHODS);
+        boolean mitIdAvailable = secondFactorOptions.contains(ScaOptions.MIT_ID_OPTION);
+        boolean noAvailableMethods = secondFactorOptions.isEmpty();
+
+        if (nemIdAvailable && mitIdAvailable) {
+            log.info("[BEC] Both NemID and MitID available");
+        } else if (nemIdAvailable) {
+            log.info("[BEC] Only NemID available");
+        } else if (mitIdAvailable) {
+            log.info("[BEC] Only MitID available");
+            throw LoginError.NO_AVAILABLE_SCA_METHODS.exception(
+                    ErrorMessages.Authentication.MIT_ID_NOT_SUPPORTED_YET);
+        } else if (noAvailableMethods) {
+            log.info("[BEC] No available methods");
+            throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
+        } else {
+            log.info("[BEC] Unknown available SCA methods: " + secondFactorOptions);
+            throw NemIdError.SECOND_FACTOR_NOT_REGISTERED.exception();
+        }
     }
 
     private void auditCredentials(String username, String password) {
