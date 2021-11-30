@@ -73,6 +73,7 @@ public final class SwedbankConstants {
     public static class StorageKeys {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String CONSENT = "CONSENT";
+        public static final String HOLDER_NAME = "HOLDER_NAME";
     }
 
     public static class QueryKeys {
@@ -191,6 +192,7 @@ public final class SwedbankConstants {
     public static final class TimeValues {
         public static final int SLEEP_TIME_MILLISECONDS = 4000;
         public static final int MONTHS_TO_FETCH_MAX = 25;
+        public static final int DAYS_TO_FETCH_HOLDER_NAME = 30;
         public static final int ONLINE_STATEMENT_MAX_DAYS = 89;
         public static final int ATTEMPS_BEFORE_TIMEOUT = 10;
         public static final int CONSENT_DURATION_IN_DAYS = 90;
