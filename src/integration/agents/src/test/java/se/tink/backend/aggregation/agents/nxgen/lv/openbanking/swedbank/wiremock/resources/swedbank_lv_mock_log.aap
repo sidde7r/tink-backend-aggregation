@@ -222,6 +222,23 @@ Content-Length: 285
 {"account":{"iban":"LV16HABA1234567891234"},"balances":[{"balanceType":"authorised","balanceAmount":{"currency":"EUR","amount":"478.06"},"referenceDate":"2021-09-10"},{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"478.06"},"referenceDate":"2021-09-10"}]}
 
 REQUEST 13
+GET https://localhost:52564/v3/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALV22&dateFrom=1992-03-11&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 13
+200
+X-Rate-Limit-Limit: 80000
+X-Rate-Limit-Remaining: 64485
+X-Rate-Limit-Reset: 178
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"account":{"iban":"LV16HABA1234567891234","ownerName":"OWNER NAME"},"transactions":{"booked":[{"transactionId":"2021062112345678-1","creditorName":"TET SIA","creditorAccount":{"iban":"LV1234512345123450000"},"transactionAmount":{"currency":"EUR","amount":"-24.88"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-21","valueDate":"2021-06-21","remittanceInformationUnstructured":"HP0000012345678:Tet rekina 22334455-6 (konts 1234567) samaksaname.","remittanceInformationStructured":"HP0000012345678"},{"transactionId":"2021062712345678-1","creditorName":"OWNER NAME ","creditorAccount":{"iban":"LV1234512345123450001"},"transactionAmount":{"currency":"EUR","amount":"-60.31"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-27","valueDate":"2021-06-27","remittanceInformationUnstructured":"Elektrum Jūnijs "}, {"transactionId":"2021080612345678-1","debtorName":"IĻJA FEŠČENKO","debtorAccount":{"iban":"LV222444433322224444"},"transactionAmount":{"currency":"EUR","amount":"200.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-08-06","valueDate":"2021-08-06","remittanceInformationUnstructured":"par komunāliem - Augusts 2021"},{"transactionId":"2021080812345678-1","creditorName":"EDEN SPRINGS LATVIA SIA","creditorAccount":{"iban":"LV1234512345123450002"},"transactionAmount":{"currency":"EUR","amount":"-18.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-08-08","valueDate":"2021-08-08","remittanceInformationUnstructured":"Klienta numurs: 7654321, Rēķina numurs: 00/12345678"},{"transactionId":"2021080812345678-1","creditorName":"TET SIA","creditorAccount":{"iban":"LV1234512345123450000"},"transactionAmount":{"currency":"EUR","amount":"-24.88"},"bankTransactionCode":"PMNT","bookingDate":"2021-08-08","valueDate":"2021-08-08","remittanceInformationUnstructured":"HP0000012345679:Tet rekina 22334455-1 (konts 1234567) samaksa.","remittanceInformationStructured":"HP0000012345679"},{"transactionId":"2021080812345678-1","creditorName":"LATVENERGO AS","creditorAccount":{"iban":"LV1234512345123450003"},"transactionAmount":{"currency":"EUR","amount":"-66.60"},"bankTransactionCode":"PMNT","bookingDate":"2021-08-08","valueDate":"2021-08-08","remittanceInformationUnstructured":"12345600000, 12345670000"},{"transactionId":"2021080812345678-1","endToEndId":"NOTPROVIDED","debtorName":"Debtor name","debtorAccount":{"iban":"LV1234512345123450004"},"transactionAmount":{"currency":"EUR","amount":"150.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-08-08","valueDate":"2021-08-08","remittanceInformationUnstructured":"Augusts"},{"transactionId":"2021081012345678-1","creditorName":"ZIEMEĻNAMS DZĪVOKĻU ĪPAŠNIEKU KOOPERATĪVĀ SABIEDRĪBA","creditorAccount":{"iban":"LV1234512345123450005"},"transactionAmount":{"currency":"EUR","amount":"-141.92"},"bankTransactionCode":"PMNT","bookingDate":"2021-08-10","valueDate":"2021-08-10","remittanceInformationUnstructured":"RĒĶINS NR.00-00, Augusta, name"},{"transactionId":"2021090512345678-1","debtorName":"IĻJA FEŠČENKO","debtorAccount":{"iban":"LV222444433322224444"},"transactionAmount":{"currency":"EUR","amount":"200.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-09-05","valueDate":"2021-09-05","remittanceInformationUnstructured":"par komunāliem - Septembris 2021"},{"transactionId":"2021090712345678-1","transactionAmount":{"currency":"EUR","amount":"-1.41"},"bankTransactionCode":"PMNT","bookingDate":"2021-09-07","valueDate":"2021-09-07","remittanceInformationUnstructured":"Kartes mēneša maksa 111111******1234 08.2021"},{"transactionId":"2021090812345678-1","endToEndId":"NOTPROVIDED","debtorName":"Debtor name","debtorAccount":{"iban":"LV1234512345123450006"},"transactionAmount":{"currency":"EUR","amount":"150.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-09-08","valueDate":"2021-09-08","remittanceInformationUnstructured":"Septembris"}],"pending":[]}}
+
+REQUEST 14
 POST https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALV22&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
@@ -231,7 +248,7 @@ TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
 TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
 X-Aggregator: Tink Testing
 
-RESPONSE 13
+RESPONSE 14
 201
 X-Rate-Limit-Limit: 80000
 X-Rate-Limit-Remaining: 77573
@@ -241,14 +258,14 @@ Server: Layer7-API-Gateway
 
 {"statementStatus":"received","statementId":"22222255-4444-4444-4444-2233322555587","psuMessage":"Authorise LV16HABA1234567891234 account statement from 2019-08-10 to 2021-06-13","_links":{"status":{"href":"/v3/accounts/12341122333444466666655555aaaaaa/transactions/22222255-4444-4444-4444-2233322555587/status"},"scaStatus":{"href":"/v3/accounts/12341122333444466666655555aaaaaa/transactions/22222255-4444-4444-4444-2233322555587/authorisations/3ae40a63-bfad-40e1-8e57-a26c5e592447"},"scaRedirect":{"href":"https://psd2.swedbank.lv/account/transactions/123456789987654322"}}}
 
-REQUEST 14
+REQUEST 15
 GET https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALV22&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
 X-Aggregator: Tink Testing
 
-RESPONSE 14
+RESPONSE 15
 200
 X-Rate-Limit-Limit: 80000
 X-Rate-Limit-Remaining: 64485

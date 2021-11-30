@@ -5,16 +5,16 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "EUR",
-        "unscaledValue": 47806,
         "scale": 2,
+        "unscaledValue": 47806,
         "doubleValue": 478.06,
         "exactValue": 478.06
       },
       "currencyCode": "EUR",
       "availableBalance": {
         "currencyCode": "EUR",
-        "unscaledValue": 47806,
         "scale": 2,
+        "unscaledValue": 47806,
         "doubleValue": 478.06,
         "exactValue": 478.06
       },
@@ -29,10 +29,16 @@
       "userModifiedType": false,
       "identifiers": "[\"iban://LV16HABA1234567891234\",\"iban://HABALV22/LV16HABA1234567891234\"]",
       "closed": false,
+      "holderName": "Owner Name",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
-        "identities": []
+        "identities": [
+          {
+            "name": "Owner Name",
+            "role": "HOLDER"
+          }
+        ]
       },
       "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "balances": [],
