@@ -260,7 +260,9 @@ public final class RabobankApiClient {
 
     private boolean shouldFetchMoreTransactions(
             boolean isSandbox, TransactionalTransactionsResponse page) {
-        return page.getTransactions().getLinks().getNextKey() != null && !isSandbox;
+        return page.getTransactions().getLinks().getNextKey() != null
+                && !isSandbox
+                && userIpInformation.isUserPresent();
     }
 
     private String buildSignatureHeader(
