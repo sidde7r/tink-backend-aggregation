@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.converter;
 
+import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.data.AccountCategoryCode;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.AccountSummaryItemDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.TransactionInformationDto;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -87,12 +90,18 @@ public class AktiaTransactionalAccountConverter {
 
     private static Transaction convertTransactionInformationDtoToTransaction(
             TransactionInformationDto transactionInformationDto) {
-        return Transaction.builder()
-                .setAmount(getAmount(transactionInformationDto))
-                .setDate(transactionInformationDto.getBookingDate())
-                .setDescription(createDescription(transactionInformationDto))
-                .setPending(false)
-                .build();
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(getAmount(transactionInformationDto))
+                        .setDate(transactionInformationDto.getBookingDate())
+                        .setDescription(createDescription(transactionInformationDto))
+                        .setPending(false);
+        if (!Strings.isNullOrEmpty(transactionInformationDto.getTransactionId())) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                    transactionInformationDto.getTransactionId());
+        }
+        return builder.build();
     }
 
     private static ExactCurrencyAmount getBalance(AccountSummaryItemDto accountSummaryItem) {
