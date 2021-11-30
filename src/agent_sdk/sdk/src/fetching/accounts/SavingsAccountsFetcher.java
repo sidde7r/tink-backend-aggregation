@@ -1,8 +1,8 @@
 package se.tink.agent.sdk.fetching.accounts;
 
 import java.util.List;
-import se.tink.agent.sdk.models.account.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public interface SavingsAccountsFetcher {
-    List<SavingsAccount> fetchAccounts();
+    List<TransactionalAccount> fetchAccounts();
 }
