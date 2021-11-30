@@ -1,3 +1,5 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+
 alias(
     name = "provider_configurations",
     actual = "@tink_backend//src/provider_configuration/data/seeding",
@@ -107,8 +109,6 @@ filegroup(
     ],
     visibility = ["//visibility:public"],
 )
-
-load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 codeowners(
     name = "other_files_owners",

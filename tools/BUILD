@@ -1,3 +1,5 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+
 filegroup(
     name = "phantomjs_linux",
     srcs = ["phantomjs-tink-linux-x86_64-2.1.1"],
@@ -21,8 +23,6 @@ filegroup(
     srcs = ["libkbc_wbaes_mac.dylib"],
     visibility = ["//visibility:public"],
 )
-
-load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 codeowners(
     name = "owners",

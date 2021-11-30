@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -14,8 +15,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )
-
-load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 
 codeowners(
     name = "owners",

@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
@@ -33,8 +34,6 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
     ],
 )
-
-load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 
 codeowners(
     name = "owners",
