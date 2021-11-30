@@ -16,7 +16,7 @@ public class CreditCardTransactionMapper implements IngTransactionMapper<CreditC
     public Transaction toTinkTransaction(CreditCardAccount account, IngElement rawTransaction) {
         return (CreditCardTransaction)
                 CreditCardTransaction.builder()
-                        .setCreditAccount(account != null ? account.getAccountNumber() : null)
+                        .setCreditAccount(account.getAccountNumber())
                         .setAmount(
                                 ExactCurrencyAmount.of(
                                         rawTransaction.getAmount(),
