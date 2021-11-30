@@ -1,21 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase;
 
-import java.net.InetAddress;
 import java.time.ZoneId;
 
 public class SebCommonConstants {
 
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
     public static final String DATE_FORMAT = "yyyy-MM-dd";
-    public static final String DUMMY_IP = "0.0.0.0";
-
-    public static String getPsuIpAddress() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (Exception e) {
-            return SebCommonConstants.DUMMY_IP;
-        }
-    }
 
     public static class Urls {
         public static final String BASE_AUTH_URL = "https://authorize.sebgroup.com";
