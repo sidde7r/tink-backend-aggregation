@@ -1,6 +1,7 @@
 package se.tink.agent.sdk.authentication.authenticators.oauth2_decoupled_app.steps;
 
-import se.tink.agent.sdk.authentication.authenticators.oauth2.RefreshableAccessTokenAndConsentLifetime;
+import java.util.Objects;
+import se.tink.agent.sdk.authentication.authenticators.oauth2.AccessTokenAndConsentLifetime;
 import se.tink.agent.sdk.authentication.authenticators.oauth2_decoupled_app.FetchAccessToken;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
@@ -15,12 +16,11 @@ public class Oauth2FetchAccessToken implements NewConsentStep {
 
     @Override
     public NewConsentResponse execute(final NewConsentRequest request) {
-        RefreshableAccessTokenAndConsentLifetime result =
-                this.agentFetchAccessToken.fetchAccessToken();
-        if (!result.getToken().isAccessTokenValid()) {
+        AccessTokenAndConsentLifetime result = this.agentFetchAccessToken.fetchAccessToken();
+        if (Objects.isNull(result.getToken()) || !result.getToken().isValid()) {
             throw new IllegalStateException("AccessToken is invalid.");
         }
-        request.getAgentStorage().putAccessToken(result.getToken());
+        request.getAgentStorage().putOauth2Token(result.getToken());
 
         return NewConsentResponse.done(result.getConsentLifetime());
     }
