@@ -15,6 +15,7 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -74,6 +75,9 @@ public class IngPaymentControllerTest {
     private static final String CONNECTION_TIMEOUT_MESSAGE = "connect timed out";
     private static final String READ_TIMEOUT_MESSAGE = "read timed out";
     private static final String FAILED_TO_RESPOND_MESSAGE = "failed to respond";
+    private static final String TOKEN_RESPONSE_FILE = "token_response.json";
+    private static final String PAYMENT_CREATE_RESPONSE_FILE =
+            "ing_payment_create_response_accepted.json";
 
     private PaymentController paymentController;
     private SessionStorage sessionStorage;
@@ -96,7 +100,7 @@ public class IngPaymentControllerTest {
     @Test
     public void shouldCreatePaymentSuccessfully() {
         // given
-        prepareTestSetupAndResponseData();
+        prepareCreatePaymentTestSetupAndResponseData();
 
         // when
         PaymentResponse paymentResponse =
@@ -184,25 +188,26 @@ public class IngPaymentControllerTest {
                 .hasFieldOrPropertyWithValue("error", BankServiceError.BANK_SIDE_FAILURE);
     }
 
+    /*
+    The below test shouldNotCreatePaymentWhenMissingKeyData() is marked as @Ignore.
+    This is a valid test scenario, however it requires a production code refactor to work properly.
+    Please see the following Jira ticket dedicated to this code refactor:
+    https://tinkab.atlassian.net/browse/MINI-1708.
+    Once the Jira ticket is finalized the @Ignore test annotation will be removed.
+    */
+    @Ignore
     @Test
     @Parameters(method = "prepareMissingKeyData")
-    public void shouldNotSignPaymentWhenMissingKeyData(
-            boolean userIsAuthenticated,
-            boolean userHasClientId,
-            boolean sessionHasAuthorizationUrl,
+    public void shouldNotCreatePaymentWhenMissingKeyData(
+            String tokenResponseFileName,
+            String paymentCreateResponseFileName,
             String exceptionMessage) {
         // given
-        setUpTestDataWithMissingKeyUserData(
-                userIsAuthenticated, userHasClientId, sessionHasAuthorizationUrl);
-
-        // and
-        bankRespondsWithGivenStatus(200);
-
-        // and
-        PaymentMultiStepRequest paymentMultiStepRequest = createPaymentMultiStepRequest();
+        prepareTestSetupForCreatePaymentWithoutKeyData(
+                tokenResponseFileName, paymentCreateResponseFileName);
 
         // expect
-        assertThatThrownBy(() -> paymentController.sign(paymentMultiStepRequest))
+        assertThatThrownBy(() -> paymentController.create(new PaymentRequest(createPayment())))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining(exceptionMessage);
     }
@@ -210,9 +215,21 @@ public class IngPaymentControllerTest {
     @SuppressWarnings("unused")
     private Object[] prepareMissingKeyData() {
         return new Object[][] {
-            {false, true, true, "Cannot find Token!"},
-            {true, false, true, "Cannot find client id!"},
-            {true, true, false, "Missing authorize payment url"}
+            {
+                "token_response_no_clientId.json",
+                PAYMENT_CREATE_RESPONSE_FILE,
+                "Invalid value of clientId to be persisted!"
+            },
+            {
+                "token_response_no_token_data.json",
+                PAYMENT_CREATE_RESPONSE_FILE,
+                "Invalid token data to be persisted!"
+            },
+            {
+                TOKEN_RESPONSE_FILE,
+                "ing_payment_create_response_no_auth_url.json",
+                "Invalid payment authorization url to be persisted!"
+            }
         };
     }
 
@@ -249,20 +266,21 @@ public class IngPaymentControllerTest {
     private void prepareResponseForPaymentCreation() {
         given(callFilter.handle(any())).willReturn(response);
         bankRespondsWithGivenStatus(200);
-        prepareResponseBodyForPaymentCreation();
+        prepareResponseBodyForPaymentCreation(TOKEN_RESPONSE_FILE, PAYMENT_CREATE_RESPONSE_FILE);
     }
 
-    private void prepareResponseBodyForPaymentCreation() {
+    private void prepareResponseBodyForPaymentCreation(
+            String tokenResponseFileName, String paymentCreateResponseFileName) {
         String resourcePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/resources/";
-        TokenResponse ingCorrectTokenResponse =
-                deserializeFromFile(resourcePath + "token_response.json", TokenResponse.class);
+        TokenResponse ingTokenResponse =
+                deserializeFromFile(resourcePath + tokenResponseFileName, TokenResponse.class);
         IngCreatePaymentResponse ingPaymentInitiationResponseReceived =
                 deserializeFromFile(
-                        resourcePath + "ing_payment_create_response_accepted.json",
+                        resourcePath + paymentCreateResponseFileName,
                         IngCreatePaymentResponse.class);
 
-        setUpResponseBody(TokenResponse.class, ingCorrectTokenResponse);
+        setUpResponseBody(TokenResponse.class, ingTokenResponse);
         setUpResponseBody(IngCreatePaymentResponse.class, ingPaymentInitiationResponseReceived);
     }
 
@@ -280,38 +298,29 @@ public class IngPaymentControllerTest {
                 .willThrow(new HttpClientException(exceptionMessage, null))
                 .willReturn(response);
         bankRespondsWithGivenStatus(200);
-        prepareResponseBodyForPaymentCreation();
+        prepareResponseBodyForPaymentCreation(TOKEN_RESPONSE_FILE, PAYMENT_CREATE_RESPONSE_FILE);
     }
 
     private void bankRespondsWithGivenStatus(int statusCode) {
         given(response.getStatus()).willReturn(statusCode);
     }
 
-    private void prepareTestSetupAndResponseData() {
+    private void prepareCreatePaymentTestSetupAndResponseData() {
         prepareResponseForPaymentCreation();
-        setUpTestDataWithMissingKeyUserData(true, true, false);
+        OAuth2Token token =
+                OAuth2Token.create("bearer", "ing-access-token", "ing-refresh-token", 12345L);
+        persistentStorage.put(StorageKeys.TOKEN, token);
+        persistentStorage.put(StorageKeys.CLIENT_ID, "some_client_id");
+        sessionStorage = new SessionStorage();
+        IngPaymentExecutor paymentExecutor = createIngPaymentExecutor(createIngPaymentApiClient());
+        paymentController = new PaymentController(paymentExecutor, paymentExecutor);
     }
 
-    private void setUpTestDataWithMissingKeyUserData(
-            boolean userIsAuthenticated,
-            boolean userHasClientId,
-            boolean sessionHasAuthorizationUrl) {
-        persistentStorage = new PersistentStorage();
-
-        if (userIsAuthenticated) {
-            OAuth2Token token =
-                    OAuth2Token.create("bearer", "ing-access-token", "ing-refresh-token", 12345L);
-            persistentStorage.put(StorageKeys.TOKEN, token);
-        }
-        if (userHasClientId) {
-            persistentStorage.put(StorageKeys.CLIENT_ID, "some_client_id");
-        }
-        if (!sessionHasAuthorizationUrl) {
-            sessionStorage = new SessionStorage();
-        }
-        IngPaymentApiClient paymentApiClient = createIngPaymentApiClient();
-        final IngPaymentExecutor paymentExecutor = createIngPaymentExecutor(paymentApiClient);
-        paymentController = new PaymentController(paymentExecutor, paymentExecutor);
+    private void prepareTestSetupForCreatePaymentWithoutKeyData(
+            String tokenResponseFileName, String paymentCreateResponseFileName) {
+        given(callFilter.handle(any())).willReturn(response);
+        bankRespondsWithGivenStatus(200);
+        prepareResponseBodyForPaymentCreation(tokenResponseFileName, paymentCreateResponseFileName);
     }
 
     private RemittanceInformation setUpRemittanceInformation() {

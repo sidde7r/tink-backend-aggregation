@@ -2,7 +2,6 @@
     "transactionStatus": "ACTC",
     "paymentId": "DUMMY_PAYMENT_ID",
     "_links": {
-        "scaRedirect": "https://sca.redirect.com/payment-initiation/DUMMY_ID/XX",
         "self": "https://self.com/v1/payments/sepa-credit-transfers/DUMMY_ID",
         "status": "https://status.com/v1/payments/sepa-credit-transfers/DUMMY_ID/status",
         "delete": "https://delete.com/v1/payments/sepa-credit-transfers/DUMMY_ID"
