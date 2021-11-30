@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
@@ -48,6 +49,11 @@ public class OfflineTransactionEntity extends TransactionEntity {
                                 transactionId)
                         .setProviderMarket(providerMarket);
 
+        if (!Strings.isNullOrEmpty(transactionId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
+        }
+
         return (Transaction) builder.build();
     }
 
@@ -61,6 +67,11 @@ public class OfflineTransactionEntity extends TransactionEntity {
                         .setPending(false)
                         .setTransactionDates(getTinkTransactionDates(valueDate, bookingDate))
                         .setProviderMarket(providerMarket);
+
+        if (!Strings.isNullOrEmpty(transactionId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
+        }
 
         return (Transaction) builder.build();
     }
