@@ -96,7 +96,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
-        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
     - alert: RefreshErrorRateAbove90%DK
@@ -109,7 +109,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
-        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
     - alert: LoginErrorRateAbove10%DK
@@ -122,7 +122,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
-        summary: Login error rate over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
     - alert: LoginErrorRateAbove90%DK
@@ -135,7 +135,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
-        summary: Login error rate over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
     - alert: BackgroundLoginErrorRateAbove90%DK
@@ -148,7 +148,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs4h }}
           {{ .Values.grafanaClassLinkAbs4h }}
-        summary: Background login error rate over the last 4 hours is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        summary: Background login error rate over the last 4 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
     - alert: OnDemandLoginErrorRateAbove90%DK
@@ -161,5 +161,5 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs4h }}
           {{ .Values.grafanaClassLinkAbs4h }}
-        summary: On-demand login error rate over the last 4 hours is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        summary: On-demand login error rate over the last 4 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>

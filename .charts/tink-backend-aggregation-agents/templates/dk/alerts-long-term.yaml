@@ -35,7 +35,7 @@ spec:
           floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="DK", provider_type!="test"}[12h]) / 4320)
         )
     # =========== LONG-TERM (12h) ALERTS ===========
-    - alert: LongTermBankOrUserErrorRateAbove90%
+    - alert: LongTermBankOrUserErrorRateAbove90%DK
       expr: sum:unavailable_or_cancelled_logins_dk:delta12h / (sum:all_logins_dk:delta12h > 2) > 0.9
       labels:
         severity: ping
@@ -47,7 +47,7 @@ spec:
         summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
         tags: <{ $labels.className }>
         
-    - alert: LongTermRefreshUnavailableErrorRateAbove90%
+    - alert: LongTermRefreshUnavailableErrorRateAbove90%DK
       expr: sum:unavailable_refreshes_per_type_dk:delta12h / (sum:all_refreshes_per_type_dk:delta12h > 2) > 0.9
       labels:
         severity: ping
