@@ -5,253 +5,131 @@ metadata:
   namespace: agents
 spec:
   rules:
-
-    #-------------------------------------------------------------------------------------------------------------------
-    # All errors alerts
-    #-------------------------------------------------------------------------------------------------------------------
-    # Authentication alerts
-    - alert: AuthenticationErrorRateOver90%PL
+    - record: sum:all_logins_pl:delta1h
       expr: |
-        # Failed logins over 90%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="PL", provider_type!="test"}[1h])) by (className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h])) by (className,provider) > 0.9)
-        # At least this many attempts.
-            and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h])) by (className,provider) > 10
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:all_logins_pl:delta4h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[4h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[4h]) / 1440)
+        )
+    - record: sum:all_refreshes_per_type_pl:delta1h
+      expr: |
+        sum by (className, type) (
+          1 + floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:failed_logins_pl:delta1h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="PL", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="PL", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:unsuccessful_background_logins_pl:delta4h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="PL", provider_type!="test"}[4h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="PL", provider_type!="test"}[4h]) / 1440)
+        )
+    - record: sum:unsuccessful_on_demand_logins_pl:delta4h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="PL", provider_type!="test"}[4h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="PL", provider_type!="test"}[4h]) / 1440)
+        )
+    - record: sum:failed_refreshes_per_type_pl:delta1h
+      expr: |
+        sum by (className, type) (
+          1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="PL", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="PL", provider_type!="test"}[1h]) / 360)
+        )
+
+    # =========== SHORT-TERM (1h) and MID-TERM (4h) ALERTS ===========
+    - alert: RefreshErrorRateAbove10%PL
+      expr: sum:failed_refreshes_per_type_pl:delta1h / sum:all_refreshes_per_type_pl:delta1h > 0.1
       for: 15m
+      priority: P3
       labels:
-        severity: urgent
-        priority: P1
+        severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Authentication failures is <{ $value | humanizePercentage }> for the last 1h.
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
 
-    - alert: LongTermAuthenticationErrorRateOver90%PL
-      expr: |
-        # Failed logins over 90%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="PL", provider_type!="test"}[12h])) by (className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 0.9)
-        # At least this many attempts.
-            and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 10
+    - alert: RefreshErrorRateAbove90%PL
+      expr: sum:failed_refreshes_per_type_pl:delta1h / (sum:all_refreshes_per_type_pl:delta1h > 2) > 0.9
       for: 15m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs12h }}
-          {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures is <{ $value | humanizePercentage }> for the last 12h
-        tags: {{ .Values.tags }}
-
-    # Refresh alerts
-    - alert: RefreshErrorRateOver20%PL
-      expr: |
-        # Failed refreshes over 20%
-        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="completed", market="PL", provider_type!="test"}[1h])) by (className,provider,type)
-            / count(sum_over_time(tink_agent_refresh_total{market="PL", provider_type!="test"}[1h])) by (className,provider,type) < 0.2)
-      for: 15m
-      labels:
-        severity: urgent
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Refresh failures is <{ $value | humanizePercentage }> for the last 1h
-        tags: {{ .Values.tags }}
-
-    #-------------------------------------------------------------------------------------------------------------------
-    # Unknown errors (due to RuntimeException) alerts
-    #-------------------------------------------------------------------------------------------------------------------
-    # Authentication alerts
-    - alert: AuthenticationUnknownErrorRateOver20%PL
-      expr: |
-        # Failed logins (due to unknown RuntimeException) over 20%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PL", provider_type!="test"}[1h])) by (className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h])) by (className,provider) > 0.2)
-        # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h])) by (className,provider) > 5
-      for: 15m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Authentication failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 1h
-        tags: {{ .Values.tags }}
-
-    - alert: LongTermAuthenticationUnknownErrorRateOver20%PL
-      expr: |
-        # Failed logins (due to unknown RuntimeException) over 20%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PL", provider_type!="test"}[12h])) by (className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 0.2)
-        # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 5
-      for: 15m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs12h }}
-          {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 12h
-        tags: {{ .Values.tags }}
-
-    # Refresh alerts
-    - alert: RefreshUnknownErrorRateOver10%PL
-      expr: |
-        # Failed refreshes (due to unknown RuntimeException) over 10%
-        count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="failed", market="PL", provider_type!="test"}[1h])) by (className,provider,type)
-            / count(sum_over_time(tink_agent_refresh_total{market="PL", provider_type!="test"}[1h])) by (className,provider,type) > 0.1
-      for: 15m
+      priority: P1
       labels:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs1h }}
-          {{ .Values.grafanaProviderLinkAbs1h }}
-        summary: Refresh failures due to unknown RuntimeExceptions is <{ $value | humanizePercentage }> for the last 1h
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
 
-    #-------------------------------------------------------------------------------------------------------------------
-    # Bank site errors alerts
-    #-------------------------------------------------------------------------------------------------------------------
-    # Authentication alerts
-    - alert: ManualAuthenticationBankSiteErrorRateOver90%PL
-      expr: |
-        # Failed logins (due to bank site errors) over 90%
-        count(sum_over_time(tink_agent_login_total{action="login-manual",outcome="unavailable", market="PL"}[4h])) BY (className,provider)
-        # All login attempts the last 4 hours
-          / count(sum_over_time(tink_agent_login_total{action="login-manual", market="PL"}[4h])) BY (className,provider) > 0.90
-        # At least this many attempts.
-           and count(sum_over_time(tink_agent_login_total{action="login-manual", market="PL", provider_type!="test"}[4h])) by (className,provider) > 10
+    - alert: LoginErrorRateAbove10%PL
+      expr: sum:failed_logins_pl:delta1h / sum:all_logins_pl:delta1h > 0.1
       for: 15m
+      priority: P3
       labels:
-        severity: urgent
-        priority: P2
+        severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs4h }}
-          {{ .Values.grafanaProviderLinkAbs4h }}
-        summary: Manual authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
 
-    - alert: AutoAuthenticationBankSiteErrorRateOver90%PL
-      expr: |
-        # Failed logins (due to bank site errors) over 90%
-        count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron",outcome="unavailable", market="PL"}[4h])) BY (className,provider)
-        # All login attempts the last 4 hours
-          / count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron", market="PL"}[4h])) BY (className,provider) > 0.90
-        # At least this many attempts.
-           and count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron", market="PL", provider_type!="test"}[4h])) by (className,provider) > 10
+    - alert: LoginErrorRateAbove90%PL
+      expr: sum:failed_logins_pl:delta1h / (sum:all_logins_pl:delta1h > 2) > 0.9
       for: 15m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs4h }}
-          {{ .Values.grafanaProviderLinkAbs4h }}
-        summary: Auto authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
-        tags: {{ .Values.tags }}
-
-    - alert: LongTermAuthenticationBankSiteErrorRateOver90%PL
-      expr: |
-        # Failed logins (due to bank site errors) over 90%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PL"}[12h])) BY (className,provider)
-        # All login attempts the last 12 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PL"}[12h])) BY (className,provider) > 0.90
-        # At least this many attempts.
-        and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 2
-      for: 15m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs12h }}
-          {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures due to bank site errors is <{ $value | humanizePercentage }> for the last 12h
-        tags: {{ .Values.tags }}
-
-    # Refresh alerts
-    - alert: RefreshBankSiteErrorRateOver90%PL
-      expr: |
-        # Failed refreshes (due to bank site errors) over 90%
-        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}[4h])) by (className,provider)
-            / count(sum_over_time(tink_agent_refresh_total{market="PL", provider_type!="test"}[4h])) by (className,provider,type) > 0.90)
-        # At least this many attempts.
-           and count(sum_over_time(tink_agent_login_total{action="refresh", market="PL", provider_type!="test"}[4h])) by (className,provider) > 10
-      for: 15m
+      priority: P1
       labels:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs4h }}
-          {{ .Values.grafanaProviderLinkAbs4h }}
-        summary: Refresh failures due to bank site errors is <{ $value | humanizePercentage }> for the last 4h
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
 
-    - alert: LongTermRefreshBankSiteErrorRateOver90%PL
-      expr: |
-        # Failed refresh (due to bank site errors) over 90%
-        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}[12h])) by (className,provider)
-            / count(sum_over_time(tink_agent_refresh_total{market="PL", provider_type!="test"}[12h])) by (className,provider) > 0.90)
+    - alert: BackgroundLoginErrorRateAbove90%PL
+      expr: sum:unsuccessful_background_logins_pl:delta4h / (sum:all_logins_pl:delta4h > 5) > 0.9
       for: 15m
+      priority: P2
       labels:
-        severity: urgent
+        severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs12h }}
-          {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Refresh failures due to bank site errors is <{ $value | humanizePercentage }> for the last 12h
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs4h }}
+          {{ .Values.grafanaClassLinkAbs4h }}
+        summary: Background login error rate over the last 4 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
 
-
-    #-------------------------------------------------------------------------------------------------------------------
-    # Cancelled errors alerts
-    #-------------------------------------------------------------------------------------------------------------------
-    # Authentication alerts
-    - alert: AuthenticationUserCancellationRateOver95%PL
-      expr: |
-        # Failed logins (due to user cancellation) over 95%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome=~"cancelled|cancelled_due_to_third_party_app_timeout", market="PL"}[4h])) BY (className,provider)
-        # All login attempts the last 4 hours
-        # All login attempts the last 4 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PL"}[4h])) BY (className,provider) > 0.95
-        # At least this many attempts.
-           and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[4h])) by (className,provider) > 10
+    - alert: OnDemandLoginErrorRateAbove90%PL
+      expr: sum:unsuccessful_on_demand_logins_pl:delta4h / (sum:all_logins_pl:delta4h > 5) > 0.9
       for: 15m
+      priority: P2
       labels:
-        severity: urgent
-        priority: P2
+        severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaProviderLinkAbs4h }}
-          {{ .Values.grafanaProviderLinkAbs4h }}
-        summary: Authentication failures due to user cancelletion is <{ $value | humanizePercentage }> for the last 4h
-        tags: {{ .Values.tags }}
-
-    - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRateOver95%PL
-      expr: |
-        # Failed logins (due to third party app timeout) over 95%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="PL"}[12h])) BY (className,provider)
-        # All login attempts the last 6 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PL"}[12h])) BY (className,provider) > 0.95
-        # At least this many attempts.
-          and count(sum_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h])) by (className,provider) > 5
-      for: 15m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaProviderLinkAbs12h }}
-          {{ .Values.grafanaProviderLinkAbs12h }}
-        summary: Authentication failures due to user cancelletion is <{ $value | humanizePercentage }> for the last 12h. Please check if a redirect url is correct.
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs4h }}
+          {{ .Values.grafanaClassLinkAbs4h }}
+        summary: On-demand login error rate over the last 4 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>

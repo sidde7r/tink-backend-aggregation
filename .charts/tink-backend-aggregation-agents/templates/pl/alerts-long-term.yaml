@@ -1,0 +1,61 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-pl-long-term
+  namespace: agents
+spec:
+  interval: 1h
+  rules:
+    - record: sum:all_logins_pl:delta12h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h]) / 4320)
+        )
+    - record: sum:unavailable_or_cancelled_logins_pl:delta12h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="PL", provider_type!="test"}[12h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="PL", provider_type!="test"}[12h]) / 4320)
+        )
+    - record: sum:all_refreshes_per_type_pl:delta12h
+      expr: |
+        sum by (className, type) (
+          1 + floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[12h]))
+          -
+          floor(count_over_time(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[12h]) / 4320)
+        )
+    - record: sum:unavailable_refreshes_per_type_pl:delta12h
+      expr: |
+        sum by (className, type) (
+          1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}[12h]))
+          -
+          floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}[12h]) / 4320)
+        )
+    # =========== LONG-TERM (12h) ALERTS ===========
+    - alert: LongTermBankOrUserErrorRateAbove90%PL
+      expr: sum:unavailable_or_cancelled_logins_pl:delta12h / (sum:all_logins_pl:delta12h > 2) > 0.9
+      labels:
+        severity: ping
+        priority: P2
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs12h }}
+          {{ .Values.grafanaClassLinkAbs12h }}
+        summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: LongTermRefreshUnavailableErrorRateAbove90%PL
+      expr: sum:unavailable_refreshes_per_type_pl:delta12h / (sum:all_refreshes_per_type_pl:delta12h > 2) > 0.9
+      labels:
+        severity: ping
+        priority: P2
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs12h }}
+          {{ .Values.grafanaClassLinkAbs12h }}
+        summary: Refresh of <{ $labels.type }> over the last 12 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+

@@ -44,7 +44,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs12h }}
           {{ .Values.grafanaClassLinkAbs12h }}
-        summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
         
     - alert: LongTermRefreshUnavailableErrorRateAbove90%DK
@@ -56,6 +56,6 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs12h }}
           {{ .Values.grafanaClassLinkAbs12h }}
-        summary: Refresh of <{ $labels.type }> over the last 12 hours is <{ $value | humanizeTimestamp }> for <{ $labels.className }>
+        summary: Refresh of <{ $labels.type }> over the last 12 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
