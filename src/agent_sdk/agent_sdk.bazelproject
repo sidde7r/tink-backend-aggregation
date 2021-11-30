@@ -8,15 +8,11 @@ build_flags:
 directories:
   src/agent_sdk
   src/libraries
+  src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account
 
 targets:
   //src/agent_sdk/runtime
   //src/agent_sdk/sdk
   //src/agent_sdk/agents/example
-
-# test_sources:
-#   src/openapi-api-client-generator/modules/openapi-generator/src/test/*
-#   src/openapi-api-client-generator/modules/openapi-generator-core/src/test/*
-#   src/openapi-api-client-generator/modules/openapi-generator-cli/src/test/*
 
 java_language_level: 11

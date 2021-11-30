@@ -2,11 +2,11 @@ package se.tink.agent.agents.example.fetcher;
 
 import java.util.List;
 import se.tink.agent.sdk.fetching.accounts.SavingsAccountsFetcher;
-import se.tink.agent.sdk.models.account.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class ExampleSavingsAccountsFetcher implements SavingsAccountsFetcher {
     @Override
-    public List<SavingsAccount> fetchAccounts() {
+    public List<TransactionalAccount> fetchAccounts() {
         return null;
     }
 }

@@ -10,6 +10,7 @@ java_library_with_sources(
         "@agent_sdk_maven//:org_projectlombok_lombok",
         "@agent_sdk_maven//:org_slf4j_slf4j_api",
         "//src/agent_sdk:lombok_plugin",
+        "//src/agent_sdk/sdk/src/models/account",
     ],
     intdeps = [
         "@tink_backend//src/libraries/serialization_utils",
@@ -17,16 +18,15 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/user_interaction",
         "//src/agent_sdk/sdk/src/environment",
         "//src/agent_sdk/sdk/src/storage",
-        "@tink_backend//src/libraries/account_identifier",
     ],
     visibility = ["//visibility:public"],
     exports = [
         "//src/agent_sdk:lombok_plugin",
         "//src/agent_sdk/sdk/src/environment",
+        "//src/agent_sdk/sdk/src/models/account",
         "//src/agent_sdk/sdk/src/models/authentication",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/user_interaction",
         "@agent_sdk_maven//:com_google_guava_guava",
-        "@tink_backend//src/libraries/account_identifier",
     ],
 )

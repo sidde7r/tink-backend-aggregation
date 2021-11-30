@@ -1,13 +1,12 @@
-load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "example",
     srcs = glob(["src/**/*.java"]),
-    visibility = [
-        # TODO: update
-        "//visibility:public",
-    ],
-    deps = [
+    intdeps = [
         "//src/agent_sdk/sdk",
+    ],
+    visibility = [
+        "//visibility:public",
     ],
 )
