@@ -215,7 +215,7 @@ content-type: application/json;charset=UTF-8
 date: Fri, 27 Aug 2021 08:27:08 GMT
 content-length: 410
 
-[{"transaktionsId":"1193296129","text":"Överföring","belopp":-8000.00,"datum":"2021-05-14","harDetaljer":true,"saldo":937.14},{"transaktionsId":"1192648138","text":"Insättning på sparkonto","belopp":3000.00,"datum":"2021-05-12","harDetaljer":false,"saldo":8937.14},{"transaktionsId":"1190359403","text":"Insättning på sparkonto","belopp":3000.00,"datum":"2021-05-05","harDetaljer":false,"saldo":5937.14}]
+[{"transaktionsId":"","text":"Överföring","belopp":-8000.00,"datum":"2021-05-14","harDetaljer":true,"saldo":937.14},{"transaktionsId":"1192648138","text":"Insättning på sparkonto","belopp":3000.00,"datum":"2021-05-12","harDetaljer":false,"saldo":8937.14},{"transaktionsId":"1190359403","text":"Insättning på sparkonto","belopp":3000.00,"datum":"2021-05-05","harDetaljer":false,"saldo":5937.14}]
 
 -----------------------------------------------------------------------------------
 REQUEST 11
