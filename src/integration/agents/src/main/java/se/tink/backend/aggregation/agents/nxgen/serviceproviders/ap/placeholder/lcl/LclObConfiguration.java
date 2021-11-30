@@ -5,6 +5,7 @@ import static com.google.common.base.Strings.*;
 import com.google.common.base.Preconditions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 /**
  * This is a configuration class to make other processes able to discover the secrets configuration
@@ -12,7 +13,7 @@ import se.tink.backend.aggregation.annotations.Secret;
  * properly. This Configuration class belongs to a dummy agent.
  */
 @JsonObject
-public class LclObConfiguration {
+public class LclObConfiguration implements ClientConfiguration {
 
     private static final String INVALID_CONFIGURATION_MESSAGE =
             "Invalid Configuration: %s cannot be empty or null";
