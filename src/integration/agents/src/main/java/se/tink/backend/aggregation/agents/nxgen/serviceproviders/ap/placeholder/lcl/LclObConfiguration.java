@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.ap.placeholder.lcl;
 
-import static com.google.common.base.Strings.*;
+import static com.google.common.base.Strings.emptyToNull;
 
 import com.google.common.base.Preconditions;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -27,7 +27,7 @@ public class LclObConfiguration {
         return clientId;
     }
 
-    public String getClientSecret() {
+    public String getQsealcKeyId() {
         Preconditions.checkNotNull(
                 emptyToNull(qsealcKeyId),
                 String.format(INVALID_CONFIGURATION_MESSAGE, "QSealc key id"));
