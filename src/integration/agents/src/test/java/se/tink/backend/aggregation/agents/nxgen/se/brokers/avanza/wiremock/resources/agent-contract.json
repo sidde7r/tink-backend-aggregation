@@ -4,10 +4,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
       "unscaledValue" : 200000000,
+      "exactValue" : 2000000.0,
       "doubleValue" : 2000000.0,
-      "exactValue" : 2000000.0
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "95501000053",
@@ -39,10 +39,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 441878.63,
+      "unscaledValue" : 44187863,
       "exactValue" : 441878.63,
-      "scale" : 2,
-      "unscaledValue" : 44187863
+      "doubleValue" : 441878.63,
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "1000000",
@@ -74,10 +74,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 23364.86,
+      "unscaledValue" : 2336486,
       "exactValue" : 23364.86,
-      "scale" : 2,
-      "unscaledValue" : 2336486
+      "doubleValue" : 23364.86,
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "1000011",
@@ -109,10 +109,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 2154.31,
+      "unscaledValue" : 215431,
       "exactValue" : 2154.31,
-      "scale" : 2,
-      "unscaledValue" : 215431
+      "doubleValue" : 2154.31,
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "2000040",
@@ -144,10 +144,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
       "unscaledValue" : -1015,
+      "exactValue" : -10.15,
       "doubleValue" : -10.15,
-      "exactValue" : -10.15
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "95541000054",
@@ -179,10 +179,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 0.0,
+      "unscaledValue" : 0,
       "exactValue" : 0.0,
-      "scale" : 2,
-      "unscaledValue" : 0
+      "doubleValue" : 0.0,
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "7000040",
@@ -214,10 +214,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 0.0,
+      "unscaledValue" : 0,
       "exactValue" : 0.0,
-      "scale" : 1,
-      "unscaledValue" : 0
+      "doubleValue" : 0.0,
+      "scale" : 1
     },
     "currencyCode" : "SEK",
     "bankId" : "1000052",
@@ -249,10 +249,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
       "unscaledValue" : -5000042,
+      "exactValue" : -50000.42,
       "doubleValue" : -50000.42,
-      "exactValue" : -50000.42
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "95561000055",
@@ -284,10 +284,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 16885.67,
+      "unscaledValue" : 1688567,
       "exactValue" : 16885.67,
-      "scale" : 2,
-      "unscaledValue" : 1688567
+      "doubleValue" : 16885.67,
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "1000075",
@@ -319,10 +319,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 312378.52,
+      "unscaledValue" : 31237852,
       "exactValue" : 312378.52,
-      "scale" : 2,
-      "unscaledValue" : 31237852
+      "doubleValue" : 312378.52,
+      "scale" : 2
     },
     "currencyCode" : "SEK",
     "bankId" : "1000093",
@@ -361,8 +361,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1911993956MSKHBDPDFDF1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1593079200000,
@@ -374,8 +377,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1911993955MSKHBDPDFDD1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1593079200000,
@@ -387,8 +393,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1911993954MSKHBDPDFDC1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1593079200000,
@@ -400,8 +409,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1911993953MSKHBDPDFDB1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1593079200000,
@@ -413,8 +425,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1911993952MSKHBDPDFCZ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1590400800000,
@@ -426,8 +441,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1863453399MSKHBDLTHBG1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1590400800000,
@@ -439,8 +457,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1863453398MSKHBDLTHBF1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1590400800000,
@@ -452,8 +473,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1863453397MSKHBDLTHBD1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1590400800000,
@@ -465,8 +489,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1863453396MSKHBDLTHBC1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1590400800000,
@@ -478,8 +505,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1863453395MSKHBDLTHBB1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1587981600000,
@@ -491,8 +521,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1826216016MSKHBDKNWWR1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1587981600000,
@@ -504,8 +537,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1826216015MSKHBDKNWWQ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1587981600000,
@@ -517,8 +553,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1826216014MSKHBDKNWWP1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1587981600000,
@@ -530,8 +569,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1826216013MSKHBDKNWWN1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1587981600000,
@@ -543,8 +585,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1826216012MSKHBDKNWWM1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1585134000000,
@@ -556,8 +601,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1778689557MSKHBDGHTPQ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1585134000000,
@@ -569,8 +617,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1778689556MSKHBDGHTPP1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1585134000000,
@@ -582,8 +633,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1778689555MSKHBDGHTPN1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1585134000000,
@@ -595,8 +649,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1778689554MSKHBDGHTPM1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1585134000000,
@@ -608,8 +665,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1778689553MSKHBDGHTPL1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 300000.0,
     "date" : 1585047600000,
@@ -621,8 +681,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1776825742MANEBQKSFCZ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1.0,
     "date" : 1583924400000,
@@ -634,8 +697,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1754061178MANEBQBTQLZ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1582714800000,
@@ -647,8 +713,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1726506231MSKHBDFBFMJ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1582714800000,
@@ -660,8 +729,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1726506230MSKHBDFBFMH1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1582714800000,
@@ -673,8 +745,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1726506229MSKHBDFBFMG1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1582628400000,
@@ -686,8 +761,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1724149896MSKHBDCZXCZ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1582628400000,
@@ -699,8 +777,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1724149895MSKHBDCZXCX1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1580122800000,
@@ -712,8 +793,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1687221972MSKHBDBWQLS1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1580122800000,
@@ -725,8 +809,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1687221971MSKHBDBWQLR1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1580122800000,
@@ -738,8 +825,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1687221970MSKHBDBWQLQ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1580122800000,
@@ -751,8 +841,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1687221969MSKHBDBWQLP1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1580122800000,
@@ -764,8 +857,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1687221968MSKHBDBWQLN1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1577444400000,
@@ -777,8 +873,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1656790658MSKHBCXSHKK1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1577444400000,
@@ -790,8 +889,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1656790657MSKHBCXSHKJ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1577444400000,
@@ -803,8 +905,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1656790656MSKHBCXSHKH1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1577444400000,
@@ -816,8 +921,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1656790655MSKHBCXSHKG1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1577444400000,
@@ -829,8 +937,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1656790654MSKHBCXSHKF1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1574766000000,
@@ -842,8 +953,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1632204477MSKHBCTNLSX1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1574766000000,
@@ -855,8 +969,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1632204476MSKHBCTNLSW1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1574679600000,
@@ -868,8 +985,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1630929563MSKHBCSNGTK1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1574679600000,
@@ -881,8 +1001,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1630929562MSKHBCSNGTJ1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1572260400000,
@@ -894,8 +1017,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1606018662MSKHBCRTLSC1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1572260400000,
@@ -907,8 +1033,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1606018661MSKHBCRTLSB1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1571997600000,
@@ -920,8 +1049,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1604526509MSKHBCQMNMX1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1569492000000,
@@ -933,8 +1065,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1580158217MSKHBCPMQBP1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1566900000000,
@@ -946,8 +1081,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1555661856MSKHBCMTLPW1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 2000.0,
     "date" : 1564048800000,
@@ -959,8 +1097,10 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -3.42,
     "date" : 1588586400000,
@@ -972,8 +1112,11 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1837476115MANEBRJGLBH1"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
   } ],
   "identityData" : {
     "nameElements" : [ {
@@ -985,14 +1128,14 @@
       "month" : "SEPTEMBER",
       "monthValue" : 9,
       "dayOfMonth" : 9,
-      "era" : "CE",
       "dayOfWeek" : "THURSDAY",
       "leapYear" : false,
       "dayOfYear" : 252,
       "chronology" : {
-        "calendarType" : "iso8601",
-        "id" : "ISO"
-      }
+        "id" : "ISO",
+        "calendarType" : "iso8601"
+      },
+      "era" : "CE"
     }
   }
 }
