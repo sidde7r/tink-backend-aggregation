@@ -48,6 +48,7 @@ public final class BecConstants {
 
         public static final String APP_TYPE = "mb1";
         public static final String APP_VERSION = "7.7.1-105";
+        public static final String APP_URL = "bec.mobilbank.b00020://";
         public static final String OS_VERSION = "Android 6.0";
         public static final String DEVICE_TYPE =
                 "HTC / HTC One_M8 / MRA58K release-keys / htc_europe / htc_m8 / htc / htc/htc_europe/htc_m8:6.0/MRA58K/662736.4:user/release-keys / htc_m8 / qcom";
