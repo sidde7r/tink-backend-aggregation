@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.QueryParamsKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
@@ -179,6 +181,27 @@ public class EvoBancoApiClient {
         setNextCodSecIpHeader(response);
 
         return response.getBody(CardTransactionsResponse.class);
+    }
+
+    public TransactionsResponse fetchDebitCardTransactions(String cardNumber) {
+        CardTransactionsResponse debitCardTransactionsResponse =
+                fetchCardTransactionsResponse(cardNumber);
+        return debitCardTransactionsResponse.toTransactionsResponse();
+    }
+
+    public CardTransactionsResponse fetchCardTransactionsResponse(String cardNumber) {
+        try {
+            return fetchCardTransactions(cardNumber, 0);
+        } catch (HttpResponseException e) {
+            return checkForEmptyTransactionResponse(e).orElseThrow(() -> e);
+        }
+    }
+
+    private Optional<CardTransactionsResponse> checkForEmptyTransactionResponse(
+            HttpResponseException e) {
+        return e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST && e.getResponse().hasBody()
+                ? Optional.of(e.getResponse().getBody(CardTransactionsResponse.class))
+                : Optional.empty();
     }
 
     public InvestmentsResponse fetchInvestments() {

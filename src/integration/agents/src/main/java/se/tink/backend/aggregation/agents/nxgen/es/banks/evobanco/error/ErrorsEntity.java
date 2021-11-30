@@ -14,6 +14,14 @@ public class ErrorsEntity {
     @JsonProperty("mensajeMostrar")
     private String messageShow;
 
+    public ErrorsEntity() {}
+
+    public ErrorsEntity(String solution, String showCode, String messageShow) {
+        this.solution = solution;
+        this.showCode = showCode;
+        this.messageShow = messageShow;
+    }
+
     public String getShowCode() {
         return showCode;
     }

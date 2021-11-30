@@ -1,0 +1,22 @@
+build_flags:
+  --test_output=all
+  --host_javabase=@bazel_tools//tools/jdk:remote_jdk11
+  --javabase=@bazel_tools//tools/jdk:remote_jdk11
+  --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_java11
+  --java_toolchain=@bazel_tools//tools/jdk:toolchain_java11
+
+directories:
+  src/agent_sdk
+  src/libraries
+
+targets:
+  //src/agent_sdk/runtime
+  //src/agent_sdk/sdk
+  //src/agent_sdk/agents/example
+
+# test_sources:
+#   src/openapi-api-client-generator/modules/openapi-generator/src/test/*
+#   src/openapi-api-client-generator/modules/openapi-generator-core/src/test/*
+#   src/openapi-api-client-generator/modules/openapi-generator-cli/src/test/*
+
+java_language_level: 11

@@ -3987,3 +3987,12 @@ git_repository(
     commit = "19ec01a93637c5cc180ee523f25b190a79adcc35",
     remote = "https://github.com/graknlabs/bazel-distribution",
 )
+
+# Agent SDK
+load("//src/agent_sdk:deps.bzl", "agent_sdk_deps")
+
+agent_sdk_deps()
+
+load("@agent_sdk_maven//:defs.bzl", pin_agent_sdk_maven = "pinned_maven_install")
+
+pin_agent_sdk_maven()

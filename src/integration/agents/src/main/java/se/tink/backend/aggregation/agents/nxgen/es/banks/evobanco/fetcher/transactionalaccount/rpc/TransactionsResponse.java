@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants.SEQUENTIAL_NUMBER_PATTERN;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Optional;
@@ -7,6 +9,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.error.ErrorsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities.CustomerNotesListEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities.EeOConsultationMovementsPostponedViewEntity;
@@ -34,7 +37,10 @@ public class TransactionsResponse
 
         return new RepositioningEntity.Builder()
                 .withDragBalance(lastTransactionInPage.getDragBalance())
-                .withSequentialNumber(lastTransactionInPage.getSequentialNumber())
+                .withSequentialNumber(
+                        String.format(
+                                SEQUENTIAL_NUMBER_PATTERN,
+                                Integer.parseInt(lastTransactionInPage.getSequentialNumber()) - 1))
                 .withCurrencyCode(lastTransactionInPage.getCurrencyCode())
                 .build();
     }
@@ -50,12 +56,17 @@ public class TransactionsResponse
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(
-                !getEeOConsultationMovementsPostponedView()
-                        .getAnswer()
-                        .getListCustomerNotes()
-                        .get(getNumberOfTransactionsInPage() - 1)
-                        .getSequentialNumber()
-                        .equals(EvoBancoConstants.Constants.FIRST_SEQUENTIAL_NUMBER));
+                getEeOConsultationMovementsPostponedView().getAnswer() != null
+                        && !getEeOConsultationMovementsPostponedView()
+                                .getAnswer()
+                                .getListCustomerNotes()
+                                .isEmpty()
+                        && !getEeOConsultationMovementsPostponedView()
+                                .getAnswer()
+                                .getListCustomerNotes()
+                                .get(getNumberOfTransactionsInPage() - 1)
+                                .getSequentialNumber()
+                                .equals(EvoBancoConstants.Constants.FIRST_SEQUENTIAL_NUMBER));
     }
 
     private int getNumberOfTransactionsInPage() {
@@ -64,6 +75,11 @@ public class TransactionsResponse
 
     public EeOConsultationMovementsPostponedViewEntity getEeOConsultationMovementsPostponedView() {
         return eeOConsultationMovementsPostponedView;
+    }
+
+    public void setEeOConsultationMovementsPostponedView(
+            EeOConsultationMovementsPostponedViewEntity eeOConsultationMovementsPostponedView) {
+        this.eeOConsultationMovementsPostponedView = eeOConsultationMovementsPostponedView;
     }
 
     @Override
@@ -79,14 +95,11 @@ public class TransactionsResponse
     @Override
     public void handleReturnCode() {
         if (isUnsuccessfulReturnCode()) {
-            switch (getErrors().get().getShowCode()) {
-                case EvoBancoConstants.ErrorCodes.NO_TRANSACTIONS_FOUND:
-                    LOG.debug("No more transactions found.");
-                    break;
-
-                default:
-                    throw new IllegalStateException(
-                            "Unknown unsuccessful return code " + getErrors().get().toString());
+            if (ErrorCodes.NO_TRANSACTIONS_FOUND.equals(getErrors().get().getShowCode())) {
+                LOG.debug("No more transactions found.");
+            } else {
+                throw new IllegalStateException(
+                        "Unknown unsuccessful return code " + getErrors().get().toString());
             }
         }
     }

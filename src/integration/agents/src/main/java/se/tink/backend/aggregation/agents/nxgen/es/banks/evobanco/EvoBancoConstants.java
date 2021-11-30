@@ -145,6 +145,7 @@ public class EvoBancoConstants {
         public static final String USER_INFO = "user-info";
         public static final String CARD_STATE = "card-state";
         public static final String ACCESS_TOKEN = "access_token";
+        public static final String PAN_TOKEN = "pan-token";
     }
 
     public static class FormKey {
@@ -178,6 +179,9 @@ public class EvoBancoConstants {
         public static final int DEVICE_ID_LENGTH = 25;
         public static final Set<String> CREDIT_TRANSACTION_TYPES = ImmutableSet.of("1", "2");
         public static final String ACCOUNT_TRANSACTION_PLUS_SIGN = "H";
+        public static final String ACCOUNT_TRANSACTION_NEG_SIGN = "D";
+        public static final String SEQUENTIAL_NUMBER_PATTERN = "%07d";
+        public static final String DATE_SEP = "T";
     }
 
     public static class CardState {

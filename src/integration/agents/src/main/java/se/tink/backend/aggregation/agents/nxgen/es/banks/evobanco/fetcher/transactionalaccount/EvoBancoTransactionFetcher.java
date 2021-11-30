@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities.EeIConsultationMovementsPostponedViewEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities.RepositioningEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsPaginationRequest;
@@ -28,21 +29,29 @@ public class EvoBancoTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<RepositioningEntity> getTransactionsFor(
             TransactionalAccount account, RepositioningEntity key) {
+        final boolean isDebitCardAccount =
+                StringUtils.isNoneEmpty(account.getFromTemporaryStorage(Storage.PAN_TOKEN));
 
-        EeIConsultationMovementsPostponedViewEntity eeIConsultationMovementsPostponedViewEntity =
-                new EeIConsultationMovementsPostponedViewEntity.Builder()
-                        .withUserbe(sessionStorage.get(EvoBancoConstants.Storage.USER_BE))
-                        .withAgreement(account.getApiIdentifier())
-                        .withRepositioning(key)
-                        .withAgreementbe(sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE))
-                        .withEntityCode(sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE))
-                        .build();
+        TransactionsPaginationRequest request = null;
+        if (!isDebitCardAccount) {
+            EeIConsultationMovementsPostponedViewEntity
+                    eeIConsultationMovementsPostponedViewEntity =
+                            new EeIConsultationMovementsPostponedViewEntity.Builder()
+                                    .withUserbe(sessionStorage.get(Storage.USER_BE))
+                                    .withAgreement(account.getApiIdentifier())
+                                    .withRepositioning(key)
+                                    .withAgreementbe(sessionStorage.get(Storage.AGREEMENT_BE))
+                                    .withEntityCode(sessionStorage.get(Storage.ENTITY_CODE))
+                                    .build();
 
-        TransactionsPaginationRequest request =
-                new TransactionsPaginationRequest(eeIConsultationMovementsPostponedViewEntity);
-
+            request =
+                    new TransactionsPaginationRequest(eeIConsultationMovementsPostponedViewEntity);
+        }
         try {
-            return bankClient.fetchTransactions(request);
+            return isDebitCardAccount
+                    ? bankClient.fetchDebitCardTransactions(
+                            account.getFromTemporaryStorage(Storage.PAN_TOKEN))
+                    : bankClient.fetchTransactions(request);
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
 

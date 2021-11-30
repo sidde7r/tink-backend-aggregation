@@ -25,7 +25,7 @@ public class AnswerEntity {
         return "1".equals(moreData);
     }
 
-    public List<ListMovementsCardEntity> getListMovementsCard() {
+    public List<ListMovementsCardEntity> getCardTransactionsList() {
         return listMovementsCard;
     }
 }

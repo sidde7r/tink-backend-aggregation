@@ -12,4 +12,8 @@ public class EeOConsultationMovementsPostponedViewEntity extends EeOBaseEntity {
     public AnswerEntityTransactionsResponse getAnswer() {
         return answer;
     }
+
+    public void setAnswer(AnswerEntityTransactionsResponse answer) {
+        this.answer = answer;
+    }
 }
