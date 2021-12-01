@@ -738,7 +738,7 @@ maven_install(
         "javax.xml.bind:jaxb-api:2.3.1",
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "no.finn.unleash:unleash-client-java:4.1.0",
-        "org.apache.commons:commons-lang3:3.4",
+        "org.apache.commons:commons-lang3:3.9",
         "org.apache.curator:curator-client:4.3.0",
         "org.apache.curator:curator-framework:4.3.0",
         "org.apache.curator:curator-recipes:4.3.0",
