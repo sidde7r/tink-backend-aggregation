@@ -4,10 +4,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.payment.enums.PaymentType;
-import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class PaymentController {
@@ -25,12 +21,11 @@ public class PaymentController {
         this.fetchablePaymentExecutor = fetchablePaymentExecutor;
     }
 
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
         return paymentExecutor.create(paymentRequest);
     }
 
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         try {
             return paymentExecutor.sign(paymentMultiStepRequest);
         } catch (AuthenticationException e) {
@@ -78,11 +73,11 @@ public class PaymentController {
         return paymentExecutor.createBeneficiary(createBeneficiaryMultiStepRequest);
     }
 
-    public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse cancel(PaymentRequest paymentRequest) {
         return paymentExecutor.cancel(paymentRequest);
     }
 
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         if (canFetch()) {
             return fetchablePaymentExecutor.fetch(paymentRequest);
         } else {
@@ -91,8 +86,7 @@ public class PaymentController {
         }
     }
 
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
-            throws PaymentException {
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         if (canFetch()) {
             return fetchablePaymentExecutor.fetchMultiple(paymentListRequest);
         } else {
@@ -103,15 +97,5 @@ public class PaymentController {
 
     public boolean canFetch() {
         return fetchablePaymentExecutor != null;
-    }
-
-    public PaymentType getPaymentProductType(Payment payment) {
-        String marketCode = "";
-        AccountIdentifierType accountIdentifierType =
-                payment.getDebtor().getAccountIdentifierType();
-        String accountNumber = payment.getDebtor().getAccountNumber();
-
-        marketCode = payment.getMarketCode(accountNumber, marketCode, accountIdentifierType);
-        return AccountTypeToPaymentTypeMapper.getType(payment, marketCode);
     }
 }
