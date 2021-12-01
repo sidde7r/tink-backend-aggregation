@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.to_system.AccountConverter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
@@ -52,7 +53,8 @@ public final class UpdateControllerTest {
         // This call should never discard any cached loans
         updateController.updateTransactions(loanAccount, transactions);
 
-        final String uniqueAccountId = loanAccount.toSystemAccount(user, provider).getBankId();
+        final String uniqueAccountId =
+                AccountConverter.toSystemAccount(user, provider, loanAccount).getBankId();
 
         Assert.assertTrue(context.getAccountFeatures(uniqueAccountId).isPresent());
         Assert.assertFalse(context.getAccountFeatures(uniqueAccountId).get().getLoans().isEmpty());

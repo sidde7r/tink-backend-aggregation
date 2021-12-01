@@ -1,15 +1,14 @@
-package se.tink.backend.aggregation.nxgen.core.account.loan.util;
+package se.tink.backend.aggregation.nxgen.core.to_system.loan;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
-import java.io.Serializable;
 import java.util.Comparator;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.libraries.enums.MarketCode;
 
-public abstract class LoanInterpreter implements Serializable {
+public abstract class LoanInterpreter {
 
-    private ImmutableSet<NamePart> nameParts;
+    private final ImmutableSet<NamePart> nameParts;
 
     protected LoanInterpreter(ImmutableSet<NamePart> nameParts) {
         this.nameParts = nameParts;
@@ -17,9 +16,8 @@ public abstract class LoanInterpreter implements Serializable {
 
     public static LoanInterpreter getInstance(MarketCode market) {
 
-        switch (market) {
-            case SE:
-                return new LoanInterpreterSE();
+        if (MarketCode.SE.equals(market)) {
+            return new LoanInterpreterSE();
         }
 
         return new LoanInterpreterDefault();

@@ -12,7 +12,9 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
+import se.tink.backend.aggregation.nxgen.core.to_system.AccountConverter;
+import se.tink.backend.aggregation.nxgen.core.to_system.LoanAccountConverter;
+import se.tink.backend.aggregation.nxgen.core.to_system.loan.LoanInterpreter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -448,9 +450,7 @@ public class NordeaLoanFetcherTest {
         User user = mock(User.class);
         Provider provider = mock(Provider.class);
         when(user.getFlags()).thenReturn(Lists.newArrayList());
-        loanAccount.toSystemAccount(user, provider);
-        loanAccount
-                .getDetails()
-                .toSystemLoan(loanAccount, LoanInterpreter.getInstance(MarketCode.SE));
+        AccountConverter.toSystemAccount(user, provider, loanAccount);
+        LoanAccountConverter.toSystemLoan(LoanInterpreter.getInstance(MarketCode.SE), loanAccount);
     }
 }

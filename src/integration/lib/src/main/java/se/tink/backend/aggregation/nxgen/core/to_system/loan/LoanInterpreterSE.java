@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.nxgen.core.account.loan.util;
+package se.tink.backend.aggregation.nxgen.core.to_system.loan;
 
 import com.google.common.collect.ImmutableSet;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public class LoanInterpreterSE extends LoanInterpreter {
 
-    private static ImmutableSet<NamePart> NAME_PARTS;
+    private static final ImmutableSet<NamePart> NAME_PARTS;
 
     static {
         NAME_PARTS =

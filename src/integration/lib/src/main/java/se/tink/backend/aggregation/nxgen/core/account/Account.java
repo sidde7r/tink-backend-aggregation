@@ -11,43 +11,26 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountHolder;
-import se.tink.backend.agents.rpc.AccountParty;
-import se.tink.backend.agents.rpc.AccountPartyAddress;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.HolderRole;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.utils.typeguesser.accountholder.AccountHolderTypeUtil;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Address;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.enums.FeatureFlags;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.strings.StringUtils;
-import se.tink.libraries.user.rpc.User;
 
 @Getter
 public abstract class Account {
@@ -140,37 +123,6 @@ public abstract class Account {
         this.balances = new ArrayList<>();
     }
 
-    protected Account(StepBuilder<? extends Account, ?> builder) {
-        this.accountNumber = builder.getAccountNumber();
-        this.apiIdentifier = builder.getApiIdentifier();
-        this.exactBalance = builder.getExactBalance();
-        this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
-        this.uniqueIdentifier = builder.getUniqueIdentifier();
-        this.temporaryStorage = builder.getTemporaryStorage();
-        this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
-        this.productName = builder.getProductName();
-        this.payload = Maps.newHashMap();
-        this.capabilities = builder.getCapabilities();
-        this.sourceInfo = builder.getSourceInfo();
-
-        if (Strings.isNullOrEmpty(builder.getAlias())) {
-            // Fallback in case the received alias happened to be null at run-time.
-            // Indicates a programming fault because the agent should be implemented in a way such
-            // that it always sets the alias to the displayed name of the account.
-            logger.error("Supplied alias was null -- falling back to account number");
-            this.name = builder.getAccountNumber();
-        } else {
-            this.name = builder.getAlias();
-        }
-
-        this.parties =
-                Optional.ofNullable(builder.getHolderNames()).orElse(Collections.emptyList())
-                        .stream()
-                        .filter(holderName -> !Strings.isNullOrEmpty(holderName))
-                        .map(holderName -> new Party(holderName, HOLDER))
-                        .collect(Collectors.toList());
-    }
-
     private String sanitizeUniqueIdentifier(String uniqueIdentifier) {
         return uniqueIdentifier.replaceAll("[^\\dA-Za-z]", "");
     }
@@ -203,82 +155,7 @@ public abstract class Account {
         return getUniqueIdentifier().hashCode();
     }
 
-    public se.tink.backend.agents.rpc.Account toSystemAccount(User user, Provider provider) {
-        se.tink.backend.agents.rpc.Account account = new se.tink.backend.agents.rpc.Account();
-
-        account.setType(getType());
-        account.setName(this.name);
-        account.setAccountNumber(this.accountNumber);
-        account.setBalance(this.exactBalance.getDoubleValue());
-        account.setCurrencyCode(this.exactBalance.getCurrencyCode());
-        account.setExactBalance(this.exactBalance);
-        account.setIdentifiers(this.identifiers);
-        account.setBankId(this.uniqueIdentifier);
-        account.setHolderName(getFirstHolder().orElse(null));
-        account.setFlags(this.accountFlags);
-        account.setPayload(createPayload(user));
-        account.setAvailableCredit(
-                Optional.ofNullable(this.exactAvailableCredit)
-                        .map(ExactCurrencyAmount::getDoubleValue)
-                        .orElse(0.0));
-        account.setExactAvailableCredit(this.exactAvailableCredit);
-        account.setAvailableBalance(this.exactAvailableBalance);
-        account.setCreditLimit(this.exactCreditLimit);
-        account.setCapabilities(this.capabilities);
-        account.setSourceInfo(this.sourceInfo);
-
-        AccountHolder accountHolder = new AccountHolder();
-        accountHolder.setType(
-                Optional.ofNullable(holderType).orElse(inferHolderType(provider)).toSystemType());
-        accountHolder.setIdentities(
-                parties.stream().map(this::toSystemParty).collect(Collectors.toList()));
-        account.setAccountHolder(accountHolder);
-
-        account.setBalances(
-                balances != null
-                        ? balances.stream()
-                                .map(Balance::toSystemBalance)
-                                .collect(Collectors.toList())
-                        : ImmutableList.of());
-        return account;
-    }
-
-    public AccountParty toSystemParty(Party party) {
-        AccountParty systemParty = new AccountParty();
-        systemParty.setName(party.getName());
-        systemParty.setRole(toSystemPartyRole(party.getRole()));
-        systemParty.setAddresses(toSystemPartyAddress(party.getAddresses()));
-        return systemParty;
-    }
-
-    private HolderRole toSystemPartyRole(Role role) {
-        if (role == Role.UNKNOWN) {
-            return null;
-        }
-        return HolderRole.valueOf(role.name());
-    }
-
-    private List<AccountPartyAddress> toSystemPartyAddress(List<Address> addresses) {
-        if (addresses == null || addresses.isEmpty()) return null;
-
-        return addresses.stream()
-                .map(
-                        address ->
-                                new AccountPartyAddress(
-                                        address.getAddressType(),
-                                        address.getStreet(),
-                                        address.getPostalCode(),
-                                        address.getCity(),
-                                        address.getCountry()))
-                .collect(Collectors.toList());
-    }
-
-    private AccountHolderType inferHolderType(Provider provider) {
-        String accountHolderTypeAsString = AccountHolderTypeUtil.inferHolderType(provider).name();
-        return AccountHolderType.valueOf(accountHolderTypeAsString);
-    }
-
-    private Optional<String> getFirstHolder() {
+    public Optional<String> getFirstHolder() {
         return parties.stream()
                 .filter(party -> HOLDER.equals(party.getRole()))
                 .findFirst()
@@ -301,196 +178,7 @@ public abstract class Account {
         return temporaryStorage.get(key, valueType);
     }
 
-    private String createPayload(User user) {
-        if (FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(user.getFlags())) {
-            payload.put("currency", exactBalance.getCurrencyCode());
-        }
-
-        if (payload.isEmpty()) {
-            return null;
-        }
-
-        return SerializationUtils.serializeToString(payload);
-    }
-
-    // This will be removed as part of the improved step builder + agent builder refactoring project
-    @Deprecated
-    public abstract static class StepBuilder<A extends Account, B extends BuildStep<A, B>>
-            implements BuildStep<A, B> {
-
-        private final Collection<String> holderNames = Lists.newArrayList();
-        private final Set<AccountIdentifier> identifiers = new HashSet<>();
-        private final TemporaryStorage temporaryStorage = new TemporaryStorage();
-        private final Set<AccountFlag> accountFlags = new HashSet<>();
-        private String uniqueIdentifier;
-        private String accountNumber;
-        private String apiIdentifier;
-        private ExactCurrencyAmount exactBalance;
-        private String alias;
-        private String productName;
-        private AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        private AccountSourceInfo sourceInfo;
-
-        protected final void applyUniqueIdentifier(@Nonnull String uniqueIdentifier) {
-            Preconditions.checkArgument(
-                    !Strings.isNullOrEmpty(uniqueIdentifier),
-                    "UniqueIdentifier must no be null or empty.");
-
-            uniqueIdentifier = StringUtils.removeNonAlphaNumeric(uniqueIdentifier);
-
-            Preconditions.checkArgument(
-                    !Strings.isNullOrEmpty(uniqueIdentifier),
-                    "UniqueIdentifier was empty after sanitation.");
-
-            this.uniqueIdentifier = uniqueIdentifier;
-        }
-
-        protected final void applyAccountNumber(@Nonnull String accountNumber) {
-            Preconditions.checkArgument(
-                    !Strings.isNullOrEmpty(accountNumber),
-                    "AccountNumber must not be null or empty.");
-
-            this.accountNumber = accountNumber;
-        }
-
-        @Deprecated
-        protected final void applyBalance(@Nonnull ExactCurrencyAmount balance) {
-            Preconditions.checkNotNull(balance, "Balance must not be null.");
-
-            this.exactBalance = balance;
-        }
-
-        protected final void applyAlias(String alias) {
-            this.alias = alias;
-        }
-
-        @Override
-        public final B addAccountIdentifier(@Nonnull AccountIdentifier identifier) {
-            Preconditions.checkNotNull(identifier, "AccountIdentifier must not be null.");
-
-            if (identifiers.add(identifier)) {
-                return buildStep();
-            }
-
-            throw new IllegalArgumentException(
-                    String.format(
-                            "Identifier %s is already present in the set.", identifier.getType()));
-        }
-
-        @Override
-        public final B setApiIdentifier(@Nonnull String identifier) {
-            this.apiIdentifier = identifier;
-            return buildStep();
-        }
-
-        @Override
-        public final B setProductName(@Nonnull String productName) {
-            this.productName = productName;
-            return buildStep();
-        }
-
-        @Override
-        public final B addHolderName(@Nonnull String holderName) {
-            this.holderNames.add(holderName);
-            return buildStep();
-        }
-
-        @Override
-        public final B addAccountFlags(@Nonnull AccountFlag... accountFlags) {
-            this.accountFlags.addAll(Arrays.asList(accountFlags));
-            return buildStep();
-        }
-
-        @Override
-        public final <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value) {
-            this.temporaryStorage.put(key, value);
-            return buildStep();
-        }
-
-        @Override
-        public B canWithdrawCash(AccountCapabilities.Answer canWithdrawCash) {
-            this.capabilities.setCanWithdrawCash(canWithdrawCash);
-            return buildStep();
-        }
-
-        @Override
-        public B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds) {
-            this.capabilities.setCanPlaceFunds(canPlaceFunds);
-            return buildStep();
-        }
-
-        @Override
-        public B canExecuteExternalTransfer(AccountCapabilities.Answer canExecuteExternalTransfer) {
-            this.capabilities.setCanExecuteExternalTransfer(canExecuteExternalTransfer);
-            return buildStep();
-        }
-
-        @Override
-        public B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer) {
-            this.capabilities.setCanReceiveExternalTransfer(canReceiveExternalTransfer);
-            return buildStep();
-        }
-
-        @Override
-        public B sourceInfo(AccountSourceInfo sourceInfo) {
-            this.sourceInfo = sourceInfo;
-            return buildStep();
-        }
-
-        protected abstract B buildStep();
-
-        String getUniqueIdentifier() {
-            return uniqueIdentifier;
-        }
-
-        String getAccountNumber() {
-            return accountNumber;
-        }
-
-        String getApiIdentifier() {
-            return apiIdentifier;
-        }
-
-        ExactCurrencyAmount getExactBalance() {
-            return exactBalance;
-        }
-
-        String getAlias() {
-            return alias;
-        }
-
-        String getProductName() {
-            return productName;
-        }
-
-        Collection<String> getHolderNames() {
-            return holderNames;
-        }
-
-        Set<AccountIdentifier> getIdentifiers() {
-            return identifiers;
-        }
-
-        TemporaryStorage getTemporaryStorage() {
-            return temporaryStorage;
-        }
-
-        Set<AccountFlag> getAccountFlags() {
-            return accountFlags;
-        }
-
-        public AccountCapabilities getCapabilities() {
-            return capabilities;
-        }
-
-        public AccountSourceInfo getSourceInfo() {
-            return sourceInfo;
-        }
-    }
-
-    // This will be removed as part of the improved step builder + agent builder refactoring project
-
-    /** @deprecated Use StepBuilder instead */
+    /** @deprecated Use *Account::nxBuilder() instead. */
     @Deprecated
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
         protected final List<AccountIdentifier> identifiers = Lists.newArrayList();

@@ -1,10 +1,11 @@
 package se.tink.agent.sdk.authentication.authenticators.oauth2.steps;
 
+import java.util.Objects;
+import se.tink.agent.sdk.authentication.authenticators.oauth2.AccessTokenAndConsentLifetime;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.ExchangeAuthorizationCode;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.HandleCallbackDataError;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Constants;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Utils;
-import se.tink.agent.sdk.authentication.authenticators.oauth2.RefreshableAccessTokenAndConsentLifetime;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
@@ -42,14 +43,14 @@ public class Oauth2ExchangeAuthorizationCodeStep implements NewConsentStep {
                                         new IllegalStateException(
                                                 "callbackData did not contain 'code' and no error was handled"));
 
-        RefreshableAccessTokenAndConsentLifetime result =
+        AccessTokenAndConsentLifetime result =
                 agentExchangeAuthorizationCode.exchangeAuthorizationCode(authorizationCode);
 
-        if (!result.getToken().isAccessTokenValid()) {
+        if (Objects.isNull(result.getToken()) || !result.getToken().isValid()) {
             throw new IllegalStateException("Access token is invalid.");
         }
 
-        request.getAgentStorage().putAccessToken(result.getToken());
+        request.getAgentStorage().putOauth2Token(result.getToken());
         return NewConsentResponse.done(result.getConsentLifetime());
     }
 }

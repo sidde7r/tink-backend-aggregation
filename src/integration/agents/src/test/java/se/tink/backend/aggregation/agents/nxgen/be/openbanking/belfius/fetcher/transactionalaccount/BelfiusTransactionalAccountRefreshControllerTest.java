@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.to_system.AccountConverter;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -310,26 +311,27 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
     }
 
     private FetchAccountsResponse getExpectedAccountsResponse(String holderName) {
+        TransactionalAccount transactionalAccount =
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(789.01)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier("BE39000000076000")
+                                        .withAccountNumber("BE39000000076000")
+                                        .withAccountName("DUMMY_NAME")
+                                        .addIdentifier(new IbanIdentifier("BE39000000076000"))
+                                        .build())
+                        .addHolderName(holderName)
+                        .setApiIdentifier(TEST_LOGICAL_ID)
+                        .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
+                        .build()
+                        .orElseThrow(IllegalStateException::new);
+
         return new FetchAccountsResponse(
                 Collections.singletonList(
-                        TransactionalAccount.nxBuilder()
-                                .withType(TransactionalAccountType.CHECKING)
-                                .withPaymentAccountFlag()
-                                .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(789.01)))
-                                .withId(
-                                        IdModule.builder()
-                                                .withUniqueIdentifier("BE39000000076000")
-                                                .withAccountNumber("BE39000000076000")
-                                                .withAccountName("DUMMY_NAME")
-                                                .addIdentifier(
-                                                        new IbanIdentifier("BE39000000076000"))
-                                                .build())
-                                .addHolderName(holderName)
-                                .setApiIdentifier(TEST_LOGICAL_ID)
-                                .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                                .build()
-                                .orElseThrow(IllegalStateException::new)
-                                .toSystemAccount(user, provider)));
+                        AccountConverter.toSystemAccount(user, provider, transactionalAccount)));
     }
 
     private FetchTransactionsResponse getExpectedTransactionsResponse(

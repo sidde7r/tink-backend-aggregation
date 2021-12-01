@@ -87,11 +87,7 @@ public class RefreshControllersTest {
                 .thenReturn(transactions);
         Mockito.when(creditCardTransactionFetcher.fetchTransactionsFor(creditCards.get(0)))
                 .thenReturn(transactions);
-        Mockito.when(
-                        transferDestinationFetcher.fetchTransferDestinationsFor(
-                                accounts.stream()
-                                        .map(a -> a.toSystemAccount(user, provider))
-                                        .collect(Collectors.toList())))
+        Mockito.when(transferDestinationFetcher.fetchTransferDestinationsFor(Mockito.anyList()))
                 .thenReturn(transferDestinations);
 
         executionOrder =

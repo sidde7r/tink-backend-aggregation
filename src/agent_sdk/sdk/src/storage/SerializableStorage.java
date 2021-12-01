@@ -8,13 +8,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.EqualsAndHashCode;
-import se.tink.agent.sdk.models.authentication.RefreshableAccessToken;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @EqualsAndHashCode
 @JsonSerialize(using = SerializableStorageSerializer.class)
 @JsonDeserialize(using = SerializableStorageDeserializer.class)
 public class SerializableStorage implements Storage {
+    private static final String OAUTH2_STORAGE_KEY = "oauth2_access_token";
+
     final HashMap<String, String> storage;
 
     SerializableStorage(HashMap<String, String> storage) {
@@ -80,19 +82,18 @@ public class SerializableStorage implements Storage {
     }
 
     @Override
-    public void putAccessToken(RefreshableAccessToken token) {
-        this.put(RefreshableAccessToken.STORAGE_KEY, token);
+    public void putOauth2Token(OAuth2Token token) {
+        this.put(OAUTH2_STORAGE_KEY, token);
     }
 
     @Override
-    public Optional<RefreshableAccessToken> getAccessToken() {
-        return this.tryGet(RefreshableAccessToken.STORAGE_KEY, RefreshableAccessToken.class);
+    public Optional<OAuth2Token> getOauth2Token() {
+        return this.tryGet(OAUTH2_STORAGE_KEY, OAuth2Token.class);
     }
 
     @Override
-    public Optional<RefreshableAccessToken> getAccessToken(String alternativeKey) {
-        return Stream.of(
-                        getAccessToken(), this.tryGet(alternativeKey, RefreshableAccessToken.class))
+    public Optional<OAuth2Token> getOauth2Token(String alternativeKey) {
+        return Stream.of(getOauth2Token(), this.tryGet(alternativeKey, OAuth2Token.class))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findFirst();

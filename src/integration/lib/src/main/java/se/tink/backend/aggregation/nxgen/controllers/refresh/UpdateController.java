@@ -14,7 +14,9 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
+import se.tink.backend.aggregation.nxgen.core.to_system.AccountConverter;
+import se.tink.backend.aggregation.nxgen.core.to_system.LoanAccountConverter;
+import se.tink.backend.aggregation.nxgen.core.to_system.loan.LoanInterpreter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.enums.MarketCode;
@@ -51,7 +53,7 @@ public class UpdateController {
         return updateAccount(
                 account,
                 AccountFeatures.createForLoan(
-                        account.getDetails().toSystemLoan(account, loanInterpreter)));
+                        LoanAccountConverter.toSystemLoan(loanInterpreter, account)));
     }
 
     public Pair<se.tink.backend.agents.rpc.Account, AccountFeatures> updateAccount(
@@ -77,7 +79,7 @@ public class UpdateController {
         }
 
         accounts.add(account);
-        return Pair.of(account.toSystemAccount(user, provider), accountFeatures);
+        return Pair.of(AccountConverter.toSystemAccount(user, provider, account), accountFeatures);
     }
 
     public Pair<se.tink.backend.agents.rpc.Account, List<Transaction>> updateTransactions(
@@ -87,7 +89,7 @@ public class UpdateController {
             return null;
         }
         return Pair.of(
-                account.toSystemAccount(user, provider),
+                AccountConverter.toSystemAccount(user, provider, account),
                 transactions.stream()
                         .map(t -> t.toSystemTransaction(user.isMultiCurrencyEnabled()))
                         .collect(Collectors.toList()));
@@ -101,7 +103,7 @@ public class UpdateController {
         }
 
         return Pair.of(
-                account.toSystemAccount(user, provider),
+                AccountConverter.toSystemAccount(user, provider, account),
                 transactions.stream()
                         .map(t -> t.toSystemTransaction(user.isMultiCurrencyEnabled()))
                         .collect(Collectors.toList()));

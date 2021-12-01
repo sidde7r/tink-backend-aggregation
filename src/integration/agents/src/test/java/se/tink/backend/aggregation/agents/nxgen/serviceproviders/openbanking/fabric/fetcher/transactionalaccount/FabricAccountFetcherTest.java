@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
+import se.tink.backend.aggregation.nxgen.core.to_system.AccountConverter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.user.rpc.User;
@@ -109,7 +110,10 @@ public class FabricAccountFetcherTest {
         FetchTransferDestinationsResponse dt =
                 InferredTransferDestinations.forPaymentAccounts(
                         fabricAccountFetcher.fetchAccounts().stream()
-                                .map(a -> a.toSystemAccount(new User(), new Provider()))
+                                .map(
+                                        a ->
+                                                AccountConverter.toSystemAccount(
+                                                        new User(), new Provider(), a))
                                 .collect(Collectors.toList()),
                         AccountIdentifierType.IBAN);
         Assert.assertEquals(1, dt.getTransferDestinations().size());

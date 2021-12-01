@@ -38,10 +38,6 @@ public class TransactionalAccount extends Account {
         super(builder);
     }
 
-    protected TransactionalAccount(StepBuilder<? extends TransactionalAccount, ?> builder) {
-        super(builder);
-    }
-
     public static Builder<?, ?> builder(
             AccountTypes type, String uniqueIdentifier, ExactCurrencyAmount balance) {
         return builder(type, uniqueIdentifier).setExactBalance(balance);
