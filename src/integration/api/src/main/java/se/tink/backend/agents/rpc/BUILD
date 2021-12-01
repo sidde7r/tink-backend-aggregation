@@ -1,11 +1,33 @@
 load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
+
+java_library_with_sources(
+    name = "field",
+    srcs = glob(
+        [
+            "Field.java",
+            "SelectOption.java",
+        ],
+    ),
+    extdeps = [
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_google_guava_guava",
+        "//third_party:lombok_libs",
+    ],
+    visibility = ["//visibility:public"],
+)
 
 java_library(
     name = "rpc",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
+    exports = [
+        ":field",
+    ],
     deps = [
+        ":field",
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/amount",
         "//src/integration/credentials:demo",
