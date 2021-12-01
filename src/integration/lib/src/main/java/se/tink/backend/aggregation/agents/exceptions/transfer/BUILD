@@ -1,12 +1,14 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "transfer",
     srcs = glob(["**/*.java"]),
-    visibility = ["//visibility:public"],
-    deps = [
-        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
-        "//src/libraries/i18n",
+    extdeps = [
         "//third_party:com_google_guava_guava",
     ],
+    intdeps = [
+        "//src/libraries/i18n",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
+    ],
+    visibility = ["//visibility:public"],
 )
