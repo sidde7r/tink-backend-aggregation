@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 @JsonObject
 public class ErrorResponse {
+    private ErrorManagement errorManagement;
+
     private List<ErrorTppMessage> tppMessages;
 
     private String transactionStatus;
@@ -22,6 +24,11 @@ public class ErrorResponse {
             return tppMessages.stream()
                     .anyMatch(errorTppMessage -> errorTppMessage.isSameError(code, text));
         }
+    }
+
+    public boolean errorManagementDescriptionEquals(String description) {
+        return errorManagement != null
+                && description.equalsIgnoreCase(errorManagement.getErrorDescription());
     }
 
     public String getTransactionStatus() {
