@@ -19,7 +19,5 @@ public enum PisCapability {
      */
     SEPA_INSTANT_CREDIT_TRANSFER,
     /** Faster Payments Service in UK, aka FPS https://www.fasterpayments.org.uk/ */
-    FASTER_PAYMENTS,
-    NORWEGIAN_DOMESTIC_CREDIT_TRANSFER,
-    INSTANT_NORWEGIAN_DOMESTIC_CREDIT_TRANSFER_STAKS
+    FASTER_PAYMENTS
 }
