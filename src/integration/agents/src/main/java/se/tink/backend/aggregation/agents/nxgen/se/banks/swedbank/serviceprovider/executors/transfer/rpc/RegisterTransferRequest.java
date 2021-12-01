@@ -4,10 +4,12 @@ import static se.tink.backend.aggregation.annotations.JsonDouble.JsonType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@AllArgsConstructor
 public class RegisterTransferRequest {
 
     @JsonDouble(outputType = JsonType.STRING, decimalSeparator = ',')
@@ -19,19 +21,6 @@ public class RegisterTransferRequest {
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Stockholm")
     private final Date date;
-
-    private RegisterTransferRequest(
-            double amount,
-            String recipientId,
-            String noteToRecipient,
-            String fromAccountId,
-            Date transferDueDate) {
-        this.amount = amount;
-        this.recipientId = recipientId;
-        this.noteToRecipient = noteToRecipient;
-        this.fromAccountId = fromAccountId;
-        this.date = transferDueDate;
-    }
 
     public static RegisterTransferRequest create(
             double amount,

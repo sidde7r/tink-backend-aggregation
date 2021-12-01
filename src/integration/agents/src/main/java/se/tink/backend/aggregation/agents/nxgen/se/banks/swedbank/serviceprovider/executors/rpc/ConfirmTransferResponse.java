@@ -5,27 +5,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.Getter;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class ConfirmTransferResponse {
     private List<TransferTransactionEntity> confirmedTransactions;
     private List<TransferTransactionEntity> rejectedTransactions;
     private AmountEntity confirmedTotalAmount;
-
-    public List<TransferTransactionEntity> getConfirmedTransactions() {
-        return confirmedTransactions;
-    }
-
-    public List<TransferTransactionEntity> getRejectedTransactions() {
-        return rejectedTransactions;
-    }
-
-    public AmountEntity getConfirmedTotalAmount() {
-        return confirmedTotalAmount;
-    }
 
     public boolean isTransferConfirmed(String idToConfirm) {
         if (Strings.isNullOrEmpty(idToConfirm)) {
