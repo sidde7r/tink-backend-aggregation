@@ -1,9 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.ap.placeholder.lcl;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.agent.AgentVisitor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -17,7 +22,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
  * <p>TODO: AAP-1241 Remove placeholder when agent platform supports defining capabilities on its
  * own.
  */
-public class LclObAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
+public class LclObAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshCreditCardAccountsExecutor {
 
     private static final String PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED =
             "Placeholder agent should never be instantiated.";
@@ -49,6 +56,16 @@ public class LclObAgent extends NextGenerationAgent implements RefreshCheckingAc
 
     @Override
     protected SessionHandler constructSessionHandler() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
         throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
     }
 }
