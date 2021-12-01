@@ -6,6 +6,7 @@ java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
     visibility = [
+        "//src/agent_sdk:__subpackages__",
         "//src/aggregation:__subpackages__",
         "//src/integration:__subpackages__",
     ],
@@ -15,6 +16,7 @@ java_library(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = [
+        "//src/agent_sdk:__subpackages__",
         "//src/aggregation:__subpackages__",
         "//src/aggregation/aggregationcontroller_api:__pkg__",
         "//src/integration:__subpackages__",
