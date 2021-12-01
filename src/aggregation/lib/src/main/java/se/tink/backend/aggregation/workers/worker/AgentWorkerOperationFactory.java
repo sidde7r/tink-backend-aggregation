@@ -271,6 +271,7 @@ public class AgentWorkerOperationFactory {
 
         if (isBalanceCalculationEnabled(context)) {
             log.info("[BALANCE CALCULATOR] Enabled");
+
             return createOrderedRefreshableItemsCommandsWithChanges(
                     request, context, itemsToRefresh, controllerWrapper, clientInfo);
         }
@@ -300,10 +301,15 @@ public class AgentWorkerOperationFactory {
         List<RefreshableItem> accountItems =
                 items.stream().filter(RefreshableItem::isAccount).collect(Collectors.toList());
 
-        List<RefreshableItem> nonAccountItems =
-                items.stream().filter(i -> !accountItems.contains(i)).collect(Collectors.toList());
+        List<RefreshableItem> transactionItems =
+                items.stream().filter(RefreshableItem::isTransaction).collect(Collectors.toList());
 
-        for (RefreshableItem item : nonAccountItems) {
+        List<RefreshableItem> nonAccountAndNonTransactionItems =
+                items.stream()
+                        .filter(i -> !accountItems.contains(i) && !transactionItems.contains(i))
+                        .collect(Collectors.toList());
+
+        for (RefreshableItem item : transactionItems) {
             commands.add(
                     new RefreshItemAgentWorkerCommand(
                             context,
@@ -320,6 +326,16 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
+
+            for (RefreshableItem item : nonAccountAndNonTransactionItems) {
+                commands.add(
+                        new RefreshItemAgentWorkerCommand(
+                                context,
+                                item,
+                                createCommandMetricState(request, clientInfo),
+                                refreshEventProducer));
+            }
+
             commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
                             context,
@@ -1729,9 +1745,7 @@ public class AgentWorkerOperationFactory {
             ControllerWrapper controllerWrapper,
             ClientInfo clientInfo) {
 
-        if (request.getCredentials() != null
-                && isBalanceCalculationEnabled(
-                        context.getAppId(), request.getCredentials().getId())) {
+        if (isBalanceCalculationEnabled(context)) {
             log.info("[BALANCE CALCULATOR] Enabled");
             return createWhitelistRefreshableItemsCommandsWithChanges(
                     request, context, itemsToRefresh, controllerWrapper, clientInfo);
@@ -1819,17 +1833,17 @@ public class AgentWorkerOperationFactory {
             }
         }
 
-        // Add all refreshable items that aren't accounts to refresh them.
-        items.stream()
-                .filter(i -> !accountItems.contains(i))
-                .forEach(
-                        item ->
-                                commands.add(
-                                        new RefreshItemAgentWorkerCommand(
-                                                context,
-                                                item,
-                                                createCommandMetricState(request, clientInfo),
-                                                refreshEventProducer)));
+        List<RefreshableItem> transactionItems =
+                items.stream().filter(RefreshableItem::isTransaction).collect(Collectors.toList());
+
+        transactionItems.forEach(
+                item ->
+                        commands.add(
+                                new RefreshItemAgentWorkerCommand(
+                                        context,
+                                        item,
+                                        createCommandMetricState(request, clientInfo),
+                                        refreshEventProducer)));
 
         commands.add(
                 new RefreshPostProcessingAgentWorkedCommand(
@@ -1838,6 +1852,18 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new SendAccountsToUpdateServiceAgentWorkerCommand(
                         context, createCommandMetricState(request, clientInfo)));
+
+        // Add refresh commands for all items that aren't accounts nor transactions
+        items.stream()
+                .filter(i -> !accountItems.contains(i) && !transactionItems.contains(i))
+                .forEach(
+                        item ->
+                                commands.add(
+                                        new RefreshItemAgentWorkerCommand(
+                                                context,
+                                                item,
+                                                createCommandMetricState(request, clientInfo),
+                                                refreshEventProducer)));
 
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
