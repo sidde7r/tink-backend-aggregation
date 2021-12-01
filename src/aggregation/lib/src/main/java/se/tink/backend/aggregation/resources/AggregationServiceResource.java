@@ -22,7 +22,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.FinancialService;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.agents.rpc.ProviderStatuses;
+import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationJsonSchemaBuilder;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
 import se.tink.backend.aggregation.agents.tools.validator.ClientConfigurationValidator;
@@ -65,6 +70,7 @@ import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.provider.ProviderDto;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
 @Path("/aggregation")
@@ -598,7 +604,8 @@ public class AggregationServiceResource implements AggregationService {
                         providerId);
             }
 
-            return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
+            Provider provider = convertProvider(filteredProviders.get(0));
+            return new ClientConfigurationValidator(provider)
                     .validate(
                             request.getSecretsNames(),
                             request.getExcludedSecretsNames(),
@@ -663,7 +670,7 @@ public class AggregationServiceResource implements AggregationService {
         if (!Objects.isNull(filteredProvider)
                 && filteredProvider.getAccessType() == AccessType.OPEN_BANKING
                 && !StringUtils.containsIgnoreCase(filteredProvider.getName(), "sandbox")) {
-            return Provider.of(filteredProvider);
+            return convertProvider(filteredProvider);
         } else {
             HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
             httpResponseHelper.error(
@@ -755,5 +762,86 @@ public class AggregationServiceResource implements AggregationService {
             default:
                 throw new IllegalStateException("Unexpected request status: " + status);
         }
+    }
+
+    private static Provider convertProvider(ProviderConfiguration providerConfiguration) {
+        Provider provider = new Provider();
+
+        provider.setAccessType(
+                Provider.AccessType.valueOf(providerConfiguration.getAccessType().name()));
+        if (providerConfiguration.getAuthenticationFlow() != null) {
+            provider.setAuthenticationFlow(
+                    Provider.AuthenticationFlow.valueOf(
+                            providerConfiguration.getAuthenticationFlow().name()));
+        }
+        provider.setClassName(providerConfiguration.getClassName());
+        provider.setCredentialsType(
+                CredentialsTypes.valueOf(providerConfiguration.getCredentialsType().name()));
+        provider.setCurrency(providerConfiguration.getCurrency());
+        provider.setDisplayName(providerConfiguration.getDisplayName());
+        provider.setFields(
+                providerConfiguration.getFields().stream()
+                        .map(AggregationServiceResource::convertField)
+                        .collect(Collectors.toList()));
+        provider.setFinancialInstitutionId(providerConfiguration.getFinancialInstitutionId());
+        provider.setMarket(providerConfiguration.getMarket());
+        provider.setName(providerConfiguration.getName());
+        provider.setPayload(providerConfiguration.getPayload());
+        provider.setStatus(ProviderStatuses.valueOf(providerConfiguration.getStatus().name()));
+        provider.setSupplementalFields(
+                providerConfiguration.getSupplementalFields().stream()
+                        .map(AggregationServiceResource::convertField)
+                        .collect(Collectors.toList()));
+        provider.setType(ProviderDto.ProviderTypes.valueOf(providerConfiguration.getType().name()));
+        provider.setAuthenticationUserType(
+                Provider.AuthenticationUserType.valueOf(
+                        providerConfiguration.getAuthenticationUserType().name()));
+        provider.setFinancialServices(
+                CollectionUtils.emptyIfNull(providerConfiguration.getFinancialServices()).stream()
+                        .map(AggregationServiceResource::convertFinancialService)
+                        .collect(Collectors.toList()));
+        return provider;
+    }
+
+    public static FinancialService convertFinancialService(
+            se.tink.backend.aggregation.client.provider_configuration.rpc.FinancialService
+                    financialService) {
+        return new FinancialService()
+                .setSegment(
+                        FinancialService.FinancialServiceSegment.valueOf(
+                                financialService.getSegment().name()))
+                .setShortName(financialService.getShortName());
+    }
+
+    private static Field convertField(
+            se.tink.backend.aggregation.client.provider_configuration.rpc.Field field) {
+        return Field.builder()
+                .additionalInfo(field.getAdditionalInfo())
+                .checkbox(field.isCheckbox())
+                .description(field.getDescription())
+                .helpText(field.getHelpText())
+                .hint(field.getHint())
+                .immutable(field.isImmutable())
+                .masked(field.isMasked())
+                .maxLength(field.getMaxLength())
+                .minLength(field.getMinLength())
+                .name(field.getName())
+                .numeric(field.isNumeric())
+                .optional(field.isOptional())
+                .pattern(field.getPattern())
+                .patternError(field.getPatternError())
+                .value(field.getValue())
+                .selectOptions(
+                        field.getSelectOptions() != null
+                                ? field.getSelectOptions().stream()
+                                        .map(
+                                                o ->
+                                                        new SelectOption(
+                                                                o.getText(),
+                                                                o.getValue(),
+                                                                o.getIconUrl()))
+                                        .collect(Collectors.toList())
+                                : null)
+                .build();
     }
 }

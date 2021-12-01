@@ -1,6 +1,5 @@
 package se.tink.backend.agents.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -20,14 +19,5 @@ public class FinancialService {
         BUSINESS,
         PERSONAL,
         UNDETERMINED;
-    }
-
-    @JsonIgnore
-    public static FinancialService of(
-            se.tink.backend.aggregation.client.provider_configuration.rpc.FinancialService
-                    financialService) {
-        return new FinancialService()
-                .setSegment(FinancialServiceSegment.valueOf(financialService.getSegment().name()))
-                .setShortName(financialService.getShortName());
     }
 }
