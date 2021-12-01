@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc.SelectedRole;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.rpc.BalanceResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
@@ -20,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Data
@@ -43,7 +43,7 @@ public class AccountEntity {
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
                                 .withAccountName(getAccountName())
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(new IbanIdentifier(LhvConstants.BIC, iban))
                                 .build())
                 .addHolderName(getHolderName(sessionStorage))
                 .setApiIdentifier(resourceId)
@@ -72,11 +72,25 @@ public class AccountEntity {
         return balanceResponse.getBalances();
     }
 
+    private ExactCurrencyAmount getBookedBalance(List<BalanceEntity> balances) {
+        return balances.stream()
+                .filter(BalanceEntity::isBooked)
+                .findFirst()
+                .map(BalanceEntity::toTinkAmount)
+                .orElseThrow(() -> new IllegalStateException("No balance found in the response"));
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceEntity> balances) {
+        return balances.stream()
+                .filter(BalanceEntity::isAvailable)
+                .findFirst()
+                .map(BalanceEntity::toTinkAmount);
+    }
+
     private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
         BalanceBuilderStep balanceBuilderStep =
-                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
-        BalanceMapper.getAvailableBalance(balances)
-                .ifPresent(balanceBuilderStep::setAvailableBalance);
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
         return balanceBuilderStep.build();
     }
 }

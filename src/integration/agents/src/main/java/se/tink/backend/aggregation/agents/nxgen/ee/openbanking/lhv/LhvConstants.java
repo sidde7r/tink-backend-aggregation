@@ -32,7 +32,6 @@ public class LhvConstants {
     }
 
     public static class AuthenticationParams {
-
         public static final String DEVICE_NAME = "Tink";
     }
 
@@ -121,6 +120,13 @@ public class LhvConstants {
     public static class Values {
         public static final long HISTORY_MAX_DAYS = 90;
     }
+
+    public static class BalanceType {
+        public static final String AVAILABLE = "interimAvailable";
+        public static final String BOOKED = "interimBooked";
+    }
+
+    public static final String BIC = "LHVBEE22";
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
