@@ -34,7 +34,7 @@ public class CardTransactionEntity {
         return Optional.of(
                 CreditCardTransaction.builder()
                         .setAmount(localAmount.toTinkAmount(defaultCurrency))
-                        .setCreditAccount(
+                        .setCreditCardAccountNumber(
                                 creditCardAccount != null
                                         ? creditCardAccount.getAccountNumber()
                                         : null)

@@ -95,7 +95,7 @@ public final class CreditCardTransaction extends Transaction {
         private String creditCardAccountNumber;
         private Card creditCard;
 
-        public Builder setCreditAccount(String creditCardAccountNumber) {
+        public Builder setCreditCardAccountNumber(String creditCardAccountNumber) {
             this.creditCardAccountNumber = creditCardAccountNumber;
             return this;
         }

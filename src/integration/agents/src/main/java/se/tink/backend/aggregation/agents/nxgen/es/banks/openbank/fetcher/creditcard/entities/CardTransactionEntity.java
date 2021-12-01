@@ -104,7 +104,8 @@ public class CardTransactionEntity {
     public CreditCardTransaction toTinkTransaction(CreditCardAccount account) {
         return (CreditCardTransaction)
                 CreditCardTransaction.builder()
-                        .setCreditAccount(account != null ? account.getAccountNumber() : null)
+                        .setCreditCardAccountNumber(
+                                account != null ? account.getAccountNumber() : null)
                         .setAmount(transactionAmount.toTinkAmount())
                         .setDescription(description)
                         .setDate(transactionDate)

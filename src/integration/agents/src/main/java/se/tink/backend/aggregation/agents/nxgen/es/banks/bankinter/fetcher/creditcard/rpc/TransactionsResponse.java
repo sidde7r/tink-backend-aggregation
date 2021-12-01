@@ -88,7 +88,8 @@ public class TransactionsResponse extends JsfUpdateResponse {
         final String amount = getAmount(transactionCells);
         return (CreditCardTransaction)
                 CreditCardTransaction.builder()
-                        .setCreditAccount(account != null ? account.getAccountNumber() : null)
+                        .setCreditCardAccountNumber(
+                                account != null ? account.getAccountNumber() : null)
                         .setTransactionDates(
                                 TransactionDates.builder()
                                         .setBookingDate(new AvailableDateInformation(date))

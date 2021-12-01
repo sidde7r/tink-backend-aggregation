@@ -44,7 +44,7 @@ public class CardMovementEntity {
     public CreditCardTransaction toTinkTransaction(CreditCardAccount creditCardAccount) {
         return (CreditCardTransaction)
                 CreditCardTransaction.builder()
-                        .setCreditAccount(
+                        .setCreditCardAccountNumber(
                                 creditCardAccount != null
                                         ? creditCardAccount.getAccountNumber()
                                         : null)

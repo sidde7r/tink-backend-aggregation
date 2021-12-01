@@ -74,7 +74,7 @@ public class CreditCardTransactionEntity {
             CreditCardTransaction.Builder builder = CreditCardTransaction.builder();
             setCommonFields(builder, date.get(), isPending);
             return Optional.of(
-                    builder.setCreditAccount(
+                    builder.setCreditCardAccountNumber(
                                     creditCardAccount != null
                                             ? creditCardAccount.getAccountNumber()
                                             : null)

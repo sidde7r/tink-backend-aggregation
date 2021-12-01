@@ -37,7 +37,7 @@ public class CardTransactionDataEntity {
         LocalDate localDate = date.toLocalDate();
         return (CreditCardTransaction)
                 CreditCardTransaction.builder()
-                        .setCreditAccount(
+                        .setCreditCardAccountNumber(
                                 creditCardAccount != null
                                         ? creditCardAccount.getAccountNumber()
                                         : null)

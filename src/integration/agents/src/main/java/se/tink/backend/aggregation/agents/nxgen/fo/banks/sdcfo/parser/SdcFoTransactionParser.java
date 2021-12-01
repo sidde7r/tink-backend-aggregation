@@ -37,7 +37,7 @@ public class SdcFoTransactionParser implements SdcTransactionParser {
                 .setAmount(bankTransaction.getAmount().toExactCurrencyAmount())
                 .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
                 .setDescription(bankTransaction.getLabel())
-                .setCreditAccount(
+                .setCreditCardAccountNumber(
                         creditCardAccount != null ? creditCardAccount.getAccountNumber() : null)
                 .build();
     }
@@ -49,7 +49,7 @@ public class SdcFoTransactionParser implements SdcTransactionParser {
                 .setAmount(bankReservation.getAmount().toExactCurrencyAmount())
                 .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))
                 .setDescription(bankReservation.getDescription())
-                .setCreditAccount(
+                .setCreditCardAccountNumber(
                         creditCardAccount != null ? creditCardAccount.getAccountNumber() : null)
                 .setPending(true)
                 .build();

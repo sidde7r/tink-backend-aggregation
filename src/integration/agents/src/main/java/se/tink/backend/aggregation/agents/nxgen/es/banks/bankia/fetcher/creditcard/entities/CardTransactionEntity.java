@@ -37,7 +37,7 @@ public class CardTransactionEntity {
                         .setDate(date.toJavaLangDate())
                         .setDescription(getDescription())
                         .setRawDetails(this)
-                        .setCreditAccount(
+                        .setCreditCardAccountNumber(
                                 creditCardAccount != null
                                         ? creditCardAccount.getAccountNumber()
                                         : null)
