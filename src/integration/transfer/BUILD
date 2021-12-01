@@ -24,7 +24,6 @@ java_library(
     deps = [
         "//src/integration/amount",
         "//src/integration/transfer:enums",
-        "//src/integration/transfer/src/main/java/se/tink/libraries/transfer/iface",
         "//src/libraries/date",
         "//src/libraries/masker",
         "//src/libraries/serialization",
