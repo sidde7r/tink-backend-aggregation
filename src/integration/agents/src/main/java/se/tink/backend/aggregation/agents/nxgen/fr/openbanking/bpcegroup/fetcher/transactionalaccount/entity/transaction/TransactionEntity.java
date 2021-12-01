@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
+import lombok.Data;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.entity.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,6 +19,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
+@Data
 public class TransactionEntity {
 
     private String resourceId;
@@ -36,15 +41,10 @@ public class TransactionEntity {
     private LocalDate transactionDate;
 
     public Transaction toTinkTransaction() {
-        TransactionDates transactionDates =
-                TransactionDates.builder()
-                        .setValueDate(new AvailableDateInformation().setDate(valueDate))
-                        .build();
-
         Builder builder =
                 Transaction.builder()
                         .setAmount(getTinkAmount())
-                        .setTransactionDates(transactionDates)
+                        .setTransactionDates(getTransactionDates())
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 resourceId)
@@ -59,11 +59,25 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    private Builder setDateOnBuilder(Builder builder) {
+    private Builder setDateOnBuilder(Builder builder) throws BankServiceException {
         return Stream.of(bookingDate, transactionDate, valueDate)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .map(builder::setDate)
-                .orElse(builder);
+                .orElseThrow(
+                        () ->
+                                new BankServiceException(
+                                        BankServiceError.valueOf("No transaction date avaliable")));
+    }
+
+    @JsonIgnore
+    private TransactionDates getTransactionDates() {
+        TransactionDates.Builder builder = TransactionDates.builder();
+        Optional.ofNullable(valueDate)
+                .ifPresent(date -> builder.setValueDate(new AvailableDateInformation(valueDate)));
+        Optional.ofNullable(bookingDate)
+                .ifPresent(
+                        date -> builder.setBookingDate(new AvailableDateInformation(bookingDate)));
+        return builder.build();
     }
 }

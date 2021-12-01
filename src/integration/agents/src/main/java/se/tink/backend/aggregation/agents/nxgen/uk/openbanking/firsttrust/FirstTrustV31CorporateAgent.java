@@ -29,12 +29,12 @@ public final class FirstTrustV31CorporateAgent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
-                        .withOrganisationId(FirstTrustConstants.ORGANISATION_ID)
-                        .withApiBaseURL(FirstTrustConstants.AIS_API_URL)
-                        .withWellKnownURL(FirstTrustConstants.CORPORATE_WELL_KNOWN_URL)
-                        .build();
+                new FirstTrustCorporateAisConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
+                                .withOrganisationId(FirstTrustConstants.ORGANISATION_ID)
+                                .withApiBaseURL(FirstTrustConstants.AIS_API_URL)
+                                .withWellKnownURL(FirstTrustConstants.CORPORATE_WELL_KNOWN_URL));
     }
 
     @Inject
