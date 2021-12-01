@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.ap.placeholder
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -29,6 +30,7 @@ public class LclObAgent extends NextGenerationAgent
     private static final String PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED =
             "Placeholder agent should never be instantiated.";
 
+    @Inject
     protected LclObAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
