@@ -267,6 +267,14 @@ public class AgentWorkerOperationFactory {
             ControllerWrapper controllerWrapper,
             ClientInfo clientInfo) {
 
+        if (request.getCredentials() != null
+                && isBalanceCalculationEnabled(
+                        context.getAppId(), request.getCredentials().getId())) {
+            log.info("[BALANCE CALCULATOR] Enabled");
+        } else {
+            log.info("[BALANCE CALCULATOR] Disabled");
+        }
+
         itemsToRefresh = convertLegacyItems(itemsToRefresh);
 
         // Sort the refreshable items
@@ -1770,5 +1778,25 @@ public class AgentWorkerOperationFactory {
                                                 .sessionId(credentialsId)
                                                 .build())
                                 .build());
+    }
+
+    private boolean isBalanceCalculationEnabled(String appId, String credentialsId) {
+        boolean balanceCalculationEnabled;
+        try {
+            Toggle toggle =
+                    Toggle.of("uk-balance-calculators")
+                            .context(
+                                    UnleashContext.builder()
+                                            .userId(appId)
+                                            .sessionId(credentialsId)
+                                            .build())
+                            .build();
+            balanceCalculationEnabled = unleashClient.isToggleEnable(toggle);
+        } catch (Exception e) {
+            log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
+            balanceCalculationEnabled = false;
+        }
+
+        return balanceCalculationEnabled;
     }
 }
