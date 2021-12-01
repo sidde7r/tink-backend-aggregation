@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sam
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.SamlinkCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.SamlinkCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount.SamlinkTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.filter.SamlinkSessionErrorFilter;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -34,6 +35,7 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
             QsealcSigner qsealcSigner,
             SamlinkAgentsConfiguration agentConfiguration) {
         super(componentProvider);
+        configureHttpClient();
         this.logMasker = componentProvider.getContext().getLogMasker();
         this.agentConfiguration = agentConfiguration;
         this.qsealcSigner = qsealcSigner;
@@ -81,6 +83,16 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
         return new SamlinkTransactionFetcher(apiClient, agentConfiguration);
     }
 
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
     private CreditCardRefreshController getCreditCardRefreshController() {
         final SamlinkCardFetcher cardFetcher = new SamlinkCardFetcher(apiClient);
         final SamlinkCardTransactionFetcher transactionFetcher =
@@ -90,13 +102,7 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
                 metricRefreshController, updateController, cardFetcher, transactionFetcher);
     }
 
-    @Override
-    public FetchAccountsResponse fetchCreditCardAccounts() {
-        return creditCardRefreshController.fetchCreditCardAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCreditCardTransactions() {
-        return creditCardRefreshController.fetchCreditCardTransactions();
+    private void configureHttpClient() {
+        client.addFilter(new SamlinkSessionErrorFilter());
     }
 }
