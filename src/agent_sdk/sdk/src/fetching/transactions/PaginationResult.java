@@ -2,7 +2,7 @@ package se.tink.agent.sdk.fetching.transactions;
 
 import java.util.List;
 import java.util.Optional;
-import se.tink.agent.sdk.models.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public interface PaginationResult {
     List<Transaction> getTransactions();
