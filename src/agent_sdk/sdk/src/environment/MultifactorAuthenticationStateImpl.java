@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionBuilder;
+import se.tink.backend.agents.rpc.Field;
 
 // TODO: move this class
 public class MultifactorAuthenticationStateImpl implements MultifactorAuthenticationState {
@@ -26,8 +27,7 @@ public class MultifactorAuthenticationStateImpl implements MultifactorAuthentica
     }
 
     @Override
-    public UserInteraction<ImmutableList<String>> intoUserInteraction(
-            ImmutableList<String> fields) {
+    public UserInteraction<ImmutableList<Field>> intoUserInteraction(ImmutableList<Field> fields) {
         return setUserResponseRequired(UserInteraction.supplementalInformation(fields));
     }
 

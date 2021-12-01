@@ -8,6 +8,7 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/user_interaction",
+        "//src/agent_sdk/sdk/src/models/field",
     ],
     visibility = ["//visibility:public"],
 )

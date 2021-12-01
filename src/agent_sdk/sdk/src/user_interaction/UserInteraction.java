@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import javax.annotation.Nullable;
+import se.tink.backend.agents.rpc.Field;
 
 public class UserInteraction<T> {
     private final T payload;
@@ -34,9 +35,8 @@ public class UserInteraction<T> {
         return new UserInteractionBuilder<>(appInfo);
     }
 
-    // TODO: fields type instead of String.
-    public static UserInteractionBuilder<ImmutableList<String>> supplementalInformation(
-            ImmutableList<String> fields) {
+    public static UserInteractionBuilder<ImmutableList<Field>> supplementalInformation(
+            ImmutableList<Field> fields) {
         return new UserInteractionBuilder<>(fields);
     }
 }

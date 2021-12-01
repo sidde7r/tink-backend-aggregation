@@ -7,6 +7,7 @@ import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
+import se.tink.backend.agents.rpc.Field;
 
 public abstract class SupplementalInformationStep implements NewConsentStep {
     @Override
@@ -16,9 +17,9 @@ public abstract class SupplementalInformationStep implements NewConsentStep {
         if (optionalUserResponseData.isPresent()) {
             return this.handleUserResponse(optionalUserResponseData.get());
         } else {
-            ImmutableList<String> fields = this.getFields();
+            ImmutableList<Field> fields = this.getFields();
 
-            UserInteraction<ImmutableList<String>> userInteraction =
+            UserInteraction<ImmutableList<Field>> userInteraction =
                     UserInteraction.supplementalInformation(fields).userResponseRequired().build();
 
             // Visit ourselves again when we get a userInteraction response.
@@ -28,8 +29,7 @@ public abstract class SupplementalInformationStep implements NewConsentStep {
         }
     }
 
-    // TODO: Update fields type.
-    public abstract ImmutableList<String> getFields();
+    public abstract ImmutableList<Field> getFields();
 
     public abstract NewConsentResponse handleUserResponse(UserResponseData response);
 }

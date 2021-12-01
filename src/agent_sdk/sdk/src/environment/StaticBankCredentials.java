@@ -1,6 +1,7 @@
 package se.tink.agent.sdk.environment;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Field;
 
 public interface StaticBankCredentials {
     /**
@@ -18,5 +19,13 @@ public interface StaticBankCredentials {
                                         String.format(
                                                 "The static bank credentials did not contain key '%s'.",
                                                 key)));
+    }
+
+    default Optional<String> tryGet(Field.Key key) {
+        return this.tryGet(key.getFieldKey());
+    }
+
+    default String get(Field.Key key) {
+        return this.get(key.getFieldKey());
     }
 }

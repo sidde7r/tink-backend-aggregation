@@ -11,10 +11,19 @@ directories:
   src/integration/identity_data
   src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account
   src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication
+  src/integration/api/src/main/java/se/tink/backend/agents/rpc
+  # Temporary:
+  src
 
 targets:
   //src/agent_sdk/runtime
   //src/agent_sdk/sdk
   //src/agent_sdk/agents/example
+  # Temporary:
+  //...:all
+
+test_sources:
+  src/agent_sdk/runtime/test/*
+  src/agent_sdk/sdk/test/*
 
 java_language_level: 11
