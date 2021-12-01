@@ -10,6 +10,7 @@ java_library_with_sources(
         "//src/agent_sdk:lombok_plugin",
     ],
     intdeps = [
+        "//src/agent_sdk/sdk/src/models/field",
     ],
     visibility = ["//visibility:public"],
 )
