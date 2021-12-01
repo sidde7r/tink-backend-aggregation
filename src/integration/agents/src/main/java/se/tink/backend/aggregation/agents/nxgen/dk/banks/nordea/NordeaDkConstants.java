@@ -59,7 +59,7 @@ public class NordeaDkConstants {
         public static final String REDIRECT_URI = "com.nordea.MobileBankDK://auth-callback";
         public static final String RESPONSE_TYPE = "code";
         public static final String UI_LOCALES = "en";
-        public static final String AV = "3.21.1.1559";
+        public static final String AV = "3.24.1";
         public static final String DM = "iPhone9,4";
         public static final String INSTALLED_APPS = "bankid nemid";
         public static final String SCOPE = "openid ndf agreement";
@@ -95,7 +95,7 @@ public class NordeaDkConstants {
         public static final String TEXT_HTML =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
         public static final String BR_GZIP_ENCODING = "br, gzip, deflate";
-        public static final String APP_VERSION = "3.21.1.1559 -> 1.19.4";
+        public static final String APP_VERSION = "3.24.1";
         public static final String DEVICE_MODEL = "iPhone7,2";
         public static final String PLATFORM_TYPE = "iOS";
         public static final String APP_LANGUAGE = "en_DK";
