@@ -113,7 +113,7 @@ spec:
       for: 15m
       priority: P2
       labels:
-        severity: ping
+        severity: urgent
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs4h }}
@@ -126,7 +126,7 @@ spec:
       for: 15m
       priority: P2
       labels:
-        severity: ping
+        severity: urgent
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs4h }}
