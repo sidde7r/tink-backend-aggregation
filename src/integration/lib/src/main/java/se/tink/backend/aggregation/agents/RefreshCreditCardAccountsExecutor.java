@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
+import se.tink.backend.aggregation.agents.capability.CapabilityExecutor;
+
 /**
  * Interface for executing refreshes of credit card accounts. Agent which supports Credit Card
  * Accounts shall implement this.

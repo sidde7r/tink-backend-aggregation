@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
+import se.tink.backend.aggregation.agents.capability.CapabilityExecutor;
+
 /**
  * Interface for executing refreshes of checking accounts. Agent which supports Checking Accounts
  * shall implement this.

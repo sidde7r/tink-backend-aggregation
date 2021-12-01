@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
+import se.tink.backend.aggregation.agents.capability.CapabilityExecutor;
+
 /**
  * Interface for executing refreshes of loan accounts. Agent which supports Loan Accounts shall
  * implement this.

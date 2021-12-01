@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.workers.commands.payment.executor;
 
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.payments.TypedPaymentControllerable;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents;
 
 import java.util.List;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.capability.CapabilityExecutor;
 
 public interface RefreshBeneficiariesExecutor extends CapabilityExecutor {
 

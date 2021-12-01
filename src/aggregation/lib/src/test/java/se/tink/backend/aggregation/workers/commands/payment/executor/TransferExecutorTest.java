@@ -25,7 +25,8 @@ public class TransferExecutorTest {
 
     @Mock private TransferRequest transferRequest;
 
-    @Mock private se.tink.backend.aggregation.agents.TransferExecutor transferExecutorAgent;
+    @Mock
+    private se.tink.backend.aggregation.agents.payments.TransferExecutor transferExecutorAgent;
 
     private TransferExecutor transferExecutor;
 
