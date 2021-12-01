@@ -21,11 +21,18 @@ public class BalanceCalculator {
             List<Transaction> transactions,
             List<Pair<AccountBalanceType, Calculation>> prioritizedCalculations) {
 
-        Pair<AccountBalanceType, Calculation> balanceTypeWithCalculation =
+        Optional<Pair<AccountBalanceType, Calculation>> balanceTypeWithCalculation =
                 findFirstPossibleCalculation(granularBalances, prioritizedCalculations);
 
-        AccountBalanceType balanceType = balanceTypeWithCalculation.getLeft();
-        Calculation calculation = balanceTypeWithCalculation.getRight();
+        if (!balanceTypeWithCalculation.isPresent()) {
+            log.info(
+                    "[BALANCE CALCULATOR] Not found any possible calculations for given balances: {}",
+                    granularBalances.keySet());
+            return Optional.empty();
+        }
+
+        AccountBalanceType balanceType = balanceTypeWithCalculation.get().getLeft();
+        Calculation calculation = balanceTypeWithCalculation.get().getRight();
         Pair<ExactCurrencyAmount, Instant> balanceWithSnapshotTime =
                 granularBalances.get(balanceType);
 
@@ -34,7 +41,7 @@ public class BalanceCalculator {
         return calculation.evaluate(balanceWithSnapshotTime, transactions);
     }
 
-    public Pair<AccountBalanceType, Calculation> findFirstPossibleCalculation(
+    public Optional<Pair<AccountBalanceType, Calculation>> findFirstPossibleCalculation(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Pair<AccountBalanceType, Calculation>> prioritizedCalculations) {
 
@@ -42,10 +49,6 @@ public class BalanceCalculator {
                 .filter(
                         balanceTypeWithCalculation ->
                                 granularBalances.containsKey(balanceTypeWithCalculation.getLeft()))
-                .findFirst()
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "There is no possible balance calculations for given balances!"));
+                .findFirst();
     }
 }

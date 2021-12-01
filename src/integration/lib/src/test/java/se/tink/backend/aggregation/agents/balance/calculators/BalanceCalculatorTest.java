@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.balance.calculators;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static se.tink.backend.agents.rpc.AccountBalanceType.CLEARED_BALANCE;
 import static se.tink.backend.agents.rpc.AccountBalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.agents.rpc.AccountBalanceType.CLOSING_BOOKED;
@@ -23,6 +22,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.lang3.tuple.Pair;
@@ -60,19 +60,15 @@ public class BalanceCalculatorTest {
 
     @Test
     @Parameters(method = "onlyBalancesThatCanNotBeInputForExampleCalculationList")
-    public void shouldThrowExceptionWhenCalculationImpossible(
+    public void shouldReturnEmptyOptionalWhenCalculationNotFound(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances) {
         // when
-        Throwable throwable =
-                catchThrowable(
-                        () ->
-                                calculator.findFirstPossibleCalculation(
-                                        granularBalances, prioritizedCalculationsExample));
+        Optional<Pair<AccountBalanceType, Calculation>> balanceTypeWithCalculation =
+                calculator.findFirstPossibleCalculation(
+                        granularBalances, prioritizedCalculationsExample);
 
         // then
-        assertThat(throwable)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("There is no possible balance calculations for given balances!");
+        assertThat(balanceTypeWithCalculation).isNotPresent();
     }
 
     @Test
@@ -80,14 +76,15 @@ public class BalanceCalculatorTest {
     public void shouldFindFirstPossibleCalculation(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances) {
         // when
-        Pair<AccountBalanceType, Calculation> balanceTypeWithCalculation =
+        Optional<Pair<AccountBalanceType, Calculation>> balanceTypeWithCalculation =
                 calculator.findFirstPossibleCalculation(
                         granularBalances, prioritizedCalculationsExample);
 
         // then
-        assertThat(balanceTypeWithCalculation).isNotNull();
-        assertThat(balanceTypeWithCalculation.getLeft()).isEqualTo(EXPECTED);
-        assertThat(balanceTypeWithCalculation.getRight()).isEqualTo(subtractPendingTransactions);
+        assertThat(balanceTypeWithCalculation).isPresent();
+        assertThat(balanceTypeWithCalculation.get().getLeft()).isEqualTo(EXPECTED);
+        assertThat(balanceTypeWithCalculation.get().getRight())
+                .isEqualTo(subtractPendingTransactions);
     }
 
     private Object[] onlyBalancesThatCanNotBeInputForExampleCalculationList() {

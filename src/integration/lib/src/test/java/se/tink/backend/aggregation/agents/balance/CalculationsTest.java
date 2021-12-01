@@ -76,7 +76,7 @@ public class CalculationsTest {
     }
 
     @Test
-    public void shouldSubstractPendingTransactionsThatWillBeBookedAfterBalanceSnapshot() {
+    public void shouldSubtractPendingTransactionsThatWillBeBookedAfterBalanceSnapshot() {
         // given
         Pair<ExactCurrencyAmount, Instant> balanceWithSnapshotTime =
                 Pair.of(ONE_HUNDRED_EURO, BALANCE_SNAPSHOT_INSTANT);
