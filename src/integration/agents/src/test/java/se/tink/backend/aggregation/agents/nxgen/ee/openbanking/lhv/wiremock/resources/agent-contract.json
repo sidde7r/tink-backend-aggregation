@@ -1,6 +1,6 @@
 {
     "accounts" : [ {
-        "accountNumber" : "EE347700771005934444",
+        "accountNumber" : "EE142200555555555555",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
@@ -17,7 +17,7 @@
             "exactValue" : 55555.33,
             "doubleValue" : 55555.33
         },
-        "bankId" : "EE347700771005934444",
+        "bankId" : "EE142200555555555555",
         "excluded" : false,
         "favored" : false,
         "name" : "Naruto",
@@ -26,7 +26,7 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"iban://LHVBEE22/EE142200555555555555\"]",
         "closed" : false,
         "holderName" : "Jane Doe",
         "accountHolder" : {
@@ -42,7 +42,7 @@
         "availableCredit" : 0.0,
         "balance" : 22.33
     }, {
-        "accountNumber" : "EE787700771005998888",
+        "accountNumber" : "EE382200221020145685",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
@@ -59,7 +59,7 @@
             "exactValue" : 777.33,
             "doubleValue" : 777.33
         },
-        "bankId" : "EE787700771005998888",
+        "bankId" : "EE382200221020145685",
         "excluded" : false,
         "favored" : false,
         "name" : "My account",
@@ -68,7 +68,7 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"iban://LHVBEE22/EE382200221020145685\"]",
         "closed" : false,
         "holderName" : "Jane Doe",
         "accountHolder" : {
@@ -111,8 +111,8 @@
                 "instant" : null
             }
         } ],
-        "merchantName" : "Jane Doe",
-        "transactionReference" : "202106281378178164-302887546"
+        "transactionReference" : "202106281378178164-302887546",
+        "booked" : true
     }, {
         "amount" : 660.0,
         "date" : 696769200000,
@@ -140,8 +140,8 @@
                 "instant" : null
             }
         } ],
-        "merchantName" : "Jane Doe",
-        "transactionReference" : "202106301378679415-303289656"
+        "transactionReference" : "202106301378679415-303289656",
+        "booked" : true
     }, {
         "amount" : 500.0,
         "date" : 696769200000,
@@ -169,8 +169,8 @@
                 "instant" : null
             }
         } ],
-        "merchantName" : "Jane Doe",
-        "transactionReference" : "202106301378706076-303310033"
+        "transactionReference" : "202106301378706076-303310033",
+        "booked" : true
     }, {
         "amount" : -75.0,
         "date" : 696596400000,
@@ -198,8 +198,8 @@
                 "instant" : null
             }
         } ],
-        "merchantName" : "Jane Doe",
-        "transactionReference" : "202106281378178164-302887546"
+        "transactionReference" : "202106281378178164-302887546",
+        "booked" : true
     }, {
         "amount" : 660.0,
         "date" : 696769200000,
@@ -227,8 +227,8 @@
                 "instant" : null
             }
         } ],
-        "merchantName" : "Jane Doe",
-        "transactionReference" : "202106301378679415-303289656"
+        "transactionReference" : "202106301378679415-303289656",
+        "booked" : true
     }, {
         "amount" : 500.0,
         "date" : 696769200000,
@@ -256,7 +256,7 @@
                 "instant" : null
             }
         } ],
-        "merchantName" : "Jane Doe",
-        "transactionReference" : "202106301378706076-303310033"
+        "transactionReference" : "202106301378706076-303310033",
+        "booked" : true
     } ]
 }
