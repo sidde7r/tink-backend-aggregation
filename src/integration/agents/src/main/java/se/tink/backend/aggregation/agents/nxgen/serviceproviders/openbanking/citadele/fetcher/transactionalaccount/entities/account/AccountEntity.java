@@ -8,16 +8,14 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.LinksEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Getter
@@ -56,26 +54,36 @@ public class AccountEntity {
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
                                 .withAccountName(getAccountName())
-                                .addIdentifier(getIdentifier())
+                                .addIdentifier(new IbanIdentifier(bic, iban))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .addHolderName(ownerName)
                 .build();
     }
 
+    public ExactCurrencyAmount getBookedBalance() {
+        return balances.stream()
+                .filter(BalanceEntity::isBooked)
+                .findFirst()
+                .map(balance -> balance.getBalanceAmount().toTinkAmount())
+                .orElseThrow(() -> new IllegalStateException("No balance found in the response"));
+    }
+
+    public Optional<ExactCurrencyAmount> getAvailableBalance() {
+        return balances.stream()
+                .filter(BalanceEntity::isAvailable)
+                .findFirst()
+                .map(balance -> balance.getBalanceAmount().toTinkAmount());
+    }
+
     private BalanceModule getBalanceModule() {
         BalanceBuilderStep balanceBuilderStep =
-                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
-        BalanceMapper.getAvailableBalance(balances)
-                .ifPresent(balanceBuilderStep::setAvailableBalance);
+                BalanceModule.builder().withBalance(getBookedBalance());
+        getAvailableBalance().ifPresent(balanceBuilderStep::setAvailableBalance);
         return balanceBuilderStep.build();
     }
 
     private String getAccountName() {
         return Stream.of(name, product, iban).filter(Objects::nonNull).findFirst().orElse(null);
-    }
-
-    private AccountIdentifier getIdentifier() {
-        return new IbanIdentifier(iban);
     }
 }
