@@ -38,7 +38,7 @@ spec:
     - alert: LongTermBankOrUserErrorRateAbove90%PL
       expr: sum:unavailable_or_cancelled_logins_pl:delta12h / (sum:all_logins_pl:delta12h > 2) > 0.9
       labels:
-        severity: ping
+        severity: urgent
         priority: P2
         who: integration-teletubbies
       annotations:
@@ -50,7 +50,7 @@ spec:
     - alert: LongTermRefreshUnavailableErrorRateAbove90%PL
       expr: sum:unavailable_refreshes_per_type_pl:delta12h / (sum:all_refreshes_per_type_pl:delta12h > 2) > 0.9
       labels:
-        severity: ping
+        severity: urgent
         priority: P2
         who: integration-teletubbies
       annotations:
