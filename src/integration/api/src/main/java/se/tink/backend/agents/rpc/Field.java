@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -51,38 +50,6 @@ public class Field {
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    public static Field of(
-            se.tink.backend.aggregation.client.provider_configuration.rpc.Field field) {
-        return builder()
-                .additionalInfo(field.getAdditionalInfo())
-                .checkbox(field.isCheckbox())
-                .description(field.getDescription())
-                .helpText(field.getHelpText())
-                .hint(field.getHint())
-                .immutable(field.isImmutable())
-                .masked(field.isMasked())
-                .maxLength(field.getMaxLength())
-                .minLength(field.getMinLength())
-                .name(field.getName())
-                .numeric(field.isNumeric())
-                .optional(field.isOptional())
-                .pattern(field.getPattern())
-                .patternError(field.getPatternError())
-                .value(field.getValue())
-                .selectOptions(
-                        field.getSelectOptions() != null
-                                ? field.getSelectOptions().stream()
-                                        .map(
-                                                o ->
-                                                        new SelectOption(
-                                                                o.getText(),
-                                                                o.getValue(),
-                                                                o.getIconUrl()))
-                                        .collect(Collectors.toList())
-                                : null)
-                .build();
     }
 
     public static class Builder {

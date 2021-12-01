@@ -46,6 +46,7 @@ java_library(
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/counters",
+        "@tink_backend//src/libraries/provider",
         "@tink_backend//src/libraries/tracing/lib",
     ],
 )

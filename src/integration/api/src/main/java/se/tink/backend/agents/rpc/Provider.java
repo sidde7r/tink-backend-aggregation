@@ -8,13 +8,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
-import java.util.*;
-import java.util.stream.Collectors;
-import org.apache.commons.collections4.CollectionUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.FinancialService.FinancialServiceSegment;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -241,45 +242,6 @@ public class Provider implements Cloneable {
         return Optional.ofNullable(financialServices).orElse(Collections.emptyList()).stream()
                 .map(FinancialService::getSegment)
                 .anyMatch(s -> s == segment);
-    }
-
-    public static Provider of(ProviderConfiguration providerConfiguration) {
-        Provider provider = new Provider();
-
-        provider.setAccessType(
-                Provider.AccessType.valueOf(providerConfiguration.getAccessType().name()));
-        if (providerConfiguration.getAuthenticationFlow() != null) {
-            provider.setAuthenticationFlow(
-                    Provider.AuthenticationFlow.valueOf(
-                            providerConfiguration.getAuthenticationFlow().name()));
-        }
-        provider.setClassName(providerConfiguration.getClassName());
-        provider.setCredentialsType(
-                CredentialsTypes.valueOf(providerConfiguration.getCredentialsType().name()));
-        provider.setCurrency(providerConfiguration.getCurrency());
-        provider.setDisplayName(providerConfiguration.getDisplayName());
-        provider.setFields(
-                providerConfiguration.getFields().stream()
-                        .map(Field::of)
-                        .collect(Collectors.toList()));
-        provider.setFinancialInstitutionId(providerConfiguration.getFinancialInstitutionId());
-        provider.setMarket(providerConfiguration.getMarket());
-        provider.setName(providerConfiguration.getName());
-        provider.setPayload(providerConfiguration.getPayload());
-        provider.setStatus(ProviderStatuses.valueOf(providerConfiguration.getStatus().name()));
-        provider.setSupplementalFields(
-                providerConfiguration.getSupplementalFields().stream()
-                        .map(Field::of)
-                        .collect(Collectors.toList()));
-        provider.setType(ProviderTypes.valueOf(providerConfiguration.getType().name()));
-        provider.setAuthenticationUserType(
-                Provider.AuthenticationUserType.valueOf(
-                        providerConfiguration.getAuthenticationUserType().name()));
-        provider.setFinancialServices(
-                CollectionUtils.emptyIfNull(providerConfiguration.getFinancialServices()).stream()
-                        .map(FinancialService::of)
-                        .collect(Collectors.toList()));
-        return provider;
     }
 
     public Set<AgentSource> getAgentSources() {
