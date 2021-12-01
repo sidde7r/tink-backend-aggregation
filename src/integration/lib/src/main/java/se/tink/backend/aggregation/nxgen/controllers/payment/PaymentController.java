@@ -1,70 +1,51 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.BankIdException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
-import se.tink.libraries.signableoperation.enums.InternalStatus;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentControllerAgentExceptionMapper.PaymentControllerAgentExceptionMapperContext;
 
 public class PaymentController {
     private final PaymentExecutor paymentExecutor;
     private final FetchablePaymentExecutor fetchablePaymentExecutor;
 
+    private final PaymentControllerAgentExceptionMapper exceptionHandler;
+
     public PaymentController(PaymentExecutor paymentExecutor) {
-        this.paymentExecutor = paymentExecutor;
-        this.fetchablePaymentExecutor = null;
+        this(paymentExecutor, null, null);
     }
 
     public PaymentController(
             PaymentExecutor paymentExecutor, FetchablePaymentExecutor fetchablePaymentExecutor) {
+        this(paymentExecutor, fetchablePaymentExecutor, new PaymentControllerOldExceptionMapper());
+    }
+
+    public PaymentController(
+            PaymentExecutor paymentExecutor,
+            FetchablePaymentExecutor fetchablePaymentExecutor,
+            PaymentControllerAgentExceptionMapper exceptionHandler) {
         this.paymentExecutor = paymentExecutor;
         this.fetchablePaymentExecutor = fetchablePaymentExecutor;
+        this.exceptionHandler = exceptionHandler;
     }
 
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        return paymentExecutor.create(paymentRequest);
+        try {
+            return paymentExecutor.create(paymentRequest);
+        } catch (AgentException agentException) {
+            throw exceptionHandler
+                    .mapToPaymentException(
+                            agentException, PaymentControllerAgentExceptionMapperContext.CREATE)
+                    .orElse(agentException);
+        }
     }
 
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         try {
             return paymentExecutor.sign(paymentMultiStepRequest);
-        } catch (AuthenticationException e) {
-            if (e instanceof BankIdException) {
-                BankIdError bankIdError = ((BankIdException) e).getError();
-                switch (bankIdError) {
-                    case CANCELLED:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.CANCELLED,
-                                InternalStatus.BANKID_CANCELLED,
-                                e);
-                    case NO_CLIENT:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.NO_CLIENT,
-                                InternalStatus.BANKID_NO_RESPONSE,
-                                e);
-                    case TIMEOUT:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.TIMEOUT, InternalStatus.BANKID_TIMEOUT, e);
-                    case INTERRUPTED:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.INTERRUPTED,
-                                InternalStatus.BANKID_INTERRUPTED,
-                                e);
-                    case ACTIVATE_EXTENDED_BANKID:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.NO_EXTENDED_USE,
-                                InternalStatus.BANKID_NEEDS_EXTENDED_USE_ENABLED,
-                                e);
-                    case UNKNOWN:
-                    default:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.UNKNOWN,
-                                InternalStatus.BANKID_UNKNOWN_EXCEPTION,
-                                e);
-                }
-            }
-
-            throw new PaymentAuthorizationException("Payment could not be signed", e);
+        } catch (AgentException agentException) {
+            throw exceptionHandler
+                    .mapToPaymentException(
+                            agentException, PaymentControllerAgentExceptionMapperContext.SIGN)
+                    .orElse(agentException);
         }
     }
 
