@@ -102,6 +102,18 @@ public class AmericanExpressConstants {
         public static final String CORPORATE_CARD = "CorporateCard";
     }
 
+    public static class CurrencyLocale {
+        private CurrencyLocale() {}
+
+        public static final String EN_EU = "en-EU";
+    }
+
+    public static class CurrencyCode {
+        private CurrencyCode() {}
+
+        public static final String EUR = "EUR";
+    }
+
     static class HttpClient {
         public static final int MAX_ATTEMPTS = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;

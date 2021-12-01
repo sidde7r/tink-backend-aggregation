@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Currency;
 import java.util.Locale;
 import lombok.Data;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -19,6 +20,13 @@ public class HolderDto {
 
     @JsonIgnore
     public String getCurrencyCode() {
+
+        /* Bank returns currency locale where it currently is not available in the locales library */
+        if (AmericanExpressConstants.CurrencyLocale.EN_EU.equalsIgnoreCase(
+                localizationPreferences.getCurrencyLocale())) {
+            return Currency.getInstance(AmericanExpressConstants.CurrencyCode.EUR)
+                    .getCurrencyCode();
+        }
         return Currency.getInstance(
                         Locale.forLanguageTag(localizationPreferences.getCurrencyLocale()))
                 .getCurrencyCode();
