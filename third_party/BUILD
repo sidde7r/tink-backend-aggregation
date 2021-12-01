@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_import", "java_library", "java_plugin")
 
 java_library(
@@ -1656,8 +1657,6 @@ java_library(
         "@aggregation//:org_projectlombok_lombok",
     ],
 )
-
-load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 codeowners(
     name = "owners",

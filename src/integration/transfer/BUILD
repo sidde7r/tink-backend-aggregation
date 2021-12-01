@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -54,8 +55,6 @@ java_library(
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
-
-load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 
 codeowners(
     name = "owners",
