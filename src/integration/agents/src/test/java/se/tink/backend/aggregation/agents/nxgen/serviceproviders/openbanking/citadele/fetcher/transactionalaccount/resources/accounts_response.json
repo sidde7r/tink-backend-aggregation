@@ -18,23 +18,23 @@
                     "balanceType": "closingBooked",
                     "creditLimitIncluded": true,
                     "lastChangeDateTime": "2021-06-02T10:13:47.324Z",
-                    "lastCommittedTransaction": "string",
-                    "referenceDate": "string"
+                    "lastCommittedTransaction": "lastCommittedTransaction",
+                    "referenceDate": "referenceDate"
                 }
             ],
             "bban": "BARC12345612345678",
-            "bic": "AAAADEBBXXX",
-            "cashAccountType": "string",
+            "bic": "PARXLV22",
+            "cashAccountType": "cashAccountType",
             "currency": "EUR",
-            "details": "string",
-            "displayName": "string",
-            "iban": "FR7612345987650123456789014",
+            "details": "details",
+            "displayName": "displayName",
+            "iban": "LV80BANK0000435195001",
             "linkedAccounts": "string",
             "msisdn": "+49 170 1234567",
-            "name": "string",
+            "name": "AccountName",
             "ownerName": "John Doe",
-            "product": "string",
-            "resourceId": "string",
+            "product": "product",
+            "resourceId": "resourceId",
             "status": "enabled",
             "usage": "PRIV"
         }

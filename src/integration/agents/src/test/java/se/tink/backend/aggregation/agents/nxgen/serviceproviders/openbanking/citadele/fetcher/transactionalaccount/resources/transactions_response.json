@@ -28,7 +28,7 @@
                     "currency": "EUR"
                 },
                 "ultimateDebtor": null,
-                "remittanceInformationUnstructured": "Payment to Own Account ALONA OSTAPENKO PARXLV22 LV35PARX0016354460002",
+                "remittanceInformationUnstructured": "This is a description",
                 "remittanceInformationStructured": null,
                 "additionalInformation": null,
                 "purposeCode": null,
