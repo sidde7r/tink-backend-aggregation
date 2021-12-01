@@ -89,12 +89,15 @@ public class SkandiaApiClient {
     private RequestBuilder createRequestInSession(URL url) {
         final OAuth2Token authToken = getTokenFromStorage();
         final String clientId = getConfiguration().getClientId();
-
-        return createRequest(url)
-                .header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
+        RequestBuilder requestBuilder = createRequest(url);
+        requestBuilder
                 .addBearerToken(authToken)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(HeaderKeys.CLIENT_ID, clientId);
+        if (userIpInformation.isManualRequest()) {
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp());
+        }
+        return requestBuilder;
     }
 
     public URL getAuthorizeUrl(String state) {
