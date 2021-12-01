@@ -10,6 +10,7 @@ import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
 import se.tink.agent.sdk.storage.SerializableReference;
 import se.tink.agent.sdk.storage.Storage;
 import se.tink.agent.sdk.utils.Sleep;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 
 public class ThirdPartyAppPollStep implements NewConsentStep {
     private static final Integer DEFAULT_MAX_POLL_ATTEMPTS = 90;
@@ -93,11 +94,11 @@ public class ThirdPartyAppPollStep implements NewConsentStep {
             case NO_CLIENT:
                 throw new IllegalStateException("NO_CLIENT");
             case ALREADY_IN_PROGRESS:
-                throw new IllegalStateException("ALREADY_IN_PROGRESS");
+                throw ThirdPartyAppError.ALREADY_IN_PROGRESS.exception();
             case CANCELLED:
                 throw new IllegalStateException("CANCELLED");
             case TIMED_OUT:
-                throw new IllegalStateException("TIMED_OUT");
+                throw ThirdPartyAppError.TIMED_OUT.exception();
             case UNKNOWN_FAILURE:
                 throw new IllegalStateException("UNKNOWN_FAILURE");
             default:

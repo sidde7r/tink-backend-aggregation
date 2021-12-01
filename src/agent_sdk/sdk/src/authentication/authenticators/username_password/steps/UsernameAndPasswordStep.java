@@ -7,6 +7,7 @@ import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
 import se.tink.agent.sdk.environment.StaticBankCredentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 
 public class UsernameAndPasswordStep implements NewConsentStep {
 
@@ -20,16 +21,14 @@ public class UsernameAndPasswordStep implements NewConsentStep {
     public NewConsentResponse execute(NewConsentRequest request) {
         StaticBankCredentials staticBankCredentials = request.getStaticBankCredentials();
 
-        // TODO: use correct exception.
-        // throw LoginError.INCORRECT_CREDENTIALS.exception();
         String username =
                 staticBankCredentials
                         .tryGet(Field.Key.USERNAME)
-                        .orElseThrow(() -> new IllegalStateException("INCORRECT_CREDENTIALS"));
+                        .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
         String password =
                 staticBankCredentials
                         .tryGet(Field.Key.PASSWORD)
-                        .orElseThrow(() -> new IllegalStateException("INCORRECT_CREDENTIALS"));
+                        .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 
         ConsentLifetime consentLifetime =
                 this.agentUsernameAndPasswordLogin.login(username, password);
