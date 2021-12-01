@@ -282,6 +282,28 @@ public class SystemTestUtils {
                 .orElseThrow(IllegalStateException::new);
     }
 
+    public static List<Map<String, Object>> parseTransferDestinations(List<JsonNode> input) {
+        return input.stream()
+                .map(data -> data.get("destinationsBySouce").iterator())
+                .map(
+                        iterator -> {
+                            List<Map<String, Object>> temp = new ArrayList<>();
+                            while (iterator.hasNext()) {
+                                try {
+                                    temp.add(
+                                            mapper.readValue(
+                                                    iterator.next().toString(),
+                                                    new TypeReference<Map<String, Object>>() {}));
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            return temp;
+                        })
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
     public static void postSupplementalInformation(
             String aggregationHost,
             int aggregationPort,

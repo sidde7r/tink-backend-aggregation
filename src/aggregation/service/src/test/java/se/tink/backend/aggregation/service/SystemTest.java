@@ -11,6 +11,7 @@ import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makePost
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseAccounts;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseIdentityData;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransactions;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransferDestinations;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilCredentialsUpdateStatusIn;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilFinalCredentialsUpdateStatus;
@@ -352,6 +353,8 @@ public class SystemTest {
 
         List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
         List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
+        List<Map<String, Object>> expectedTransferDestinations =
+                expectedBankEntities.getTransferDestinationPatterns();
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
@@ -382,6 +385,14 @@ public class SystemTest {
                                 50,
                                 1));
 
+        List<Map<String, Object>> givenTransferDestinations =
+                parseTransferDestinations(
+                        pollForAllCallbacksForAnEndpoint(
+                                fakeAggregationControllerDataEndpoint(),
+                                "updateTransferDestinationPatterns",
+                                50,
+                                1));
+
         // We assume that we have only one account in expected entities
         String accountId = givenAccounts.get(0).get("id").toString();
         List<String> distinctAccountIdsInTransactions =
@@ -401,6 +412,9 @@ public class SystemTest {
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransferDestinations, givenTransferDestinations));
     }
 
     /*
