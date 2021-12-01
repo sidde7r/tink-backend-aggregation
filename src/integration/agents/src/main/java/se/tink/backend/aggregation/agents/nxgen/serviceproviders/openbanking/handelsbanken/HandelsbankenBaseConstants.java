@@ -89,10 +89,6 @@ public final class HandelsbankenBaseConstants {
         public static final String TPP_ID = "SE-FINA-44059";
     }
 
-    public static class Psu {
-        public static final String IP_ADDRESS = "0.0.0.0";
-    }
-
     public static class Market {
         public static final String SWEDEN = "SE";
         public static final String FINLAND = "FI";

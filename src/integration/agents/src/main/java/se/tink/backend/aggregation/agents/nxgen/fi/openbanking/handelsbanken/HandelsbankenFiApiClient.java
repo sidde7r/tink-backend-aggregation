@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenUserIpInformation;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -14,8 +15,11 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class HandelsbankenFiApiClient extends HandelsbankenBaseApiClient {
 
     public HandelsbankenFiApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, String market) {
-        super(client, persistentStorage, market);
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            String market,
+            HandelsbankenUserIpInformation userIpInformation) {
+        super(client, persistentStorage, market, userIpInformation);
     }
 
     @Override
