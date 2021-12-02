@@ -412,6 +412,9 @@ public class SystemTest {
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
+        log.info("expectedTransferDestinations: " + expectedTransferDestinations);
+        log.info("givenTransferDestinations: " + givenTransferDestinations);
+
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedTransferDestinations, givenTransferDestinations));
