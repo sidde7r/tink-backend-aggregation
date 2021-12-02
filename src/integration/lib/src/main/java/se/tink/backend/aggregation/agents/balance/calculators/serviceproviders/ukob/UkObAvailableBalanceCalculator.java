@@ -35,8 +35,8 @@ public class UkObAvailableBalanceCalculator implements AvailableBalanceCalculato
 
     private static final List<Pair<AccountBalanceType, Calculation>> prioritizedCalculations =
             ImmutableList.<Pair<AccountBalanceType, Calculation>>builder()
-                    .add(Pair.of(EXPECTED, returnBalanceAmountAsIs))
                     .add(Pair.of(INTERIM_AVAILABLE, returnBalanceAmountAsIs))
+                    .add(Pair.of(EXPECTED, returnBalanceAmountAsIs))
                     .add(Pair.of(FORWARD_AVAILABLE, returnBalanceAmountAsIs))
                     .add(
                             Pair.of(
