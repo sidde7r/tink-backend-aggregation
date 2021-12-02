@@ -13,7 +13,12 @@ java_library_with_sources(
         "@tink_backend//src/libraries/account_identifier",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
     ],
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
+    ],
 )
