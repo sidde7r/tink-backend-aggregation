@@ -5,7 +5,7 @@ import se.tink.agent.sdk.authentication.new_consent.ConsentLifetime;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
-import se.tink.agent.sdk.environment.StaticBankCredentials;
+import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 

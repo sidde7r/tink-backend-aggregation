@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import se.tink.agent.sdk.environment.StaticBankCredentials;
+import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.agent.sdk.storage.Storage;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
 
