@@ -111,6 +111,8 @@ public class IngPaymentControllerTest {
                 .usingRecursiveComparison()
                 .ignoringFields("payment.id")
                 .isEqualTo(getExpectedPaymentResponseOnCreate());
+
+        // and
         assertThat(sessionStorage).containsKey("PAYMENT_AUTHORIZATION_URL");
     }
 
@@ -188,14 +190,7 @@ public class IngPaymentControllerTest {
                 .hasFieldOrPropertyWithValue("error", BankServiceError.BANK_SIDE_FAILURE);
     }
 
-    /*
-    The below test shouldNotCreatePaymentWhenMissingKeyData() is marked as @Ignore.
-    This is a valid test scenario, however it requires a production code refactor to work properly.
-    Please see the following Jira ticket dedicated to this code refactor:
-    https://tinkab.atlassian.net/browse/MINI-1708.
-    Once the Jira ticket is finalized the @Ignore test annotation will be removed.
-    */
-    @Ignore
+    @Ignore("Requires MINI-1708")
     @Test
     @Parameters(method = "prepareMissingKeyData")
     public void shouldNotCreatePaymentWhenMissingKeyData(
@@ -206,8 +201,11 @@ public class IngPaymentControllerTest {
         prepareTestSetupForCreatePaymentWithoutKeyData(
                 tokenResponseFileName, paymentCreateResponseFileName);
 
+        // and
+        PaymentRequest paymentRequest = new PaymentRequest(createPayment());
+
         // expect
-        assertThatThrownBy(() -> paymentController.create(new PaymentRequest(createPayment())))
+        assertThatThrownBy(() -> paymentController.create(paymentRequest))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining(exceptionMessage);
     }
@@ -311,9 +309,7 @@ public class IngPaymentControllerTest {
                 OAuth2Token.create("bearer", "ing-access-token", "ing-refresh-token", 12345L);
         persistentStorage.put(StorageKeys.TOKEN, token);
         persistentStorage.put(StorageKeys.CLIENT_ID, "some_client_id");
-        sessionStorage = new SessionStorage();
-        IngPaymentExecutor paymentExecutor = createIngPaymentExecutor(createIngPaymentApiClient());
-        paymentController = new PaymentController(paymentExecutor, paymentExecutor);
+        sessionStorage.clear();
     }
 
     private void prepareTestSetupForCreatePaymentWithoutKeyData(
