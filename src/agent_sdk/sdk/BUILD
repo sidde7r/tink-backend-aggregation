@@ -11,6 +11,8 @@ java_library_with_sources(
         "@agent_sdk_maven//:org_slf4j_slf4j_api",
         "//src/agent_sdk:lombok_plugin",
         "//src/agent_sdk/sdk/src/models/account",
+        "//src/agent_sdk/sdk/src/models/transfer",
+        "//src/agent_sdk/sdk/src/models/transfer/enums",
     ],
     intdeps = [
         "@tink_backend//src/libraries/serialization_utils",
@@ -29,6 +31,8 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/models/authentication",
         "//src/agent_sdk/sdk/src/models/field",
         "//src/agent_sdk/sdk/src/models/identity_data",
+        "//src/agent_sdk/sdk/src/models/transfer",
+        "//src/agent_sdk/sdk/src/models/transfer/enums",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/user_interaction",
         "@agent_sdk_maven//:com_google_guava_guava",

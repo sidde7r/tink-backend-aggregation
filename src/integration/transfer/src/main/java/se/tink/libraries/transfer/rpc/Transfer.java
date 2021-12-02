@@ -33,7 +33,6 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.transfer.iface.UuidIdentifiable;
 import se.tink.libraries.uuid.UUIDUtils;
 
 @SuppressWarnings("serial")
@@ -42,7 +41,7 @@ import se.tink.libraries.uuid.UUIDUtils;
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
+public class Transfer implements Serializable, Cloneable {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
 
     private static final Logger log = LoggerFactory.getLogger(Transfer.class);
@@ -197,7 +196,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         this.sourceMessage = sourceMessage;
     }
 
-    @Override
     public UUID getId() {
         return id;
     }

@@ -146,6 +146,7 @@ junit_test(
         "//src/libraries/encoding",
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",
+        "//src/libraries/masker",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
         "//src/libraries/metrics:core",

@@ -19,8 +19,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.libraries.masker.StringMasker;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SupplementalInformationControllerImpl implements SupplementalInformationController {
@@ -139,7 +139,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         // if key has 6 or more digits, mask it
         final int numberOfDigits = key.replaceAll("\\D+", "").length();
         if (numberOfDigits >= 6) {
-            return StringMasker.mask(key);
+            return StringMasker.starMaskBeginningOfString(key);
         }
         return key;
     }

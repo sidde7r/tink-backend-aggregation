@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.utils.masker.Base64EncodedMaskerPatternsProvider;
 import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionMaskerPatternsProvider;
-import se.tink.backend.aggregation.utils.masker.StringMasker;
+import se.tink.libraries.masker.StringMasker;
 
 public class LogMaskerImpl implements LogMasker {
 
