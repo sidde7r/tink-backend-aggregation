@@ -1,0 +1,9 @@
+{
+  "access_token": "ing_test_access_token",
+  "refresh_token": "ing_refresh_token",
+  "expires_in": 899,
+  "refresh_token_expires_in": 3456,
+  "scope": "granting",
+  "token_type": "wrong_token_type",
+  "client_id": "client_Id_test"
+}
