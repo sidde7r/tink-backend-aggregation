@@ -6,12 +6,10 @@ import java.security.KeyStore;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
-import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -26,13 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.serializecontainer.SerializeContai
 
 public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuilderProvidable {
 
-    void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor);
-
     String getUserAgent();
-
-    SSLContext getSslContext();
-
-    String getHeaderAggregatorIdentifier();
 
     HttpResponseStatusHandler getResponseStatusHandler();
 
@@ -49,13 +41,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
     void addMessageWriter(MessageBodyWriter<?> messageBodyWriter);
 
     void registerJacksonModule(Module module);
-
-    /**
-     * @param cipherSuites A list of cipher suites to be presented to the server at TLS Client Hello
-     *     in order of preference, e.g. TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 etc. This might be
-     *     necessary if the choice of cipher suite causes the TLS handshake to fail.
-     */
-    void setCipherSuites(final List<String> cipherSuites);
 
     void setUserAgent(String userAgent);
 
@@ -114,13 +99,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
     void setEidasIdentity(EidasIdentity eidasIdentity);
 
     void setEidasProxy(EidasProxyConfiguration conf);
-
-    /**
-     * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use
-     *     `QsealcSigner` if requesting signatures
-     */
-    @Deprecated
-    void setEidasSign(EidasProxyConfiguration conf);
 
     void addRedirectHandler(RedirectHandler handler);
 

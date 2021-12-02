@@ -94,7 +94,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         final CreditAgricoleBaseMessageSignInterceptor creditAgricoleBaseMessageSignInterceptor =
                 new CreditAgricoleBaseMessageSignInterceptor(
                         this.agentConfiguration, qSealSignatureProvider);
-        this.client.setMessageSignInterceptor(creditAgricoleBaseMessageSignInterceptor);
+        this.client.addFilter(creditAgricoleBaseMessageSignInterceptor);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();

@@ -13,13 +13,13 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.NextGenFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
+import se.tink.backend.aggregation.nxgen.http.header.AuthorizationHeader;
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -327,7 +327,7 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
         return header(HttpHeaders.AUTHORIZATION, value);
     }
 
-    public NextGenRequestBuilder addBearerToken(OAuth2Token token) {
+    public NextGenRequestBuilder addBearerToken(AuthorizationHeader token) {
         return header(HttpHeaders.AUTHORIZATION, token.toAuthorizeHeader());
     }
 

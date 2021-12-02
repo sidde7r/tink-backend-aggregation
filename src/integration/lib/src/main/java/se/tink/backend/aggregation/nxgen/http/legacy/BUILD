@@ -5,7 +5,6 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
@@ -27,6 +26,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:io_opentracing_opentracing_api",
         "@tink_backend//src/libraries/tracing/lib",
     ],

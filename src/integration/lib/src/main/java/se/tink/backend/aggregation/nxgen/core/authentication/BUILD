@@ -11,5 +11,8 @@ java_library_with_sources(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
+    intdeps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/header",
+    ],
     visibility = ["//visibility:public"],
 )

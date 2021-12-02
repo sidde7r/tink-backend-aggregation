@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -31,11 +33,17 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
             final CredentialsRequest credentialsRequest,
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
+
+        String aggregatorIdentifier =
+                Optional.ofNullable(context.getAggregatorInfo())
+                        .map(AggregatorInfo::getAggregatorIdentifier)
+                        .orElse(null);
+
         tinkHttpClient =
                 NextGenTinkHttpClient.builder(
                                 context.getLogMasker(),
                                 context.getLogMasker().shouldLog(credentialsRequest.getProvider()))
-                        .setAggregatorInfo(context.getAggregatorInfo())
+                        .setAggregatorIdentifier(aggregatorIdentifier)
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setJsonHttpTrafficLogger(context.getJsonHttpTrafficLogger())
                         .setSignatureKeyPair(signatureKeyPair)

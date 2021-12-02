@@ -5,10 +5,10 @@ import java.util.Map;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
+import se.tink.backend.aggregation.nxgen.http.header.AuthorizationHeader;
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -182,9 +182,8 @@ public class IntegrationWireMockTestRequestBuilder implements RequestBuilder {
     }
 
     @Override
-    public RequestBuilder addBearerToken(OAuth2Token token) {
-        requestBuilder = requestBuilder.addBearerToken(token);
-        return this;
+    public RequestBuilder addBearerToken(AuthorizationHeader token) {
+        return requestBuilder.addBearerToken(token);
     }
 
     @Override

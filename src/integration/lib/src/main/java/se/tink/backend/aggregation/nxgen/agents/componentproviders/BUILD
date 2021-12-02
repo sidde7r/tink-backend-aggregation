@@ -12,6 +12,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/authentication/encap3",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/random",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",

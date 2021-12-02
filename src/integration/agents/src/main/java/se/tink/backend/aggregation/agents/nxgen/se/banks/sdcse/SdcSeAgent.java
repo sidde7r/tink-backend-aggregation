@@ -8,6 +8,9 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.nio.charset.StandardCharsets;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.SdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.SparbankenSydSdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -54,9 +58,20 @@ public final class SdcSeAgent extends SdcAgent
                 new SdcSeTransactionParser());
 
         creditCardRefreshController = constructCreditCardRefreshController();
-        this.client.loadTrustMaterial(
-                null,
-                TrustPinnedCertificateStrategy.forCertificate(SdcSeConstants.Secret.PUBLIC_CERT));
+        configureHttpClientPinnedCertificate();
+    }
+
+    private void configureHttpClientPinnedCertificate() {
+        try {
+            Certificate pinnedCertificate =
+                    Pem.parseCertificate(
+                            SdcSeConstants.Secret.PUBLIC_CERT.getBytes(StandardCharsets.US_ASCII));
+
+            client.loadTrustMaterial(
+                    null, TrustPinnedCertificateStrategy.forCertificate(pinnedCertificate));
+        } catch (CertificateException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override

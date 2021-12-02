@@ -8,6 +8,9 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
+import java.nio.charset.StandardCharsets;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -34,6 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.filter.SdcExceptionFilter;
+import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -68,9 +72,21 @@ public final class SdcDkAgent extends SdcAgent
 
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        client.loadTrustMaterial(
-                null, TrustPinnedCertificateStrategy.forCertificate(Secret.PUBLIC_CERT));
+
+        configureHttpClientPinnedCertificate();
         configureExceptionFilter();
+    }
+
+    private void configureHttpClientPinnedCertificate() {
+        try {
+            Certificate pinnedCertificate =
+                    Pem.parseCertificate(Secret.PUBLIC_CERT.getBytes(StandardCharsets.US_ASCII));
+
+            client.loadTrustMaterial(
+                    null, TrustPinnedCertificateStrategy.forCertificate(pinnedCertificate));
+        } catch (CertificateException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private void configureExceptionFilter() {

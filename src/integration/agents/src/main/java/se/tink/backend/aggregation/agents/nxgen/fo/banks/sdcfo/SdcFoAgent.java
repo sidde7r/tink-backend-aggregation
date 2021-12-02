@@ -7,6 +7,9 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.nio.charset.StandardCharsets;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcSmsOtpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcTransactionFetcher;
+import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -47,8 +51,19 @@ public final class SdcFoAgent extends SdcAgent
                 new SdcFoTransactionParser());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        this.client.loadTrustMaterial(
-                null, TrustPinnedCertificateStrategy.forCertificate(Secret.PUBLIC_CERT));
+        configureHttpClientPinnedCertificate();
+    }
+
+    private void configureHttpClientPinnedCertificate() {
+        try {
+            Certificate pinnedCertificate =
+                    Pem.parseCertificate(Secret.PUBLIC_CERT.getBytes(StandardCharsets.US_ASCII));
+
+            client.loadTrustMaterial(
+                    null, TrustPinnedCertificateStrategy.forCertificate(pinnedCertificate));
+        } catch (CertificateException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override

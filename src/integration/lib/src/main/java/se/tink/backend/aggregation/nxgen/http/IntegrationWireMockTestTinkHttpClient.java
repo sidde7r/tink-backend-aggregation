@@ -10,12 +10,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
-import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
@@ -64,23 +62,8 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
-    public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
-        tinkHttpClient.setMessageSignInterceptor(messageSignInterceptor);
-    }
-
-    @Override
     public String getUserAgent() {
         return tinkHttpClient.getUserAgent();
-    }
-
-    @Override
-    public SSLContext getSslContext() {
-        return tinkHttpClient.getSslContext();
-    }
-
-    @Override
-    public String getHeaderAggregatorIdentifier() {
-        return tinkHttpClient.getHeaderAggregatorIdentifier();
     }
 
     @Override
@@ -117,11 +100,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     @Override
     public void registerJacksonModule(Module module) {
         tinkHttpClient.registerJacksonModule(module);
-    }
-
-    @Override
-    public void setCipherSuites(List<String> cipherSuites) {
-        tinkHttpClient.setCipherSuites(cipherSuites);
     }
 
     @Override
@@ -226,12 +204,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     @Override
     public void clearEidasProxy() {
         // NOOP
-    }
-
-    @Override
-    @Deprecated
-    public void setEidasSign(EidasProxyConfiguration conf) {
-        tinkHttpClient.setEidasSign(conf);
     }
 
     @Override

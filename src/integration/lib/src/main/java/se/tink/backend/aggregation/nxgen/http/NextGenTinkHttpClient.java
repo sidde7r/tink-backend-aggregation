@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -51,11 +50,7 @@ import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.params.ClientPNames;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.StrictHostnameVerifier;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -64,14 +59,11 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.ResponseLoggingFilter;
-import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
-import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -122,6 +114,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         implements TinkHttpClient {
 
+    private static final String AGGREGATOR_IDENTIFIER_FOR_TESTING = "Tink Testing";
+
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -130,10 +124,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final BasicCookieStore internalCookieStore;
     private SSLContextBuilder internalSslContextBuilder;
     private String userAgent;
-    private final AggregatorInfo aggregator;
+    private final String aggregatorIdentifier;
     private boolean shouldAddAggregatorHeader = true;
-
-    private List<String> cipherSuites;
 
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
@@ -160,7 +152,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                     .build();
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private SSLContext sslContext;
 
     private HttpResponseStatusHandler responseStatusHandler;
 
@@ -180,14 +171,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     public String getUserAgent() {
         Preconditions.checkNotNull(userAgent);
         return this.userAgent;
-    }
-
-    public SSLContext getSslContext() {
-        return sslContext;
-    }
-
-    public String getHeaderAggregatorIdentifier() {
-        return aggregator.getAggregatorIdentifier();
     }
 
     @Override
@@ -264,10 +247,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
         this.rawHttpTrafficLogger = builder.getRawHttpTrafficLogger();
         this.jsonHttpTrafficLogger = builder.getJsonHttpTrafficLogger();
-        this.aggregator =
-                Objects.nonNull(builder.getAggregatorInfo())
-                        ? builder.getAggregatorInfo()
-                        : AggregatorInfo.getAggregatorForTesting();
+
+        this.aggregatorIdentifier =
+                Optional.ofNullable(builder.getAggregatorIdentifier())
+                        .orElse(AGGREGATOR_IDENTIFIER_FOR_TESTING);
+
         this.provider = builder.getProvider();
 
         // Add an initial redirect handler to fix any illegal location paths
@@ -320,7 +304,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private RawHttpTrafficLogger rawHttpTrafficLogger;
         private JsonHttpTrafficLogger jsonHttpTrafficLogger;
 
-        private AggregatorInfo aggregatorInfo;
+        private String aggregatorIdentifier;
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
 
@@ -349,6 +333,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     private void constructInternalClient() {
+        SSLContext sslContext;
         try {
             sslContext = this.internalSslContextBuilder.build();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
@@ -364,22 +349,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         if (!this.followRedirects) {
             // Add a redirect handler to deny all redirects.
             addRedirectHandler(new DenyAllRedirectHandler());
-        }
-
-        if (Objects.nonNull(cipherSuites)) {
-            final Registry<ConnectionSocketFactory> socketFactoryRegistry =
-                    RegistryBuilder.<ConnectionSocketFactory>create()
-                            .register(
-                                    "https",
-                                    new SSLConnectionSocketFactory(
-                                            sslContext,
-                                            null,
-                                            cipherSuites.stream().toArray(String[]::new),
-                                            null))
-                            .build();
-
-            internalHttpClientBuilder.setConnectionManager(
-                    new BasicHttpClientConnectionManager(socketFactoryRegistry));
         }
 
         HttpResponseInterceptor contentEncodingFixerInterceptor =
@@ -525,15 +494,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         jacksonProvider.setMapper(OBJECT_MAPPER);
 
         this.internalClientConfig.getSingletons().add(jacksonProvider);
-    }
-
-    /**
-     * @param cipherSuites A list of cipher suites to be presented to the server at TLS Client Hello
-     *     in order of preference, e.g. TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 etc. This might be
-     *     necessary if the choice of cipher suite causes the TLS handshake to fail.
-     */
-    public void setCipherSuites(final List<String> cipherSuites) {
-        this.cipherSuites = cipherSuites;
     }
 
     public void setUserAgent(String userAgent) {
@@ -748,15 +708,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
     }
 
-    /**
-     * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use
-     *     `QsealcSigner` if requesting signatures
-     */
-    @Deprecated
-    public void setEidasSign(EidasProxyConfiguration conf) {
-        setEidasClient(conf.toInternalConfig());
-    }
-
     private void setEidasClient(InternalEidasProxyConfiguration conf) {
         try {
             trustRootCaCertificate(conf.getRootCaTrustStore());
@@ -773,10 +724,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     public void addRedirectHandler(RedirectHandler handler) {
         this.redirectStrategy.addHandler(handler);
-    }
-
-    public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
-        addFilter(messageSignInterceptor);
     }
     // --- Configuration ---
 
@@ -844,7 +791,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new NextGenRequestBuilder(
                         new ArrayList<>(this.getFilters()),
                         url,
-                        getHeaderAggregatorIdentifier(),
+                        this.aggregatorIdentifier,
                         responseStatusHandler);
         if (!shouldAddAggregatorHeader) {
             builder.removeAggregatorHeader();
@@ -856,13 +803,13 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     public <T> T request(Class<T> c, HttpRequest request)
             throws HttpClientException, HttpResponseException {
         return new NextGenRequestBuilder(
-                        this.getFilters(), getHeaderAggregatorIdentifier(), responseStatusHandler)
+                        this.getFilters(), this.aggregatorIdentifier, responseStatusHandler)
                 .raw(c, request);
     }
 
     public void request(HttpRequest request) throws HttpClientException, HttpResponseException {
         new NextGenRequestBuilder(
-                        this.getFilters(), getHeaderAggregatorIdentifier(), responseStatusHandler)
+                        this.getFilters(), this.aggregatorIdentifier, responseStatusHandler)
                 .raw(request);
     }
     // --- Requests ---

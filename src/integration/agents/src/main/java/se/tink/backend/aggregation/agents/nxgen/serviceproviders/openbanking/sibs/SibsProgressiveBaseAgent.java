@@ -72,7 +72,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
 
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
 
-        client.setMessageSignInterceptor(
+        client.addFilter(
                 new SibsMessageSignInterceptor(
                         agentConfiguration,
                         qSealSignatureProvider,
