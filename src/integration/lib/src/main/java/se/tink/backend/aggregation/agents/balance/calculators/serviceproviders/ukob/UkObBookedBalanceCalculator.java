@@ -70,7 +70,7 @@ public class UkObBookedBalanceCalculator implements BookedBalanceCalculator {
     public Optional<ExactCurrencyAmount> calculateBookedBalance(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
-        log.info("[BALANCE CALCULATOR] Trying to calculate Booked Balance if needed and possible");
+        log.info("[BALANCE CALCULATOR] Trying to calculate Booked Balance");
         return calculator.findFirstPossibleCalculationAndEvaluateIt(
                 granularBalances, transactions, prioritizedCalculations);
     }

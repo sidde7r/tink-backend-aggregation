@@ -36,7 +36,10 @@ public class BalanceCalculator {
         Pair<ExactCurrencyAmount, Instant> balanceWithSnapshotTime =
                 granularBalances.get(balanceType);
 
-        log.info("[BALANCE CALCULATOR] Running calculation with balance {} as input", balanceType);
+        log.info(
+                "[BALANCE CALCULATOR] Running calculation with balance {} {} as input",
+                balanceType,
+                balanceWithSnapshotTime.getLeft());
 
         return calculation.evaluate(balanceWithSnapshotTime, transactions);
     }
