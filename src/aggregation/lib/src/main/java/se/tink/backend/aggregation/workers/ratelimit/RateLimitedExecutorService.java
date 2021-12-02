@@ -115,7 +115,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.pt.openbanking.unicre.UnicreAgent", 0.01)
                     .put("nxgen.fr.openbanking.bpcegroup.BpceGroupAgent", 0.04)
                     .put("nxgen.serviceproviders.openbanking.revolut.RevolutEEAAgent", 0.033)
-                    .put("nxgen.uk.openbanking.handelsbanken.HandelsbankenCorporateAgent", 0.03)
+                    .put("nxgen.uk.openbanking.handelsbanken.HandelsbankenCorporateAgent", 0.005)
                     .build();
 
     private final MetricRegistry metricRegistry;

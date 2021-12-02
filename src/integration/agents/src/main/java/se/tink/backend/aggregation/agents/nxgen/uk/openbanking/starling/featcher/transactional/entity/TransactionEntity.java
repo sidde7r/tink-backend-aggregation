@@ -60,10 +60,15 @@ public class TransactionEntity {
         Builder builder =
                 Transaction.builder()
                         .setAmount(transactionAmount)
-                        .setDate(transactionTime)
                         .setDescription(reference)
                         .setPending(isPending())
                         .setProprietaryFinancialInstitutionType(source);
+
+        if (isSettlementTime()) {
+            builder.setDate(settlementTime);
+        } else {
+            builder.setDate(transactionTime);
+        }
 
         if (isMerchantCounterPartyType()) {
             builder.setMerchantName(counterPartyName);
@@ -88,5 +93,10 @@ public class TransactionEntity {
     @JsonIgnore
     private boolean isMerchantCounterPartyType() {
         return MERCHANT_COUNTER_PARTY_TYPE.equals(counterPartyType);
+    }
+
+    @JsonIgnore
+    private boolean isSettlementTime() {
+        return settlementTime != null;
     }
 }
