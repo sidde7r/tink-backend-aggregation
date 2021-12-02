@@ -12,7 +12,6 @@ import static se.tink.backend.agents.rpc.AccountBalanceType.OPENING_CLEARED;
 import static se.tink.backend.aggregation.agents.balance.Calculations.addBookedTransactionsWithBookingDateAfterBalanceSnapshot;
 import static se.tink.backend.aggregation.agents.balance.Calculations.returnBalanceAmountAsIs;
 import static se.tink.backend.aggregation.agents.balance.Calculations.subtractPendingTransactions;
-import static se.tink.backend.aggregation.agents.balance.Calculations.subtractPendingTransactionsWithBookingDateAfterBalanceSnapshot;
 
 import com.google.common.collect.ImmutableList;
 import java.time.Instant;
@@ -45,19 +44,19 @@ public class UkObBookedBalanceCalculator implements BookedBalanceCalculator {
                     .add(
                             Pair.of(
                                     CLOSING_BOOKED,
-                                    subtractPendingTransactionsWithBookingDateAfterBalanceSnapshot))
+                                    addBookedTransactionsWithBookingDateAfterBalanceSnapshot))
                     .add(
                             Pair.of(
                                     OPENING_BOOKED,
-                                    subtractPendingTransactionsWithBookingDateAfterBalanceSnapshot))
+                                    addBookedTransactionsWithBookingDateAfterBalanceSnapshot))
                     .add(
                             Pair.of(
                                     CLOSING_CLEARED,
-                                    subtractPendingTransactionsWithBookingDateAfterBalanceSnapshot))
+                                    addBookedTransactionsWithBookingDateAfterBalanceSnapshot))
                     .add(
                             Pair.of(
                                     OPENING_CLEARED,
-                                    subtractPendingTransactionsWithBookingDateAfterBalanceSnapshot))
+                                    addBookedTransactionsWithBookingDateAfterBalanceSnapshot))
                     .add(
                             Pair.of(
                                     CLOSING_AVAILABLE,
