@@ -32,11 +32,15 @@ public class AgentContractEntity {
 
     @Override
     public String toString() {
-        return "AgentContractEntity{" +
-            "accounts=" + accounts +
-            ", transactions=" + transactions +
-            ", identityData=" + identityData +
-            ", transferDestinationPatterns=" + transferDestinationPatterns +
-            '}';
+        return "AgentContractEntity{"
+                + "accounts="
+                + accounts
+                + ", transactions="
+                + transactions
+                + ", identityData="
+                + identityData
+                + ", transferDestinationPatterns="
+                + transferDestinationPatterns
+                + '}';
     }
 }

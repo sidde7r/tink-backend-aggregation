@@ -600,19 +600,20 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             CompositeAgentContext context = componentProvider.getContext();
             String appId = context.getAppId();
             String providerId = context.getProviderId();
-            String credentialsId = componentProvider.getCredentialsRequest().getCredentials().getId();
+            String credentialsId =
+                    componentProvider.getCredentialsRequest().getCredentials().getId();
 
             Toggle toggle =
-                Toggle.of("uk-balance-calculators")
-                    .context(
-                        UnleashContext.builder()
-                            .sessionId(credentialsId)
-                            .addProperty(
-                                Constants.Context.PROVIDER_NAME.getValue(),
-                                providerId)
-                            .addProperty(Constants.Context.APP_ID.getValue(), appId)
-                            .build())
-                    .build();
+                    Toggle.of("uk-balance-calculators")
+                            .context(
+                                    UnleashContext.builder()
+                                            .sessionId(credentialsId)
+                                            .addProperty(
+                                                    Constants.Context.PROVIDER_NAME.getValue(),
+                                                    providerId)
+                                            .addProperty(Constants.Context.APP_ID.getValue(), appId)
+                                            .build())
+                            .build();
             balanceCalculationEnabled = unleashClient.isToggleEnable(toggle);
         } catch (Exception e) {
             log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
