@@ -51,8 +51,7 @@ public class UkObAvailableBalanceCalculator implements AvailableBalanceCalculato
     public Optional<ExactCurrencyAmount> calculateAvailableBalance(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
-        log.info(
-                "[BALANCE CALCULATOR] Trying to calculate Available Balance if needed and possible");
+        log.info("[BALANCE CALCULATOR] Trying to calculate Available Balance");
         return calculator.findFirstPossibleCalculationAndEvaluateIt(
                 granularBalances, transactions, prioritizedCalculations);
     }
