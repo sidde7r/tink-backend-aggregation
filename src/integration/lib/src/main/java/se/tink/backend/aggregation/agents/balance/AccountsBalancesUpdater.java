@@ -44,7 +44,7 @@ public class AccountsBalancesUpdater {
                     });
 
         } catch (Exception e) {
-            log.warn("[ACCOUNTS BALANCES UPDATER] Something went wrong", e);
+            log.warn("[BALANCE CALCULATOR] Something went wrong", e);
         }
     }
 
@@ -53,9 +53,15 @@ public class AccountsBalancesUpdater {
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
 
+        if (transactions.size() == 0) {
+            log.info(
+                    "[BALANCE CALCULATOR] No transactions available. Skipping booked balance calculations");
+            return;
+        }
+
         if (ACCOUNT_TYPES_SUPPORTING_BOOKED_CALCULATIONS.contains(account.getType())) {
             log.info(
-                    "[ACCOUNTS BALANCES UPDATER] Found account type {}. Trying to run booked balance calculation",
+                    "[BALANCE CALCULATOR] Found account type {}. Trying to run booked balance calculation",
                     account.getType());
 
             ExactCurrencyAmount buggyBookedBalance = account.getExactBalance();
@@ -63,7 +69,7 @@ public class AccountsBalancesUpdater {
                     bookedBalanceCalculator.calculateBookedBalance(granularBalances, transactions);
 
             log.info(
-                    "[ACCOUNTS BALANCES UPDATER] Buggy booked balance potentially replaced by calculated: {} -> {}",
+                    "[BALANCE CALCULATOR] Buggy booked balance potentially replaced by calculated: {} -> {}",
                     buggyBookedBalance,
                     calculatedBookedBalance);
         }
@@ -74,9 +80,15 @@ public class AccountsBalancesUpdater {
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
 
+        if (transactions.size() == 0) {
+            log.info(
+                    "[BALANCE CALCULATOR] No transactions available. Skipping available balance calculations");
+            return;
+        }
+
         if (ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS.contains(account.getType())) {
             log.info(
-                    "[ACCOUNTS BALANCES UPDATER] Found account type {}. Trying to run available balance calculation",
+                    "[BALANCE CALCULATOR] Found account type {}. Trying to run available balance calculation",
                     account.getType());
 
             ExactCurrencyAmount buggyAvailableBalance = account.getAvailableBalance();
@@ -85,7 +97,7 @@ public class AccountsBalancesUpdater {
                             granularBalances, transactions);
 
             log.info(
-                    "[ACCOUNTS BALANCES UPDATER] Available balance potentially replaced by calculated: {} -> {}",
+                    "[BALANCE CALCULATOR] Available balance potentially replaced by calculated: {} -> {}",
                     buggyAvailableBalance,
                     calculatedAvailableBalance);
         }
