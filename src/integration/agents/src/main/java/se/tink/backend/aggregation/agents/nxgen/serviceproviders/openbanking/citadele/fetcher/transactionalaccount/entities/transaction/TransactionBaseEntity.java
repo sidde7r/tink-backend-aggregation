@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.account.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
@@ -60,15 +62,19 @@ public class TransactionBaseEntity {
     }
 
     private String getDescription() {
-        return creditorName == null ? remittanceInformationUnstructured : creditorName;
+        return Stream.of(creditorName, remittanceInformationUnstructured)
+                .filter(java.util.Objects::nonNull)
+                .findFirst()
+                .orElse(StringUtils.EMPTY);
     }
 
     private TransactionDates getTinkTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setValueDate(new AvailableDateInformation().setDate(valueDate));
-
-        if (Objects.nonNull(bookingDate)) {
+        if (valueDate != null) {
+            builder.setValueDate(new AvailableDateInformation().setDate(valueDate));
+        }
+        if (bookingDate != null) {
             builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
         }
 

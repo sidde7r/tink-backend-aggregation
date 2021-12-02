@@ -1,16 +1,23 @@
 {
     "accounts" : [ {
-        "accountNumber" : "LV75PARX0023123456789",
+        "accountNumber" : "LV80BANK0000435195001",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
-            "exactValue" : 516.44,
             "scale" : 2,
             "unscaledValue" : 51644,
-            "doubleValue" : 516.44
+            "doubleValue" : 516.44,
+            "exactValue" : 516.44
         },
         "currencyCode" : "EUR",
-        "bankId" : "LV75PARX0023123456789",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 50924,
+            "doubleValue" : 509.24,
+            "exactValue" : 509.24
+        },
+        "bankId" : "LV80BANK0000435195001",
         "excluded" : false,
         "favored" : false,
         "name" : "X prime",
@@ -19,7 +26,7 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"iban://PARXLV22/LV80BANK0000435195001\"]",
         "closed" : false,
         "holderName" : "Firstname Lastname",
         "accountHolder" : {
@@ -35,17 +42,24 @@
         "availableCredit" : 0.0,
         "balance" : 516.44
     }, {
-        "accountNumber" : "LV09PARX0023123456789",
+        "accountNumber" : "LV60PARX1111111111111",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
-            "exactValue" : -283.78,
             "scale" : 2,
             "unscaledValue" : -28378,
-            "doubleValue" : -283.78
+            "doubleValue" : -283.78,
+            "exactValue" : -283.78
         },
         "currencyCode" : "EUR",
-        "bankId" : "LV09PARX0023123456789",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 1,
+            "unscaledValue" : 6003,
+            "doubleValue" : 600.3,
+            "exactValue" : 600.3
+        },
+        "bankId" : "LV60PARX1111111111111",
         "excluded" : false,
         "favored" : false,
         "name" : "X supreme",
@@ -54,7 +68,7 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"iban://PARXLV22/LV60PARX1111111111111\"]",
         "closed" : false,
         "holderName" : "Firstname Lastname",
         "accountHolder" : {
@@ -85,19 +99,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194624829055319.010002"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-13",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : -2.23,
         "date" : 1618308000000,
@@ -113,19 +122,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194624670955483.000002"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-13",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : -61.56,
         "date" : 1618308000000,
@@ -141,19 +145,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194624670955483.000003"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-13",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : 25.0,
         "date" : 1618653600000,
@@ -169,19 +168,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194662223949275.000002"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-17",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : 25.0,
         "date" : 1618826400000,
@@ -197,19 +191,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194689939382350.000002"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-19",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : -5.0,
         "date" : 1618912800000,
@@ -225,19 +214,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194694872104118.010001"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-20",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : -1.2,
         "date" : 1618999200000,
@@ -253,19 +237,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194704971512620.010001"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-21",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : -12.01,
         "date" : 1618999200000,
@@ -281,19 +260,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194701165514113.030001"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-21",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : -4.91,
         "date" : 1619085600000,
@@ -309,19 +283,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194715838011186.030001"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-22",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : -1.2,
         "date" : 1619085600000,
@@ -337,19 +306,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "194717399512164.010001"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-04-22",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : true
     }, {
         "amount" : -1.75,
         "date" : 1625997600000,
@@ -365,19 +329,14 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "195518838403404.030001"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-07-11",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : false
     }, {
         "amount" : -181.07,
         "date" : 1625997600000,
@@ -393,18 +352,13 @@
             "PROVIDER_GIVEN_TRANSACTION_ID" : "195519177803488.020001"
         },
         "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : null,
-                "instant" : null
-            }
-        }, {
             "type" : "BOOKING_DATE",
             "value" : {
                 "date" : "2021-07-11",
                 "instant" : null
             }
         } ],
-        "providerMarket" : "LV"
+        "providerMarket" : "LV",
+        "booked" : false
     } ]
 }

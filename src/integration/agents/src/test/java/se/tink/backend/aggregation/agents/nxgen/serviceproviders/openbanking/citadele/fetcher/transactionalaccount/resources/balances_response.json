@@ -1,0 +1,26 @@
+{
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "509.24"
+      },
+      "balanceType": "interimAvailable",
+      "creditLimitIncluded": true,
+      "lastChangeDateTime": null,
+      "referenceDate": null,
+      "lastCommittedTransaction": null
+    },
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "516.44"
+      },
+      "balanceType": "closingBooked",
+      "creditLimitIncluded": false,
+      "lastChangeDateTime": null,
+      "referenceDate": null,
+      "lastCommittedTransaction": null
+    }
+  ]
+}

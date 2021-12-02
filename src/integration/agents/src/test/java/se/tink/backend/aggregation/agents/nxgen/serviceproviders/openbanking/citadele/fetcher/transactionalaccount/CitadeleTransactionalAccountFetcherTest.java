@@ -8,9 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.ListAccountsResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -33,19 +32,17 @@ public class CitadeleTransactionalAccountFetcherTest {
                         Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
                         ListAccountsResponse.class);
 
-        AmountEntity amountEntity =
-                new AmountEntity(new ExactCurrencyAmount(BigDecimal.valueOf(5877.78), "EUR"));
-        BalanceEntity balanceEntity = new BalanceEntity();
-        balanceEntity.setBalanceType("type");
-        balanceEntity.setBalanceAmount(amountEntity);
-        balanceEntity.setCreditLimitIncluded(false);
-        List<BalanceEntity> accountBalance = Collections.singletonList(balanceEntity);
+        FetchBalancesResponse balanceEntity =
+                SerializationUtils.deserializeFromString(
+                        Paths.get(TEST_DATA_PATH, "balances_response.json").toFile(),
+                        FetchBalancesResponse.class);
+
         // when
         TransactionalAccount result =
                 listAccountsResponse
                         .getAccounts()
                         .get(0)
-                        .toTinkAccount(accountBalance)
+                        .toTinkAccount(balanceEntity.getBalances())
                         .orElse(null);
 
         // then
@@ -62,13 +59,14 @@ public class CitadeleTransactionalAccountFetcherTest {
                                                 BigDecimal.valueOf(5877.78), "EUR")))
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier("FR7612345987650123456789014")
-                                        .withAccountNumber("FR7612345987650123456789014")
-                                        .withAccountName("string")
+                                        .withUniqueIdentifier("LV80BANK0000435195001")
+                                        .withAccountNumber("LV80BANK0000435195001")
+                                        .withAccountName("AccountName")
                                         .addIdentifier(
-                                                new IbanIdentifier("FR7612345987650123456789014"))
+                                                new IbanIdentifier(
+                                                        "PARXLV22", "LV80BANK0000435195001"))
                                         .build())
-                        .setApiIdentifier("string")
+                        .setApiIdentifier("resourceId")
                         .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                         .addHolderName("John Doe")
                         .build()

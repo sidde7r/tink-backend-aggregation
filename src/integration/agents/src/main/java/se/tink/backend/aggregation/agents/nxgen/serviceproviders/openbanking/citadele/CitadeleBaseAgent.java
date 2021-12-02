@@ -102,7 +102,7 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         CitadeleTransactionalAccountFetcher accountFetcher =
-                new CitadeleTransactionalAccountFetcher(apiClient, persistentStorage);
+                new CitadeleTransactionalAccountFetcher(apiClient);
         CitadeleTransactionFetcher transactionFetcher =
                 new CitadeleTransactionFetcher(apiClient, request.getProvider().getMarket());
 

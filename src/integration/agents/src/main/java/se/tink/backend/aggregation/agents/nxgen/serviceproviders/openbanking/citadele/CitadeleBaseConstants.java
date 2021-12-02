@@ -80,6 +80,11 @@ public class CitadeleBaseConstants {
                         HttpStatus.SC_SERVICE_UNAVAILABLE);
     }
 
+    public static class BalanceType {
+        public static final String AVAILABLE = "interimAvailable";
+        public static final String BOOKED = "closingBooked";
+    }
+
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(
