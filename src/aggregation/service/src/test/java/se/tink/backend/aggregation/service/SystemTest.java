@@ -425,6 +425,7 @@ public class SystemTest {
        DanskeBank agent when we tried to execute it in Java11 container and verify that it
        is fixed.
     */
+    @Ignore // Very flaky - will be investigated https://tinkab.atlassian.net/browse/AAP-1716
     @Test
     public void getRefreshShouldUploadEntitiesForDanskeBank() throws Exception {
         // given
