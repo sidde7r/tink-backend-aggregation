@@ -11,6 +11,7 @@ import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makePost
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseAccounts;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseIdentityData;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransactions;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransferDestinations;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilCredentialsUpdateStatusIn;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilFinalCredentialsUpdateStatus;
@@ -254,7 +255,7 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForRefreshEndpoint);
 
-        List<?> givenAccounts =
+        List<Map<String, Object>> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
@@ -272,7 +273,18 @@ public class SystemTest {
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateIdentity", 50, 1));
 
+        // We assume that we have only one account in expected entities
+        String accountId = givenAccounts.get(0).get("id").toString();
+        List<String> distinctAccountIdsInTransactions =
+                givenTransactions.stream()
+                        .map(trx -> trx.get("accountId").toString())
+                        .distinct()
+                        .collect(Collectors.toList());
+
         // then
+        Assert.assertEquals(1, givenAccounts.size());
+        Assert.assertEquals(1, distinctAccountIdsInTransactions.size());
+        Assert.assertEquals(accountId, distinctAccountIdsInTransactions.get(0));
         Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
@@ -341,6 +353,8 @@ public class SystemTest {
 
         List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
         List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
+        List<Map<String, Object>> expectedTransferDestinations =
+                expectedBankEntities.getTransferDestinationPatterns();
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
@@ -358,7 +372,7 @@ public class SystemTest {
         postSupplementalInformation(
                 aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);
 
-        List<?> givenAccounts =
+        List<Map<String, Object>> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
@@ -371,7 +385,26 @@ public class SystemTest {
                                 50,
                                 1));
 
+        List<Map<String, Object>> givenTransferDestinations =
+                parseTransferDestinations(
+                        pollForAllCallbacksForAnEndpoint(
+                                fakeAggregationControllerDataEndpoint(),
+                                "updateTransferDestinationPatterns",
+                                50,
+                                1));
+
+        // We assume that we have only one account in expected entities
+        String accountId = givenAccounts.get(0).get("id").toString();
+        List<String> distinctAccountIdsInTransactions =
+                givenTransactions.stream()
+                        .map(trx -> trx.get("accountId").toString())
+                        .distinct()
+                        .collect(Collectors.toList());
+
         // then
+        Assert.assertEquals(1, givenAccounts.size());
+        Assert.assertEquals(1, distinctAccountIdsInTransactions.size());
+        Assert.assertEquals(accountId, distinctAccountIdsInTransactions.get(0));
         Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
@@ -379,6 +412,12 @@ public class SystemTest {
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
+        log.info("expectedTransferDestinations: " + expectedTransferDestinations);
+        log.info("givenTransferDestinations: " + givenTransferDestinations);
+
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransferDestinations, givenTransferDestinations));
     }
 
     /*
@@ -386,6 +425,7 @@ public class SystemTest {
        DanskeBank agent when we tried to execute it in Java11 container and verify that it
        is fixed.
     */
+    @Ignore // Very flaky - will be investigated https://tinkab.atlassian.net/browse/AAP-1716
     @Test
     public void getRefreshShouldUploadEntitiesForDanskeBank() throws Exception {
         // given
@@ -413,7 +453,7 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForRefreshEndpoint);
 
-        List<?> givenAccounts =
+        List<Map<String, Object>> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
@@ -475,7 +515,7 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForRefreshEndpoint);
 
-        List<?> givenAccounts =
+        List<Map<String, Object>> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
                                 fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));

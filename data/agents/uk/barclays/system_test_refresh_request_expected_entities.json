@@ -1,105 +1,155 @@
 {
-    "accounts": [
+  "accounts": [
+    {
+      "accountNumber": "00000000000000",
+      "accountExclusion": "NONE",
+      "currencyCode": "GBP",
+      "bankId": "00000000000000",
+      "name": "00000000000000",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "identifiers": "[\"sort-code://00000000000000\"]",
+      "closed": false,
+      "holderName": "Little Big Digital Ltd",
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "availableCredit": 0.0,
+      "balance": 30.0
+    }
+  ],
+  "transactions": [
+    {
+      "amount": 20.0,
+      "date": 1579604400000,
+      "description": "DUMMY_VALUE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 10.0,
+      "date": 1579258800000,
+      "description": "DUMMY_VALUE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -319.31,
+      "date": 1579258800000,
+      "description": "DUMMY_VALUE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -6.5,
+      "date": 1578567600000,
+      "description": "DUMMY_VALUE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -282.29,
+      "date": 1578222000000,
+      "description": "DUMMY_VALUE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -16.34,
+      "date": 1559296800000,
+      "description": "DUMMY_VALUE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -12.0,
+      "date": 1559037600000,
+      "description": "DUMMY_VALUE",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    }
+  ],
+  "transferDestinationPatterns": [
+    {
+      "account": {
+        "accountNumber": "00000000000000",
+        "availableCredit": 0.0,
+        "balance": 30.0,
+        "currencyCode": "GBP",
+        "bankId": "00000000000000",
+        "certainDate": null,
+        "credentialsId": "refresh-test-for-barclays",
+        "excluded": false,
+        "favored": false,
+        "id": "1",
+        "name": "00000000000000",
+        "ownership": 1.0,
+        "payload": null,
+        "type": "CHECKING",
+        "userId": "userId",
+        "userModifiedExcluded": false,
+        "userModifiedName": false,
+        "userModifiedType": false,
+        "identifiers": "[\"sort-code://00000000000000\"]",
+        "transferDestinations": null,
+        "details": null,
+        "holderName": "Little Big Digital Ltd",
+        "closed": false,
+        "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "accountExclusion": "NONE",
+        "financialInstitutionId": "0ee1cda5943e4662bb9775c34de291d6",
+        "availableBalance": {
+          "currencyCode": "GBP",
+          "exactValue": 30.00,
+          "unscaledValue": 3000,
+          "scale": 2,
+          "doubleValue": 30.0
+        },
+        "creditLimit": null,
+        "balances": []
+      },
+      "destinations": [
         {
-            "accountNumber": "00000000000000",
-            "accountExclusion": "NONE",
-            "currencyCode": "GBP",
-            "bankId": "00000000000000",
-            "name": "00000000000000",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "identifiers": "[\"sort-code://00000000000000\"]",
-            "closed": false,
-            "holderName": "Little Big Digital Ltd",
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "availableCredit": 0.0,
-            "balance": 30.0
+          "type": "SORT_CODE",
+          "pattern": ".+",
+          "matchesMultiple": true,
+          "name": null,
+          "bank": null
         }
-    ],
-    "transactions": [
-        {
-            "amount": 20.0,
-            "date": 1579604400000,
-            "description": "DUMMY_VALUE",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 10.0,
-            "date": 1579258800000,
-            "description": "DUMMY_VALUE",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -319.31,
-            "date": 1579258800000,
-            "description": "DUMMY_VALUE",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -6.5,
-            "date": 1578567600000,
-            "description": "DUMMY_VALUE",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -282.29,
-            "date": 1578222000000,
-            "description": "DUMMY_VALUE",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -16.34,
-            "date": 1559296800000,
-            "description": "DUMMY_VALUE",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -12.0,
-            "date": 1559037600000,
-            "description": "DUMMY_VALUE",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        }
-    ]
+      ]
+    }
+  ]
 }

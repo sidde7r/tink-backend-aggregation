@@ -29,4 +29,18 @@ public class AgentContractEntity {
     public List<Map<String, Object>> getTransferDestinationPatterns() {
         return transferDestinationPatterns;
     }
+
+    @Override
+    public String toString() {
+        return "AgentContractEntity{"
+                + "accounts="
+                + accounts
+                + ", transactions="
+                + transactions
+                + ", identityData="
+                + identityData
+                + ", transferDestinationPatterns="
+                + transferDestinationPatterns
+                + '}';
+    }
 }

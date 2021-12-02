@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import no.finn.unleash.UnleashContext;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -17,6 +18,10 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.balance.AccountsBalancesUpdater;
+import se.tink.backend.aggregation.agents.balance.calculators.serviceproviders.ukob.UkObAvailableBalanceCalculator;
+import se.tink.backend.aggregation.agents.balance.calculators.serviceproviders.ukob.UkObBookedBalanceCalculator;
+import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
@@ -89,10 +94,14 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
+import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
 @Slf4j
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
@@ -105,6 +114,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 TypedPaymentControllerable {
 
     private final AgentComponentProvider componentProvider;
+    private final UnleashClient unleashClient;
+    private final AccountsBalancesUpdater accountsBalancesUpdater;
 
     private final JwtSigner jwtSigner;
     private final EidasIdentity eidasIdentity;
@@ -139,6 +150,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             UkOpenBankingPisConfig pisConfig,
             UkOpenBankingPisRequestFilter pisRequestFilter) {
         super(componentProvider);
+        this.unleashClient = componentProvider.getUnleashClient();
         this.jwtSigner = ukOpenBankingFlowFacade.getJwtSinger();
         this.agentConfiguration = ukOpenBankingFlowFacade.getAgentConfiguration();
         this.tlsConfigurationSetter = ukOpenBankingFlowFacade.getTlsConfigurationSetter();
@@ -150,6 +162,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
         this.pisRequestFilter = pisRequestFilter;
         this.componentProvider = componentProvider;
+        this.accountsBalancesUpdater =
+                new AccountsBalancesUpdater(
+                        new UkObBookedBalanceCalculator(), new UkObAvailableBalanceCalculator());
 
         configureMdcPropagation();
     }
@@ -158,7 +173,48 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider,
             UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
             UkOpenBankingAisConfig aisConfig) {
-        this(componentProvider, ukOpenBankingFlowFacade, aisConfig, null, null);
+        this(
+                componentProvider,
+                componentProvider.getUnleashClient(),
+                ukOpenBankingFlowFacade,
+                aisConfig,
+                null,
+                null);
+    }
+
+    public UkOpenBankingBaseAgent(
+            AgentComponentProvider componentProvider,
+            UnleashClient unleashClient,
+            UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
+            UkOpenBankingAisConfig aisConfig,
+            UkOpenBankingPisConfig pisConfig,
+            UkOpenBankingPisRequestFilter pisRequestFilter) {
+        super(componentProvider);
+        this.unleashClient = unleashClient;
+        this.jwtSigner = ukOpenBankingFlowFacade.getJwtSinger();
+        this.agentConfiguration = ukOpenBankingFlowFacade.getAgentConfiguration();
+        this.tlsConfigurationSetter = ukOpenBankingFlowFacade.getTlsConfigurationSetter();
+        this.eidasIdentity = ukOpenBankingFlowFacade.getUkEidasIdentity();
+        this.aisConfig = aisConfig;
+        this.pisConfig = pisConfig;
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
+        this.pisRequestFilter = pisRequestFilter;
+        this.componentProvider = componentProvider;
+        this.accountsBalancesUpdater =
+                new AccountsBalancesUpdater(
+                        new UkObBookedBalanceCalculator(), new UkObAvailableBalanceCalculator());
+
+        configureMdcPropagation();
+    }
+
+    public UkOpenBankingBaseAgent(
+            AgentComponentProvider componentProvider,
+            UnleashClient unleashClient,
+            UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
+            UkOpenBankingAisConfig aisConfig) {
+        this(componentProvider, unleashClient, ukOpenBankingFlowFacade, aisConfig, null, null);
     }
 
     private void addFilter(Filter filter) {
@@ -525,5 +581,45 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     private static void configureMdcPropagation() {
         RxJavaPlugins.setScheduleHandler(RunnableMdcWrapper::wrap);
+    }
+
+    @Override
+    public void afterRefreshPostProcess(AccountDataCache cache) {
+
+        if (request.getCredentials() != null
+                && isBalanceCalculationEnabled(componentProvider)
+                && cache != null) {
+            accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(
+                    cache.getFilteredAccountData());
+        }
+    }
+
+    private boolean isBalanceCalculationEnabled(AgentComponentProvider componentProvider) {
+        boolean balanceCalculationEnabled;
+        try {
+            CompositeAgentContext context = componentProvider.getContext();
+            String appId = context.getAppId();
+            String providerId = context.getProviderId();
+            String credentialsId =
+                    componentProvider.getCredentialsRequest().getCredentials().getId();
+
+            Toggle toggle =
+                    Toggle.of("uk-balance-calculators")
+                            .context(
+                                    UnleashContext.builder()
+                                            .sessionId(credentialsId)
+                                            .addProperty(
+                                                    Constants.Context.PROVIDER_NAME.getValue(),
+                                                    providerId)
+                                            .addProperty(Constants.Context.APP_ID.getValue(), appId)
+                                            .build())
+                            .build();
+            balanceCalculationEnabled = unleashClient.isToggleEnable(toggle);
+        } catch (Exception e) {
+            log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
+            balanceCalculationEnabled = false;
+        }
+
+        return balanceCalculationEnabled;
     }
 }

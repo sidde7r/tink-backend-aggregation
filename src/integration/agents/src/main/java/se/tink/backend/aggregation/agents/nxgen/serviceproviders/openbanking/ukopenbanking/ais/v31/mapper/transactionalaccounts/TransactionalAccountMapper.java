@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.GranularBalancesMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
@@ -85,7 +86,10 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
 
     private BalanceModule buildBalanceModule(Collection<AccountBalanceEntity> balances) {
         BalanceBuilderStep builder =
-                BalanceModule.builder().withBalance(balanceMapper.getAccountBalance(balances));
+                BalanceModule.builder()
+                        .withBalanceAndGranularBalances(
+                                balanceMapper.getAccountBalance(balances),
+                                GranularBalancesMapper.toGranularBalances(balances));
 
         balanceMapper.calculateAvailableCredit(balances).ifPresent(builder::setAvailableCredit);
         balanceMapper.calculateCreditLimit(balances).ifPresent(builder::setCreditLimit);

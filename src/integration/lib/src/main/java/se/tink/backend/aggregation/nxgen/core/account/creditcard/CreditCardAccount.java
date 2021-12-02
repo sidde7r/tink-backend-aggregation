@@ -23,6 +23,9 @@ public class CreditCardAccount extends Account {
             ExactCurrencyAmount availableCredit) {
         super(builder, balance, availableCredit);
         this.cardModule = builder.getCardModule();
+        if (Objects.nonNull(builder.getCardModule())) {
+            this.granularAccountBalances = builder.getCardModule().getGranularAccountBalances();
+        }
     }
 
     public static CreditCardDetailsStep<CreditCardBuildStep> nxBuilder() {

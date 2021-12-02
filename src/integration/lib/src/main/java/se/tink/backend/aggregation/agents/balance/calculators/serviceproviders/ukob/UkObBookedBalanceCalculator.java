@@ -24,11 +24,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.agents.balance.Calculation;
 import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculator;
+import se.tink.backend.aggregation.agents.balance.calculators.BookedBalanceCalculator;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
-public class UkObBookedBalanceCalculator {
+public class UkObBookedBalanceCalculator implements BookedBalanceCalculator {
 
     private final BalanceCalculator calculator;
 
@@ -70,8 +71,7 @@ public class UkObBookedBalanceCalculator {
     public Optional<ExactCurrencyAmount> calculateBookedBalance(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
-        log.info(
-                "[UK OB BOOKED BALANCE CALCULATOR] Trying to calculate Booked Balance if needed and possible");
+        log.info("[BALANCE CALCULATOR] Trying to calculate Booked Balance if needed and possible");
         return calculator.findFirstPossibleCalculationAndEvaluateIt(
                 granularBalances, transactions, prioritizedCalculations);
     }

@@ -37,6 +37,7 @@ public final class AccountConverter {
         account.setBalance(exactBalance.getDoubleValue());
         account.setCurrencyCode(exactBalance.getCurrencyCode());
         account.setExactBalance(exactBalance);
+        account.setGranularAccountBalances(sourceAccount.getGranularAccountBalances());
         account.setIdentifiers(sourceAccount.getIdentifiers());
         account.setBankId(sourceAccount.getUniqueIdentifier());
         account.setHolderName(sourceAccount.getFirstHolder().orElse(null));

@@ -9,7 +9,8 @@
         "CHECKING_TRANSACTIONS",
         "SAVING_TRANSACTIONS",
         "CREDITCARD_ACCOUNTS",
-        "CREDITCARD_TRANSACTIONS"
+        "CREDITCARD_TRANSACTIONS",
+        "TRANSFER_DESTINATIONS"
     ],
     "create": false,
     "callbackUri": "callbackUri",

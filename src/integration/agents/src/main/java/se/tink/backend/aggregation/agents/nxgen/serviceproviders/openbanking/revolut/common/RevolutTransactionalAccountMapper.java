@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.GranularBalancesMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -95,7 +96,10 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
 
     private BalanceModule buildBalanceModule(Collection<AccountBalanceEntity> balances) {
         BalanceBuilderStep builder =
-                BalanceModule.builder().withBalance(balanceMapper.getAccountBalance(balances));
+                BalanceModule.builder()
+                        .withBalanceAndGranularBalances(
+                                balanceMapper.getAccountBalance(balances),
+                                GranularBalancesMapper.toGranularBalances(balances));
 
         balanceMapper.calculateAvailableCredit(balances).ifPresent(builder::setAvailableCredit);
         balanceMapper.calculateCreditLimit(balances).ifPresent(builder::setCreditLimit);

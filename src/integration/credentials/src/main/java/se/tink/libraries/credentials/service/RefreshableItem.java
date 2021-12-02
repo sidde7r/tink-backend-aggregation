@@ -119,6 +119,10 @@ public enum RefreshableItem {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_ACCOUNTS);
     }
 
+    public static boolean isTransaction(RefreshableItem item) {
+        return REFRESHABLE_ITEMS_TRANSACTIONS.contains(item);
+    }
+
     public static boolean hasTransactions(Collection<RefreshableItem> items) {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_TRANSACTIONS);
     }

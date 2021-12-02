@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.Response;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -39,6 +40,8 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class FakeAggregationControllerAggregationClient
         implements AggregationControllerAggregationClient {
+
+    private static Integer accountId = 1;
 
     private final Logger log =
             LoggerFactory.getLogger(FakeAggregationControllerAggregationClient.class);
@@ -71,15 +74,24 @@ public class FakeAggregationControllerAggregationClient
         return "pong";
     }
 
+    @SneakyThrows
     @Override
-    public Account updateAccount(
+    public synchronized Account updateAccount(
             HostConfiguration hostConfiguration, UpdateAccountRequest request) {
+        // In production, when we upload Account entity to AC, we receive an identical Account
+        // object as
+        // a response and the only difference is that we receive a new id field. Then, when building
+        // Transaction entities, we set their accountId field equal to this id that we receive
+        // to imitate this behaviour we are setting a new id for the Account object here as if
+        // this id is returned from AC. We clone the Account object because when we set id here
+        // we don't want this to directly impact the Account object that we put in the request
+        // to be able to really imitate what is going on in production
+        se.tink.libraries.account.rpc.Account accountClone = request.getAccount().clone();
+        accountClone.setId(accountId.toString());
+        request.setAccount(accountClone);
+
         callFakeAggregationControllerForSendingData("updateAccount", request);
-        try {
-            return mapper.readValue(mapper.writeValueAsString(request.getAccount()), Account.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.readValue(mapper.writeValueAsString(request.getAccount()), Account.class);
     }
 
     @Override
