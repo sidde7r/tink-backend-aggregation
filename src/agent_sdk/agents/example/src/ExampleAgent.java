@@ -18,6 +18,8 @@ import se.tink.agent.sdk.fetching.capability.FetchSavingsAccounts;
 import se.tink.agent.sdk.fetching.capability.FetchSavingsTransactions;
 import se.tink.agent.sdk.fetching.identity_data.IdentityDataFetcher;
 import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
+import se.tink.agent.sdk.operation.Operation;
+import se.tink.agent.sdk.utils.Utilities;
 
 @Agent
 public class ExampleAgent
@@ -28,8 +30,12 @@ public class ExampleAgent
                 FetchSavingsTransactions,
                 FetchIdentityData {
 
-    public ExampleAgent(String arg) {
-        System.out.println("Hello from Example agent: " + arg);
+    private final Utilities utilities;
+    private final Operation operation;
+
+    public ExampleAgent(Utilities utilities, Operation operation) {
+        this.utilities = utilities;
+        this.operation = operation;
     }
 
     @Override
