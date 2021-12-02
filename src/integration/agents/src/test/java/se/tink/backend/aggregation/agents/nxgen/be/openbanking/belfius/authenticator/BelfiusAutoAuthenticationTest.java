@@ -17,10 +17,10 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
@@ -226,7 +226,13 @@ public class BelfiusAutoAuthenticationTest {
                                 new FakeLogMasker(),
                                 LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
-        new BelfiusClientConfigurator().configure(tinkHttpClient, persistentStorage, 1, 1);
+        new BelfiusClientConfigurator()
+                .configure(
+                        tinkHttpClient,
+                        persistentStorage,
+                        1,
+                        1,
+                        belfiusTestFixture.sessionExpiryDate());
         tinkHttpClient.addFilter(executionFilter);
         return tinkHttpClient;
     }

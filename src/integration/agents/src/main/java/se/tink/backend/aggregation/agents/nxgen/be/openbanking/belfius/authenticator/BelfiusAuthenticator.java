@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenti
 
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormValues;
@@ -93,14 +92,8 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
                         .build()
                         .serialize();
 
-        TokenResponse tokenResponse = new TokenResponse();
-        try {
-            tokenResponse = apiClient.postToken(new URL(Urls.TOKEN_PATH), refreshTokenEntity);
-        } catch (HttpResponseException h) {
-            if (h.getResponse().getStatus() == 500) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-        }
+        TokenResponse tokenResponse =
+                apiClient.postToken(new URL(Urls.TOKEN_PATH), refreshTokenEntity);
         persistentStorage.put(StorageKeys.ID_TOKEN, tokenResponse.getIdToken());
         persistentStorage.put(StorageKeys.LOGICAL_ID, tokenResponse.getLogicalId());
         return OAuth2Token.create(

@@ -1,0 +1,5 @@
+{
+    "error_description": "User/System has deactivated the consent. Tpp has to start over with the api /consent-uris",
+    "error_code": "20005",
+    "error": "no_active_consent"
+}

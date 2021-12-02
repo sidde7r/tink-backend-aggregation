@@ -28,13 +28,14 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -71,6 +72,8 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
     private static final String TEST_USER = "USER_NAME";
     private static final int TEST_RETRY_SLEEP_MS = 1;
     private static final int TEST_MAX_RETRIES_NUMBER = 1;
+    private static final Date SESSION_EXPIRY_DATE =
+            new Date(new ConstantLocalDateTimeSource().getSystemCurrentTimeMillis());
 
     private static final FetchAccountResponse FETCH_ACCOUNT_RESPONSE =
             deserializeFromFile(
@@ -144,7 +147,12 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
     private BelfiusApiClient getConfiguredBelfiusApiClient(
             AgentConfiguration<BelfiusConfiguration> agentConfiguration) {
         new BelfiusClientConfigurator()
-                .configure(client, persistentStorage, TEST_RETRY_SLEEP_MS, TEST_MAX_RETRIES_NUMBER);
+                .configure(
+                        client,
+                        persistentStorage,
+                        TEST_RETRY_SLEEP_MS,
+                        TEST_MAX_RETRIES_NUMBER,
+                        SESSION_EXPIRY_DATE);
         client.addFilter(callFilter);
 
         return new BelfiusApiClient(client, agentConfiguration, new MockRandomValueGenerator());

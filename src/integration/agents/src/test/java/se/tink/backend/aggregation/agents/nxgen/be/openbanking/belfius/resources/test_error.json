@@ -1,0 +1,5 @@
+{
+    "error": "test_error",
+    "error_code": "1234",
+    "error_description": "Something went wrong during test"
+}

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -100,5 +101,13 @@ public final class BelfiusConstants {
     static class HttpClient {
         static final int MAX_RETRIES = 3;
         static final int RETRY_SLEEP_MILLISECONDS = 3000;
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class LogTags {
+        public static final LogTag NO_ACTIVE_CONSENT = LogTag.from("[BELFIUS_NO_ACTIVE_CONSENT]");
+        public static final LogTag INVALID_TOKEN = LogTag.from("[BELFIUS_INVALID_TOKEN]");
+        public static final LogTag REFRESH_TOKEN_ERROR =
+                LogTag.from("[BELFIUS_REFRESH_TOKEN_ERROR]");
     }
 }

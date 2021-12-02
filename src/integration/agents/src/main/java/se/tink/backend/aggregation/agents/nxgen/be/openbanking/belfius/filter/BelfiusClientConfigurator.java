@@ -1,5 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter;
 
+import java.util.Date;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
@@ -13,9 +14,12 @@ public final class BelfiusClientConfigurator {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             int maxRetries,
-            int retrySleepMilliseconds) {
-        client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
+            int retrySleepMilliseconds,
+            Date sessionExpiryDate) {
         client.addFilter(new ServerErrorFilter());
+        client.addFilter(new BelfiusUnknownRefreshTokenErrorLoggingFilter(sessionExpiryDate));
+        client.addFilter(new BelfiusTokenErrorFilter(persistentStorage, sessionExpiryDate));
+        client.addFilter(new BelfiusConsentErrorFilter(persistentStorage, sessionExpiryDate));
         client.addFilter(new TimeoutFilter());
         client.addFilter(new ConnectionTimeoutRetryFilter(maxRetries, retrySleepMilliseconds));
         client.addFilter(new TerminatedHandshakeRetryFilter(maxRetries, retrySleepMilliseconds));
