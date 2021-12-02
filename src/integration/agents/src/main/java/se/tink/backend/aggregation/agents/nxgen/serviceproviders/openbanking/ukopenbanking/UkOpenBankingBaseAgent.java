@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.balance.AccountsBalancesUpdater;
 import se.tink.backend.aggregation.agents.balance.calculators.serviceproviders.ukob.UkObAvailableBalanceCalculator;
 import se.tink.backend.aggregation.agents.balance.calculators.serviceproviders.ukob.UkObBookedBalanceCalculator;
+import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
@@ -100,6 +101,7 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
 @Slf4j
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
@@ -585,24 +587,32 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     public void afterRefreshPostProcess(AccountDataCache cache) {
 
         if (request.getCredentials() != null
-                && isBalanceCalculationEnabled(context.getAppId(), request.getCredentials().getId())
+                && isBalanceCalculationEnabled(componentProvider)
                 && cache != null) {
             accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(
                     cache.getFilteredAccountData());
         }
     }
 
-    private boolean isBalanceCalculationEnabled(String appId, String credentialsId) {
+    private boolean isBalanceCalculationEnabled(AgentComponentProvider componentProvider) {
         boolean balanceCalculationEnabled;
         try {
+            CompositeAgentContext context = componentProvider.getContext();
+            String appId = context.getAppId();
+            String providerId = context.getProviderId();
+            String credentialsId = componentProvider.getCredentialsRequest().getCredentials().getId();
+
             Toggle toggle =
-                    Toggle.of("uk-balance-calculators")
-                            .context(
-                                    UnleashContext.builder()
-                                            .userId(appId)
-                                            .sessionId(credentialsId)
-                                            .build())
-                            .build();
+                Toggle.of("uk-balance-calculators")
+                    .context(
+                        UnleashContext.builder()
+                            .sessionId(credentialsId)
+                            .addProperty(
+                                Constants.Context.PROVIDER_NAME.getValue(),
+                                providerId)
+                            .addProperty(Constants.Context.APP_ID.getValue(), appId)
+                            .build())
+                    .build();
             balanceCalculationEnabled = unleashClient.isToggleEnable(toggle);
         } catch (Exception e) {
             log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
