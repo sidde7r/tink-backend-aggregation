@@ -89,7 +89,6 @@ public class FakeAggregationControllerAggregationClient
         se.tink.libraries.account.rpc.Account accountClone = request.getAccount().clone();
         accountClone.setId(accountId.toString());
         request.setAccount(accountClone);
-        accountId++;
 
         callFakeAggregationControllerForSendingData("updateAccount", request);
         return mapper.readValue(mapper.writeValueAsString(request.getAccount()), Account.class);
