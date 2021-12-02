@@ -151,6 +151,7 @@ generate_codeowners(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sdc:owners",
         "//src/integration/agents:german_providers_owners",
         "//src/integration/agents:italian_providers_owners",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents:berlingroup_utils_owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bankverlag:owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe:owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/deutschebank:owners",
