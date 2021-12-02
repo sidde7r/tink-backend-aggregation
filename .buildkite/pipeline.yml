@@ -119,11 +119,11 @@ steps:
         config: docker/docker-compose-system-tests.bazel.yml
 
   - name: ':male-detective: run detect-secrets on new commits'
-    command: "/bin/sh /opt/detect-secrets"
+    command: "/opt/detect-secrets"
     branches: '!master'
     plugins:
       - docker#v3.3.0:
-          image: gcr.io/tink-containers/detect-secrets:latest
+          image: gcr.io/tink-containers/detect-secrets:v1
           always-pull: true
 
   - name: ':docker: tink-backend-aggregation'

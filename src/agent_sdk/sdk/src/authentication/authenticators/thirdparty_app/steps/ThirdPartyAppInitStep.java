@@ -8,6 +8,7 @@ import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
 import se.tink.agent.sdk.storage.SerializableReference;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 
 public class ThirdPartyAppInitStep implements NewConsentStep {
     private final ThirdPartyAppInitAuthentication agentInitAuthentication;
@@ -43,7 +44,7 @@ public class ThirdPartyAppInitStep implements NewConsentStep {
                 throw new IllegalStateException("NO_CLIENT");
 
             case ALREADY_IN_PROGRESS:
-                throw new IllegalStateException("ALREADY_IN_PROGRESS");
+                throw ThirdPartyAppError.ALREADY_IN_PROGRESS.exception();
 
             case UNKNOWN_FAILURE:
                 throw new IllegalStateException("UNKNOWN_FAILURE");

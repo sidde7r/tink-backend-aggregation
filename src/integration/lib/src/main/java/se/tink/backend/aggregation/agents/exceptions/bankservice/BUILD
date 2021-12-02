@@ -1,11 +1,11 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "bankservice",
     srcs = glob(["*.java"]),
-    visibility = ["//visibility:public"],
-    deps = [
+    intdeps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/libraries/i18n",
     ],
+    visibility = ["//visibility:public"],
 )
