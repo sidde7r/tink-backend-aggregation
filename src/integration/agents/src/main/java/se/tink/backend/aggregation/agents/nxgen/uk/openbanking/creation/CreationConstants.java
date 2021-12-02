@@ -6,4 +6,8 @@ public final class CreationConstants {
             "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp";
     public static final String WELL_KNOWN_URL =
             "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/.well-known/openid-configuration";
+
+    public final class Scope {
+        public static final String OFFLINE_ACCESS = "offline_access";
+    }
 }

@@ -44,6 +44,11 @@ public class AuthorizeRequest {
             return this;
         }
 
+        public Builder withAdditionalScopeValue(String scope) {
+            this.scopes.add(scope);
+            return this;
+        }
+
         public Builder withPaymentsScope() {
             this.scopes.add(OpenIdConstants.Scopes.PAYMENTS);
             return this;
