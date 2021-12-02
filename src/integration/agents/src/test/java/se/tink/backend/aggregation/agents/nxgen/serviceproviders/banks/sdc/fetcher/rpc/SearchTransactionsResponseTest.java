@@ -51,7 +51,7 @@ public class SearchTransactionsResponseTest {
         for (CreditCardTransaction transaction : transactions) {
             assertThat(transaction.getDescription()).isNotNull();
             assertThat(transaction.getDate()).isNotNull();
-            assertThat(transaction.getCreditAccount().isPresent()).isTrue();
+            assertThat(transaction.getCreditCardAccountNumber().isPresent()).isTrue();
             assertThat(transaction.getExactAmount().getDoubleValue()).isNotEqualTo(0);
         }
     }

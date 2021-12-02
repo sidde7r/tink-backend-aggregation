@@ -41,7 +41,7 @@ public class HandelsbankenSECreditCardTransaction {
                 .setDate(date)
                 .setDescription(formattedDescription)
                 .setPending(pending)
-                .setCreditAccount(account)
+                .setCreditCardAccountNumber(account != null ? account.getAccountNumber() : null)
                 .build();
     }
 

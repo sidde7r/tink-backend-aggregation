@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
+import se.tink.backend.aggregation.nxgen.core.card.Card;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
@@ -48,7 +48,7 @@ public class TransactionEntity {
         Builder builder =
                 CreditCardTransaction.builder()
                         .setAmount(transactionAmount.toTinkAmount().negate())
-                        .setCreditCard(CreditCard.create(getNameOnCard(), getMaskedPan()))
+                        .setCreditCard(Card.create(getNameOnCard(), getMaskedPan()))
                         .setPending(isPending)
                         .setDate(valueDate)
                         .setDescription(transactionDetails)

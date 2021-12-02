@@ -9,6 +9,7 @@ java_library(
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/card",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
         "//src/libraries/agent-storage",

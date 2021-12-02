@@ -19,7 +19,8 @@ public class CreditCardTransactionEntity {
 
     public AggregationTransaction toTinkTransaction(CreditCardAccount creditCardAccount) {
         return CreditCardTransaction.builder()
-                .setCreditAccount(creditCardAccount)
+                .setCreditCardAccountNumber(
+                        creditCardAccount != null ? creditCardAccount.getAccountNumber() : null)
                 .setAmount(sum.toTinkAmount())
                 .setDate(date.getValue())
                 .setDescription(title)
