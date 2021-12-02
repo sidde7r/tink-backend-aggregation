@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.error;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
