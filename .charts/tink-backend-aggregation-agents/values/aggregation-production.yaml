@@ -61,6 +61,10 @@ allLoginActions: action=~"login-auto|login-manual|login-cron|is-logged-in|persis
 manualLoginActions: action=~"login-manual|is-logged-in"
 loginActionsWithoutManual: action=~"login-auto|login-cron|persist-login-session"
 
+# new set of login actions which will be used only for DE and IT first and later
+# may be expanded to other markets.
+manualLoginAction: action="login-manual"
+
 obAgents: provider=~".*-ob|.*-oauth2"
 reAgents: provider!~".*-ob|.*-oauth2"
 
