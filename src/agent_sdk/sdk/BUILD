@@ -26,6 +26,7 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/models/field",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/exceptions",
+        "//src/agent_sdk/sdk/src/utils",
     ],
     visibility = ["//visibility:public"],
     exports = [

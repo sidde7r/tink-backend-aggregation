@@ -13,7 +13,7 @@ import se.tink.agent.sdk.authentication.common_steps.GetConsentLifetimeStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.utils.Sleep;
+import se.tink.agent.sdk.utils.Sleeper;
 
 public class ThirdPartyAppAuthenticationProcess
         implements AuthenticationProcess<ThirdPartyAppAuthenticator> {
@@ -28,7 +28,7 @@ public class ThirdPartyAppAuthenticationProcess
     @Override
     public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
             ThirdPartyAppAuthenticator authenticator) {
-        Sleep sleeper = null;
+        Sleeper sleeper = null;
         return AuthenticationFlow.builder(
                         new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
                 .addStep(new ThirdPartyAppOpenAppStep(authenticator, ThirdPartyAppPollStep.class))

@@ -9,7 +9,7 @@ import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
 import se.tink.agent.sdk.storage.SerializableReference;
 import se.tink.agent.sdk.storage.Storage;
-import se.tink.agent.sdk.utils.Sleep;
+import se.tink.agent.sdk.utils.Sleeper;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 
 public class ThirdPartyAppPollStep implements NewConsentStep {
@@ -18,7 +18,7 @@ public class ThirdPartyAppPollStep implements NewConsentStep {
 
     private final Integer maxPollAttempts;
     private final ThirdPartyAppPollStatus agentPollStatus;
-    private final Sleep sleep;
+    private final Sleeper sleeper;
 
     private final Class<? extends NewConsentStep> reopenAppStep;
     private final Class<? extends NewConsentStep> nextStep;
@@ -26,22 +26,22 @@ public class ThirdPartyAppPollStep implements NewConsentStep {
     public ThirdPartyAppPollStep(
             Integer maxPollAttempts,
             ThirdPartyAppPollStatus agentPollStatus,
-            Sleep sleep,
+            Sleeper sleeper,
             Class<? extends NewConsentStep> reopenAppStep,
             Class<? extends NewConsentStep> nextStep) {
         this.maxPollAttempts = maxPollAttempts;
         this.agentPollStatus = agentPollStatus;
-        this.sleep = sleep;
+        this.sleeper = sleeper;
         this.reopenAppStep = reopenAppStep;
         this.nextStep = nextStep;
     }
 
     public ThirdPartyAppPollStep(
             ThirdPartyAppPollStatus agentPollStatus,
-            Sleep sleep,
+            Sleeper sleeper,
             Class<? extends NewConsentStep> reopenAppStep,
             Class<? extends NewConsentStep> nextStep) {
-        this(DEFAULT_MAX_POLL_ATTEMPTS, agentPollStatus, sleep, reopenAppStep, nextStep);
+        this(DEFAULT_MAX_POLL_ATTEMPTS, agentPollStatus, sleeper, reopenAppStep, nextStep);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ThirdPartyAppPollStep implements NewConsentStep {
         checkAndIncrementAttemptsCounter(authenticationStorage);
 
         // Sleep a short while between attempts.
-        this.sleep.sleep(DEFAULT_WAIT_DURATION);
+        this.sleeper.sleep(DEFAULT_WAIT_DURATION);
 
         SerializableReference reference =
                 authenticationStorage

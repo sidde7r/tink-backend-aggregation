@@ -14,7 +14,7 @@ import se.tink.agent.sdk.authentication.capability.AuthenticateOauth2DecoupledAp
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.utils.Sleep;
+import se.tink.agent.sdk.utils.Sleeper;
 
 public class Oauth2DecoupledAppAuthenticationProcess
         implements AuthenticationProcess<Oauth2DecoupledAppAuthenticator> {
@@ -29,7 +29,7 @@ public class Oauth2DecoupledAppAuthenticationProcess
     @Override
     public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
             Oauth2DecoupledAppAuthenticator authenticator) {
-        Sleep sleeper = null;
+        Sleeper sleeper = null;
 
         return AuthenticationFlow.builder(
                         new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
