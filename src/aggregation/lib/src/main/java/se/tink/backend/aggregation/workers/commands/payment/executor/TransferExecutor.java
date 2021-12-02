@@ -4,7 +4,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.commands.exceptions.TransferAgentWorkerCommandExecutionException;
 
-class TransferExecutor extends ExecutorBase<se.tink.backend.aggregation.agents.TransferExecutor> {
+class TransferExecutor
+        extends ExecutorBase<se.tink.backend.aggregation.agents.payments.TransferExecutor> {
 
     TransferExecutor(Executor executor) {
         super(executor);
@@ -12,7 +13,7 @@ class TransferExecutor extends ExecutorBase<se.tink.backend.aggregation.agents.T
 
     @Override
     protected ExecutorResult execute(
-            se.tink.backend.aggregation.agents.TransferExecutor agent,
+            se.tink.backend.aggregation.agents.payments.TransferExecutor agent,
             TransferRequest transferRequest,
             Credentials credentials)
             throws TransferAgentWorkerCommandExecutionException {
@@ -26,6 +27,6 @@ class TransferExecutor extends ExecutorBase<se.tink.backend.aggregation.agents.T
 
     @Override
     protected boolean canHandlePayment(Object agent, TransferRequest transferRequest) {
-        return agent instanceof se.tink.backend.aggregation.agents.TransferExecutor;
+        return agent instanceof se.tink.backend.aggregation.agents.payments.TransferExecutor;
     }
 }

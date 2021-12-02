@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
+import se.tink.backend.aggregation.agents.capability.CapabilityExecutor;
+
 /**
  * Interface for executing refreshes of customer identity data. An agent which supports fetching
  * customer identity data shall implement this.

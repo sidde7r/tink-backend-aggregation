@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
+import se.tink.backend.aggregation.agents.payments.TypedPaymentControllerable;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.commands.exceptions.TransferAgentWorkerCommandExecutionException;
 import se.tink.backend.aggregation.workers.commands.payment.executor.Executor;

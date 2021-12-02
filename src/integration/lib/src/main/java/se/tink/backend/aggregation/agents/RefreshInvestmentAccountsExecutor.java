@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
+import se.tink.backend.aggregation.agents.capability.CapabilityExecutor;
+
 /**
  * Interface for executing refreshes of investment accounts. Agent which supports Investment
  * Accounts shall implement this.

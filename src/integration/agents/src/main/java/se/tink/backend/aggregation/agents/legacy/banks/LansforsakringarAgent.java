@@ -64,7 +64,6 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
@@ -140,6 +139,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.modules.LegacyAgentProductionStrategyModule;
 import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyModule;
 import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
+import se.tink.backend.aggregation.agents.payments.TransferExecutor;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;

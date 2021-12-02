@@ -84,7 +84,6 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
@@ -158,6 +157,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.modules.LegacyAgentProductionStrategyModule;
 import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyModule;
 import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
+import se.tink.backend.aggregation.agents.payments.TransferExecutor;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
