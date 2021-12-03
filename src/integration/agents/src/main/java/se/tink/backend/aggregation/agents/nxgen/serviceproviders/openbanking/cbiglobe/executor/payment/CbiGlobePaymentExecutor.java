@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -278,9 +279,11 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 ErrorResponse errorResponse =
                         ErrorResponse.createFrom(httpResponseException.getResponse());
                 if (errorResponse != null
-                        && errorResponse.tppMessagesContainsError(
-                                "GENERIC_ERROR", "Generic error")) {
-                    throw new PaymentException("Probably a payment timout");
+                        && (errorResponse.errorManagementDescriptionEquals(
+                                        "Operation not allowed: authentication required.")
+                                || errorResponse.tppMessagesContainsError(
+                                        "GENERIC_ERROR", "Unknown Payment Identifier"))) {
+                    throw new PaymentAuthorizationTimeOutException();
                 } else {
                     throw httpResponseException;
                 }

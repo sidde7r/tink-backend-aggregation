@@ -5,7 +5,7 @@ import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -20,7 +20,7 @@ import se.tink.libraries.payment.rpc.Payment.Builder;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class IspAgentPaymentWiremockTest {
+public class IspPaymentMockTest {
 
     private static final String BASE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/isp/mock/resources/";
@@ -98,7 +98,7 @@ public class IspAgentPaymentWiremockTest {
         Throwable throwable = catchThrowable(agentWireMockPaymentTest::executePayment);
 
         // then
-        assertThat(throwable).isInstanceOf(PaymentException.class);
+        assertThat(throwable).isInstanceOf(PaymentAuthorizationException.class);
     }
 
     private Builder createSinglePayment() {
