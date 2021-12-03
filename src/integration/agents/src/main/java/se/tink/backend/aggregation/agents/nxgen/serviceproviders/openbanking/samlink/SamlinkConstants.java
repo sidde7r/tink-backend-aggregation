@@ -51,4 +51,10 @@ public final class SamlinkConstants {
 
         public static final String NO_API_KEY = "No API key found in request";
     }
+
+    public class ErrorCodes {
+        private ErrorCodes() {}
+
+        public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+    }
 }
