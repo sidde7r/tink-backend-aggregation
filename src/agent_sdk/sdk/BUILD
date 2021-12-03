@@ -24,6 +24,7 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/models/identity_data",
         "//src/agent_sdk/sdk/src/models/field",
         "//src/agent_sdk/sdk/src/operation",
+        "//src/agent_sdk/sdk/src/environment",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/exceptions",
         "//src/agent_sdk/sdk/src/authentication",
@@ -33,6 +34,7 @@ java_library_with_sources(
     exports = [
         "//src/agent_sdk:lombok_plugin",
         "//src/agent_sdk/sdk/src/authentication",
+        "//src/agent_sdk/sdk/src/environment",
         "//src/agent_sdk/sdk/src/exceptions",
         "//src/agent_sdk/sdk/src/models/account",
         "//src/agent_sdk/sdk/src/models/authentication",
