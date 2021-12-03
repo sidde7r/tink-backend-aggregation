@@ -14,6 +14,7 @@ java_library(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = [
+        "//src/agent_sdk:__subpackages__",
         "//src/aggregation:__subpackages__",
         "//src/integration:__subpackages__",
     ],
