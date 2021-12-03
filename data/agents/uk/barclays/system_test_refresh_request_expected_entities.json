@@ -13,10 +13,22 @@
       "holderName": "Little Big Digital Ltd",
       "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "availableCredit": 0.0,
-      "balance": 30.0
+      "balance": 25.0
     }
   ],
   "transactions": [
+        {
+            "amount": 5.0,
+            "date": 1580382000000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
     {
       "amount": 20.0,
       "date": 1579604400000,
@@ -107,7 +119,7 @@
       "account": {
         "accountNumber": "00000000000000",
         "availableCredit": 0.0,
-        "balance": 30.0,
+        "balance": 25.0,
         "currencyCode": "GBP",
         "bankId": "00000000000000",
         "certainDate": null,
@@ -133,10 +145,10 @@
         "financialInstitutionId": "0ee1cda5943e4662bb9775c34de291d6",
         "availableBalance": {
           "currencyCode": "GBP",
-          "exactValue": 30.00,
           "unscaledValue": 3000,
+          "doubleValue": 30.0,
           "scale": 2,
-          "doubleValue": 30.0
+          "exactValue": 30.0
         },
         "creditLimit": null,
         "balances": []
