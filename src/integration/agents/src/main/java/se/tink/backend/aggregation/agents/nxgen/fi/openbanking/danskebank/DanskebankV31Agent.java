@@ -64,7 +64,7 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
                 flowFacade,
                 aisConfig,
                 new DanskeBankPisConfiguration.Builder(
-                                V31.getPisBaseUrl(MarketCode.FI).toString(), MarketCode.FI)
+                                V31.getPisBaseUrl().toString(), MarketCode.FI)
                         .withWellKnownURL(V31.getWellKnownUrl(MarketCode.FI))
                         .build(),
                 createPisRequestFilter(

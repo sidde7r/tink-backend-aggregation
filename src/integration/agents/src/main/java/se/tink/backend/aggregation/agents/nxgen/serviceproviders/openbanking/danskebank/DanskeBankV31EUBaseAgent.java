@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.da
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais.defaultTransactionalAccountMapper;
 
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -23,35 +24,29 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.filter.UkOpenBankingPisRequestFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
+import se.tink.backend.aggregation.agents.payments.TypedPaymentControllerable;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
+import se.tink.libraries.payment.rpc.Payment;
 
 public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                TypedPaymentControllerable {
 
     private final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingBaseAgentImpl ukOpenBankingBaseAgent;
-
-    public DanskeBankV31EUBaseAgent(
-            AgentComponentProvider componentProvider,
-            UkOpenBankingFlowFacade flowFacade,
-            UkOpenBankingAisConfig aisConfig,
-            CreditCardAccountMapper creditCardAccountMapper) {
-        super(componentProvider);
-        ukOpenBankingBaseAgent =
-                new UkOpenBankingBaseAgentImpl(
-                        componentProvider, flowFacade, aisConfig, creditCardAccountMapper);
-        this.aisConfig = aisConfig;
-    }
 
     public DanskeBankV31EUBaseAgent(
             AgentComponentProvider componentProvider,
@@ -68,6 +63,30 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                         creditCardAccountMapper,
                         transactionalAccountMapper);
         this.aisConfig = aisConfig;
+    }
+
+    public DanskeBankV31EUBaseAgent(
+            AgentComponentProvider componentProvider,
+            UkOpenBankingFlowFacade flowFacade,
+            UkOpenBankingAisConfig aisConfig,
+            UkOpenBankingPisConfig pisConfig,
+            UkOpenBankingPisRequestFilter pisRequestFilter,
+            CreditCardAccountMapper creditCardAccountMapper) {
+        super(componentProvider);
+        ukOpenBankingBaseAgent =
+                new UkOpenBankingBaseAgentImpl(
+                        componentProvider,
+                        flowFacade,
+                        aisConfig,
+                        pisConfig,
+                        pisRequestFilter,
+                        creditCardAccountMapper);
+        this.aisConfig = aisConfig;
+    }
+
+    @Override
+    public Optional<PaymentController> getPaymentController(Payment payment) {
+        return ukOpenBankingBaseAgent.getPaymentController(payment);
     }
 
     @Override
@@ -151,21 +170,23 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                 AgentComponentProvider componentProvider,
                 UkOpenBankingFlowFacade flowFacade,
                 UkOpenBankingAisConfig agentConfig,
-                CreditCardAccountMapper creditCardAccountMapper) {
-            super(componentProvider, flowFacade, agentConfig);
-            this.creditCardAccountMapper = creditCardAccountMapper;
-            this.transactionalAccountMapper = defaultTransactionalAccountMapper();
-        }
-
-        UkOpenBankingBaseAgentImpl(
-                AgentComponentProvider componentProvider,
-                UkOpenBankingFlowFacade flowFacade,
-                UkOpenBankingAisConfig agentConfig,
                 CreditCardAccountMapper creditCardAccountMapper,
                 TransactionalAccountMapper transactionalAccountMapper) {
             super(componentProvider, flowFacade, agentConfig);
             this.creditCardAccountMapper = creditCardAccountMapper;
             this.transactionalAccountMapper = transactionalAccountMapper;
+        }
+
+        UkOpenBankingBaseAgentImpl(
+                AgentComponentProvider componentProvider,
+                UkOpenBankingFlowFacade flowFacade,
+                UkOpenBankingAisConfig aisConfig,
+                UkOpenBankingPisConfig pisConfig,
+                UkOpenBankingPisRequestFilter pisRequestFilter,
+                CreditCardAccountMapper creditCardAccountMapper) {
+            super(componentProvider, flowFacade, aisConfig, pisConfig, pisRequestFilter);
+            this.creditCardAccountMapper = creditCardAccountMapper;
+            this.transactionalAccountMapper = defaultTransactionalAccountMapper();
         }
 
         @Override
