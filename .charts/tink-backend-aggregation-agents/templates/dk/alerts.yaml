@@ -1,32 +1,71 @@
-# EXPERIMENTAL APPROACH ALERTS V. 2.0
+# EXPERIMENTAL APPROACH ALERTS V. 3.0
+# Assuming that counter resets are rare, that is for any query interval there has been
+# at most one counter reset within that interval, there are five distinct cases to consider.
+# Assume for the sake of an example that the query interval is one hour.
+# '[' and ']' denote the beginning and end of the query interval, respectively.
+# 'X' denotes counter reset.
+
+# Case A: no counter resets within the last hour:
 #
-# When a time series appears for the first time, event associated with its creation
-# is missed by increase() since we don't have a reference point (no observable increase).
-# This is due to metrics not being zero-initialized.
-# Assuming query interval of one hour, the approach makes use of the following heuristics:
-# if a time series is "old", that is appeared more than an hour ago, increase() behaves correctly.
-# However, if a time series has appeared more recently, we want to be able to count the first event,
-# thus adding 1 to the result. Effectively, we want to calculate:
+#       now-1h                                          now
+#         |                                              |
+# --------[----------------------------------------------]
 #
-# if (time series is old) then increase(...) else increase(...) + 1
+# Case B: counter reset and reappearance of a time series in the meantime:
+# --------[----------------X        N--------------------]
 #
-# Determining if a time series is "old" or not is done in an extremely hacky fashion
-# of counting a number of target scrapes within the last hour.
-# A series is considered to be "old" if and only if it contains at least
-# <query interval> / <scrape interval> = 1h / 10s = 360 data points
-# (361 is possible to due to off-by-one errors and scrape latencies)
+# Case C: counter reset and time series not appearing again after
+# --------[-----------------------------X                ]
 #
-# The expression above is equivalent to
-#   1 + increase(...) - (if "old" then 1 else 0)
-#   =
-#   1 + increase(...) - floor(<number_of_data_points> / 360)
+# Case D: counter reset a long time ago and time series reappearing in the meantime:
+# ---X    [                  N---------------------------]
 #
-# floor(increase(...)) is used instead of raw increase(...) to account for
-# its undesirable extrapolation behavior and floating-point inaccuracies.
+# Case E: as above but with counter reset
+# ---X   [          N------------------X                 ]
 #
-# One corner case where this approach fails: when a time series appeared more than
-# <query interval> ago, but there was a counter reset in the meantime.
-# This is an event rare enough not to significantly affect the end result.
+# Let T be the query selector we're interested in, for instance
+#   tink_agent_login_total{action="login", market="DK", provider_type!="test"}
+#
+# Correct result is increase(T[1h]) in cases A and C, and increase(T[1h]) + 1 in cases B,D and E
+# (because we want to account for new events - denoted by 'N' - which increase() alone would not account for)
+#
+# Let Δ = increase(T[1h])
+#
+# Step-by-step explanation of the expression calculating the *actual* number of events
+# that have occurred within last hour:
+#
+# First, we calculate Δ for each time series and keep only those
+# whose counter value was scraped an hour ago, but not ones whose value
+# was scraped at the time of query (in other words: keep only case C):
+
+# Δ and ((T offset 1h) unless T)        % `unless` is set difference
+#
+# Then, we calculate Δ+1 for every time series, which will leave us with correct result for
+# every remaining case except case A.
+# Let X = floor(count_over_time(T[1h]) / 360)
+# X is equal to 1 in case A (no counter resets) and 0 in cases B, C and D, E
+# Since case A covers the full query interval,
+# it will have 1h / <scrape_interval> = 1h / 10s = 360 scraped data points.
+# To attain the desired result, we subtract 1 from case A, or equivalently,
+# subtract X from every time series.
+#
+# Finally, the correct result is a set union of these two:
+#
+# Δ and ((T offset 1h) unless T)
+# or
+# 1 + Δ - X
+#
+# `or` is left-biased, so it will keep the result for case C calculated in step 1 and
+# complement it with results for the remaining cases calculated in step 2).
+
+# floor(increase(...)) is used instead of raw increase(...)
+# to account for its undesirable extrapolation behavior.
+#
+# Due to scrape latencies and other artifacts, it's not possible to achieve 100% accuracy
+# without zero-initializing metrics. Nevertheless, this approach provides correct results
+# with less than 1% relative error, even with 12-hour range queries.
+#
+# TODO: provide an in-depth explanation of the approach as a Confluence page (with pictures!)
 
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
@@ -35,54 +74,101 @@ metadata:
   namespace: agents
 spec:
   rules:
+    - record: increase:all_logins_dk:delta1h
+      expr: floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]))
     - record: sum:all_logins_dk:delta1h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]) / 360)
+          (increase:all_logins_dk:delta1h
+           and
+           (tink_agent_login_total{action="login", market="DK", provider_type!="test"} offset 1h
+            unless tink_agent_login_total{action="login", market="DK", provider_type!="test"}))
+          or
+          (1 + increase:all_logins_dk:delta1h - floor(count_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]) / 360))
         )
+
+    # ALL LOGIN ATTEMPTS (4h)
+    - record: increase:all_logins_dk:delta4h
+      expr: floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[4h]))
     - record: sum:all_logins_dk:delta4h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[4h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[4h]) / 1440)
+          (increase:all_logins_dk:delta4h
+           and
+           (tink_agent_login_total{action="login", market="DK", provider_type!="test"} offset 4h
+            unless tink_agent_login_total{action="login", market="DK", provider_type!="test"}))
+          or
+          (1 + increase:all_logins_dk:delta4h - floor(count_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[4h]) / 1440))
         )
-    - record: sum:all_refreshes_per_type_dk:delta1h
-      expr: |
-        sum by (className, type) (
-          1 + floor(increase(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]))
-          -
-          floor(count_over_time(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]) / 360)
-        )
+
+    # FAILED LOGIN ATTEMPTS (1h)
+    - record: increase:failed_logins_dk:delta1h
+      expr: floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]))
     - record: sum:failed_logins_dk:delta1h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]) / 360)
+          (increase:failed_logins_dk:delta1h
+           and
+           (tink_agent_login_total{action="login", outcome=~"failed.*", outcome=~"failed.*", market="DK", provider_type!="test"} offset 1h
+            unless tink_agent_login_total{action="login", outcome=~"failed.*", outcome=~"failed.*", market="DK", provider_type!="test"}))
+          or
+          (1 + increase:failed_logins_dk:delta1h - floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]) / 360))
         )
+
+    # UNSUCCESSFUL BACKGROUND LOGINS (4h)
+    - record: increase:unsuccessful_background_logins_dk:delta4h
+      expr: floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}[4h]))
     - record: sum:unsuccessful_background_logins_dk:delta4h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}[4h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}[4h]) / 1440)
+          (increase:unsuccessful_background_logins_dk:delta4h
+           and
+           (tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"} offset 4h
+            unless tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}))
+          or
+          (1 + increase:unsuccessful_background_logins_dk:delta4h - floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}[4h]) / 1440))
         )
+
+    # UNSUCCESSFUL ON-DEMAND LOGINS (4h)
+    - record: increase:unsuccessful_on_demand_logins_dk:delta4h
+      expr: floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}[4h]))
     - record: sum:unsuccessful_on_demand_logins_dk:delta4h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}[4h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}[4h]) / 1440)
+          (increase:unsuccessful_on_demand_logins_dk:delta4h
+           and
+           (tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"} offset 4h
+            unless tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}))
+          or
+          (1 + increase:unsuccessful_on_demand_logins_dk:delta4h - floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}[4h]) / 1440))
         )
+
+    # ALL REFRESH ATTEMPTS PER TYPE (1h)
+    - record: increase:all_refreshes_per_type_dk:delta1h
+      expr: floor(increase(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]))
+    - record: sum:all_refreshes_per_type_dk:delta1h
+      expr: |
+        sum by (className, type) (
+          (increase:all_refreshes_per_type_dk:delta1h
+           and
+           (tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"} offset 1h
+            unless tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}))
+          or
+          (1 + increase:all_refreshes_per_type_dk:delta1h - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]) / 360))
+        )
+
+    # FAILED REFRESH ATTEMPTS PER TYPE (1h)
+    - record: increase:failed_refreshes_per_type_dk:delta1h
+      expr: floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}[1h]))
     - record: sum:failed_refreshes_per_type_dk:delta1h
       expr: |
         sum by (className, type) (
-          1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}[1h]))
-          -
-          floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}[1h]) / 360)
+          (increase:failed_refreshes_per_type_dk:delta1h
+           and
+           (tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"} offset 1h
+            unless tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}))
+          or
+          (1 + increase:failed_refreshes_per_type_dk:delta1h - floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}[1h]) / 360))
         )
 
     # =========== SHORT-TERM (1h) and MID-TERM (4h) ALERTS ===========
