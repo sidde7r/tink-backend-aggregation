@@ -4,3 +4,9 @@ alias(
     actual = "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/payment",
     visibility = ["//src/agent_sdk/sdk:__subpackages__"],
 )
+
+alias(
+    name = "transfers",
+    actual = "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/transfer",
+    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
+)
