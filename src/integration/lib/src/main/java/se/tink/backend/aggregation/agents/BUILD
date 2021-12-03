@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_library")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 java_library(
     name = "agents",
@@ -94,4 +95,15 @@ java_library(
         "@tink_backend//src/libraries/unleash",
         "@tink_backend//src/libraries/uuid",
     ],
+)
+
+codeowners(
+    name = "berlingroup_utils_owners",
+    patterns = [
+        "utils/berlingroup",
+    ],
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

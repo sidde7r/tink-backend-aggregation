@@ -11,7 +11,9 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.AspspPaymentStatus;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -99,9 +101,23 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        return apiClient
-                .fetchPaymentStatus(paymentRequest)
-                .toTinkPayment(paymentRequest.getPayment(), paymentStatusMapper);
+        FetchPaymentStatusResponse fetchPaymentStatusResponse =
+                apiClient.fetchPaymentStatus(paymentRequest);
+        logDetailsForRejectedPayment(fetchPaymentStatusResponse);
+        return fetchPaymentStatusResponse.toTinkPayment(
+                paymentRequest.getPayment(), paymentStatusMapper);
+    }
+
+    private void logDetailsForRejectedPayment(
+            FetchPaymentStatusResponse fetchPaymentStatusResponse) {
+        AspspPaymentStatus paymentStatus =
+                AspspPaymentStatus.fromString(fetchPaymentStatusResponse.getTransactionStatus());
+        if (paymentStatus == AspspPaymentStatus.REJECTED) {
+            log.info(
+                    "Payment rejected psuMessage: {} fundsAvailable: {}",
+                    fetchPaymentStatusResponse.getPsuMessage(),
+                    fetchPaymentStatusResponse.getFundsAvailable());
+        }
     }
 
     @Override

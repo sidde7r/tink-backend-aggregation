@@ -1,0 +1,262 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/123456
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 7125d8aa-535c-434a-adeb-44a1c7eabdc4
+PSU-IP-Address: 64.252.83.7
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Fri, 08 Oct 2021 01:36:53 GMT
+Date: Fri, 08 Oct 2021 01:36:53 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 7125d8aa-535c-434a-adeb-44a1c7eabdc4
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Content-Length: 283
+
+{
+  "access": {
+    "accounts": [
+      {
+        "iban": "DE19701500001501450863"
+      }
+    ],
+    "balances": [
+      {
+        "iban": "DE19701500001501450863"
+      }
+    ],
+    "transactions": [
+      {
+        "iban": "DE19701500001501450863"
+      }
+    ]
+  },
+  "recurringIndicator": true,
+  "validUntil": "2022-01-06",
+  "frequencyPerDay": 4,
+  "lastActionDate": "2021-10-08",
+  "consentStatus": "valid"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+TPP-Rejection-NoFunds-Preferred: true
+TPP-Redirect-Preferred: false
+
+{
+  "debtorAccount": {
+    "iban": "DE23500105171883783625"
+  },
+  "creditorAccount": {
+    "iban": "DE27500105175141353468"
+  },
+  "instructedAmount": {
+    "amount": "1.0",
+    "currency": "EUR"
+  },
+  "creditorName": "Creditor Name",
+  "remittanceInformationUnstructured": "remittance information to creditor"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Date: Fri, 08 Oct 2021 01:36:53 GMT
+Date: Fri, 08 Oct 2021 01:36:54 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 14630abf-b0b2-452a-add4-c88ad1f49904
+ASPSP-SCA-Approach: ***
+Location: ***
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Content-Length: 684
+
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "88ca8a38-9ef4-4d05-8d6a-55aea448da63",
+  "_links": {
+    "self": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/42de7ed-7af3-4617-a363-8e6711367cf0"
+    },
+    "status": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/42de7ed-7af3-4617-a363-8e6711367cf0/status"
+    },
+    "startAuthorisationWithPsuAuthentication": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/1/authorisations"
+    }
+  },
+  "psuMessage": "Bitte geben Sie Ihren Anmeldenamen/Legitimations-ID und Ihre PIN ein."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/1/authorisations
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID: username
+
+{
+  "psuData": {
+    "password": "password"
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+201
+Date: Fri, 08 Oct 2021 01:36:54 GMT
+Date: Fri, 08 Oct 2021 01:36:54 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: b2bc138a-0b11-4306-a22c-1bc9583d70b9
+ASPSP-SCA-Approach: ***
+Location: ***
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Content-Length: 821
+
+{
+  "scaStatus": "psuAuthenticated",
+  "authorisationId": "6a6d2d32-f37a-4a02-ab10-5a8f5397ba85",
+  "scaMethods": [
+    {
+      "authenticationType": "PUSH_OTP",
+      "authenticationMethodId": "Classic - Handy",
+      "name": "pushTAN | Handy"
+    },
+    {
+      "authenticationType": "PUSH_DEC",
+      "authenticationMethodId": "Handy",
+      "name": "pushTAN | Handy"
+    }
+  ],
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/1/authorisations/2"
+    },
+    "selectAuthenticationMethod": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/1/authorisations/2"
+    }
+  },
+  "psuMessage": "Bitte wählen Sie Ihr mobiles Endgerät für den pushTAN-Versand."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+PUT https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/1/authorisations/2
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+
+{
+  "authenticationMethodId": "Handy"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Fri, 08 Oct 2021 01:36:54 GMT
+Date: Fri, 08 Oct 2021 01:36:54 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 53f75be2-1306-40fc-865f-99b51fc3cab2
+ASPSP-SCA-Approach: ***
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Content-Length: 589
+
+{
+  "scaStatus": "started",
+  "chosenScaMethod": {
+    "authenticationType": "PUSH_DEC",
+    "authenticationMethodId": "Handy",
+    "name": "pushTAN | Handy"
+  },
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/1/authorisations/2"
+    },
+    "status": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/1/authorisations/2"
+    }
+  },
+  "psuMessage": "3955- Auftrag empfangen - Bitte Auftrag in Ihrer App freigeben."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/1/authorisations/2
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Fri, 08 Oct 2021 01:36:59 GMT
+Date: Fri, 08 Oct 2021 01:36:59 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 6b45fc8d-f7e6-4f32-8aed-32756115e413
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Content-Length: 140
+
+{
+  "scaStatus": "finalised",
+  "psuMessage": "9010- Der Auftrag wurde nicht ausgeführt. - 3909- Bitte wenden Sie sich an Ihren Berater."
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/88ca8a38-9ef4-4d05-8d6a-55aea448da63/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Fri, 08 Oct 2021 01:37:06 GMT
+Date: Fri, 08 Oct 2021 01:37:06 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 12ef0c42-3666-48bd-8a8a-45f4c829a818
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Content-Length: 170
+
+{
+  "transactionStatus": "RJCT",
+  "fundsAvailable": false,
+  "psuMessage": "9010- Der Auftrag wurde nicht ausgeführt. - 3909- Bitte wenden Sie sich an Ihren Berater."
+}
