@@ -5,7 +5,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.Account;
@@ -18,16 +17,40 @@ import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
-@RequiredArgsConstructor
 public class AccountsBalancesUpdater {
-
-    private final BookedBalanceCalculator bookedBalanceCalculator;
-    private final AvailableBalanceCalculator availableBalanceCalculator;
 
     private static final EnumSet<AccountTypes> ACCOUNT_TYPES_SUPPORTING_BOOKED_CALCULATIONS =
             EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS, AccountTypes.CREDIT_CARD);
     private static final EnumSet<AccountTypes> ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS =
             EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS);
+
+    private final BookedBalanceCalculator bookedBalanceCalculator;
+    private final AvailableBalanceCalculator availableBalanceCalculator;
+
+    public final boolean dryRun;
+
+    public AccountsBalancesUpdater(
+            BookedBalanceCalculator bookedBalanceCalculator,
+            AvailableBalanceCalculator availableBalanceCalculator,
+            boolean dryRun) {
+        this.bookedBalanceCalculator = bookedBalanceCalculator;
+        this.availableBalanceCalculator = availableBalanceCalculator;
+        this.dryRun = dryRun;
+    }
+
+    public static AccountsBalancesUpdater createDryRunBalanceUpdater(
+            BookedBalanceCalculator bookedBalanceCalculator,
+            AvailableBalanceCalculator availableBalanceCalculator) {
+        return new AccountsBalancesUpdater(
+                bookedBalanceCalculator, availableBalanceCalculator, true);
+    }
+
+    public static AccountsBalancesUpdater createBalanceUpdater(
+            BookedBalanceCalculator bookedBalanceCalculator,
+            AvailableBalanceCalculator availableBalanceCalculator) {
+        return new AccountsBalancesUpdater(
+                bookedBalanceCalculator, availableBalanceCalculator, false);
+    }
 
     public void updateAccountsBalancesByRunningCalculations(List<AccountData> accountsData) {
         try {
@@ -62,8 +85,21 @@ public class AccountsBalancesUpdater {
             Optional<ExactCurrencyAmount> calculatedBookedBalance =
                     bookedBalanceCalculator.calculateBookedBalance(granularBalances, transactions);
 
+            if (dryRun) {
+                log.info(
+                        "[BALANCE CALCULATOR] Dry run. Buggy booked balance would be replaced by calculated: {} -> {}",
+                        buggyBookedBalance,
+                        calculatedBookedBalance);
+            }
+
+            calculatedBookedBalance.ifPresent(
+                    balance -> {
+                        account.setExactBalance(balance);
+                        account.setBalance(balance.getDoubleValue());
+                    });
+
             log.info(
-                    "[BALANCE CALCULATOR] Buggy booked balance potentially replaced by calculated: {} -> {}",
+                    "[BALANCE CALCULATOR] Buggy booked balance was replaced by calculated: {} -> {}",
                     buggyBookedBalance,
                     calculatedBookedBalance);
         }
@@ -84,8 +120,18 @@ public class AccountsBalancesUpdater {
                     availableBalanceCalculator.calculateAvailableBalance(
                             granularBalances, transactions);
 
+            if (dryRun) {
+                log.info(
+                        "[BALANCE CALCULATOR] Dry run. Buggy available balance would be replaced by calculated: {} -> {}",
+                        buggyAvailableBalance,
+                        calculatedAvailableBalance);
+                return;
+            }
+
+            calculatedAvailableBalance.ifPresent(account::setAvailableBalance);
+
             log.info(
-                    "[BALANCE CALCULATOR] Available balance potentially replaced by calculated: {} -> {}",
+                    "[BALANCE CALCULATOR] Buggy available balance was replaced by calculated: {} -> {}",
                     buggyAvailableBalance,
                     calculatedAvailableBalance);
         }
