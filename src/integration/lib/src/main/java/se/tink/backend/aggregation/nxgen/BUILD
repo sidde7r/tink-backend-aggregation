@@ -5,6 +5,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     exports = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/transfer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/transaction",
     ],
     deps = [
@@ -13,8 +14,8 @@ java_library(
         "//src/integration/credentials:demo",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/oauth2/constants",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/transfer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/card",
