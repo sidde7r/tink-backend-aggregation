@@ -94,7 +94,7 @@ public class NordeaBankIdIFrameInitializerTest {
         assertThat(firstWindowForIframe).isEqualTo(BankIdIframeFirstWindow.ENTER_SSN);
 
         verifyCorrectBankIdAuthUrlInitialization();
-        mocksToVerifyInOrder.verify(driver).getUrl(SAMPLE_BANK_ID_AUTHENTICATION_URL);
+        mocksToVerifyInOrder.verify(driver).get(SAMPLE_BANK_ID_AUTHENTICATION_URL);
         mocksToVerifyInOrder.verify(driver).clickButton(LOC_BANK_ID_METHOD_BUTTON);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }

@@ -3,63 +3,34 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
 
 import com.google.inject.Inject;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.Cookie;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcher;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
 public class BankIdWebDriverImpl implements BankIdWebDriver {
 
-    private final WebDriverWrapper driver;
-    private final Sleeper sleeper;
-    private final WebDriverCommonUtils driverCommonUtils;
-    private final ElementsSearcher elementsSearcher;
-
-    @Override
-    public WebDriverWrapper getDriver() {
-        return driver;
-    }
-
-    @Override
-    public String getDriverId() {
-        return driver.getDriverId();
-    }
-
-    @Override
-    public void getUrl(String url) {
-        driver.get(url);
-    }
-
-    @Override
-    public String getCurrentUrl() {
-        return driver.getCurrentUrl();
-    }
-
-    @Override
-    public Set<Cookie> getCookies() {
-        return driver.manage().getCookies();
-    }
+    @Delegate private final WebDriverWrapper driver;
+    @Delegate private final WebDriverBasicUtils driverBasicUtils;
+    @Delegate private final ElementsSearcher elementsSearcher;
 
     @Override
     public String getFullPageSourceLog() {
-        driverCommonUtils.switchToParentWindow();
+        driverBasicUtils.switchToParentWindow();
         String mainPageSource = driver.getPageSource();
 
         boolean switchedToIframe =
-                driverCommonUtils.trySwitchToIframe(BankIdConstants.HtmlSelectors.BY_IFRAME);
+                driverBasicUtils.trySwitchToIframe(BankIdConstants.HtmlSelectors.BY_IFRAME);
         String iframeSource = switchedToIframe ? driver.getPageSource() : null;
 
         return String.format(
@@ -123,15 +94,5 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
                                                 "Could not find element by " + locator));
 
         element.sendKeys(value);
-    }
-
-    @Override
-    public void sleepFor(int millis) {
-        sleeper.sleepFor(millis);
-    }
-
-    @Override
-    public ElementsSearchResult searchForFirstMatchingLocator(ElementsSearchQuery query) {
-        return elementsSearcher.searchForFirstMatchingLocator(query);
     }
 }

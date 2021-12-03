@@ -7,9 +7,12 @@ import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class WebDriverConstants {
+
+    public static final LogTag LOG_TAG = LogTag.from("[WebDriver]");
 
     public static final By EMPTY_BY =
             new By() {

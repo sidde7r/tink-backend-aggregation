@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ExamplePageData.BY_IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ExamplePageData.BY_MAIN_ELEMENT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ExamplePageData.BY_NOT_EXISTING_ELEMENT;
@@ -44,8 +43,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.Sleeper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtilsImpl;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
@@ -75,9 +75,8 @@ public class ElementsSearcherResultsTest {
 
     @Before
     public void setupTest() {
-        WebDriverCommonUtils driverCommonUtils = new WebDriverCommonUtils(driver);
-        elementsSearcher =
-                new ElementsSearcherImpl(driver, driver, driverCommonUtils, mock(Sleeper.class));
+        WebDriverBasicUtils driverBasicUtils = new WebDriverBasicUtilsImpl(driver, new Sleeper());
+        elementsSearcher = new ElementsSearcherImpl(driver, driverBasicUtils);
 
         driver.get(EXAMPLE_HTML_PAGE_URL);
     }

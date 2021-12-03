@@ -229,7 +229,7 @@ public class DnbBankIdIFrameInitializerTest {
     }
 
     private void verifyOpensWebsite() {
-        mocksToVerifyInOrder.verify(driver).getUrl(INIT_LOGIN);
+        mocksToVerifyInOrder.verify(driver).get(INIT_LOGIN);
     }
 
     private void verifyWaitsForSSNInput() {

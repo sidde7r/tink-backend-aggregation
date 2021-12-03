@@ -21,8 +21,9 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.Sleeper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtilsImpl;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
@@ -54,8 +55,8 @@ public class ElementsSearcherSleepingTest {
     @Before
     public void setupTest() {
         sleeper = spy(new SleeperWithSleepsCounter());
-        WebDriverCommonUtils driverCommonUtils = new WebDriverCommonUtils(driver);
-        elementsSearcher = new ElementsSearcherImpl(driver, driver, driverCommonUtils, sleeper);
+        WebDriverBasicUtils driverBasicUtils = new WebDriverBasicUtilsImpl(driver, sleeper);
+        elementsSearcher = new ElementsSearcherImpl(driver, driverBasicUtils);
 
         driver.get(EXAMPLE_HTML_PAGE_URL);
     }

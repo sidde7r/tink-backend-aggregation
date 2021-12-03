@@ -11,12 +11,10 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtils;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
@@ -24,9 +22,7 @@ import se.tink.integration.webdriver.WebDriverWrapper;
 public class ElementsSearcherImpl implements ElementsSearcher {
 
     private final WebDriverWrapper driver;
-    private final JavascriptExecutor javascriptExecutor;
-    private final WebDriverCommonUtils driverCommonUtils;
-    private final Sleeper sleeper;
+    private final WebDriverBasicUtils basicUtils;
 
     @Override
     public ElementsSearchResult searchForFirstMatchingLocator(ElementsSearchQuery query) {
@@ -45,7 +41,7 @@ public class ElementsSearcherImpl implements ElementsSearcher {
                 return searchResult;
             }
 
-            sleeper.sleepFor(1_000);
+            basicUtils.sleepFor(1_000);
         }
 
         return ElementsSearchResult.empty();
@@ -82,12 +78,12 @@ public class ElementsSearcherImpl implements ElementsSearcher {
         By iframeSelector = locator.getIframeSelector();
 
         if (iframeSelector == EMPTY_BY) {
-            driverCommonUtils.switchToParentWindow();
+            basicUtils.switchToParentWindow();
             return true;
         }
 
-        driverCommonUtils.switchToParentWindow();
-        return driverCommonUtils.trySwitchToIframe(iframeSelector);
+        basicUtils.switchToParentWindow();
+        return basicUtils.trySwitchToIframe(iframeSelector);
     }
 
     private Optional<? extends SearchContext> tryFindSearchContextForLocator(
@@ -103,8 +99,7 @@ public class ElementsSearcherImpl implements ElementsSearcher {
     }
 
     private @Nullable WebElement getShadowDomRoot(WebElement shadowHost) {
-        return (WebElement)
-                javascriptExecutor.executeScript("return arguments[0].shadowRoot", shadowHost);
+        return (WebElement) driver.executeScript("return arguments[0].shadowRoot", shadowHost);
     }
 
     private List<WebElement> tryFindElements(SearchContext searchContext, ElementLocator locator) {

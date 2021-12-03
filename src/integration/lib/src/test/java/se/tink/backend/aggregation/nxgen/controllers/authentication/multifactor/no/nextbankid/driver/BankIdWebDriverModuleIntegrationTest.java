@@ -27,7 +27,7 @@ public class BankIdWebDriverModuleIntegrationTest {
 
     @After
     public void clean() {
-        ChromeDriverInitializer.quitChromeDriver(webDriver.getDriver());
+        ChromeDriverInitializer.quitChromeDriver(webDriver);
         proxyManager.shutDownProxy();
     }
 
@@ -37,7 +37,7 @@ public class BankIdWebDriverModuleIntegrationTest {
         proxyManager.setUrlSubstringToListenFor("example.com");
 
         // when
-        webDriver.getUrl("https://example.com/");
+        webDriver.get("https://example.com/");
         Optional<ResponseFromProxy> responseFromProxy = proxyManager.waitForProxyResponse(1);
 
         // then

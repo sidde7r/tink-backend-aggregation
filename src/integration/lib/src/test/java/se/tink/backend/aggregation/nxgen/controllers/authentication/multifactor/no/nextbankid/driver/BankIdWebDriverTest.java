@@ -11,23 +11,19 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_IFRAME;
 
-import com.google.common.collect.ImmutableSet;
-import java.util.Set;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.Sleeper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcher;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @RunWith(JUnitParamsRunner.class)
@@ -37,8 +33,7 @@ public class BankIdWebDriverTest {
     Mocks
      */
     private WebDriverWrapper driver;
-    private WebDriver.Options driverOptions;
-    private WebDriverCommonUtils driverCommonUtils;
+    private WebDriverBasicUtils driverBasicUtils;
     private ElementsSearcher elementsSearcher;
 
     private InOrder mocksToVerifyInOrder;
@@ -51,25 +46,21 @@ public class BankIdWebDriverTest {
     @Before
     public void setup() {
         driver = mock(WebDriverWrapper.class);
-        driverOptions = mock(WebDriver.Options.class);
-        when(driver.manage()).thenReturn(driverOptions);
 
-        driverCommonUtils = mock(WebDriverCommonUtils.class);
+        driverBasicUtils = mock(WebDriverBasicUtils.class);
         elementsSearcher = mock(ElementsSearcher.class);
         Sleeper sleeper = mock(Sleeper.class);
 
-        mocksToVerifyInOrder =
-                inOrder(driver, driverOptions, driverCommonUtils, elementsSearcher, sleeper);
+        mocksToVerifyInOrder = inOrder(driver, driverBasicUtils, elementsSearcher, sleeper);
 
-        bankIdDriver =
-                new BankIdWebDriverImpl(driver, sleeper, driverCommonUtils, elementsSearcher);
+        bankIdDriver = new BankIdWebDriverImpl(driver, driverBasicUtils, elementsSearcher);
     }
 
     @Test
     @Parameters(value = {"http://some.url", "https://other.url"})
     public void should_get_url(String url) {
         // when
-        bankIdDriver.getUrl(url);
+        bankIdDriver.get(url);
 
         // then
         mocksToVerifyInOrder.verify(driver).get(url);
@@ -93,29 +84,9 @@ public class BankIdWebDriverTest {
     }
 
     @Test
-    public void should_get_cookies() {
-        // given
-        Cookie cookie1 = mock(Cookie.class);
-        Cookie cookie2 = mock(Cookie.class);
-        Set<Cookie> expectedCookies = ImmutableSet.of(cookie1, cookie2);
-
-        when(driverOptions.getCookies()).thenReturn(expectedCookies);
-
-        // when
-        Set<Cookie> cookies = bankIdDriver.getCookies();
-
-        // then
-        assertThat(cookies).isEqualTo(expectedCookies);
-
-        mocksToVerifyInOrder.verify(driver).manage();
-        mocksToVerifyInOrder.verify(driverOptions).getCookies();
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
     public void should_get_full_page_source_when_there_is_bank_id_iframe() {
         // given
-        when(driverCommonUtils.trySwitchToIframe(any())).thenReturn(true);
+        when(driverBasicUtils.trySwitchToIframe(any())).thenReturn(true);
         when(driver.getPageSource())
                 .thenReturn("parent page source")
                 .thenReturn("iframe page source");
@@ -130,9 +101,9 @@ public class BankIdWebDriverTest {
                                 "Main page source:%n" + "%s" + "%nBankID iframe source:%n" + "%s",
                                 "parent page source", "iframe page source"));
 
-        mocksToVerifyInOrder.verify(driverCommonUtils).switchToParentWindow();
+        mocksToVerifyInOrder.verify(driverBasicUtils).switchToParentWindow();
         mocksToVerifyInOrder.verify(driver).getPageSource();
-        mocksToVerifyInOrder.verify(driverCommonUtils).trySwitchToIframe(BY_IFRAME);
+        mocksToVerifyInOrder.verify(driverBasicUtils).trySwitchToIframe(BY_IFRAME);
         mocksToVerifyInOrder.verify(driver).getPageSource();
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -140,7 +111,7 @@ public class BankIdWebDriverTest {
     @Test
     public void should_omit_iframe_source_when_there_is_no_bank_id_iframe() {
         // given
-        when(driverCommonUtils.trySwitchToIframe(any())).thenReturn(false);
+        when(driverBasicUtils.trySwitchToIframe(any())).thenReturn(false);
         when(driver.getPageSource())
                 .thenReturn("parent page source")
                 .thenReturn("iframe page source");
@@ -155,9 +126,9 @@ public class BankIdWebDriverTest {
                                 "Main page source:%n" + "%s" + "%nBankID iframe source:%n" + "%s",
                                 "parent page source", null));
 
-        mocksToVerifyInOrder.verify(driverCommonUtils).switchToParentWindow();
+        mocksToVerifyInOrder.verify(driverBasicUtils).switchToParentWindow();
         mocksToVerifyInOrder.verify(driver).getPageSource();
-        mocksToVerifyInOrder.verify(driverCommonUtils).trySwitchToIframe(BY_IFRAME);
+        mocksToVerifyInOrder.verify(driverBasicUtils).trySwitchToIframe(BY_IFRAME);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

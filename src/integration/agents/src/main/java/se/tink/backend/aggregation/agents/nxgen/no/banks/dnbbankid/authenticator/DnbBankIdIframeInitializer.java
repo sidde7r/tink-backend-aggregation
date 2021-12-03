@@ -42,7 +42,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
     }
 
     private void openDnbWebsite(BankIdWebDriver webDriver) {
-        webDriver.getUrl(DnbConstants.Url.INIT_LOGIN);
+        webDriver.get(DnbConstants.Url.INIT_LOGIN);
     }
 
     private void waitForSSNInput(BankIdWebDriver webDriver) {

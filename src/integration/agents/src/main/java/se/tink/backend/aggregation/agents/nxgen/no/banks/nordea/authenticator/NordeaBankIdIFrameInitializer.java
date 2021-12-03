@@ -24,7 +24,7 @@ public class NordeaBankIdIFrameInitializer implements BankIdIframeInitializer {
     public BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver) {
         String initializeBankIdUrl = prepareUrlToInitializeBankId();
 
-        webDriver.getUrl(initializeBankIdUrl);
+        webDriver.get(initializeBankIdUrl);
         webDriver.clickButton(LOC_BANK_ID_METHOD_BUTTON);
 
         return BankIdIframeFirstWindow.ENTER_SSN;

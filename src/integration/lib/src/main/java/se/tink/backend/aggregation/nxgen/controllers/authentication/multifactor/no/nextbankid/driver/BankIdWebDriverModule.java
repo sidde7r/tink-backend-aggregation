@@ -7,10 +7,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.openqa.selenium.JavascriptExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.Sleeper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtilsImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcherImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
@@ -59,7 +61,8 @@ public class BankIdWebDriverModule extends AbstractModule {
         bind(WebDriverWrapper.class).toInstance(webDriver);
         bind(JavascriptExecutor.class).toInstance(javascriptExecutor);
 
-        bind(BankIdWebDriver.class).to(BankIdWebDriverImpl.class);
+        bind(WebDriverBasicUtils.class).to(WebDriverBasicUtilsImpl.class);
         bind(ElementsSearcher.class).to(ElementsSearcherImpl.class);
+        bind(BankIdWebDriver.class).to(BankIdWebDriverImpl.class);
     }
 }
