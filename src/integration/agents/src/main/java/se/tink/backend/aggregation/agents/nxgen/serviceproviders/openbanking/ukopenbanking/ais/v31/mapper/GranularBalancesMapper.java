@@ -32,11 +32,23 @@ public interface GranularBalancesMapper {
                                             balance ->
                                                     Pair.of(
                                                             balance.getAmount(),
-                                                            balance.getDateTime())));
+                                                            balance.getDateTime()),
+                                            GranularBalancesMapper
+                                                    ::getLatestBalanceWithSnapshotTime));
+
         } catch (Exception e) {
             log.warn("[GRANULAR BALANCES] Balance type mapping failed", e);
         }
 
         return granularBalances;
+    }
+
+    static Pair<ExactCurrencyAmount, Instant> getLatestBalanceWithSnapshotTime(
+            Pair<ExactCurrencyAmount, Instant> currentPair,
+            Pair<ExactCurrencyAmount, Instant> nextPair) {
+        if (nextPair.getRight().isAfter(currentPair.getRight())) {
+            return nextPair;
+        }
+        return currentPair;
     }
 }
