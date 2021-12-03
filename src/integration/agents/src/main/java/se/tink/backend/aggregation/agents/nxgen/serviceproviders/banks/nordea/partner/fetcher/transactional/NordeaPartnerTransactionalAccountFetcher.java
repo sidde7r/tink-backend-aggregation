@@ -6,13 +6,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerMarketUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.NordeaPartnerAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.model.NordeaPartnerTransactionalPaginatorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc.AccountTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -22,7 +25,8 @@ public class NordeaPartnerTransactionalAccountFetcher
 
     private final NordeaPartnerApiClient apiClient;
     private final NordeaPartnerAccountMapper accountMapper;
-    private final LocalDate dateLimit;
+    private final AgentComponentProvider componentProvider;
+    private final CredentialsRequest request;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -32,6 +36,10 @@ public class NordeaPartnerTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
+
+        final LocalDate dateLimit =
+                NordeaPartnerMarketUtil.getPaginationStartDate(account, request, componentProvider);
+
         if (apiClient.isUserPresent()) {
             try {
                 final AccountTransactionsResponse response =
