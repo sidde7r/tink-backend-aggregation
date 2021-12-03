@@ -10,4 +10,8 @@ public class PaymentAuthorizationFailedByUserException extends PaymentAuthorizat
             ErrorEntity errorEntity, InternalStatus internalStatus) {
         super(errorEntity, MESSAGE, internalStatus);
     }
+
+    public PaymentAuthorizationFailedByUserException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

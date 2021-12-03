@@ -18,4 +18,12 @@ public class PaymentAuthorizationTimeOutException extends PaymentAuthorizationEx
             ErrorEntity errorEntity, InternalStatus internalStatus) {
         super(errorEntity, MESSAGE, internalStatus);
     }
+
+    public PaymentAuthorizationTimeOutException(String message, Throwable cause) {
+        super(message, InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT, cause);
+    }
+
+    public PaymentAuthorizationTimeOutException(Throwable cause) {
+        super(MESSAGE, InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT, cause);
+    }
 }

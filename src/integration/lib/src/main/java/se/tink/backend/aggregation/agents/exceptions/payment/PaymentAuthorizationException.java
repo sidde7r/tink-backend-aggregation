@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
@@ -24,6 +23,10 @@ public class PaymentAuthorizationException extends PaymentException {
         super(DEFAULT_MESSAGE, internalStatus);
     }
 
+    public PaymentAuthorizationException(Throwable cause) {
+        super(DEFAULT_MESSAGE, cause);
+    }
+
     public PaymentAuthorizationException(
             ErrorEntity errorEntity, String message, InternalStatus internalStatus) {
         super(message, internalStatus);
@@ -35,7 +38,7 @@ public class PaymentAuthorizationException extends PaymentException {
     }
 
     public PaymentAuthorizationException(
-            String message, InternalStatus internalStatus, AuthenticationException cause) {
+            String message, InternalStatus internalStatus, Throwable cause) {
         super(message, internalStatus, cause);
     }
 }

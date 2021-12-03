@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentControllerAgentExceptionMapper.PaymentControllerAgentExceptionMapperContext;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerAgentExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerAgentExceptionMapper.PaymentControllerAgentExceptionMapperContext;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerOldExceptionMapper;
 
 public class PaymentController {
     private final PaymentExecutor paymentExecutor;
@@ -10,7 +14,7 @@ public class PaymentController {
     private final PaymentControllerAgentExceptionMapper exceptionHandler;
 
     public PaymentController(PaymentExecutor paymentExecutor) {
-        this(paymentExecutor, null, null);
+        this(paymentExecutor, null);
     }
 
     public PaymentController(
@@ -31,10 +35,14 @@ public class PaymentController {
         try {
             return paymentExecutor.create(paymentRequest);
         } catch (AgentException agentException) {
-            throw exceptionHandler
-                    .mapToPaymentException(
-                            agentException, PaymentControllerAgentExceptionMapperContext.CREATE)
-                    .orElse(agentException);
+            Optional<PaymentException> paymentException =
+                    exceptionHandler.tryToMapToPaymentException(
+                            agentException, PaymentControllerAgentExceptionMapperContext.CREATE);
+            if (paymentException.isPresent()) {
+                throw paymentException.get();
+            } else {
+                throw agentException;
+            }
         }
     }
 
@@ -42,10 +50,14 @@ public class PaymentController {
         try {
             return paymentExecutor.sign(paymentMultiStepRequest);
         } catch (AgentException agentException) {
-            throw exceptionHandler
-                    .mapToPaymentException(
-                            agentException, PaymentControllerAgentExceptionMapperContext.SIGN)
-                    .orElse(agentException);
+            Optional<PaymentException> paymentException =
+                    exceptionHandler.tryToMapToPaymentException(
+                            agentException, PaymentControllerAgentExceptionMapperContext.SIGN);
+            if (paymentException.isPresent()) {
+                throw paymentException.get();
+            } else {
+                throw agentException;
+            }
         }
     }
 
