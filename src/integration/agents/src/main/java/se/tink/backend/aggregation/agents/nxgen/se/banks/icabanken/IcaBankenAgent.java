@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.PAYMENTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
 import java.util.List;
@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
@@ -44,7 +45,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.filter.Connec
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.filter.IcaBankenFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;

@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.Uninterruptibles;

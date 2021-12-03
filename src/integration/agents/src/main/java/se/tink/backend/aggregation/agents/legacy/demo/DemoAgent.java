@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.demo;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.PAYMENTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

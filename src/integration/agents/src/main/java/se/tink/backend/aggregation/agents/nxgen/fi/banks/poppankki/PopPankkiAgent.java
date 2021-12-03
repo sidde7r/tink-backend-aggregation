@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
 
 import com.google.inject.Inject;
 import java.util.Collections;

@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.MAX_RETRIES;
 import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_MAX_RETRIES;
 import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_RETRY_MS_MAX;
 import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RATE_LIMIT_RETRY_MS_MIN;
 import static se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;

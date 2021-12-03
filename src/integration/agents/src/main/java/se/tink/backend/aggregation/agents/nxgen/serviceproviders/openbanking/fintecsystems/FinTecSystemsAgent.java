@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems;
 
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.PisCapability.SEPA_CREDIT_TRANSFER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants.REDIRECT_URL;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.SEPA_CREDIT_TRANSFER;
 
 import com.google.inject.Inject;
 import java.util.Optional;

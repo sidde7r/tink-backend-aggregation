@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.other;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
