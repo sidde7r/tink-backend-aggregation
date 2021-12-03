@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Test;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.libraries.enums.MarketCode;
 
 public class CapabilitiesExtractorTest {

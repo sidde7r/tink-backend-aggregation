@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.capability.CapabilityExecutor;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 
 @Getter
 @AllArgsConstructor

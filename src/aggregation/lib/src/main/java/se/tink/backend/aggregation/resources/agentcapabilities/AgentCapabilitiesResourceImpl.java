@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilitiesService;
+import se.tink.backend.aggregation.agents.agentcapabilities.Capability;
 import se.tink.backend.aggregation.api.AgentCapabilitiesResource;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 
 public class AgentCapabilitiesResourceImpl implements AgentCapabilitiesResource {
 
