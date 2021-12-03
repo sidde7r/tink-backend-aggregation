@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -226,7 +227,7 @@ public class BelfiusAutoAuthenticationTest {
                                 new FakeLogMasker(),
                                 LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
-        new BelfiusClientConfigurator()
+        new BelfiusClientConfigurator(new ConstantLocalDateTimeSource())
                 .configure(
                         tinkHttpClient,
                         persistentStorage,

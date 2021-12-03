@@ -8,6 +8,7 @@ import junitparams.Parameters;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 
 @RunWith(JUnitParamsRunner.class)
 public class SessionExpiryDateComparatorTest {
@@ -16,7 +17,9 @@ public class SessionExpiryDateComparatorTest {
     @Parameters
     public void shouldCompareSessionExpiryDate(Date sessionExpiryDate, String expected) {
         // when
-        String result = SessionExpiryDateComparator.getSessionExpiryInfo(sessionExpiryDate);
+        String result =
+                new SessionExpiryDateComparator(new ActualLocalDateTimeSource())
+                        .getSessionExpiryInfo(sessionExpiryDate);
 
         // then
         assertThat(result).isEqualTo(expected);

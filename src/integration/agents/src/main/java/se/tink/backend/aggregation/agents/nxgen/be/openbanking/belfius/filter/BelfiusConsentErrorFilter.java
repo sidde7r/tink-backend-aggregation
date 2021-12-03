@@ -17,6 +17,7 @@ public class BelfiusConsentErrorFilter extends Filter {
 
     private final PersistentStorage persistentStorage;
     private final Date sessionExpiryDate;
+    private final SessionExpiryDateComparator sessionExpiryDateComparator;
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {
@@ -34,7 +35,7 @@ public class BelfiusConsentErrorFilter extends Filter {
                     NO_ACTIVE_CONSENT,
                     httpResponse.getBody(String.class),
                     sessionExpiryDate,
-                    SessionExpiryDateComparator.getSessionExpiryInfo(sessionExpiryDate));
+                    sessionExpiryDateComparator.getSessionExpiryInfo(sessionExpiryDate));
             persistentStorage.clear();
             throw SessionError.SESSION_EXPIRED.exception(
                     "User\\System has deactivated the consent");

@@ -146,7 +146,7 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
 
     private BelfiusApiClient getConfiguredBelfiusApiClient(
             AgentConfiguration<BelfiusConfiguration> agentConfiguration) {
-        new BelfiusClientConfigurator()
+        new BelfiusClientConfigurator(new ConstantLocalDateTimeSource())
                 .configure(
                         client,
                         persistentStorage,

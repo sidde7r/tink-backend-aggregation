@@ -1,20 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter;
 
 import java.util.Date;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class SessionExpiryDateComparator {
+@RequiredArgsConstructor
+class SessionExpiryDateComparator {
 
-    static String getSessionExpiryInfo(Date sessionExpiryDate) {
+    private final LocalDateTimeSource localDateTimeSource;
+
+    String getSessionExpiryInfo(Date sessionExpiryDate) {
         if (sessionExpiryDate == null) {
             return null;
         }
         return String.valueOf(isSessionExpiredPrematurely(sessionExpiryDate));
     }
 
-    private static boolean isSessionExpiredPrematurely(Date sessionExpiryDate) {
-        return new Date(System.currentTimeMillis()).before(sessionExpiryDate);
+    private boolean isSessionExpiredPrematurely(Date sessionExpiryDate) {
+        return localDateTimeSource.getSystemCurrentTimeMillis() < sessionExpiryDate.getTime();
     }
 }

@@ -43,7 +43,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         this.apiClient =
                 new BelfiusApiClient(
                         client, agentConfiguration, componentProvider.getRandomValueGenerator());
-        new BelfiusClientConfigurator()
+        new BelfiusClientConfigurator(componentProvider.getLocalDateTimeSource())
                 .configure(
                         client,
                         persistentStorage,

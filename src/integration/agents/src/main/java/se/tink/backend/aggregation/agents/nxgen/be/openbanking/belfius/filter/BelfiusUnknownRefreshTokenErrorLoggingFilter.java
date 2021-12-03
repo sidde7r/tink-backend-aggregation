@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 public class BelfiusUnknownRefreshTokenErrorLoggingFilter extends Filter {
 
     private final Date sessionExpiryDate;
+    private final SessionExpiryDateComparator sessionExpiryDateComparator;
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {
@@ -34,7 +35,7 @@ public class BelfiusUnknownRefreshTokenErrorLoggingFilter extends Filter {
                     REFRESH_TOKEN_ERROR,
                     httpResponse.getBody(String.class),
                     sessionExpiryDate,
-                    SessionExpiryDateComparator.getSessionExpiryInfo(sessionExpiryDate));
+                    sessionExpiryDateComparator.getSessionExpiryInfo(sessionExpiryDate));
         }
     }
 

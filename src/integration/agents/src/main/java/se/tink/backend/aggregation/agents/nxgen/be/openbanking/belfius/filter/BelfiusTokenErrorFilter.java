@@ -24,6 +24,7 @@ public class BelfiusTokenErrorFilter extends Filter {
 
     private final PersistentStorage persistentStorage;
     private final Date sessionExpiryDate;
+    private final SessionExpiryDateComparator sessionExpiryDateComparator;
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {
@@ -42,7 +43,7 @@ public class BelfiusTokenErrorFilter extends Filter {
                     INVALID_TOKEN,
                     httpResponse.getBody(ErrorResponse.class),
                     sessionExpiryDate,
-                    SessionExpiryDateComparator.getSessionExpiryInfo(sessionExpiryDate));
+                    sessionExpiryDateComparator.getSessionExpiryInfo(sessionExpiryDate));
             persistentStorage.clear();
             throw SessionError.SESSION_EXPIRED.exception(
                     httpResponse.getBody(ErrorResponse.class).getErrorDescription());

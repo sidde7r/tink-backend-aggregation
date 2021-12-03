@@ -72,7 +72,7 @@ public class BelfiusApiClientFiltersTest {
     @Before
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        new BelfiusClientConfigurator()
+        new BelfiusClientConfigurator(new ConstantLocalDateTimeSource())
                 .configure(
                         client,
                         persistentStorage,
