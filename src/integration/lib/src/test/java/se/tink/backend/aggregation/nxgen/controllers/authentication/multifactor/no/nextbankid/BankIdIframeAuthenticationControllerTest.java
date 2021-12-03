@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
@@ -29,7 +29,7 @@ public class BankIdIframeAuthenticationControllerTest {
     /*
     Mocks
      */
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
     private AgentTemporaryStorage agentTemporaryStorage;
     private ProxyManager proxyManager;
     private BankIdAuthenticationState authenticationState;
@@ -48,7 +48,7 @@ public class BankIdIframeAuthenticationControllerTest {
 
     @Before
     public void setup() {
-        webDriver = mock(BankIdWebDriver.class);
+        webDriver = mock(WebDriverService.class);
         when(webDriver.getDriverId()).thenReturn("SAMPLE_DRIVER_ID");
         agentTemporaryStorage = mock(AgentTemporaryStorage.class);
         proxyManager = mock(ProxyManager.class);

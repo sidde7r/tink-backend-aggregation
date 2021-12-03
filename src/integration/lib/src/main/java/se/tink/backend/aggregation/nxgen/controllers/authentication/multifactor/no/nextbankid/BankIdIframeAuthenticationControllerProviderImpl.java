@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverModule;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverModuleComponents;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverModule;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverModuleComponents;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeModule;
@@ -24,9 +24,9 @@ public class BankIdIframeAuthenticationControllerProviderImpl
             UserAvailability userAvailability,
             AgentTemporaryStorage agentTemporaryStorage) {
 
-        BankIdWebDriverModuleComponents webDriverModuleComponents =
-                BankIdWebDriverModule.initializeModule(agentTemporaryStorage);
-        BankIdWebDriver webDriver = webDriverModuleComponents.getWebDriver();
+        WebDriverModuleComponents webDriverModuleComponents =
+                WebDriverModule.initializeModule(agentTemporaryStorage);
+        WebDriverService webDriver = webDriverModuleComponents.getWebDriver();
         ProxyManager proxyManager = webDriverModuleComponents.getProxyManager();
 
         BankIdAuthenticationState authenticationState = new BankIdAuthenticationState();

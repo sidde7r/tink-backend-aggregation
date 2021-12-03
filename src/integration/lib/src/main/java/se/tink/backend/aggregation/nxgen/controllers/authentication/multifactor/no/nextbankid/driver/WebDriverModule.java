@@ -19,7 +19,7 @@ import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.ProxyInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
-public class BankIdWebDriverModule extends AbstractModule {
+public class WebDriverModule extends AbstractModule {
 
     /*
     Dependencies for module components
@@ -29,7 +29,7 @@ public class BankIdWebDriverModule extends AbstractModule {
     private final WebDriverWrapper webDriver;
     private final JavascriptExecutor javascriptExecutor;
 
-    private BankIdWebDriverModule(AgentTemporaryStorage agentTemporaryStorage) {
+    private WebDriverModule(AgentTemporaryStorage agentTemporaryStorage) {
         sleeper = new Sleeper();
         proxy = ProxyInitializer.startProxyServer();
         webDriver =
@@ -40,18 +40,18 @@ public class BankIdWebDriverModule extends AbstractModule {
     }
 
     /**
-     * This is the only correct way of initializing {@link BankIdWebDriver} with all dependencies it
-     * requires.
+     * This is the only correct way of initializing {@link WebDriverService} with all dependencies
+     * it requires.
      */
-    public static BankIdWebDriverModuleComponents initializeModule(
+    public static WebDriverModuleComponents initializeModule(
             AgentTemporaryStorage agentTemporaryStorage) {
-        BankIdWebDriverModule driverModule = new BankIdWebDriverModule(agentTemporaryStorage);
+        WebDriverModule driverModule = new WebDriverModule(agentTemporaryStorage);
         Injector injector = Guice.createInjector(driverModule);
 
-        BankIdWebDriver bankIdWebDriver = injector.getInstance(BankIdWebDriver.class);
+        WebDriverService webDriverService = injector.getInstance(WebDriverService.class);
         ProxyManager proxyManager = injector.getInstance(ProxyManager.class);
 
-        return new BankIdWebDriverModuleComponents(bankIdWebDriver, proxyManager);
+        return new WebDriverModuleComponents(webDriverService, proxyManager);
     }
 
     @Override
@@ -63,6 +63,6 @@ public class BankIdWebDriverModule extends AbstractModule {
 
         bind(WebDriverBasicUtils.class).to(WebDriverBasicUtilsImpl.class);
         bind(ElementsSearcher.class).to(ElementsSearcherImpl.class);
-        bind(BankIdWebDriver.class).to(BankIdWebDriverImpl.class);
+        bind(WebDriverService.class).to(WebDriverServiceImpl.class);
     }
 }

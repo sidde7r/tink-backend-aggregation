@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverConstants;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -31,7 +31,7 @@ public class ElementsSearchQuery {
 
         private final List<ElementLocator> elements = new ArrayList<>();
         private Integer searchForSeconds =
-                BankIdConstants.DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS;
+                WebDriverConstants.DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS;
         private boolean searchOnlyOnce;
 
         public ElementsSearchQueryBuilder searchFor(ElementLocator... locators) {

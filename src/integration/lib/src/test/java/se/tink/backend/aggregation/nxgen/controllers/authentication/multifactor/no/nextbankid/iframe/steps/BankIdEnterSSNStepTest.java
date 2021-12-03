@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
@@ -26,7 +26,7 @@ public class BankIdEnterSSNStepTest {
     /*
     Mocks
      */
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
     private BankIdScreensManager screensManager;
 
     private InOrder mocksToVerifyInOrder;
@@ -38,7 +38,7 @@ public class BankIdEnterSSNStepTest {
 
     @Before
     public void setup() {
-        webDriver = mock(BankIdWebDriver.class);
+        webDriver = mock(WebDriverService.class);
         screensManager = mock(BankIdScreensManager.class);
 
         mocksToVerifyInOrder = inOrder(webDriver, screensManager);

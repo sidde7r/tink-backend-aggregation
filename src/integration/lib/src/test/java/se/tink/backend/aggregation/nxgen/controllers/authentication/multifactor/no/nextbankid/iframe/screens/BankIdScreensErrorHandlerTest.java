@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
@@ -37,7 +37,7 @@ public class BankIdScreensErrorHandlerTest {
     /*
     Mocks
      */
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
 
     /*
     Real
@@ -46,7 +46,7 @@ public class BankIdScreensErrorHandlerTest {
 
     @Before
     public void setup() {
-        webDriver = mock(BankIdWebDriver.class);
+        webDriver = mock(WebDriverService.class);
 
         errorHandler = new BankIdScreensErrorHandler(webDriver);
     }

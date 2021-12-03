@@ -12,15 +12,15 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 
-public class BankIdWebDriverModuleIntegrationTest {
+public class WebDriverServiceModuleIntegrationTest {
 
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
     private ProxyManager proxyManager;
 
     @Before
     public void setup() {
-        BankIdWebDriverModuleComponents webDriverModuleComponents =
-                BankIdWebDriverModule.initializeModule(Mockito.mock(AgentTemporaryStorage.class));
+        WebDriverModuleComponents webDriverModuleComponents =
+                WebDriverModule.initializeModule(Mockito.mock(AgentTemporaryStorage.class));
         webDriver = webDriverModuleComponents.getWebDriver();
         proxyManager = webDriverModuleComponents.getProxyManager();
     }

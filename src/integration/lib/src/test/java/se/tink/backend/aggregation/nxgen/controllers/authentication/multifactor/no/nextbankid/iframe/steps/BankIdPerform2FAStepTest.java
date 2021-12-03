@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
@@ -35,7 +35,7 @@ public class BankIdPerform2FAStepTest {
     /*
     Mocks
      */
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
     private BankIdScreensManager screensManager;
     private BankIdAskUserToChoose2FAMethodNameStep choose2FAStep;
     private BankIdAuthWithOneTimeCodeStep authWithOneTimeCodeStep;
@@ -51,7 +51,7 @@ public class BankIdPerform2FAStepTest {
 
     @Before
     public void setup() {
-        webDriver = mock(BankIdWebDriver.class);
+        webDriver = mock(WebDriverService.class);
         screensManager = mock(BankIdScreensManager.class);
         choose2FAStep = mock(BankIdAskUserToChoose2FAMethodNameStep.class);
         authWithOneTimeCodeStep = mock(BankIdAuthWithOneTimeCodeStep.class);

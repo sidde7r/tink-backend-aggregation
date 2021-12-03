@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
@@ -36,7 +36,7 @@ public class BankIdVerifyAuthenticationStepTest {
     /*
     Mocks
      */
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
     private BankIdScreensManager screensManager;
 
     private InOrder mocksToVerifyInOrder;
@@ -48,7 +48,7 @@ public class BankIdVerifyAuthenticationStepTest {
 
     @Before
     public void setup() {
-        webDriver = mock(BankIdWebDriver.class);
+        webDriver = mock(WebDriverService.class);
         screensManager = mock(BankIdScreensManager.class);
 
         mocksToVerifyInOrder = inOrder(webDriver, screensManager);

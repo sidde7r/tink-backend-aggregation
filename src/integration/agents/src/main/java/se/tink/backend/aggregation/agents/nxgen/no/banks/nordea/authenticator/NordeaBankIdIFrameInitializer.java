@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.Authentic
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 
@@ -21,7 +21,7 @@ public class NordeaBankIdIFrameInitializer implements BankIdIframeInitializer {
     private final RandomValueGenerator randomValueGenerator;
 
     @Override
-    public BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver) {
+    public BankIdIframeFirstWindow initializeIframe(WebDriverService webDriver) {
         String initializeBankIdUrl = prepareUrlToInitializeBankId();
 
         webDriver.get(initializeBankIdUrl);

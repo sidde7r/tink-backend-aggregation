@@ -14,6 +14,8 @@ public class WebDriverConstants {
 
     public static final LogTag LOG_TAG = LogTag.from("[WebDriver]");
 
+    public static final int DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS = 10;
+
     public static final By EMPTY_BY =
             new By() {
                 @Override

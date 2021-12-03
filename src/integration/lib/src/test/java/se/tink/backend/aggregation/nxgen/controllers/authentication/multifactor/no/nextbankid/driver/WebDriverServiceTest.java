@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @RunWith(JUnitParamsRunner.class)
-public class BankIdWebDriverTest {
+public class WebDriverServiceTest {
 
     /*
     Mocks
@@ -41,7 +41,7 @@ public class BankIdWebDriverTest {
     /*
     Real
      */
-    private BankIdWebDriver bankIdDriver;
+    private WebDriverService bankIdDriver;
 
     @Before
     public void setup() {
@@ -53,7 +53,7 @@ public class BankIdWebDriverTest {
 
         mocksToVerifyInOrder = inOrder(driver, driverBasicUtils, elementsSearcher, sleeper);
 
-        bankIdDriver = new BankIdWebDriverImpl(driver, driverBasicUtils, elementsSearcher);
+        bankIdDriver = new WebDriverServiceImpl(driver, driverBasicUtils, elementsSearcher);
     }
 
     @Test

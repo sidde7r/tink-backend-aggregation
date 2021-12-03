@@ -25,7 +25,7 @@ import org.mockito.InOrder;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
@@ -40,7 +40,7 @@ public class BankIdAskUserToChoose2FAMethodNameStepTest {
     /*
     Mocks
      */
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
     private BankIdScreensManager screensManager;
     private Catalog catalog;
     private SupplementalInformationController supplementalInformationController;
@@ -54,7 +54,7 @@ public class BankIdAskUserToChoose2FAMethodNameStepTest {
 
     @Before
     public void setup() {
-        webDriver = mock(BankIdWebDriver.class);
+        webDriver = mock(WebDriverService.class);
         screensManager = mock(BankIdScreensManager.class);
         catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("anything not empty");

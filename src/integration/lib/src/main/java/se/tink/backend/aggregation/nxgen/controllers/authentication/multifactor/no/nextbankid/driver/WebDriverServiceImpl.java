@@ -1,15 +1,13 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
-
 import com.google.inject.Inject;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
@@ -18,23 +16,22 @@ import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
-public class BankIdWebDriverImpl implements BankIdWebDriver {
+public class WebDriverServiceImpl implements WebDriverService {
 
     @Delegate private final WebDriverWrapper driver;
     @Delegate private final WebDriverBasicUtils driverBasicUtils;
     @Delegate private final ElementsSearcher elementsSearcher;
 
     @Override
-    public String getFullPageSourceLog() {
+    public String getFullPageSourceLog(By iframeSelector) {
         driverBasicUtils.switchToParentWindow();
         String mainPageSource = driver.getPageSource();
 
-        boolean switchedToIframe =
-                driverBasicUtils.trySwitchToIframe(BankIdConstants.HtmlSelectors.BY_IFRAME);
+        boolean switchedToIframe = driverBasicUtils.trySwitchToIframe(iframeSelector);
         String iframeSource = switchedToIframe ? driver.getPageSource() : null;
 
         return String.format(
-                "Main page source:%n" + "%s" + "%nBankID iframe source:%n" + "%s",
+                "Main page source:%n" + "%s" + "%nIframe source:%n" + "%s",
                 mainPageSource, iframeSource);
     }
 
@@ -56,7 +53,7 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
             style recalculations that cause element to be recreated.
             If such thing occurs, we should try to click button one more time.
              */
-            log.warn("{} Stale button element reference", BANK_ID_LOG_PREFIX);
+            log.warn("{} Stale button element reference", WebDriverConstants.LOG_TAG);
             clickButtonInternal(locator);
         }
     }

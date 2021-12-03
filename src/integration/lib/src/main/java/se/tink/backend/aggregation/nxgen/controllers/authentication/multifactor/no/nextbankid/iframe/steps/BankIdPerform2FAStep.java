@@ -8,7 +8,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankId2FAMethod;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class BankIdPerform2FAStep {
 
-    private final BankIdWebDriver webDriver;
+    private final WebDriverService webDriver;
     private final BankIdScreensManager screensManager;
 
     private final BankIdAskUserToChoose2FAMethodNameStep askUserToChoose2FAMethodNameStep;

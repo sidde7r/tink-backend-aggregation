@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver;
 
+import org.openqa.selenium.By;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.basicutils.WebDriverBasicUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcher;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
-public interface BankIdWebDriver extends WebDriverWrapper, WebDriverBasicUtils, ElementsSearcher {
+public interface WebDriverService extends WebDriverWrapper, WebDriverBasicUtils, ElementsSearcher {
 
-    String getFullPageSourceLog();
+    String getFullPageSourceLog(By iframeSelector);
 
     void clickButton(ElementLocator selector);
 

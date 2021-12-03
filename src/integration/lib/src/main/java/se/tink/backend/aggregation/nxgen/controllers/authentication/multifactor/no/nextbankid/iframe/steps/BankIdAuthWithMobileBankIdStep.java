@@ -14,7 +14,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
@@ -26,7 +26,7 @@ import se.tink.libraries.i18n.Catalog;
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class BankIdAuthWithMobileBankIdStep {
 
-    private final BankIdWebDriver webDriver;
+    private final WebDriverService webDriver;
     private final BankIdScreensManager screensManager;
 
     private final Catalog catalog;

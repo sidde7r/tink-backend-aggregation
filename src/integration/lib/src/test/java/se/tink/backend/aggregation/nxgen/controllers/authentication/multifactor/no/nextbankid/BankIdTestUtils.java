@@ -18,7 +18,7 @@ import org.junit.Ignore;
 import org.mockito.exceptions.base.MockitoException;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
@@ -73,18 +73,18 @@ public class BankIdTestUtils {
         }
     }
 
-    public static void mockLocatorExists(ElementLocator locator, BankIdWebDriver driver) {
+    public static void mockLocatorExists(ElementLocator locator, WebDriverService driver) {
         WebElement element = mockWebElement();
         mockLocatorExists(locator, element, driver);
     }
 
     public static void mockLocatorExists(
-            ElementLocator locator, WebElement elementForLocator, BankIdWebDriver driver) {
+            ElementLocator locator, WebElement elementForLocator, WebDriverService driver) {
         mockLocatorExists(locator, singletonList(elementForLocator), driver);
     }
 
     public static void mockLocatorExists(
-            ElementLocator locator, List<WebElement> elementsForLocator, BankIdWebDriver driver) {
+            ElementLocator locator, List<WebElement> elementsForLocator, WebDriverService driver) {
         doReturn(ElementsSearchResult.of(locator, elementsForLocator))
                 .when(driver)
                 .searchForFirstMatchingLocator(
@@ -95,7 +95,7 @@ public class BankIdTestUtils {
                                 }));
     }
 
-    public static void mockLocatorDoesNotExists(ElementLocator locator, BankIdWebDriver driver) {
+    public static void mockLocatorDoesNotExists(ElementLocator locator, WebDriverService driver) {
         doReturn(ElementsSearchResult.empty())
                 .when(driver)
                 .searchForFirstMatchingLocator(

@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @Getter
 @RequiredArgsConstructor
-public class BankIdWebDriverModuleComponents {
-    private final BankIdWebDriver webDriver;
+public class WebDriverModuleComponents {
+    private final WebDriverService webDriver;
     private final ProxyManager proxyManager;
 }

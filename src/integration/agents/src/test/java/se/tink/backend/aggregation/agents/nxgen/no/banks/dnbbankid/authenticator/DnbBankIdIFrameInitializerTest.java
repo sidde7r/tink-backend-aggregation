@@ -38,7 +38,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 
 @RunWith(JUnitParamsRunner.class)
@@ -49,7 +49,7 @@ public class DnbBankIdIFrameInitializerTest {
     /*
     Mocks
      */
-    private BankIdWebDriver driver;
+    private WebDriverService driver;
     private InOrder mocksToVerifyInOrder;
 
     /*
@@ -59,7 +59,7 @@ public class DnbBankIdIFrameInitializerTest {
 
     @Before
     public void setup() {
-        driver = mock(BankIdWebDriver.class);
+        driver = mock(WebDriverService.class);
         Credentials credentials = mock(Credentials.class);
         when(credentials.getField(Field.Key.USERNAME)).thenReturn(SAMPLE_SSN);
 

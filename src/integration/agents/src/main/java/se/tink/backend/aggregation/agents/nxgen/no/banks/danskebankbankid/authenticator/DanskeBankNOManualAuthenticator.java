@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -40,7 +40,7 @@ public class DanskeBankNOManualAuthenticator
     private final DanskeBankNOAuthInitializer authInitializer;
 
     @Override
-    public BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver) {
+    public BankIdIframeFirstWindow initializeIframe(WebDriverService webDriver) {
         String username = credentials.getField(Field.Key.USERNAME);
         String serviceCode = credentials.getField(Field.Key.PASSWORD);
         String bankIdPassword = credentials.getField(Field.Key.BANKID_PASSWORD);

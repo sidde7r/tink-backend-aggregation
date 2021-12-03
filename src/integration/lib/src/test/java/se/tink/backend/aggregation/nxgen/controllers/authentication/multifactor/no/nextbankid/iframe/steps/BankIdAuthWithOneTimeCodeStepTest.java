@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
@@ -46,7 +46,7 @@ public class BankIdAuthWithOneTimeCodeStepTest {
     /*
     Mocks
      */
-    private BankIdWebDriver driver;
+    private WebDriverService driver;
     private BankIdScreensManager screensManager;
     private BankIdAuthenticationState authenticationState;
     private Catalog catalog;
@@ -61,7 +61,7 @@ public class BankIdAuthWithOneTimeCodeStepTest {
 
     @Before
     public void setup() {
-        driver = mock(BankIdWebDriver.class);
+        driver = mock(WebDriverService.class);
         screensManager = mock(BankIdScreensManager.class);
         authenticationState = mock(BankIdAuthenticationState.class);
 

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
@@ -58,7 +58,7 @@ public class BankIdIframeAuthenticationController
 
     private static final int WAIT_FOR_PROXY_RESPONSE_IN_SECONDS = 10;
 
-    private final BankIdWebDriver webDriver;
+    private final WebDriverService webDriver;
     private final AgentTemporaryStorage agentTemporaryStorage;
     private final ProxyManager proxyManager;
     private final BankIdAuthenticationState authenticationState;
@@ -99,7 +99,7 @@ public class BankIdIframeAuthenticationController
             log.error(
                     "{} BankID iframe authentication error: {}\n{}",
                     e.getMessage(),
-                    webDriver.getFullPageSourceLog(),
+                    webDriver.getFullPageSourceLog(BankIdConstants.HtmlSelectors.BY_IFRAME),
                     e);
             throw e;
 
