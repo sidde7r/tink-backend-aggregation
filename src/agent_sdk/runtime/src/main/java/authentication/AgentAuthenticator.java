@@ -8,7 +8,7 @@ import se.tink.agent.runtime.authentication.processes.oauth2_decoupled_app.Oauth
 import se.tink.agent.runtime.authentication.processes.thirdparty_app.ThirdPartyAppAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.username_password.UsernameAndPasswordAuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.sdk.environment.MultifactorAuthenticationState;
+import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.storage.Storage;
 
 public class AgentAuthenticator {

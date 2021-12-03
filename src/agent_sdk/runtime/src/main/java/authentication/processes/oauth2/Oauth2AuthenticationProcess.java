@@ -12,7 +12,7 @@ import se.tink.agent.sdk.authentication.capability.AuthenticateOauth2;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.environment.MultifactorAuthenticationState;
+import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 
 public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2Authenticator> {
     private final MultifactorAuthenticationState multifactorAuthenticationState;

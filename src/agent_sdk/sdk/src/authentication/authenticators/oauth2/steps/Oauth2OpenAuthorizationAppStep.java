@@ -4,7 +4,7 @@ import se.tink.agent.sdk.authentication.authenticators.oauth2.BuildAuthorization
 import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
-import se.tink.agent.sdk.environment.MultifactorAuthenticationState;
+import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.backend.aggregation.nxgen.http.url.URL;

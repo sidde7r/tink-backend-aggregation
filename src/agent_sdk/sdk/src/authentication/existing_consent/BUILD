@@ -11,7 +11,6 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/storage",
-        "//src/agent_sdk/sdk/src/environment",
         "//src/agent_sdk/sdk/src/operation",
     ],
     visibility = ["//visibility:public"],

@@ -1,6 +1,7 @@
-package se.tink.agent.sdk.environment;
+package se.tink.agent.runtime.operation;
 
 import com.google.common.collect.ImmutableList;
+import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionBuilder;
