@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
+import se.tink.integration.webdriver.service.WebDriverService;
 
 /**
  * BankID iframe can only be embedded on preregistered domains i.e. some bank's website address -

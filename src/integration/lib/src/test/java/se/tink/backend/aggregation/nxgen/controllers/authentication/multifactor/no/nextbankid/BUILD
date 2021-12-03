@@ -3,12 +3,6 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "nextbankid",
     srcs = glob(["**/*.java"]),
-    data = [
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/bankid/screenscraping/resources",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/no/nextbankid/driver/searchelements/resources",
-        "@chromedriver//file",
-        "@chromium//file",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -18,7 +12,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/no/nextbankid",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
-        "//third_party:io_netty_netty_all",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver/service",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",

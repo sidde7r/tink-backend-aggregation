@@ -23,10 +23,10 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementLocator;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdScreensManagerTest {

@@ -7,8 +7,8 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))

@@ -17,7 +17,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_SUBMIT_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_THIRD_PARTY_APP_SPINNER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverConstants.EMPTY_BY;
+import static se.tink.integration.webdriver.service.WebDriverConstants.EMPTY_BY;
 
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByCssSelector;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields.BankIdOneTimeCodeField;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankIdConstants {

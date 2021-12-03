@@ -38,8 +38,8 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 
 @RunWith(JUnitParamsRunner.class)
 public class DnbBankIdIFrameInitializerTest {

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NordeaNoConstants {

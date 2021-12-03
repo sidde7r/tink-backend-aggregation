@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
+import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 

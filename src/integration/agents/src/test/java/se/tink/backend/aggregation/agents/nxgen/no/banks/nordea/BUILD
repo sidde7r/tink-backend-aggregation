@@ -22,6 +22,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/no/nextbankid",
         "//src/integration/models",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver/service",
         "//src/libraries/cryptography/hash",
         "//src/libraries/encoding",
         "//src/libraries/serialization",

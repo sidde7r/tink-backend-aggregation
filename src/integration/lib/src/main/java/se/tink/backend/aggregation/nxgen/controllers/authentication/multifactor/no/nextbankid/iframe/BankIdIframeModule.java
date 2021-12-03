@@ -6,8 +6,8 @@ import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverService;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor
