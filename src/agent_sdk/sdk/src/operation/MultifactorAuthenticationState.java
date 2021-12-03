@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.environment;
+package se.tink.agent.sdk.operation;
 
 import com.google.common.collect.ImmutableList;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;

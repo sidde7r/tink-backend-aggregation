@@ -9,6 +9,8 @@ import se.tink.agent.agents.example.fetcher.ExampleSavingsTransactionsFetcher;
 import se.tink.agent.sdk.annotations.Agent;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Authenticator;
 import se.tink.agent.sdk.authentication.capability.AuthenticateOauth2;
+import se.tink.agent.sdk.environment.Operation;
+import se.tink.agent.sdk.environment.Utilities;
 import se.tink.agent.sdk.fetching.accounts.CheckingAccountsFetcher;
 import se.tink.agent.sdk.fetching.accounts.SavingsAccountsFetcher;
 import se.tink.agent.sdk.fetching.capability.FetchCheckingAccounts;
@@ -18,8 +20,6 @@ import se.tink.agent.sdk.fetching.capability.FetchSavingsAccounts;
 import se.tink.agent.sdk.fetching.capability.FetchSavingsTransactions;
 import se.tink.agent.sdk.fetching.identity_data.IdentityDataFetcher;
 import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
-import se.tink.agent.sdk.operation.Operation;
-import se.tink.agent.sdk.utils.Utilities;
 
 @Agent
 public class ExampleAgent

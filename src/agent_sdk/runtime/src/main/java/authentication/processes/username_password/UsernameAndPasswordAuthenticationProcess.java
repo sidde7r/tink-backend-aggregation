@@ -3,7 +3,7 @@ package se.tink.agent.runtime.authentication.processes.username_password;
 import java.util.Optional;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.sdk.authentication.AuthenticationFlow;
+import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.username_password.UsernameAndPasswordAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.username_password.steps.UsernameAndPasswordStep;
 import se.tink.agent.sdk.authentication.capability.AuthenticateUsernameAndPassword;

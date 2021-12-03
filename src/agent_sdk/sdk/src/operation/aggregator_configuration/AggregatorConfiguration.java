@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.environment.aggregator_configuration;
+package se.tink.agent.sdk.operation.aggregator_configuration;
 
 import java.util.Optional;
 

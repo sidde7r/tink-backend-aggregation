@@ -11,6 +11,7 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/models/field",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
     ],
     visibility = ["//visibility:public"],
 )

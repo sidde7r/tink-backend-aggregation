@@ -5,7 +5,10 @@ java_library_with_sources(
     intdeps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc:field",
     ],
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
+    visibility = [
+        "//src/agent_sdk/runtime:__subpackages__",
+        "//src/agent_sdk/sdk:__subpackages__",
+    ],
     exports = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc:field",
     ],
