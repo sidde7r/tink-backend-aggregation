@@ -22,11 +22,12 @@ import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -75,8 +76,7 @@ public class BelfiusManualAuthenticationTest {
     @Test
     @Parameters(method = "callbackDataWithCorrespondingErrors")
     public void shouldThrowProperExceptionWhenNoCallbackCodeIsReturned(
-            Map<String, String> callbackData, Class<RuntimeException> exceptionClass)
-            throws IOException {
+            Map<String, String> callbackData, Class<RuntimeException> exceptionClass) {
         // given
         bankReturnsConsentResponse();
 
@@ -94,7 +94,7 @@ public class BelfiusManualAuthenticationTest {
 
     @Test
     @Parameters({"500", "501", "502", "503", "555"})
-    public void shouldThrowProperExceptionWhenBankRespondsWith(int statusCode) throws IOException {
+    public void shouldThrowProperExceptionWhenBankRespondsWith(int statusCode) {
         // given
         SupplementalInformationHelper supplementalInformationHelper =
                 new MockSupplementalInformationHelper(validCallbackData());
@@ -144,7 +144,7 @@ public class BelfiusManualAuthenticationTest {
     }
 
     private AutoAuthenticationController authenticationController(
-            SupplementalInformationHelper supplementalInformationHelper) throws IOException {
+            SupplementalInformationHelper supplementalInformationHelper) {
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 oAuth2AuthenticationController(supplementalInformationHelper);
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
@@ -159,7 +159,7 @@ public class BelfiusManualAuthenticationTest {
     }
 
     private OAuth2AuthenticationController oAuth2AuthenticationController(
-            SupplementalInformationHelper supplementalInformationHelper) throws IOException {
+            SupplementalInformationHelper supplementalInformationHelper) {
         return new OAuth2AuthenticationController(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -206,7 +206,13 @@ public class BelfiusManualAuthenticationTest {
                                 new FakeLogMasker(),
                                 LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
-        new BelfiusClientConfigurator().configure(tinkHttpClient, persistentStorage, 1, 1);
+        new BelfiusClientConfigurator(new ConstantLocalDateTimeSource())
+                .configure(
+                        tinkHttpClient,
+                        persistentStorage,
+                        1,
+                        1,
+                        belfiusTestFixture.sessionExpiryDate());
         tinkHttpClient.addFilter(executionFilter);
         return tinkHttpClient;
     }

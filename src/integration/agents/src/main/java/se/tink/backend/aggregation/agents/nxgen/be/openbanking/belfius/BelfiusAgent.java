@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.BelfiusTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -42,8 +43,13 @@ public final class BelfiusAgent extends NextGenerationAgent
         this.apiClient =
                 new BelfiusApiClient(
                         client, agentConfiguration, componentProvider.getRandomValueGenerator());
-        new BelfiusClientConfigurator()
-                .configure(client, persistentStorage, MAX_RETRIES, RETRY_SLEEP_MILLISECONDS);
+        new BelfiusClientConfigurator(componentProvider.getLocalDateTimeSource())
+                .configure(
+                        client,
+                        persistentStorage,
+                        MAX_RETRIES,
+                        RETRY_SLEEP_MILLISECONDS,
+                        credentials.getSessionExpiryDate());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
