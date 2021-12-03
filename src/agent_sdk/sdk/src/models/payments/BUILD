@@ -1,5 +1,5 @@
 alias(
-    name = "payments",
+    name = "payment_rpc",
     actual = "//src/integration/payment:rpc",
     visibility = ["//src/agent_sdk/sdk:__subpackages__"],
 )
