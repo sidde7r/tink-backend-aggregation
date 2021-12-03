@@ -28,7 +28,8 @@ public class BelfiusAgentTest {
                         .setFinancialInstitutionId("60cdc3bd42aa43a9ab2e6eeef116bebd")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(true)
+                        .expectLoggedIn(true);
     }
 
     @Test

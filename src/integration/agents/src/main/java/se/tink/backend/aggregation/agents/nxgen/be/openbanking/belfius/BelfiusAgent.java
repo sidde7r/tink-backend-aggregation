@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @Slf4j
@@ -105,6 +106,6 @@ public final class BelfiusAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new OAuth2TokenSessionHandler(persistentStorage);
     }
 }
