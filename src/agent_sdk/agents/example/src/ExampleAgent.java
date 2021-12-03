@@ -1,11 +1,16 @@
 package se.tink.agent.agents.example;
 
+import java.util.Optional;
 import se.tink.agent.agents.example.authentication.ExampleOauth2Authenticator;
 import se.tink.agent.agents.example.fetcher.ExampleCheckingAccountsFetcher;
 import se.tink.agent.agents.example.fetcher.ExampleCheckingTransactionsFetcher;
 import se.tink.agent.agents.example.fetcher.ExampleIdentityDataFetcher;
 import se.tink.agent.agents.example.fetcher.ExampleSavingsAccountsFetcher;
 import se.tink.agent.agents.example.fetcher.ExampleSavingsTransactionsFetcher;
+import se.tink.agent.agents.example.payments.ExampleBankTransferExecutor;
+import se.tink.agent.agents.example.payments.ExampleCreateBeneficiaryExecutor;
+import se.tink.agent.agents.example.payments.ExampleGPIPaymentExecutor;
+import se.tink.agent.agents.example.payments.ExamplePaymentExecutor;
 import se.tink.agent.sdk.annotations.Agent;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Authenticator;
 import se.tink.agent.sdk.authentication.capability.AuthenticateOauth2;
@@ -20,6 +25,16 @@ import se.tink.agent.sdk.fetching.capability.FetchSavingsAccounts;
 import se.tink.agent.sdk.fetching.capability.FetchSavingsTransactions;
 import se.tink.agent.sdk.fetching.identity_data.IdentityDataFetcher;
 import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.payments.CreateBeneficiaryControllerable;
+import se.tink.backend.aggregation.agents.payments.PaymentControllerable;
+import se.tink.backend.aggregation.agents.payments.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.payments.TypedPaymentControllerable;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @Agent
 public class ExampleAgent
@@ -28,7 +43,11 @@ public class ExampleAgent
                 FetchCheckingTransactions,
                 FetchSavingsAccounts,
                 FetchSavingsTransactions,
-                FetchIdentityData {
+                FetchIdentityData,
+                CreateBeneficiaryControllerable,
+                PaymentControllerable,
+                TransferExecutorNxgen,
+                TypedPaymentControllerable {
 
     private final Utilities utilities;
     private final Operation operation;
@@ -66,5 +85,30 @@ public class ExampleAgent
     @Override
     public IdentityDataFetcher identityDataFetcher() {
         return new ExampleIdentityDataFetcher();
+    }
+
+    @Override
+    public Optional<CreateBeneficiaryController> getCreateBeneficiaryController() {
+        return Optional.of(new CreateBeneficiaryController(new ExampleCreateBeneficiaryExecutor()));
+    }
+
+    @Override
+    public Optional<PaymentController> getPaymentController() {
+        ExampleGPIPaymentExecutor examplePaymentExecutor = new ExampleGPIPaymentExecutor();
+        return Optional.of(new PaymentController(examplePaymentExecutor, examplePaymentExecutor));
+    }
+
+    @Override
+    public Optional<PaymentController> getPaymentController(Payment payment)
+            throws PaymentRejectedException {
+        ExampleGPIPaymentExecutor examplePaymentExecutor = new ExampleGPIPaymentExecutor();
+        return Optional.of(new PaymentController(examplePaymentExecutor, examplePaymentExecutor));
+    }
+
+    @Override
+    public Optional<String> execute(Transfer transfer) {
+        return new TransferController(
+                        new ExamplePaymentExecutor(), new ExampleBankTransferExecutor())
+                .execute(transfer);
     }
 }
