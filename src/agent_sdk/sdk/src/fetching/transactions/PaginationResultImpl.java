@@ -35,7 +35,7 @@ public class PaginationResultImpl implements PaginationResult {
     }
 
     @Override
-    public List<Transaction> getTransactions() {
+    public List<Transaction> getTinkTransactions() {
         return transactions;
     }
 
