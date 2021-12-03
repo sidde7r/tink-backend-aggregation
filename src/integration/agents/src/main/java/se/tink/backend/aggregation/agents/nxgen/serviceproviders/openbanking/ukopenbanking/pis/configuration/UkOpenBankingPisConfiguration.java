@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.Risk;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.enums.MarketCode;
 
 @Getter
 public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
@@ -29,5 +30,10 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
     @Override
     public Risk getPaymentContext() {
         return new Risk();
+    }
+
+    @Override
+    public MarketCode getMarketCode() {
+        return null;
     }
 }

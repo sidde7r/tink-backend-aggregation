@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformationDto;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentInitiation.DomesticPaymentInitiationBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
@@ -18,6 +19,7 @@ import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.account.identifiers.PaymPhoneNumberIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -56,6 +58,11 @@ public abstract class PaymentConverterBase {
      * https://openbankinguk.github.io/read-write-api-site3/v3.1.8/references/namespaced-enumerations.html#obexternallocalinstrument1code
      */
     public static final String FASTER_PAYMENTS_LOCAL_INSTRUMENT_CODE = "UK.OBIE.FPS";
+
+    public static final String FI_LOCAL_INSTRUMENT_CODE = "DK.DanskeBank.FI.TransferFunds";
+    public static final String SE_LOCAL_INSTRUMENT_CODE = "DK.DanskeBank.SE.TransferFunds";
+    public static final String DK_LOCAL_INSTRUMENT_CODE = "DK.DanskeBank.DK.TransferFunds";
+    public static final String NO_LOCAL_INSTRUMENT_CODE = "DK.DanskeBank.NO.TransferFunds";
 
     public DebtorAccount getDebtorAccount(Payment payment) {
         return Optional.ofNullable(payment.getDebtor())
@@ -102,6 +109,28 @@ public abstract class PaymentConverterBase {
         }
 
         return FASTER_PAYMENTS_LOCAL_INSTRUMENT_CODE;
+    }
+
+    public void getEuLocalInstrument(
+            DomesticPaymentInitiationBuilder domesticPaymentInitiation, MarketCode marketCode) {
+
+        switch (marketCode) {
+            case FI:
+                domesticPaymentInitiation.localInstrument(FI_LOCAL_INSTRUMENT_CODE);
+                return;
+            case NO:
+                domesticPaymentInitiation.localInstrument(NO_LOCAL_INSTRUMENT_CODE);
+                return;
+            case SE:
+                domesticPaymentInitiation.localInstrument(SE_LOCAL_INSTRUMENT_CODE);
+                return;
+            case DK:
+                domesticPaymentInitiation.localInstrument(DK_LOCAL_INSTRUMENT_CODE);
+                return;
+            default:
+                throw new IllegalArgumentException(
+                        (String.format("Unknown market: %s", marketCode)));
+        }
     }
 
     public ExactCurrencyAmount convertInstructedAmountToExactCurrencyAmount(

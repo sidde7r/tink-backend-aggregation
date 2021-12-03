@@ -270,6 +270,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         .instructionIdentification(instructionIdentification)
                         .endToEndIdentification(endToEndIdentification);
 
+        if (payment.getPaymentScheme() != null && pisConfig.getMarketCode() != null) {
+            domesticPaymentConverter.getEuLocalInstrument(
+                    domesticPaymentInitiationBuilder, pisConfig.getMarketCode());
+        }
+
         // First step to optionally enable this before making this mandatory
         if (payment.getPaymentScheme() != null
                 && payment.getPaymentScheme() == PaymentScheme.FASTER_PAYMENTS) {

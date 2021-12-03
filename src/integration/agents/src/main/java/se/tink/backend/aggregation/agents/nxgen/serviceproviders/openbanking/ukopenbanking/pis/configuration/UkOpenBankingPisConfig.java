@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.Risk;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.enums.MarketCode;
 
 public interface UkOpenBankingPisConfig {
 
@@ -14,4 +15,6 @@ public interface UkOpenBankingPisConfig {
     boolean compatibleWithFundsConfirming();
 
     Risk getPaymentContext();
+
+    MarketCode getMarketCode();
 }
