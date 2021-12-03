@@ -49,6 +49,7 @@ public class CreatePaymentResponse {
         return new PaymentResponse(builder.build(), paymentRequest.getStorage());
     }
 
+    @JsonIgnore
     public PaymentStatus getTinkStatus() {
         return OpBankPaymentStatus.fromString(status).getPaymentStatus();
     }
