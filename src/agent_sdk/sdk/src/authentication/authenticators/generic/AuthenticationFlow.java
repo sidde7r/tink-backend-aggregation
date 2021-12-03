@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.authentication;
+package se.tink.agent.sdk.authentication.authenticators.generic;
 
 import com.google.common.collect.ImmutableList;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;

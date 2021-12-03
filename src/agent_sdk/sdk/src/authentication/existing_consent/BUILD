@@ -1,7 +1,7 @@
 load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
 java_library_with_sources(
-    name = "user_interaction",
+    name = "existing_consent",
     srcs = glob(["*.java"]),
     extdeps = [
         "@agent_sdk_maven//:com_google_guava_guava",
@@ -10,8 +10,9 @@ java_library_with_sources(
         "//src/agent_sdk:lombok_plugin",
     ],
     intdeps = [
-        "//src/agent_sdk/sdk/src/models/field",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/agent_sdk/sdk/src/storage",
+        "//src/agent_sdk/sdk/src/environment",
+        "//src/agent_sdk/sdk/src/operation",
     ],
     visibility = ["//visibility:public"],
 )

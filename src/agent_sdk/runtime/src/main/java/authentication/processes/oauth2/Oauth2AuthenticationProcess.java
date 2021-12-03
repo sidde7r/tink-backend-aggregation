@@ -3,7 +3,7 @@ package se.tink.agent.runtime.authentication.processes.oauth2;
 import java.util.Optional;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.sdk.authentication.AuthenticationFlow;
+import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Authenticator;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.steps.Oauth2ExchangeAuthorizationCodeStep;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.steps.Oauth2OpenAuthorizationAppStep;

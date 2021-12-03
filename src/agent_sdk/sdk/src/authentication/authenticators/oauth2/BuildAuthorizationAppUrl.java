@@ -1,8 +1,7 @@
 package se.tink.agent.sdk.authentication.authenticators.oauth2;
 
-import java.net.URI;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public interface BuildAuthorizationAppUrl {
-    // TODO: Change URI class to something usable/buildable.
-    URI buildAuthorizationAppUrl(String state);
+    URL buildAuthorizationAppUrl(String state);
 }

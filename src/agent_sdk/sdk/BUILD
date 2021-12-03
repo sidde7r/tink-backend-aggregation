@@ -27,11 +27,13 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/operation",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/exceptions",
+        "//src/agent_sdk/sdk/src/authentication",
         "//src/agent_sdk/sdk/src/utils",
     ],
     visibility = ["//visibility:public"],
     exports = [
         "//src/agent_sdk:lombok_plugin",
+        "//src/agent_sdk/sdk/src/authentication",
         "//src/agent_sdk/sdk/src/environment",
         "//src/agent_sdk/sdk/src/exceptions",
         "//src/agent_sdk/sdk/src/models/account",

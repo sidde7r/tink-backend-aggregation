@@ -1,8 +1,8 @@
 package se.tink.agent.sdk.user_interaction;
 
 import com.google.common.base.Preconditions;
-import java.net.URI;
 import lombok.EqualsAndHashCode;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @EqualsAndHashCode
 public class ThirdPartyAppInfo {
@@ -15,7 +15,7 @@ public class ThirdPartyAppInfo {
     private String upgradeMessage;
     private String state;
 
-    public static ThirdPartyAppInfo of(URI url) {
+    public static ThirdPartyAppInfo of(URL url) {
         Preconditions.checkNotNull(url, "URL must not be null.");
         final ThirdPartyAppInfo payload = new ThirdPartyAppInfo();
 
