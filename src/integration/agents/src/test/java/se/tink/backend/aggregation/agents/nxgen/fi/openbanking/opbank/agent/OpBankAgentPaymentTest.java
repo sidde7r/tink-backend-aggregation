@@ -35,7 +35,7 @@ public class OpBankAgentPaymentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("fi", "fi-opbank-ob")
-                        .setFinancialInstitutionId("c758d66003e5493489b9c314d09e86bc")
+                        .setFinancialInstitutionId("opbank")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
