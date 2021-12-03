@@ -37,7 +37,7 @@ public class PhantomJsInitializer {
 
         PhantomJSDriver driver = getPhantomJsDriver(config);
 
-        return WebDriverWrapper.builder()
+        return WebDriverWrapperImpl.builder()
                 .driver(driver)
                 .javascriptExecutor(driver)
                 .driverId(driverId)

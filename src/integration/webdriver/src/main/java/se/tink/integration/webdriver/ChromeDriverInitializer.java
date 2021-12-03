@@ -55,7 +55,7 @@ public class ChromeDriverInitializer {
 
         ChromeDriver driver = startChromeDriver(config);
 
-        return WebDriverWrapper.builder()
+        return WebDriverWrapperImpl.builder()
                 .driver(driver)
                 .javascriptExecutor(driver)
                 .driverId(driverId)
