@@ -62,7 +62,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(transactionalAccountType)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getBalance(accountBalance.getAvailableBalance())))
+                .withBalance(getBalance())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(id)
@@ -85,14 +85,19 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getBalance(double balance) {
+    private BalanceModule getBalance() {
         String currency = properties.getCurrencyCode();
 
         if (Strings.isNullOrEmpty(currency)) {
             log.warn("Handelsbanken Norway: No currency for account found. Defaulting to NOK.");
-            return ExactCurrencyAmount.of(balance, "NOK");
+            currency = "NOK";
         }
 
-        return ExactCurrencyAmount.of(balance, currency);
+        return BalanceModule.builder()
+                .withBalance(
+                        ExactCurrencyAmount.of(accountBalance.getAccountingBalance(), currency))
+                .setAvailableBalance(
+                        ExactCurrencyAmount.of(accountBalance.getAvailableBalance(), currency))
+                .build();
     }
 }
