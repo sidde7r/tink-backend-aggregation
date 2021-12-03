@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.environment;
+package se.tink.agent.sdk.operation;
 
 public interface Provider {
     String getMarket();

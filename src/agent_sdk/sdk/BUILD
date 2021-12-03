@@ -24,8 +24,10 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/environment",
         "//src/agent_sdk/sdk/src/models/identity_data",
         "//src/agent_sdk/sdk/src/models/field",
+        "//src/agent_sdk/sdk/src/operation",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/exceptions",
+        "//src/agent_sdk/sdk/src/utils",
     ],
     visibility = ["//visibility:public"],
     exports = [
@@ -39,10 +41,12 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/models/transaction",
         "//src/agent_sdk/sdk/src/models/transfer",
         "//src/agent_sdk/sdk/src/models/transfer/enums",
+        "//src/agent_sdk/sdk/src/operation",
         "//src/agent_sdk/sdk/src/payments",
         "//src/agent_sdk/sdk/src/payments/capability",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/user_interaction",
+        "//src/agent_sdk/sdk/src/utils",
         "@agent_sdk_maven//:com_google_guava_guava",
     ],
 )

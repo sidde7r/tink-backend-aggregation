@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.environment;
+package se.tink.agent.sdk.operation;
 
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;

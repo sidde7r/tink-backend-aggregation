@@ -3,7 +3,7 @@ package se.tink.agent.sdk.authentication.existing_consent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import se.tink.agent.sdk.environment.StaticBankCredentials;
+import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.agent.sdk.storage.Storage;
 
 @Builder
