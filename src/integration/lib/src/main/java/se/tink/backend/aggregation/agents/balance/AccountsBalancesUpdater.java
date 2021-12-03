@@ -53,12 +53,6 @@ public class AccountsBalancesUpdater {
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
 
-        if (transactions.size() == 0) {
-            log.info(
-                    "[BALANCE CALCULATOR] No transactions available. Skipping booked balance calculations");
-            return;
-        }
-
         if (ACCOUNT_TYPES_SUPPORTING_BOOKED_CALCULATIONS.contains(account.getType())) {
             log.info(
                     "[BALANCE CALCULATOR] Found account type {}. Trying to run booked balance calculation",
@@ -79,12 +73,6 @@ public class AccountsBalancesUpdater {
             Account account,
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
-
-        if (transactions.size() == 0) {
-            log.info(
-                    "[BALANCE CALCULATOR] No transactions available. Skipping available balance calculations");
-            return;
-        }
 
         if (ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS.contains(account.getType())) {
             log.info(
