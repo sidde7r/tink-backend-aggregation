@@ -8,6 +8,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.http.DefaultResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -47,8 +48,12 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setJsonHttpTrafficLogger(context.getJsonHttpTrafficLogger())
                         .setSignatureKeyPair(signatureKeyPair)
-                        .setProvider(credentialsRequest.getProvider())
                         .build();
+
+        Optional.ofNullable(credentialsRequest.getProvider())
+                .map(Provider::getName)
+                .map(DefaultResponseStatusHandler::new)
+                .ifPresent(tinkHttpClient::setResponseStatusHandler);
 
         if (context.getMetricRegistry() != null) {
             tinkHttpClient.addFilter(

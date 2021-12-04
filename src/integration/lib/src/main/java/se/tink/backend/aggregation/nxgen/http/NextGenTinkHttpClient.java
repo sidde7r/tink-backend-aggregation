@@ -61,7 +61,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.ResponseLoggingFilter;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
@@ -135,8 +134,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private LoggingStrategy loggingStrategy = LoggingStrategy.DEFAULT;
     private final RawHttpTrafficLogger rawHttpTrafficLogger;
     private final JsonHttpTrafficLogger jsonHttpTrafficLogger;
-
-    private final Provider provider;
 
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
     private ExecutionTimeLoggingFilter executionTimeLoggingFilter;
@@ -252,8 +249,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 Optional.ofNullable(builder.getAggregatorIdentifier())
                         .orElse(AGGREGATOR_IDENTIFIER_FOR_TESTING);
 
-        this.provider = builder.getProvider();
-
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
 
@@ -267,9 +262,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         registerJacksonModule(new VavrModule());
         registerJacksonModule(new JavaTimeModule());
-        responseStatusHandler =
-                new DefaultResponseStatusHandler(
-                        this.provider != null ? this.provider.getName() : null);
+
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
 
@@ -306,7 +299,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         private String aggregatorIdentifier;
         private SignatureKeyPair signatureKeyPair;
-        private Provider provider;
 
         public Builder(LogMasker logMasker, LoggingMode loggingMode) {
             this.logMasker = logMasker;
