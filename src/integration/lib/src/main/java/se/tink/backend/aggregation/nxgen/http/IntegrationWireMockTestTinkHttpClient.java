@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
+import se.tink.backend.aggregation.nxgen.http.proxy.ProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -175,6 +176,11 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     @Override
     public void trustRootCaCertificate(byte[] jksData, String password) {
         // NOOP
+    }
+
+    @Override
+    public void setProxyProfile(ProxyProfile proxyProfile) {
+        tinkHttpClient.setProxyProfile(proxyProfile);
     }
 
     @Override

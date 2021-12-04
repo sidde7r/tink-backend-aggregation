@@ -49,6 +49,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/legacy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/adapter",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/redirect/handler",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
