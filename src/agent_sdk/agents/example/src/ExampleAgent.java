@@ -1,6 +1,7 @@
 package se.tink.agent.agents.example;
 
 import java.util.Optional;
+import javax.inject.Inject;
 import se.tink.agent.agents.example.authentication.ExampleOauth2Authenticator;
 import se.tink.agent.agents.example.fetcher.ExampleCheckingAccountsFetcher;
 import se.tink.agent.agents.example.fetcher.ExampleCheckingTransactionsFetcher;
@@ -52,6 +53,7 @@ public class ExampleAgent
     private final Utilities utilities;
     private final Operation operation;
 
+    @Inject
     public ExampleAgent(Utilities utilities, Operation operation) {
         this.utilities = utilities;
         this.operation = operation;
