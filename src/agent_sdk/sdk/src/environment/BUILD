@@ -5,12 +5,15 @@ java_library_with_sources(
     srcs = glob(["**/*.java"]),
     extdeps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/operation",
         "//src/agent_sdk/sdk/src/utils",
         "//src/agent_sdk/sdk/src/storage",
+        "//src/agent_sdk/sdk/src/operation/aggregator_configuration",
     ],
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+    ],
 )
