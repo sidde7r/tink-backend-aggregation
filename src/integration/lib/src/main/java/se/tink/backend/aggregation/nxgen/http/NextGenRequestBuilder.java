@@ -8,6 +8,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -364,7 +365,9 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
         reorderFilters();
         HttpResponse httpResponse = getFilterHead().handle(httpRequest);
 
-        responseStatusHandler.handleResponse(httpRequest, httpResponse);
+        if (Objects.nonNull(responseStatusHandler)) {
+            responseStatusHandler.handleResponse(httpRequest, httpResponse);
+        }
 
         if (c == HttpResponse.class) {
             return c.cast(httpResponse);
@@ -385,6 +388,9 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
         reorderFilters();
         HttpResponse httpResponse = handle(HttpResponse.class, httpRequest);
 
-        responseStatusHandler.handleResponseWithoutExpectedReturnBody(httpRequest, httpResponse);
+        if (Objects.nonNull(responseStatusHandler)) {
+            responseStatusHandler.handleResponseWithoutExpectedReturnBody(
+                    httpRequest, httpResponse);
+        }
     }
 }
