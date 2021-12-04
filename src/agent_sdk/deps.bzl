@@ -13,6 +13,7 @@ def agent_sdk_deps():
     maven_install(
         name = "agent_sdk_maven",
         artifacts = [
+            "javax.inject:javax.inject:1",
             "com.google.code.findbugs:jsr305:3.0.2",
             "org.projectlombok:lombok:1.18.22",
             "com.google.guava:guava:%s" % GUAVA_VERSION,
