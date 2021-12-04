@@ -93,7 +93,7 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void trustRootCaCertificate(byte[] jksData, String password);
 
-    void setDebugProxy(String uri);
+    void setLocalDebugProxy(int port);
 
     void setProxyProfile(ProxyProfile proxyProfile);
 

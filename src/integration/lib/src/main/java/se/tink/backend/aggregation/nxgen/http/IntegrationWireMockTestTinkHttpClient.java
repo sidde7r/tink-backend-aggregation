@@ -184,8 +184,8 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
-    public void setDebugProxy(String uri) {
-        tinkHttpClient.setDebugProxy(uri);
+    public void setLocalDebugProxy(int port) {
+        tinkHttpClient.setLocalDebugProxy(port);
     }
 
     @Override

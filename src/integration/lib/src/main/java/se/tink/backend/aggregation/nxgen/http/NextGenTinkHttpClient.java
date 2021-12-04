@@ -95,6 +95,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficL
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.proxy.LocalDebugProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.proxy.ProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
@@ -690,9 +691,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         log.info("Using proxy {}", host);
     }
 
-    public void setDebugProxy(String uri) {
-        setProxy(uri);
-        disableSslVerification();
+    @Override
+    public void setLocalDebugProxy(int port) {
+        this.setProxyProfile(new LocalDebugProxyProfile(port));
     }
 
     public void setProductionProxy(String uri, String username, String password) {
