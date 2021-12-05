@@ -15,6 +15,7 @@ import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatchers.ProxyResponseUrlSubstringMatcher;
 
 @RunWith(JUnitParamsRunner.class)
 public class ProxyResponseListenerTest {
@@ -41,7 +42,8 @@ public class ProxyResponseListenerTest {
     @Test
     public void should_find_response_when_its_filtered_first_and_then_we_wait_for_it() {
         // given
-        proxyResponseListener.changeUrlSubstringToListenFor("part.of.url");
+        proxyResponseListener.changeProxyResponseMatcher(
+                new ProxyResponseUrlSubstringMatcher("part.of.url"));
 
         // when
         proxyResponseListener.filterResponse(
@@ -56,7 +58,8 @@ public class ProxyResponseListenerTest {
     @Test
     public void should_find_response_when_we_wait_for_it_first_and_its_filtered_later() {
         // given
-        proxyResponseListener.changeUrlSubstringToListenFor("another.part.of.url");
+        proxyResponseListener.changeProxyResponseMatcher(
+                new ProxyResponseUrlSubstringMatcher("another.part.of.url"));
 
         // when
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
@@ -81,7 +84,8 @@ public class ProxyResponseListenerTest {
     public void should_listen_by_response_url_substring(
             String responseUrl, String responseUrlSubstring, boolean shouldRegisterResponse) {
         // given
-        proxyResponseListener.changeUrlSubstringToListenFor(responseUrlSubstring);
+        proxyResponseListener.changeProxyResponseMatcher(
+                new ProxyResponseUrlSubstringMatcher(responseUrlSubstring));
 
         HttpMessageInfo responseMessageInfo = httpMessageInfoWithUrl(responseUrl);
 
@@ -118,7 +122,8 @@ public class ProxyResponseListenerTest {
     @Test
     public void should_listen_only_to_the_very_first_response() {
         // given
-        proxyResponseListener.changeUrlSubstringToListenFor("some.url");
+        proxyResponseListener.changeProxyResponseMatcher(
+                new ProxyResponseUrlSubstringMatcher("some.url"));
 
         HttpMessageInfo messageInfo1 = httpMessageInfoWithUrl("https://some.url?param=1");
         HttpMessageInfo messageInfo2 = httpMessageInfoWithUrl("https://some.url?param=2");

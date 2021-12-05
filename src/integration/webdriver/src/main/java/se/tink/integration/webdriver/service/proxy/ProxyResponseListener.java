@@ -8,11 +8,10 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 
 public class ProxyResponseListener implements ResponseFilter {
 
-    private String urlSubstringToListenFor = null;
+    private ProxyResponseMatcher proxyResponseMatcher = null;
     private ResponseSynchronizedContainer responseSynchronizedContainer =
             new ResponseSynchronizedContainer();
 
@@ -38,20 +37,25 @@ public class ProxyResponseListener implements ResponseFilter {
     public void filterResponse(
             HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
 
-        String responseUrl = messageInfo.getUrl();
-        if (StringUtils.containsIgnoreCase(responseUrl, urlSubstringToListenFor)) {
-            ResponseFromProxy proxyResponse =
-                    ResponseFromProxy.builder()
-                            .response(response)
-                            .contents(contents)
-                            .messageInfo(messageInfo)
-                            .build();
+        ResponseFromProxy proxyResponse =
+                ResponseFromProxy.builder()
+                        .response(response)
+                        .contents(contents)
+                        .messageInfo(messageInfo)
+                        .build();
+
+        boolean isMatchingResponse =
+                Optional.ofNullable(proxyResponseMatcher)
+                        .map(matcher -> matcher.matches(proxyResponse))
+                        .orElse(false);
+
+        if (isMatchingResponse) {
             responseSynchronizedContainer.saveResponse(proxyResponse);
         }
     }
 
-    public void changeUrlSubstringToListenFor(String urlSubstring) {
-        urlSubstringToListenFor = urlSubstring;
+    public void changeProxyResponseMatcher(ProxyResponseMatcher proxyResponseMatcher) {
+        this.proxyResponseMatcher = proxyResponseMatcher;
         // remove previously saved response if we change the url address that we listen to
         responseSynchronizedContainer = new ResponseSynchronizedContainer();
     }

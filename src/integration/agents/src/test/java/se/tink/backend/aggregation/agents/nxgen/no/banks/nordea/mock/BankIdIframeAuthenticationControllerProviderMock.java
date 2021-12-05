@@ -52,7 +52,7 @@ public class BankIdIframeAuthenticationControllerProviderMock
                                 "Location",
                                         "http://redirect.url?key1=value1&code=AUTH_CODE&key2=value2",
                                 "someKey2", "someValue2"));
-        when(proxyManager.waitForProxyResponse(anyInt()))
+        when(proxyManager.waitForMatchingProxyResponse(anyInt()))
                 .thenReturn(Optional.of(responseFromProxy));
 
         BankIdAuthenticationState authenticationState = mock(BankIdAuthenticationState.class);

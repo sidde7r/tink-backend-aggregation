@@ -27,6 +27,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.integration.webdriver.WebDriverHelper;
 import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatcher;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatchers.ProxyResponseUrlSubstringMatcher;
 
 @RequiredArgsConstructor
 public class DanskeBankNOManualAuthenticator
@@ -59,8 +61,8 @@ public class DanskeBankNOManualAuthenticator
     }
 
     @Override
-    public String getSubstringOfUrlIndicatingAuthenticationFinish() {
-        return AUTHENTICATION_FINISH_URL;
+    public ProxyResponseMatcher getMatcherForResponseThatIndicatesAuthenticationWasFinished() {
+        return new ProxyResponseUrlSubstringMatcher(AUTHENTICATION_FINISH_URL);
     }
 
     @Override

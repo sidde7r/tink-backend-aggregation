@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.proxy.ProxyManager;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatcher;
 import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
 import se.tink.libraries.credentials.service.UserAvailability;
 
@@ -104,18 +105,19 @@ public class BankIdIframeAuthenticationControllerTest {
         // given
         when(iframeInitializer.initializeIframe(webDriver)).thenReturn(firstWindow);
 
-        when(iframeAuthenticator.getSubstringOfUrlIndicatingAuthenticationFinish())
-                .thenReturn("part.of.some.url");
+        ProxyResponseMatcher proxyResponseMatcher = mock(ProxyResponseMatcher.class);
+        when(iframeAuthenticator.getMatcherForResponseThatIndicatesAuthenticationWasFinished())
+                .thenReturn(proxyResponseMatcher);
 
         ResponseFromProxy responseFromProxy = mock(ResponseFromProxy.class);
-        when(proxyManager.waitForProxyResponse(anyInt()))
+        when(proxyManager.waitForMatchingProxyResponse(anyInt()))
                 .thenReturn(Optional.of(responseFromProxy));
 
         // when
         authenticationController.authenticate(credentials);
 
         // then
-        verifyStartsListeningForResponseFromUrl("part.of.some.url");
+        verifyStartsListeningForResponseMatchingMatcher(proxyResponseMatcher);
         verifyIframeInitialization();
         verifySavesFirstIframeWindow(firstWindow);
         verifyAuthenticationWithIframeController();
@@ -145,8 +147,9 @@ public class BankIdIframeAuthenticationControllerTest {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void verifyStartsListeningForResponseFromUrl(String url) {
-        mocksToVerifyInOrder.verify(proxyManager).setUrlSubstringToListenFor(url);
+    private void verifyStartsListeningForResponseMatchingMatcher(
+            ProxyResponseMatcher proxyResponseMatcher) {
+        mocksToVerifyInOrder.verify(proxyManager).setProxyResponseMatcher(proxyResponseMatcher);
     }
 
     private void verifyAuthenticationWithIframeController() {
@@ -155,7 +158,7 @@ public class BankIdIframeAuthenticationControllerTest {
 
     @SuppressWarnings("SameParameterValue")
     private void verifyWaitsForResponseFromUrl(int waitForSeconds) {
-        mocksToVerifyInOrder.verify(proxyManager).waitForProxyResponse(waitForSeconds);
+        mocksToVerifyInOrder.verify(proxyManager).waitForMatchingProxyResponse(waitForSeconds);
     }
 
     private void verifyHandlesIframeAuthResult(BankIdIframeAuthenticationResult result) {

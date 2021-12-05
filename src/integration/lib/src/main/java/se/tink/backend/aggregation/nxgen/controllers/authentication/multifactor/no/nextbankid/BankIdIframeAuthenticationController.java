@@ -117,14 +117,13 @@ public class BankIdIframeAuthenticationController
     }
 
     private void setupProxyResponseListener() {
-        String urlToListenFor =
-                iframeAuthenticator.getSubstringOfUrlIndicatingAuthenticationFinish();
-        proxyManager.setUrlSubstringToListenFor(urlToListenFor);
+        proxyManager.setProxyResponseMatcher(
+                iframeAuthenticator.getMatcherForResponseThatIndicatesAuthenticationWasFinished());
     }
 
     private ResponseFromProxy waitForAuthFinishUrlResponse() {
         return proxyManager
-                .waitForProxyResponse(WAIT_FOR_PROXY_RESPONSE_IN_SECONDS)
+                .waitForMatchingProxyResponse(WAIT_FOR_PROXY_RESPONSE_IN_SECONDS)
                 .orElseThrow(() -> new IllegalStateException("Did not found proxy response"));
     }
 }

@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.service.proxy.ProxyManager;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatchers.ProxyResponseUrlSubstringMatcher;
 import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
 
 public class WebDriverServiceModuleIntegrationTest {
@@ -34,11 +35,12 @@ public class WebDriverServiceModuleIntegrationTest {
     @Test
     public void should_initialize_working_driver_with_proxy() {
         // given
-        proxyManager.setUrlSubstringToListenFor("example.com");
+        proxyManager.setProxyResponseMatcher(new ProxyResponseUrlSubstringMatcher("example.com"));
 
         // when
         webDriver.get("https://example.com/");
-        Optional<ResponseFromProxy> responseFromProxy = proxyManager.waitForProxyResponse(1);
+        Optional<ResponseFromProxy> responseFromProxy =
+                proxyManager.waitForMatchingProxyResponse(1);
 
         // then
         assertThat(webDriver.getCurrentUrl()).contains("https://example.com/");
