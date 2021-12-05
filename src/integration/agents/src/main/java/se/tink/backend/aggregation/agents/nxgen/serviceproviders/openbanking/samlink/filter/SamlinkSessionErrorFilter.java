@@ -33,7 +33,7 @@ public class SamlinkSessionErrorFilter extends Filter {
 
     private void throwIfConsentError(List<TppMessageEntity> errors) {
         if (errors.stream().anyMatch(TppMessageEntity::isConsentExpired)) {
-            throw SessionError.SESSION_EXPIRED.exception("Cause: Consent is expired");
+            throw SessionError.CONSENT_EXPIRED.exception("Cause: Consent is expired");
         }
     }
 
