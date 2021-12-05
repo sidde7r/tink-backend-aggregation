@@ -44,7 +44,6 @@ public class BankIdIframeAuthenticationControllerProviderMock
 
         WebDriverService bankIdWebDriver = mock(WebDriverService.class);
 
-        ProxyManager proxyManager = mock(ProxyManager.class);
         ResponseFromProxy responseFromProxy =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(
@@ -52,7 +51,7 @@ public class BankIdIframeAuthenticationControllerProviderMock
                                 "Location",
                                         "http://redirect.url?key1=value1&code=AUTH_CODE&key2=value2",
                                 "someKey2", "someValue2"));
-        when(proxyManager.waitForMatchingProxyResponse(anyInt()))
+        when(bankIdWebDriver.waitForMatchingProxyResponse(anyInt()))
                 .thenReturn(Optional.of(responseFromProxy));
 
         BankIdAuthenticationState authenticationState = mock(BankIdAuthenticationState.class);
@@ -62,7 +61,6 @@ public class BankIdIframeAuthenticationControllerProviderMock
         return new BankIdIframeAuthenticationController(
                 bankIdWebDriver,
                 agentTemporaryStorage,
-                proxyManager,
                 authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,

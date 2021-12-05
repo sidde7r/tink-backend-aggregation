@@ -20,7 +20,7 @@ import se.tink.integration.webdriver.service.proxy.ProxyManagerImpl;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearcher;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearcherImpl;
 
-public class WebDriverModule extends AbstractModule {
+public class WebDriverServiceModule extends AbstractModule {
 
     /*
     Dependencies for module components
@@ -30,7 +30,7 @@ public class WebDriverModule extends AbstractModule {
     private final WebDriverWrapper webDriver;
     private final JavascriptExecutor javascriptExecutor;
 
-    private WebDriverModule(AgentTemporaryStorage agentTemporaryStorage) {
+    private WebDriverServiceModule(AgentTemporaryStorage agentTemporaryStorage) {
         sleeper = new Sleeper();
         proxy = ProxyInitializer.startProxyServer();
         webDriver =
@@ -44,15 +44,11 @@ public class WebDriverModule extends AbstractModule {
      * This is the only correct way of initializing {@link WebDriverService} with all dependencies
      * it requires.
      */
-    public static WebDriverModuleComponents initializeModule(
+    public static WebDriverService createWebDriverService(
             AgentTemporaryStorage agentTemporaryStorage) {
-        WebDriverModule driverModule = new WebDriverModule(agentTemporaryStorage);
+        WebDriverServiceModule driverModule = new WebDriverServiceModule(agentTemporaryStorage);
         Injector injector = Guice.createInjector(driverModule);
-
-        WebDriverService webDriverService = injector.getInstance(WebDriverService.class);
-        ProxyManager proxyManager = injector.getInstance(ProxyManager.class);
-
-        return new WebDriverModuleComponents(webDriverService, proxyManager);
+        return injector.getInstance(WebDriverService.class);
     }
 
     @Override

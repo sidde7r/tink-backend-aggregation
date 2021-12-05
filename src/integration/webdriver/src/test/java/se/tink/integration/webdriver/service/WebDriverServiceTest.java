@@ -21,6 +21,7 @@ import org.openqa.selenium.WebElement;
 import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.integration.webdriver.service.basicutils.Sleeper;
 import se.tink.integration.webdriver.service.basicutils.WebDriverBasicUtils;
+import se.tink.integration.webdriver.service.proxy.ProxyManager;
 import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult;
@@ -43,7 +44,7 @@ public class WebDriverServiceTest {
     /*
     Real
      */
-    private WebDriverService bankIdDriver;
+    private WebDriverService driverService;
 
     @Before
     public void setup() {
@@ -53,16 +54,20 @@ public class WebDriverServiceTest {
         elementsSearcher = mock(ElementsSearcher.class);
         Sleeper sleeper = mock(Sleeper.class);
 
-        mocksToVerifyInOrder = inOrder(driver, driverBasicUtils, elementsSearcher, sleeper);
+        ProxyManager proxyManager = mock(ProxyManager.class);
 
-        bankIdDriver = new WebDriverServiceImpl(driver, driverBasicUtils, elementsSearcher);
+        mocksToVerifyInOrder =
+                inOrder(driver, driverBasicUtils, elementsSearcher, sleeper, proxyManager);
+
+        driverService =
+                new WebDriverServiceImpl(driver, driverBasicUtils, elementsSearcher, proxyManager);
     }
 
     @Test
     @Parameters(value = {"http://some.url", "https://other.url"})
     public void should_get_url(String url) {
         // when
-        bankIdDriver.get(url);
+        driverService.get(url);
 
         // then
         mocksToVerifyInOrder.verify(driver).get(url);
@@ -76,7 +81,7 @@ public class WebDriverServiceTest {
         when(driver.getCurrentUrl()).thenReturn(expectedCurrentUrl);
 
         // when
-        String currentUrl = bankIdDriver.getCurrentUrl();
+        String currentUrl = driverService.getCurrentUrl();
 
         // then
         assertThat(currentUrl).isEqualTo(expectedCurrentUrl);
@@ -94,7 +99,7 @@ public class WebDriverServiceTest {
                 .thenReturn("iframe page source");
 
         // when
-        String pageSourceLog = bankIdDriver.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
+        String pageSourceLog = driverService.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
 
         // then
         assertThat(pageSourceLog)
@@ -119,7 +124,7 @@ public class WebDriverServiceTest {
                 .thenReturn("iframe page source");
 
         // when
-        String pageSourceLog = bankIdDriver.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
+        String pageSourceLog = driverService.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
 
         // then
         assertThat(pageSourceLog)
@@ -147,7 +152,7 @@ public class WebDriverServiceTest {
                                 buttonLocator, asList(buttonElement1, buttonElement2)));
 
         // when
-        bankIdDriver.clickButton(buttonLocator);
+        driverService.clickButton(buttonLocator);
 
         // then
         verify(buttonElement1).click();
@@ -172,7 +177,7 @@ public class WebDriverServiceTest {
                 .thenReturn(ElementsSearchResult.empty());
 
         // when
-        Throwable throwable = catchThrowable(() -> bankIdDriver.clickButton(buttonLocator));
+        Throwable throwable = catchThrowable(() -> driverService.clickButton(buttonLocator));
 
         // then
         assertThat(throwable)
@@ -201,7 +206,7 @@ public class WebDriverServiceTest {
                 .thenReturn(ElementsSearchResult.of(elementLocator, asList(element1, element2)));
 
         // when
-        bankIdDriver.setValueToElement(valueToSet, elementLocator);
+        driverService.setValueToElement(valueToSet, elementLocator);
 
         // then
         verify(element1).sendKeys(valueToSet);
@@ -228,7 +233,7 @@ public class WebDriverServiceTest {
 
         // when
         Throwable throwable =
-                catchThrowable(() -> bankIdDriver.setValueToElement("some value", elementLocator));
+                catchThrowable(() -> driverService.setValueToElement("some value", elementLocator));
 
         // then
         assertThat(throwable)
@@ -254,7 +259,8 @@ public class WebDriverServiceTest {
 
         // when
         ElementsSearchQuery searchQuery = mock(ElementsSearchQuery.class);
-        ElementsSearchResult searchResult = bankIdDriver.searchForFirstMatchingLocator(searchQuery);
+        ElementsSearchResult searchResult =
+                driverService.searchForFirstMatchingLocator(searchQuery);
 
         // then
         assertThat(searchResult).isEqualTo(expectedSearchResult);

@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
-import se.tink.integration.webdriver.service.proxy.ProxyManager;
 import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
 import se.tink.libraries.credentials.service.UserAvailability;
 
@@ -60,7 +59,6 @@ public class BankIdIframeAuthenticationController
 
     private final WebDriverService webDriver;
     private final AgentTemporaryStorage agentTemporaryStorage;
-    private final ProxyManager proxyManager;
     private final BankIdAuthenticationState authenticationState;
     private final BankIdIframeInitializer iframeInitializer;
     private final BankIdIframeAuthenticator iframeAuthenticator;
@@ -104,7 +102,7 @@ public class BankIdIframeAuthenticationController
             throw e;
 
         } finally {
-            proxyManager.shutDownProxy();
+            webDriver.shutDownProxy();
             agentTemporaryStorage.remove(webDriver.getDriverId());
         }
     }
@@ -117,12 +115,12 @@ public class BankIdIframeAuthenticationController
     }
 
     private void setupProxyResponseListener() {
-        proxyManager.setProxyResponseMatcher(
+        webDriver.setProxyResponseMatcher(
                 iframeAuthenticator.getMatcherForResponseThatIndicatesAuthenticationWasFinished());
     }
 
     private ResponseFromProxy waitForAuthFinishUrlResponse() {
-        return proxyManager
+        return webDriver
                 .waitForMatchingProxyResponse(WAIT_FOR_PROXY_RESPONSE_IN_SECONDS)
                 .orElseThrow(() -> new IllegalStateException("Did not found proxy response"));
     }
