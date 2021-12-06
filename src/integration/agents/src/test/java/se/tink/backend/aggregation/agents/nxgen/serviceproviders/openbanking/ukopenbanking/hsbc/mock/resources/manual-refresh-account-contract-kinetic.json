@@ -5,10 +5,10 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "GBP",
-        "exactValue": 4324.42,
-        "doubleValue": 4324.42,
+        "exactValue": 4329.90,
+        "doubleValue": 4329.90,
         "scale": 2,
-        "unscaledValue": 432442
+        "unscaledValue": 432990
       },
       "currencyCode": "GBP",
       "availableBalance": {
@@ -47,7 +47,7 @@
       "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "balances": [],
       "availableCredit": 0.0,
-      "balance": 4324.42
+      "balance": 4329.90
     }
   ],
   "transactions": [
