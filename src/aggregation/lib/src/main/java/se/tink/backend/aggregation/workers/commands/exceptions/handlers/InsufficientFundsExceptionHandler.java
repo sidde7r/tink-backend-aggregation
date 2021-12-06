@@ -24,7 +24,8 @@ public class InsufficientFundsExceptionHandler
         log.info(
                 "[transferId: {}] Could not execute payment due insufficient funds. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);

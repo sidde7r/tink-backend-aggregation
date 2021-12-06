@@ -23,7 +23,8 @@ public class CreditorValidationExceptionHandler
         log.info(
                 "[transferId: {}] Could not execute payment due to creditor validation failure. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);

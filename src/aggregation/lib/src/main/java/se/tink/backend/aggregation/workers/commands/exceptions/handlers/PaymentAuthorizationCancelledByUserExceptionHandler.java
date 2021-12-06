@@ -24,7 +24,8 @@ public class PaymentAuthorizationCancelledByUserExceptionHandler
         log.info(
                 "[transferId: {}] Could not execute payment due to authorisation cancelled by user.. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);

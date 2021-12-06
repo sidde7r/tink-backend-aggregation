@@ -23,7 +23,8 @@ public class DuplicatePaymentExceptionHandler
         log.info(
                 "[transferId: {}] Could not execute payment, duplicate payment detected. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);

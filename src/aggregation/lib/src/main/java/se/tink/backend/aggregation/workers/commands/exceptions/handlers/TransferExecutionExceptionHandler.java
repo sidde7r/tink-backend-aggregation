@@ -35,7 +35,8 @@ public class TransferExecutionExceptionHandler
             log.info(
                     "[transferId: {}] Could not execute transfer. Transfer has been set CANCELLED due to {}",
                     UUIDUtils.toTinkUUID(transfer.getId()),
-                    exception.getUserMessage());
+                    exception.getUserMessage(),
+                    exception);
         } else {
             metricAction.failed();
             log.error(

@@ -24,7 +24,8 @@ public class DebtorValidationExceptionHandler
         log.info(
                 "[transferId: {}] Could not execute payment due to debtor validation failure. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);

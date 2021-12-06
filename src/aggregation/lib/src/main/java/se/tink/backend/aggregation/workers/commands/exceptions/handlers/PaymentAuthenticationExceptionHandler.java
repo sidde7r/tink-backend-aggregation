@@ -24,7 +24,8 @@ public class PaymentAuthenticationExceptionHandler
         log.info(
                 "[transferId: {}] Could not execute payment due to payment authentication failure. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
