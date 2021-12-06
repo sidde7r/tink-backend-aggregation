@@ -86,8 +86,8 @@ spec:
         )
 
     # =========== SHORT-TERM (1h) and MID-TERM (4h) ALERTS ===========
-    - alert: EXPERIMENTALRefreshErrorRateAbove10%GB
-      expr: sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) > 0.1
+    - alert: EXPERIMENTALRefreshErrorRateAbove20%GB
+      expr: sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) > 0.2
       for: 15m
       priority: P3
       labels:
