@@ -19,12 +19,29 @@ public class PaginatorResponseImpl implements PaginatorResponse {
         this.canFetchMore = canFetchMore;
     }
 
+    /**
+     * Create an empty PaginatorResponse without indicating there are more transactions to fetch.
+     * Pagination will continue until canFetchMore is false or max consecutive empty pages limit has
+     * been reached.
+     */
     public static PaginatorResponse createEmpty() {
         return new PaginatorResponseImpl(EMPTY_LIST, null);
     }
 
+    /**
+     * Create an empty PaginatorResponse and explicitly indicate if there are more transactions to
+     * fetch.
+     */
     public static PaginatorResponse createEmpty(boolean canFetchMore) {
         return new PaginatorResponseImpl(EMPTY_LIST, canFetchMore);
+    }
+
+    /**
+     * Create an empty PaginatorResponse and explicitly indicate that there are no more transactions
+     * to fetch. Pagination will stop after this response has been returned.
+     */
+    public static PaginatorResponse createEmptyFinal() {
+        return new PaginatorResponseImpl(EMPTY_LIST, false);
     }
 
     public static PaginatorResponse create(Collection<? extends Transaction> transactions) {
