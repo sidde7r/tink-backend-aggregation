@@ -265,7 +265,7 @@ public class DebugAgentWorkerCommandTest {
                                         "Payment Credentials Status: "
                                                 + testCase.getCredentialsStatus()
                                                 + "\n"
-                                                + "Transfer Status: "
+                                                + "Payment Transfer Status: "
                                                 + testCase.getTransferStatus()
                                                 + "\n"
                                                 + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
@@ -355,7 +355,7 @@ public class DebugAgentWorkerCommandTest {
                                     "Payment Credentials Status: "
                                             + testCase.getCredentialsStatus()
                                             + "\n"
-                                            + "Transfer Status: "
+                                            + "Payment Transfer Status: "
                                             + testCase.getTransferStatus()
                                             + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
@@ -407,7 +407,7 @@ public class DebugAgentWorkerCommandTest {
                                     "Payment Credentials Status: "
                                             + testCase.getCredentialsStatus()
                                             + "\n"
-                                            + "Transfer Status: "
+                                            + "Payment Transfer Status: "
                                             + testCase.getTransferStatus()
                                             + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"

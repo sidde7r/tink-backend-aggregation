@@ -132,7 +132,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                         .orElse(null);
         SaveLogsResult rawLogsResult = logsSaver.saveRawLogs(RawHttpLogsCatalog.DEFAULT);
         if (rawLogsResult.isSaved()) {
-            logResultsBuilder.append("\nTransfer Status: ").append(transferStatus);
+            logResultsBuilder.append("\nPayment Transfer Status: ").append(transferStatus);
             logResultsBuilder
                     .append(
                             format(
