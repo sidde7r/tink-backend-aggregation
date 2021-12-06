@@ -172,24 +172,6 @@ spec:
         the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
-  - alert: manual_login_error_rate_over_50%_in_de
-    expr: |
-      ( sum:DE:all_manual_attempts:failed:delta4h:className
-      / sum:DE:className:production:login-manual:delta4h ) > 0.5
-      and sum:DE:className:production:login-manual:delta4h > 20
-    for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
-    labels:
-      severity: urgent
-      priority: P2
-      who: integration-nazguls
-    annotations:
-      description: {{ .Values.kibanaClassLink }}
-        {{ .Values.grafanaLink }}
-      summary: Manual login error rate more than 50% ( <{ $value * 100}> ) % for agent <{ $labels.className }>
-        the last 4 hours.
-      tags: {{ .Values.tags }}
-
-
   - alert: manual_login_error_rate_over_50%_due_to_bank_side_error_de
     expr: |
       (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action="login-manual"}[1h]))
@@ -225,74 +207,8 @@ spec:
       tags: {{ .Values.tags }}
 
   ## Long term alerts
-  ## - to detect only authentication error / timeouts through longer period of time with really low SR
-  - alert: long_term_all_error_between_80_and_90_de
-    expr: |
-      sum:DE:all_manual_attempts:not_cancelled_unavaible_failed:delta6h
-        / sum:DE:all_manual_attempts:delta6h < 0.2
-      and sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.allErrorsAuth }}", market="DE"}[6h])) BY (className)
-        / sum:DE:all_manual_attempts:delta6h >= 0.1
-    for: 1h
-    labels:
-      severity: ping
-      priority: P4
-      who: integration-nazguls
-    annotations:
-      description: {{ .Values.kibanaClassLink }}
-        {{ .Values.grafanaLink }}
-      summary: Login success rate is between 10 - 20% ( <{ $value }> ) the last 6 hours because of all errors.
-      tags: {{ .Values.tags }}
+  ## removed due to problems with prometheus performance
 
-  - alert: long_term_all_error_below_90_de
-    expr: |
-      # Login failure the last 6 hours
-      sum:DE:all_manual_attempts:not_cancelled_unavaible_failed:delta6h
-      # All login attempts the last 6 hours
-        / sum:DE:all_manual_attempts:delta6h < 0.10
-    for: 1h
-    labels:
-      severity: urgent
-      priority: P1
-      who: integration-nazguls
-    annotations:
-      description: {{ .Values.kibanaClassLink }}
-        {{ .Values.grafanaLink }}
-      summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours because of all errors.
-      tags: {{ .Values.tags }}
-
-  - alert: long_term_authentication_errors_between_80_and_90_de
-    expr: |
-      (sum:DE:all_manual_attempts:not_cancelled:delta6h
-        / sum:DE:all_manual_attempts:delta6h < 0.2)
-      and (sum:DE:all_manual_attempts:not_cancelled:delta6h
-        / sum:DE:all_manual_attempts:delta6h > 0.1)
-    for: 1h
-    labels:
-      severity: ping
-      priority: P4
-      who: integration-nazguls
-    annotations:
-      description: {{ .Values.kibanaClassLink }}
-        {{ .Values.grafanaLink }}
-      summary: Login success rate is between 10 - 20% ( <{ $value }> ) the last 6 hours because of all errors.
-      tags: {{ .Values.tags }}
-
-  - alert: long_term_authentication_errors_over_90_de
-    expr: |
-      # Login cancelled the last 6 hours
-      sum:DE:all_manual_attempts:not_cancelled:delta6h
-      # All login attempts the last 6 hours
-        / sum:DE:all_manual_attempts:delta6h < 0.10
-    for: 1h
-    labels:
-      severity: urgent
-      priority: P1
-      who: integration-nazguls
-    annotations:
-      description: {{ .Values.kibanaClassLink }}
-        {{ .Values.grafanaLink }}
-      summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours.
-      tags: {{ .Values.tags }}
 
   #################################
   ### AllErrors - Agent Refresh ###
