@@ -10,7 +10,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 import org.junit.Ignore;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.libraries.cryptography.RSA;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore

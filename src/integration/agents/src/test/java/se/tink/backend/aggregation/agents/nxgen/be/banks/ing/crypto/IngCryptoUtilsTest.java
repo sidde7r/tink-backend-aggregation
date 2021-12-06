@@ -15,7 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
+import se.tink.libraries.cryptography.EllipticCurve;
 
 public class IngCryptoUtilsTest {
 

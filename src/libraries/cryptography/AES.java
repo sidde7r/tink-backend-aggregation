@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.libraries.cryptography;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -12,40 +12,44 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AES {
+    private static final String PKCS5_PADDING = "PKCS5Padding";
+    private static final String PKCS7_PADDING = "PKCS7Padding";
+    private static final String NO_PADDING = "NoPadding";
+
     public static byte[] encryptEcbPkcs5(byte[] key, byte[] data) {
-        return aesEcb(true, key, data, "PKCS5Padding");
+        return aesEcb(true, key, data, PKCS5_PADDING);
     }
 
     public static byte[] encryptEcbPkcs7(byte[] key, byte[] data) {
-        return aesEcb(true, key, data, "PKCS7Padding");
+        return aesEcb(true, key, data, PKCS7_PADDING);
     }
 
     public static byte[] encryptEcbNoPadding(byte[] key, byte[] data) {
-        return aesEcb(true, key, data, "NoPadding");
+        return aesEcb(true, key, data, NO_PADDING);
     }
 
     public static byte[] decryptEcbNoPadding(byte[] key, byte[] data) {
-        return aesEcb(false, key, data, "NoPadding");
+        return aesEcb(false, key, data, NO_PADDING);
     }
 
     public static byte[] encryptCbc(byte[] key, byte[] iv, byte[] data) {
-        return aesCbc(true, key, iv, data, "PKCS5Padding");
+        return aesCbc(true, key, iv, data, PKCS5_PADDING);
     }
 
     public static byte[] decryptCbc(byte[] key, byte[] iv, byte[] data) {
-        return aesCbc(false, key, iv, data, "PKCS5Padding");
+        return aesCbc(false, key, iv, data, PKCS5_PADDING);
     }
 
     public static byte[] decryptCbcNoPadding(byte[] key, byte[] iv, byte[] data) {
-        return aesCbc(false, key, iv, data, "NoPadding");
+        return aesCbc(false, key, iv, data, NO_PADDING);
     }
 
     public static byte[] encryptCbcPkcs7(byte[] key, byte[] iv, byte[] data) {
-        return aesCbc(true, key, iv, data, "PKCS7Padding");
+        return aesCbc(true, key, iv, data, PKCS7_PADDING);
     }
 
     public static byte[] decryptCbcPkcs7(byte[] key, byte[] iv, byte[] data) {
-        return aesCbc(false, key, iv, data, "PKCS7Padding");
+        return aesCbc(false, key, iv, data, PKCS7_PADDING);
     }
 
     public static byte[] encryptCtr(byte[] key, byte[] ctr, byte[] data) {
@@ -57,11 +61,11 @@ public class AES {
     }
 
     public static byte[] encryptCfbSegmentationSize8NoPadding(byte[] key, byte[] iv, byte[] data) {
-        return aesCfb(true, key, iv, data, "NoPadding");
+        return aesCfb(true, key, iv, data, NO_PADDING);
     }
 
     public static byte[] decryptCfbSegmentationSize8NoPadding(byte[] key, byte[] iv, byte[] data) {
-        return aesCfb(false, key, iv, data, "NoPadding");
+        return aesCfb(false, key, iv, data, NO_PADDING);
     }
 
     private static byte[] aesEcb(boolean encrypt, byte[] key, byte[] data, String padding) {

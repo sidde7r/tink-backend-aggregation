@@ -4,7 +4,7 @@ import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcPersistentStorage;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.libraries.cryptography.RSA;
 
 public class SignKeys {
     private RSAPrivateKey privateKey;

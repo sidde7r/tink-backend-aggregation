@@ -7,9 +7,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfiguration;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.storage.MockEncapStorage;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
+import se.tink.libraries.cryptography.EllipticCurve;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public class MockEncapMessageUtils extends BaseEncapMessageUtils {

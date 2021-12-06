@@ -4,6 +4,8 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -74,11 +76,7 @@ public class ThreadSafeDateFormat {
     public static final ThreadSafeDateFormat FORMATTER_LOGGING =
             new ThreadSafeDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
 
-    /**
-     * A builder used to construct {@link ThreadSafeDateFormat}s. Mostly used to create variations
-     * of a preexisting {@link ThreadSafeDateFormat} by calling {@link
-     * ThreadSafeDateFormat#toBuilder()}.
-     */
+    /** A builder used to construct {@link ThreadSafeDateFormat}s. */
     public static class ThreadSafeDateFormatBuilder implements Cloneable {
 
         private String pattern;
@@ -133,7 +131,8 @@ public class ThreadSafeDateFormat {
         }
     }
 
-    private DateTimeFormatter dateFormat;
+    private DateTimeFormatter jodaDateFormatter;
+    private java.time.format.DateTimeFormatter javaDateFormatter;
 
     private ThreadSafeDateFormatBuilder builder;
 
@@ -161,27 +160,39 @@ public class ThreadSafeDateFormat {
 
     private ThreadSafeDateFormat(ThreadSafeDateFormatBuilder builder) {
         this.builder = builder;
-        this.dateFormat =
+        this.jodaDateFormatter =
                 DateTimeFormat.forPattern(builder.getPattern())
                         .withZone(DateTimeZone.forTimeZone(builder.getTimezone()))
+                        .withLocale(builder.getLocale());
+        this.javaDateFormatter =
+                java.time.format.DateTimeFormatter.ofPattern(builder.getPattern())
+                        .withZone(builder.getTimezone().toZoneId())
                         .withLocale(builder.getLocale());
     }
 
     public String format(Date date) {
-        return dateFormat.print(date.getTime());
+        return jodaDateFormatter.print(date.getTime());
     }
 
     public String format(ReadablePartial date) {
-        return dateFormat.print(date);
+        return jodaDateFormatter.print(date);
     }
 
     public String format(Instant instant) {
-        return dateFormat.print(Date.from(instant).getTime());
+        return jodaDateFormatter.print(Date.from(instant).getTime());
+    }
+
+    public String format(LocalDate date) {
+        return date.format(javaDateFormatter);
+    }
+
+    public String format(LocalDateTime date) {
+        return date.format(javaDateFormatter);
     }
 
     public Date parse(String string) throws ParseException {
         try {
-            return dateFormat.parseDateTime(TRIMMER.trimFrom(string)).toDate();
+            return jodaDateFormatter.parseDateTime(TRIMMER.trimFrom(string)).toDate();
         } catch (Exception e) {
             throw new ParseException(
                     "could not parse date: "
@@ -193,17 +204,11 @@ public class ThreadSafeDateFormat {
         }
     }
 
-    public boolean fitsFormat(String period) {
-        try {
-            dateFormat.parseDateTime(period);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public LocalDate parseToLocalDate(String string) {
+        return LocalDate.parse(TRIMMER.trimFrom(string), javaDateFormatter);
     }
 
-    public ThreadSafeDateFormatBuilder toBuilder() {
-        // Cloning since we don't allow internal builder to be mutable.
-        return builder.clone();
+    public LocalDateTime parseToLocalDateTime(String string) {
+        return LocalDateTime.parse(TRIMMER.trimFrom(string), javaDateFormatter);
     }
 }

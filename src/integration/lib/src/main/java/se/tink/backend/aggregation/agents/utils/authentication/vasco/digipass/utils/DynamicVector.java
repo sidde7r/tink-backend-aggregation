@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils;
 
 import java.util.Arrays;
-import se.tink.backend.aggregation.agents.utils.crypto.AES;
+import se.tink.libraries.cryptography.AES;
 
 // The message in the protocol is called `activationMessage`, however the code references to this as
 // DynamicVector.

@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.rpc.tl
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.persistance.MetroAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.persistance.MetroProcessState;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.fetcher.common.error.UnknownError;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.DeviceRegistrationError;
@@ -36,6 +35,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.Incorrec
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
+import se.tink.libraries.cryptography.EllipticCurve;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OtpVerificationCallTest {

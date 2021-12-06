@@ -7,7 +7,7 @@ import java.security.Security;
 import java.security.interfaces.ECPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
+import se.tink.libraries.cryptography.EllipticCurve;
 
 public class ChallengeUtilsTest {
 

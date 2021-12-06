@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.helper;
 
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.persistence.FortisProcessState;
-import se.tink.backend.aggregation.agents.utils.crypto.AES;
-import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
+import se.tink.libraries.cryptography.AES;
+import se.tink.libraries.cryptography.KeyDerivation;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public class FortisKeyDecryptor {

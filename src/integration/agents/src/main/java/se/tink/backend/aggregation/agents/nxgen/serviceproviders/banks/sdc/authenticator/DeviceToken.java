@@ -7,8 +7,8 @@ import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.ChallengeResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.cryptography.RSA;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DeviceToken {

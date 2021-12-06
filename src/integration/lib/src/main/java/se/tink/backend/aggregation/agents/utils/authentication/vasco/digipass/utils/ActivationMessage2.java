@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils;
 
 import java.util.Arrays;
-import se.tink.backend.aggregation.agents.utils.crypto.AES;
+import se.tink.libraries.cryptography.AES;
 
 // The message in the protocol is called `activationMessage2`, i.e. this is not
 // the second iteration of a `ActivationMessage` utils class.

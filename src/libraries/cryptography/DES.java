@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.libraries.cryptography;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -12,17 +12,18 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class DES {
+    private static final String NO_PADDING = "NoPadding";
 
     public static byte[] encryptEcbNoPadding(byte[] key, byte[] data) {
-        return ecb(true, key, data, "NoPadding");
+        return ecb(true, key, data, NO_PADDING);
     }
 
     public static byte[] decryptEcbNoPadding(byte[] key, byte[] data) {
-        return ecb(false, key, data, "NoPadding");
+        return ecb(false, key, data, NO_PADDING);
     }
 
     public static byte[] encryptCbcNoPadding(byte[] key, byte[] iv, byte[] data) {
-        return cbc(true, key, iv, data, "NoPadding");
+        return cbc(true, key, iv, data, NO_PADDING);
     }
 
     private static byte[] ecb(boolean encrypt, byte[] key, byte[] data, String padding) {

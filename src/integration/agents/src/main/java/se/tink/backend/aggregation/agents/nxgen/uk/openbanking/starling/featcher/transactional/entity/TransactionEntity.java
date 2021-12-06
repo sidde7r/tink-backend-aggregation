@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -64,7 +65,12 @@ public class TransactionEntity {
                         .setPending(isPending())
                         .setProprietaryFinancialInstitutionType(source);
 
-        if (isSettlementTime()) {
+        if (hasFeedItemUid()) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, feedItemUid);
+        }
+
+        if (hasSettlementTime()) {
             builder.setDate(settlementTime);
         } else {
             builder.setDate(transactionTime);
@@ -96,7 +102,12 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    private boolean isSettlementTime() {
+    private boolean hasSettlementTime() {
         return settlementTime != null;
+    }
+
+    @JsonIgnore
+    private boolean hasFeedItemUid() {
+        return feedItemUid != null;
     }
 }

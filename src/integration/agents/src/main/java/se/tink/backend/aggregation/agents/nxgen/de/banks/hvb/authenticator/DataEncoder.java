@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Base64;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.libraries.cryptography.RSA;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DataEncoder {

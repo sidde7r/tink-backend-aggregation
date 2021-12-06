@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.libraries.cryptography;
 
 import com.google.common.primitives.Bytes;
 import java.math.BigInteger;
@@ -133,15 +133,16 @@ public class EllipticCurve {
     }
 
     public static PublicKey getPublicKeyFromCurveAndPoints(String curveName, byte[] x, byte[] y) {
-        BigInteger X = BigIntegers.fromUnsignedByteArray(x);
-        BigInteger Y = BigIntegers.fromUnsignedByteArray(y);
+        BigInteger coordinateX = BigIntegers.fromUnsignedByteArray(x);
+        BigInteger coordinateY = BigIntegers.fromUnsignedByteArray(y);
 
         ECNamedCurveParameterSpec ecNamedCurveParameterSpec =
                 ECNamedCurveTable.getParameterSpec(curveName);
         java.security.spec.EllipticCurve ellipticCurve =
                 EC5Util.convertCurve(
                         ecNamedCurveParameterSpec.getCurve(), ecNamedCurveParameterSpec.getSeed());
-        java.security.spec.ECPoint ecPoint = new java.security.spec.ECPoint(X, Y);
+        java.security.spec.ECPoint ecPoint =
+                new java.security.spec.ECPoint(coordinateX, coordinateY);
         java.security.spec.ECParameterSpec ecParameterSpec =
                 EC5Util.convertSpec(ellipticCurve, ecNamedCurveParameterSpec);
         java.security.spec.ECPublicKeySpec publicKeySpec =
@@ -220,14 +221,14 @@ public class EllipticCurve {
                 throw new IllegalStateException("Infinity is not a valid public key for ECDH");
             }
 
-            ECPoint P = pubPoint.multiply(key.getD()).normalize();
+            ECPoint pubPointMultipliedWithD = pubPoint.multiply(key.getD()).normalize();
 
-            if (P.isInfinity()) {
+            if (pubPointMultipliedWithD.isInfinity()) {
                 throw new IllegalStateException("Infinity is not a valid agreement value for ECDH");
             }
 
-            byte[] x = bigIntToBytes(P.getAffineXCoord().toBigInteger());
-            byte[] y = bigIntToBytes(P.getAffineYCoord().toBigInteger());
+            byte[] x = bigIntToBytes(pubPointMultipliedWithD.getAffineXCoord().toBigInteger());
+            byte[] y = bigIntToBytes(pubPointMultipliedWithD.getAffineYCoord().toBigInteger());
             return Bytes.concat(x, y);
         }
 

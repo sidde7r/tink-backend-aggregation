@@ -14,7 +14,7 @@ import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
-import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
+import se.tink.libraries.cryptography.parser.Pem;
 
 public class PostbankJwtGenerator implements JwtGenerator {
 

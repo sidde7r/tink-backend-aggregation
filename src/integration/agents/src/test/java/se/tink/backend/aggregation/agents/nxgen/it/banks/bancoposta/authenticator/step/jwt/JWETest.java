@@ -9,7 +9,7 @@ import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
 import lombok.SneakyThrows;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.libraries.cryptography.RSA;
 
 public class JWETest {
     private KeyPair keyPair = RSA.generateKeyPair();

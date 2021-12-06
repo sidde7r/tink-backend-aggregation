@@ -6,7 +6,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/random",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/soap",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
@@ -14,6 +13,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/libraries/agent-storage",
+        "//src/libraries/cryptography",
         "//src/libraries/cryptography/hash",
         "//src/libraries/encoding",
         "//src/libraries/serialization",

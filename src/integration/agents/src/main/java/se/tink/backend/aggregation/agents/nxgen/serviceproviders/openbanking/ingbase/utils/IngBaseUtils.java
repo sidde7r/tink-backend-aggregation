@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
-import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
+import se.tink.libraries.cryptography.parser.Pem;
 
 public final class IngBaseUtils {
 

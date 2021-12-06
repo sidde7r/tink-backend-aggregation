@@ -6,8 +6,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Crypto;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.InitiateSessionRequest;
-import se.tink.backend.aggregation.agents.utils.crypto.AES;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.libraries.cryptography.AES;
+import se.tink.libraries.cryptography.RSA;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 

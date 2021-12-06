@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.libraries.cryptography;
 
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;

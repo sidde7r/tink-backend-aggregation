@@ -46,9 +46,13 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "05858a24-d2e9-48a8-a396-482a419cc273"
+        },
         "transactionDates" : [ ],
-        "proprietaryFinancialInstitutionType" : "MASTER_CARD"
+        "proprietaryFinancialInstitutionType" : "MASTER_CARD",
+        "merchantName" : "Market Cafe",
+        "booked" : true
     }, {
         "amount" : 0.01,
         "date" : 1596276000000,
@@ -60,9 +64,12 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "f24c0674-b377-492f-af99-9cd770a58fba"
+        },
         "transactionDates" : [ ],
-        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT"
+        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT",
+        "booked" : true
     }, {
         "amount" : 0.02,
         "date" : 1596276000000,
@@ -74,9 +81,12 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "a11a0674-b377-492f-af99-9cd770a58fba"
+        },
         "transactionDates" : [ ],
-        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT"
+        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT",
+        "booked" : false
     }, {
         "amount" : 0.03,
         "date" : 1596276000000,
@@ -88,8 +98,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "b11x0674-b377-492f-af99-9cd770a58fba"
+        },
         "transactionDates" : [ ],
-        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT"
+        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT",
+        "booked" : false
     } ]
 }

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.libraries.cryptography;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

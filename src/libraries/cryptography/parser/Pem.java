@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto.parser;
+package se.tink.libraries.cryptography.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
