@@ -334,7 +334,7 @@ Content-Length: 340
 
 -----------------------------------------------------------------------------------
 REQUEST 5
-GET https://oba.revolut.com/accounts/dd666666-1111-1111-1111-33344444444/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://oba.revolut.com/accounts/dd666666-1111-1111-1111-33344444444/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 001580000103UAvAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000

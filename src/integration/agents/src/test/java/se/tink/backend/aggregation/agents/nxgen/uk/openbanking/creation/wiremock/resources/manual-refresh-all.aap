@@ -173,7 +173,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
 REQUEST 5
-GET https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800001HQQsjAAH
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000

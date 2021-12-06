@@ -325,7 +325,7 @@ x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
 }
 
 REQUEST 7
-GET https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800000jfxrpAAA
 Authorization: Bearer DUMMY_ACCESS_TOKEN

@@ -197,7 +197,7 @@ X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
 REQUEST 6
-GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -332,15 +332,15 @@ X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
     ]
   },
   "Links": {
-    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z",
-    "Next": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z"
+    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-04-10T00:00:00Z",
+    "Next": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-04-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z"
   },
   "Meta": {}
 }
 
 -----------------------------------------------------------------------------------
 REQUEST 7
-GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z
+GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-04-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z
 Accept: application/json
 x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -381,7 +381,7 @@ X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
     ]
   },
   "Links": {
-    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z"
+    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-04-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z"
     },
   "Meta": {}
 }

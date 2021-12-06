@@ -116,7 +116,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 {"Data":{"Account":[{"AccountId":"DUMMY_ACCOUNT_ID","Currency":"GBP","AccountType":"Personal","AccountSubType":"CurrentAccount","OpeningDate":"2020-11-06T00:00:00.000Z","MaturityDate":"2021-11-05","Account":[{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"00000000000000","Name":"Szymon Mysiak"}]}]},"Meta":{"TotalPages":1},"Links":{"Self":"https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/aisp/accounts"}}
 
 REQUEST 9
-GET https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 X-Aggregator: Tink Testing
 x-fapi-financial-id: 0015800000jf9GgAAI
