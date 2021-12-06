@@ -29,10 +29,16 @@
       "userModifiedType": false,
       "identifiers": "[\"iban://HABAEE2X/EE032311123456789015\",\"iban://EE032311123456789015\"]",
       "closed": false,
+      "holderName": "Owner Name",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
-        "identities": []
+        "identities": [
+          {
+            "name": "Owner Name",
+            "role": "HOLDER"
+          }
+        ]
       },
       "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "balances": [],
@@ -68,10 +74,16 @@
       "userModifiedType": false,
       "identifiers": "[\"iban://HABAEE2X/EE182311987654321015\",\"iban://EE182311987654321015\"]",
       "closed": false,
+      "holderName": "Owner Name",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
-        "identities": []
+        "identities": [
+          {
+            "name": "Owner Name",
+            "role": "HOLDER"
+          }
+        ]
       },
       "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "balances": [],
