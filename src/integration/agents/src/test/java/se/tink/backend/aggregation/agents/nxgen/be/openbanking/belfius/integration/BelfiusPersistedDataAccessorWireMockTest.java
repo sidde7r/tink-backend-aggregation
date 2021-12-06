@@ -69,7 +69,7 @@ public class BelfiusPersistedDataAccessorWireMockTest {
                 getCommonTestConfiguration("belfius_auto_refresh.aap")
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
-                        .addPersistentStorageData(TOKEN_STORAGE_KEY, getTokenValidFor(0))
+                        .addPersistentStorageData(TOKEN_STORAGE_KEY, getTokenValidFor(-1))
                         .addPersistentStorageData(LOGICAL_ID_STORAGE_KEY, LOGICAL_ID)
                         .build();
 
