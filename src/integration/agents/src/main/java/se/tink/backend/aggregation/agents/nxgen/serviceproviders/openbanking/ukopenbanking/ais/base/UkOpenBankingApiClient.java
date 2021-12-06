@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
+import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ProductEndpoint;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.AccountBlockedOrSuspendedValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
@@ -81,11 +83,20 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public List<AccountBalanceEntity> fetchV31AccountBalances(String accountId) {
-        return createAisRequest(aisConfig.getAccountBalanceRequestURL(accountId))
-                .get(AccountBalanceV31Response.class)
-                .getData()
-                .map(this::logBalanceSnapshotTime)
-                .orElse(Collections.emptyList());
+        try {
+            return createAisRequest(aisConfig.getAccountBalanceRequestURL(accountId))
+                    .get(AccountBalanceV31Response.class)
+                    .getData()
+                    .map(this::logBalanceSnapshotTime)
+                    .orElse(Collections.emptyList());
+        } catch (HttpResponseException e) {
+            if (AccountBlockedOrSuspendedValidator.isAccountClosed(e.getResponse())) {
+                log.info(
+                        "[AccountBlockedOrSuspendedValidator]: Account closed or suspended, returning empty list ");
+                return Collections.emptyList();
+            }
+            throw new AccountRefreshException("Failed to fetch balances");
+        }
     }
 
     public List<TrustedBeneficiaryEntity> fetchV31AccountBeneficiaries(String accountId) {
