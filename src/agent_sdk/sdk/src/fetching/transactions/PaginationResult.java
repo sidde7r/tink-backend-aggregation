@@ -5,7 +5,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public interface PaginationResult {
-    List<Transaction> getTransactions();
+    List<Transaction> getTinkTransactions();
 
     /**
      * It's at the paginator's discretion to decide when to stop if this returns `Optional.empty()`.

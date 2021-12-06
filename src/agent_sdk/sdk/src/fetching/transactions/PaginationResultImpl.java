@@ -18,12 +18,29 @@ public class PaginationResultImpl implements PaginationResult {
         this.canFetchMore = canFetchMore;
     }
 
+    /**
+     * Create an empty PaginationResult without indicating there are more transactions to fetch.
+     * Pagination will continue until canFetchMore is false or max consecutive empty pages limit has
+     * been reached.
+     */
     public static PaginationResult createEmpty() {
         return new PaginationResultImpl(EMPTY_LIST, null);
     }
 
+    /**
+     * Create an empty PaginationResult and explicitly indicate if there are more transactions to
+     * fetch.
+     */
     public static PaginationResult createEmpty(boolean canFetchMore) {
         return new PaginationResultImpl(EMPTY_LIST, canFetchMore);
+    }
+
+    /**
+     * Create an empty PaginationResult and explicitly indicate that there are no more transactions
+     * to fetch. Pagination will stop after this response has been returned.
+     */
+    public static PaginationResult createEmptyFinal() {
+        return new PaginationResultImpl(EMPTY_LIST, false);
     }
 
     public static PaginationResult create(List<Transaction> transactions) {
@@ -35,7 +52,7 @@ public class PaginationResultImpl implements PaginationResult {
     }
 
     @Override
-    public List<Transaction> getTransactions() {
+    public List<Transaction> getTinkTransactions() {
         return transactions;
     }
 

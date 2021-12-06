@@ -20,8 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -118,7 +118,10 @@ public class IcaBankenTransactionFetcherTest {
 
         // then
         Assert.assertNotNull(paginatorResponse);
-        Assert.assertEquals(paginatorResponse.getClass(), EmptyFinalPaginatorResponse.class);
+        Assert.assertEquals(paginatorResponse.getClass(), PaginatorResponseImpl.class);
+        Assert.assertTrue(paginatorResponse.getTinkTransactions().isEmpty());
+        Assert.assertTrue(paginatorResponse.canFetchMore().isPresent());
+        Assert.assertFalse(paginatorResponse.canFetchMore().get());
     }
 
     @Test
