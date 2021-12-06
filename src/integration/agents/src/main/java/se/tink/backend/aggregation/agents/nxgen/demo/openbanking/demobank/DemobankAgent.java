@@ -100,6 +100,14 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
             PisCapability.FASTER_PAYMENTS,
         },
         markets = {"GB"})
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER,
+            PisCapability.INSTANT_NORWEGIAN_DOMESTIC_CREDIT_TRANSFER_STRAKS,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.SEPA_CREDIT_TRANSFER,
+        },
+        markets = {"NO"})
 public final class DemobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
