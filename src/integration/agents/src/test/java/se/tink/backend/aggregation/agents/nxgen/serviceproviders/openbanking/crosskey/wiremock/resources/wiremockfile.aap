@@ -54,7 +54,7 @@ Content-Type: application/json;charset=utf-8
 {"Data":{"Account":[{"AccountId":"22372fe2-fb83-11eb-8fdb-ff271038e1b7","Currency":"SEK","AccountType":"Personal","AccountSubType":"CurrentAccount","Description":"PREMIUMKONTO","Account":[{"SchemeName":"UK.OBIE.IBAN","Identification":"SE1923000000023100231222","Name":"WICK JOHN"}]}]},"Links":{"Self":"https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts"},"Meta":{}}
 
 REQUEST 7
-GET https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts/22372fe2-fb83-11eb-8fdb-ff271038e1b7/transactions?toBookingDateTime=1992-04-09T00%3A00%3A00&fromBookingDateTime=1992-01-11T00%3A00%3A00
+GET https://api.alandsbanken.se/open-banking/v3.1/aisp/accounts/22372fe2-fb83-11eb-8fdb-ff271038e1b7/transactions?toBookingDateTime=1992-04-09T00%3A00%3A00&fromBookingDateTime=1992-01-12T00%3A00%3A00
 
 RESPONSE 7
 403
