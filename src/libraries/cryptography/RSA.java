@@ -159,6 +159,6 @@ public class RSA {
     public static String pemFormatPublicKey(PublicKey publicKey) {
         String rawPublicKey = EncodingUtils.encodeAsBase64String(publicKey.getEncoded());
         return String.format(
-                "-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", rawPublicKey);
+                "-----BEGIN PUBLIC KEY-----%n%s%n-----END PUBLIC KEY-----%n", rawPublicKey);
     }
 }

@@ -11,7 +11,7 @@ public class MGF1 {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             return generateMask(mgfSeed, length, digest);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 

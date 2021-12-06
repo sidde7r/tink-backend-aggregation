@@ -86,13 +86,13 @@ public class LaCaixaPasswordHash {
 
         // fold to first 4 bytes
         for (int counter1 = COUNTER_1_VALUE; counter1 >= 0; counter1--) {
-            outbuf[(int) counter1] = (byte) (foldFirst4 & 0xFF);
+            outbuf[counter1] = (byte) (foldFirst4 & 0xFF);
             foldFirst4 >>= 8;
         }
 
         // fold to last 4 bytes
         for (int counter = COUNTER_2_VALUE; counter > COUNTER_1_VALUE; counter--) {
-            outbuf[(int) counter] = (byte) (foldLast4 & 0xFF);
+            outbuf[counter] = (byte) (foldLast4 & 0xFF);
             foldLast4 >>= 8;
         }
 
