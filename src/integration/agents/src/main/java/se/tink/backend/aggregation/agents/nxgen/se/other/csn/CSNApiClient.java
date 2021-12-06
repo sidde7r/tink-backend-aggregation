@@ -4,6 +4,7 @@ import java.util.Optional;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.authenticator.bankid.rpc.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.LoanAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.LoanTransactionsResponse;
@@ -37,7 +38,9 @@ public class CSNApiClient {
                 .findFirst()
                 .map(cookie -> cookie.getValue())
                 .orElseThrow(
-                        () -> new IllegalStateException("Required value access_token is missing"));
+                        () ->
+                                LoginError.INCORRECT_CREDENTIALS.exception(
+                                        "Required value access_token is missing"));
     }
 
     public HttpResponse initBankId(LoginForm loginForm) {
