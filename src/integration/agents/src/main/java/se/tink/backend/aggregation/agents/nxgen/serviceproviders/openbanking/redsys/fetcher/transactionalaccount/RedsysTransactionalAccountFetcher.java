@@ -71,16 +71,7 @@ public class RedsysTransactionalAccountFetcher
         } catch (HttpResponseException hre) {
             final ErrorResponse error = ErrorResponse.fromResponse(hre.getResponse());
             if (error.hasErrorCode(ErrorCodes.CONSENT_EXPIRED) && Objects.isNull(key)) {
-                // Request new consent
-                if (!consentController.requestConsent()) {
-                    consentController.clearConsentStorage();
-                    throw SessionError.CONSENT_REVOKED.exception();
-                }
-                final String consentId = consentController.getConsentId();
-                // Server will return 500 if accounts aren't fetched first with this consent
-                // (Bankinter)
-                apiClient.fetchAccounts(consentId);
-                return apiClient.fetchTransactions(account.getApiIdentifier(), consentId, key);
+                throw SessionError.SESSION_EXPIRED.exception();
             } else if (HttpStatus.SC_BAD_REQUEST == hre.getResponse().getStatus()
                     && error.hasErrorCode(ErrorCodes.SERVER_ERROR)) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
