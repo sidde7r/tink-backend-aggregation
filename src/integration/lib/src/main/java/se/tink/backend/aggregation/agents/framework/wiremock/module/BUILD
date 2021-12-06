@@ -27,5 +27,6 @@ java_library(
         "@tink_backend//src/libraries/events:event_submitter_mock",
         "@tink_backend//src/libraries/events:event_submitter_module",
         "@tink_backend//src/libraries/protobuf_type_utils",
+        "@tink_backend//src/libraries/unleash",
     ],
 )
