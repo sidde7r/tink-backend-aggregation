@@ -150,7 +150,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private HttpResponseStatusHandler responseStatusHandler;
+    private HttpResponseStatusHandler responseStatusHandler =
+            new DefaultResponseStatusHandler(null);
 
     private static class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
