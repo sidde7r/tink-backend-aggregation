@@ -4,6 +4,8 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -130,6 +132,7 @@ public class ThreadSafeDateFormat {
     }
 
     private DateTimeFormatter jodaDateFormatter;
+    private java.time.format.DateTimeFormatter javaDateFormatter;
 
     private ThreadSafeDateFormatBuilder builder;
 
@@ -161,6 +164,10 @@ public class ThreadSafeDateFormat {
                 DateTimeFormat.forPattern(builder.getPattern())
                         .withZone(DateTimeZone.forTimeZone(builder.getTimezone()))
                         .withLocale(builder.getLocale());
+        this.javaDateFormatter =
+                java.time.format.DateTimeFormatter.ofPattern(builder.getPattern())
+                        .withZone(builder.getTimezone().toZoneId())
+                        .withLocale(builder.getLocale());
     }
 
     public String format(Date date) {
@@ -175,6 +182,14 @@ public class ThreadSafeDateFormat {
         return jodaDateFormatter.print(Date.from(instant).getTime());
     }
 
+    public String format(LocalDate date) {
+        return date.format(javaDateFormatter);
+    }
+
+    public String format(LocalDateTime date) {
+        return date.format(javaDateFormatter);
+    }
+
     public Date parse(String string) throws ParseException {
         try {
             return jodaDateFormatter.parseDateTime(TRIMMER.trimFrom(string)).toDate();
@@ -187,5 +202,13 @@ public class ThreadSafeDateFormat {
                             + ")",
                     0);
         }
+    }
+
+    public LocalDate parseToLocalDate(String string) {
+        return LocalDate.parse(TRIMMER.trimFrom(string), javaDateFormatter);
+    }
+
+    public LocalDateTime parseToLocalDateTime(String string) {
+        return LocalDateTime.parse(TRIMMER.trimFrom(string), javaDateFormatter);
     }
 }
