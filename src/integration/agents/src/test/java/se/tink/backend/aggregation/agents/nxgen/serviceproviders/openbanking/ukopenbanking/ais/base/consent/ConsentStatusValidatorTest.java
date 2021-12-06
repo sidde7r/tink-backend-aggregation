@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -43,7 +44,7 @@ public class ConsentStatusValidatorTest {
     @Test
     public void shouldValidateConsentSuccessfully() {
         // given
-        given(mockedConsentResponse.getData()).willReturn(mockedConsent);
+        given(mockedConsentResponse.getData()).willReturn(Optional.ofNullable(mockedConsent));
         given(mockedApiClient.fetchConsent(DUMMY_CONSENT_ID)).willReturn(mockedConsentResponse);
         storage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
@@ -64,7 +65,7 @@ public class ConsentStatusValidatorTest {
     public void shouldThrowSessionExceptionWhenConsentStatusInvalid() {
         // given
         given(mockedConsent.isNotAuthorised()).willReturn(Boolean.TRUE);
-        given(mockedConsentResponse.getData()).willReturn(mockedConsent);
+        given(mockedConsentResponse.getData()).willReturn(Optional.ofNullable(mockedConsent));
         given(mockedApiClient.fetchConsent(DUMMY_CONSENT_ID)).willReturn(mockedConsentResponse);
         storage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
@@ -117,7 +118,7 @@ public class ConsentStatusValidatorTest {
     @Test
     public void shouldThrowSessionExceptionWhenConsentExpired() {
         // given
-        given(mockedConsentResponse.getData()).willReturn(mockedConsent);
+        given(mockedConsentResponse.getData()).willReturn(Optional.ofNullable(mockedConsent));
         given(mockedApiClient.fetchConsent(DUMMY_CONSENT_ID)).willReturn(mockedConsentResponse);
         storage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,

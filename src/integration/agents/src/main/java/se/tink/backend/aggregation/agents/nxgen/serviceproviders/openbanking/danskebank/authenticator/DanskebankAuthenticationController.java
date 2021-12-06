@@ -64,7 +64,11 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
                 apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
         apiClient.instantiateAisAuthFilter(clientCredentialsToken);
 
-        AccountPermissionsDataResponseEntity consent = apiClient.fetchConsent(consentId).getData();
+        AccountPermissionsDataResponseEntity consent =
+                apiClient
+                        .fetchConsent(consentId)
+                        .getData()
+                        .orElseThrow(SessionError.CONSENT_REVOKED::exception);
 
         if (consent.isNotAuthorised()) {
             throw SessionError.SESSION_EXPIRED.exception();
