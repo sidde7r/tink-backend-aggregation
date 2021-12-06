@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.events;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
@@ -21,8 +20,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
@@ -354,9 +351,6 @@ public class DefaultRawBankDataEventProducerTest {
     public void
             whenGivenAProperComplexJsonResponseBodyEventProducerShouldEmitEventWithHttpClient() {
         // given
-        Provider provider = mock(Provider.class);
-        when(provider.getAccessType()).thenReturn(AccessType.OPEN_BANKING);
-
         RawBankDataEventProducer eventProducer =
                 new DefaultRawBankDataEventProducer(
                         RawBankDataEventCreationStrategies.createDefaultConfiguration());
@@ -369,7 +363,6 @@ public class DefaultRawBankDataEventProducerTest {
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
-                        .setProvider(provider)
                         .build();
 
         client.addFilter(
@@ -495,9 +488,6 @@ public class DefaultRawBankDataEventProducerTest {
     public void
             whenUsingDefaultDecisionStrategyThatDeniesEventsProducerShouldNotEmitEventWithHttpClient() {
         // given
-        Provider provider = mock(Provider.class);
-        when(provider.getAccessType()).thenReturn(AccessType.OPEN_BANKING);
-
         RawBankDataEventProducer eventProducer =
                 new DefaultRawBankDataEventProducer(
                         RawBankDataEventCreationStrategies.createDefaultConfiguration());
@@ -509,7 +499,6 @@ public class DefaultRawBankDataEventProducerTest {
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setRawHttpTrafficLogger(mock(RawHttpTrafficLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
-                        .setProvider(provider)
                         .build();
 
         client.addFilter(

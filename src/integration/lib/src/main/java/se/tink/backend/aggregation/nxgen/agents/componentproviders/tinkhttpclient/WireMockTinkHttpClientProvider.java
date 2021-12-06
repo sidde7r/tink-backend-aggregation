@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.http.DefaultResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -38,8 +40,12 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                         .setAggregatorIdentifier(aggregatorIdentifier)
                         .setRawHttpTrafficLogger(context.getRawHttpTrafficLogger())
                         .setSignatureKeyPair(signatureKeyPair)
-                        .setProvider(credentialsRequest.getProvider())
                         .build();
+
+        Optional.ofNullable(credentialsRequest.getProvider())
+                .map(Provider::getName)
+                .map(DefaultResponseStatusHandler::new)
+                .ifPresent(httpClient::setResponseStatusHandler);
 
         // Build raw bank data event emission interceptor
         DefaultRawBankDataEventProducer rawBankDataEventProducer =
