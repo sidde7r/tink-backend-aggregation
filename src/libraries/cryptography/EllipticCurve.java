@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.libraries.cryptography;
 
 import com.google.common.primitives.Bytes;
 import java.math.BigInteger;

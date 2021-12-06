@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.libraries.cryptography;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -11,24 +11,23 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class DES {
-
+public class TripleDES {
     public static byte[] encryptEcbNoPadding(byte[] key, byte[] data) {
         return ecb(true, key, data, "NoPadding");
-    }
-
-    public static byte[] decryptEcbNoPadding(byte[] key, byte[] data) {
-        return ecb(false, key, data, "NoPadding");
     }
 
     public static byte[] encryptCbcNoPadding(byte[] key, byte[] iv, byte[] data) {
         return cbc(true, key, iv, data, "NoPadding");
     }
 
+    public static byte[] decryptCbcNoPadding(byte[] key, byte[] iv, byte[] data) {
+        return cbc(false, key, iv, data, "NoPadding");
+    }
+
     private static byte[] ecb(boolean encrypt, byte[] key, byte[] data, String padding) {
         try {
-            Cipher cipher = Cipher.getInstance(String.format("DES/ECB/%s", padding));
-            SecretKey keyValue = new SecretKeySpec(key, "DES");
+            Cipher cipher = Cipher.getInstance(String.format("DESede/ECB/%s", padding));
+            SecretKey keyValue = new SecretKeySpec(key, "DESede");
             int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue);
             return cipher.doFinal(data);
@@ -43,9 +42,9 @@ public class DES {
 
     private static byte[] cbc(boolean encrypt, byte[] key, byte[] iv, byte[] data, String padding) {
         try {
-            Cipher cipher = Cipher.getInstance(String.format("DES/CBC/%s", padding));
+            Cipher cipher = Cipher.getInstance(String.format("DESede/CBC/%s", padding));
             IvParameterSpec ivValue = new IvParameterSpec(iv);
-            SecretKey keyValue = new SecretKeySpec(key, "DES");
+            SecretKey keyValue = new SecretKeySpec(key, "DESede");
             int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue, ivValue);
             return cipher.doFinal(data);

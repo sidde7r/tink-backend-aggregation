@@ -1,7 +1,7 @@
-load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "cryptography",
     srcs = glob(
         ["*.java"],
@@ -9,10 +9,18 @@ java_library(
             "*Test.java",
         ],
     ),
-    visibility = ["//visibility:public"],
-    deps = [
+    extdeps = [
+        "//third_party:commons_codec_commons_codec",
+        "//third_party:net_minidev_json_smart",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "@aggregation//:com_google_guava_guava",
     ],
+    intdeps = [
+        "//src/libraries/cryptography/hash",
+        "//src/libraries/encoding",
+    ],
+    visibility = ["//visibility:public"],
 )
 
 junit_test(
@@ -22,7 +30,8 @@ junit_test(
         "//data:cryptography_test",
     ],
     deps = [
-        "//src/libraries/cryptography",
+        ":cryptography",
+        "//src/libraries/encoding",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
