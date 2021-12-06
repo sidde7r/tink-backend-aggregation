@@ -25,6 +25,8 @@ public class SparebankenSorTransactionalAccountFetcher
         return Optional.ofNullable(accountList).orElseGet(Collections::emptyList).stream()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

@@ -5,10 +5,10 @@
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "NOK",
-                "doubleValue": 16248.43,
+                "doubleValue": -4033751.57,
                 "scale": 2,
-                "unscaledValue": 1624843,
-                "exactValue": 16248.43
+                "unscaledValue": -403375157,
+                "exactValue": -4033751.57
             },
             "currencyCode": "NOK",
             "bankId": "30004254445",
@@ -36,17 +36,17 @@
             "flags": "[]",
             "balances": [],
             "availableCredit": 0.0,
-            "balance": 16248.43
+            "balance": -4033751.57
         },
         {
             "accountNumber": "30003804077",
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "NOK",
-                "doubleValue": 172.73,
+                "doubleValue": 401.73,
                 "scale": 2,
-                "unscaledValue": 17273,
-                "exactValue": 172.73
+                "unscaledValue": 40173,
+                "exactValue": 401.73
             },
             "currencyCode": "NOK",
             "bankId": "30003804077",
@@ -74,7 +74,7 @@
             "flags": "[]",
             "balances": [],
             "availableCredit": 0.0,
-            "balance": 172.73
+            "balance": 401.73
         },
         {
             "accountNumber": "30003806959",
