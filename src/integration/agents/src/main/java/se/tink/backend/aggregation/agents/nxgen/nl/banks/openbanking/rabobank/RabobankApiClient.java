@@ -28,8 +28,8 @@ import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -206,7 +206,7 @@ public final class RabobankApiClient {
 
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
             if (errorResponse.isPeriodInvalidError()) {
-                return new EmptyFinalPaginatorResponse();
+                return PaginatorResponseImpl.createEmptyFinal();
             }
             throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
         }

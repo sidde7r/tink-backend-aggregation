@@ -6,7 +6,6 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -33,7 +32,7 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
 
         // Current bank limit of transaction history is 18 months
         if (fromDate.before(limitDate)) {
-            return new EmptyFinalPaginatorResponse();
+            return PaginatorResponseImpl.createEmptyFinal();
         } else if (toDate.before(limitDate)) {
             fromDate = limitDate;
         }
