@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.ie.openbanking.permanenttsb;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -25,14 +28,21 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class PermanentTsbApiClient extends UkOpenBankingApiClient {
+
+    private static final String FROM_BOOKING_DATE_TIME_KEY = "fromBookingDateTime";
+    private static final String TO_BOOKING_DATE_TIME_KEY = "toBookingDateTime";
+    protected static final DateTimeFormatter PERMANENT_TSB_DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     private final UkOpenBankingAisConfig aisConfig;
     private final String qsealPem;
 
-    public PermanentTsbApiClient(
+    protected PermanentTsbApiClient(
             TinkHttpClient httpClient,
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
@@ -134,5 +144,34 @@ public class PermanentTsbApiClient extends UkOpenBankingApiClient {
                         .withCode(code);
 
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
+    }
+
+    @Override
+    public <T> T fetchAccountTransactions(
+            String accountId,
+            OffsetDateTime fromBookingDateTime,
+            OffsetDateTime toBookingDateTime,
+            Class<T> responseType) {
+
+        URL urlWithoutZuluInDates =
+                buildTransactionsUrl(
+                        accountId,
+                        fromBookingDateTime,
+                        toBookingDateTime,
+                        PERMANENT_TSB_DATE_TIME_FORMATTER);
+        log.info("[PermanentTsbApiClient] Try using dates without Zulu offset.");
+        return createAisRequest(urlWithoutZuluInDates).get(responseType);
+    }
+
+    private URL buildTransactionsUrl(
+            String accountId,
+            OffsetDateTime fromBookingDateTime,
+            OffsetDateTime toBookingDateTime,
+            DateTimeFormatter formatter) {
+        return aisConfig
+                .getApiBaseURL()
+                .concatWithSeparator(aisConfig.getInitialTransactionsPaginationKey(accountId))
+                .queryParam(FROM_BOOKING_DATE_TIME_KEY, formatter.format(fromBookingDateTime))
+                .queryParam(TO_BOOKING_DATE_TIME_KEY, formatter.format(toBookingDateTime));
     }
 }
