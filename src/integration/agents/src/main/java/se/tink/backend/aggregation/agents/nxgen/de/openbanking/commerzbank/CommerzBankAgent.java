@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
@@ -69,7 +70,9 @@ public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
 
         return Optional.of(
                 new PaymentController(
-                        xs2aDevelopersPaymentExecutor, xs2aDevelopersPaymentExecutor));
+                        xs2aDevelopersPaymentExecutor,
+                        xs2aDevelopersPaymentExecutor,
+                        new PaymentControllerExceptionMapper()));
     }
 
     @Override
