@@ -1,0 +1,2082 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 44050.41,
+            "exactValue" : 44050.41,
+            "scale" : 2,
+            "unscaledValue" : 4405041
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 44050.41,
+            "exactValue" : 44050.41,
+            "scale" : 2,
+            "unscaledValue" : 4405041
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "eeeeeeee111122223333aaaaaaaaaaaa",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "RESURS WORLD",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 44050.41,
+        "balance" : 44050.41
+    } ],
+    "transactions" : [ {
+        "amount" : -1099.0,
+        "date" : 1638183600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000131"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-29",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -732.0,
+        "date" : 1638183600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000130"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-29",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : 15464.68,
+        "date" : 1637838000000,
+        "description" : "PAYMENT",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000126"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-25",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PAYMENT",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -701.0,
+        "date" : 1637924400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000128"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-26",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -524.59,
+        "date" : 1638183600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000129"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-29",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -141.0,
+        "date" : 1637924400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000127"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-26",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -193.0,
+        "date" : 1636974000000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000125"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-15",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -72.0,
+        "date" : 1636369200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000124"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-08",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -2307.0,
+        "date" : 1636369200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000123"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-08",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -89.0,
+        "date" : 1635764400000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000118"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -1872.98,
+        "date" : 1635850800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000122"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-02",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -215.0,
+        "date" : 1635850800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000119"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-02",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -400.0,
+        "date" : 1635850800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000120"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-02",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -3708.0,
+        "date" : 1635850800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000121"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-02",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -812.18,
+        "date" : 1635501600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000117"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-29",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : 18462.35,
+        "date" : 1635242400000,
+        "description" : "PAYMENT",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000116"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-26",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PAYMENT",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -2003.57,
+        "date" : 1635156000000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000115"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-25",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -3652.95,
+        "date" : 1634896800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000113"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-22",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -870.0,
+        "date" : 1634896800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000114"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-22",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -1551.0,
+        "date" : 1634551200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000111"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-18",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -170.0,
+        "date" : 1634551200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000112"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-18",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -30.0,
+        "date" : 1633946400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000109"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-11",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -90.0,
+        "date" : 1633946400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000110"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-11",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -39.0,
+        "date" : 1630663200000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000098"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -39.0,
+        "date" : 1630663200000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000099"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -89.0,
+        "date" : 1633082400000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000108"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : 11823.0,
+        "date" : 1632823200000,
+        "description" : "PAYMENT",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000107"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-28",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PAYMENT",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -948.0,
+        "date" : 1632736800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000106"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-27",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -678.7,
+        "date" : 1632391200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000105"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-23",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -539.0,
+        "date" : 1632218400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000104"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-21",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -233.0,
+        "date" : 1631613600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000103"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-14",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -3600.0,
+        "date" : 1631527200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000102"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-13",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -381.31,
+        "date" : 1631008800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000101"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-07",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -660.0,
+        "date" : 1631008800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000100"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-07",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -1021.49,
+        "date" : 1630663200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000095"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -664.8,
+        "date" : 1630663200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000096"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -829.0,
+        "date" : 1630663200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000097"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -180.0,
+        "date" : 1638270000000,
+        "description" : "PRELIMINARY",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "_189639804"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PRELIMINARY",
+        "providerMarket" : "SE",
+        "booked" : false
+    }, {
+        "amount" : 17000.0,
+        "date" : 1630404000000,
+        "description" : "PAYMENT",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000093"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-31",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PAYMENT",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -89.0,
+        "date" : 1630490400000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000094"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-09-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -34.9,
+        "date" : 1629972000000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000092"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-26",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -590.0,
+        "date" : 1629712800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000090"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-23",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -928.8,
+        "date" : 1629712800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000091"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-23",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -24.0,
+        "date" : 1629194400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000086"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-17",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -299.0,
+        "date" : 1629194400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000087"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-17",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -93.2,
+        "date" : 1629194400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000088"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-17",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -422.72,
+        "date" : 1629194400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000089"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-17",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -2738.0,
+        "date" : 1628762400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000085"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-12",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -405.0,
+        "date" : 1628589600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000083"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-10",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -53.95,
+        "date" : 1628503200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000082"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-09",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -570.8,
+        "date" : 1628676000000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000084"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-11",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -31.0,
+        "date" : 1628157600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000077"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-05",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -62.0,
+        "date" : 1628157600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000078"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-05",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -708.32,
+        "date" : 1628157600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000079"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-05",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -85.0,
+        "date" : 1628157600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000080"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-05",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -30.0,
+        "date" : 1628157600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000081"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-05",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -10.0,
+        "date" : 1627984800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000075"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -153.0,
+        "date" : 1627984800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000076"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -39.0,
+        "date" : 1625479200000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000069"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-05",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -39.0,
+        "date" : 1625479200000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000070"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-05",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -89.0,
+        "date" : 1627812000000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000074"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -11399.88,
+        "date" : 1627552800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000073"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-29",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : 25000.0,
+        "date" : 1627380000000,
+        "description" : "PAYMENT",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000072"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-27",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PAYMENT",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -136.4,
+        "date" : 1625652000000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000071"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-07",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -16576.0,
+        "date" : 1625220000000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000068"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-02",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -89.0,
+        "date" : 1625133600000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000067"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -569.0,
+        "date" : 1625047200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000065"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -494.0,
+        "date" : 1625047200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000066"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -29.0,
+        "date" : 1624960800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000064"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-29",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -246.65,
+        "date" : 1624528800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000061"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-24",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -2588.0,
+        "date" : 1624528800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000062"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-24",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -140.0,
+        "date" : 1624528800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000063"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-24",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -828.0,
+        "date" : 1624442400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000060"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-23",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -597.0,
+        "date" : 1624269600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000058"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-21",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -294.0,
+        "date" : 1624269600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000059"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-21",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -500.0,
+        "date" : 1624010400000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000057"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-18",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -166.0,
+        "date" : 1623924000000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000056"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-17",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -45.0,
+        "date" : 1623837600000,
+        "description" : "CHARGE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000053"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-16",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "CHARGE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -9114.9,
+        "date" : 1623837600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000054"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-16",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -415.0,
+        "date" : 1623837600000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000055"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-16",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -524.0,
+        "date" : 1623751200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000052"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-15",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -1564.0,
+        "date" : 1623664800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000051"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-14",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : 6701.0,
+        "date" : 1623405600000,
+        "description" : "PAYMENT",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000050"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-11",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PAYMENT",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -375.84,
+        "date" : 1623319200000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000049"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-10",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -1450.0,
+        "date" : 1622800800000,
+        "description" : "Dummy transaction note",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "60283157281_000000048"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-04",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    } ]
+}

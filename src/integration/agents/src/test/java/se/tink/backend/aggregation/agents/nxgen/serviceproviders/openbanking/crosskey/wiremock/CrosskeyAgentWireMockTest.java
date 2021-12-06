@@ -20,9 +20,13 @@ public class CrosskeyAgentWireMockTest {
     private static final String WIREMOCK_SERVER_FILEPATH = BASE_PATH + "wiremockfile.aap";
     private static final String WIREMOCK_SERVER_FILEPATH_RESURS_SUPREME =
             BASE_PATH + "wiremockfile_supreme.aap";
+    private static final String WIREMOCK_SERVER_FILEPATH_RESURSBANK =
+            BASE_PATH + "wiremockfile_resursbank.aap";
     private static final String CONTRACT_FILE_PATH = BASE_PATH + "agent-contract.json";
     private static final String CONTRACT_FILE_PATH_RESURS_SUPREME =
             BASE_PATH + "agent-contract-supreme.json";
+    private static final String CONTRACT_FILE_PATH_RESURSBANK =
+            BASE_PATH + "agent-contract-resursbank.json";
 
     private AgentWireMockRefreshTest buildAgentWireMockRefreshTest(
             String providerName, String wiremockFile) throws IOException, ConfigurationException {
@@ -66,6 +70,23 @@ public class CrosskeyAgentWireMockTest {
         final AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
                         .parseContractOnBasisOfFile(CONTRACT_FILE_PATH_RESURS_SUPREME);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testRefreshResursbank() throws Exception {
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                buildAgentWireMockRefreshTest(
+                        "se-resursbank-ob", WIREMOCK_SERVER_FILEPATH_RESURSBANK);
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(CONTRACT_FILE_PATH_RESURSBANK);
 
         // when
         agentWireMockRefreshTest.executeRefresh();

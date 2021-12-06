@@ -1,0 +1,4141 @@
+REQUEST 1
+POST https://open-banking.resurs.com/oidc/v1.0/token?client_id=dummyClientId
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 30 Nov 2021 17:27:41 GMT
+Date: Tue, 30 Nov 2021 17:27:41 GMT
+Content-Type: application/json;charset=utf-8
+RateLimit-Limit: 100
+RateLimit-Remaining: 99
+RateLimit-Reset: 1
+X-RateLimit-Remaining-Second: 99
+X-RateLimit-Limit-Second: 100
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Length: 947
+
+{
+  "access_token": "eyJraWQiOiJjMzU1NWVlZC00ZTg2LTQ0MDUtODIzYS00YThmZjNmMTE4N2MiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJ**HASHED:qs**wic2NvcGUiOiJvcGVuaWQgYWNjb3VudHMiLCJzdHJvbmdseUF1dGhlbnRpY2F0ZWQiOmZhbHNlLCJpc3MiOiJodHRwczpcL1wvb3Blbi1iYW5raW5nLnJlc3Vycy5jb20iLCJjbmYiOnsieDV0I1MyNTYiOiJpOVVsRXZSNnFGY0tZamUwR0NpVWdGWVRrbHRrRFNvcTNLanBHR0Z6SUdNIn0sImV4cCI6MTYzODI5MzQ0MSwiaWF0IjoxNjM4MjkzMjYxLCJqdGkiOiJlNDczNzNhMS1mYmYwLTQyOTEtYmJmYi1kZTlmMmQ3YzU3YzQiLCJ0ZW5hbnQiOiJyZXN1cnNiYW5rIn0.CkW46MNC-RSa-DaJ3i159TvaOWpNsMAei9cPKG8CKZ9pqVxiql0yrtA_D9AwR96P-Th1cyu1sneNCzEJKh-KLar0qz2kye_17qt7qD2hFWiaOkNFK0B9YeA8yNfvztvTE0r6Rh1LgL7MLZ-0FMiWlDWtfKh1R53oCXMFUfBxwdPhn3uP6AAsF2cHrbo1gIWUPYjFkaw0Qu_9Wu3wHgULYNEA2lW2l-mANqFzmdas6pA6YuCJhU-BBcSVGAmoPvM8wmtH49TDup-Dkq9aPIyEYYIj1oFh5Y5BRbx8YAtA_cbx3j3rL130ydx2RClFcC57nbdBz9IWpvYNZQcBDl07fA",
+  "scope": "openid accounts",
+  "token_type": "Bearer",
+  "expires_in": 180
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://open-banking.resurs.com/open-banking/v3.1/aisp/account-access-consents
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+{
+    "Data":
+    {
+        "ExpirationDateTime": "",
+        "Permissions":
+        [
+            "ReadAccountsDetail",
+            "ReadBalances",
+            "ReadTransactionsDetail",
+            "ReadTransactionsCredits",
+            "ReadTransactionsDebits"
+        ],
+        "TransactionFromDateTime": "",
+        "TransactionToDateTime": ""
+    },
+    "Risk":
+    {}
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Date: Tue, 30 Nov 2021 17:27:41 GMT
+Date: Tue, 30 Nov 2021 17:27:41 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Remaining-Minute: 1999
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Remaining: 199
+RateLimit-Reset: 1
+RateLimit-Limit: 200
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: 776ac261-e393-455e-99b3-6309cc502af1
+X-Frame-Options: DENY
+Content-Length: 521
+
+{
+  "Data": {
+    "ConsentId": "**HASHED:B7**",
+    "CreationDateTime": "**HASHED:PM**",
+    "Status": "**HASHED:0+**",
+    "StatusUpdateDateTime": "**HASHED:PM**",
+    "Permissions": [
+      "**HASHED:2c**",
+      "**HASHED:vO**",
+      "**HASHED:ce**",
+      "**HASHED:wc**",
+      "**HASHED:xz**"
+    ],
+    "ExpirationDateTime": "**HASHED:9d**"
+  },
+  "Risk": {},
+  "Links": {
+    "Self": "**HASHED:MW**"
+  },
+  "Meta": {}
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE_1
+200
+Date: Tue, 30 Nov 2021 17:28:33 GMT
+Date: Tue, 30 Nov 2021 17:28:34 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Limit: 200
+RateLimit-Remaining: 199
+RateLimit-Reset: 1
+X-RateLimit-Remaining-Minute: 1999
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: ed6c29ac-91a1-4fd3-908f-ff49e84506b8
+X-Frame-Options: DENY
+Content-Length: 357
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "Currency": "SEK",
+        "AccountType": "Personal",
+        "AccountSubType": "CreditCard",
+        "Description": "RESURS WORLD",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.PAN",
+            "Identification": "528248XXXXXX2290",
+            "Name": "-"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE_1
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 30 Nov 2021 17:28:34 GMT
+Date: Tue, 30 Nov 2021 17:28:34 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Remaining-Minute: 1999
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Remaining: 199
+RateLimit-Limit: 200
+RateLimit-Reset: 1
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: 7ceaa4f0-54a4-4dc3-a64e-e2aa9f93d68d
+X-Frame-Options: DENY
+Content-Length: 357
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "Currency": "SEK",
+        "AccountType": "Personal",
+        "AccountSubType": "CreditCard",
+        "Description": "RESURS WORLD",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.PAN",
+            "Identification": "528248XXXXXX2290",
+            "Name": "-"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/balances
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Tue, 30 Nov 2021 17:28:34 GMT
+Date: Tue, 30 Nov 2021 17:28:35 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Remaining-Minute: 1999
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Remaining: 199
+RateLimit-Reset: 1
+RateLimit-Limit: 200
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: ee3ed06c-68ac-41a9-a20a-dba602353fb5
+X-Frame-Options: DENY
+Content-Length: 360
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2021-11-30T17:28:35.38499Z",
+        "Amount": {
+          "Amount": "44050.41",
+          "Currency": "SEK"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/balances"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions?toBookingDateTime=1992-04-09T00:00:00&fromBookingDateTime=1992-01-12T00:00:00
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET TRANSACTIONS_1
+200
+Date: Tue, 30 Nov 2021 17:28:35 GMT
+Date: Tue, 30 Nov 2021 17:28:36 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Remaining-Minute: 1998
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Remaining: 199
+RateLimit-Reset: 1
+RateLimit-Limit: 200
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: b752c287-dccd-4d80-9086-61d4ee075e95
+X-Frame-Options: DENY
+Transfer-Encoding: chunked
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000131",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-29T12:00:00Z",
+        "Amount": {
+          "Amount": "1099.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-11-27T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000130",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-29T12:00:00Z",
+        "Amount": {
+          "Amount": "732.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-11-26T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000126",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-25T12:00:00Z",
+        "Amount": {
+          "Amount": "15464.68",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-11-25T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000128",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-26T12:00:00Z",
+        "Amount": {
+          "Amount": "701.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-11-25T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000129",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-29T12:00:00Z",
+        "Amount": {
+          "Amount": "524.59",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-11-25T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000127",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-26T12:00:00Z",
+        "Amount": {
+          "Amount": "141.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-11-24T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000125",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-15T12:00:00Z",
+        "Amount": {
+          "Amount": "193.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-11-11T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000124",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-08T12:00:00Z",
+        "Amount": {
+          "Amount": "72.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-11-07T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000123",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-08T12:00:00Z",
+        "Amount": {
+          "Amount": "2307.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-11-06T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000118",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-01T12:00:00Z",
+        "Amount": {
+          "Amount": "89.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-10-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000122",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-02T12:00:00Z",
+        "Amount": {
+          "Amount": "1872.98",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "ES"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000119",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-02T12:00:00Z",
+        "Amount": {
+          "Amount": "215.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-29T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000120",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-02T12:00:00Z",
+        "Amount": {
+          "Amount": "400.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-29T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000121",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-11-02T12:00:00Z",
+        "Amount": {
+          "Amount": "3708.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-29T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000117",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-29T12:00:00Z",
+        "Amount": {
+          "Amount": "812.18",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-28T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "ES"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000116",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-26T12:00:00Z",
+        "Amount": {
+          "Amount": "18462.35",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-10-26T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000115",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-25T12:00:00Z",
+        "Amount": {
+          "Amount": "2003.57",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-23T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "ES"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000113",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-22T12:00:00Z",
+        "Amount": {
+          "Amount": "3652.95",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-21T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "ES"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000114",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-22T12:00:00Z",
+        "Amount": {
+          "Amount": "870.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-21T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000111",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-18T12:00:00Z",
+        "Amount": {
+          "Amount": "1551.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000112",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-18T12:00:00Z",
+        "Amount": {
+          "Amount": "170.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000109",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-11T12:00:00Z",
+        "Amount": {
+          "Amount": "30.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-09T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000110",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-11T12:00:00Z",
+        "Amount": {
+          "Amount": "90.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-10-09T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000098",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-03T12:00:00Z",
+        "Amount": {
+          "Amount": "39.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-09-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000099",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-03T12:00:00Z",
+        "Amount": {
+          "Amount": "39.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-09-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000108",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-10-01T12:00:00Z",
+        "Amount": {
+          "Amount": "89.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-09-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000107",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-28T12:00:00Z",
+        "Amount": {
+          "Amount": "11823.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-09-28T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000106",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-27T12:00:00Z",
+        "Amount": {
+          "Amount": "948.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-24T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000105",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-23T12:00:00Z",
+        "Amount": {
+          "Amount": "678.70",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-22T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000104",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-21T12:00:00Z",
+        "Amount": {
+          "Amount": "539.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-20T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000103",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-14T12:00:00Z",
+        "Amount": {
+          "Amount": "233.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-13T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000102",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-13T12:00:00Z",
+        "Amount": {
+          "Amount": "3600.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-10T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000101",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-07T12:00:00Z",
+        "Amount": {
+          "Amount": "381.31",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-05T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000100",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-07T12:00:00Z",
+        "Amount": {
+          "Amount": "660.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-03T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000095",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-03T12:00:00Z",
+        "Amount": {
+          "Amount": "1021.49",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-02T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000096",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-03T12:00:00Z",
+        "Amount": {
+          "Amount": "664.80",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-02T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000097",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-03T12:00:00Z",
+        "Amount": {
+          "Amount": "829.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-09-02T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "_189639804",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Pending",
+        "Amount": {
+          "Amount": "180.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "QuotationDate": "2021-11-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PRELIMINARY"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {}
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8 MATCH TRANSACTIONS_1
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions?toBookingDateTime=1992-01-11T00:00:00&fromBookingDateTime=1991-10-14T00:00:00
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET TRANSACTIONS_2
+200
+Date: Tue, 30 Nov 2021 17:28:36 GMT
+Date: Tue, 30 Nov 2021 17:28:36 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Limit: 200
+RateLimit-Remaining: 199
+RateLimit-Reset: 1
+X-RateLimit-Remaining-Minute: 1998
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: 680526f4-e387-4066-8fdd-756981e50eba
+X-Frame-Options: DENY
+Transfer-Encoding: chunked
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000093",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-31T12:00:00Z",
+        "Amount": {
+          "Amount": "17000.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-08-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000094",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-09-01T12:00:00Z",
+        "Amount": {
+          "Amount": "89.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-08-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000092",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-26T12:00:00Z",
+        "Amount": {
+          "Amount": "34.90",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-25T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000090",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-23T12:00:00Z",
+        "Amount": {
+          "Amount": "590.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-21T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000091",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-23T12:00:00Z",
+        "Amount": {
+          "Amount": "928.80",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-21T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000086",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-17T12:00:00Z",
+        "Amount": {
+          "Amount": "24.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000087",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-17T12:00:00Z",
+        "Amount": {
+          "Amount": "299.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000088",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-17T12:00:00Z",
+        "Amount": {
+          "Amount": "93.20",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000089",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-17T12:00:00Z",
+        "Amount": {
+          "Amount": "422.72",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000085",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-12T12:00:00Z",
+        "Amount": {
+          "Amount": "2738.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-11T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000083",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-10T12:00:00Z",
+        "Amount": {
+          "Amount": "405.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-08T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000082",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-09T12:00:00Z",
+        "Amount": {
+          "Amount": "53.95",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-07T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000084",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-11T12:00:00Z",
+        "Amount": {
+          "Amount": "570.80",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-07T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000077",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-05T12:00:00Z",
+        "Amount": {
+          "Amount": "31.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-04T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000078",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-05T12:00:00Z",
+        "Amount": {
+          "Amount": "62.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-04T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000079",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-05T12:00:00Z",
+        "Amount": {
+          "Amount": "708.32",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-04T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000080",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-05T12:00:00Z",
+        "Amount": {
+          "Amount": "85.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-03T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000081",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-05T12:00:00Z",
+        "Amount": {
+          "Amount": "30.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-03T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000075",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-03T12:00:00Z",
+        "Amount": {
+          "Amount": "10.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-02T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "NL"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000076",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-03T12:00:00Z",
+        "Amount": {
+          "Amount": "153.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-08-02T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "NL"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000069",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-07-05T12:00:00Z",
+        "Amount": {
+          "Amount": "39.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-07-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000070",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-07-05T12:00:00Z",
+        "Amount": {
+          "Amount": "39.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-07-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000074",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-08-01T12:00:00Z",
+        "Amount": {
+          "Amount": "89.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-07-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000073",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-07-29T12:00:00Z",
+        "Amount": {
+          "Amount": "11399.88",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-07-28T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "IE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000072",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-07-27T12:00:00Z",
+        "Amount": {
+          "Amount": "25000.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-07-27T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000071",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-07-07T12:00:00Z",
+        "Amount": {
+          "Amount": "136.40",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-07-06T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000068",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-07-02T12:00:00Z",
+        "Amount": {
+          "Amount": "16576.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-07-01T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000067",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-07-01T12:00:00Z",
+        "Amount": {
+          "Amount": "89.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-06-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000065",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-30T12:00:00Z",
+        "Amount": {
+          "Amount": "569.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-29T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000066",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-30T12:00:00Z",
+        "Amount": {
+          "Amount": "494.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-29T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000064",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-29T12:00:00Z",
+        "Amount": {
+          "Amount": "29.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-28T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000061",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-24T12:00:00Z",
+        "Amount": {
+          "Amount": "246.65",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-23T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000062",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-24T12:00:00Z",
+        "Amount": {
+          "Amount": "2588.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-23T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000063",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-24T12:00:00Z",
+        "Amount": {
+          "Amount": "140.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-23T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000060",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-23T12:00:00Z",
+        "Amount": {
+          "Amount": "828.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-21T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000058",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-21T12:00:00Z",
+        "Amount": {
+          "Amount": "597.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-19T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000059",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-21T12:00:00Z",
+        "Amount": {
+          "Amount": "294.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-19T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000057",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-18T12:00:00Z",
+        "Amount": {
+          "Amount": "500.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-17T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000056",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-17T12:00:00Z",
+        "Amount": {
+          "Amount": "166.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000053",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-16T12:00:00Z",
+        "Amount": {
+          "Amount": "45.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-06-15T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000054",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-16T12:00:00Z",
+        "Amount": {
+          "Amount": "9114.90",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-06-15T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000055",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-16T12:00:00Z",
+        "Amount": {
+          "Amount": "415.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-15T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000052",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-15T12:00:00Z",
+        "Amount": {
+          "Amount": "524.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-14T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000051",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-14T12:00:00Z",
+        "Amount": {
+          "Amount": "1564.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-13T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000050",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-11T12:00:00Z",
+        "Amount": {
+          "Amount": "6701.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-06-11T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000049",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-10T12:00:00Z",
+        "Amount": {
+          "Amount": "375.84",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-08T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000048",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-04T12:00:00Z",
+        "Amount": {
+          "Amount": "1450.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-03T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9 MATCH TRANSACTIONS_2
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions?toBookingDateTime=1992-01-11T00:00:00&fromBookingDateTime=1991-10-14T00:00:00
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Date: Tue, 30 Nov 2021 17:28:36 GMT
+Date: Tue, 30 Nov 2021 17:28:37 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Limit: 200
+RateLimit-Remaining: 198
+RateLimit-Reset: 1
+X-RateLimit-Remaining-Minute: 1997
+X-RateLimit-Remaining-Second: 198
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: aea5c43a-8c3b-4b5b-bc4b-03b422602f42
+X-Frame-Options: DENY
+Transfer-Encoding: chunked
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000048",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-04T12:00:00Z",
+        "Amount": {
+          "Amount": "1450.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-03T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000047",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-02T12:00:00Z",
+        "Amount": {
+          "Amount": "537.25",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-06-01T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000046",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-01T12:00:00Z",
+        "Amount": {
+          "Amount": "89.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-05-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000042",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-25T12:00:00Z",
+        "Amount": {
+          "Amount": "12000.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-05-25T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000043",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-25T12:00:00Z",
+        "Amount": {
+          "Amount": "408.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-24T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000044",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-25T12:00:00Z",
+        "Amount": {
+          "Amount": "244.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-24T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000045",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-25T12:00:00Z",
+        "Amount": {
+          "Amount": "307.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-24T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000041",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-24T12:00:00Z",
+        "Amount": {
+          "Amount": "663.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-22T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000040",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-24T12:00:00Z",
+        "Amount": {
+          "Amount": "1180.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-21T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000039",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-21T12:00:00Z",
+        "Amount": {
+          "Amount": "762.73",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-20T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000038",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-18T12:00:00Z",
+        "Amount": {
+          "Amount": "2940.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-17T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000037",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-17T12:00:00Z",
+        "Amount": {
+          "Amount": "30.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-15T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000035",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-17T12:00:00Z",
+        "Amount": {
+          "Amount": "650.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-14T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000036",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-17T12:00:00Z",
+        "Amount": {
+          "Amount": "300.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-14T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000034",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-17T12:00:00Z",
+        "Amount": {
+          "Amount": "2780.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-13T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000031",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-14T12:00:00Z",
+        "Amount": {
+          "Amount": "680.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-12T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000032",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-14T12:00:00Z",
+        "Amount": {
+          "Amount": "80.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-12T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000033",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-14T12:00:00Z",
+        "Amount": {
+          "Amount": "184.51",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-12T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000028",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-10T12:00:00Z",
+        "Amount": {
+          "Amount": "3699.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-08T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000029",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-10T12:00:00Z",
+        "Amount": {
+          "Amount": "190.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-08T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000030",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-10T12:00:00Z",
+        "Amount": {
+          "Amount": "447.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-08T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000027",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-07T12:00:00Z",
+        "Amount": {
+          "Amount": "4100.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-06T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000024",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-04T12:00:00Z",
+        "Amount": {
+          "Amount": "121.85",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-01T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000025",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-04T12:00:00Z",
+        "Amount": {
+          "Amount": "45.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-01T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000026",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-04T12:00:00Z",
+        "Amount": {
+          "Amount": "171.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-05-01T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000022",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-01T12:00:00Z",
+        "Amount": {
+          "Amount": "89.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-04-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000020",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-29T12:00:00Z",
+        "Amount": {
+          "Amount": "9159.90",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-04-29T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000021",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-29T12:00:00Z",
+        "Amount": {
+          "Amount": "9159.90",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-04-29T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000023",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-05-03T12:00:00Z",
+        "Amount": {
+          "Amount": "3605.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-04-29T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PAYMENT"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000019",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-28T12:00:00Z",
+        "Amount": {
+          "Amount": "283.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-04-27T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "NL"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000018",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-26T12:00:00Z",
+        "Amount": {
+          "Amount": "195.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-04-23T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000016",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-20T12:00:00Z",
+        "Amount": {
+          "Amount": "270.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-04-19T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000017",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-20T12:00:00Z",
+        "Amount": {
+          "Amount": "600.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-04-19T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000015",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-20T12:00:00Z",
+        "Amount": {
+          "Amount": "12288.25",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-04-18T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000013",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-13T12:00:00Z",
+        "Amount": {
+          "Amount": "1205.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-04-12T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000014",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-13T12:00:00Z",
+        "Amount": {
+          "Amount": "12.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-04-12T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000012",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-09T12:00:00Z",
+        "Amount": {
+          "Amount": "243.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-04-08T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000011",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-05T12:00:00Z",
+        "Amount": {
+          "Amount": "2597.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-04-01T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000010",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-04-01T12:00:00Z",
+        "Amount": {
+          "Amount": "89.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "TargetCurrency": "SEK",
+          "ExchangeRate": 0.000000,
+          "QuotationDate": "2021-03-31T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CHARGE"
+        },
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": ""
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000007",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-31T12:00:00Z",
+        "Amount": {
+          "Amount": "999.60",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000008",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-31T12:00:00Z",
+        "Amount": {
+          "Amount": "110.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000009",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-31T12:00:00Z",
+        "Amount": {
+          "Amount": "29.90",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-30T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000005",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-29T12:00:00Z",
+        "Amount": {
+          "Amount": "500.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-26T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000006",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-29T12:00:00Z",
+        "Amount": {
+          "Amount": "755.40",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-25T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000003",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-17T12:00:00Z",
+        "Amount": {
+          "Amount": "2149.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "DK"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000004",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-17T12:00:00Z",
+        "Amount": {
+          "Amount": "800.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-16T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "DK"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000001",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-16T12:00:00Z",
+        "Amount": {
+          "Amount": "227.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-15T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      },
+      {
+        "AccountId": "eeeeeeee-1111-2222-3333-aaaaaaaaaaaa",
+        "TransactionId": "60283157281_000000002",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-16T12:00:00Z",
+        "Amount": {
+          "Amount": "3500.00",
+          "Currency": "SEK"
+        },
+        "CurrencyExchange": {
+          "SourceCurrency": "SEK",
+          "TargetCurrency": "SEK",
+          "UnitCurrency": "SEK",
+          "ExchangeRate": 1.000000,
+          "QuotationDate": "2021-03-15T12:00:00Z"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "PURCHASE"
+        },
+        "TransactionInformation": "Dummy transaction note",
+        "CreditorAgent": {
+          "PostalAddress": {
+            "TownName": "Dummy town",
+            "Country": "SE"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions?toBookingDateTime=1991-10-13T00:00:00&fromBookingDateTime=1991-07-16T00:00:00
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Date: Tue, 30 Nov 2021 17:28:37 GMT
+Date: Tue, 30 Nov 2021 17:28:37 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Remaining-Minute: 1998
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Remaining: 199
+RateLimit-Limit: 200
+RateLimit-Reset: 1
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: 5478de70-43c4-4435-9008-32654427ab16
+X-Frame-Options: DENY
+Content-Length: 235
+
+{
+    "Data":
+    {
+        "Transaction":
+        []
+    },
+    "Links":
+    {
+        "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions"
+    },
+    "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions?toBookingDateTime=1991-07-15T00:00:00&fromBookingDateTime=1991-04-17T00:00:00
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Date: Tue, 30 Nov 2021 17:28:37 GMT
+Date: Tue, 30 Nov 2021 17:28:37 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Limit: 200
+RateLimit-Remaining: 199
+RateLimit-Reset: 1
+X-RateLimit-Remaining-Minute: 1996
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: f6f99dc0-eba3-4dc5-9f33-04c0450426d7
+X-Frame-Options: DENY
+Content-Length: 201
+
+{
+  "Data": {
+    "Transaction": []
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions?toBookingDateTime=1991-04-16T00:00:00&fromBookingDateTime=1991-01-17T00:00:00
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Date: Tue, 30 Nov 2021 17:28:37 GMT
+Date: Tue, 30 Nov 2021 17:28:38 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Remaining-Minute: 1997
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Remaining: 199
+RateLimit-Reset: 1
+RateLimit-Limit: 200
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: 422e1d8a-975e-4f04-9ee4-a27ee45d7eaa
+X-Frame-Options: DENY
+Content-Length: 201
+
+{
+  "Data": {
+    "Transaction": []
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions?toBookingDateTime=1991-01-16T00:00:00&fromBookingDateTime=1990-10-19T00:00:00
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Date: Tue, 30 Nov 2021 17:28:38 GMT
+Date: Tue, 30 Nov 2021 17:28:38 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Remaining-Second: 199
+X-RateLimit-Remaining-Minute: 1996
+X-RateLimit-Limit-Minute: 2000
+RateLimit-Remaining: 199
+RateLimit-Reset: 1
+RateLimit-Limit: 200
+X-RateLimit-Limit-Second: 200
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: bdcb2d15-27a8-4229-94ce-bde33cd7d492
+X-Frame-Options: DENY
+Content-Length: 201
+
+{
+  "Data": {
+    "Transaction": []
+  },
+  "Links": {
+    "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/eeeeeeee-1111-2222-3333-aaaaaaaaaaaa/transactions"
+  },
+  "Meta": {}
+}
