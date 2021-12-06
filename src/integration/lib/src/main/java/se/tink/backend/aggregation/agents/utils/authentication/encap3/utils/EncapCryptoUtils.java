@@ -9,9 +9,9 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.Base64;
 import org.apache.commons.codec.binary.Hex;
-import se.tink.backend.aggregation.agents.utils.crypto.AES;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.libraries.cryptography.AES;
+import se.tink.libraries.cryptography.EllipticCurve;
+import se.tink.libraries.cryptography.RSA;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 

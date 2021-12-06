@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator;
 
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils.DataUtils;
-import se.tink.backend.aggregation.agents.utils.crypto.MGF1;
-import se.tink.backend.aggregation.agents.utils.crypto.TOTP;
+import se.tink.libraries.cryptography.MGF1;
+import se.tink.libraries.cryptography.TOTP;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public class TotpCalculator {

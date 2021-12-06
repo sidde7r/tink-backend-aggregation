@@ -7,10 +7,10 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Arrays;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
-import se.tink.backend.aggregation.agents.utils.crypto.AES;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
-import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
-import se.tink.backend.aggregation.agents.utils.crypto.TripleDES;
+import se.tink.libraries.cryptography.AES;
+import se.tink.libraries.cryptography.EllipticCurve;
+import se.tink.libraries.cryptography.KeyDerivation;
+import se.tink.libraries.cryptography.TripleDES;
 import se.tink.libraries.cryptography.hash.Hash;
 
 public class CryptoUtils {

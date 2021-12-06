@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaCo
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SignedChallenge;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.ChallengeResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.HOTP;
+import se.tink.libraries.cryptography.HOTP;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor

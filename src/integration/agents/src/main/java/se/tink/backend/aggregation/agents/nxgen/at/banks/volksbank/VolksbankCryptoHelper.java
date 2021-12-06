@@ -8,7 +8,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.apache.commons.codec.binary.Hex;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.libraries.cryptography.RSA;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public final class VolksbankCryptoHelper {

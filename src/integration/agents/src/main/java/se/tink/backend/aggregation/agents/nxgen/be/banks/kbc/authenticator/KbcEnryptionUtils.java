@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.AES;
-import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
+import se.tink.libraries.cryptography.AES;
+import se.tink.libraries.cryptography.KeyDerivation;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public class KbcEnryptionUtils {

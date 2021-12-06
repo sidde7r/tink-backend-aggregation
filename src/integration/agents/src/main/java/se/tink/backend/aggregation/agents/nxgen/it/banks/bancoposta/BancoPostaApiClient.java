@@ -36,12 +36,12 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.savi
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.saving.rpc.SavingAccountDetailsTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.saving.rpc.SavingAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.saving.rpc.SavingTransactionResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.HOTP;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.cryptography.HOTP;
 
 @RequiredArgsConstructor
 public class BancoPostaApiClient {

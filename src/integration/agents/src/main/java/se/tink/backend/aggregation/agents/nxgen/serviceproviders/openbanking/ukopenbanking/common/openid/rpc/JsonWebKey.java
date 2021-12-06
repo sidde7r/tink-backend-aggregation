@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.security.PublicKey;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.cryptography.EllipticCurve;
+import se.tink.libraries.cryptography.RSA;
 import se.tink.libraries.encoding.EncodingUtils;
 
 // According to rfc7517

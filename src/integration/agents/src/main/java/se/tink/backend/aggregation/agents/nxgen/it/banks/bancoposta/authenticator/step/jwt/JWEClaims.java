@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.JWT.Claims;
-import se.tink.backend.aggregation.agents.utils.crypto.HOTP;
+import se.tink.libraries.cryptography.HOTP;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 

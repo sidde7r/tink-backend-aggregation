@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
+import se.tink.libraries.cryptography.EllipticCurve;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public class ContentSignerTest {

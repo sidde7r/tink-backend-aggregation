@@ -10,8 +10,8 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 import se.tink.backend.eidasdevissuer.client.EdiClient;
+import se.tink.libraries.cryptography.parser.Pem;
 
 public class InternalEidasProxyConfiguration {
     private static final String DUMMY_CERT_NAME = "trustedcert";

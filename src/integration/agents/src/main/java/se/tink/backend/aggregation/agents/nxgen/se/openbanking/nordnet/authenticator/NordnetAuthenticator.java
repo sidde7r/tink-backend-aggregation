@@ -8,9 +8,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.rpc.GetSessionKeyResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.cryptography.RSA;
 
 public class NordnetAuthenticator implements PasswordAuthenticator {
     private final NordnetApiClient apiClient;

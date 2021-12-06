@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.utils;
 import java.security.PrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.util.Arrays;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
+import se.tink.libraries.cryptography.EllipticCurve;
 import se.tink.libraries.encoding.EncodingUtils;
 
 public interface ChallengeUtils {

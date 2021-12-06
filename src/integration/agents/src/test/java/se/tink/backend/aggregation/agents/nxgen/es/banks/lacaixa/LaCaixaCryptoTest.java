@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.crypto.LaCaixaPasswordHash;
+import se.tink.libraries.cryptography.LaCaixaPasswordHash;
 
 public class LaCaixaCryptoTest {
 

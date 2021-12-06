@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.ut
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils.DynamicVector;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils.FingerPrintUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils.OtpUtils;
-import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.libraries.cryptography.AES;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.serialization.TypeReferences;

@@ -11,8 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.SessionResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.LaCaixaPasswordHash;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.libraries.cryptography.LaCaixaPasswordHash;
 
 public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
 

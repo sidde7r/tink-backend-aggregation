@@ -4,8 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.util.Collections;
-import se.tink.backend.aggregation.agents.utils.crypto.parser.Jks;
-import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
+import se.tink.libraries.cryptography.parser.Jks;
+import se.tink.libraries.cryptography.parser.Pem;
 
 class CoopTrustMaterialProvider {
     private static final String THAWTE_EV_RSA_CA_2018_INTERMEDIATE =

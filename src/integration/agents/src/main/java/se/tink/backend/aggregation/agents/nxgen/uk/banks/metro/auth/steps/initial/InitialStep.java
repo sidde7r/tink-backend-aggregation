@@ -8,13 +8,13 @@ import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.persistance.
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.persistance.MetroPersistedDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.steps.autoauthentication.AutoAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.steps.getcredentials.CredentialsGetStep;
-import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
+import se.tink.libraries.cryptography.EllipticCurve;
+import se.tink.libraries.cryptography.RSA;
 
 @AllArgsConstructor
 public class InitialStep
