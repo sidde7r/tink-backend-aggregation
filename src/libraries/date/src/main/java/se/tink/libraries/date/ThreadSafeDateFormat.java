@@ -74,11 +74,7 @@ public class ThreadSafeDateFormat {
     public static final ThreadSafeDateFormat FORMATTER_LOGGING =
             new ThreadSafeDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
 
-    /**
-     * A builder used to construct {@link ThreadSafeDateFormat}s. Mostly used to create variations
-     * of a preexisting {@link ThreadSafeDateFormat} by calling {@link
-     * ThreadSafeDateFormat#toBuilder()}.
-     */
+    /** A builder used to construct {@link ThreadSafeDateFormat}s. */
     public static class ThreadSafeDateFormatBuilder implements Cloneable {
 
         private String pattern;
@@ -191,19 +187,5 @@ public class ThreadSafeDateFormat {
                             + ")",
                     0);
         }
-    }
-
-    public boolean fitsFormat(String period) {
-        try {
-            jodaDateFormatter.parseDateTime(period);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public ThreadSafeDateFormatBuilder toBuilder() {
-        // Cloning since we don't allow internal builder to be mutable.
-        return builder.clone();
     }
 }
