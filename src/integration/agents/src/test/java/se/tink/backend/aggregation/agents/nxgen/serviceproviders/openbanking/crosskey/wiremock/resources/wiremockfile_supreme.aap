@@ -115,7 +115,7 @@ Content-Length: 357
 }
 -----------------------------------------------------------------------------------
 REQUEST 5
-GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions?toBookingDateTime=1992-04-09T00%3A00%3A00&fromBookingDateTime=1992-01-11T00%3A00%3A00
+GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions?toBookingDateTime=1992-04-09T00%3A00%3A00&fromBookingDateTime=1992-01-12T00%3A00%3A00
 Accept: application/json
 Content-Type: application/json
 x-fapi-financial-id: resursbank
