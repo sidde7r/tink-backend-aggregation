@@ -1,310 +1,276 @@
 {
-  "accounts": [
-    {
-      "accountNumber": "20000043443841",
-      "accountExclusion": "NONE",
-      "exactBalance": {
-        "currencyCode": "GBP",
-        "exactValue": 1.16345801E7,
-        "doubleValue": 1.16345801E7,
-        "scale": 2,
-        "unscaledValue": 1163458010
-      },
-      "currencyCode": "GBP",
-      "availableBalance": {
-        "currencyCode": "GBP",
-        "exactValue": 1.16345801E7,
-        "doubleValue": 1.16345801E7,
-        "scale": 2,
-        "unscaledValue": 1163458010
-      },
-      "bankId": "20000043443841",
-      "excluded": false,
-      "favored": false,
-      "name": "20000043443841",
-      "ownership": 1.0,
-      "type": "CHECKING",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false,
-      "identifiers": "[\"sort-code://20000043443841\"]",
-      "closed": false,
-      "accountHolder": {
-        "accountId": null,
-        "type": "BUSINESS",
-        "identities": []
-      },
-      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "balances": [],
-      "availableCredit": 0.0,
-      "balance": 1.16345801E7
+  "accounts" : [ {
+    "accountNumber" : "20000043443841",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 1.16345801E7,
+      "unscaledValue" : 1163458010,
+      "doubleValue" : 1.16345801E7,
+      "scale" : 2
     },
-    {
-      "accountNumber": "20671933345203",
-      "accountExclusion": "NONE",
-      "exactBalance": {
-        "currencyCode": "GBP",
-        "exactValue": 1.16345801E7,
-        "doubleValue": 1.16345801E7,
-        "scale": 2,
-        "unscaledValue": 1163458010
-      },
-      "currencyCode": "GBP",
-      "availableBalance": {
-        "currencyCode": "GBP",
-        "exactValue": 1.16345801E7,
-        "doubleValue": 1.16345801E7,
-        "scale": 2,
-        "unscaledValue": 1163458010
-      },
-      "bankId": "20671933345203",
-      "excluded": false,
-      "favored": false,
-      "name": "20671933345203",
-      "ownership": 1.0,
-      "type": "CHECKING",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false,
-      "identifiers": "[\"sort-code://20671933345203\"]",
-      "closed": false,
-      "accountHolder": {
-        "accountId": null,
-        "type": "BUSINESS",
-        "identities": []
-      },
-      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "balances": [],
-      "availableCredit": 0.0,
-      "balance": 1.16345801E7
-    }
-  ],
-  "transactions": [
-    {
-      "amount": -147.2,
-      "date": 1631008800000,
-      "description": "CLOUD EMEA  81748832GUO3VTBHER DDR",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false,
-      "externalSystemIds": {},
-      "mutability": null,
-      "transactionDates": [
-        {
-          "type": "BOOKING_DATE",
-          "value": {
-            "date": "2021-09-07",
-            "instant": "2021-09-07T23:01:45.000Z"
-          }
-        },
-        {
-          "type": "VALUE_DATE",
-          "value": {
-            "date": "2021-09-08",
-            "instant": null
-          }
-        }
-      ],
-      "providerMarket": "UK"
+    "currencyCode" : "GBP",
+    "availableBalance" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 1.16345801E7,
+      "unscaledValue" : 1163458010,
+      "doubleValue" : 1.16345801E7,
+      "scale" : 2
     },
-    {
-      "amount": -147.33,
-      "date": 1628157600000,
-      "description": "YYY IRELAND LTD  27680530GH2NQ98ADG DDR",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false,
-      "externalSystemIds": {},
-      "mutability": null,
-      "transactionDates": [
-        {
-          "type": "BOOKING_DATE",
-          "value": {
-            "date": "2021-08-05",
-            "instant": "2021-08-05T23:02:03.000Z"
-          }
-        },
-        {
-          "type": "VALUE_DATE",
-          "value": {
-            "date": "2021-08-06",
-            "instant": null
-          }
-        }
-      ],
-      "providerMarket": "UK"
+    "bankId" : "20000043443841",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "20000043443841",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"sort-code://20000043443841\"]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "BUSINESS",
+      "identities" : [ ]
     },
-    {
-      "amount": -60000.0,
-      "date": 1627639200000,
-      "description": "FF  tx odds FT",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false,
-      "externalSystemIds": {},
-      "mutability": null,
-      "transactionDates": [
-        {
-          "type": "BOOKING_DATE",
-          "value": {
-            "date": "2021-07-30",
-            "instant": "2021-07-30T15:07:14.000Z"
-          }
-        },
-        {
-          "type": "VALUE_DATE",
-          "value": {
-            "date": "2021-07-30",
-            "instant": null
-          }
-        }
-      ],
-      "providerMarket": "UK"
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 1.16345801E7
+  }, {
+    "accountNumber" : "20671933345203",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 1.16345801E7,
+      "unscaledValue" : 1163458010,
+      "doubleValue" : 1.16345801E7,
+      "scale" : 2
     },
-    {
-      "amount": -147.2,
-      "date": 1625652000000,
-      "description": "YYY IRELAND LTD  27680530GTEPNSQM1Y DDR",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false,
-      "externalSystemIds": {},
-      "mutability": null,
-      "transactionDates": [
-        {
-          "type": "BOOKING_DATE",
-          "value": {
-            "date": "2021-07-07",
-            "instant": "2021-07-07T23:01:42.000Z"
-          }
-        },
-        {
-          "type": "VALUE_DATE",
-          "value": {
-            "date": "2021-07-08",
-            "instant": null
-          }
-        }
-      ],
-      "providerMarket": "UK"
+    "currencyCode" : "GBP",
+    "availableBalance" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 1.16345801E7,
+      "unscaledValue" : 1163458010,
+      "doubleValue" : 1.16345801E7,
+      "scale" : 2
     },
-    {
-      "amount": 100000.0,
-      "date": 1625652000000,
-      "description": "XYZ LIMITED *  512963*BARCLAYS B* TFR",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false,
-      "externalSystemIds": {},
-      "mutability": null,
-      "transactionDates": [
-        {
-          "type": "BOOKING_DATE",
-          "value": {
-            "date": "2021-07-07",
-            "instant": "2021-07-07T07:50:45.000Z"
-          }
-        },
-        {
-          "type": "VALUE_DATE",
-          "value": {
-            "date": "2021-07-07",
-            "instant": null
-          }
-        }
-      ],
-      "providerMarket": "UK"
+    "bankId" : "20671933345203",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "20671933345203",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"sort-code://20671933345203\"]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "BUSINESS",
+      "identities" : [ ]
     },
-    {
-      "amount": -35.55,
-      "date": 1624960800000,
-      "description": "200000 43443841  COMM 08Mar/06Jun",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false,
-      "externalSystemIds": {},
-      "mutability": null,
-      "transactionDates": [
-        {
-          "type": "BOOKING_DATE",
-          "value": {
-            "date": "2021-06-29",
-            "instant": "2021-06-29T01:00:58.000Z"
-          }
-        },
-        {
-          "type": "VALUE_DATE",
-          "value": {
-            "date": "2021-06-29",
-            "instant": null
-          }
-        }
-      ],
-      "providerMarket": "UK"
-    },
-    {
-      "amount": -150.2,
-      "date": 1631008800000,
-      "description": "CLOUD USA",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false,
-      "externalSystemIds": {},
-      "mutability": null,
-      "transactionDates": [
-        {
-          "type": "BOOKING_DATE",
-          "value": {
-            "date": "2021-09-07",
-            "instant": "2021-09-07T23:01:46.000Z"
-          }
-        },
-        {
-          "type": "VALUE_DATE",
-          "value": {
-            "date": "2021-06-29",
-            "instant": null
-          }
-        }
-      ],
-      "providerMarket": "UK"
-    }
-  ],
-  "identityData": {
-    "nameElements": [
-      {
-        "type": "FULLNAME",
-        "value": null
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 1.16345801E7
+  } ],
+  "transactions" : [ {
+    "amount" : -147.2,
+    "date" : 1631008800000,
+    "description" : "CLOUD EMEA  81748832GUO3VTBHER DDR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-07",
+        "instant" : "2021-09-07T23:01:45.000Z"
       }
-    ],
-    "dateOfBirth": null
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -147.33,
+    "date" : 1628157600000,
+    "description" : "YYY IRELAND LTD  27680530GH2NQ98ADG DDR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-05",
+        "instant" : "2021-08-05T23:02:03.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-06",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -60000.0,
+    "date" : 1627639200000,
+    "description" : "FF  tx odds FT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-30",
+        "instant" : "2021-07-30T15:07:14.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-30",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -147.2,
+    "date" : 1625652000000,
+    "description" : "YYY IRELAND LTD  27680530GTEPNSQM1Y DDR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-07",
+        "instant" : "2021-07-07T23:01:42.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : 100000.0,
+    "date" : 1625652000000,
+    "description" : "XYZ LIMITED *  512963*BARCLAYS B* TFR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-07",
+        "instant" : "2021-07-07T07:50:45.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -35.55,
+    "date" : 1624960800000,
+    "description" : "200000 43443841  COMM 08Mar/06Jun",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : "2021-06-29T01:00:58.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -150.2,
+    "date" : 1631008800000,
+    "description" : "CLOUD USA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-07",
+        "instant" : "2021-09-07T23:01:46.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "UK",
+    "booked" : true
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FULLNAME",
+      "value" : null
+    } ],
+    "dateOfBirth" : null
   }
 }

@@ -144,7 +144,9 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
           }
         ],
         "AccountId": "10000000000004123217",
-        "Currency": "EUR"
+        "Currency": "EUR",
+        "AccountType": "Business",
+        "AccountSubType": "CurrentAccount"
       }
     ]
   },

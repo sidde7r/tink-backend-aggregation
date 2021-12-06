@@ -18,20 +18,6 @@ public interface UkOpenBankingConstants {
         }
     }
 
-    enum ProductEndpoint {
-        ACCOUNT_ID_PRODUCT("/accounts/%s/product");
-
-        private final String value;
-
-        ProductEndpoint(String value) {
-            this.value = value;
-        }
-
-        public String getPath() {
-            return this.value;
-        }
-    }
-
     class HttpHeaders {
         public static final String AUTHORIZATION = "Authorization";
         public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
