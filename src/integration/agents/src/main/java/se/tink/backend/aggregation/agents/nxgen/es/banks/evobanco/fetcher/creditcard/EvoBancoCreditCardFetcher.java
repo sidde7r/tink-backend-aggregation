@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
@@ -60,22 +61,30 @@ public class EvoBancoCreditCardFetcher
         try {
             return bankClient.fetchCardTransactions(account.getApiIdentifier(), page);
         } catch (HttpResponseException e) {
-            HttpResponse httpResponse = e.getResponse();
-            final CardTransactionsResponse response =
-                    httpResponse.getBody(CardTransactionsResponse.class);
-            ErrorsEntity errorCode =
-                    response.getEeOConsultationMovementsTarjetabe().getError().get();
-
-            if (ErrorCodes.TRANSACTIONS_ERROR.equals(errorCode.getShowCode())) {
+            if (isEmptyTransactionsListResponse(e.getResponse())) {
                 return PaginatorResponseImpl.createEmpty(false);
             }
-            log.warn(
-                    "Error message: httpStatus: {}, code: {}, message: {}",
-                    httpResponse.getStatus(),
-                    errorCode.getShowCode(),
-                    errorCode.getMessageShow());
-
             throw BankServiceError.DEFAULT_MESSAGE.exception(e);
         }
+    }
+
+    private boolean isEmptyTransactionsListResponse(HttpResponse httpResponse) {
+        try {
+            final CardTransactionsResponse response =
+                    httpResponse.getBody(CardTransactionsResponse.class);
+            ErrorsEntity errorCode = response.getErrors().get();
+            return ErrorCodes.TRANSACTIONS_ERROR.equals(errorCode.getShowCode());
+        } catch (HttpClientException ex) {
+            // Evo Banco sometimes returns not a JSON response. It either does mean that end-user
+            // doesn't have credit cards or it is another format of a credit card's transactions
+            // empty list response.
+            if (httpResponse.getStatus() == 400
+                    && ex.getMessage()
+                            .contains(
+                                    "com.fasterxml.jackson.core.JsonParseException: Unexpected character")) {
+                return true;
+            }
+        }
+        return false;
     }
 }
