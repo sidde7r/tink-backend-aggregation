@@ -71,13 +71,12 @@ spec:
         the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
-  # why only className not action,className grouping ?? or maybe just use className grouping in above alerts
   - alert: manual_login_success_rate_below_50_de
     expr: |
-      (sum:DE:all_manual_attempts:not_failed:delta60m:className
-          / sum:DE:all_manual_attempts:delta60m:className < 0.50)
+      (sum:DE:all_manual_attempts:not_failed:delta60m:action_className
+          / sum:DE:all_manual_attempts:delta60m:action_className < 0.50)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta60m:className > 5
+      and sum:DE:all_manual_attempts:delta60m:action_className > 5
     for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
