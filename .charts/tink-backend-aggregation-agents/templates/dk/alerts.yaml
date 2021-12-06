@@ -45,7 +45,8 @@
 # Let X = floor(count_over_time(T[1h]) / 360)
 # X is equal to 1 in case A (no counter resets) and 0 in cases B, C and D, E
 # Since case A covers the full query interval,
-# it will have 1h / <scrape_interval> = 1h / 10s = 360 scraped data points.
+# it will have at least 1h / <scrape_interval> = 1h / 10s = 360 scraped data points
+# (361 is also possible).
 # To attain the desired result, we subtract 1 from case A, or equivalently,
 # subtract X from every time series.
 #
@@ -61,9 +62,9 @@
 # floor(increase(...)) is used instead of raw increase(...)
 # to account for its undesirable extrapolation behavior.
 #
-# Due to scrape latencies and other artifacts, it's not possible to achieve 100% accuracy
-# without zero-initializing metrics. Nevertheless, this approach provides correct results
-# with less than 1% relative error, even with 12-hour range queries.
+# Due to scrape latencies and other unavoidable artifacts, it's not possible to achieve 100% accuracy
+# without zero-initializing metrics. Nevertheless, this approach provides results
+# with a very small relative difference from the actual number of events (as reported by Kibana).
 #
 # TODO: provide an in-depth explanation of the approach as a Confluence page (with pictures!)
 
@@ -172,8 +173,9 @@ spec:
         )
 
     # =========== SHORT-TERM (1h) and MID-TERM (4h) ALERTS ===========
-    - alert: RefreshErrorRateAbove10%DK
-      expr: sum:failed_refreshes_per_type_dk:delta1h / sum:all_refreshes_per_type_dk:delta1h > 0.1
+    - alert: RefreshErrorRateAbove20%DK
+      # Avoid alert duplication caused by the rule below this one
+      expr: 0.2 <= sum:failed_refreshes_per_type_dk:delta1h / (sum:all_refreshes_per_type_dk:delta1h >= 5) <= 0.9
       for: 15m
       priority: P3
       labels:
@@ -186,7 +188,7 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: RefreshErrorRateAbove90%DK
-      expr: sum:failed_refreshes_per_type_dk:delta1h / (sum:all_refreshes_per_type_dk:delta1h > 2) > 0.9
+      expr: sum:failed_refreshes_per_type_dk:delta1h / (sum:all_refreshes_per_type_dk:delta1h >= 5) > 0.9
       for: 15m
       priority: P1
       labels:
@@ -198,8 +200,8 @@ spec:
         summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
-    - alert: LoginErrorRateAbove10%DK
-      expr: sum:failed_logins_dk:delta1h / sum:all_logins_dk:delta1h > 0.1
+    - alert: LoginErrorRateAbove20%DK
+      expr: 0.2 <= sum:failed_logins_dk:delta1h / (sum:all_logins_dk:delta1h >= 5) <= 0.9
       for: 15m
       priority: P3
       labels:
@@ -212,7 +214,7 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: LoginErrorRateAbove90%DK
-      expr: sum:failed_logins_dk:delta1h / (sum:all_logins_dk:delta1h > 2) > 0.9
+      expr: sum:failed_logins_dk:delta1h / (sum:all_logins_dk:delta1h >= 5) > 0.9
       for: 15m
       priority: P1
       labels:
