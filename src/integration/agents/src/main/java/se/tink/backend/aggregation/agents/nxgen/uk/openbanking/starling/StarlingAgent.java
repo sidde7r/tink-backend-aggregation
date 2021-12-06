@@ -49,7 +49,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.unleash.model.Toggle;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(capabilities = FASTER_PAYMENTS, markets = "GB")
@@ -101,7 +100,6 @@ public final class StarlingAgent extends AgentPlatformAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             LocalDateTimeSource localDateTimeSource) {
-        Toggle toggle = Toggle.of("StarlingTransactionControllerSwitcher").build();
         StarlingTransactionFetcher starlingTransactionFetcher =
                 new StarlingTransactionFetcher(apiClient);
         TransactionDatePaginationController<TransactionalAccount>
@@ -111,30 +109,18 @@ public final class StarlingAgent extends AgentPlatformAgent
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .setZoneId(DEFAULT_ZONE_ID)
                                 .build();
-        if (!componentProvider.getUnleashClient().isToggleEnable(toggle)) {
-            log.info(
-                    "[STARLING_TRANSACTION_CONTROLLER] Custom pagination controller has been taken");
-            return new TransactionalAccountRefreshController(
-                    metricRefreshController,
-                    updateController,
-                    new StarlingTransactionalAccountFetcher(apiClient),
-                    new TransactionFetcherController<>(
-                            transactionPaginationHelper,
-                            new StarlingTransactionPaginationController<>(
-                                    defaultTransactionPaginationController,
-                                    starlingTransactionFetcher,
-                                    localDateTimeSource,
-                                    DEFAULT_ZONE_ID)));
-        } else {
-            log.info(
-                    "[STARLING_TRANSACTION_CONTROLLER] Default pagination controller has been taken");
-            return new TransactionalAccountRefreshController(
-                    metricRefreshController,
-                    updateController,
-                    new StarlingTransactionalAccountFetcher(apiClient),
-                    new TransactionFetcherController<>(
-                            transactionPaginationHelper, defaultTransactionPaginationController));
-        }
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new StarlingTransactionalAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new StarlingTransactionPaginationController<>(
+                                defaultTransactionPaginationController,
+                                starlingTransactionFetcher,
+                                localDateTimeSource,
+                                DEFAULT_ZONE_ID)));
     }
 
     @Override
