@@ -133,7 +133,7 @@ public class ThreadSafeDateFormat {
         }
     }
 
-    private DateTimeFormatter dateFormat;
+    private DateTimeFormatter jodaDateFormatter;
 
     private ThreadSafeDateFormatBuilder builder;
 
@@ -161,27 +161,27 @@ public class ThreadSafeDateFormat {
 
     private ThreadSafeDateFormat(ThreadSafeDateFormatBuilder builder) {
         this.builder = builder;
-        this.dateFormat =
+        this.jodaDateFormatter =
                 DateTimeFormat.forPattern(builder.getPattern())
                         .withZone(DateTimeZone.forTimeZone(builder.getTimezone()))
                         .withLocale(builder.getLocale());
     }
 
     public String format(Date date) {
-        return dateFormat.print(date.getTime());
+        return jodaDateFormatter.print(date.getTime());
     }
 
     public String format(ReadablePartial date) {
-        return dateFormat.print(date);
+        return jodaDateFormatter.print(date);
     }
 
     public String format(Instant instant) {
-        return dateFormat.print(Date.from(instant).getTime());
+        return jodaDateFormatter.print(Date.from(instant).getTime());
     }
 
     public Date parse(String string) throws ParseException {
         try {
-            return dateFormat.parseDateTime(TRIMMER.trimFrom(string)).toDate();
+            return jodaDateFormatter.parseDateTime(TRIMMER.trimFrom(string)).toDate();
         } catch (Exception e) {
             throw new ParseException(
                     "could not parse date: "
@@ -195,7 +195,7 @@ public class ThreadSafeDateFormat {
 
     public boolean fitsFormat(String period) {
         try {
-            dateFormat.parseDateTime(period);
+            jodaDateFormatter.parseDateTime(period);
             return true;
         } catch (Exception e) {
             return false;
