@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
 import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderReader;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 
 public class AgentCapabilitiesServiceTest {
 

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.creditcards.okq8;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;

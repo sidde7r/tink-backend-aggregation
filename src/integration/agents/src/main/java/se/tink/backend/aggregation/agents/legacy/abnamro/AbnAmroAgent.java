@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;

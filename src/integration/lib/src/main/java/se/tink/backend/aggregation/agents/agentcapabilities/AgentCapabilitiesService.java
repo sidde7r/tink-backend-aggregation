@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.reflections.Reflections;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 
 public class AgentCapabilitiesService {
 

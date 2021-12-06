@@ -5,7 +5,6 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

@@ -315,6 +315,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         }
         log.info("correlationId: {}", getCorrelationId());
         signableOperation.setCorrelationId(getCorrelationId());
+        log.info("Transfer Status in update Signable Operation Status: {}", status);
         updateSignableOperation(signableOperation);
     }
 

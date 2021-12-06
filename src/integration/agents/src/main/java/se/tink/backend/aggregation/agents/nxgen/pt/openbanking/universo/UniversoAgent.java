@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
 import java.security.cert.X509Certificate;

@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -124,9 +125,14 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         }
 
         String transferId = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
-
+        String transferStatus =
+                Optional.of(transferRequest.getSignableOperation())
+                        .map(SignableOperation::getStatus)
+                        .map(String::valueOf)
+                        .orElse(null);
         SaveLogsResult rawLogsResult = logsSaver.saveRawLogs(RawHttpLogsCatalog.DEFAULT);
         if (rawLogsResult.isSaved()) {
+            logResultsBuilder.append("\nTransfer Status: ").append(transferStatus);
             logResultsBuilder
                     .append(
                             format(

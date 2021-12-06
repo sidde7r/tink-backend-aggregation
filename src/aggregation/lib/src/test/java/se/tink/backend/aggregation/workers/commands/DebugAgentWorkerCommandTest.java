@@ -265,6 +265,9 @@ public class DebugAgentWorkerCommandTest {
                                         "Payment Credentials Status: "
                                                 + testCase.getCredentialsStatus()
                                                 + "\n"
+                                                + "Transfer Status: "
+                                                + testCase.getTransferStatus()
+                                                + "\n"
                                                 + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
                                                 + "\n"
                                                 + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
@@ -352,6 +355,9 @@ public class DebugAgentWorkerCommandTest {
                                     "Payment Credentials Status: "
                                             + testCase.getCredentialsStatus()
                                             + "\n"
+                                            + "Transfer Status: "
+                                            + testCase.getTransferStatus()
+                                            + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
                                             + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
@@ -401,6 +407,9 @@ public class DebugAgentWorkerCommandTest {
                                     "Payment Credentials Status: "
                                             + testCase.getCredentialsStatus()
                                             + "\n"
+                                            + "Transfer Status: "
+                                            + testCase.getTransferStatus()
+                                            + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
                                             + "\n"
                                             + "Flushed transfer to long term storage for payments disputes (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/lts/storage"
@@ -429,7 +438,7 @@ public class DebugAgentWorkerCommandTest {
                 // combinations of other params that shouldn't have any impact
                 .credentialsStatuses(ALL_CREDENTIALS_STATUSES)
                 .isUserDebugFlags(false)
-
+                .transferStatuses(ALL_TRANSFER_STATUSES)
                 // generate
                 .generateTestCases();
     }

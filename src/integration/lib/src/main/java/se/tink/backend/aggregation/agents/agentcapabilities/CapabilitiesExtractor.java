@@ -18,8 +18,6 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.payments.TransferExecutor;
 import se.tink.backend.aggregation.agents.payments.TransferExecutorNxgen;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.libraries.enums.MarketCode;
 
 public class CapabilitiesExtractor {

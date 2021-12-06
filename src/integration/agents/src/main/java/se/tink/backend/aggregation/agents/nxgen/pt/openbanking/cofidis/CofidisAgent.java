@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.cofidis;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
 
 import com.google.inject.Inject;
 import java.util.Collections;
