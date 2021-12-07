@@ -197,8 +197,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController,
-                new SwedbankDefaultTransferDestinationFetcher(apiClient, swedbankStorage));
+                metricRefreshController, new SwedbankDefaultTransferDestinationFetcher(apiClient));
     }
 
     @Override
