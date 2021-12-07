@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.newday;
 
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.newday.authenticator.NewDayAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
@@ -69,7 +69,7 @@ public class NewDayBaseAgent extends UkOpenBankingBaseAgent {
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new UkOpenBankingAisAuthenticator(this.apiClient),
+                new NewDayAisAuthenticator(this.apiClient),
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),
