@@ -118,6 +118,8 @@ clients:
     aggregatorIdentifier: "Capuchin Aps"
   dk-capuchin-production-2:
     aggregatorIdentifier: "Capuchin Aps"
+  dk-capuchin-test:
+    aggregatorIdentifier: "Capuchin Aps"
   dk-din-andelskasse-ostervra:
     aggregatorIdentifier: "Din Andelskasse Østervrå"
   dk-dragsholm-sparekasse-production:
@@ -446,6 +448,8 @@ clients:
     aggregatorIdentifier: "Minna Tjanster"
   se-rocker-production:
     aggregatorIdentifier: "Rocker"
+  se-sebkort-production:
+    aggregatorIdentifier: "SEB Kort"
   se-sebxunquo-production:
     aggregatorIdentifier: "SEBx UNQUO"
   se-skandiabanken:
