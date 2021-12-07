@@ -4,7 +4,7 @@ metadata:
   name: alerts-dk-long-term
   namespace: agents
 spec:
-  interval: 1h
+  interval: 2h
   rules:
     # ALL LOGIN ATTEMPTS (12h)
     - record: increase:all_logins_dk:delta12h

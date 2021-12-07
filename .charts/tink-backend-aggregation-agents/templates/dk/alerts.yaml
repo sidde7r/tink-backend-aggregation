@@ -26,13 +26,24 @@
 # Let T be the query selector we're interested in, for instance
 #   tink_agent_login_total{action="login", market="DK", provider_type!="test"}
 #
-# Correct result is increase(T[1h]) in cases A and C, and increase(T[1h]) + 1 in cases B,D and E
+# "Correct" result is increase(T[1h]) in cases A and C, and increase(T[1h]) + 1 in cases B, D and E
 # (because we want to account for new events - denoted by 'N' - which increase() alone would not account for)
+# Important assumption made here is that when a time series appears as fresh, its counter value
+# is equal to 1, which isn't always the case - this happens when there were, for instance,
+# two refreshes of the same type, provider and on the same instance within 10 seconds of each other.
+# This scenario is very unlikely in most cases, although can be spotted during background
+# refreshes of high-traffic providers, which is why sometimes we'll get results that are slightly off.
+# In cases D and E the correct result is actually increase(T[1h]) + min_over_time(T[1h]), but
+# accounting for this corner-case would make the query even more unreadable and expensive to run.
+# Case B is the most annoying one: if (X > N) then increase(T[1h]) else increase(T[1h]) + B.
+# Since it's impossible to extract X and N in pure PromQL (X and N being counter values at times of
+# counter reset and time series reappearance, respectively), increase(T[1h]) + 1 is used instead
+# as the "average-case" scenario. 100% accuracy is, unfortunately, impossible to attain.
 #
 # Let Δ = increase(T[1h])
 #
-# Step-by-step explanation of the expression calculating the *actual* number of events
-# that have occurred within last hour:
+# Step-by-step explanation of the expression calculating the number of events
+# that have occurred within last hour (under assumptions described above):
 #
 # First, we calculate Δ for each time series and keep only those
 # whose counter value was scraped an hour ago, but not ones whose value
@@ -46,11 +57,12 @@
 # X is equal to 1 in case A (no counter resets) and 0 in cases B, C and D, E
 # Since case A covers the full query interval,
 # it will have at least 1h / <scrape_interval> = 1h / 10s = 360 scraped data points
-# (361 is also possible).
+# (361 is also possible). Of course this assumes little to none scrape latency,
+# which is rather reasonable.
 # To attain the desired result, we subtract 1 from case A, or equivalently,
 # subtract X from every time series.
 #
-# Finally, the correct result is a set union of these two:
+# The final result is a set union of these two:
 #
 # Δ and ((T offset 1h) unless T)
 # or
@@ -62,9 +74,6 @@
 # floor(increase(...)) is used instead of raw increase(...)
 # to account for its undesirable extrapolation behavior.
 #
-# Due to scrape latencies and other unavoidable artifacts, it's not possible to achieve 100% accuracy
-# without zero-initializing metrics. Nevertheless, this approach provides results
-# with a very small relative difference from the actual number of events (as reported by Kibana).
 #
 # TODO: provide an in-depth explanation of the approach as a Confluence page (with pictures!)
 
@@ -74,6 +83,7 @@ metadata:
   name: alerts-dk
   namespace: agents
 spec:
+  interval: 10m
   rules:
     - record: increase:all_logins_dk:delta1h
       expr: floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]))
@@ -176,8 +186,8 @@ spec:
     - alert: RefreshErrorRateAbove20%DK
       # Avoid alert duplication caused by the rule below this one
       expr: 0.2 <= sum:failed_refreshes_per_type_dk:delta1h / (sum:all_refreshes_per_type_dk:delta1h >= 5) <= 0.9
-      for: 15m
       priority: P3
+      for: 30m
       labels:
         severity: ping
         who: integration-teletubbies
@@ -189,8 +199,8 @@ spec:
 
     - alert: RefreshErrorRateAbove90%DK
       expr: sum:failed_refreshes_per_type_dk:delta1h / (sum:all_refreshes_per_type_dk:delta1h >= 5) > 0.9
-      for: 15m
       priority: P1
+      for: 30m
       labels:
         severity: urgent
         who: integration-teletubbies
@@ -202,8 +212,8 @@ spec:
 
     - alert: LoginErrorRateAbove20%DK
       expr: 0.2 <= sum:failed_logins_dk:delta1h / (sum:all_logins_dk:delta1h >= 5) <= 0.9
-      for: 15m
       priority: P3
+      for: 30m
       labels:
         severity: ping
         who: integration-teletubbies
@@ -215,7 +225,7 @@ spec:
 
     - alert: LoginErrorRateAbove90%DK
       expr: sum:failed_logins_dk:delta1h / (sum:all_logins_dk:delta1h >= 5) > 0.9
-      for: 15m
+      for: 30m
       priority: P1
       labels:
         severity: urgent
@@ -227,9 +237,9 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: BackgroundLoginErrorRateAbove90%DK
-      expr: sum:unsuccessful_background_logins_dk:delta4h / (sum:all_logins_dk:delta4h > 5) > 0.9
-      for: 15m
+      expr: sum:unsuccessful_background_logins_dk:delta4h / (sum:all_logins_dk:delta4h >= 5) > 0.9
       priority: P2
+      for: 30m
       labels:
         severity: urgent
         who: integration-teletubbies
@@ -240,8 +250,8 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: OnDemandLoginErrorRateAbove90%DK
-      expr: sum:unsuccessful_on_demand_logins_dk:delta4h / (sum:all_logins_dk:delta4h > 5) > 0.9
-      for: 15m
+      expr: sum:unsuccessful_on_demand_logins_dk:delta4h / (sum:all_logins_dk:delta4h >= 5) > 0.9
+      for: 30m
       priority: P2
       labels:
         severity: urgent
