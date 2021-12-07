@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
@@ -295,7 +294,7 @@ public class CrosskeyBaseApiClient {
     private CrosskeyTransactionsResponse fetchTransactions(
             String apiIdentifier, Date fromDate, Date toDate) {
 
-        String fromBookingDateTime = formatAndSetZeroTimeOneDayForward(fromDate);
+        String fromBookingDateTime = formatAndSetZeroTime(fromDate);
 
         String toBookingDateTime = formatAndSetZeroTime(toDate);
 
@@ -426,20 +425,6 @@ public class CrosskeyBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.CONSENT_ID_NOT_FOUND))
                 .getData()
                 .getConsentId();
-    }
-
-    private String formatAndSetZeroTimeOneDayForward(Date date) {
-        // For transaction pagination, Crosskey doesn't take the time into consideration, only the
-        // date when we are asking for transactions. So in order to not receive duplicate
-        // transactions (one on each page, in case we have transactions on the day we set as either
-        // toBookingDateTime or fromBookingDateTime), we move the fromDate one date forward in order
-        // to prevent us from getting duplicates.
-        LocalDate localDate =
-                date.toInstant()
-                        .plus(1, ChronoUnit.DAYS)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
-        return formatAndSetZeroTime(localDate);
     }
 
     private String formatAndSetZeroTime(Date date) {
