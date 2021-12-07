@@ -59,5 +59,6 @@ java_library_with_sources(
         "@agent_sdk_maven//:com_google_guava_guava",
         "@agent_sdk_maven//:javax_inject_javax_inject",
         "@agent_sdk_maven//:org_projectlombok_lombok",
+        "@agent_sdk_maven//:org_slf4j_slf4j_api",
     ],
 )
