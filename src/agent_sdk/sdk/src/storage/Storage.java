@@ -5,6 +5,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public interface Storage {
+    void remove(String key);
+
     String put(String key, Object value);
 
     String get(String key);

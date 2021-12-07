@@ -28,6 +28,11 @@ public class SerializableStorage implements Storage {
     }
 
     @Override
+    public void remove(String key) {
+        this.storage.remove(key);
+    }
+
+    @Override
     public String put(String key, Object value) {
         final String valueToStore =
                 value instanceof String
