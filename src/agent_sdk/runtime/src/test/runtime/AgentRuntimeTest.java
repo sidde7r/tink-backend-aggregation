@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.agent.runtime.AgentRuntime;
-import se.tink.agent.sdk.annotations.Agent;
 
 @Ignore
 public class AgentRuntimeTest {
@@ -21,7 +20,6 @@ public class AgentRuntimeTest {
     }
 
     @Ignore
-    @Agent
     public static class TestAgent {
 
         @Inject

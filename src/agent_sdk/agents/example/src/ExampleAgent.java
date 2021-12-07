@@ -12,7 +12,6 @@ import se.tink.agent.agents.example.payments.ExampleBankTransferExecutor;
 import se.tink.agent.agents.example.payments.ExampleCreateBeneficiaryExecutor;
 import se.tink.agent.agents.example.payments.ExampleGPIPaymentExecutor;
 import se.tink.agent.agents.example.payments.ExamplePaymentExecutor;
-import se.tink.agent.sdk.annotations.Agent;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Authenticator;
 import se.tink.agent.sdk.authentication.features.AuthenticateOauth2;
 import se.tink.agent.sdk.environment.Operation;
@@ -37,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-@Agent
 public class ExampleAgent
         implements AuthenticateOauth2,
                 FetchCheckingAccounts,
