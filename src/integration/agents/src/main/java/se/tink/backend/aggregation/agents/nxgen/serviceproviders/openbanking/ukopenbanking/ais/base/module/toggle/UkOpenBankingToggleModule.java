@@ -8,8 +8,8 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
 import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.provider.UnleashClientProvider;
 import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants.Context;
 
 public class UkOpenBankingToggleModule extends AbstractModule {

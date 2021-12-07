@@ -19,10 +19,10 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementali
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.FakeUnleashClientProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
 import se.tink.backend.aggregation.nxgen.raw_data_events.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.unleash.provider.FakeUnleashClientWithEnabledTogglesProvider;
+import se.tink.libraries.unleash.provider.UnleashClientProvider;
 
 public final class AgentWireMockComponentProviderModule extends AbstractModule {
 
@@ -65,6 +65,6 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
         bind(GeneratedValueProvider.class).toInstance(generatedValueProvider);
         bind(FakeBankSocket.class).toInstance(fakeBankSocket);
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
-        bind(UnleashClientProvider.class).to(FakeUnleashClientProviderImpl.class);
+        bind(UnleashClientProvider.class).to(FakeUnleashClientWithEnabledTogglesProvider.class);
     }
 }

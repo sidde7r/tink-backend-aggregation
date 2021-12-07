@@ -15,13 +15,13 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.provider.UnleashClientProvider;
 
 public class AgentComponentProvider
         implements TinkHttpClientProvider,

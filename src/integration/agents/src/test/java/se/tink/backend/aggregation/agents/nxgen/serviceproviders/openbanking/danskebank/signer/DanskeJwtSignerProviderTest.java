@@ -27,10 +27,10 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.EIdasTinkCert;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.unleash.provider.UnleashClientProvider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DanskeJwtSignerProviderTest {
