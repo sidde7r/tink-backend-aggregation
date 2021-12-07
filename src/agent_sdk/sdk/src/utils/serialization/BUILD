@@ -5,6 +5,7 @@ java_library_with_sources(
     extdeps = [
         "@agent_sdk_maven//:com_fasterxml_jackson_core_jackson_core",
         "@agent_sdk_maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@agent_sdk_maven//:com_fasterxml_jackson_core_jackson_databind",
     ],
     intdeps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
@@ -14,5 +15,6 @@ java_library_with_sources(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "@agent_sdk_maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@agent_sdk_maven//:com_fasterxml_jackson_core_jackson_core",
+        "@agent_sdk_maven//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

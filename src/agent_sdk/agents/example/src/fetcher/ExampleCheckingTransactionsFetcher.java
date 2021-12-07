@@ -5,7 +5,7 @@ import java.util.Optional;
 import se.tink.agent.sdk.fetching.transactions.PaginationResult;
 import se.tink.agent.sdk.fetching.transactions.date.DatePaginationConfiguration;
 import se.tink.agent.sdk.fetching.transactions.date.DatePaginationFetcher;
-import se.tink.agent.sdk.storage.SerializableReference;
+import se.tink.agent.sdk.storage.Reference;
 
 public class ExampleCheckingTransactionsFetcher implements DatePaginationFetcher {
     @Override
@@ -15,7 +15,7 @@ public class ExampleCheckingTransactionsFetcher implements DatePaginationFetcher
 
     @Override
     public PaginationResult fetchTransactionsFor(
-            SerializableReference accountReference, LocalDate fromDate, LocalDate toDate) {
+            Reference accountReference, LocalDate fromDate, LocalDate toDate) {
 
         return null;
     }
