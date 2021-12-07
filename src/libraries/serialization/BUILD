@@ -1,11 +1,11 @@
 load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "serialization",
     srcs = glob(["src/main/**/*.java"]),
-    visibility = ["//visibility:public"],
-    deps = [
+    extdeps = [
         "//third_party:commons_codec_commons_codec",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
@@ -15,6 +15,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
     ],
+    visibility = ["//visibility:public"],
 )
 
 junit_test(
