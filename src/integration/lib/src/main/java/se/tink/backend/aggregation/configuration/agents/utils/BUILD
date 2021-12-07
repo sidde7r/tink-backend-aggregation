@@ -14,7 +14,6 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
-        "//src/libraries/cryptography/hash",
     ],
     visibility = ["//visibility:public"],
 )
