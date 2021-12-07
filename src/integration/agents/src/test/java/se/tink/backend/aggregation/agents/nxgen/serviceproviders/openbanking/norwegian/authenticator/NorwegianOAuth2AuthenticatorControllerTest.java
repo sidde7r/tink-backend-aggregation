@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 
 public class NorwegianOAuth2AuthenticatorControllerTest {
@@ -25,7 +25,6 @@ public class NorwegianOAuth2AuthenticatorControllerTest {
 
     private OAuth2AuthenticationController mockOAuth2AuthenticationController;
     private NorwegianAuthenticator mockNorwegianAuthenticator;
-
     private NorwegianOAuth2AuthenticatorController authenticatorController;
 
     @Before

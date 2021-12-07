@@ -29,10 +29,6 @@ public class BalancesItemEntity {
         return ResponseValues.BALANCE_TYPE_AVAILABLE.equalsIgnoreCase(balanceType);
     }
 
-    public boolean isCreditLimitIncluded() {
-        return false;
-    }
-
     public ExactCurrencyAmount toTinkAmount() {
         return amountEntity.toAmount();
     }

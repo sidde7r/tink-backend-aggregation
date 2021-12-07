@@ -1,18 +1,18 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.detail;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.detail;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
-import static se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.ACCESS_TOKEN;
-import static se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.ACCESS_TOKEN_EXPIRES_IN;
-import static se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.REFRESH_TOKEN;
-import static se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.REFRESH_TOKEN_EXPIRES_IN;
-import static se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.TOKEN_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.ACCESS_TOKEN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.ACCESS_TOKEN_EXPIRES_IN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.REFRESH_TOKEN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.REFRESH_TOKEN_EXPIRES_IN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData.TOKEN_TYPE;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.exception.RequiredDataMissingException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.data.NorwegianAuthenticatorTestData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.exception.RequiredDataMissingException;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class TokenResponseConverterTest {

@@ -118,11 +118,11 @@ public class NorwegianBaseAgent extends NextGenerationAgent
             AgentConfiguration<NorwegianConfiguration> agentConfiguration) {
 
         try {
-            Optional<X509Certificate> maybeX509Certificate =
+            Optional<X509Certificate> x509Certificate =
                     CertificateUtils.getRootX509CertificateFromBase64EncodedString(
                             agentConfiguration.getQsealc());
-            if (maybeX509Certificate.isPresent()) {
-                String qsealcThumbprint = Hash.sha1AsHex(maybeX509Certificate.get().getEncoded());
+            if (x509Certificate.isPresent()) {
+                String qsealcThumbprint = Hash.sha1AsHex(x509Certificate.get().getEncoded());
                 return new NorwegianSigningFilter(qsealcThumbprint, qsealcSigner);
             }
             throw new IllegalStateException("Invalid QSealc certificate");

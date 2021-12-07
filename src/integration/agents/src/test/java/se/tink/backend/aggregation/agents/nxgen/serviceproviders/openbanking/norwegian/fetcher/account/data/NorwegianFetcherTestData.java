@@ -1,17 +1,17 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.data;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.fetcher.account.data;
 
 import java.nio.file.Paths;
 import org.junit.Ignore;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.rpc.BalanceResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.fetcher.account.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.fetcher.account.rpc.BalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.fetcher.account.rpc.TransactionsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
 public class NorwegianFetcherTestData {
 
     private static final String TEST_DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/norwegian/resources";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/norwegian/resources";
 
     // ===========================TRANSACTIONS==========================================
     // booked

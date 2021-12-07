@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.fetcher.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,9 +14,10 @@ import java.util.Date;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.data.NorwegianFetcherTestData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.NorwegianConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.client.NorwegianApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.fetcher.account.data.NorwegianFetcherTestData;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -27,6 +28,8 @@ public class NorwegianTransactionFetcherTest {
 
     NorwegianTransactionFetcher fetcher;
     TransactionalAccount someAccount;
+    private static final ConstantLocalDateTimeSource CONSTANT_LOCAL_DATE_TIME_SOURCE =
+            new ConstantLocalDateTimeSource();
 
     @Before
     public void init() {
@@ -38,7 +41,10 @@ public class NorwegianTransactionFetcherTest {
                 .thenReturn(NorwegianFetcherTestData.getTransactionResponse());
         fetcher =
                 new NorwegianTransactionFetcher(
-                        client, persistentStorage, mock(SessionStorage.class));
+                        client,
+                        persistentStorage,
+                        mock(SessionStorage.class),
+                        CONSTANT_LOCAL_DATE_TIME_SOURCE);
         someAccount = mock(TransactionalAccount.class);
     }
 

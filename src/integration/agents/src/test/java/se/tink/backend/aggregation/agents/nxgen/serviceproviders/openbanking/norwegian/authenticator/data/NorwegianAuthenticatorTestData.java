@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.data;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.data;
 
 import org.junit.Ignore;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.authenticator.rpc.TokenResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
