@@ -10,7 +10,6 @@ java_library_with_sources(
         "@agent_sdk_maven//:org_slf4j_slf4j_api",
         "//src/agent_sdk:lombok_plugin",
         "//src/agent_sdk/sdk/src/capabilities",
-        "//src/agent_sdk/sdk/src/models/account",
         "//src/agent_sdk/sdk/src/payments",
         "//src/agent_sdk/sdk/src/payments/features",
         "//src/agent_sdk/sdk/src/payments:transfers",
@@ -22,6 +21,7 @@ java_library_with_sources(
     ],
     intdeps = [
         "@tink_backend//src/libraries/serialization_utils",
+        "//src/agent_sdk/sdk/src/models/account",
         "//src/agent_sdk/sdk/src/models/authentication",
         "//src/agent_sdk/sdk/src/user_interaction",
         "//src/agent_sdk/sdk/src/models/identity_data",
