@@ -1,24 +1,30 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
-load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "amount",
     srcs = glob(["src/main/**/*.java"]),
-    visibility = [
-        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller:__subpackages__",
-        "//src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/fake:__subpackages__",
-        "//src/aggregation/api:__subpackages__",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands:__subpackages__",
-        "//src/integration:__subpackages__",
-    ],
-    deps = [
+    extdeps = [
         "//third_party:lombok_libs",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
+    ],
+    intdeps = [
+        "//src/libraries/i18n",
+        "//src/libraries/cryptography",
+        "//src/libraries/date",
+    ],
+    visibility = [
+        "//src/agent_sdk:__subpackages__",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller:__subpackages__",
+        "//src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/fake:__subpackages__",
+        "//src/aggregation/api:__subpackages__",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands:__subpackages__",
+        "//src/integration:__subpackages__",
     ],
 )
 
