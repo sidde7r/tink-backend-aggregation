@@ -13,11 +13,6 @@ java_library_with_sources(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
     ],
-    intdeps = [
-        "//src/libraries/i18n",
-        "//src/libraries/cryptography",
-        "//src/libraries/date",
-    ],
     visibility = [
         "//src/agent_sdk:__subpackages__",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller:__subpackages__",
