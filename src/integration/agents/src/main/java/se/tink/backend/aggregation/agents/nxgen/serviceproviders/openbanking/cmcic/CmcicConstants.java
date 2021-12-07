@@ -56,7 +56,7 @@ public final class CmcicConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "aisp";
+        public static final String SCOPE = "aisp extended_transaction_history";
         public static final String CODE_CHALLENGE_METHOD = "S256";
     }
 
