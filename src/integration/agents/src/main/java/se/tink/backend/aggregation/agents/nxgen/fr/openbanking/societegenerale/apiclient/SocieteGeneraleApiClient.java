@@ -6,7 +6,6 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc.PisTokenRequest;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-@RequiredArgsConstructor
 public class SocieteGeneraleApiClient implements FrAispApiClient {
 
     private final TinkHttpClient client;
@@ -37,6 +35,20 @@ public class SocieteGeneraleApiClient implements FrAispApiClient {
     private final SocieteGeneraleConfiguration configuration;
     private final String redirectUrl;
     private final SignatureHeaderProvider signatureHeaderProvider;
+
+    public SocieteGeneraleApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            SocieteGeneraleConfiguration configuration,
+            String redirectUrl,
+            SignatureHeaderProvider signatureHeaderProvider) {
+        this.client = client;
+        this.persistentStorage = persistentStorage;
+        this.configuration = configuration;
+        this.redirectUrl = redirectUrl;
+        this.signatureHeaderProvider = signatureHeaderProvider;
+        client.setResponseStatusHandler(new SocieteGeneraleResponseHandler());
+    }
 
     public TokenResponse exchangeAuthorizationCodeOrRefreshToken(AbstractForm request) {
         return client.request(new URL(SocieteGeneraleConstants.Urls.TOKEN_PATH))

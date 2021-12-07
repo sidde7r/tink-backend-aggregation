@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient;
 
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.DefaultResponseStatusHandler;
@@ -13,6 +14,11 @@ public class SocieteGeneraleResponseHandler extends DefaultResponseStatusHandler
         if (isNoAccessError(httpResponse)) {
             throw LoginError.NO_ACCOUNTS.exception();
         }
+
+        if (httpResponse.getStatus() >= 500) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(httpResponse.getBody(String.class));
+        }
+
         super.handleResponse(httpRequest, httpResponse);
     }
 
