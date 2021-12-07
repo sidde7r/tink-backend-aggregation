@@ -4,36 +4,64 @@ metadata:
   name: alerts-pl-long-term
   namespace: agents
 spec:
-  interval: 1h
+  interval: 2h
   rules:
+    # ALL LOGIN ATTEMPTS (12h)
+    - record: increase:all_logins_pl:delta12h
+      expr: floor(increase(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h]))
     - record: sum:all_logins_pl:delta12h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h]) / 4320)
+          (increase:all_logins_pl:delta12h
+           and
+           (tink_agent_login_total{action="login", market="PL", provider_type!="test"} offset 12h
+            unless tink_agent_login_total{action="login", market="PL", provider_type!="test"}))
+          or
+          (1 + increase:all_logins_pl:delta12h - floor(count_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[12h]) / 4320))
         )
+
+    # UNAVAILABLE OR CANCELLED LOGINS (12h)
+    - record: increase:unavailable_or_cancelled_logins_pl:delta12h
+      expr: floor(increase(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="PL", provider_type!="test"}[12h]))
     - record: sum:unavailable_or_cancelled_logins_pl:delta12h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="PL", provider_type!="test"}[12h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="PL", provider_type!="test"}[12h]) / 4320)
+          (increase:unavailable_or_cancelled_logins_pl:delta12h
+           and
+           (tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="PL", provider_type!="test"} offset 12h
+            unless tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="PL", provider_type!="test"}))
+          or
+          (1 + increase:unavailable_or_cancelled_logins_pl:delta12h - floor(count_over_time(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="PL", provider_type!="test"}[12h]) / 4320))
         )
+
+    # ALL REFRESH ATTEMPTS PER TYPE (12h)
+    - record: increase:all_refreshes_per_type_pl:delta12h
+      expr: floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[12h]))
     - record: sum:all_refreshes_per_type_pl:delta12h
       expr: |
         sum by (className, type) (
-          1 + floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[12h]))
-          -
-          floor(count_over_time(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[12h]) / 4320)
+          (increase:all_refreshes_per_type_pl:delta12h
+           and
+           (tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"} offset 12h
+            unless tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}))
+          or
+          (1 + increase:all_refreshes_per_type_pl:delta12h - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[12h]) / 4320))
         )
+
+    # UNAVAILABLE REFRESHES PER TYPE (12h)
+    - record: increase:unavailable_refreshes_per_type_pl:delta12h
+      expr: floor(increase(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}[12h]))
     - record: sum:unavailable_refreshes_per_type_pl:delta12h
       expr: |
         sum by (className, type) (
-          1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}[12h]))
-          -
-          floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}[12h]) / 4320)
+          (increase:unavailable_refreshes_per_type_pl:delta12h
+           and
+           (tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"} offset 12h
+            unless tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}))
+          or
+          (1 + increase:unavailable_refreshes_per_type_pl:delta12h - floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="PL", provider_type!="test"}[12h]) / 4320))
         )
+
     # =========== LONG-TERM (12h) ALERTS ===========
     - alert: LongTermBankOrUserErrorRateAbove90%PL
       expr: sum:unavailable_or_cancelled_logins_pl:delta12h / (sum:all_logins_pl:delta12h > 2) > 0.9
@@ -44,7 +72,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLinkAbs12h }}
           {{ .Values.grafanaClassLinkAbs12h }}
-        summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        summary: Bank-side or user login error failure rate over the last 12 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
     - alert: LongTermRefreshUnavailableErrorRateAbove90%PL
@@ -58,4 +86,3 @@ spec:
           {{ .Values.grafanaClassLinkAbs12h }}
         summary: Refresh of <{ $labels.type }> over the last 12 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
-

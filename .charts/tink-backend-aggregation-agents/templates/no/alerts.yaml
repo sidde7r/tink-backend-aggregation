@@ -4,62 +4,111 @@ metadata:
   name: alerts-no
   namespace: agents
 spec:
+  interval: 10m
   rules:
+    - record: increase:all_logins_no:delta1h
+      expr: floor(increase(tink_agent_login_total{action="login", market="NO", provider_type!="test"}[1h]))
     - record: sum:all_logins_no:delta1h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", market="NO", provider_type!="test"}[1h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", market="NO", provider_type!="test"}[1h]) / 360)
+          (increase:all_logins_no:delta1h
+           and
+           (tink_agent_login_total{action="login", market="NO", provider_type!="test"} offset 1h
+            unless tink_agent_login_total{action="login", market="NO", provider_type!="test"}))
+          or
+          (1 + increase:all_logins_no:delta1h - floor(count_over_time(tink_agent_login_total{action="login", market="NO", provider_type!="test"}[1h]) / 360))
         )
+
+    # ALL LOGIN ATTEMPTS (4h)
+    - record: increase:all_logins_no:delta4h
+      expr: floor(increase(tink_agent_login_total{action="login", market="NO", provider_type!="test"}[4h]))
     - record: sum:all_logins_no:delta4h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", market="NO", provider_type!="test"}[4h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", market="NO", provider_type!="test"}[4h]) / 1440)
+          (increase:all_logins_no:delta4h
+           and
+           (tink_agent_login_total{action="login", market="NO", provider_type!="test"} offset 4h
+            unless tink_agent_login_total{action="login", market="NO", provider_type!="test"}))
+          or
+          (1 + increase:all_logins_no:delta4h - floor(count_over_time(tink_agent_login_total{action="login", market="NO", provider_type!="test"}[4h]) / 1440))
         )
-    - record: sum:all_refreshes_per_type_no:delta1h
-      expr: |
-        sum by (className, type) (
-          1 + floor(increase(tink_agent_refresh_total{action="refresh", market="NO", provider_type!="test"}[1h]))
-          -
-          floor(count_over_time(tink_agent_refresh_total{action="refresh", market="NO", provider_type!="test"}[1h]) / 360)
-        )
+
+    # FAILED LOGIN ATTEMPTS (1h)
+    - record: increase:failed_logins_no:delta1h
+      expr: floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="NO", provider_type!="test"}[1h]))
     - record: sum:failed_logins_no:delta1h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="NO", provider_type!="test"}[1h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="NO", provider_type!="test"}[1h]) / 360)
+          (increase:failed_logins_no:delta1h
+           and
+           (tink_agent_login_total{action="login", outcome=~"failed.*", market="NO", provider_type!="test"} offset 1h
+            unless tink_agent_login_total{action="login", outcome=~"failed.*", market="NO", provider_type!="test"}))
+          or
+          (1 + increase:failed_logins_no:delta1h - floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="NO", provider_type!="test"}[1h]) / 360))
         )
+
+    # UNSUCCESSFUL BACKGROUND LOGINS (4h)
+    - record: increase:unsuccessful_background_logins_no:delta4h
+      expr: floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="NO", provider_type!="test"}[4h]))
     - record: sum:unsuccessful_background_logins_no:delta4h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="NO", provider_type!="test"}[4h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="NO", provider_type!="test"}[4h]) / 1440)
+          (increase:unsuccessful_background_logins_no:delta4h
+           and
+           (tink_agent_login_total{action="login-cron", outcome!="completed", market="NO", provider_type!="test"} offset 4h
+            unless tink_agent_login_total{action="login-cron", outcome!="completed", market="NO", provider_type!="test"}))
+          or
+          (1 + increase:unsuccessful_background_logins_no:delta4h - floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="NO", provider_type!="test"}[4h]) / 1440))
         )
+
+    # UNSUCCESSFUL ON-DEMAND LOGINS (4h)
+    - record: increase:unsuccessful_on_demand_logins_no:delta4h
+      expr: floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="NO", provider_type!="test"}[4h]))
     - record: sum:unsuccessful_on_demand_logins_no:delta4h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="NO", provider_type!="test"}[4h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="NO", provider_type!="test"}[4h]) / 1440)
+          (increase:unsuccessful_on_demand_logins_no:delta4h
+           and
+           (tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="NO", provider_type!="test"} offset 4h
+            unless tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="NO", provider_type!="test"}))
+          or
+          (1 + increase:unsuccessful_on_demand_logins_no:delta4h - floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="NO", provider_type!="test"}[4h]) / 1440))
         )
+
+    # ALL REFRESH ATTEMPTS PER TYPE (1h)
+    - record: increase:all_refreshes_per_type_no:delta1h
+      expr: floor(increase(tink_agent_refresh_total{action="refresh", market="NO", provider_type!="test"}[1h]))
+    - record: sum:all_refreshes_per_type_no:delta1h
+      expr: |
+        sum by (className, type) (
+          (increase:all_refreshes_per_type_no:delta1h
+           and
+           (tink_agent_refresh_total{action="refresh", market="NO", provider_type!="test"} offset 1h
+            unless tink_agent_refresh_total{action="refresh", market="NO", provider_type!="test"}))
+          or
+          (1 + increase:all_refreshes_per_type_no:delta1h - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="NO", provider_type!="test"}[1h]) / 360))
+        )
+
+    # FAILED REFRESH ATTEMPTS PER TYPE (1h)
+    - record: increase:failed_refreshes_per_type_no:delta1h
+      expr: floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="NO", provider_type!="test"}[1h]))
     - record: sum:failed_refreshes_per_type_no:delta1h
       expr: |
         sum by (className, type) (
-          1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="NO", provider_type!="test"}[1h]))
-          -
-          floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="NO", provider_type!="test"}[1h]) / 360)
+          (increase:failed_refreshes_per_type_no:delta1h
+           and
+           (tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="NO", provider_type!="test"} offset 1h
+            unless tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="NO", provider_type!="test"}))
+          or
+          (1 + increase:failed_refreshes_per_type_no:delta1h - floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="NO", provider_type!="test"}[1h]) / 360))
         )
 
     # =========== SHORT-TERM (1h) and MID-TERM (4h) ALERTS ===========
-    - alert: RefreshErrorRateAbove10%NO
-      expr: sum:failed_refreshes_per_type_no:delta1h / sum:all_refreshes_per_type_no:delta1h > 0.1
-      for: 15m
+    - alert: RefreshErrorRateAbove20%NO
+      # Avoid alert duplication caused by the rule below this one
+      expr: 0.2 <= sum:failed_refreshes_per_type_no:delta1h / (sum:all_refreshes_per_type_no:delta1h >= 5) <= 0.9
       priority: P3
+      for: 30m
       labels:
         severity: ping
         who: integration-teletubbies
@@ -70,9 +119,9 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: RefreshErrorRateAbove90%NO
-      expr: sum:failed_refreshes_per_type_no:delta1h / (sum:all_refreshes_per_type_no:delta1h > 2) > 0.9
-      for: 15m
+      expr: sum:failed_refreshes_per_type_no:delta1h / (sum:all_refreshes_per_type_no:delta1h >= 5) > 0.9
       priority: P1
+      for: 30m
       labels:
         severity: urgent
         who: integration-teletubbies
@@ -82,10 +131,10 @@ spec:
         summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
-    - alert: LoginErrorRateAbove10%NO
-      expr: sum:failed_logins_no:delta1h / sum:all_logins_no:delta1h > 0.1
-      for: 15m
+    - alert: LoginErrorRateAbove20%NO
+      expr: 0.2 <= sum:failed_logins_no:delta1h / (sum:all_logins_no:delta1h >= 5) <= 0.9
       priority: P3
+      for: 30m
       labels:
         severity: ping
         who: integration-teletubbies
@@ -96,8 +145,8 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: LoginErrorRateAbove90%NO
-      expr: sum:failed_logins_no:delta1h / (sum:all_logins_no:delta1h > 2) > 0.9
-      for: 15m
+      expr: sum:failed_logins_no:delta1h / (sum:all_logins_no:delta1h >= 5) > 0.9
+      for: 30m
       priority: P1
       labels:
         severity: urgent
@@ -109,9 +158,9 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: BackgroundLoginErrorRateAbove90%NO
-      expr: sum:unsuccessful_background_logins_no:delta4h / (sum:all_logins_no:delta4h > 5) > 0.9
-      for: 15m
+      expr: sum:unsuccessful_background_logins_no:delta4h / (sum:all_logins_no:delta4h >= 5) > 0.9
       priority: P2
+      for: 30m
       labels:
         severity: urgent
         who: integration-teletubbies
@@ -122,8 +171,8 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: OnDemandLoginErrorRateAbove90%NO
-      expr: sum:unsuccessful_on_demand_logins_no:delta4h / (sum:all_logins_no:delta4h > 5) > 0.9
-      for: 15m
+      expr: sum:unsuccessful_on_demand_logins_no:delta4h / (sum:all_logins_no:delta4h >= 5) > 0.9
+      for: 30m
       priority: P2
       labels:
         severity: urgent
