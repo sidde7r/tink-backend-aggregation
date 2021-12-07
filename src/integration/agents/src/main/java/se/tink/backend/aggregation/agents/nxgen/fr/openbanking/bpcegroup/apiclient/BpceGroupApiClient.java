@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.RefreshRequest;
@@ -31,7 +32,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
+import se.tink.libraries.cryptography.hash.Hash;
 
+@Slf4j
 @RequiredArgsConstructor
 public class BpceGroupApiClient implements FrAispApiClient {
 
@@ -117,28 +120,18 @@ public class BpceGroupApiClient implements FrAispApiClient {
         sendRequestAndGetResponse(requestBuilder, HttpMethod.PUT, HttpResponse.class);
     }
 
+    public AccountsResponse fetchAccountsFromCacheIfPossible() {
+        return getStoredAccountResponse().orElseGet(this::fetchAccounts);
+    }
+
     public AccountsResponse fetchAccounts() {
         final RequestBuilder requestBuilder =
                 httpClient.request(createUrlWithBasePath(ENDPOINT_ACCOUNTS));
-
         AccountsResponse accountsResponse =
                 sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, AccountsResponse.class);
-
+        // [PENG-402] Temporary log to investigate 403 TMRQ errors
+        log.info("[API CLIENT] Connected PSU hash: {}", getConnectedPsuHash(accountsResponse));
         return storeAndGetAccountsResponse(accountsResponse);
-    }
-
-    public AccountsResponse fetchAccountsFromCacheIfPossible() {
-        final RequestBuilder requestBuilder =
-                httpClient.request(createUrlWithBasePath(ENDPOINT_ACCOUNTS));
-
-        return getStoredAccountResponse()
-                .orElseGet(
-                        () ->
-                                storeAndGetAccountsResponse(
-                                        sendRequestAndGetResponse(
-                                                requestBuilder,
-                                                HttpMethod.GET,
-                                                AccountsResponse.class)));
     }
 
     public BalancesResponse fetchBalances(String resourceId) {
@@ -250,6 +243,16 @@ public class BpceGroupApiClient implements FrAispApiClient {
     }
 
     private Optional<AccountsResponse> getStoredAccountResponse() {
+        // [PENG-402] Temporary log to investigate 403 TMRQ errors
+        log.info("[API CLIENT] Trying to get account response from storage");
         return tempStorage.get(ACCOUNT_RESPONSE_KEY, AccountsResponse.class);
+    }
+
+    private String getConnectedPsuHash(AccountsResponse accountsResponse) {
+        return Optional.ofNullable(accountsResponse)
+                .map(AccountsResponse::getConnectedPsu)
+                .map(String::getBytes)
+                .map(Hash::sha256Base64)
+                .orElse("EMPTY");
     }
 }
