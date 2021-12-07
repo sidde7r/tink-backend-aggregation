@@ -34,20 +34,15 @@ metadata:
   name: alerts-gb-experimental
   namespace: agents
 spec:
+  interval: 5m
   rules:
+    # Precompute GB metrics
     - record: sum:all_logins_gb:delta1h
       expr: |
         sum by (className) (
           1 + floor(increase(tink_agent_login_total{action="login", market="GB", provider_type!="test"}[1h]))
           -
           floor(count_over_time(tink_agent_login_total{action="login", market="GB", provider_type!="test"}[1h]) / 360)
-        )
-    - record: sum:all_logins_gb:delta4h
-      expr: |
-        sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login", market="GB", provider_type!="test"}[4h]))
-          -
-          floor(count_over_time(tink_agent_login_total{action="login", market="GB", provider_type!="test"}[4h]) / 1440)
         )
     - record: sum:all_refreshes_per_type_gb:delta1h
       expr: |
@@ -56,6 +51,13 @@ spec:
           -
           floor(count_over_time(tink_agent_refresh_total{action="refresh", market="GB", provider_type!="test"}[1h]) / 360)
         )
+    - record: sum:unavailable_or_cancelled_logins_gb:delta1h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="GB", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="GB", provider_type!="test"}[1h]) / 360)
+        )
     - record: sum:failed_logins_gb:delta1h
       expr: |
         sum by (className) (
@@ -63,19 +65,19 @@ spec:
           -
           floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="GB", provider_type!="test"}[1h]) / 360)
         )
-    - record: sum:unsuccessful_background_logins_gb:delta4h
+    - record: sum:unsuccessful_on_demand_logins_gb:delta1h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="GB", provider_type!="test"}[4h]))
+          1 + floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="GB", provider_type!="test"}[1h]))
           -
-          floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="GB", provider_type!="test"}[4h]) / 1440)
+          floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="GB", provider_type!="test"}[1h]) / 360)
         )
-    - record: sum:unsuccessful_on_demand_logins_gb:delta4h
+    - record: sum:unsuccessful_background_logins_gb:delta1h
       expr: |
         sum by (className) (
-          1 + floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="GB", provider_type!="test"}[4h]))
+          1 + floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="GB", provider_type!="test"}[1h]))
           -
-          floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="GB", provider_type!="test"}[4h]) / 1440)
+          floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="GB", provider_type!="test"}[1h]) / 360)
         )
     - record: sum:failed_refreshes_per_type_gb:delta1h
       expr: |
@@ -84,10 +86,17 @@ spec:
           -
           floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="GB", provider_type!="test"}[1h]) / 360)
         )
+    - record: sum:unavailable_refreshes_per_type_gb:delta1h
+      expr: |
+        sum by (className, type) (
+        1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="GB", provider_type!="test"}[1h]))
+        -
+        floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="GB", provider_type!="test"}[1h]) / 360)
+        )
 
-    # =========== SHORT-TERM (1h) and MID-TERM (4h) ALERTS ===========
-    - alert: EXPERIMENTALRefreshErrorRateAbove20%GB
-      expr: sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) > 0.2
+    # =========== SHORT-TERM (1h) ===========
+    - alert: EXPERIMENTALRefreshErrorRateAbove10%GB
+      expr: 0.1 <= sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) <= 0.9
       for: 15m
       priority: P3
       labels:
@@ -113,7 +122,7 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: EXPERIMENTALLoginErrorRateAbove10%GB
-      expr: sum:failed_logins_gb:delta1h / sum:all_logins_gb:delta1h > 0.1
+      expr: 0.1 <= sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) <= 0.9
       for: 15m
       priority: P3
       labels:
@@ -139,27 +148,50 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: EXPERIMENTALBackgroundLoginErrorRateAbove90%GB
-      expr: sum:unsuccessful_background_logins_gb:delta4h / (sum:all_logins_gb:delta4h > 5) > 0.9
+      expr: sum:unsuccessful_background_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
       for: 15m
       priority: P2
       labels:
         severity: urgent
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs4h }}
-          {{ .Values.grafanaClassLinkAbs4h }}
-        summary: Background login error rate over the last 4 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Background login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
     - alert: EXPERIMENTALOnDemandLoginErrorRateAbove90%GB
-      expr: sum:unsuccessful_on_demand_logins_gb:delta4h / (sum:all_logins_gb:delta4h > 5) > 0.9
+      expr: sum:unsuccessful_on_demand_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
       for: 15m
       priority: P2
       labels:
         severity: urgent
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs4h }}
-          {{ .Values.grafanaClassLinkAbs4h }}
-        summary: On-demand login error rate over the last 4 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: On-demand login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+
+    - alert: EXPERIMENTALRefreshUnavailableErrorRateAbove90%GB
+      expr: sum:unavailable_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 2) > 0.9
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Refresh of <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: EXPERIMENTBankOrUserErrorRateAbove90%GB
+      expr: sum:unavailable_or_cancelled_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 2) > 0.9
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
