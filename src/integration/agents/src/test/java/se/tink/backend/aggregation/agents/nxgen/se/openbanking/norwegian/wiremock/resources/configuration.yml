@@ -1,0 +1,15 @@
+agentsServiceConfiguration:
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
+  featureFlags:
+  testConfiguration:
+    debugOutput: true
+  integrations:
+    824b9a1381fa5346acd64c5e8773d403:
+      tink:
+        clientId: dummyClient
+        clientSecret: dummySecret
+        redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+        scopes:
+          - AIS

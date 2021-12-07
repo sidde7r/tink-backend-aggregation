@@ -1,0 +1,2118 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.banknorwegian.com/openbanking/consents
+Content-Type: application/json
+TPP-Client-ID: dummyClient
+TPP-Redirect-URI: https://api.tink.se/api/v1/credentials/third-party/callback
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date digest request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id tpp-redirect-uri",signature="RkFLRV9TSUdOQVRVUkUK"
+
+{
+  "ValidUntil": "1992-07-09",
+  "RecurringIndicator": true,
+  "Access": {
+    "allPsd2": "allAccounts",
+    "Accounts": [],
+    "Balances": [],
+    "Transactions": []
+  },
+  "FrequencyPerDay": 4,
+  "CombinedServiceIndicator": false
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+Date: Mon, 13 Dec 2021 15:21:26 GMT
+Date: Mon, 13 Dec 2021 15:21:26 GMT
+Content-Type: application/json;charset=utf-8
+Location: https://api.banknorwegian.com/consents/fa62c701-aa84-4544-92c9-3b0097ccc0d3
+Request-ID: 27e6b3a0-133a-43b0-9b02-023c77ba7b00
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Content-Length: 497
+
+{"consentStatus":"Received","consentId":"fa62c701-aa84-4544-92c9-3b0097ccc0d3","_links":{"scaRedirect":{"href":"https://identity.banknorwegian.se/connect/authorize?response_type=code&response_mode=query&client_id=6044918e20f04bf6b701b22692c99ee9&scope=offline_access readaccounts&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&consent_id=fa62c701-aa84-4544-92c9-3b0097ccc0d3&prompt=login&code_challenge=<YOUR_CODE_CHALLENGE>&code_challenge_method=S256"}}}
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://identity.banknorwegian.no/connect/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) digest host",signature="RkFLRV9TSUdOQVRVUkUK"
+
+client_id=dummyClient&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&grant_type=authorization_code&code=dummyCode&code_verifier=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&client_secret=dummySecret
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Mon, 13 Dec 2021 15:23:53 GMT
+Date: Mon, 13 Dec 2021 15:23:53 GMT
+Content-Type: application/json;charset=utf-8
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Set-Cookie: ***
+Content-Length: 1171
+
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkI5OEExMEEzQkQzNEZGNjM0OTNGQ0FGQzM0NjRCOUVGRjFFQzg1NTJSUzI1NiIsInR5cCI6ImF0K2p3dCIsIng1dCI6InVZb1FvNzAwXzJOSlA4cjhOR1M1N19Ic2hWSSJ9.eyJuYmYiOjE2Mzk0MDkwMzQsImV4cCI6MTYzOTQxMjYzNCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS5iYW5rbm9yd2VnaWFuLm5vIiwiYXVkIjoiYWNjb3VudHNhcGkiLCJjbGllbnRfaWQiOiI2MDQ0OTE4ZTIwZjA0YmY2YjcwMWIyMjY5MmM5OWVlOSIsInN1YiI6IjI0NzQwNzkiLCJhdXRoX3RpbWUiOjE2Mzk0MDg5ODUsImlkcCI6IjIyIiwiY29uc2VudF9pZCI6ImZhNjJjNzAxLWFhODQtNDU0NC05MmM5LTNiMDA5N2NjYzBkMyIsInNpZCI6IjZGNEYzOTZDQzYwMzIyNkNGN0NEQTYyRUMxRUI5MzQzIiwiaWF0IjoxNjM5NDA5MDM0LCJzY29wZSI6WyJyZWFkYWNjb3VudHMiLCJvZmZsaW5lX2FjY2VzcyJdLCJhbXIiOlsiZXh0ZXJuYWwiXX0.Tmr0gMHqqwdfqWiCdSppVHzePwtos2Ni_lwGt-TSeXVd1wM5Q_OJ9UBsB8u4rVZoalt4FRF8QbY62R1aikk9sefEWLYwuQyNINgoCtMYCE8HBUzoock7yLU25N32paFK0Zf0hCPwLblD0Pi0il6o9J5IIXZ6BDWW2S-rFVSXyIWpxpmijiZyCzah8ZXMI5gt8mu1zBkaXrar8VFCmo2S3lydOThqux6-Ef8YWztUV2vNGXRrHDPWN96RaTwdQhRO0kiysnWzmLO9QH4uh-cRi2slGN8IMCmVvNbxIfhjRz0mYqAqMmhcfL_AXAlf7uhDuaGPoHPUUnB7CVj-ItYaag",
+  "expires_in": 3600,
+  "token_type": "Bearer",
+  "refresh_token": "53DB7FC7FF074D679DEA08CC709A86C6DA3DA19AED4A0106442A0E058F323262",
+  "scope": "offline_access readaccounts"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api.banknorwegian.com/openbanking/consents/fa62c701-aa84-4544-92c9-3b0097ccc0d3
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Mon, 13 Dec 2021 15:23:55 GMT
+Date: Mon, 13 Dec 2021 15:23:55 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: fc523ef0-21d4-4928-9d77-1ebad1fe60e4
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Content-Length: 324
+
+{
+  "access": {
+    "accounts": [
+      "364a6795-22f5-4fc5-96d1-0d376a7b1a2b"
+    ],
+    "balances": [
+      "364a6795-22f5-4fc5-96d1-0d376a7b1a2b"
+    ],
+    "transactions": [
+      "364a6795-22f5-4fc5-96d1-0d376a7b1a2b"
+    ]
+  },
+  "recurringIndicator": true,
+  "validUntil": "2022-03-13T00:00:00",
+  "frequencyPerDay": 4,
+  "lastActionDate": "2021-12-13T16:23:10.5445227",
+  "consentStatus": "Valid"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.banknorwegian.com/openbanking/accounts
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Mon, 13 Dec 2021 15:23:55 GMT
+Date: Mon, 13 Dec 2021 15:23:55 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: 70f997d3-4e36-4605-9964-617c49a1d0c1
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Content-Length: 597
+
+{
+  "accounts": [
+    {
+      "resourceId": "364a6795-22f5-4fc5-96d1-0d376a7b1a2b",
+      "bban": "10372997001",
+      "currency": "SEK",
+      "name": "CreditCard",
+      "ownerName": "Owner Name",
+      "product": "CreditCard",
+      "cashAccountType": "CurrentAccount",
+      "status": "Enabled",
+      "remittanceInformation": {
+        "resourceId": "364a6795-22f5-4fc5-96d1-0d376a7b1a2b",
+        "accountType": "PlusGiro",
+        "bban": "418 75 00-6",
+        "remittanceInformationStructured": {
+          "reference": "1037299700139"
+        }
+      },
+      "_links": {
+        "balances": {
+          "href": "/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/balances"
+        },
+        "transactions": {
+          "href": "/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/transactions"
+        }
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.banknorwegian.com/openbanking/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/balances
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Mon, 13 Dec 2021 15:23:58 GMT
+Date: Mon, 13 Dec 2021 15:23:58 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: 0a99c9b9-b28c-4e33-b17d-676581f2bc6c
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Content-Length: 561
+
+{
+  "accountReference": {
+    "bban": "10372997001",
+    "currency": "SEK"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "SEK",
+        "amount": "-468"
+      },
+      "balanceType": "ClosingBooked",
+      "creditLimitIncluded": false,
+      "referenceDate": "2021-12-13T00:00:00.0000000+01:00"
+    },
+    {
+      "balanceAmount": {
+        "currency": "SEK",
+        "amount": "-468"
+      },
+      "balanceType": "Expected",
+      "creditLimitIncluded": false,
+      "referenceDate": "2021-12-13T16:23:58.3637512+01:00"
+    },
+    {
+      "balanceAmount": {
+        "currency": "SEK",
+        "amount": "49532"
+      },
+      "balanceType": "InterimAvailable",
+      "creditLimitIncluded": false,
+      "referenceDate": "2021-12-13T16:23:58.3637524+01:00"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api.banknorwegian.com/openbanking/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both&page=1
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Mon, 13 Dec 2021 15:23:59 GMT
+Date: Mon, 13 Dec 2021 15:23:58 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: 7224c96f-461e-46c2-b7f6-2f7880c5295e
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{
+  "accountReference": {
+    "bban": "10372997001",
+    "currency": "SEK"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "1186310244",
+        "entryReference": "1186310244",
+        "transactionDate": "2021-12-04T00:00:00.0000000",
+        "bookingDate": "2021-12-04T00:00:00.0000000",
+        "valueDate": "2021-12-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-169"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-12-04T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Aimo Solution AB",
+        "remittanceInformationUnstructured": "Aimo Solution AB Stockholm SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "AFFILIATED AUTO RENTAL"
+      },
+      {
+        "transactionId": "1181280086",
+        "entryReference": "1181280086",
+        "transactionDate": "2021-11-26T00:00:00.0000000",
+        "bookingDate": "2021-11-27T00:00:00.0000000",
+        "valueDate": "2021-12-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-190"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-11-26T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Aimo Solution AB",
+        "remittanceInformationUnstructured": "Aimo Solution AB Stockholm SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "AFFILIATED AUTO RENTAL"
+      },
+      {
+        "transactionId": "1179527186",
+        "entryReference": "1179527186",
+        "transactionDate": "2021-11-25T00:00:00.0000000",
+        "bookingDate": "2021-11-25T00:00:00.0000000",
+        "valueDate": "2021-11-25T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "2325.47"
+        },
+        "debtorAccount": {},
+        "remittanceInformationUnstructured": "från Name Owner",
+        "proprietaryBankTransactionCode": "Betalning"
+      },
+      {
+        "transactionId": "1176945448",
+        "entryReference": "1176945448",
+        "transactionDate": "2021-11-19T00:00:00.0000000",
+        "bookingDate": "2021-11-20T00:00:00.0000000",
+        "valueDate": "2021-12-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-109"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-11-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NETFLIX.COM",
+        "remittanceInformationUnstructured": "NETFLIX.COM 020790637 NL",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CABLE/PAY TV SERVICES"
+      },
+      {
+        "transactionId": "1172569365",
+        "entryReference": "1172569365",
+        "transactionDate": "2021-11-13T00:00:00.0000000",
+        "bookingDate": "2021-11-14T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-315.61"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.213916",
+            "currencyTo": "SEK",
+            "rateDate": "2021-11-13T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "www.madmonq.gg",
+        "remittanceInformationUnstructured": "www.madmonq.gg PRAHA CZ",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "VARIETY STORES"
+      },
+      {
+        "transactionId": "1170223336",
+        "entryReference": "1170223336",
+        "transactionDate": "2021-11-09T00:00:00.0000000",
+        "bookingDate": "2021-11-10T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-25.26"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "PLN",
+            "rate": "2.215789",
+            "currencyTo": "SEK",
+            "rateDate": "2021-11-09T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "LIM*RIDE COST",
+        "remittanceInformationUnstructured": "LIM*RIDE COST WARSZAWA PL",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "TRANSPORTATION SVCS - DEFAULT"
+      },
+      {
+        "transactionId": "1170269898",
+        "entryReference": "1170269898",
+        "transactionDate": "2021-11-09T00:00:00.0000000",
+        "bookingDate": "2021-11-10T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-62.59"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "PLN",
+            "rate": "2.220291",
+            "currencyTo": "SEK",
+            "rateDate": "2021-11-09T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "UBER   *TRIP",
+        "remittanceInformationUnstructured": "UBER   *TRIP HELP.UBER.COM NL",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "TAXICABS/LIMOUSINES"
+      },
+      {
+        "transactionId": "1168196317",
+        "entryReference": "1168196317",
+        "transactionDate": "2021-11-05T00:00:00.0000000",
+        "bookingDate": "2021-11-06T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1212.22"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.111945",
+            "currencyTo": "SEK",
+            "rateDate": "2021-11-05T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Dropbox",
+        "remittanceInformationUnstructured": "Dropbox db.tt/cchelp IE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "COMPUTER NETWORK/INFO SVCS"
+      },
+      {
+        "transactionId": "1167497143",
+        "entryReference": "1167497143",
+        "transactionDate": "2021-11-03T00:00:00.0000000",
+        "bookingDate": "2021-11-04T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-211.03"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "USD",
+            "rate": "8.763704",
+            "currencyTo": "SEK",
+            "rateDate": "2021-11-03T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Amazon.com*YZ5CZ3383",
+        "remittanceInformationUnstructured": "Amazon.com*YZ5CZ3383 Amzn.com/bill US",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "BOOK STORES"
+      },
+      {
+        "transactionId": "1160460971",
+        "entryReference": "1160460971",
+        "transactionDate": "2021-10-25T00:00:00.0000000",
+        "bookingDate": "2021-10-25T00:00:00.0000000",
+        "valueDate": "2021-10-25T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "6468.06"
+        },
+        "debtorAccount": {},
+        "remittanceInformationUnstructured": "från Name Owner",
+        "proprietaryBankTransactionCode": "Betalning"
+      },
+      {
+        "transactionId": "1158437020",
+        "entryReference": "1158437020",
+        "transactionDate": "2021-10-20T00:00:00.0000000",
+        "bookingDate": "2021-10-21T00:00:00.0000000",
+        "valueDate": "2021-10-21T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "718.24"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-20T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "AMZN Mktp DE",
+        "remittanceInformationUnstructured": "AMZN Mktp DE AMAZON.DE LU",
+        "proprietaryBankTransactionCode": "CreditVoucher",
+        "mccName": "MISC SPECIALTY RETAIL"
+      },
+      {
+        "transactionId": "1158475718",
+        "entryReference": "1158475718",
+        "transactionDate": "2021-10-19T00:00:00.0000000",
+        "bookingDate": "2021-10-21T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-354"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "HAYMARKET BY SCANDIC",
+        "remittanceInformationUnstructured": "HAYMARKET BY SCANDIC STOCKHOLM SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "RESTAURANTS"
+      },
+      {
+        "transactionId": "1157717888",
+        "entryReference": "1157717888",
+        "transactionDate": "2021-10-19T00:00:00.0000000",
+        "bookingDate": "2021-10-19T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-109"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NETFLIX.COM",
+        "remittanceInformationUnstructured": "NETFLIX.COM 020790637 NL",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CABLE/PAY TV SERVICES"
+      },
+      {
+        "transactionId": "1157154126",
+        "entryReference": "1157154126",
+        "transactionDate": "2021-10-17T00:00:00.0000000",
+        "bookingDate": "2021-10-18T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-346"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-17T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "BRUNNSVIKENS TRADGARD",
+        "remittanceInformationUnstructured": "BRUNNSVIKENS TRADGARD SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "LANDSCAPE/HORTICULTURAL SER"
+      },
+      {
+        "transactionId": "1157181588",
+        "entryReference": "1157181588",
+        "transactionDate": "2021-10-17T00:00:00.0000000",
+        "bookingDate": "2021-10-18T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-195"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-17T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "BRUNNSVIKENS TRADGARD",
+        "remittanceInformationUnstructured": "BRUNNSVIKENS TRADGARD SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "LANDSCAPE/HORTICULTURAL SER"
+      },
+      {
+        "transactionId": "1156704383",
+        "entryReference": "1156704383",
+        "transactionDate": "2021-10-15T00:00:00.0000000",
+        "bookingDate": "2021-10-17T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-138"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-15T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "MAX STOCKHOLM VASAGATAN",
+        "remittanceInformationUnstructured": "MAX STOCKHOLM VASAGATAN STOCKHOLM SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "FAST FOOD RESTAURANTS"
+      },
+      {
+        "transactionId": "1155829296",
+        "entryReference": "1155829296",
+        "transactionDate": "2021-10-15T00:00:00.0000000",
+        "bookingDate": "2021-10-16T00:00:00.0000000",
+        "valueDate": "2021-11-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-75"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-15T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Aimo Solution AB",
+        "remittanceInformationUnstructured": "Aimo Solution AB Stockholm SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "AFFILIATED AUTO RENTAL"
+      },
+      {
+        "transactionId": "1153269268",
+        "entryReference": "1153269268",
+        "transactionDate": "2021-10-13T00:00:00.0000000",
+        "bookingDate": "2021-10-14T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-118.9"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-13T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NARAPOTEKET I FROSUNDA",
+        "remittanceInformationUnstructured": "NARAPOTEKET I FROSUNDA SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "DRUG STORES \u0026 PHARMACIES"
+      },
+      {
+        "transactionId": "1152901446",
+        "entryReference": "1152901446",
+        "transactionDate": "2021-10-12T00:00:00.0000000",
+        "bookingDate": "2021-10-13T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-100"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-12T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "COOP",
+        "remittanceInformationUnstructured": "COOP SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "GROCERY STORES/SUPERMARKETS"
+      },
+      {
+        "transactionId": "1152097216",
+        "entryReference": "1152097216",
+        "transactionDate": "2021-10-10T00:00:00.0000000",
+        "bookingDate": "2021-10-11T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-736"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-10T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Klarna adlibris.se",
+        "remittanceInformationUnstructured": "Klarna adlibris.se Stockholm SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "BOOKS/PERIODICALS/NEWSPAPERS"
+      },
+      {
+        "transactionId": "1151419105",
+        "entryReference": "1151419105",
+        "transactionDate": "2021-10-09T00:00:00.0000000",
+        "bookingDate": "2021-10-10T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-251.2"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-09T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "STORA COOP BROMMA",
+        "remittanceInformationUnstructured": "STORA COOP BROMMA BROMMA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "GROCERY STORES/SUPERMARKETS"
+      },
+      {
+        "transactionId": "1151578117",
+        "entryReference": "1151578117",
+        "transactionDate": "2021-10-09T00:00:00.0000000",
+        "bookingDate": "2021-10-10T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-161.6"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-09T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "JULA SVERIGE AB BROMMA",
+        "remittanceInformationUnstructured": "JULA SVERIGE AB BROMMA BROMMA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "HARDWARE STORES"
+      },
+      {
+        "transactionId": "1151557514",
+        "entryReference": "1151557514",
+        "transactionDate": "2021-10-09T00:00:00.0000000",
+        "bookingDate": "2021-10-10T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-651"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-09T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "CYKLOTEKET B2 AB",
+        "remittanceInformationUnstructured": "CYKLOTEKET B2 AB BROMMA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "BICYCLE SHOPS/SALES/SERVICE"
+      },
+      {
+        "transactionId": "1150797786",
+        "entryReference": "1150797786",
+        "transactionDate": "2021-10-08T00:00:00.0000000",
+        "bookingDate": "2021-10-09T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-854.9"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-08T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "HM SE0144",
+        "remittanceInformationUnstructured": "HM SE0144 Solna SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "FAMILY CLOTHING STORES"
+      },
+      {
+        "transactionId": "1151031185",
+        "entryReference": "1151031185",
+        "transactionDate": "2021-10-08T00:00:00.0000000",
+        "bookingDate": "2021-10-09T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-220"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-08T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "APOTEK HJARTAT MALL OF SC",
+        "remittanceInformationUnstructured": "APOTEK HJARTAT MALL OF SC SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "DRUG STORES \u0026 PHARMACIES"
+      },
+      {
+        "transactionId": "1148475742",
+        "entryReference": "1148475742",
+        "transactionDate": "2021-10-03T00:00:00.0000000",
+        "bookingDate": "2021-10-04T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-20"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-10-03T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "AIK TRAFFEN . MANN CAT",
+        "remittanceInformationUnstructured": "AIK TRAFFEN . MANN CAT SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "FAST FOOD RESTAURANTS"
+      },
+      {
+        "transactionId": "1146657749",
+        "entryReference": "1146657749",
+        "transactionDate": "2021-09-30T00:00:00.0000000",
+        "bookingDate": "2021-10-01T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1069.46"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-30T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "AMZN Mktp DE*AX0639MR5",
+        "remittanceInformationUnstructured": "AMZN Mktp DE*AX0639MR5 AMAZON.DE LU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "MISC SPECIALTY RETAIL"
+      },
+      {
+        "transactionId": "1143740159",
+        "entryReference": "1143740159",
+        "transactionDate": "2021-09-25T00:00:00.0000000",
+        "bookingDate": "2021-09-27T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-30"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-25T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "MAX MALL OF SCANDINAVIA",
+        "remittanceInformationUnstructured": "MAX MALL OF SCANDINAVIA SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "FAST FOOD RESTAURANTS"
+      },
+      {
+        "transactionId": "1141352399",
+        "entryReference": "1141352399",
+        "transactionDate": "2021-09-22T00:00:00.0000000",
+        "bookingDate": "2021-09-23T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-153"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-22T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NARAPOTEKET I FROSUNDA",
+        "remittanceInformationUnstructured": "NARAPOTEKET I FROSUNDA SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "DRUG STORES \u0026 PHARMACIES"
+      },
+      {
+        "transactionId": "1139617527",
+        "entryReference": "1139617527",
+        "transactionDate": "2021-09-20T00:00:00.0000000",
+        "bookingDate": "2021-09-20T00:00:00.0000000",
+        "valueDate": "2021-09-20T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "6909.78"
+        },
+        "debtorAccount": {},
+        "remittanceInformationUnstructured": "från Name Owner",
+        "proprietaryBankTransactionCode": "Betalning"
+      },
+      {
+        "transactionId": "1139739702",
+        "entryReference": "1139739702",
+        "transactionDate": "2021-09-19T00:00:00.0000000",
+        "bookingDate": "2021-09-20T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-109"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NETFLIX.COM",
+        "remittanceInformationUnstructured": "NETFLIX.COM 020790637 NL",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CABLE/PAY TV SERVICES"
+      },
+      {
+        "transactionId": "1139862056",
+        "entryReference": "1139862056",
+        "transactionDate": "2021-09-19T00:00:00.0000000",
+        "bookingDate": "2021-09-20T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-228"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "XXL SPORT \u0026 VIL",
+        "remittanceInformationUnstructured": "XXL SPORT \u0026 VIL BROMMA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "SPORTING GOODS STORES"
+      },
+      {
+        "transactionId": "1139836051",
+        "entryReference": "1139836051",
+        "transactionDate": "2021-09-19T00:00:00.0000000",
+        "bookingDate": "2021-09-20T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1082"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "BAUHAUS BROMMA",
+        "remittanceInformationUnstructured": "BAUHAUS BROMMA BROMMA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CONSTRUCTION MATERIALS - DEF"
+      },
+      {
+        "transactionId": "1139746582",
+        "entryReference": "1139746582",
+        "transactionDate": "2021-09-19T00:00:00.0000000",
+        "bookingDate": "2021-09-20T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-207"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Joe  The Juice",
+        "remittanceInformationUnstructured": "Joe  The Juice Bromma SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "RESTAURANTS"
+      },
+      {
+        "transactionId": "1139794627",
+        "entryReference": "1139794627",
+        "transactionDate": "2021-09-19T00:00:00.0000000",
+        "bookingDate": "2021-09-20T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-15"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NYX*Unattended-SE",
+        "remittanceInformationUnstructured": "NYX*Unattended-SE MannCateringi SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "MISC FOOD STORES - DEFAULT"
+      },
+      {
+        "transactionId": "1138632848",
+        "entryReference": "1138632848",
+        "transactionDate": "2021-09-17T00:00:00.0000000",
+        "bookingDate": "2021-09-18T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-139"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-17T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Aimo Solution AB",
+        "remittanceInformationUnstructured": "Aimo Solution AB Stockholm SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "AFFILIATED AUTO RENTAL"
+      },
+      {
+        "transactionId": "1138120848",
+        "entryReference": "1138120848",
+        "transactionDate": "2021-09-16T00:00:00.0000000",
+        "bookingDate": "2021-09-17T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-228"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-16T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "StickerApp Sweden AB",
+        "remittanceInformationUnstructured": "StickerApp Sweden AB Lomma SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "MISC SPECIALTY RETAIL"
+      },
+      {
+        "transactionId": "1137740022",
+        "entryReference": "1137740022",
+        "transactionDate": "2021-09-14T00:00:00.0000000",
+        "bookingDate": "2021-09-16T00:00:00.0000000",
+        "valueDate": "2021-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-94"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-14T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "MAX MALL OF SCANDINAVIA",
+        "remittanceInformationUnstructured": "MAX MALL OF SCANDINAVIA SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "FAST FOOD RESTAURANTS"
+      },
+      {
+        "transactionId": "1135788514",
+        "entryReference": "1135788514",
+        "transactionDate": "2021-09-14T00:00:00.0000000",
+        "bookingDate": "2021-09-15T00:00:00.0000000",
+        "valueDate": "2021-09-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-360"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-14T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "MIN DOKTOR KLINIKEN MO",
+        "remittanceInformationUnstructured": "MIN DOKTOR KLINIKEN MO SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "DOCTORS \u0026 PHYSICIANS"
+      },
+      {
+        "transactionId": "1135734457",
+        "entryReference": "1135734457",
+        "transactionDate": "2021-09-12T00:00:00.0000000",
+        "bookingDate": "2021-09-15T00:00:00.0000000",
+        "valueDate": "2021-09-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-819"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2021-09-12T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "HORNBACH SUNDBYBERG",
+        "remittanceInformationUnstructured": "HORNBACH SUNDBYBERG SUNDBYBERG SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CONSTRUCTION MATERIALS - DEF"
+      }
+    ],
+    "pending": []
+  },
+  "_links": {
+    "account": {
+      "href": "/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://api.banknorwegian.com/openbanking/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/transactions?dateFrom=1991-10-14&dateTo=1992-01-11&bookingStatus=both&page=1
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Date: Mon, 13 Dec 2021 15:24:04 GMT
+Date: Mon, 13 Dec 2021 15:24:04 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: 6be5a5ff-a895-4218-a923-87624afb7c13
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{
+  "accountReference": {
+    "bban": "10372997001",
+    "currency": "SEK"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "933690276",
+        "entryReference": "933690276",
+        "transactionDate": "2020-09-18T00:00:00.0000000",
+        "bookingDate": "2020-09-19T00:00:00.0000000",
+        "valueDate": "2020-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-861.18"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.59653",
+            "currencyTo": "SEK",
+            "rateDate": "2020-09-18T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "AMZN Mktp DE*RW7ST9RF5",
+        "remittanceInformationUnstructured": "AMZN Mktp DE*RW7ST9RF5 800-279-6620 LU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "BOOK STORES"
+      },
+      {
+        "transactionId": "933865213",
+        "entryReference": "933865213",
+        "transactionDate": "2020-09-18T00:00:00.0000000",
+        "bookingDate": "2020-09-19T00:00:00.0000000",
+        "valueDate": "2020-10-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-109"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-09-18T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NETFLIX.COM",
+        "remittanceInformationUnstructured": "NETFLIX.COM 020790637 NL",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CABLE/PAY TV SERVICES"
+      },
+      {
+        "transactionId": "928077700",
+        "entryReference": "928077700",
+        "transactionDate": "2020-09-10T00:00:00.0000000",
+        "bookingDate": "2020-09-11T00:00:00.0000000",
+        "valueDate": "2020-09-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-80"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-09-10T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "QUICK STAR",
+        "remittanceInformationUnstructured": "QUICK STAR SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "MISC FOOD STORES - DEFAULT"
+      },
+      {
+        "transactionId": "918497828",
+        "entryReference": "918497828",
+        "transactionDate": "2020-08-24T00:00:00.0000000",
+        "bookingDate": "2020-08-25T00:00:00.0000000",
+        "valueDate": "2020-09-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1620.78"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-08-24T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "EURONICS  1",
+        "remittanceInformationUnstructured": "EURONICS  1 BIELLA IT",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "HOUSEHOLD APPLIANCE STORES"
+      },
+      {
+        "transactionId": "916530386",
+        "entryReference": "916530386",
+        "transactionDate": "2020-08-20T00:00:00.0000000",
+        "bookingDate": "2020-08-22T00:00:00.0000000",
+        "valueDate": "2020-09-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-20391.86"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.565785",
+            "currencyTo": "SEK",
+            "rateDate": "2020-08-20T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "WWW.DECATHLON.COM",
+        "remittanceInformationUnstructured": "WWW.DECATHLON.COM MILANO IT",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "SPORTS/RIDING APPAREL STORES"
+      },
+      {
+        "transactionId": "915457643",
+        "entryReference": "915457643",
+        "transactionDate": "2020-08-19T00:00:00.0000000",
+        "bookingDate": "2020-08-20T00:00:00.0000000",
+        "valueDate": "2020-09-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-109"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-08-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NETFLIX.COM",
+        "remittanceInformationUnstructured": "NETFLIX.COM 020790637 NL",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CABLE/PAY TV SERVICES"
+      },
+      {
+        "transactionId": "914772108",
+        "entryReference": "914772108",
+        "transactionDate": "2020-08-19T00:00:00.0000000",
+        "bookingDate": "2020-08-19T00:00:00.0000000",
+        "valueDate": "2020-08-19T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "1923.34"
+        },
+        "debtorAccount": {},
+        "remittanceInformationUnstructured": "från Name Owner",
+        "proprietaryBankTransactionCode": "Betalning"
+      },
+      {
+        "transactionId": "913633514",
+        "entryReference": "913633514",
+        "transactionDate": "2020-08-15T00:00:00.0000000",
+        "bookingDate": "2020-08-16T00:00:00.0000000",
+        "valueDate": "2020-09-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-444.78"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.482677",
+            "currencyTo": "SEK",
+            "rateDate": "2020-08-15T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "DAC SOMEDIS",
+        "remittanceInformationUnstructured": "DAC SOMEDIS 06MENTON FR",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "AUTOMATED FUEL DISPENSERS"
+      },
+      {
+        "transactionId": "913633510",
+        "entryReference": "913633510",
+        "transactionDate": "2020-08-15T00:00:00.0000000",
+        "bookingDate": "2020-08-16T00:00:00.0000000",
+        "valueDate": "2020-09-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-790.61"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.482763",
+            "currencyTo": "SEK",
+            "rateDate": "2020-08-15T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "INTERMARCHE",
+        "remittanceInformationUnstructured": "INTERMARCHE 06MENTON FR",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "GROCERY STORES/SUPERMARKETS"
+      },
+      {
+        "transactionId": "908731424",
+        "entryReference": "908731424",
+        "transactionDate": "2020-08-08T00:00:00.0000000",
+        "bookingDate": "2020-08-10T00:00:00.0000000",
+        "valueDate": "2020-08-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-330.87"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.513823",
+            "currencyTo": "SEK",
+            "rateDate": "2020-08-08T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NOVA COOP CARBURANTI BIE",
+        "remittanceInformationUnstructured": "NOVA COOP CARBURANTI BIE BIELLA IT",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "AUTOMATED FUEL DISPENSERS"
+      },
+      {
+        "transactionId": "905809059",
+        "entryReference": "905809059",
+        "transactionDate": "2020-08-03T00:00:00.0000000",
+        "bookingDate": "2020-08-05T00:00:00.0000000",
+        "valueDate": "2020-08-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-335.09"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".030413",
+            "currencyTo": "SEK",
+            "rateDate": "2020-08-03T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "STOP OIL BENZINKUT SHO",
+        "remittanceInformationUnstructured": "STOP OIL BENZINKUT SHO SATORALJAUJHE HU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "SERVICE STATIONS"
+      },
+      {
+        "transactionId": "901984696",
+        "entryReference": "901984696",
+        "transactionDate": "2020-07-29T00:00:00.0000000",
+        "bookingDate": "2020-07-30T00:00:00.0000000",
+        "valueDate": "2020-07-30T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "435.76"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".02907",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-29T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "IKEA lakberendezes online",
+        "remittanceInformationUnstructured": "IKEA lakberendezes online Budapest HU",
+        "proprietaryBankTransactionCode": "CreditVoucher",
+        "mccName": "FURNITURE/EQUIP STORES"
+      },
+      {
+        "transactionId": "901695559",
+        "entryReference": "901695559",
+        "transactionDate": "2020-07-28T00:00:00.0000000",
+        "bookingDate": "2020-07-29T00:00:00.0000000",
+        "valueDate": "2020-07-29T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "1332.03"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-28T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "WIZZ AIR",
+        "remittanceInformationUnstructured": "WIZZ AIR BUDAPEST HU",
+        "proprietaryBankTransactionCode": "CreditVoucher",
+        "mccName": "WIZZ AIR"
+      },
+      {
+        "transactionId": "901019034",
+        "entryReference": "901019034",
+        "transactionDate": "2020-07-27T00:00:00.0000000",
+        "bookingDate": "2020-07-28T00:00:00.0000000",
+        "valueDate": "2020-08-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-436.93"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".030737",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-27T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Anyukam Mondta Etterem",
+        "remittanceInformationUnstructured": "Anyukam Mondta Etterem Encs HU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "RESTAURANTS"
+      },
+      {
+        "transactionId": "897782427",
+        "entryReference": "897782427",
+        "transactionDate": "2020-07-24T00:00:00.0000000",
+        "bookingDate": "2020-07-24T00:00:00.0000000",
+        "valueDate": "2020-07-24T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "31642.49"
+        },
+        "debtorAccount": {},
+        "remittanceInformationUnstructured": "från Name Owner",
+        "proprietaryBankTransactionCode": "Betalning"
+      },
+      {
+        "transactionId": "898518274",
+        "entryReference": "898518274",
+        "transactionDate": "2020-07-23T00:00:00.0000000",
+        "bookingDate": "2020-07-25T00:00:00.0000000",
+        "valueDate": "2020-08-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-81.57"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".030437",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-23T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "FAIPARI TERMEK-BARKAC",
+        "remittanceInformationUnstructured": "FAIPARI TERMEK-BARKAC SATORALJAUJHE HU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "LUMBER/BUILD. SUPPLY STORES"
+      },
+      {
+        "transactionId": "896870416",
+        "entryReference": "896870416",
+        "transactionDate": "2020-07-21T00:00:00.0000000",
+        "bookingDate": "2020-07-22T00:00:00.0000000",
+        "valueDate": "2020-07-22T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "96.42"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".028527",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-21T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "IKEA lakberendezes online",
+        "remittanceInformationUnstructured": "IKEA lakberendezes online Budapest HU",
+        "proprietaryBankTransactionCode": "CreditVoucher",
+        "mccName": "FURNITURE/EQUIP STORES"
+      },
+      {
+        "transactionId": "896126094",
+        "entryReference": "896126094",
+        "transactionDate": "2020-07-19T00:00:00.0000000",
+        "bookingDate": "2020-07-21T00:00:00.0000000",
+        "valueDate": "2020-08-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1203.73"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".030044",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "RYANAIR",
+        "remittanceInformationUnstructured": "RYANAIR DUBLIN IE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "RYANAIR"
+      },
+      {
+        "transactionId": "895959489",
+        "entryReference": "895959489",
+        "transactionDate": "2020-07-19T00:00:00.0000000",
+        "bookingDate": "2020-07-20T00:00:00.0000000",
+        "valueDate": "2020-08-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1290.36"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".030013",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-19T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "TESCO 41007",
+        "remittanceInformationUnstructured": "TESCO 41007 SATORALJAUJHE HU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "DEPARTMENT STORES"
+      },
+      {
+        "transactionId": "895204450",
+        "entryReference": "895204450",
+        "transactionDate": "2020-07-18T00:00:00.0000000",
+        "bookingDate": "2020-07-19T00:00:00.0000000",
+        "valueDate": "2020-08-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-109"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-18T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NETFLIX.COM",
+        "remittanceInformationUnstructured": "NETFLIX.COM 020790637 NL",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CABLE/PAY TV SERVICES"
+      },
+      {
+        "transactionId": "889252419",
+        "entryReference": "889252419",
+        "transactionDate": "2020-07-10T00:00:00.0000000",
+        "bookingDate": "2020-07-11T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-2258.37"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".030334",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-10T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "IKEA lakberendezes online",
+        "remittanceInformationUnstructured": "IKEA lakberendezes online Budapest HU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "FURNITURE/EQUIP STORES"
+      },
+      {
+        "transactionId": "888691306",
+        "entryReference": "888691306",
+        "transactionDate": "2020-07-09T00:00:00.0000000",
+        "bookingDate": "2020-07-10T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-13735.06"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "HUF",
+            "rate": ".030135",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-09T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "IKEA lakberendezes online",
+        "remittanceInformationUnstructured": "IKEA lakberendezes online Budapest HU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "FURNITURE/EQUIP STORES"
+      },
+      {
+        "transactionId": "885611542",
+        "entryReference": "885611542",
+        "transactionDate": "2020-07-03T00:00:00.0000000",
+        "bookingDate": "2020-07-04T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-169"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-03T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "ASN SPEL \u0026 TOBAK",
+        "remittanceInformationUnstructured": "ASN SPEL \u0026 TOBAK SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CIGAR STORES/STANDS"
+      },
+      {
+        "transactionId": "885025704",
+        "entryReference": "885025704",
+        "transactionDate": "2020-07-02T00:00:00.0000000",
+        "bookingDate": "2020-07-03T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-638.03"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.68906",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-02T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Amazon.it*VD4FK1UP5",
+        "remittanceInformationUnstructured": "Amazon.it*VD4FK1UP5 www.amazon.it LU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "MISC SPECIALTY RETAIL"
+      },
+      {
+        "transactionId": "885575268",
+        "entryReference": "885575268",
+        "transactionDate": "2020-07-01T00:00:00.0000000",
+        "bookingDate": "2020-07-04T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1332.03"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-07-01T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "WIZZ AIR",
+        "remittanceInformationUnstructured": "WIZZ AIR BUDAPEST HU",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "WIZZ AIR"
+      },
+      {
+        "transactionId": "881914598",
+        "entryReference": "881914598",
+        "transactionDate": "2020-06-27T00:00:00.0000000",
+        "bookingDate": "2020-06-29T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-224.25"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-27T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "DRESSMANN 394 SOLNA",
+        "remittanceInformationUnstructured": "DRESSMANN 394 SOLNA SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "MENS/WOMENS CLOTHING STORES"
+      },
+      {
+        "transactionId": "881983419",
+        "entryReference": "881983419",
+        "transactionDate": "2020-06-27T00:00:00.0000000",
+        "bookingDate": "2020-06-29T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-149"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-27T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "DECATHLON MALL OF SCANDIN",
+        "remittanceInformationUnstructured": "DECATHLON MALL OF SCANDIN SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "SPORTING GOODS STORES"
+      },
+      {
+        "transactionId": "881572680",
+        "entryReference": "881572680",
+        "transactionDate": "2020-06-26T00:00:00.0000000",
+        "bookingDate": "2020-06-29T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-801.14"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-26T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "LIDL 350 /SOLNA CENTRUM",
+        "remittanceInformationUnstructured": "LIDL 350 /SOLNA CENTRUM SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "MISC FOOD STORES - DEFAULT"
+      },
+      {
+        "transactionId": "882220675",
+        "entryReference": "882220675",
+        "transactionDate": "2020-06-26T00:00:00.0000000",
+        "bookingDate": "2020-06-29T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1899.21"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "USD",
+            "rate": "9.543769",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-26T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "EDX, INC.",
+        "remittanceInformationUnstructured": "EDX, INC. CAMBRIDGE US",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "SCHOOLS - DEFAULT"
+      },
+      {
+        "transactionId": "880672315",
+        "entryReference": "880672315",
+        "transactionDate": "2020-06-25T00:00:00.0000000",
+        "bookingDate": "2020-06-26T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-198"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-25T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "SYSTEMBOLAGET SOLNA EX",
+        "remittanceInformationUnstructured": "SYSTEMBOLAGET SOLNA EX SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "PKG STORES/BEER/WINE/LIQUOR"
+      },
+      {
+        "transactionId": "879450917",
+        "entryReference": "879450917",
+        "transactionDate": "2020-06-24T00:00:00.0000000",
+        "bookingDate": "2020-06-25T00:00:00.0000000",
+        "valueDate": "2020-06-25T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "141.26"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "rate": "10.28842",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-24T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "AMZN Mktp IT",
+        "remittanceInformationUnstructured": "AMZN Mktp IT 800-279-6620 LU",
+        "proprietaryBankTransactionCode": "CreditVoucher",
+        "mccName": "MISC SPECIALTY RETAIL"
+      },
+      {
+        "transactionId": "879021944",
+        "entryReference": "879021944",
+        "transactionDate": "2020-06-23T00:00:00.0000000",
+        "bookingDate": "2020-06-24T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-846.66"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-23T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "ICA KVANTUM MALL OF SCAND",
+        "remittanceInformationUnstructured": "ICA KVANTUM MALL OF SCAND SOLNA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "GROCERY STORES/SUPERMARKETS"
+      },
+      {
+        "transactionId": "878333354",
+        "entryReference": "878333354",
+        "transactionDate": "2020-06-22T00:00:00.0000000",
+        "bookingDate": "2020-06-23T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-266"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-22T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Aimo Solution AB",
+        "remittanceInformationUnstructured": "Aimo Solution AB Stockholm SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "AFFILIATED AUTO RENTAL"
+      },
+      {
+        "transactionId": "878391148",
+        "entryReference": "878391148",
+        "transactionDate": "2020-06-22T00:00:00.0000000",
+        "bookingDate": "2020-06-23T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1756"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-22T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "DECATHLON",
+        "remittanceInformationUnstructured": "DECATHLON JERFELLA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "SPORTING GOODS STORES"
+      },
+      {
+        "transactionId": "878549373",
+        "entryReference": "878549373",
+        "transactionDate": "2020-06-22T00:00:00.0000000",
+        "bookingDate": "2020-06-23T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1995"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-22T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "Lekmer AB",
+        "remittanceInformationUnstructured": "Lekmer AB Jaerfaella SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "CHILDREN/INFANTS WEAR STORES"
+      },
+      {
+        "transactionId": "877856711",
+        "entryReference": "877856711",
+        "transactionDate": "2020-06-21T00:00:00.0000000",
+        "bookingDate": "2020-06-22T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-3770"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-21T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "NORRANGENS ALPACKA",
+        "remittanceInformationUnstructured": "NORRANGENS ALPACKA SALA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "HOTELS/MOTELS/RESORTS"
+      },
+      {
+        "transactionId": "877950376",
+        "entryReference": "877950376",
+        "transactionDate": "2020-06-21T00:00:00.0000000",
+        "bookingDate": "2020-06-22T00:00:00.0000000",
+        "valueDate": "2020-07-28T00:00:00.0000000",
+        "transactionAmount": {
+          "currency": "SEK",
+          "amount": "-1637"
+        },
+        "exchangeRate": [
+          {
+            "currencyFrom": "SEK",
+            "rate": "1.00",
+            "currencyTo": "SEK",
+            "rateDate": "2020-06-21T00:00:00.0000000"
+          }
+        ],
+        "creditorName": "IKEA BARKARBY",
+        "remittanceInformationUnstructured": "IKEA BARKARBY JERFELLA SE",
+        "proprietaryBankTransactionCode": "Köp",
+        "mccName": "FURNITURE/EQUIP STORES"
+      }
+    ],
+    "pending": []
+  },
+  "_links": {
+    "account": {
+      "href": "/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://api.banknorwegian.com/openbanking/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/transactions?dateFrom=1991-07-16&dateTo=1991-10-13&bookingStatus=both&page=1
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Date: Mon, 13 Dec 2021 15:24:18 GMT
+Date: Mon, 13 Dec 2021 15:24:18 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: ee94e06e-f849-4bfd-af0d-10776081377e
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Content-Length: 181
+
+{"accountReference":{"bban":"10372997001","currency":"SEK"},"transactions":{"booked":[],"pending":[]},"_links":{"account":{"href":"/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b"}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 26
+GET https://api.banknorwegian.com/openbanking/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/transactions?dateFrom=1991-04-17&dateTo=1991-07-15&bookingStatus=both&page=1
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 26
+200
+Date: Mon, 13 Dec 2021 15:24:19 GMT
+Date: Mon, 13 Dec 2021 15:24:19 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: 76b00cd0-f227-430d-b4f0-edaeccdd1f43
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Content-Length: 181
+
+{"accountReference":{"bban":"10372997001","currency":"SEK"},"transactions":{"booked":[],"pending":[]},"_links":{"account":{"href":"/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b"}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 27
+GET https://api.banknorwegian.com/openbanking/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/transactions?dateFrom=1991-01-17&dateTo=1991-04-16&bookingStatus=both&page=1
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 27
+200
+Date: Mon, 13 Dec 2021 15:24:20 GMT
+Date: Mon, 13 Dec 2021 15:24:20 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: 41eb0e86-c3e1-42e5-bd75-62f8d75f45e4
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Content-Length: 181
+
+{"accountReference":{"bban":"10372997001","currency":"SEK"},"transactions":{"booked":[],"pending":[]},"_links":{"account":{"href":"/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b"}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 28
+GET https://api.banknorwegian.com/openbanking/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b/transactions?dateFrom=1990-10-19&dateTo=1991-01-16&bookingStatus=both&page=1
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-IP-Port: 0000
+PSU-User-Agent: Tink
+Region-ID: SE
+PSU-Device-ID: Tink
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 28
+200
+Date: Mon, 13 Dec 2021 15:24:21 GMT
+Date: Mon, 13 Dec 2021 15:24:21 GMT
+Content-Type: application/json;charset=utf-8
+Request-ID: 27ffa101-92ca-44d9-8dd1-cc153fd17262
+X-BN-CORRELATION-ID: ***
+X-Powered-By: ASP.NET
+Content-Length: 181
+
+{"accountReference":{"bban":"10372997001","currency":"SEK"},"transactions":{"booked":[],"pending":[]},"_links":{"account":{"href":"/accounts/364a6795-22f5-4fc5-96d1-0d376a7b1a2b"}}}
