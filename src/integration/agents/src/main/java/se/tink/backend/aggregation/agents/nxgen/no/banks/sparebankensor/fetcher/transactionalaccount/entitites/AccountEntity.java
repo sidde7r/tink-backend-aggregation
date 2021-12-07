@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -13,7 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -39,24 +43,33 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(
-                        getTinkAccountType(), id, getBalance(accountBalance.getAvailableBalance()))
-                .setAccountNumber(id)
-                .setName(displayName)
-                .setHolderName(new HolderName(owner.getName()))
-                .setBankIdentifier(id)
-                .addIdentifiers(Arrays.asList(new IbanIdentifier(iban), new BbanIdentifier(bban)))
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(getTinkAccountType())
+                .withoutFlags()
+                .withBalance(getBalanceModule())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(id)
+                                .withAccountNumber(id)
+                                .withAccountName(displayName)
+                                .addIdentifiers(
+                                        Arrays.asList(
+                                                new IbanIdentifier(iban), new BbanIdentifier(bban)))
+                                .build())
+                .addHolderName(owner.getName())
                 .putInTemporaryStorage(
                         SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)
                 .build();
     }
 
     @JsonIgnore
-    private AccountTypes getTinkAccountType() {
-        return SparebankenSorConstants.Accounts.ACCOUNT_TYPE_MAPPER
-                .translate(properties.getType())
-                .orElse(AccountTypes.OTHER);
+    private TransactionalAccountType getTinkAccountType() {
+        return TransactionalAccountType.from(
+                        SparebankenSorConstants.Accounts.ACCOUNT_TYPE_MAPPER
+                                .translate(properties.getType())
+                                .orElse(AccountTypes.CHECKING))
+                .orElse(null);
     }
 
     @JsonIgnore
@@ -86,5 +99,21 @@ public class AccountEntity {
         }
 
         return ExactCurrencyAmount.of(balance, currency);
+    }
+
+    private BalanceModule getBalanceModule() {
+        String currency = properties.getCurrencyCode();
+
+        if (Strings.isNullOrEmpty(currency)) {
+            log.warn("Sparebanken Sor: No currency for account found. Defaulting to NOK.");
+            currency = "NOK";
+        }
+
+        return BalanceModule.builder()
+                .withBalance(
+                        ExactCurrencyAmount.of(accountBalance.getAccountingBalance(), currency))
+                .setAvailableBalance(
+                        ExactCurrencyAmount.of(accountBalance.getAvailableBalance(), currency))
+                .build();
     }
 }
