@@ -4,7 +4,6 @@ java_library_with_sources(
     name = "sdk",
     srcs = glob(["src/**/*.java"]),
     extdeps = [
-        "@agent_sdk_maven//:com_fasterxml_jackson_core_jackson_core",
         "@agent_sdk_maven//:com_google_code_findbugs_jsr305",
         "@agent_sdk_maven//:com_google_guava_guava",
         "@agent_sdk_maven//:org_projectlombok_lombok",
