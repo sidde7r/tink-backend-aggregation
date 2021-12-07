@@ -1,10 +1,10 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "account_capabilities",
     srcs = glob(["*.java"]),
-    visibility = ["//visibility:public"],
-    deps = [
+    extdeps = [
         "@aggregation//:com_google_guava_guava",
     ],
+    visibility = ["//visibility:public"],
 )
