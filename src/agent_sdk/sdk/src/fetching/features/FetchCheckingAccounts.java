@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.fetching.capability;
+package se.tink.agent.sdk.fetching.features;
 
 import se.tink.agent.sdk.fetching.accounts.CheckingAccountsFetcher;
 

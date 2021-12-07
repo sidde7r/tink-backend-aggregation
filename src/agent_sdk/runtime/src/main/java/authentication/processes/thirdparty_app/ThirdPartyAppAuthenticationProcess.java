@@ -8,10 +8,10 @@ import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdParty
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppInitStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppOpenAppStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppPollStep;
-import se.tink.agent.sdk.authentication.capability.AuthenticateThirdPartyApp;
 import se.tink.agent.sdk.authentication.common_steps.GetConsentLifetimeStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
+import se.tink.agent.sdk.authentication.features.AuthenticateThirdPartyApp;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.utils.Sleeper;
 
