@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 @JsonDeserialize(using = SerializableReferenceDeserializer.class)
 @JsonSerialize(using = SerializableReferenceSerializer.class)
-public class SerializableReference {
+public class SerializableReference implements Reference {
     private static final String STORAGE_KEY = "reference";
 
     final SerializableStorage storage;
@@ -16,6 +16,12 @@ public class SerializableReference {
         this.storage = storage;
     }
 
+    @Override
+    public String get() {
+        return this.get(String.class);
+    }
+
+    @Override
     public <T> T get(Class<T> referenceType) {
         return this.storage
                 .tryGet(STORAGE_KEY, referenceType)
@@ -23,10 +29,6 @@ public class SerializableReference {
                         () ->
                                 new IllegalStateException(
                                         "The Reference could not be found or failed to be deserialized."));
-    }
-
-    public String get() {
-        return this.get(String.class);
     }
 
     public static SerializableReference from(String reference) {
