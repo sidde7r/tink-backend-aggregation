@@ -1,0 +1,107 @@
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://psd2-api.danskebank.com/psd2/fi/private/.well-known/openid-configuration
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+Content-Length: 1167
+
+{"issuer": "https://psd2-api.danskebank.com/psd2", "authorization_endpoint": "https://psd2-auth.danskebank.com/psd2/fi/private/oauth2/authorize", "token_endpoint": "https://psd2-api.danskebank.com/psd2/fi/private/oauth2/token", "jwks_uri": "https://psd2-api.danskebank.com/psd2/jwks", "token_endpoint_auth_methods_supported": ["tls_client_auth"], "registration_endpoint": "https://psd2-api.danskebank.com/psd2/v1.0/thirdparty/register", "tls_client_certificate_bound_access_tokens": true, "scopes_supported": ["openid", "payments", "accounts", "fundsconfirmations"], "response_types_supported": ["code id_token"], "grant_types_supported": ["authorization_code", "client_credentials", "refresh_token"], "subject_types_supported": ["public"], "id_token_signing_alg_values_supported": ["PS256"], "request_parameter_supported": true, "request_uri_parameter_supported": false, "request_object_signing_alg_values_supported": ["PS256"], "token_endpoint_auth_signing_alg_values_supported": ["PS256"], "display_values_supported": ["page"], "claims_parameter_supported": true, "claims_supported": ["sub", "iss", "iat", "exp", "acr", "openbanking_intent_id", "aud", "at_hash"] }
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://psd2-api.danskebank.com/psd2/fi/private/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Mon, 06 Dec 2021 13:46:54 GMT
+Date: Mon, 06 Dec 2021 13:46:55 GMT
+Content-Type: application/json
+Content-Security-Policy: default-src 'self'; style-src 'unsafe-inline'
+Content-Length: 489
+
+{"token_type": "Bearer", "access_token": "AAJJMWNmZDhjNTI4YzVlOGNhNGMzNTI1YWNmNmUxYzBjNTIzMzE2NTk2MWNkMmFjYmUxOTRlNmJjNzUxMzk5YmQyOS0yYjExNTc1NxIfXWbgh_KZLluELTEV18w1e2moySjwTtk7DQaviVab4uvyHkkw8qEScxbqeAaqj_E5q6ychw8YMXH00D_QgcOZxw97AqrtKQzLZ0F0-IeOI5buP5hDGH-i_fLdlNHY8Bun5SV6z62dMj7cInBlbCrA_T6KGm1Cxh2Z-Yno75P2EBbAwUXFKjEI3HjMT5WZbAmqd-RbcXTIM8ieWQeZD1cihapSrxHC85exE3f9ICfNpdUj7nWQTIx9X-PqhwNUTA", "metadata": "m:", "expires_in": 3600, "consented_on": 1638798415, "scope": "payments"}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://psd2-api.danskebank.com/psd2/v3.1/pisp/fi/domestic-payment-consents
+Content-Type: application/json; charset=UTF-8
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+
+{"Risk": {"PaymentContextCode": "PartyToParty"}, "Data": {"Initiation": {"RemittanceInformation": {"Unstructured": "Tink Test-2021-12-06--13-46-51"}, "EndToEndIdentification": "258b967552ae47579f183b57514f141", "InstructionIdentification": "258b967552ae47579f183b57514f1413", "DebtorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI9189512712449566"}, "LocalInstrument": "DK.DanskeBank.FI.TransferFunds", "CreditorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI3126598515147343", "Name": "Tink Test"}, "InstructedAmount": {"Amount": "1.00", "Currency": "EUR"} } } }
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET 1
+201
+Date: Mon, 06 Dec 2021 13:46:56 GMT
+Date: Mon, 06 Dec 2021 13:46:57 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 975
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+
+{"Data": {"ConsentId": "urn:obp:pi:3.1.8:0942b135-80df-4dad-ba63-8a03ca8cee5b", "CreationDateTime": "2021-12-06T15:46:57.293427+02:00", "Status": "AwaitingAuthorisation", "StatusUpdateDateTime": "2021-12-06T15:46:57.293427+02:00", "Initiation": {"RemittanceInformation": {"Unstructured": "Tink Test-2021-12-06--13-46-51"}, "EndToEndIdentification": "258b967552ae47579f183b57514f141", "InstructionIdentification": "258b967552ae47579f183b57514f1413", "DebtorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI9189512712449566"}, "LocalInstrument": "DK.DanskeBank.FI.TransferFunds", "CreditorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI3126598515147343", "Name": "Tink Test"}, "InstructedAmount": {"Amount": "1.00", "Currency": "EUR"} } }, "Risk": {"PaymentContextCode": "PartyToParty"}, "Links": {"Self": "https://psd2-api.danskebank.com/psd2/v3.1/pisp/domestic-payment-consents/urn:obp:pi:3.1.8:0942b135-80df-4dad-ba63-8a03ca8cee5b"}, "Meta": {} }
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH 1
+POST https://psd2-api.danskebank.com/psd2/fi/private/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&code=dummyCode
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Mon, 06 Dec 2021 13:47:44 GMT
+Date: Mon, 06 Dec 2021 13:47:44 GMT
+Content-Type: application/json
+Content-Security-Policy: default-src 'self'; style-src 'unsafe-inline'
+Content-Length: 1605
+
+{"token_type": "Bearer", "access_token": "AAJJMWNmZDhjNTI4YzVlOGNhNGMzNTI1YWNmNmUxYzBjNTIzMzE2NTk2MWNkMmFjYmUxOTRlNmJjNzUxMzk5YmQyOS0yYjExNTc1N8uaZN0y2fjZqcw8WMQmDJcDAPTXHwMaY9iO1Afi2XjevPvU09iAgFg8nWloEUt1qYvDECCWRMNl-zcYHMFa_McPisaUiSFfP8TI7zq7CfRMPi_JKWZ2H8XsbEykmt9R6PxvILQZwizH4chorXT3Vmuc69brd49033KMvTXE0TViA0NShaPzJAmchmByC8cuPp1amM2DkgerXA8pPwV6XCs-Gb_CltqWlOn7uUn4NYh6xj3dHI_AaXoIX8ETcPbYxQ", "metadata": "m:consent\u003durn:obp:pi:3.1.8:0942b135-80df-4dad-ba63-8a03ca8cee5b\u0026nonce\u003d28227ca736b0072f\u0026acr\u003durn:openbanking:psd2:sca", "expires_in": 3600, "consented_on": 1638798464, "scope": "openid payments", "id_token": "eyJhbGciOiJQUzI1NiIsImtpZCI6IkpsY0dVVUY5akJUdFU5Z3NBWWNZWmhQZkdUcyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3BzZDItYXBpLmRhbnNrZWJhbmsuY29tIiwiaWF0IjoxNjM4Nzk4NDY0LCJleHAiOjE2Mzg4MDIwNjQsInN1YiI6InVybjpvYnA6cGk6My4xLjg6MDk0MmIxMzUtODBkZi00ZGFkLWJhNjMtOGEwM2NhOGNlZTViIiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwib3BlbmJhbmtpbmdfaW50ZW50X2lkIjoidXJuOm9icDpwaTozLjEuODowOTQyYjEzNS04MGRmLTRkYWQtYmE2My04YTAzY2E4Y2VlNWIiLCJhdWQiOiIxY2ZkOGM1MjhjNWU4Y2E0YzM1MjVhY2Y2ZTFjMGM1MjMzMTY1OTYxY2QyYWNiZTE5NGU2YmM3NTEzOTliZDI5LTJiMTE1NzU3IiwiYXRfaGFzaCI6IkV5bW9lZ2ZkOU9UWWFTSUdockxJcEEiLCJub25jZSI6IjI4MjI3Y2E3MzZiMDA3MmYifQ.ChhZp1Laf1qUR8H3063CDKu8xt25qkSpzU7GGovXpw8qlgrk8NaJqn0DkAw-MEW5iRBuoov1E8PG-rZxPXybG0Zxz2cGWI2mrAkvQY0dFeFK3tb9BiAWjm11Nm5S_1ucRYsOXpHBNySzESeEt9h2IN2ZI2iX96R-Rt3aTs3NVrKZUKX-mP9JW8hbLObq8B55kvbRcL3CCzclGSHqBZ8JnkeQBqx2fj2yp2XbZi3DHOHpfPWFa-SMq0uuyjBUZfId_5laRRVCdGh5oxob6IPerpVuYjUWeYRFEKIKUjem9Lz06OFAxp--_aXLdIDVY2tBagTiRblwuQX47MwEPOWj4w"}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://psd2-api.danskebank.com/psd2/jwks
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Mon, 06 Dec 2021 13:47:45 GMT
+Date: Mon, 06 Dec 2021 13:47:45 GMT
+Content-Type: application/json
+X-Forwarded-For: 34.254.6.61
+Accept-Encoding: identity
+Via: 1.1 AAAAAPrmIWQ-
+X-Global-Transaction-ID: 94efc95d61ae14810b961295
+Content-Length: 6923
+
+{"keys": [{"kty": "RSA", "x5t#S256": "NDJmYmJmODRmZmZiYTY4NmQyNWI2MTRkNTQwMTI5MzdiYjliODQ2YjZhZTZmMGVlZWRiMDY1Mzk1YTlmOTk2Yw", "e": "AQAB", "use": "sig", "kid": "JlcGUUF9jBTtU9gsAYcYZhPfGTs", "x5c": ["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\u003d\u003d", "MIIFtjCCA56gAwIBAgILAMrSl0OXH9IoboQwDQYJKoZIhvcNAQENBQAwZDELMAkGA1UEBhMCTk8xGDAWBgNVBGEMD05UUk5PLTk4MzE2MzMyNzETMBEGA1UECgwKQnV5cGFzcyBBUzEmMCQGA1UEAwwdQnV5cGFzcyBDbGFzcyAzIFJvb3QgQ0EgRzIgU1QwHhcNMjAxMTEwMTE1MzU4WhcNNDUxMTEwMTE1MzU4WjBkMQswCQYDVQQGEwJOTzEYMBYGA1UEYQwPTlRSTk8tOTgzMTYzMzI3MRMwEQYDVQQKDApCdXlwYXNzIEFTMSYwJAYDVQQDDB1CdXlwYXNzIENsYXNzIDMgUm9vdCBDQSBHMiBTVDCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAMIPjGefrHJS3n0pjuRvtXi8cs66W3GFOcI5OwT65qWihYdyXFjq2N6i31emmNPvGLmmYMl/5+TDkMptZqvXBr1qUSAXLMvJbDLMxGDGEws4h50RCgJa0pv4h+jaQ3HyZ4OVVNpzT6aWFuRh+Hv+U+nL3Zj/B46u0JdiFNl4l7UDNbGJUTx8X5CoPCeLL28dgARuxScZ9vNMColXLsaYYz0JA6+mN7AXfJ8v3E8I9HLx09nBfC8pt0WHapQPRmZeYidUR3EO6s53UtI3NT5OrTsfOqsmv0amce+YyCZsDDYicjJbk6dhJT2MMsNaGldR4ZrawGrgpn0BgiH/HdFQssencEgtjNgrNa9asCHcicGS/Jqt7d4bNVh1ANZrzCQUkpKkUETnqyzrKFsPypD2kNUQSqoo80VGoOEk5qhH79wgh+UYslSWUPd7uhNjD50d8Ie/q0LRLn8dwVfHaytj0+XIiH4FUhvUxJkqqf2mRvWDBqog/G/nathdJbp9zBCHJY9gKZIcDyAfVWQgW3Rhdj0WW9hP0Vn7iUC733/slZktP8goZPPvjsAXg1HCExiVyJioyXASP0tdnYBNy3dkuxhoMLzk051f4XL93WEDu7+oOAZY5JKi4K8lwpmC+R2q7tjXsHHhU2hUCJHHsL0nSWutgi3avo4hXqPgKMy3d7QHAgMBAAGjaTBnMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFBdThSZml8cmEg2f3sy0RDLqlNTRMA4GA1UdDwEB/wQEAwIBBjAlBggrBgEFBQcBAwQZMBcwFQYIKwYBBQUHCwIwCQYHBACL7EkBAjANBgkqhkiG9w0BAQ0FAAOCAgEAHnu/NkqYQy0BO3Xgm/owE6DuCTFARlHxVwidq+bJkGxtonB/eK08NNvgxZGZ2eA520P+TqyIkxwlFNI91v2/9T6Vcc3RPkpYw21PQUlCcCfZPx5gOJFsJ2L5hN9B6kHFM+v7sLyEuydURQXb+CfLhgQibUk3+wVePXCMoTzY/tuUsIezBoa5Os2VHd9/4Vk6FbeZqr9Sk3Ls2PhuvHZfIIVS573Zq+89DROritqwJCiy6zrdRKGBeya9Ha8uH60IiAJTMUvpo6IiYrjxgf1ZxWOWCr9KqcgAFFrQzfEjKI9DMLbFjo5SIckQCcYJaWfGWFRoWduhUcR02uG8drU6xmvvqqWYFXFu9rDi69f3AcNaOgID27eazhCNSHskD461+Kxdo5KhCyYczvV4LZTPJS8/lObibjb7AX2amPdU72cq5h04oKLmpoFjQWPM1J2+H4gKnX4T6wzz2iPOKj0UpCwr19Esb9s+5Ype4AjDRFdJJrsjaAAiMLD9Io9IJjRbBjYWy5G8DgcHEfs9N6bj0s8XkEjecBhRKelcNoQRPBBG1jMaihL0SNQHabbnA37YTPMd6HVAcAi8CftSK+jQSRgvZlkIQmGcyMAs1kI3WbqaI6+SpCg+7Rd6FB7FAl7EySw05V2GF+nys69/9967LDYlkEHBfafbUrN5HjQtB1E\u003d"], "n": "58cscA-7A6HaHLcjslrwjyFu1N1hjdv_Tr3dEg2vWVS4cvM0Wa2XVBIHh3Us08FC7Usi1leDk0GvJFMU9Lb9_ki3ltIp9-yV0alnSeO-jdCo0ipojFibHtwKpwtPeQhViRJ5DGdJUi9WGknPgNmc08DV0Tx-mrhNPGTAru21wCdfYV5zcara5aqRMLWnhJRq1eikGViRPyJonVRp_DHSI8W_i5pAkhdIFSoRXPRUsZj1YjfqxSgJNHC8jqlkrHIMaCzBItD7b3eJKu6KEWW1_GqVpEpTalxohNst8KwTtqyhqD90ajSeAbnJhae1kSbLR0WGNQwjv2L5CqfD0RTrdw"} ] }
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+POST https://psd2-api.danskebank.com/psd2/v3.1/pisp/domestic-payments
+Content-Type: application/json; charset=UTF-8
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk": {"PaymentContextCode": "PartyToParty"}, "Data": {"ConsentId": "urn:obp:pi:3.1.8:0942b135-80df-4dad-ba63-8a03ca8cee5b", "Initiation": {"RemittanceInformation": {"Unstructured": "Tink Test-2021-12-06--13-46-51"}, "EndToEndIdentification": "258b967552ae47579f183b57514f141", "InstructionIdentification": "258b967552ae47579f183b57514f1413", "DebtorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI9189512712449566"}, "CreditorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI3126598515147343", "Name": "Tink Test"}, "InstructedAmount": {"Amount": "1.00", "Currency": "EUR"} } } }
+#"LocalInstrument": "DK.DanskeBank.FI.TransferFunds"
+-----------------------------------------------------------------------------------
+RESPONSE 7
+201
+Date: Mon, 06 Dec 2021 13:47:46 GMT
+Date: Mon, 06 Dec 2021 13:47:46 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 1017
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data": {"DomesticPaymentId": "b8e9baa7-4700-4fcf-8af9-ff68d1a3d955", "ConsentId": "urn:obp:pi:3.1.8:0942b135-80df-4dad-ba63-8a03ca8cee5b", "CreationDateTime": "2021-12-06T15:47:46.385144+02:00", "Status": "AcceptedSettlementInProcess", "StatusUpdateDateTime": "2021-12-06T15:47:46.911412+02:00", "Initiation": {"RemittanceInformation": {"Unstructured": "Tink Test-2021-12-06--13-46-51"}, "EndToEndIdentification": "258b967552ae47579f183b57514f141", "InstructionIdentification": "258b967552ae47579f183b57514f1413", "DebtorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI9189512712449566"}, "LocalInstrument": "DK.DanskeBank.FI.TransferFunds", "CreditorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI3126598515147343", "Name": "Tink Test"}, "InstructedAmount": {"Amount": "1.00", "Currency": "EUR"} }, "Debtor": {"Name": "FirstName SecondName LastName"} }, "Links": {"Self": "https://psd2-api.danskebank.com/psd2/v3.1/pisp/domestic-payments/b8e9baa7-4700-4fcf-8af9-ff68d1a3d955"}, "Meta": {} }
