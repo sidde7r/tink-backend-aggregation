@@ -4,9 +4,11 @@ java_library_with_sources(
     name = "exceptions",
     intdeps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/exceptions",
     ],
     visibility = ["//src/agent_sdk/sdk:__subpackages__"],
     exports = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/exceptions",
     ],
 )
