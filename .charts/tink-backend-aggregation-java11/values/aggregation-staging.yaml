@@ -44,7 +44,7 @@ agents:
       keyId: "tink-nordea-encrypt"
     preprod:
       partnerId: "bf873fdc-035b-48ef-a616-3b3c3fc243df"
-      baseUrl: "https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2"
+      baseUrl: "https://private-rel01.nd.test.nordea/api/dbf/ca/partners-service-common-v2"
       nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdoeEj7Vg9/YwYBjugMk33Ao8fmsjpBCuh4PlqgjAIEHob16GxyKoGvIsI2AHdFVGXBE7PBIDMghUDqp9XlrT69Lz+5U+KkCoLnPxeKZKo5/+6w91cDwuwRr3gjrJ47bDjLngrC6Qi3fmF8emcYd9sliaBS/GD96M5WIY1vYCj1qCrWl+IzRry/TLg52VfNuzg9yPqBKbnh2vab3LXE+uxzFhr0V24h6BmHR1+S23Ist8R8REFms/svXl2EHJDlN/ZVtq/e8QuNZDDhfhFCA9CR8gjyINzWI0Jycm3KFrdQO806FrhN+2lcFbXi4sa7fOKva53TbN/MxwhVTX7p4HwIDAQAB"
       keyId: "tink-nordea-encrypt"
     prod:
