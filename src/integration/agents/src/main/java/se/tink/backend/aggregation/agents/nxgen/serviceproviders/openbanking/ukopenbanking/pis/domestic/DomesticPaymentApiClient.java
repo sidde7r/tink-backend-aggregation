@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.CONSENT_ID_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.ErrorMessage;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.MARKET;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.PAYMENT_ID_KEY;
 
 import java.util.Arrays;
@@ -48,6 +49,7 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     static final String PAYMENT_CONSENT = "/domestic-payment-consents";
+    static final String PAYMENT_CONSENT_WITH_MARKET = "/{market}/domestic-payment-consents";
     static final String PAYMENT_STATUS = "/domestic-payments/{paymentId}";
     static final String PAYMENT_CONSENT_STATUS = "/domestic-payment-consents/{consentId}";
     static final String PAYMENT_CONSENT_FUND_CONFIRMATION =
@@ -69,10 +71,20 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
         final DomesticPaymentConsentRequest consentRequest =
                 createDomesticPaymentConsentRequest(paymentRequest);
         DomesticPaymentConsentResponse response;
+
+        URL consentRequestUrl;
+        if (pisConfig.getMarketCode() != null) {
+            consentRequestUrl =
+                    createUrl(PAYMENT_CONSENT_WITH_MARKET)
+                            .parameter(MARKET, pisConfig.getMarketCode().toString().toLowerCase());
+        } else {
+            consentRequestUrl = createUrl(PAYMENT_CONSENT);
+        }
+
         try {
             response =
                     requestBuilder
-                            .createPisRequestWithJwsHeader(createUrl(PAYMENT_CONSENT))
+                            .createPisRequestWithJwsHeader(consentRequestUrl)
                             .post(DomesticPaymentConsentResponse.class, consentRequest);
             validateDomesticPaymentConsentResponse(response);
 
