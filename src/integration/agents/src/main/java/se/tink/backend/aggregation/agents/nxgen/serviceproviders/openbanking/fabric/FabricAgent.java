@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricRedirectAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.FabricPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricTransactionFetcher;
@@ -40,7 +40,7 @@ public abstract class FabricAgent extends NextGenerationAgent
                 RefreshTransferDestinationExecutor,
                 UrlProvider {
 
-    protected final String clientName;
+    protected final LocalDateTimeSource localDateTimeSource;
     protected final FabricApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -49,6 +49,7 @@ public abstract class FabricAgent extends NextGenerationAgent
         super(componentProvider);
 
         Objects.requireNonNull(getBaseUrl());
+        localDateTimeSource = componentProvider.getLocalDateTimeSource();
         apiClient =
                 new FabricApiClient(
                         client,
@@ -56,40 +57,42 @@ public abstract class FabricAgent extends NextGenerationAgent
                         componentProvider.getRandomValueGenerator(),
                         sessionStorage,
                         request.getUserAvailability().getOriginatingUserIpOrDefault(),
-                        getBaseUrl());
+                        getBaseUrl(),
+                        getAgentConfiguration().getRedirectUrl());
 
-        clientName = request.getProvider().getPayload();
-        transactionalAccountRefreshController =
-                getTransactionalAccountRefreshController(
-                        componentProvider.getLocalDateTimeSource());
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    private AgentConfiguration<FabricConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(FabricConfiguration.class);
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setConfiguration(getAgentConfiguration());
         client.setEidasProxy(configuration.getEidasProxy());
-    }
-
-    protected AgentConfiguration<FabricConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(FabricConfiguration.class);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final FabricRedirectAuthenticationController controller =
-                new FabricRedirectAuthenticationController(
+        FabricRedirectAuthenticator redirectAuthenticator =
+                new FabricRedirectAuthenticator(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new FabricAuthenticator(apiClient, persistentStorage, credentials),
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        apiClient,
+                        credentials,
+                        localDateTimeSource);
+
+        FabricAutoAuthenticator autoAuthenticator =
+                new FabricAutoAuthenticator(persistentStorage, apiClient);
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
+                        redirectAuthenticator, supplementalInformationHelper),
+                autoAuthenticator);
     }
 
     @Override
@@ -112,11 +115,9 @@ public abstract class FabricAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController(
-            LocalDateTimeSource localDateTimeSource) {
-        final FabricAccountFetcher accountFetcher = new FabricAccountFetcher(apiClient);
-
-        final FabricTransactionFetcher transactionFetcher = new FabricTransactionFetcher(apiClient);
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        FabricAccountFetcher accountFetcher = new FabricAccountFetcher(apiClient);
+        FabricTransactionFetcher transactionFetcher = new FabricTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

@@ -104,15 +104,7 @@ public class FabricConstants {
         public static final String TPP_REDIRECT_PREFERED = "true";
     }
 
-    public static class Consent {
-        public static final String ALL_ACCOUNTS = "allAccounts";
-        public static final String FREQUENCY_PER_DAY = "4";
-        public static final String VALID_UNTIL = "9999-12-31";
-        public static final String VALID = "valid";
-    }
-
     public static class Accounts {
-        public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
         public static final String CASH = "CASH";
     }
 

@@ -67,7 +67,8 @@ public class FabricPaymentExecutorTest {
                         new MockRandomValueGenerator(),
                         new SessionStorage(),
                         "userIp",
-                        "baseUrl");
+                        "baseUrl",
+                        "redirectUrl");
         return new FabricPaymentExecutor(
                 apiClient,
                 mock(SupplementalInformationHelper.class),
