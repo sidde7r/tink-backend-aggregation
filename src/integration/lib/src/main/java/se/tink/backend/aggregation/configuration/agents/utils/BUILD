@@ -1,11 +1,9 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "utils",
     srcs = glob(["*.java"]),
-    visibility = ["//visibility:public"],
-    deps = [
-        "//src/integration/lib:annotations",
+    extdeps = [
         "//third_party:com_google_code_gson_gson",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
@@ -14,4 +12,9 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
+    intdeps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/libraries/cryptography/hash",
+    ],
+    visibility = ["//visibility:public"],
 )
