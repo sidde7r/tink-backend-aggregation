@@ -31,5 +31,26 @@ public interface IdBuildStep {
      */
     IdBuildStep setProductName(@Nullable String productName);
 
+    /**
+     * Sets the reference of the account in the bank's API, i.e. a resource identifier. This value
+     * will be used to access resources attached to this account, e.g. transactions.
+     *
+     * @param reference The account reference.
+     * @return The next step of the builder.
+     */
+    IdBuildStep setBankApiReference(String reference);
+
+    /**
+     * Sets the reference of the account in the bank's API, i.e. a resource identifier. This value
+     * will be used to access resources attached to this account, e.g. transactions.
+     *
+     * <p>Use this method when the API require more than one value to reference the account, i.e. a
+     * data structure with more than one field. The object must be serializable using Jackson.
+     *
+     * @param reference The account reference. Must be serializable using Jackson.
+     * @return The next step of the builder.
+     */
+    IdBuildStep setBankApiReference(Object reference);
+
     IdModule build();
 }

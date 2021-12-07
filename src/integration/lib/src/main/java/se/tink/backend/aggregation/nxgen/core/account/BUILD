@@ -15,6 +15,7 @@ java_library_with_sources(
         "//third_party:org_slf4j_slf4j_api",
     ],
     intdeps = [
+        "//src/agent_sdk/sdk/src/storage",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/card",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
