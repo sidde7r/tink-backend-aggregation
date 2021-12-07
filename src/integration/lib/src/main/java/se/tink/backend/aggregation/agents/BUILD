@@ -1,5 +1,20 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
+
+java_library_with_sources(
+    name = "href_model",
+    srcs = ["Href.java"],
+    extdeps = [
+        "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+    ],
+    intdeps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+    ],
+    visibility = ["//visibility:public"],
+)
 
 java_library(
     name = "agents",

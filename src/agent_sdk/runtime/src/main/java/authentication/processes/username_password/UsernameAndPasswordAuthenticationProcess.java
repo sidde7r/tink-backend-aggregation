@@ -6,9 +6,9 @@ import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.username_password.UsernameAndPasswordAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.username_password.steps.UsernameAndPasswordStep;
-import se.tink.agent.sdk.authentication.capability.AuthenticateUsernameAndPassword;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
+import se.tink.agent.sdk.authentication.features.AuthenticateUsernameAndPassword;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 
 public class UsernameAndPasswordAuthenticationProcess

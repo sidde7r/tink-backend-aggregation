@@ -5,8 +5,8 @@ import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.generic.GenericAuthenticator;
-import se.tink.agent.sdk.authentication.capability.AuthenticateGeneric;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
+import se.tink.agent.sdk.authentication.features.AuthenticateGeneric;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 
 public class GenericAuthenticationProcess implements AuthenticationProcess<GenericAuthenticator> {

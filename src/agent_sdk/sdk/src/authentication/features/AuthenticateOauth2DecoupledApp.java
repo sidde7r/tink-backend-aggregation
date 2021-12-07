@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.authentication.capability;
+package se.tink.agent.sdk.authentication.features;
 
 import se.tink.agent.sdk.authentication.authenticators.oauth2_decoupled_app.Oauth2DecoupledAppAuthenticator;
 

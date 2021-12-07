@@ -12,18 +12,17 @@ import se.tink.agent.agents.example.payments.ExampleBankTransferExecutor;
 import se.tink.agent.agents.example.payments.ExampleCreateBeneficiaryExecutor;
 import se.tink.agent.agents.example.payments.ExampleGPIPaymentExecutor;
 import se.tink.agent.agents.example.payments.ExamplePaymentExecutor;
-import se.tink.agent.sdk.annotations.Agent;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Authenticator;
-import se.tink.agent.sdk.authentication.capability.AuthenticateOauth2;
+import se.tink.agent.sdk.authentication.features.AuthenticateOauth2;
 import se.tink.agent.sdk.environment.Operation;
 import se.tink.agent.sdk.environment.Utilities;
 import se.tink.agent.sdk.fetching.accounts.CheckingAccountsFetcher;
 import se.tink.agent.sdk.fetching.accounts.SavingsAccountsFetcher;
-import se.tink.agent.sdk.fetching.capability.FetchCheckingAccounts;
-import se.tink.agent.sdk.fetching.capability.FetchCheckingTransactions;
-import se.tink.agent.sdk.fetching.capability.FetchIdentityData;
-import se.tink.agent.sdk.fetching.capability.FetchSavingsAccounts;
-import se.tink.agent.sdk.fetching.capability.FetchSavingsTransactions;
+import se.tink.agent.sdk.fetching.features.FetchCheckingAccounts;
+import se.tink.agent.sdk.fetching.features.FetchCheckingTransactions;
+import se.tink.agent.sdk.fetching.features.FetchIdentityData;
+import se.tink.agent.sdk.fetching.features.FetchSavingsAccounts;
+import se.tink.agent.sdk.fetching.features.FetchSavingsTransactions;
 import se.tink.agent.sdk.fetching.identity_data.IdentityDataFetcher;
 import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -37,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-@Agent
 public class ExampleAgent
         implements AuthenticateOauth2,
                 FetchCheckingAccounts,

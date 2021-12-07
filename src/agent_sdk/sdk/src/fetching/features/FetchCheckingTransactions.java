@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.fetching.capability;
+package se.tink.agent.sdk.fetching.features;
 
 import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
 
@@ -8,6 +8,6 @@ import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
  * <p>Use this interface, as opposed to {@link FetchCombinedCheckingSavingsTransactions} if the API
  * you integrate against has separate endpoints for transactions for CHECKING and SAVINGS accounts.
  */
-public interface FetchSavingsTransactions {
-    TransactionsFetcher savingsTransactionsFetcher();
+public interface FetchCheckingTransactions {
+    TransactionsFetcher checkingTransactionsFetcher();
 }
