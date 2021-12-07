@@ -114,16 +114,16 @@ spec:
 
     # FAILED LOGIN ATTEMPTS (1h)
     - record: increase:failed_logins_dk:delta1h
-      expr: floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]))
+      expr: floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]))
     - record: sum:failed_logins_dk:delta1h
       expr: |
         sum by (className) (
           (increase:failed_logins_dk:delta1h
            and
-           (tink_agent_login_total{action="login", outcome=~"failed.*", outcome=~"failed.*", market="DK", provider_type!="test"} offset 1h
-            unless tink_agent_login_total{action="login", outcome=~"failed.*", outcome=~"failed.*", market="DK", provider_type!="test"}))
+           (tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"} offset 1h
+            unless tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}))
           or
-          (1 + increase:failed_logins_dk:delta1h - floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]) / 360))
+          (1 + increase:failed_logins_dk:delta1h - floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]) / 360))
         )
 
     # UNSUCCESSFUL BACKGROUND LOGINS (4h)
