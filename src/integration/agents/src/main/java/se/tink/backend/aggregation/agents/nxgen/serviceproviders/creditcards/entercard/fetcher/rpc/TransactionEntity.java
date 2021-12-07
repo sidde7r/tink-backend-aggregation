@@ -2,10 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.TransactionType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.card.Card;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -36,12 +39,20 @@ public class TransactionEntity {
         ZonedDateTime dateTime =
                 ZonedDateTime.parse(transactionDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-        return CreditCardTransaction.builder()
-                .setCreditCard(Card.create(cardHolderName, cardNumber))
-                .setDescription(description)
-                .setPending(isPending)
-                .setAmount(amount)
-                .setDateTime(dateTime)
-                .build();
+        Builder builder =
+                CreditCardTransaction.builder()
+                        .setCreditCard(Card.create(cardHolderName, cardNumber))
+                        .setDescription(description)
+                        .setPending(isPending)
+                        .setAmount(amount)
+                        .setDateTime(dateTime);
+
+        if (Objects.nonNull(id)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                    Integer.toString(id));
+        }
+
+        return builder.build();
     }
 }

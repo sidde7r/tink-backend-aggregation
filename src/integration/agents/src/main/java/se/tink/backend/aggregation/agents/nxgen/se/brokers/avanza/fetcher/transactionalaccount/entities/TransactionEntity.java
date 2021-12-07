@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.trans
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -62,11 +65,19 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setAmount(ExactCurrencyAmount.of(amount, currency))
-                .setDate(verificationDate)
-                .setDescription(description)
-                .setPending(false)
-                .build();
+
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(ExactCurrencyAmount.of(amount, currency))
+                        .setDate(verificationDate)
+                        .setDescription(description)
+                        .setPending(false);
+
+        if (!Strings.isNullOrEmpty(id)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, id);
+        }
+
+        return builder.build();
     }
 }

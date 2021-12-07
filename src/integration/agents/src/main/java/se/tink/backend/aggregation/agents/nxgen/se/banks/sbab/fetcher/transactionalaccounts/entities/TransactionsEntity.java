@@ -1,13 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccounts.entities;
 
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -26,13 +29,22 @@ public class TransactionsEntity {
     private Date valueDate;
 
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setAmount(getAmount())
-                .setType(getTransferType())
-                .setRawDetails(getRawDetails())
-                .setDate(getValueDate())
-                .setDescription(getNarrative())
-                .build();
+
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(getAmount())
+                        .setType(getTransferType())
+                        .setRawDetails(getRawDetails())
+                        .setDate(getValueDate())
+                        .setDescription(getNarrative());
+
+        if (!Strings.isNullOrEmpty(transactionIdentifier)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                    transactionIdentifier);
+        }
+
+        return builder.build();
     }
 
     public String getNarrative() {

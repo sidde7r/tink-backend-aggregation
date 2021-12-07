@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 
 import java.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -44,6 +45,7 @@ public class SwedbankOBAgentWiremockTest {
         configuration = AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
     }
 
+    @Ignore
     @Test
     public void testPaymentWithNewRecipient() throws Exception {
         AgentWireMockPaymentTest agentWireMockPaymentTest =
@@ -59,6 +61,7 @@ public class SwedbankOBAgentWiremockTest {
         agentWireMockPaymentTest.executePayment();
     }
 
+    @Ignore
     @Test(expected = PaymentAuthorizationException.class)
     public void testCancelledPaymentWithNewRecipient() throws Exception {
         AgentWireMockPaymentTest agentWireMockPaymentTest =
@@ -74,6 +77,7 @@ public class SwedbankOBAgentWiremockTest {
         agentWireMockPaymentTest.executePayment();
     }
 
+    @Ignore
     @Test(expected = InsufficientFundsException.class)
     public void testFailedPaymentWithNewRecipient() throws Exception {
         AgentWireMockPaymentTest agentWireMockPaymentTest =

@@ -5,9 +5,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "unscaledValue" : -2401630,
-            "scale" : 1,
+            "exactValue" : -240163.0,
             "doubleValue" : -240163.0,
-            "exactValue" : -240163.0
+            "scale" : 1
         },
         "currencyCode" : "SEK",
         "bankId" : "CAR74B1234567890",
@@ -36,9 +36,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "unscaledValue" : 0,
-            "scale" : 1,
+            "exactValue" : 0.0,
             "doubleValue" : 0.0,
-            "exactValue" : 0.0
+            "scale" : 1
         },
         "currencyCode" : "SEK",
         "bankId" : "SKG4501234567890",
@@ -67,9 +67,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "unscaledValue" : 243714,
-            "scale" : 2,
+            "exactValue" : 2437.14,
             "doubleValue" : 2437.14,
-            "exactValue" : 2437.14
+            "scale" : 2
         },
         "currencyCode" : "SEK",
         "bankId" : "savingAccountId123",
@@ -102,16 +102,16 @@
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
             "unscaledValue" : 1073455,
-            "scale" : 2,
+            "exactValue" : 10734.55,
             "doubleValue" : 10734.55,
-            "exactValue" : 10734.55
+            "scale" : 2
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
             "unscaledValue" : -426545,
-            "scale" : 2,
+            "exactValue" : -4265.45,
             "doubleValue" : -4265.45,
-            "exactValue" : -4265.45
+            "scale" : 2
         },
         "currencyCode" : "SEK",
         "bankId" : "1234567",
@@ -144,9 +144,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "unscaledValue" : 0,
-            "scale" : 1,
+            "exactValue" : 0.0,
             "doubleValue" : 0.0,
-            "exactValue" : 0.0
+            "scale" : 1
         },
         "currencyCode" : "SEK",
         "bankId" : "YRD61F1234567890",
@@ -181,8 +181,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "161269661"
+        },
+        "transactionDates" : [ ],
+        "booked" : false
     }, {
         "amount" : -36.25,
         "date" : 1629712800000,
@@ -194,8 +197,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1228820611"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -360.89,
         "date" : 1629626400000,
@@ -207,8 +213,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1228927489"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1998.0,
         "date" : 1629453600000,
@@ -220,8 +229,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1228367142"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -558.96,
         "date" : 1629108000000,
@@ -233,8 +245,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1227026817"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -119.8,
         "date" : 1628676000000,
@@ -246,8 +261,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1225096079"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -423.87,
         "date" : 1628503200000,
@@ -259,8 +277,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1224842318"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -67.5,
         "date" : 1628071200000,
@@ -272,8 +293,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1222626910"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -550.28,
         "date" : 1627898400000,
@@ -285,8 +309,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1222392096"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -163.74,
         "date" : 1627725600000,
@@ -298,8 +325,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1221631636"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -506.78,
         "date" : 1629972000000,
@@ -311,8 +341,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "161269661"
+        },
+        "transactionDates" : [ ],
+        "booked" : false
     }, {
         "amount" : -36.25,
         "date" : 1629712800000,
@@ -324,8 +357,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1228820611"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -360.89,
         "date" : 1629626400000,
@@ -337,8 +373,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1228927489"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1998.0,
         "date" : 1629453600000,
@@ -350,8 +389,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1228367142"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -558.96,
         "date" : 1629108000000,
@@ -363,8 +405,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1227026817"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -119.8,
         "date" : 1628676000000,
@@ -376,8 +421,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1225096079"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -423.87,
         "date" : 1628503200000,
@@ -389,8 +437,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1224842318"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -67.5,
         "date" : 1628071200000,
@@ -402,8 +453,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1222626910"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -550.28,
         "date" : 1627898400000,
@@ -415,8 +469,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1222392096"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -163.74,
         "date" : 1627725600000,
@@ -428,8 +485,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1221631636"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 1100.0,
         "date" : 1627380000000,
@@ -441,8 +501,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1219361381"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -3096.0,
         "date" : 1627380000000,
@@ -454,8 +517,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1219387365"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -541.97,
         "date" : 1626948000000,
@@ -467,8 +533,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1218604882"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -1100.0,
         "date" : 1626948000000,
@@ -480,8 +549,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1217617184"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -471.2,
         "date" : 1626861600000,
@@ -493,8 +565,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1217617175"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -621.0,
         "date" : 1626861600000,
@@ -506,8 +581,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1217312662"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 5698.88,
         "date" : 1626688800000,
@@ -519,8 +597,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1216363218"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -411.26,
         "date" : 1626602400000,
@@ -532,8 +613,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1216700378"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -347.61,
         "date" : 1626429600000,
@@ -545,8 +629,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1216322715"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 7000.0,
         "date" : 1626084000000,
@@ -558,8 +645,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1214115163"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -502.47,
         "date" : 1625997600000,
@@ -571,8 +661,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1214447875"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -487.87,
         "date" : 1625738400000,
@@ -584,8 +677,11 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1214077167"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -7000.0,
         "date" : 1626084000000,
@@ -597,8 +693,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1214115162"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 4000.0,
         "date" : 1625220000000,
@@ -610,8 +709,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1210724573"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : -8000.0,
         "date" : 1620986400000,
@@ -624,7 +726,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 3000.0,
         "date" : 1620813600000,
@@ -636,8 +739,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1192648138"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     }, {
         "amount" : 3000.0,
         "date" : 1620208800000,
@@ -649,8 +755,11 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1190359403"
+        },
+        "transactionDates" : [ ],
+        "booked" : true
     } ],
     "identityData" : {
         "nameElements" : [ {
@@ -660,16 +769,16 @@
         "dateOfBirth" : {
             "year" : 1999,
             "month" : "JANUARY",
+            "era" : "CE",
+            "monthValue" : 1,
+            "dayOfMonth" : 1,
             "dayOfWeek" : "FRIDAY",
             "leapYear" : false,
             "dayOfYear" : 1,
             "chronology" : {
                 "calendarType" : "iso8601",
                 "id" : "ISO"
-            },
-            "era" : "CE",
-            "monthValue" : 1,
-            "dayOfMonth" : 1
+            }
         }
     }
 }

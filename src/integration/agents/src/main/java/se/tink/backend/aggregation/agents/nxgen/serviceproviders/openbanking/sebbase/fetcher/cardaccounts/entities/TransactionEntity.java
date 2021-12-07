@@ -59,6 +59,12 @@ public class TransactionEntity {
                         .setProprietaryFinancialInstitutionType(proprietaryBankTransactionCode)
                         .setProviderMarket(providerMarket);
 
+        if (!Strings.isNullOrEmpty(cardTransactionId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                    cardTransactionId);
+        }
+
         return (CreditCardTransaction) builder.build();
     }
 

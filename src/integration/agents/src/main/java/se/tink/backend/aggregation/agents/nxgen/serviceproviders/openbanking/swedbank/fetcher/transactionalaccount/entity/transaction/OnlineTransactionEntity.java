@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
@@ -43,6 +44,11 @@ public class OnlineTransactionEntity extends TransactionEntity {
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId);
 
+        if (!Strings.isNullOrEmpty(transactionId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
+        }
+
         return (Transaction) builder.build();
     }
 
@@ -57,6 +63,11 @@ public class OnlineTransactionEntity extends TransactionEntity {
                         .setPending(isPending)
                         .setTransactionDates(getTinkTransactionDates(valueDate, bookingDate))
                         .setProviderMarket(providerMarket);
+
+        if (!Strings.isNullOrEmpty(transactionId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
+        }
 
         return (Transaction) builder.build();
     }

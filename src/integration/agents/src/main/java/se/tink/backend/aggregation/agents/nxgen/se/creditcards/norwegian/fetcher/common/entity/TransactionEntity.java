@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -42,11 +45,19 @@ public class TransactionEntity {
     private boolean isPresentInOtherDispute;
 
     public CreditCardTransaction toTinkTransaction() {
-        return CreditCardTransaction.builder()
-                .setAmount(ExactCurrencyAmount.of(amount, NorwegianConstants.CURRENCY))
-                .setDate(transactionDate)
-                .setDescription(transactionText)
-                .setPending(!isBooked)
-                .build();
+
+        Builder builder =
+                CreditCardTransaction.builder()
+                        .setAmount(ExactCurrencyAmount.of(amount, NorwegianConstants.CURRENCY))
+                        .setDate(transactionDate)
+                        .setDescription(transactionText)
+                        .setPending(!isBooked);
+
+        if (!Strings.isNullOrEmpty(uniqueId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, uniqueId);
+        }
+
+        return builder.build();
     }
 }
