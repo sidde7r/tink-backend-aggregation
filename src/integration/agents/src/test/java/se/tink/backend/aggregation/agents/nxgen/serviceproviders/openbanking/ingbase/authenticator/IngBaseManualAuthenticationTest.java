@@ -51,7 +51,6 @@ public final class IngBaseManualAuthenticationTest {
     private PersistentStorage persistentStorage;
     private CredentialsRequest credentialsRequest;
     private Credentials credentials;
-    private SupplementalInformationHelper supplementalInfoHelper;
     private IngBaseAuthenticationTestFixture testFixture;
 
     @Mock private HttpResponse response;
@@ -75,10 +74,14 @@ public final class IngBaseManualAuthenticationTest {
         bankRespondsCorrectlyWithTokenAndAuthorizationUrl();
 
         // and
-        supplementalInfoHelper = new MockSupplementalInformationHelper(errorCallbackData);
+        SupplementalInformationHelper supplementalInfoHelper =
+                new MockSupplementalInformationHelper(errorCallbackData);
 
         // then
-        assertThatThrownBy(() -> createAutoAuthenticationController().authenticate(credentials))
+        assertThatThrownBy(
+                        () ->
+                                createAuthenticationController(supplementalInfoHelper)
+                                        .authenticate(credentials))
                 .hasFieldOrPropertyWithValue("error", expectedAgentError);
     }
 
@@ -106,10 +109,14 @@ public final class IngBaseManualAuthenticationTest {
         bankRespondsCorrectlyWithTokenAndAuthorizationUrl();
 
         // and
-        supplementalInfoHelper = new MockSupplementalInformationHelper(unrecognizedCallbackData);
+        SupplementalInformationHelper supplementalInfoHelper =
+                new MockSupplementalInformationHelper(unrecognizedCallbackData);
 
         // then
-        assertThatThrownBy(() -> createAutoAuthenticationController().authenticate(credentials))
+        assertThatThrownBy(
+                        () ->
+                                createAuthenticationController(supplementalInfoHelper)
+                                        .authenticate(credentials))
                 .isExactlyInstanceOf(expectedException.getClass());
     }
 
@@ -135,11 +142,14 @@ public final class IngBaseManualAuthenticationTest {
         bankRespondsWithGivenStatus(statusCode);
 
         // and
-        supplementalInfoHelper =
+        SupplementalInformationHelper supplementalInfoHelper =
                 new MockSupplementalInformationHelper(prepareCorrectCallbackData());
 
         // then
-        assertThatThrownBy(() -> createAutoAuthenticationController().authenticate(credentials))
+        assertThatThrownBy(
+                        () ->
+                                createAuthenticationController(supplementalInfoHelper)
+                                        .authenticate(credentials))
                 .hasFieldOrPropertyWithValue("error", agentError);
     }
 
@@ -159,11 +169,14 @@ public final class IngBaseManualAuthenticationTest {
         bankRespondsWithUnauthorizedStatusAndInvalidSignature();
 
         // and
-        supplementalInfoHelper =
+        SupplementalInformationHelper supplementalInfoHelper =
                 new MockSupplementalInformationHelper(prepareCorrectCallbackData());
 
         // then
-        assertThatThrownBy(() -> createAutoAuthenticationController().authenticate(credentials))
+        assertThatThrownBy(
+                        () ->
+                                createAuthenticationController(supplementalInfoHelper)
+                                        .authenticate(credentials))
                 .hasFieldOrPropertyWithValue("error", BankServiceError.BANK_SIDE_FAILURE);
     }
 
@@ -177,12 +190,12 @@ public final class IngBaseManualAuthenticationTest {
         bankRespondsWithAuthorizationUrl();
 
         // and
-        supplementalInfoHelper =
+        SupplementalInformationHelper supplementalInfoHelper =
                 new MockSupplementalInformationHelper(prepareCorrectCallbackData());
 
         // and
         AutoAuthenticationController autoAuthenticationController =
-                createAutoAuthenticationController();
+                createAuthenticationController(supplementalInfoHelper);
 
         // then
         assertThatThrownBy(() -> autoAuthenticationController.authenticate(credentials))
@@ -237,7 +250,8 @@ public final class IngBaseManualAuthenticationTest {
         given(response.getStatus()).willReturn(statusCode);
     }
 
-    private AutoAuthenticationController createAutoAuthenticationController() {
+    private AutoAuthenticationController createAuthenticationController(
+            SupplementalInformationHelper supplementalInfoHelper) {
         return new AutoAuthenticationController(
                 credentialsRequest,
                 new AgentTestContext(credentials),

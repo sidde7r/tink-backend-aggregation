@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +53,7 @@ public final class IngBaseAutoAuthenticationTest {
             OAuth2Token.create("bearer", "ing_test_access_token", "ing_refresh_token", 899L);
 
     private PersistentStorage persistentStorage;
-    private Authenticator autoAuthenticationController;
+    private Authenticator authenticationController;
     private CredentialsRequest credentialsRequest;
     private Credentials credentials;
     private IngBaseAuthenticationTestFixture testFixture;
@@ -67,7 +68,7 @@ public final class IngBaseAutoAuthenticationTest {
         testFixture = new IngBaseAuthenticationTestFixture();
         credentials = testFixture.deserializeFromFile("ing_credentials.json", Credentials.class);
         credentialsRequest = testFixture.createCredentialsRequest(credentials, false);
-        autoAuthenticationController = createAutoAuthenticationController();
+        authenticationController = createAuthenticationController();
         given(executionFilter.handle(any())).willReturn(response);
     }
 
@@ -76,10 +77,11 @@ public final class IngBaseAutoAuthenticationTest {
         // given
         accessTokenIsValid();
 
-        // when
-        autoAuthenticationController.authenticate(credentials);
-
         // then
+        assertThatNoException()
+                .isThrownBy(() -> authenticationController.authenticate(credentials));
+
+        // and
         assertThatUserIsAuthenticatedSuccessfully(ACCESS_TOKEN);
     }
 
@@ -92,7 +94,7 @@ public final class IngBaseAutoAuthenticationTest {
         bankReturnsAccessTokenBasedOnValidRefreshToken();
 
         // when
-        autoAuthenticationController.authenticate(credentials);
+        authenticationController.authenticate(credentials);
 
         // then
         assertThatUserIsAuthenticatedSuccessfully(REFRESHED_ACCESS_TOKEN);
@@ -114,7 +116,7 @@ public final class IngBaseAutoAuthenticationTest {
         bankRespondsCorrectlyAfterSecondRequest(exceptionMessage);
 
         // when
-        autoAuthenticationController.authenticate(credentials);
+        authenticationController.authenticate(credentials);
 
         // then
         assertThatUserIsAuthenticatedSuccessfully(REFRESHED_ACCESS_TOKEN);
@@ -131,7 +133,7 @@ public final class IngBaseAutoAuthenticationTest {
         bankRespondsWithGivenStatus(statusCode);
 
         // then
-        assertThatThrownBy(() -> autoAuthenticationController.authenticate(credentials))
+        assertThatThrownBy(() -> authenticationController.authenticate(credentials))
                 .hasFieldOrPropertyWithValue("error", agentError);
     }
 
@@ -155,7 +157,7 @@ public final class IngBaseAutoAuthenticationTest {
         bankRespondsWithUnauthorizedStatusAndInvalidSignature();
 
         // then
-        assertThatThrownBy(() -> autoAuthenticationController.authenticate(credentials))
+        assertThatThrownBy(() -> authenticationController.authenticate(credentials))
                 .hasFieldOrPropertyWithValue("error", BankServiceError.BANK_SIDE_FAILURE);
     }
 
@@ -168,7 +170,7 @@ public final class IngBaseAutoAuthenticationTest {
         bankRespondsWithBadRequest();
 
         // then
-        assertThatThrownBy(() -> autoAuthenticationController.authenticate(credentials))
+        assertThatThrownBy(() -> authenticationController.authenticate(credentials))
                 .hasFieldOrPropertyWithValue("error", SessionError.SESSION_EXPIRED);
         assertThat(persistentStorage.containsKey("oauth2_access_token")).isFalse();
     }
@@ -230,7 +232,7 @@ public final class IngBaseAutoAuthenticationTest {
         return OAuth2Token.create("bearer", "ing_access_token", "ing_refresh_token", -1);
     }
 
-    private AutoAuthenticationController createAutoAuthenticationController() {
+    private AutoAuthenticationController createAuthenticationController() {
         SupplementalInformationHelper supplementalInfoHelper =
                 new MockSupplementalInformationHelper(new HashMap<>());
         return new AutoAuthenticationController(
