@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments.RedsysPaymentExecutor;
@@ -33,12 +32,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public abstract class RedsysAgent extends NextGenerationAgent
@@ -143,25 +138,12 @@ public abstract class RedsysAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        final RedsysTransactionalAccountFetcher accountFetcher =
-                new RedsysTransactionalAccountFetcher(apiClient, consentController, this);
-
-        final TransactionPaginator<TransactionalAccount> paginator =
-                new TransactionKeyPaginationController<>(accountFetcher);
-
-        final TransactionFetcherController<TransactionalAccount> controller;
-        if (supportsPendingTransactions()) {
-            final RedsysUpcomingTransactionFetcher upcomingTransactionFetcher =
-                    new RedsysUpcomingTransactionFetcher(apiClient, consentController);
-            controller =
-                    new TransactionFetcherController<>(
-                            transactionPaginationHelper, paginator, upcomingTransactionFetcher);
-        } else {
-            controller = new TransactionFetcherController<>(transactionPaginationHelper, paginator);
-        }
+        final RedsysTransactionalAccountFetcher fetcher =
+                new RedsysTransactionalAccountFetcher(
+                        apiClient, consentController, this, transactionPaginationHelper);
 
         return new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, accountFetcher, controller);
+                metricRefreshController, updateController, fetcher, fetcher);
     }
 
     @Override

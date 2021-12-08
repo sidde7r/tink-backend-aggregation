@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.when;
@@ -10,9 +11,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -23,6 +27,10 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RedsysApiClientTest {
+    private static final String SERVER_ERROR_RESPONSE =
+            "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"server_error\",\"text\":\"server_error\"}]}";
+    private static final String CONSENT_EXPIRED_RESPONSE =
+            "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"CONSENT_EXPIRED\",\"text\":\"CONSENT_EXPIRED\"}]}";
 
     @Mock private SessionStorage sessionStorage;
 
@@ -122,5 +130,41 @@ public class RedsysApiClientTest {
                 RedsysConstants.Urls.BASE_API_URL,
                 aspspConfiguration.getAspspCode(),
                 String.format(RedsysConstants.Urls.CONSENT, consentId));
+    }
+
+    @Test(expected = SessionException.class)
+    public void shouldThrowSessionExceptionWhenConsentRevoked() {
+        // given
+        when(signedRequestFactory.createSignedRequest(any(), any(), any()))
+                .thenReturn(requestBuilder);
+        PaginationKey paginationKey = mock(PaginationKey.class);
+        when(paginationKey.getRequestId()).thenReturn("dummyRequestId");
+        when(paginationKey.getPath()).thenReturn("dummyPath");
+        prepareErrorResponse(409, CONSENT_EXPIRED_RESPONSE);
+
+        // when
+        objectUnderTest.fetchTransactionsWithKey(paginationKey, "dummyConsentId");
+    }
+
+    @Test(expected = BankServiceException.class)
+    public void shouldThrowBankServiceExceptionWhenServerError() {
+        // given
+        when(signedRequestFactory.createSignedRequest(any(), any(), any()))
+                .thenReturn(requestBuilder);
+        PaginationKey paginationKey = mock(PaginationKey.class);
+        when(paginationKey.getRequestId()).thenReturn("dummyRequestId");
+        when(paginationKey.getPath()).thenReturn("dummyPath");
+        prepareErrorResponse(400, SERVER_ERROR_RESPONSE);
+
+        // when
+        objectUnderTest.fetchTransactionsWithKey(paginationKey, "dummyConsentId");
+    }
+
+    private void prepareErrorResponse(int httpStatus, String errorResponse) {
+        final HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponse.getStatus()).thenReturn(httpStatus);
+        when(httpResponse.getBody(String.class)).thenReturn(errorResponse);
+        HttpResponseException hre = new HttpResponseException(null, httpResponse);
+        when(requestBuilder.get(any())).thenThrow(hre);
     }
 }

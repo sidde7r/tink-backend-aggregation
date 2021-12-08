@@ -1,43 +1,37 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.BalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
+@RequiredArgsConstructor
 public class RedsysTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionKeyPaginator<TransactionalAccount, PaginationKey> {
+                TransactionFetcher<TransactionalAccount>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
     private final RedsysApiClient apiClient;
     private final ConsentController consentController;
     private final AspspConfiguration aspspConfiguration;
-
-    public RedsysTransactionalAccountFetcher(
-            RedsysApiClient apiClient,
-            ConsentController consentController,
-            AspspConfiguration aspspConfiguration) {
-        this.apiClient = apiClient;
-        this.consentController = consentController;
-        this.aspspConfiguration = aspspConfiguration;
-    }
+    private final TransactionPaginationHelper paginationHelper;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -63,20 +57,43 @@ public class RedsysTransactionalAccountFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<PaginationKey> getTransactionsFor(
-            TransactionalAccount account, PaginationKey key) {
-        try {
-            final String consentId = consentController.getConsentId();
-            return apiClient.fetchTransactions(account.getApiIdentifier(), consentId, key);
-        } catch (HttpResponseException hre) {
-            final ErrorResponse error = ErrorResponse.fromResponse(hre.getResponse());
-            if (error.hasErrorCode(ErrorCodes.CONSENT_EXPIRED) && Objects.isNull(key)) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            } else if (HttpStatus.SC_BAD_REQUEST == hre.getResponse().getStatus()
-                    && error.hasErrorCode(ErrorCodes.SERVER_ERROR)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
-            }
-            throw hre;
+    public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
+        List<AggregationTransaction> transactions = new ArrayList<>();
+
+        if (aspspConfiguration.supportsPendingTransactions()) {
+            transactions.addAll(fetchUpcomingTransactionsFor(account));
         }
+
+        LocalDate dateOfLastFetchedTransactions =
+                paginationHelper
+                        .getTransactionDateLimit(account)
+                        .map(date -> toLocaDate(date))
+                        .orElse(null);
+
+        final String consentId = consentController.getConsentId();
+
+        BaseTransactionsResponse response =
+                apiClient.fetchTransactions(
+                        account.getApiIdentifier(), consentId, dateOfLastFetchedTransactions);
+        transactions.addAll(response.getTinkTransactions());
+        while (response.nextKey() != null) {
+            response = apiClient.fetchTransactionsWithKey(response.nextKey(), consentId);
+            transactions.addAll(response.getTinkTransactions());
+        }
+
+        return transactions;
+    }
+
+    private LocalDate toLocaDate(Date date) {
+        return new java.sql.Date(date.getTime()).toLocalDate();
+    }
+
+    @Override
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
+        final BaseTransactionsResponse response =
+                apiClient.fetchPendingTransactions(
+                        account.getApiIdentifier(), consentController.getConsentId());
+        return response.getUpcomingTransactions();
     }
 }
