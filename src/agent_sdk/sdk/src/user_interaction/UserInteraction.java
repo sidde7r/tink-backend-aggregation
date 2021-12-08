@@ -1,6 +1,5 @@
 package se.tink.agent.sdk.user_interaction;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -18,8 +17,7 @@ public class UserInteraction<T> {
             boolean userResponseRequired,
             @Nullable String customResponseKey) {
         this.type = type;
-        this.payload =
-                Preconditions.checkNotNull(payload, "UserInteraction payload cannot be null.");
+        this.payload = payload;
         this.userResponseRequired = userResponseRequired;
         this.customResponseKey = customResponseKey;
     }
