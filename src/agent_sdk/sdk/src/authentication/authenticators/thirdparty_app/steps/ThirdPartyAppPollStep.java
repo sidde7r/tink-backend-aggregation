@@ -77,8 +77,7 @@ public class ThirdPartyAppPollStep implements NewConsentStep {
                         .orElse(0);
         if (counter > this.maxPollAttempts) {
             // Timeout
-            // TODO: use proper exception.
-            throw new IllegalStateException("TIME_OUT");
+            throw ThirdPartyAppError.TIMED_OUT.exception();
         }
         authenticationStorage.put(ThirdPartyAppAuthenticator.STATE_KEY_COUNTER, counter + 1);
     }
