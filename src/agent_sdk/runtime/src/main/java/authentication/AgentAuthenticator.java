@@ -5,6 +5,7 @@ import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.generic.GenericAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.oauth2.Oauth2AuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.oauth2_decoupled_app.Oauth2DecoupledAppAuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.oauth2_decoupled_swedish_mobile_bankid.Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.swedish_mobile_bankid.SwedishMobileBankIdAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.thirdparty_app.ThirdPartyAppAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.username_password.UsernameAndPasswordAuthenticationProcess;
@@ -30,7 +31,8 @@ public class AgentAuthenticator {
                         new Oauth2DecoupledAppAuthenticationProcess(),
                         new ThirdPartyAppAuthenticationProcess(),
                         new SwedishMobileBankIdAuthenticationProcess(),
-                        new UsernameAndPasswordAuthenticationProcess());
+                        new UsernameAndPasswordAuthenticationProcess(),
+                        new Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess());
     }
 
     public void authenticate(String request) {}
