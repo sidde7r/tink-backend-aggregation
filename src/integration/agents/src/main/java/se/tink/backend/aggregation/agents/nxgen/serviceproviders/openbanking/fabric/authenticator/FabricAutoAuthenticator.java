@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client.FabricAuthApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class FabricAutoAuthenticator implements AutoAuthenticator {
 
     private final PersistentStorage persistentStorage;
-    private final FabricApiClient apiClient;
+    private final FabricAuthApiClient authApiClient;
 
     @Override
     public void autoAuthenticate() {
@@ -22,6 +22,6 @@ public class FabricAutoAuthenticator implements AutoAuthenticator {
     }
 
     private boolean isConsentValid(String consentId) {
-        return apiClient.getConsentStatus(consentId).getConsentStatus().isValid();
+        return authApiClient.getConsentStatus(consentId).getConsentStatus().isValid();
     }
 }

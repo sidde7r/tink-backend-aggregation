@@ -8,17 +8,21 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client.FabricFetcherApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.nxgen.core.to_system.AccountConverter;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.user.rpc.User;
 
 public class FabricAccountFetcherTest {
+
+    private static final String CONSENT_ID = "c1234id";
 
     @Test
     public void shouldConvertToTransferDestinationProperly() {
@@ -101,11 +105,16 @@ public class FabricAccountFetcherTest {
                         accountDetialSource, AccountDetailsResponse.class);
         BalanceResponse balanceResponse =
                 SerializationUtils.deserializeFromString(sourceBalance, BalanceResponse.class);
-        FabricApiClient apiClient = mock(FabricApiClient.class);
-        when(apiClient.fetchAccounts()).thenReturn(accountResponse);
-        when(apiClient.getAccountDetails("/v1/accounts/15259")).thenReturn(accountDetailsResponse);
-        when(apiClient.getBalances("/v1/accounts/15259/balances")).thenReturn(balanceResponse);
-        FabricAccountFetcher fabricAccountFetcher = new FabricAccountFetcher(apiClient);
+        FabricFetcherApiClient fetcherApiClient = mock(FabricFetcherApiClient.class);
+        when(fetcherApiClient.fetchAccounts(CONSENT_ID)).thenReturn(accountResponse);
+        when(fetcherApiClient.getAccountDetails(CONSENT_ID, "/v1/accounts/15259"))
+                .thenReturn(accountDetailsResponse);
+        when(fetcherApiClient.getBalances(CONSENT_ID, "/v1/accounts/15259/balances"))
+                .thenReturn(balanceResponse);
+        PersistentStorage persistentStorage = new PersistentStorage();
+        persistentStorage.put(StorageKeys.CONSENT_ID, CONSENT_ID);
+        FabricAccountFetcher fabricAccountFetcher =
+                new FabricAccountFetcher(persistentStorage, fetcherApiClient);
 
         FetchTransferDestinationsResponse dt =
                 InferredTransferDestinations.forPaymentAccounts(

@@ -13,8 +13,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client.FabricAuthApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
 
     private final PersistentStorage persistentStorage;
-    private final FabricApiClient apiClient;
+    private final FabricAuthApiClient authApiClient;
     private final FabricSupplementalInformationCollector fabricSupplementalInformationCollector;
     private final LocalDateTimeSource localDateTimeSource;
 
@@ -46,11 +46,11 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
         ConsentResponse consentResponse = createAndSaveConsent();
         // This bank requires explicit creation of authorisation resource
         AuthorizationResponse authorizationObject =
-                apiClient.createAuthorizationObject(
+                authApiClient.createAuthorizationObject(
                         consentResponse.getLinks().getStartAuthorisation());
 
         authorizationObject =
-                apiClient.updateAuthorizationWithLoginDetails(
+                authApiClient.updateAuthorizationWithLoginDetails(
                         authorizationObject.getLinks().getUpdatePsuAuthentication(),
                         credentials.getField(Key.USERNAME),
                         credentials.getField(Key.PASSWORD));
@@ -81,7 +81,7 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
                 ConsentRequest.buildTypicalRecurring(
                         AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build(),
                         localDateTimeSource);
-        return apiClient.createConsentForEmbeddedFlow(consentRequest);
+        return authApiClient.createConsentForEmbeddedFlow(consentRequest);
     }
 
     private AuthorizationResponse pickAndSelectScaMethod(
@@ -103,7 +103,7 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
 
         ScaMethodEntity selectedMethod = allowedScaMethods.get(0);
 
-        return apiClient.updateAuthorizationWithMethodId(
+        return authApiClient.updateAuthorizationWithMethodId(
                 authorizationObject.getLinks().getSelectAuthenticationMethod(),
                 selectedMethod.getAuthenticationMethodId());
     }
@@ -116,7 +116,7 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
     private AuthorizationStatusResponse collectAndSendOtp(
             AuthorizationResponse authorizationObject) {
         String smsOtp = fabricSupplementalInformationCollector.collectSmsOtp();
-        return apiClient.updateAuthorizationWithOtpCode(
+        return authApiClient.updateAuthorizationWithOtpCode(
                 authorizationObject.getLinks().getAuthoriseTransaction(), smsOtp);
     }
 
@@ -126,13 +126,14 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
                     "Invalid sca status after otp authorization: " + scaStatus);
         }
 
-        ConsentStatus consentStatus = apiClient.getConsentStatus(consentId).getConsentStatus();
+        ConsentStatus consentStatus = authApiClient.getConsentStatus(consentId).getConsentStatus();
         if (!consentStatus.isValid()) {
             throw LoginError.DEFAULT_MESSAGE.exception(
                     "Invalid consent status after otp authorization: " + consentStatus);
         }
 
-        credentials.setSessionExpiryDate(apiClient.getConsentDetails(consentId).getValidUntil());
+        credentials.setSessionExpiryDate(
+                authApiClient.getConsentDetails(consentId).getValidUntil());
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
     }
 }

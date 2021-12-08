@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-12-01 08:35+0000\n"
-"PO-Revision-Date: 2021-12-01 08:35+0000\n"
+"POT-Creation-Date: 2021-12-08 14:15+0000\n"
+"PO-Revision-Date: 2021-12-08 14:15+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -1420,3 +1420,6 @@ msgstr ""
 
 msgid "Funds availability is not confirmed by the bank."
 msgstr "La disponibilità dei fondi non è confermata dalla banca."
+
+msgid "Please enter the code you received."
+msgstr "Inserisci il codice che hai ricevuto."

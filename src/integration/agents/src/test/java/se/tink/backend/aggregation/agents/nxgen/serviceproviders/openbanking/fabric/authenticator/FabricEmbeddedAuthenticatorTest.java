@@ -16,7 +16,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client.FabricAuthApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
@@ -36,7 +36,7 @@ public class FabricEmbeddedAuthenticatorTest {
 
     private FabricEmbeddedAuthenticator fabricEmbeddedAuthenticator;
 
-    private FabricApiClient fabricApiClient;
+    private FabricAuthApiClient fabricAuthApiClient;
     private Credentials credentials;
 
     @Before
@@ -48,7 +48,7 @@ public class FabricEmbeddedAuthenticatorTest {
                 mock(FabricSupplementalInformationCollector.class);
 
         PersistentStorage persistentStorage = mock(PersistentStorage.class);
-        fabricApiClient = mock(FabricApiClient.class);
+        fabricAuthApiClient = mock(FabricAuthApiClient.class);
 
         credentials = new Credentials();
         credentials.setField(Key.USERNAME, USERNAME);
@@ -57,7 +57,7 @@ public class FabricEmbeddedAuthenticatorTest {
         fabricEmbeddedAuthenticator =
                 new FabricEmbeddedAuthenticator(
                         persistentStorage,
-                        fabricApiClient,
+                        fabricAuthApiClient,
                         fabricSupplementalInformationCollector,
                         new ConstantLocalDateTimeSource());
     }
@@ -65,18 +65,18 @@ public class FabricEmbeddedAuthenticatorTest {
     @Test
     public void authenticateShouldThrowExceptionIfUserCredentialsAreInvalid() {
         // given
-        when(fabricApiClient.createConsentForEmbeddedFlow(any()))
+        when(fabricAuthApiClient.createConsentForEmbeddedFlow(any()))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "consentCreated.json").toFile(),
                                 ConsentResponse.class));
-        when(fabricApiClient.createAuthorizationObject(any()))
+        when(fabricAuthApiClient.createAuthorizationObject(any()))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "authorisationCreatedResponse.json")
                                         .toFile(),
                                 AuthorizationResponse.class));
-        when(fabricApiClient.updateAuthorizationWithLoginDetails(
+        when(fabricAuthApiClient.updateAuthorizationWithLoginDetails(
                         "/v1/consents/139407/authorisations/217980", USERNAME, PASSWORD))
                 .thenThrow(LoginError.INCORRECT_CREDENTIALS.exception());
 
@@ -92,18 +92,18 @@ public class FabricEmbeddedAuthenticatorTest {
     @Test
     public void authenticateShouldThrowExceptionIfNotSupportedScaMethodIsChosen() {
         // given
-        when(fabricApiClient.createConsentForEmbeddedFlow(any()))
+        when(fabricAuthApiClient.createConsentForEmbeddedFlow(any()))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "consentCreated.json").toFile(),
                                 ConsentResponse.class));
-        when(fabricApiClient.createAuthorizationObject(any()))
+        when(fabricAuthApiClient.createAuthorizationObject(any()))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "authorisationCreatedResponse.json")
                                         .toFile(),
                                 AuthorizationResponse.class));
-        when(fabricApiClient.updateAuthorizationWithLoginDetails(
+        when(fabricAuthApiClient.updateAuthorizationWithLoginDetails(
                         "/v1/consents/139407/authorisations/217980", USERNAME, PASSWORD))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -125,18 +125,18 @@ public class FabricEmbeddedAuthenticatorTest {
     @Test
     public void authenticateShouldThrowExceptionIfNoSupportedScaMethodOnAList() {
         // given
-        when(fabricApiClient.createConsentForEmbeddedFlow(any()))
+        when(fabricAuthApiClient.createConsentForEmbeddedFlow(any()))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "consentCreated.json").toFile(),
                                 ConsentResponse.class));
-        when(fabricApiClient.createAuthorizationObject(any()))
+        when(fabricAuthApiClient.createAuthorizationObject(any()))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "authorisationCreatedResponse.json")
                                         .toFile(),
                                 AuthorizationResponse.class));
-        when(fabricApiClient.updateAuthorizationWithLoginDetails(
+        when(fabricAuthApiClient.updateAuthorizationWithLoginDetails(
                         "/v1/consents/139407/authorisations/217980", USERNAME, PASSWORD))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(

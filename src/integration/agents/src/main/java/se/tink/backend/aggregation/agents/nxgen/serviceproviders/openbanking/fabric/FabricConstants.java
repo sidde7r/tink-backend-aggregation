@@ -82,7 +82,6 @@ public class FabricConstants {
     }
 
     public static final class AuthenticationKeys {
-        public static final String PASSWORD = "password";
         public static final String AUTHENTICATION_FINALISED = "finalised";
         public static final String AUTHENTICATION_PSU_AUTHENTICATED = "psuAuthenticated";
         public static final String SCA_METHOD_SELECTED = "scaMethodSelected";

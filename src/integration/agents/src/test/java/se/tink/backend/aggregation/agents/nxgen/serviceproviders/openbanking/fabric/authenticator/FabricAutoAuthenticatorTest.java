@@ -11,8 +11,8 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client.FabricAuthApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -25,15 +25,16 @@ public class FabricAutoAuthenticatorTest {
     private static final String CONSENT_ID = "consentId";
 
     private FabricAutoAuthenticator fabricAutoAuthenticator;
-    private FabricApiClient fabricApiClient;
+    private FabricAuthApiClient fabricAuthApiClient;
     private PersistentStorage persistentStorage;
 
     @Before
     public void setup() {
         persistentStorage = mock(PersistentStorage.class);
-        fabricApiClient = mock(FabricApiClient.class);
+        fabricAuthApiClient = mock(FabricAuthApiClient.class);
 
-        fabricAutoAuthenticator = new FabricAutoAuthenticator(persistentStorage, fabricApiClient);
+        fabricAutoAuthenticator =
+                new FabricAutoAuthenticator(persistentStorage, fabricAuthApiClient);
     }
 
     @Test
@@ -41,7 +42,7 @@ public class FabricAutoAuthenticatorTest {
         // given
         when(persistentStorage.get(StorageKeys.CONSENT_ID, String.class))
                 .thenReturn(Optional.of(CONSENT_ID));
-        when(fabricApiClient.getConsentStatus(CONSENT_ID))
+        when(fabricAuthApiClient.getConsentStatus(CONSENT_ID))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "fabricValidConsentStatusResponse.json")
@@ -72,7 +73,7 @@ public class FabricAutoAuthenticatorTest {
         // given
         when(persistentStorage.get(StorageKeys.CONSENT_ID, String.class))
                 .thenReturn(Optional.of(CONSENT_ID));
-        when(fabricApiClient.getConsentStatus(CONSENT_ID))
+        when(fabricAuthApiClient.getConsentStatus(CONSENT_ID))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "fabricInvalidConsentStatusResponse.json")

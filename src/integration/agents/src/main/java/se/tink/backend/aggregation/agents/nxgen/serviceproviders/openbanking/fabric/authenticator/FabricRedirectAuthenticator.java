@@ -7,9 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client.FabricAuthApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
@@ -37,27 +38,34 @@ public class FabricRedirectAuthenticator implements ThirdPartyAppAuthenticator<S
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final FabricApiClient apiClient;
+    private final FabricAuthApiClient authApiClient;
     private final Credentials credentials;
     private final LocalDateTimeSource localDateTimeSource;
+    private final String customersBaseRedirectUrl;
 
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl = buildAuthorizeUrl(strongAuthenticationState.getState());
+        URL authorizeUrl = buildAuthorizeUrl();
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
-    private URL buildAuthorizeUrl(String state) {
+    private URL buildAuthorizeUrl() {
         ConsentRequest consentRequest =
                 ConsentRequest.buildTypicalRecurring(
                         AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build(),
                         localDateTimeSource);
-        ConsentResponse consentResponse = apiClient.createConsent(state, consentRequest);
+        ConsentResponse consentResponse =
+                authApiClient.createConsent(buildCustomersRedirectUrl(), consentRequest);
         persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
         return new URL(consentResponse.getLinks().getScaRedirect());
+    }
+
+    private URL buildCustomersRedirectUrl() {
+        return new URL(customersBaseRedirectUrl)
+                .queryParam(QueryKeys.STATE, strongAuthenticationState.getState());
     }
 
     @Override
@@ -114,7 +122,7 @@ public class FabricRedirectAuthenticator implements ThirdPartyAppAuthenticator<S
     }
 
     private void setSessionExpiryDateBasedOnConsent(String consentId) {
-        ConsentDetailsResponse consentDetails = apiClient.getConsentDetails(consentId);
+        ConsentDetailsResponse consentDetails = authApiClient.getConsentDetails(consentId);
         credentials.setSessionExpiryDate(consentDetails.getValidUntil());
     }
 }

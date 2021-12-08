@@ -10,7 +10,8 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client.FabricPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client.FabricRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.FabricPaymentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
@@ -60,17 +60,14 @@ public class FabricPaymentExecutorTest {
     private FabricPaymentExecutor createFabricPaymentExecutor(String fileName, URL url) {
         TinkHttpClient tinkHttpClient = createTinkHttpClient(fileName, url);
 
-        FabricApiClient apiClient =
-                new FabricApiClient(
-                        tinkHttpClient,
-                        new PersistentStorage(),
-                        new MockRandomValueGenerator(),
+        FabricPaymentApiClient paymentApiClient =
+                new FabricPaymentApiClient(
+                        new FabricRequestBuilder(
+                                tinkHttpClient, new MockRandomValueGenerator(), "userIp"),
                         new SessionStorage(),
-                        "userIp",
-                        "baseUrl",
                         "redirectUrl");
         return new FabricPaymentExecutor(
-                apiClient,
+                paymentApiClient,
                 mock(SupplementalInformationHelper.class),
                 new SessionStorage(),
                 new StrongAuthenticationState("state"));

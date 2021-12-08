@@ -1,14 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.client;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.Urls.API_PSD2_URL;
-
-import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.PathParameterValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.QueryKeys;
@@ -19,154 +14,24 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.FabricPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.TransactionResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.SelectAuthorizationMethodRequest;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @RequiredArgsConstructor
-public class FabricApiClient {
+public class FabricPaymentApiClient {
 
-    private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
-    private final RandomValueGenerator randomValueGenerator;
+    private final FabricRequestBuilder requestBuilder;
+
     private final SessionStorage sessionStorage;
-    private final String userIp;
-    private final String baseUrl;
     private final String redirectUrl;
-
-    private RequestBuilder createRequest(URL url) {
-        RequestBuilder request = client.request(url);
-        request.header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString());
-        request.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
-        request.accept(MediaType.APPLICATION_JSON);
-        request.type(MediaType.APPLICATION_JSON);
-        return request;
-    }
-
-    private RequestBuilder createRequestInSession(URL url) {
-        return createRequest(url)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
-    }
-
-    public ConsentResponse createConsent(String state, ConsentRequest consentRequest) {
-        final URL redirectUri = new URL(redirectUrl).queryParam(QueryKeys.STATE, state);
-
-        return createRequest(new URL(baseUrl + Urls.CONSENT))
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUri.toString())
-                .header(HeaderKeys.TPP_REDIRECT_PREFERED, HeaderValues.TPP_REDIRECT_PREFERED)
-                .post(ConsentResponse.class, consentRequest);
-    }
-
-    public ConsentResponse createConsentForEmbeddedFlow(ConsentRequest consentRequest) {
-        return createRequest(new URL(baseUrl + Urls.CONSENT))
-                .header(HeaderKeys.TPP_REDIRECT_PREFERED, false)
-                .post(ConsentResponse.class, consentRequest);
-    }
-
-    public AuthorizationResponse createAuthorizationObject(String authorizationPath) {
-        return createRequest(new URL(baseUrl + API_PSD2_URL + authorizationPath))
-                .post(AuthorizationResponse.class);
-    }
-
-    public AuthorizationResponse updateAuthorizationWithLoginDetails(
-            String authorizationPath, String username, String password) {
-        try {
-
-            return createRequest(new URL(baseUrl + API_PSD2_URL + authorizationPath))
-                    .header(HeaderKeys.PSU_ID, username)
-                    .put(
-                            AuthorizationResponse.class,
-                            new AuthorizationRequest(new PsuDataEntity(password)));
-        } catch (HttpResponseException exception) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(exception);
-        }
-    }
-
-    public AuthorizationResponse updateAuthorizationWithMethodId(
-            String authorizationPath, String scaMethodId) {
-        return createRequest(new URL(baseUrl + API_PSD2_URL + authorizationPath))
-                .put(
-                        AuthorizationResponse.class,
-                        new SelectAuthorizationMethodRequest(scaMethodId));
-    }
-
-    public AuthorizationStatusResponse updateAuthorizationWithOtpCode(
-            String authorizationPath, String smsOtp) {
-        try {
-
-            return createRequest(new URL(baseUrl + API_PSD2_URL + authorizationPath))
-                    .put(
-                            AuthorizationStatusResponse.class,
-                            new FinalizeAuthorizationRequest(smsOtp));
-        } catch (HttpResponseException exception) {
-            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(exception);
-        }
-    }
-
-    public ConsentStatusResponse getConsentStatus(String consentId) {
-        return createRequest(
-                        new URL(baseUrl + Urls.GET_CONSENT_STATUS)
-                                .parameter(IdTags.CONSENT_ID, consentId))
-                .get(ConsentStatusResponse.class);
-    }
-
-    public ConsentDetailsResponse getConsentDetails(String consentId) {
-        return createRequest(
-                        new URL(baseUrl + Urls.GET_CONSENT_DETAILS)
-                                .parameter(IdTags.CONSENT_ID, consentId))
-                .get(ConsentDetailsResponse.class);
-    }
-
-    public AccountResponse fetchAccounts() {
-        return createRequestInSession(new URL(baseUrl + Urls.GET_ACCOUNTS))
-                .get(AccountResponse.class);
-    }
-
-    public BalanceResponse getBalances(String url) {
-        return createRequestInSession(new URL(baseUrl + API_PSD2_URL + url))
-                .get(BalanceResponse.class);
-    }
-
-    public AccountDetailsResponse getAccountDetails(String url) {
-        return createRequestInSession(new URL(baseUrl + API_PSD2_URL + url))
-                .get(AccountDetailsResponse.class);
-    }
-
-    public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
-        return createRequestInSession(
-                        new URL(baseUrl + Urls.GET_TRANSACTIONS)
-                                .parameter(IdTags.ACCOUNT_ID, resourceId))
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .get(TransactionResponse.class);
-    }
 
     public FabricPaymentResponse createPayment(
             FabricPaymentRequest fabricPaymentRequest, Payment payment) {
-        return createRequest(
+        return requestBuilder
+                .createRequest(
                         new URL(Urls.INITIATE_A_PAYMENT_URL)
                                 .parameter(
                                         PathParameterKeys.PAYMENT_SERVICE,
@@ -185,7 +50,8 @@ public class FabricApiClient {
     }
 
     public FabricPaymentResponse getPayment(Payment payment) {
-        return createRequest(
+        return requestBuilder
+                .createRequest(
                         new URL(Urls.PAYMENT_URL)
                                 .parameter(
                                         PathParameterKeys.PAYMENT_SERVICE,
@@ -199,7 +65,8 @@ public class FabricApiClient {
     }
 
     public FabricPaymentResponse getPaymentStatus(Payment payment) {
-        return createRequest(
+        return requestBuilder
+                .createRequest(
                         new URL(Urls.GET_PAYMENT_STATUS_URL)
                                 .parameter(
                                         PathParameterKeys.PAYMENT_SERVICE,
@@ -213,7 +80,8 @@ public class FabricApiClient {
 
     public PaymentAuthorizationsResponse getPaymentAuthorizations(Payment payment) {
         PaymentAuthorizationsResponse result =
-                createRequest(
+                requestBuilder
+                        .createRequest(
                                 new URL(Urls.GET_PAYMENT_AUTHORIZATIONS_URL)
                                         .parameter(
                                                 PathParameterKeys.PAYMENT_SERVICE,
@@ -233,7 +101,8 @@ public class FabricApiClient {
     }
 
     public FabricPaymentResponse deletePayment(Payment payment) {
-        return createRequest(
+        return requestBuilder
+                .createRequest(
                         new URL(Urls.PAYMENT_URL)
                                 .parameter(
                                         PathParameterKeys.PAYMENT_SERVICE,
@@ -247,7 +116,8 @@ public class FabricApiClient {
     }
 
     public PaymentAuthorizationStatus getPaymentAuthorizationStatus(Payment payment) {
-        return createRequest(
+        return requestBuilder
+                .createRequest(
                         new URL(Urls.GET_PAYMENT_AUTHORIZATION_STATUS_URL)
                                 .parameter(
                                         PathParameterKeys.PAYMENT_SERVICE,
