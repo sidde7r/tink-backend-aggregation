@@ -5,16 +5,16 @@
     "exactBalance" : {
       "currencyCode" : "EUR",
       "doubleValue" : 267.77,
-      "scale" : 2,
       "unscaledValue" : 26777,
+      "scale" : 2,
       "exactValue" : 267.77
     },
     "currencyCode" : "EUR",
     "availableBalance" : {
       "currencyCode" : "EUR",
       "doubleValue" : 267.77,
-      "scale" : 2,
       "unscaledValue" : 26777,
+      "scale" : 2,
       "exactValue" : 267.77
     },
     "bankId" : "EE171000555555555555",
@@ -70,9 +70,6 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "orgId",
-    "merchantName" : "GREENY OÜ",
-    "merchantCategoryCode" : "COID",
     "providerMarket" : "EE",
     "booked" : true
   } ]
