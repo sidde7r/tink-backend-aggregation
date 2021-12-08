@@ -99,7 +99,6 @@ import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
 import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
@@ -114,7 +113,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 TypedPaymentControllerable {
 
     private final AgentComponentProvider componentProvider;
-    private final UnleashClient unleashClient;
     private final AccountsBalancesUpdater accountsBalancesUpdater;
 
     private final JwtSigner jwtSigner;
@@ -150,7 +148,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             UkOpenBankingPisConfig pisConfig,
             UkOpenBankingPisRequestFilter pisRequestFilter) {
         super(componentProvider);
-        this.unleashClient = componentProvider.getUnleashClient();
         this.jwtSigner = ukOpenBankingFlowFacade.getJwtSinger();
         this.agentConfiguration = ukOpenBankingFlowFacade.getAgentConfiguration();
         this.tlsConfigurationSetter = ukOpenBankingFlowFacade.getTlsConfigurationSetter();
@@ -173,50 +170,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider,
             UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
             UkOpenBankingAisConfig aisConfig) {
-        this(
-                componentProvider,
-                componentProvider.getUnleashClient(),
-                ukOpenBankingFlowFacade,
-                aisConfig,
-                null,
-                null);
-    }
-
-    public UkOpenBankingBaseAgent(
-            AgentComponentProvider componentProvider,
-            UnleashClient unleashClient,
-            UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
-            UkOpenBankingAisConfig aisConfig,
-            UkOpenBankingPisConfig pisConfig,
-            UkOpenBankingPisRequestFilter pisRequestFilter) {
-        super(componentProvider);
-        this.unleashClient = unleashClient;
-        this.jwtSigner = ukOpenBankingFlowFacade.getJwtSinger();
-        this.agentConfiguration = ukOpenBankingFlowFacade.getAgentConfiguration();
-        this.tlsConfigurationSetter = ukOpenBankingFlowFacade.getTlsConfigurationSetter();
-        this.eidasIdentity = ukOpenBankingFlowFacade.getUkEidasIdentity();
-        this.aisConfig = aisConfig;
-        this.pisConfig = pisConfig;
-        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
-        this.pisRequestFilter = pisRequestFilter;
-        this.componentProvider = componentProvider;
-        this.accountsBalancesUpdater =
-                new AccountsBalancesUpdater(
-                        new UkObBookedBalanceCalculator(),
-                        new UkObAvailableBalanceCalculator(),
-                        false);
-
-        configureMdcPropagation();
-    }
-
-    public UkOpenBankingBaseAgent(
-            AgentComponentProvider componentProvider,
-            UnleashClient unleashClient,
-            UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
-            UkOpenBankingAisConfig aisConfig) {
-        this(componentProvider, unleashClient, ukOpenBankingFlowFacade, aisConfig, null, null);
+        this(componentProvider, ukOpenBankingFlowFacade, aisConfig, null, null);
     }
 
     private void addFilter(Filter filter) {
@@ -616,7 +570,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                                             .addProperty(Constants.Context.APP_ID.getValue(), appId)
                                             .build())
                             .build();
-            balanceCalculationEnabled = unleashClient.isToggleEnable(toggle);
+            balanceCalculationEnabled = componentProvider.getUnleashClient().isToggleEnable(toggle);
         } catch (Exception e) {
             log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
             balanceCalculationEnabled = false;

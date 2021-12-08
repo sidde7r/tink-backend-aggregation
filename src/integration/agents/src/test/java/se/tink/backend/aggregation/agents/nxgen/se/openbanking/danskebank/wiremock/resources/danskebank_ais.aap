@@ -383,7 +383,7 @@ Content-Length: 758
 
 -----------------------------------------------------------------------------------
 REQUEST 10a
-GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800000jf7AeAAI
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -634,7 +634,7 @@ Transfer-Encoding: chunked
 }
 -----------------------------------------------------------------------------------
 REQUEST 12
-GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800000jf7AeAAI
 x-fapi-interaction-id: 90971a34-1b30-4174-8e50-4cf4a7298277
@@ -761,7 +761,7 @@ Content-Length: 3154
 }
 -----------------------------------------------------------------------------------
 REQUEST 6
-GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/9a23da47-d3c8-4f95-86f9-23e7ae11114c/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/9a23da47-d3c8-4f95-86f9-23e7ae11114c/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800000jf7AeAAI
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -988,7 +988,7 @@ Content-Length: 752
 
 -----------------------------------------------------------------------------------
 REQUEST 14a
-GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/df978158-4b58-447f-bfdb-85eb5f77eb32/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/df978158-4b58-447f-bfdb-85eb5f77eb32/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800000jf7AeAAI
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -1109,7 +1109,7 @@ Content-Length: 7993
 }
 -----------------------------------------------------------------------------------
 REQUEST 15a
-GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/d3cdd5e7-7349-40a5-859e-bc1f8fd7f301/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/d3cdd5e7-7349-40a5-859e-bc1f8fd7f301/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800000jf7AeAAI
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
