@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -56,6 +57,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@Slf4j
 public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration> {
 
     private final QsealcSigner qsealcSigner;
@@ -95,7 +97,10 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
 
     public URL getAuthorizeUrl(final String state) {
         final String consentId = getConsentId();
+
+        // TODO - LLAMAS-52: Temporary log to verify consent Id
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
+        log.info("Consent-ID to persist: {}", Hash.sha256AsHex(consentId));
 
         final String authUrl = agentConfiguration.getBaseOauthUrl() + Urls.AUTH;
         return getAuthorizeUrlWithCode(
@@ -172,6 +177,11 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
 
     private RequestBuilder createRequestInSession(URL url, String body) {
         final OAuth2Token token = getTokenFromSession(StorageKeys.OAUTH_TOKEN);
+
+        // TODO - LLAMAS-52: Temporary log to verify consent Id
+        log.info(
+                "Persisted Consent-ID: {}",
+                Hash.sha256AsHex(persistentStorage.get(StorageKeys.CONSENT_ID)));
 
         return buildRequestWithSignature(url, body)
                 .addBearerToken(token)
