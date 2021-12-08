@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
+import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServerFaultFilterTest {
@@ -35,15 +37,16 @@ public class ServerFaultFilterTest {
     }
 
     @Test
-    public void shouldReturnBankServiceError() {
+    public void shouldThrowBankServiceErrorIfServerFault() {
         // given
         given(response.getStatus()).willReturn(HttpStatus.SC_UNAUTHORIZED);
         given(response.hasBody()).willReturn(true);
         given(response.getBody(FaultResponse.class)).willReturn(faultResponse);
+        given(response.getType()).willReturn(MediaType.APPLICATION_JSON_TYPE);
         given(faultResponse.isServerFault()).willReturn(true);
 
         // when
-        when(filter.handle(any())).thenReturn(response);
+        when(filter.handle(any())).thenThrow(new HttpResponseException(null, response));
 
         // then
         assertThatThrownBy(() -> serverFaultFilter.handle(httpRequest))
