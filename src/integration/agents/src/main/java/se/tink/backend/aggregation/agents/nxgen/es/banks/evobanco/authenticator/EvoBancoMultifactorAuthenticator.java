@@ -58,14 +58,18 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
             }
         }
 
-        try {
-            String deviceId =
-                    UUID.randomUUID()
-                            .toString()
-                            .toUpperCase()
-                            .substring(0, EvoBancoConstants.Constants.DEVICE_ID_LENGTH);
-            persistentStorage.put(EvoBancoConstants.Storage.DEVICE_ID, deviceId);
+        String deviceId =
+                UUID.randomUUID()
+                        .toString()
+                        .toUpperCase()
+                        .substring(0, EvoBancoConstants.Constants.DEVICE_ID_LENGTH);
+        persistentStorage.put(EvoBancoConstants.Storage.DEVICE_ID, deviceId);
 
+        return getReferenceOtp();
+    }
+
+    private String getReferenceOtp() {
+        try {
             SignatureDataEntity signatureDataEntity =
                     new SignatureDataEntity.Builder()
                             .withReferenceOtp("")
@@ -79,6 +83,8 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
 
             LinkingLoginResponse1 linkingLoginResponse1 =
                     bankClient.link1(new LinkingLoginRequest(eeILinkingAndLoginEntity));
+
+            linkingLoginResponse1.handleReturnCode();
 
             return linkingLoginResponse1.getEeOLinkingAndLogin().getAnswer().getReferenceotp();
         } catch (HttpResponseException e) {
