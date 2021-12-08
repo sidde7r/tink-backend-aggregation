@@ -1,9 +1,13 @@
 package se.tink.agent.sdk.user_interaction;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import javax.annotation.Nullable;
+import se.tink.agent.sdk.user_interaction.swedish_mobile_bankid.SwedishMobileBankIdInfo;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UserInteraction<T> {
     private final UserInteractionType type;
@@ -17,7 +21,8 @@ public class UserInteraction<T> {
             boolean userResponseRequired,
             @Nullable String customResponseKey) {
         this.type = type;
-        this.payload = payload;
+        this.payload =
+                Preconditions.checkNotNull(payload, "UserInteraction payload cannot be null.");
         this.userResponseRequired = userResponseRequired;
         this.customResponseKey = customResponseKey;
     }
@@ -26,8 +31,8 @@ public class UserInteraction<T> {
         return type;
     }
 
-    public T getPayload() {
-        return payload;
+    public String getPayload() {
+        return Strings.emptyToNull(SerializationUtils.serializeToString(payload));
     }
 
     public boolean isUserResponseRequired() {
@@ -48,9 +53,9 @@ public class UserInteraction<T> {
         return new UserInteractionBuilder<>(UserInteractionType.SUPPLEMENTAL_INFORMATION, fields);
     }
 
-    public static UserInteraction<String> swedishMobileBankId(@Nullable String autostartToken) {
-        return new UserInteractionBuilder<>(
-                        UserInteractionType.SWEDISH_MOBILE_BANKID, autostartToken)
+    public static UserInteraction<SwedishMobileBankIdInfo> swedishMobileBankId(
+            SwedishMobileBankIdInfo appInfo) {
+        return new UserInteractionBuilder<>(UserInteractionType.SWEDISH_MOBILE_BANKID, appInfo)
                 .build();
     }
 }

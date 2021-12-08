@@ -10,8 +10,13 @@ java_library_with_sources(
         "//src/agent_sdk:lombok_plugin",
     ],
     intdeps = [
+        "@tink_backend//src/libraries/serialization_utils",
         "//src/agent_sdk/sdk/src/models/field",
+        "//src/agent_sdk/sdk/src/user_interaction/swedish_mobile_bankid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
     ],
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/agent_sdk/sdk/src/user_interaction/swedish_mobile_bankid",
+    ],
 )
