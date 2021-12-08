@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.rpc.EERpcResponse;
@@ -15,7 +16,8 @@ public abstract class EEBaseLoginResponse implements EERpcResponse {
             switch (getErrors().get().getShowCode()) {
                 case EvoBancoConstants.ErrorCodes.AUTHENTICATION_ERROR:
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
-
+                case EvoBancoConstants.ErrorCodes.CLIENT_IDENTIFICATION_ERROR:
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 default:
                     throw new IllegalStateException(
                             "Unknown unsuccessful return code " + getErrors().get().toString());
