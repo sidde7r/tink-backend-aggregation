@@ -124,7 +124,8 @@ public class Sparebank1Constants {
 
     public static final class Encryption {
         public static final String KEY =
-                "PniCq(]}Ft\"8]xC-java.lang.String(vYO3Z}lxqcbxK_522Q/U?_0]qT>y?Wz_.YxK7JwJ$8Ja2;99QY?i^,<job&uH3-t(ZLMaT%umLx?'\"6X_W:OA^'DK\",OWxR6u]-uUYTJPzy5z{o";
+                "#*-.>i9-(3]8h[d5java.lang.String(zZ#[cR(c&yu~A6ahE`'%mf_|iuZ;o*Xs,T6|H!NB`9/iAu[$:`W8e`_>/eu/*6Oy0j^Dm=spQ!a}+oOvT#D*Rm2<:|_Ei_,S-H5rLvA{%5U\"S#2";
+        public static final String KEY_ID = "2021-48";
     }
 
     public static final class Claims {

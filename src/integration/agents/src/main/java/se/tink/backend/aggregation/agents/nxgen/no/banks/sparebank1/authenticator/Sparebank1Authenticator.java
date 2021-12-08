@@ -203,7 +203,7 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
         JWTClaimsSet claimsSet = buildClaims(identity);
         JWSHeader header =
                 new JWSHeader.Builder(JWSAlgorithm.HS512)
-                        .keyID("2021-03")
+                        .keyID(Encryption.KEY_ID)
                         .type(JOSEObjectType.JWT)
                         .build();
         SignedJWT signedJWT = new SignedJWT(header, claimsSet);
