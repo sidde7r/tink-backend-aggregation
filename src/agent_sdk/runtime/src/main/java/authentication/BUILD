@@ -11,6 +11,7 @@ java_library(
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/generic",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/oauth2",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/oauth2_decoupled_app",
+        "//src/agent_sdk/runtime/src/main/java/authentication/processes/swedish_mobile_bankid",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/thirdparty_app",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/username_password",
         "//src/agent_sdk/runtime/src/main/java/instance",
