@@ -1,11 +1,10 @@
 package se.tink.agent.runtime.operation;
 
-import com.google.common.collect.ImmutableList;
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionBuilder;
-import se.tink.backend.agents.rpc.Field;
+import se.tink.agent.sdk.user_interaction.supplemental_information.SupplementalInformation;
 
 // TODO: move this class
 public class MultifactorAuthenticationStateImpl implements MultifactorAuthenticationState {
@@ -28,8 +27,10 @@ public class MultifactorAuthenticationStateImpl implements MultifactorAuthentica
     }
 
     @Override
-    public UserInteraction<ImmutableList<Field>> intoUserInteraction(ImmutableList<Field> fields) {
-        return setUserResponseRequired(UserInteraction.supplementalInformation(fields));
+    public UserInteraction<SupplementalInformation> intoUserInteraction(
+            SupplementalInformation supplementalInformation) {
+        return setUserResponseRequired(
+                UserInteraction.supplementalInformation(supplementalInformation));
     }
 
     private <T> UserInteraction<T> setUserResponseRequired(UserInteractionBuilder<T> builder) {
