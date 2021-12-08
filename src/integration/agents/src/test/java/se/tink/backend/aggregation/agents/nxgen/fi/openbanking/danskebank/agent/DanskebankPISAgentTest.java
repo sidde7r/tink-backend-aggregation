@@ -50,22 +50,37 @@ public class DanskebankPISAgentTest {
     }
 
     @Test
-    public void testDomesticPayment() throws Exception {
+    public void testDomesticPaymentWithStructuredInfo() throws Exception {
         builder.build()
-                .testGenericPaymentUKOB(createPayment().withExecutionDate(LocalDate.now()).build());
+                .testGenericPaymentUKOB(
+                        createPayment(true).withExecutionDate(LocalDate.now()).build());
     }
 
-    private Payment.Builder createPayment() {
+    @Test
+    public void testDomesticPaymentWithUnstructuredInfo() throws Exception {
+        builder.build()
+                .testGenericPaymentUKOB(
+                        createPayment(false).withExecutionDate(LocalDate.now()).build());
+    }
+
+    private Payment.Builder createPayment(boolean isStructured) {
         String paymentId = preparePaymentId();
         System.out.println("Running payment: " + paymentId);
 
-        return createRealPayment(paymentId).withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
+        return createRealPayment(paymentId, isStructured)
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
     }
 
-    private Payment.Builder createRealPayment(String paymentId) {
+    private Payment.Builder createRealPayment(String paymentId, boolean isStructured) {
+
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue(paymentId);
-        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        if (isStructured) {
+            remittanceInformation.setType(RemittanceInformationType.REFERENCE);
+
+        } else {
+            remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        }
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
@@ -86,9 +101,9 @@ public class DanskebankPISAgentTest {
     }
 
     private String preparePaymentId() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd--HH-mm-ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
         String dateNow = LocalDateTime.now().format(formatter);
-        return "Tink Test-" + dateNow;
+        return "TinkTest-" + dateNow;
     }
 
     @AfterClass
