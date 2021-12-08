@@ -23,7 +23,7 @@ public class Oauth2DecoupledAppAuthenticationProcess
             AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateOauth2DecoupledApp.class)
-                .map(AuthenticateOauth2DecoupledApp::oauth2DecoupledAppAuthenticator);
+                .map(AuthenticateOauth2DecoupledApp::authenticator);
     }
 
     @Override

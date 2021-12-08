@@ -22,7 +22,7 @@ public class ThirdPartyAppAuthenticationProcess
             AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateThirdPartyApp.class)
-                .map(AuthenticateThirdPartyApp::thirdPartyAppAuthenticator);
+                .map(AuthenticateThirdPartyApp::authenticator);
     }
 
     @Override
