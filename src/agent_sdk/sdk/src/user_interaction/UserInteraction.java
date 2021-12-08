@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UserInteraction<T> {
     private final UserInteractionType type;
@@ -26,8 +27,11 @@ public class UserInteraction<T> {
         return type;
     }
 
-    public T getPayload() {
-        return payload;
+    public String getPayload() {
+        if (payload instanceof String) {
+            return (String) payload;
+        }
+        return SerializationUtils.serializeToString(payload);
     }
 
     public boolean isUserResponseRequired() {
