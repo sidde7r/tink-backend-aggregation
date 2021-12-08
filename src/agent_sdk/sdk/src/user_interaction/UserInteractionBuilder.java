@@ -1,11 +1,13 @@
 package se.tink.agent.sdk.user_interaction;
 
 public class UserInteractionBuilder<T> {
+    private final UserInteractionType type;
     private final T payload;
     private boolean userResponseRequired = false;
     private String customResponseKey = null;
 
-    UserInteractionBuilder(T payload) {
+    UserInteractionBuilder(UserInteractionType type, T payload) {
+        this.type = type;
         this.payload = payload;
     }
 
@@ -22,6 +24,6 @@ public class UserInteractionBuilder<T> {
 
     public UserInteraction<T> build() {
         return new UserInteraction<>(
-                this.payload, this.userResponseRequired, this.customResponseKey);
+                this.type, this.payload, this.userResponseRequired, this.customResponseKey);
     }
 }

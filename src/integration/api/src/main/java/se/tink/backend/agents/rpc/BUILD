@@ -1,4 +1,3 @@
-load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
@@ -19,23 +18,10 @@ java_library_with_sources(
     visibility = ["//visibility:public"],
 )
 
-java_library(
+java_library_with_sources(
     name = "rpc",
     srcs = glob(["*.java"]),
-    visibility = ["//visibility:public"],
-    exports = [
-        ":field",
-    ],
-    deps = [
-        ":field",
-        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
-        "//src/integration/amount",
-        "//src/integration/credentials:demo",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
-        "//src/libraries/serialization",
-        "//src/libraries/strings",
-        "//src/libraries/uuid",
+    extdeps = [
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_lang3",
@@ -44,9 +30,24 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/account/proto:java_account_party_proto",
+    ],
+    intdeps = [
+        ":field",
+        "//src/integration/credentials:demo",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
+        "//src/integration/amount",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
+        "//src/libraries/serialization",
+        "@tink_backend//src/libraries/strings",
+        "@tink_backend//src/libraries/uuid",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/accountholder",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/provider",
+    ],
+    visibility = ["//visibility:public"],
+    exports = [
+        ":field",
     ],
 )

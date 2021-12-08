@@ -1,16 +1,17 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "demo",
     srcs = glob(["src/main/**/demo/*.java"]),
+    extdeps = [
+        "@aggregation//:com_google_guava_guava",
+    ],
     visibility = [
         "//src/integration:__subpackages__",
         "//src/libraries/social_security_number:__pkg__",
-    ],
-    deps = [
-        "@aggregation//:com_google_guava_guava",
     ],
 )
 

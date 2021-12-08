@@ -1,12 +1,9 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "agent-storage",
     srcs = glob(["*.java"]),
-    visibility = ["//visibility:public"],
-    deps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
-        "//src/libraries/serialization",
+    extdeps = [
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
@@ -14,4 +11,9 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_reactivex_rxjava3_rxjava",
     ],
+    intdeps = [
+        "//src/libraries/serialization",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
+    ],
+    visibility = ["//visibility:public"],
 )

@@ -1,42 +1,46 @@
-package se.tink.agent.runtime.authentication.processes.thirdparty_app;
+package se.tink.agent.runtime.authentication.processes.swedish_mobile_bankid;
 
 import java.util.Optional;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
-import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppAuthenticator;
+import se.tink.agent.sdk.authentication.authenticators.swedish_mobile_bankid.SwedishMobileBankIdAuthenticator;
+import se.tink.agent.sdk.authentication.authenticators.swedish_mobile_bankid.steps.SwedishMobileBankIdOpenAppStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppInitStep;
-import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppOpenAppStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppPollStep;
 import se.tink.agent.sdk.authentication.common_steps.GetConsentLifetimeStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
-import se.tink.agent.sdk.authentication.features.AuthenticateThirdPartyApp;
+import se.tink.agent.sdk.authentication.features.AuthenticateSwedishMobileBankId;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.utils.Sleeper;
 
-public class ThirdPartyAppAuthenticationProcess
-        implements AuthenticationProcess<ThirdPartyAppAuthenticator> {
+public class SwedishMobileBankIdAuthenticationProcess
+        implements AuthenticationProcess<SwedishMobileBankIdAuthenticator> {
+
     @Override
-    public Optional<ThirdPartyAppAuthenticator> instantiateAuthenticator(
+    public Optional<SwedishMobileBankIdAuthenticator> instantiateAuthenticator(
             AgentInstance agentInstance) {
         return agentInstance
-                .instanceOf(AuthenticateThirdPartyApp.class)
-                .map(AuthenticateThirdPartyApp::authenticator);
+                .instanceOf(AuthenticateSwedishMobileBankId.class)
+                .map(AuthenticateSwedishMobileBankId::authenticator);
     }
 
     @Override
     public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
-            ThirdPartyAppAuthenticator authenticator) {
+            SwedishMobileBankIdAuthenticator authenticator) {
         Sleeper sleeper = null;
         return AuthenticationFlow.builder(
-                        new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
-                .addStep(new ThirdPartyAppOpenAppStep(authenticator, ThirdPartyAppPollStep.class))
+                        new ThirdPartyAppInitStep(
+                                authenticator, SwedishMobileBankIdOpenAppStep.class))
+                .addStep(
+                        new SwedishMobileBankIdOpenAppStep(
+                                authenticator, ThirdPartyAppPollStep.class))
                 .addStep(
                         new ThirdPartyAppPollStep(
                                 authenticator,
                                 sleeper,
-                                ThirdPartyAppOpenAppStep.class,
+                                SwedishMobileBankIdOpenAppStep.class,
                                 GetConsentLifetimeStep.class))
                 .addStep(new GetConsentLifetimeStep(authenticator))
                 .build();
@@ -44,7 +48,7 @@ public class ThirdPartyAppAuthenticationProcess
 
     @Override
     public AuthenticationFlow<ExistingConsentStep> getUseExistingConsentFlow(
-            ThirdPartyAppAuthenticator authenticator) {
+            SwedishMobileBankIdAuthenticator authenticator) {
         return AuthenticationFlow.builder(new VerifyBankConnectionStep(authenticator)).build();
     }
 }

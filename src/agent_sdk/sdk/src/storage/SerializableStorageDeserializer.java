@@ -1,6 +1,5 @@
 package se.tink.agent.sdk.storage;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -21,7 +20,7 @@ public class SerializableStorageDeserializer extends StdDeserializer<Serializabl
 
     @Override
     public SerializableStorage deserialize(JsonParser parser, DeserializationContext ctxt)
-            throws IOException, JacksonException {
+            throws IOException {
         HashMap<String, String> storage =
                 parser.readValueAs(new TypeReference<Map<String, String>>() {});
         return new SerializableStorage(storage);

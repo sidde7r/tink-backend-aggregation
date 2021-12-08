@@ -3,5 +3,5 @@ package se.tink.agent.sdk.authentication.features;
 import se.tink.agent.sdk.authentication.authenticators.generic.GenericAuthenticator;
 
 public interface AuthenticateGeneric {
-    GenericAuthenticator genericAuthenticator();
+    GenericAuthenticator authenticator();
 }

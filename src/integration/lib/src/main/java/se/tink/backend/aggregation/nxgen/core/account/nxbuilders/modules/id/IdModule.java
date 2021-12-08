@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import se.tink.agent.sdk.storage.SerializableReference;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.AccountNameStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.AccountNumberStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
@@ -24,6 +25,7 @@ public final class IdModule {
     private final String accountName;
     private final String productName;
     private final Set<AccountIdentifier> identifiers;
+    private final SerializableReference bankApiReference;
 
     private IdModule(Builder builder) {
         this.uniqueId = builder.uniqueIdentifier;
@@ -31,10 +33,15 @@ public final class IdModule {
         this.accountName = builder.accountName;
         this.identifiers = builder.identifiers;
         this.productName = builder.productName;
+        this.bankApiReference = builder.bankApiReference;
     }
 
     public static UniqueIdStep<IdBuildStep> builder() {
         return new Builder();
+    }
+
+    public SerializableReference getBankApiReference() {
+        return bankApiReference;
     }
 
     public String getUniqueId() {
@@ -68,6 +75,7 @@ public final class IdModule {
         private String accountNumber;
         private String accountName;
         private String productName;
+        private SerializableReference bankApiReference;
 
         @Override
         public AccountNameStep<IdBuildStep> withAccountNumber(@Nonnull String accountNumber) {
@@ -124,6 +132,18 @@ public final class IdModule {
                     "UniqueIdentifier was empty after sanitation.");
 
             this.uniqueIdentifier = trimmedIdentifier;
+            return this;
+        }
+
+        @Override
+        public IdBuildStep setBankApiReference(String reference) {
+            this.bankApiReference = SerializableReference.from(reference);
+            return this;
+        }
+
+        @Override
+        public IdBuildStep setBankApiReference(Object reference) {
+            this.bankApiReference = SerializableReference.from(reference);
             return this;
         }
 

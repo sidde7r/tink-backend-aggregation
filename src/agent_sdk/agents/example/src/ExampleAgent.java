@@ -58,7 +58,7 @@ public class ExampleAgent
     }
 
     @Override
-    public Oauth2Authenticator oauth2Authenticator() {
+    public Oauth2Authenticator authenticator() {
         return new ExampleOauth2Authenticator();
     }
 

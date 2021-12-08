@@ -14,7 +14,7 @@ public class GenericAuthenticationProcess implements AuthenticationProcess<Gener
     public Optional<GenericAuthenticator> instantiateAuthenticator(AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateGeneric.class)
-                .map(AuthenticateGeneric::genericAuthenticator);
+                .map(AuthenticateGeneric::authenticator);
     }
 
     @Override
