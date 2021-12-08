@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authen
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaGetRequestSignFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaPostRequestSignFilter;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaResponseHandler;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaAccountCreditCardFetcher;
@@ -120,6 +121,8 @@ public final class BoursoramaAgent extends NextGenerationAgent
                         componentProvider.getLocalDateTimeSource(), boursoramaHolderNamesExtractor);
 
         this.identityFetcher = getIdentityFetcher();
+
+        this.client.setResponseStatusHandler(new BoursoramaResponseHandler());
     }
 
     @Override
