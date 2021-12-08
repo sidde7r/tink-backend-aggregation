@@ -5,17 +5,17 @@
     "exactBalance" : {
       "currencyCode" : "EUR",
       "doubleValue" : 1852.48,
-      "unscaledValue" : 185248,
+      "exactValue" : 1852.48,
       "scale" : 2,
-      "exactValue" : 1852.48
+      "unscaledValue" : 185248
     },
     "currencyCode" : "EUR",
     "availableBalance" : {
       "currencyCode" : "EUR",
       "doubleValue" : 1852.48,
-      "unscaledValue" : 185248,
+      "exactValue" : 1852.48,
       "scale" : 2,
-      "exactValue" : 1852.48
+      "unscaledValue" : 185248
     },
     "bankId" : "LT551592381537588511",
     "excluded" : false,
@@ -69,7 +69,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "JONAS SATKAUSKAS",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -99,7 +98,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "Firstname Lastname",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -129,7 +127,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "SEB bankas",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -159,7 +156,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "UAB \"TELE2\"",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -189,7 +185,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "ADB  \"Gjensidige\"",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -219,7 +214,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "HDS RETAIL GP DOO BEOG\\BUDIMSKA 2             \\BEOGRAD      \\11000     SRBSRB",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -249,7 +243,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "Firstname Lastname",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -279,7 +272,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "HDS RETAIL GP DOO BEOG\\BUDIMSKA 2             \\BEOGRAD      \\11000     SRBSRB",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -309,7 +301,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "HDS RETAIL GP DOO BEOG\\BUDIMSKA 2             \\BEOGRAD      \\11000     SRBSRB",
     "providerMarket" : "LT",
     "booked" : true
   }, {
@@ -339,7 +330,6 @@
         "instant" : null
       }
     } ],
-    "merchantName" : "UAB TERASA\\VILNIAUS G. 28-120\\VILNIUS\\UNKNOWN      LTU",
     "providerMarket" : "LT",
     "booked" : true
   } ]
