@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher;
 
+import static java.util.Objects.nonNull;
+
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ public class KnabAccountFetcher implements AccountFetcher<TransactionalAccount> 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccounts().stream()
+                .filter(this::onlyAccountsWithIban)
                 .map(this::getAccountWithBalance)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -28,5 +31,9 @@ public class KnabAccountFetcher implements AccountFetcher<TransactionalAccount> 
         BalancesResponse balancesResponse = apiClient.fetchAccountBalance(account.getResourceId());
 
         return account.toTinkAccount(balancesResponse.getBalances());
+    }
+
+    private boolean onlyAccountsWithIban(AccountEntity account) {
+        return nonNull(account.getIban());
     }
 }

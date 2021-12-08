@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.ent
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -17,18 +18,18 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 @SuppressWarnings("UnusedDeclaration")
 public class AccountEntity {
 
-    private String resourceId;
-    private String iban;
+    @Getter private String resourceId;
+
+    @Getter private String iban;
+
     private String currency;
+
     private String name;
+
     private String product;
 
     @JsonProperty("_links")
     private AccountsLinksEntity links;
-
-    public String getResourceId() {
-        return resourceId;
-    }
 
     public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> balances) {
         return TransactionalAccount.nxBuilder()
@@ -41,7 +42,8 @@ public class AccountEntity {
                                 .withAccountNumber(iban)
                                 .withAccountName(product)
                                 .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.IBAN, iban, null))
                                 .build())
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
