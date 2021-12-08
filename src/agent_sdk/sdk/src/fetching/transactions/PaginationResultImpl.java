@@ -9,11 +9,11 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @EqualsAndHashCode
 public class PaginationResultImpl implements PaginationResult {
 
-    private static final List<Transaction> EMPTY_LIST = Collections.emptyList();
-    private final List<Transaction> transactions;
+    private static final List<? extends Transaction> EMPTY_LIST = Collections.emptyList();
+    private final List<? extends Transaction> transactions;
     private final Boolean canFetchMore;
 
-    private PaginationResultImpl(List<Transaction> transactions, Boolean canFetchMore) {
+    private PaginationResultImpl(List<? extends Transaction> transactions, Boolean canFetchMore) {
         this.transactions = transactions;
         this.canFetchMore = canFetchMore;
     }
@@ -43,16 +43,17 @@ public class PaginationResultImpl implements PaginationResult {
         return new PaginationResultImpl(EMPTY_LIST, false);
     }
 
-    public static PaginationResult create(List<Transaction> transactions) {
+    public static PaginationResult create(List<? extends Transaction> transactions) {
         return new PaginationResultImpl(transactions, null);
     }
 
-    public static PaginationResult create(List<Transaction> transactions, boolean canFetchMore) {
+    public static PaginationResult create(
+            List<? extends Transaction> transactions, boolean canFetchMore) {
         return new PaginationResultImpl(transactions, canFetchMore);
     }
 
     @Override
-    public List<Transaction> getTinkTransactions() {
+    public List<? extends Transaction> getTinkTransactions() {
         return transactions;
     }
 
