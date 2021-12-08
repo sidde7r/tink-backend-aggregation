@@ -7,6 +7,7 @@ import org.junit.Test;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionType;
+import se.tink.agent.sdk.user_interaction.swedish_mobile_bankid.SwedishMobileBankIdInfo;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -49,8 +50,10 @@ public class UserInteractionTest {
 
     @Test
     public void testSwedishMobileBankIdWithAutostartToken() {
-        UserInteraction<String> userInteraction =
-                UserInteraction.swedishMobileBankId("54b3d400-9cac-486e-8372-7001bb0b7d2c");
+        UserInteraction<SwedishMobileBankIdInfo> userInteraction =
+                UserInteraction.swedishMobileBankId(
+                        SwedishMobileBankIdInfo.withAutostartToken(
+                                "54b3d400-9cac-486e-8372-7001bb0b7d2c"));
 
         Assert.assertEquals(UserInteractionType.SWEDISH_MOBILE_BANKID, userInteraction.getType());
         Assert.assertEquals(Optional.empty(), userInteraction.getCustomResponseKey());
@@ -63,7 +66,9 @@ public class UserInteractionTest {
 
     @Test
     public void testSwedishMobileBankIdWithoutAutostartToken() {
-        UserInteraction<String> userInteraction = UserInteraction.swedishMobileBankId(null);
+        UserInteraction<SwedishMobileBankIdInfo> userInteraction =
+                UserInteraction.swedishMobileBankId(
+                        SwedishMobileBankIdInfo.withoutAutostartToken());
 
         Assert.assertEquals(UserInteractionType.SWEDISH_MOBILE_BANKID, userInteraction.getType());
         Assert.assertEquals(Optional.empty(), userInteraction.getCustomResponseKey());
