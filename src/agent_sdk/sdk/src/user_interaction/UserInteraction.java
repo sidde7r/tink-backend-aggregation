@@ -2,11 +2,10 @@ package se.tink.agent.sdk.user_interaction;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import javax.annotation.Nullable;
+import se.tink.agent.sdk.user_interaction.supplemental_information.SupplementalInformation;
 import se.tink.agent.sdk.user_interaction.swedish_mobile_bankid.SwedishMobileBankIdInfo;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UserInteraction<T> {
@@ -48,9 +47,10 @@ public class UserInteraction<T> {
         return new UserInteractionBuilder<>(UserInteractionType.THIRD_PARTY_APP, appInfo);
     }
 
-    public static UserInteractionBuilder<ImmutableList<Field>> supplementalInformation(
-            ImmutableList<Field> fields) {
-        return new UserInteractionBuilder<>(UserInteractionType.SUPPLEMENTAL_INFORMATION, fields);
+    public static UserInteractionBuilder<SupplementalInformation> supplementalInformation(
+            SupplementalInformation supplementalInformation) {
+        return new UserInteractionBuilder<>(
+                UserInteractionType.SUPPLEMENTAL_INFORMATION, supplementalInformation);
     }
 
     public static UserInteraction<SwedishMobileBankIdInfo> swedishMobileBankId(

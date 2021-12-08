@@ -1,12 +1,12 @@
 package src.agent_sdk.sdk.test.user_interaction;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionType;
+import se.tink.agent.sdk.user_interaction.supplemental_information.SupplementalInformation;
 import se.tink.agent.sdk.user_interaction.swedish_mobile_bankid.SwedishMobileBankIdInfo;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -29,13 +29,14 @@ public class UserInteractionTest {
 
     @Test
     public void testSupplementalInformation() {
-        ImmutableList<Field> fields =
-                ImmutableList.<Field>builder()
-                        .add(Field.builder().name("foo").description("something").build())
-                        .add(Field.builder().name("bar").description("something else").build())
-                        .build();
-        UserInteraction<ImmutableList<Field>> userInteraction =
-                UserInteraction.supplementalInformation(fields).build();
+
+        SupplementalInformation supplementalInformation =
+                SupplementalInformation.from(
+                        Field.builder().name("foo").description("something").build(),
+                        Field.builder().name("bar").description("something else").build());
+
+        UserInteraction<SupplementalInformation> userInteraction =
+                UserInteraction.supplementalInformation(supplementalInformation).build();
 
         Assert.assertEquals(
                 UserInteractionType.SUPPLEMENTAL_INFORMATION, userInteraction.getType());
