@@ -21,7 +21,7 @@ public class PaymentAuthorizationCancelledByUserExceptionHandler
             PaymentAuthorizationCancelledByUserException exception, ExceptionHandlerInput input) {
         input.getMetricAction().cancelled();
 
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute payment due to authorisation cancelled by user.. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
                 exception.getMessage(),

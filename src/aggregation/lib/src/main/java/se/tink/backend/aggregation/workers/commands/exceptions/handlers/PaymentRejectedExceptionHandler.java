@@ -20,7 +20,7 @@ public class PaymentRejectedExceptionHandler implements ExceptionHandler<Payment
             PaymentRejectedException exception, ExceptionHandlerInput input) {
         input.getMetricAction().failed();
 
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute payment due to payment rejected by the bank. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
                 exception.getMessage(),

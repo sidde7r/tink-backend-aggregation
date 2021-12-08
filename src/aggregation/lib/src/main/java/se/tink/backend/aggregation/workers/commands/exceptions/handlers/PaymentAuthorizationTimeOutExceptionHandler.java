@@ -21,7 +21,7 @@ public class PaymentAuthorizationTimeOutExceptionHandler
             PaymentAuthorizationTimeOutException exception, ExceptionHandlerInput input) {
         input.getMetricAction().cancelled();
 
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute payment due to authorisation timeout. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
                 exception.getMessage(),

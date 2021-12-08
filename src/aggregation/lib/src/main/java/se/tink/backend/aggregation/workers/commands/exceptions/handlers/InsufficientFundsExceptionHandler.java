@@ -21,7 +21,7 @@ public class InsufficientFundsExceptionHandler
             InsufficientFundsException exception, ExceptionHandlerInput input) {
         input.getMetricAction().cancelled();
 
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute payment due insufficient funds. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
                 exception.getMessage(),

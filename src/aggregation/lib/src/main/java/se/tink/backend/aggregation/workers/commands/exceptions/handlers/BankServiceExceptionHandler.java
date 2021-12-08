@@ -22,7 +22,7 @@ public class BankServiceExceptionHandler implements ExceptionHandler<BankService
             BankServiceException exception, ExceptionHandlerInput input) {
         input.getMetricAction().unavailable();
 
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute transfer due to bank side failure. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
                 exception.getMessage(),

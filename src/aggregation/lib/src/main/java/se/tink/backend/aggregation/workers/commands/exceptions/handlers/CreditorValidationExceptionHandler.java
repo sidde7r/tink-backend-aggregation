@@ -20,7 +20,7 @@ public class CreditorValidationExceptionHandler
     public AgentWorkerCommandResult handleException(
             CreditorValidationException exception, ExceptionHandlerInput input) {
         input.getMetricAction().cancelled();
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute payment due to creditor validation failure. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
                 exception.getMessage(),

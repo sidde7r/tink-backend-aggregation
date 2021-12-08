@@ -20,7 +20,7 @@ public class PaymentExceptionHandler implements ExceptionHandler<PaymentExceptio
             PaymentException exception, ExceptionHandlerInput input) {
         input.getMetricAction().failed();
 
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute transfer due to Payment exception. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
                 exception.getMessage(),
