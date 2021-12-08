@@ -95,8 +95,8 @@ spec:
         )
 
     # =========== SHORT-TERM (1h) ===========
-    - alert: EXPERIMENTALRefreshErrorRateAbove10%GB
-      expr: 0.1 <= sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) <= 0.9
+    - alert: EXPERIMENTALRefreshErrorRateAbove20%GB
+      expr: 0.2 <= sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) <= 0.9
       for: 15m
       priority: P3
       labels:
@@ -121,8 +121,8 @@ spec:
         summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
-    - alert: EXPERIMENTALLoginErrorRateAbove10%GB
-      expr: 0.1 <= sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) <= 0.9
+    - alert: EXPERIMENTALLoginErrorRateAbove20%GB
+      expr: 0.2 <= sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) <= 0.9
       for: 15m
       priority: P3
       labels:
@@ -135,7 +135,7 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: EXPERIMENTALLoginErrorRateAbove90%GB
-      expr: sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 2) > 0.9
+      expr: sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
       for: 15m
       priority: P1
       labels:
@@ -185,7 +185,7 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: EXPERIMENTBankOrUserErrorRateAbove90%GB
-      expr: sum:unavailable_or_cancelled_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 2) > 0.9
+      expr: sum:unavailable_or_cancelled_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
       labels:
         severity: urgent
         priority: P2
