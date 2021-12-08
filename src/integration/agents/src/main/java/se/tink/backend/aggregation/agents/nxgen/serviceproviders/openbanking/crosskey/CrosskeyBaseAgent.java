@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
+import java.time.ZoneId;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -187,6 +188,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                                         new CrossKeyTransactionalAccountTransactionFetcher(
                                                 apiClient))
                                 .setLocalDateTimeSource(localDateTimeSource)
+                                .setZoneId(ZoneId.systemDefault())
                                 .build()));
     }
 
@@ -201,6 +203,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         new TransactionDatePaginationController.Builder<>(
                                         new CrossKeyCreditCardTransactionFetcher(apiClient))
                                 .setLocalDateTimeSource(localDateTimeSource)
+                                .setZoneId(ZoneId.systemDefault())
                                 .build()));
     }
 }
