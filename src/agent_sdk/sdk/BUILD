@@ -6,6 +6,7 @@ java_library_with_sources(
     extdeps = [
         "@agent_sdk_maven//:com_google_code_findbugs_jsr305",
         "@agent_sdk_maven//:com_google_guava_guava",
+        "@agent_sdk_maven//:org_apache_commons_commons_lang3",
         "@agent_sdk_maven//:org_projectlombok_lombok",
         "@agent_sdk_maven//:org_slf4j_slf4j_api",
         "//src/agent_sdk:lombok_plugin",
@@ -61,6 +62,7 @@ java_library_with_sources(
         "@agent_sdk_maven//:com_google_code_findbugs_jsr305",
         "@agent_sdk_maven//:com_google_guava_guava",
         "@agent_sdk_maven//:javax_inject_javax_inject",
+        "@agent_sdk_maven//:org_apache_commons_commons_lang3",
         "@agent_sdk_maven//:org_projectlombok_lombok",
         "@agent_sdk_maven//:org_slf4j_slf4j_api",
     ],
