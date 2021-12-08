@@ -49,4 +49,10 @@ public class UserInteraction<T> {
             ImmutableList<Field> fields) {
         return new UserInteractionBuilder<>(UserInteractionType.SUPPLEMENTAL_INFORMATION, fields);
     }
+
+    public static UserInteraction<String> swedishMobileBankId(@Nullable String autostartToken) {
+        return new UserInteractionBuilder<>(
+                        UserInteractionType.SWEDISH_MOBILE_BANKID, autostartToken)
+                .build();
+    }
 }
