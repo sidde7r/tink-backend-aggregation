@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
+import se.tink.agent.sdk.operation.User;
 import se.tink.agent.sdk.storage.Storage;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExistingConsentRequest {
+    private final User user;
     private final StaticBankCredentials staticBankCredentials;
 
     // This storage/state should be used by authentication steps to not interfere with agent's
@@ -16,6 +18,10 @@ public class ExistingConsentRequest {
     private final Storage authenticationStorage;
 
     private final Storage agentStorage;
+
+    public User getUser() {
+        return user;
+    }
 
     public StaticBankCredentials getStaticBankCredentials() {
         return staticBankCredentials;
