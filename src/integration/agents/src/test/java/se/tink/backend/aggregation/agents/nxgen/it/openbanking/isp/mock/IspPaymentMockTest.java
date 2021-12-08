@@ -32,8 +32,8 @@ public class IspPaymentMockTest {
     private static final String SINGLE_PAYMENT_RJCT_FILE =
             BASE_PATH + "isp-single-payment_rjct.aap";
 
-    private static final String SINGLE_PAYMENT_TIMEOUT_FILE =
-            BASE_PATH + "isp-single-payment_timeout.aap";
+    private static final String SINGLE_PAYMENT_OPERATION_NOT_ALLOWED_FILE =
+            BASE_PATH + "isp-single-payment_operation_not_allowed.aap";
 
     @Test
     public void testSinglePaymentAccepted() throws Exception {
@@ -48,7 +48,8 @@ public class IspPaymentMockTest {
                                 MarketCode.IT, "it-isp-oauth2", SINGLE_PAYMENT_ACCP_FILE)
                         .withConfigurationFile(configuration)
                         .withPayment(payment.build())
-                        .addCallbackData("tpcb_00000000-0000-4000-0000-000000000000", "success")
+                        .addCallbackData("state", "00000000-0000-4000-0000-000000000000")
+                        .addCallbackData("result", "success")
                         .buildWithoutLogin(PaymentCommand.class);
 
         // then
@@ -69,7 +70,8 @@ public class IspPaymentMockTest {
                                 MarketCode.IT, "it-isp-oauth2", SINGLE_PAYMENT_RJCT_FILE)
                         .withConfigurationFile(configuration)
                         .withPayment(payment.build())
-                        .addCallbackData("tpcb_00000000-0000-4000-0000-000000000000", "failure")
+                        .addCallbackData("state", "00000000-0000-4000-0000-000000000000")
+                        .addCallbackData("result", "success")
                         .buildWithoutLogin(PaymentCommand.class);
 
         // when
@@ -77,6 +79,30 @@ public class IspPaymentMockTest {
 
         // then
         assertThat(throwable).isInstanceOf(PaymentRejectedException.class);
+    }
+
+    @Test
+    public void testSinglePaymentFailedDueToFailedLogin() throws Exception {
+        // given
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+
+        Builder payment = createSinglePayment();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.IT, "it-isp-oauth2", SINGLE_PAYMENT_ACCP_FILE)
+                        .withConfigurationFile(configuration)
+                        .withPayment(payment.build())
+                        .addCallbackData("state", "00000000-0000-4000-0000-000000000000")
+                        .addCallbackData("result", "failure")
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        // when
+        Throwable throwable = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        assertThat(throwable).isInstanceOf(PaymentAuthorizationException.class);
     }
 
     @Test
@@ -89,7 +115,9 @@ public class IspPaymentMockTest {
 
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(
-                                MarketCode.IT, "it-isp-oauth2", SINGLE_PAYMENT_TIMEOUT_FILE)
+                                MarketCode.IT,
+                                "it-isp-oauth2",
+                                SINGLE_PAYMENT_OPERATION_NOT_ALLOWED_FILE)
                         .withConfigurationFile(configuration)
                         .withPayment(payment.build())
                         .buildWithoutLogin(PaymentCommand.class);

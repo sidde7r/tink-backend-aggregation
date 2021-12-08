@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -24,8 +25,8 @@ public class MpsPaymentMockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/mps/mock/resources/";
 
     private static final String CONFIGURATION_FILE = BASE_PATH + "configuration.yml";
-    private static final String SINGLE_PAYMENT_TIMEOUT_FILE =
-            BASE_PATH + "mps-single-payment_timeout.aap";
+    private static final String SINGLE_PAYMENT_UNKNOWN_FILE =
+            BASE_PATH + "mps-single-payment_unknown_payment.aap";
 
     @Test
     public void testSinglePaymentTimeout() throws Exception {
@@ -37,7 +38,7 @@ public class MpsPaymentMockTest {
 
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(
-                                MarketCode.IT, "it-mps-oauth2", SINGLE_PAYMENT_TIMEOUT_FILE)
+                                MarketCode.IT, "it-mps-oauth2", SINGLE_PAYMENT_UNKNOWN_FILE)
                         .withConfigurationFile(configuration)
                         .withPayment(payment.build())
                         .buildWithoutLogin(PaymentCommand.class);
@@ -47,6 +48,30 @@ public class MpsPaymentMockTest {
 
         // then
         assertThat(throwable).isInstanceOf(PaymentAuthorizationException.class);
+    }
+
+    @Test
+    public void testSinglePaymentUserCancelledLogin() throws Exception {
+        // given
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+
+        Builder payment = createSinglePayment();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.IT, "it-mps-oauth2", SINGLE_PAYMENT_UNKNOWN_FILE)
+                        .withConfigurationFile(configuration)
+                        .withPayment(payment.build())
+                        .addCallbackData("state", "00000000-0000-4000-0000-000000000000")
+                        .addCallbackData("result", "success")
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        // when
+        Throwable throwable = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        assertThat(throwable).isInstanceOf(PaymentAuthorizationCancelledByUserException.class);
     }
 
     private Builder createSinglePayment() {

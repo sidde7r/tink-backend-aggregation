@@ -34,8 +34,8 @@ aspsp-code: 01030
 date: Fri, 10 Apr 1992 12:00:00 UTC
 aspsp-product-code: retail
 tpp-redirect-preferred: true
-tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=code
-tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=code
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
+tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=failure
 psu-ip-address: 127.0.0.1
 
 {"debtorAccount":{"iban":"IT29D0300203280625969137225"},"instructedAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"IT45H0300203280271332616346"},"creditorName":"Creditor Name","transactionType":"remote_transaction","remittanceInformationUnstructured":"remittance information to creditor"}
