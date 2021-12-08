@@ -29,7 +29,7 @@ public class BelfiusConsentErrorFilter extends Filter {
     private void invalidateSessionOnNoActiveConsent(HttpResponse httpResponse) {
         if (httpResponse.getStatus() == 403
                 && httpResponse.hasBody()
-                && httpResponse.getBody(String.class).contains("no_active_consent")) {
+                && httpResponse.getBody(String.class).toLowerCase().contains("no_active_consent")) {
             log.info(
                     "{} Consent invalid. Force to manual authentication. Error response: {}.\nSession expiry date: {}\nIs session expired prematurely: {}",
                     NO_ACTIVE_CONSENT,

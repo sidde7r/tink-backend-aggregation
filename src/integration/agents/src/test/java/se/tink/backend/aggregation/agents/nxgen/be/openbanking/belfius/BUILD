@@ -4,6 +4,7 @@ junit_test(
     name = "belfius",
     srcs = glob(["**/*.java"]),
     data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius/authenticator/resources",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius/resources",
     ],
     visibility = ["//visibility:public"],

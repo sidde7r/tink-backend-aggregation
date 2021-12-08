@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,8 +18,11 @@ public class FetchAccountResponse {
     private BigDecimal balance;
     private String currency;
     private String iban;
+
+    @JsonProperty("account_name")
     private String accountName;
-    private String type;
+
+    private String product;
 
     public Optional<TransactionalAccount> toTinkAccount(String logicalId) {
         return TransactionalAccount.nxBuilder()
@@ -29,7 +33,7 @@ public class FetchAccountResponse {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(type)
+                                .withAccountName(product)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .addHolderName(accountName)

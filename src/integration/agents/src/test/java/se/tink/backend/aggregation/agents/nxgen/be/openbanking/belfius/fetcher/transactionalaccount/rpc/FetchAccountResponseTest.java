@@ -23,7 +23,7 @@ public class FetchAccountResponseTest {
         FieldUtils.writeDeclaredField(objectUnderTest, "balance", balance, true);
         FieldUtils.writeDeclaredField(objectUnderTest, "currency", currency, true);
         FieldUtils.writeDeclaredField(objectUnderTest, "iban", iban, true);
-        FieldUtils.writeDeclaredField(objectUnderTest, "type", accountType, true);
+        FieldUtils.writeDeclaredField(objectUnderTest, "product", accountType, true);
         FieldUtils.writeDeclaredField(objectUnderTest, "accountName", accountName, true);
         // when
         Optional<TransactionalAccount> result = objectUnderTest.toTinkAccount("logicalId");

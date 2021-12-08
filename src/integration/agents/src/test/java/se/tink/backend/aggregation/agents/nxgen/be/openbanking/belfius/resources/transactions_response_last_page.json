@@ -1,6 +1,6 @@
 {
-    "_embedded": {
-        "transactions": [
+    "transactions": {
+        "booked": [
             {
                 "transaction_ref": "090548887U403",
                 "counterparty_info": "Info info",

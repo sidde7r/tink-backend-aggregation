@@ -25,7 +25,7 @@ public class ErrorDiscoverTest {
         Mockito.when(response.getStatus()).thenReturn(403);
         Mockito.when(response.getBody(String.class))
                 .thenReturn(
-                        "{\"error_description\":\"This account can't be consulted via electronic channel\",\"error_code\":\"20003\",\"error\":\"channel_not_permitted\"}");
+                        "{\"error_description\":\"This account can't be consulted via electronic channel\",\"error_code\":\"20003\",\"error\":\"CHANNEL_NOT_PERMITTED\"}");
 
         // when
         boolean result = ErrorDiscover.isChannelNotPermitted(exception);

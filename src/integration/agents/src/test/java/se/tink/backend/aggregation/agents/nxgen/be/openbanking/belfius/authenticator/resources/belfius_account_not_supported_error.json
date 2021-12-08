@@ -1,0 +1,5 @@
+{
+    "error": "ACCOUNT_NOT_SUPPORTED",
+    "error_code": "B14800-3008-000000",
+    "error_description": "This account is not allowed for this type of request."
+}

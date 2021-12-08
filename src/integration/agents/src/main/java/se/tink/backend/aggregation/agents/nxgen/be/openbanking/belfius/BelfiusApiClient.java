@@ -88,8 +88,8 @@ public final class BelfiusApiClient {
         HttpResponse response = ex.getResponse();
         ErrorResponse body = response.getBody(ErrorResponse.class);
         return response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
-                && (ErrorCodes.ACCOUNT_NOT_SUPPORTED.equals(body.getErrorCode())
-                        || ErrorCodes.NOT_SUPPORTED.equals(body.getErrorCode()));
+                && (ErrorCodes.CHANNEL_NOT_PERMITTED.equalsIgnoreCase(body.getErrorCode())
+                        || ErrorCodes.ACCOUNT_NOT_SUPPORTED.equalsIgnoreCase(body.getErrorCode()));
     }
 
     public TokenResponse postToken(URL url, String tokenEntity) {
@@ -112,7 +112,8 @@ public final class BelfiusApiClient {
             HttpResponse response = e.getResponse();
             ErrorResponse responseBody = response.getBody(ErrorResponse.class);
             if (response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
-                    && ErrorCodes.NOT_SUPPORTED.equals(responseBody.getError())) {
+                    && ErrorCodes.ACCOUNT_NOT_SUPPORTED.equalsIgnoreCase(
+                            responseBody.getErrorCode())) {
                 throw new AccountRefreshException(responseBody.getErrorDescription());
             }
             throw e;

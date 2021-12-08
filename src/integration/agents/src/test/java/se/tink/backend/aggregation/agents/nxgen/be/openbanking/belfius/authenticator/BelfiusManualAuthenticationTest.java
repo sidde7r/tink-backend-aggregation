@@ -20,10 +20,12 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
@@ -54,6 +56,7 @@ public class BelfiusManualAuthenticationTest {
     private PersistentStorage persistentStorage;
     private BelfiusApiClient belfiusApiClient;
     private BelfiusTestFixture belfiusTestFixture;
+    private Map<String, String> callbackData;
     @Mock private Filter executionFilter;
     @Mock private HttpResponse response;
 
@@ -70,24 +73,23 @@ public class BelfiusManualAuthenticationTest {
         persistentStorage = new PersistentStorage();
         credentialsRequest = manualCredentialsRequest();
         credentials = credentialsRequest.getCredentials();
+        callbackData = new HashMap<>();
+        authenticationController =
+                authenticationController(new MockSupplementalInformationHelper(callbackData));
         setDefaultBankResponses();
     }
 
     @Test
     @Parameters(method = "callbackDataWithCorrespondingErrors")
     public void shouldThrowProperExceptionWhenNoCallbackCodeIsReturned(
-            Map<String, String> callbackData, Class<RuntimeException> exceptionClass) {
+            Map<String, String> testCallbackData, Class<RuntimeException> exceptionClass) {
         // given
         bankReturnsConsentResponse();
 
         // and
-        SupplementalInformationHelper supplementalInformationHelper =
-                new MockSupplementalInformationHelper(callbackData);
+        callbackDataIsReturned(testCallbackData);
 
-        // when
-        authenticationController = authenticationController(supplementalInformationHelper);
-
-        // then
+        // expect
         assertThatThrownBy(() -> authenticationController.authenticate(credentials))
                 .isExactlyInstanceOf(exceptionClass);
     }
@@ -96,9 +98,7 @@ public class BelfiusManualAuthenticationTest {
     @Parameters({"500", "501", "502", "503", "555"})
     public void shouldThrowProperExceptionWhenBankRespondsWith(int statusCode) {
         // given
-        SupplementalInformationHelper supplementalInformationHelper =
-                new MockSupplementalInformationHelper(validCallbackData());
-        authenticationController = authenticationController(supplementalInformationHelper);
+        callbackDataIsReturned(validCallbackData());
 
         // and
         bankRespondsWithGivenStatusWhenCreatingConsent(statusCode);
@@ -106,6 +106,25 @@ public class BelfiusManualAuthenticationTest {
         // expect
         assertThatThrownBy(() -> authenticationController.authenticate(credentials))
                 .isExactlyInstanceOf(BankServiceException.class);
+    }
+
+    @Test
+    @Parameters({
+        "belfius_channel_not_permitted_error.json",
+        "belfius_account_not_supported_error.json"
+    })
+    public void shouldThrowLoginNotSupportedExceptionWhenBankRespondsWith(
+            String errorResponseBody) {
+        // given
+        callbackDataIsReturned(validCallbackData());
+
+        // and
+        bankRespondsWith403StatusAndGivenBody(errorResponseBody);
+
+        // expect
+        assertThatThrownBy(() -> authenticationController.authenticate(credentials))
+                .isInstanceOf(LoginException.class)
+                .hasFieldOrPropertyWithValue("error", LoginError.NOT_SUPPORTED);
     }
 
     @SuppressWarnings("unused")
@@ -123,6 +142,15 @@ public class BelfiusManualAuthenticationTest {
             {noCallback(), ThirdPartyAppException.class},
             {emptyCallbackData(), NoCodeParamException.class}
         };
+    }
+
+    private void callbackDataIsReturned(Map<String, String> testCallbackData) {
+        if (testCallbackData != null) {
+            callbackData.putAll(testCallbackData);
+        } else {
+            authenticationController =
+                    authenticationController(new MockSupplementalInformationHelper(null));
+        }
     }
 
     private ImmutableMap<String, String> validCallbackData() {
@@ -179,6 +207,12 @@ public class BelfiusManualAuthenticationTest {
 
     private void bankRespondsWithGivenStatusWhenCreatingConsent(int statusCode) {
         given(response.getStatus()).willReturn(statusCode);
+    }
+
+    private void bankRespondsWith403StatusAndGivenBody(String responseBody) {
+        given(response.getStatus()).willReturn(403);
+        given(response.getBody(ErrorResponse.class))
+                .willReturn(belfiusTestFixture.errorResponse(responseBody));
     }
 
     private void bankReturnsConsentResponse() {

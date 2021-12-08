@@ -10,6 +10,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderReader;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.ErrorResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.libraries.credentials.service.UserAvailability;
@@ -54,6 +55,10 @@ public class BelfiusTestFixture {
 
     Credentials belfiusCredentials() {
         return fileContent("belfius_credentials.json", Credentials.class);
+    }
+
+    ErrorResponse errorResponse(String errorFileName) {
+        return fileContent(errorFileName, ErrorResponse.class);
     }
 
     @SneakyThrows

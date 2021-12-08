@@ -6,18 +6,19 @@ import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class EmbeddedEntity {
+public class TransactionsListEntity {
 
     @JsonProperty("next_page_key")
     private String nextPageKey;
 
-    private List<TransactionEntity> transactions;
+    @JsonProperty("booked")
+    private List<BookedTransactionEntity> bookedTransactionEntities;
 
     public String getNextPageKey() {
         return nextPageKey;
     }
 
-    public List<TransactionEntity> getTransactions() {
-        return ListUtils.emptyIfNull(transactions);
+    public List<BookedTransactionEntity> getTransactions() {
+        return ListUtils.emptyIfNull(bookedTransactionEntities);
     }
 }
