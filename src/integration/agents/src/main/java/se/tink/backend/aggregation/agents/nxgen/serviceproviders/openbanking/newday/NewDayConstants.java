@@ -9,4 +9,6 @@ public final class NewDayConstants {
     public static String getWellKnownUrlByBrand(final String brand) {
         return String.format(WELL_KNOWN_URL, brand);
     }
+
+    public static final String OFFLINE_ACCESS = "offline_access";
 }
