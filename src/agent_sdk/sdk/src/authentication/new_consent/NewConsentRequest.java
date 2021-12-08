@@ -6,13 +6,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
+import se.tink.agent.sdk.operation.User;
 import se.tink.agent.sdk.storage.Storage;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class NewConsentRequest {
-    // TODO: Add UserIP number etc?
+    private final User user;
     private final StaticBankCredentials staticBankCredentials;
     @Nullable private final UserResponseData userResponseData;
 
@@ -21,6 +22,10 @@ public class NewConsentRequest {
     private final Storage authenticationStorage;
 
     private final Storage agentStorage;
+
+    public User getUser() {
+        return user;
+    }
 
     public StaticBankCredentials getStaticBankCredentials() {
         return staticBankCredentials;
