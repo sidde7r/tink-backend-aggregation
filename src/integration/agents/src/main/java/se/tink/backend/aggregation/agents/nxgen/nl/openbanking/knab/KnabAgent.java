@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshake
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
-public class KnabAgent extends NextGenerationAgent
+public final class KnabAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private static final int MAX_RETRIES = 3;
