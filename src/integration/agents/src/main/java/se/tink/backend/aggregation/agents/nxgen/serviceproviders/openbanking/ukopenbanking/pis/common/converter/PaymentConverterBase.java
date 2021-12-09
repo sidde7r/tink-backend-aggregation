@@ -128,8 +128,10 @@ public abstract class PaymentConverterBase {
                 domesticPaymentInitiation.localInstrument(DK_LOCAL_INSTRUMENT_CODE);
                 return;
             default:
-                throw new IllegalArgumentException(
-                        (String.format("Unknown market: %s", marketCode)));
+                log.info(
+                        String.format(
+                                "Market code: %s is outside EU or not supported for EU Local Instrument.",
+                                marketCode));
         }
     }
 
