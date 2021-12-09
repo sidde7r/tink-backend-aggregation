@@ -1,0 +1,100 @@
+REQUEST 1
+POST https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"debtorAccount":{"iban":"DE55500107000004455730"},"creditorAccount":{"iban":"DE40300209005380419896"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"Test Creditor","remittanceInformationUnstructured":"SepaReferenceToCreditor","startDate":"2021-01-16","endDate":"2021-03-12","frequency":"Monthly","dayOfExecution":"10"}
+
+RESPONSE 1
+201
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+ASPSP-Notification-Support: ***
+Location: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{"transactionStatus":"RCVD","paymentId":"2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q","_links":{"self":{"href":"https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q"},"status":{"href":"https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/status"},"startAuthorisationWithPsuAuthentication":{"href":"https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations"}}}
+
+REQUEST 2
+POST https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 2
+201
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Aspsp-Sca-Approach: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{"chosenScaMethod":{"authenticationType":"SMS_OTP","authenticationMethodId":"901","name":"mobile TAN","explanation":"SMS"},"challengeData":{"additionalInformation":"Bitte geben Sie die TAN ein"},"_links":{"scaStatus":{"href":"https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/50e77329-1820-410b-b80d-55f49103293f"},"authoriseTransaction":{"href":"https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/50e77329-1820-410b-b80d-55f49103293f"}},"scaStatus":"scaMethodSelected","authorisationId":"50e77329-1820-410b-b80d-55f49103293f"}
+
+REQUEST 3
+PUT https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/50e77329-1820-410b-b80d-55f49103293f
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"scaAuthenticationData":"123456"}
+
+RESPONSE 3
+200
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+Aspsp-Sca-Approach: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{"_links":{"scaStatus":{"href":"https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/50e77329-1820-410b-b80d-55f49103293f"}},"scaStatus":"finalised"}
+
+REQUEST 4
+GET https://psd2.bvxs2a.de/degussabank/v1/periodic-payments/sepa-credit-transfers/2HBVzF5EGH0zMNB1aQHN8xhsmHIeKu-MNbXHA68LvJktnHiQD74da5677f5H5zjArxdfrAP-zNm80m7CA2Fcf_SdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+X-Request-Id: 33068e7f-af15-4b47-8d9f-27f9795293c5
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{"transactionStatus":"ACTC","fundsAvailable":true}

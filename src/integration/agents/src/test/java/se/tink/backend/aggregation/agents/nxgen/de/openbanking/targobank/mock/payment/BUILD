@@ -1,13 +1,13 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "mock",
+    name = "payment_mock",
     srcs = glob(["*.java"]),
     data = [
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/degussabank/mock/resources",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/targobank/mock/payment/resources",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/degussabank"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/targobank"],
     deps = [
         "//src/integration/amount",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",

@@ -7,8 +7,11 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.BankverlagAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.BankverlagPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.BankverlagAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.BankverlagTransactionsFetcher;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -16,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -34,6 +38,7 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
     protected RandomValueGenerator randomValueGenerator;
     protected LocalDateTimeSource localDateTimeSource;
     private String aspspId;
+    protected BankverlagRequestBuilder requestBuilder;
 
     protected BankverlagBaseAgent(AgentComponentProvider componentProvider, String aspspId) {
         super(componentProvider);
@@ -41,6 +46,9 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
         randomValueGenerator = componentProvider.getRandomValueGenerator();
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
         bankverlagStorage = new BankverlagStorage(persistentStorage, sessionStorage);
+        requestBuilder =
+                new BankverlagRequestBuilder(
+                        client, randomValueGenerator, userIp, constructHeaderValues());
         apiClient = constructApiClient();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -116,5 +124,28 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+
+        BankverlagPaymentAuthenticator bankverlagPaymentAuthenticator =
+                new BankverlagPaymentAuthenticator(
+                        apiClient,
+                        supplementalInformationController,
+                        bankverlagStorage,
+                        credentials,
+                        catalog,
+                        aspspId,
+                        provider.getDisplayName());
+
+        BankverlagPaymentApiClient bankverlagPaymentApiClient =
+                new BankverlagPaymentApiClient(new BasePaymentMapper(), requestBuilder);
+
+        BasePaymentExecutor paymentExecutor =
+                new BasePaymentExecutor(
+                        bankverlagPaymentApiClient, bankverlagPaymentAuthenticator, sessionStorage);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }

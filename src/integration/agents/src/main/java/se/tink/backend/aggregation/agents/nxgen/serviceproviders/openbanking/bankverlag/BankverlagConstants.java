@@ -27,6 +27,12 @@ public final class BankverlagConstants {
         static final URL FETCH_ACCOUNTS = new URL(BASE_URL + "/v1/accounts");
         static final URL FETCH_BALANCES = new URL(FETCH_ACCOUNTS + "/{accountId}/balances");
         static final URL FETCH_TRANSACTIONS = new URL(FETCH_ACCOUNTS + "/{accountId}/transactions");
+
+        public static final URL CREATE_PAYMENT =
+                new URL(BASE_URL + "/v1/{payment-service}/{payment-product}");
+        public static final URL GET_PAYMENT =
+                new URL(BASE_URL + "/v1/{payment-service}/{payment-product}/{paymentId}");
+        public static final URL GET_PAYMENT_STATUS = new URL(GET_PAYMENT + "/status");
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
