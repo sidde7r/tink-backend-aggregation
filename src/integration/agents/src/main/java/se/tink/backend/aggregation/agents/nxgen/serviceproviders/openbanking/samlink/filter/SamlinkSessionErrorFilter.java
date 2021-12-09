@@ -20,20 +20,19 @@ public class SamlinkSessionErrorFilter extends Filter {
             return nextFilter(httpRequest);
         } catch (HttpResponseException e) {
             final HttpResponse httpResponse = e.getResponse();
-            checkErrorResponseBodyType(httpResponse);
-
-            final List<TppMessageEntity> errors =
-                    httpResponse.getBody(ErrorResponse.class).getTppMessages();
-            throwIfConsentError(errors);
+            throwIfConsentError(httpResponse);
             // Throw BankServiceError for other error responses to avoid user to do manual
             // authentication
             throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
         }
     }
 
-    private void throwIfConsentError(List<TppMessageEntity> errors) {
+    public void throwIfConsentError(HttpResponse httpResponse) {
+        checkErrorResponseBodyType(httpResponse);
+        final List<TppMessageEntity> errors =
+                httpResponse.getBody(ErrorResponse.class).getTppMessages();
         if (errors.stream().anyMatch(TppMessageEntity::isConsentExpired)) {
-            throw SessionError.SESSION_EXPIRED.exception("Cause: Consent is expired");
+            throw SessionError.CONSENT_EXPIRED.exception("Cause: Consent is expired");
         }
     }
 

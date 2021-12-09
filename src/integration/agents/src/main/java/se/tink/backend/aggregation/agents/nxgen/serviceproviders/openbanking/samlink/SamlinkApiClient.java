@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -39,6 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sam
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.filter.SamlinkSessionErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.provider.SamlinkAuthorisationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.provider.SamlinkSignatureEntity;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -55,7 +57,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.cryptography.hash.Hash;
 
+@Slf4j
 public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration> {
 
     private final QsealcSigner qsealcSigner;
@@ -95,7 +99,10 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
 
     public URL getAuthorizeUrl(final String state) {
         final String consentId = getConsentId();
+
+        // TODO - LLAMAS-52: Temporary log to verify consent Id
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
+        log.info("Consent-ID to persist: {}", Hash.sha256AsHex(consentId));
 
         final String authUrl = agentConfiguration.getBaseOauthUrl() + Urls.AUTH;
         return getAuthorizeUrlWithCode(
@@ -106,29 +113,33 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
     // The "withBalance" URL parameter is not supported by SamLink
     @Override
     public AccountsBaseResponseBerlinGroup fetchAccounts() {
-        AccountsBaseResponseBerlinGroup response =
-                createRequestInSession(
-                                new URL(agentConfiguration.getBaseUrl()).concat(Urls.ACCOUNTS),
-                                StringUtils.EMPTY)
-                        .get(AccountsBaseResponseBerlinGroup.class);
-
-        final List<AccountEntityBaseEntity> accountsWithBalances =
-                response.getAccounts().stream()
-                        .map(this::fetchBalances)
-                        .collect(Collectors.toList());
 
         try {
+            AccountsBaseResponseBerlinGroup response =
+                    createRequestInSession(
+                                    new URL(agentConfiguration.getBaseUrl()).concat(Urls.ACCOUNTS),
+                                    StringUtils.EMPTY)
+                            .get(AccountsBaseResponseBerlinGroup.class);
+
+            final List<AccountEntityBaseEntity> accountsWithBalances =
+                    response.getAccounts().stream()
+                            .map(this::fetchBalances)
+                            .collect(Collectors.toList());
+
             return new AccountsBaseResponseBerlinGroup(accountsWithBalances);
         } catch (HttpResponseException e) {
             final HttpResponse httpResponse = e.getResponse();
-            if (httpResponse
-                            .getBody(String.class)
-                            .contains(SamlinkConstants.ErrorMessage.NO_API_KEY)
-                    && credentials.getType() == CredentialsTypes.PASSWORD) {
-                credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
-                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
-            }
+            handleApiKeyError(httpResponse);
+            new SamlinkSessionErrorFilter().throwIfConsentError(httpResponse);
             throw e;
+        }
+    }
+
+    private void handleApiKeyError(HttpResponse httpResponse) {
+        if (httpResponse.getBody(String.class).contains(SamlinkConstants.ErrorMessage.NO_API_KEY)
+                && credentials.getType() == CredentialsTypes.PASSWORD) {
+            credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
+            systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 
@@ -172,6 +183,11 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
 
     private RequestBuilder createRequestInSession(URL url, String body) {
         final OAuth2Token token = getTokenFromSession(StorageKeys.OAUTH_TOKEN);
+
+        // TODO - LLAMAS-52: Temporary log to verify consent Id
+        log.info(
+                "Persisted Consent-ID: {}",
+                Hash.sha256AsHex(persistentStorage.get(StorageKeys.CONSENT_ID)));
 
         return buildRequestWithSignature(url, body)
                 .addBearerToken(token)
