@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,7 +22,6 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
-import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.ClientIdDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.ConsentIdDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.TokenDetector;
@@ -31,6 +31,7 @@ import se.tink.libraries.aggregation_agent_api_client.src.configuration.ClientCo
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.ClientConfiguration.ClientConfigurationBuilder;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.Configuration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.EidasConfiguration;
+import se.tink.libraries.aggregation_agent_api_client.src.configuration.LoggingConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.ServiceConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.TlsConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.eidas.signer.FakeQSealSignerClient;
@@ -38,6 +39,7 @@ import se.tink.libraries.aggregation_agent_api_client.src.eidas.signer.QSealSign
 import se.tink.libraries.aggregation_agent_api_client.src.eidas.signer.QSealSignerClientImpl;
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
 import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableKey;
+import se.tink.libraries.har_logger.src.model.HarEntry;
 
 @Getter
 @Setter
@@ -55,7 +57,7 @@ public class HttpApiClientBuilder {
     private EidasIdentity eidasIdentity;
     private boolean useEidasProxy;
     private LogMasker logMasker;
-    private RawHttpTrafficLogger rawHttpTrafficLogger;
+    private Consumer<HarEntry> harEntryConsumer;
     private PersistentStorage persistentStorage;
     private Map<String, Object> secretsConfiguration;
     private String userIp;
@@ -70,7 +72,12 @@ public class HttpApiClientBuilder {
     public HttpApiClient build() {
 
         Configuration.ConfigurationBuilder configurationBuilder =
-                Configuration.builder().clientConfiguration(buildClientConfiguration());
+                Configuration.builder()
+                        .clientConfiguration(buildClientConfiguration())
+                        .loggingConfiguration(
+                                LoggingConfiguration.builder()
+                                        .harEntryConsumer(harEntryConsumer)
+                                        .build());
 
         QSealSignerClient qSealSignerClient;
         if (shouldUseEidas()) {

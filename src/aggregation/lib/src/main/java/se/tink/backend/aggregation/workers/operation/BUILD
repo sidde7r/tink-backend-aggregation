@@ -45,6 +45,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/interaction_counter",
         "//src/libraries/serialization",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",

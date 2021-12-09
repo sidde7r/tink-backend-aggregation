@@ -19,6 +19,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/i18n",
         "//src/libraries/metrics:registry",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_google_code_findbugs_jsr305",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",

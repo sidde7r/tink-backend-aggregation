@@ -58,6 +58,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/libraries/rate_limit_service",
         "//src/libraries/serialization",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.framework.context;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -60,6 +61,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.UnleashClientFactory;
@@ -128,16 +131,22 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
         LogMasker logMasker = new FakeLogMasker();
         setLogMasker(logMasker);
         RawHttpTrafficLogger.consoleOutputLogger().ifPresent(this::setRawHttpTrafficLogger);
-        setJsonHttpTrafficLogger(
-                new JsonHttpTrafficLogger(
-                        HttpJsonLogMetaEntity.builder()
-                                .agentName(provider.getClassName())
-                                .providerName(provider.getName())
-                                .appId(appId)
-                                .clusterId(clusterId)
-                                .credentialsId(credential.getId())
-                                .userId(credential.getId())
-                                .build()));
+        HttpJsonLogMetaEntity logMetaEntity =
+                HttpJsonLogMetaEntity.builder()
+                        .agentName(provider.getClassName())
+                        .providerName(provider.getName())
+                        .appId(appId)
+                        .clusterId(clusterId)
+                        .credentialsId(credential.getId())
+                        .userId(credential.getId())
+                        .build();
+        setJsonHttpTrafficLogger(new JsonHttpTrafficLogger(logMetaEntity));
+
+        final Map<String, String> logMetaData =
+                SerializationUtils.deserializeFromString(
+                        SerializationUtils.serializeToString(logMetaEntity),
+                        new TypeReference<Map<String, String>>() {});
+        setHarLogCollector(new HarLogCollector(logMetaData));
     }
 
     public AgentTestServerClient getAgentTestServerClient() {

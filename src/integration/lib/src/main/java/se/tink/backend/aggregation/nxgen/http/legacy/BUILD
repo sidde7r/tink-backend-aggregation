@@ -17,6 +17,7 @@ java_library(
         "//src/libraries/encoding",
         "//src/libraries/request_tracing",
         "//src/libraries/serialization",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",

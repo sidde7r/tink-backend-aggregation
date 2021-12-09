@@ -62,6 +62,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
@@ -159,18 +160,24 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.operationName = operationName;
 
         RawHttpTrafficLogger.inMemoryLogger().ifPresent(this::setRawHttpTrafficLogger);
-        setJsonHttpTrafficLogger(
-                new JsonHttpTrafficLogger(
-                        HttpJsonLogMetaEntity.builder()
-                                .agentName(request.getProvider().getClassName())
-                                .providerName(request.getProvider().getName())
-                                .appId(appId)
-                                .clusterId(clusterId)
-                                .credentialsId(request.getCredentials().getId())
-                                .userId(request.getCredentials().getUserId())
-                                .requestId(request.getRequestId())
-                                .operation(operationName)
-                                .build()));
+        HttpJsonLogMetaEntity logMetaEntity =
+                HttpJsonLogMetaEntity.builder()
+                        .agentName(request.getProvider().getClassName())
+                        .providerName(request.getProvider().getName())
+                        .appId(appId)
+                        .clusterId(clusterId)
+                        .credentialsId(request.getCredentials().getId())
+                        .userId(request.getCredentials().getUserId())
+                        .requestId(request.getRequestId())
+                        .operation(operationName)
+                        .build();
+        setJsonHttpTrafficLogger(new JsonHttpTrafficLogger(logMetaEntity));
+
+        final Map<String, String> logMetaData =
+                SerializationUtils.deserializeFromString(
+                        SerializationUtils.serializeToString(logMetaEntity),
+                        new TypeReference<Map<String, String>>() {});
+        setHarLogCollector(new HarLogCollector(logMetaData));
     }
 
     public String getOperationName() {
