@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_OFFSET;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
@@ -10,7 +12,9 @@ import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 public class TransactionEntity {
@@ -72,14 +76,26 @@ public class TransactionEntity {
 
         if (hasSettlementTime()) {
             builder.setDate(settlementTime);
+            builder.setTransactionDates(buildBookingDate(settlementTime));
         } else {
             builder.setDate(transactionTime);
+            builder.setTransactionDates(buildBookingDate(transactionTime));
         }
 
         if (isMerchantCounterPartyType()) {
             builder.setMerchantName(counterPartyName);
         }
         return (Transaction) builder.build();
+    }
+
+    @JsonIgnore
+    private TransactionDates buildBookingDate(Date date) {
+        return TransactionDates.builder()
+                .setBookingDate(
+                        new AvailableDateInformation()
+                                .setInstant(date.toInstant())
+                                .setDate(date.toInstant().atZone(DEFAULT_OFFSET).toLocalDate()))
+                .build();
     }
 
     public String getStatus() {
