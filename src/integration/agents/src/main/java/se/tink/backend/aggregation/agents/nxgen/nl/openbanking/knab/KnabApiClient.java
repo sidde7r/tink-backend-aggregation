@@ -37,8 +37,6 @@ public class KnabApiClient {
 
     private final String psuIpAddress;
 
-    private KnabConfiguration configuration;
-
     private KnabAuthorizationCredentials authorizationCredentials;
 
     private TokenRequestFactory tokenRequestFactory;
@@ -46,7 +44,6 @@ public class KnabApiClient {
     private String redirectUrl;
 
     public void applyConfiguration(KnabConfiguration configuration, String redirectUrl) {
-        this.configuration = configuration;
         this.redirectUrl = redirectUrl;
 
         authorizationCredentials =
@@ -85,7 +82,7 @@ public class KnabApiClient {
     public URL anonymousConsentApprovalUrl(String scope, String state) {
         return Urls.AUTHORIZE
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
+                .queryParam(QueryKeys.CLIENT_ID, authorizationCredentials.getClientId())
                 .queryParam(QueryKeys.SCOPE, scope)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl);

@@ -10,13 +10,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @SuppressWarnings("UnusedDeclaration")
 public class ConsentStatusResponse {
 
-    private static final String VALID = "valid";
-
     @JsonProperty("consentStatus")
     private String status;
 
     @JsonIgnore
     public boolean isValid() {
-        return VALID.equalsIgnoreCase(status);
+        return "valid".equalsIgnoreCase(status);
     }
 }
