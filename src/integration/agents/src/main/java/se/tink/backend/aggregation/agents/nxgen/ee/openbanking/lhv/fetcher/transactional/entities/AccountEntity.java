@@ -77,6 +77,14 @@ public class AccountEntity {
                 .filter(BalanceEntity::isBooked)
                 .findFirst()
                 .map(BalanceEntity::toTinkAmount)
+                .orElse(getAvailableBalanceIfBookedIsNull(balances));
+    }
+
+    private ExactCurrencyAmount getAvailableBalanceIfBookedIsNull(List<BalanceEntity> balances) {
+        return balances.stream()
+                .filter(BalanceEntity::isAvailable)
+                .findFirst()
+                .map(BalanceEntity::toTinkAmount)
                 .orElseThrow(() -> new IllegalStateException("No balance found in the response"));
     }
 
