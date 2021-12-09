@@ -29,13 +29,13 @@
       "userModifiedType": false,
       "identifiers": "[\"iban://NL54KNAB0000000000\"]",
       "closed": false,
-      "holderName": "M. Python",
+      "holderName": "Monty Python",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
         "identities": [
           {
-            "name": "M. Python",
+            "name": "Monty Python",
             "role": "HOLDER"
           }
         ]
@@ -50,7 +50,7 @@
     {
       "amount": 110.0,
       "date": 695214000000,
-      "description": "Betaalverzoek geld van R. H. van Rijn",
+      "description": "Betaalverzoek geld van Rembrandt H. van Rijn",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {

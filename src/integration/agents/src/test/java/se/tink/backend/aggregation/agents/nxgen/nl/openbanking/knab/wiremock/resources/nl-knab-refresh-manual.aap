@@ -154,7 +154,7 @@ apigw-requestid: JmE6IEZBS0UgMQ==
       "usage": "PRIV",
       "iban": "NL54KNAB0000000000",
       "currency": "EUR",
-      "name": "M. Python",
+      "name": "Monty Python",
       "product": "Current Account",
       "cashAccountType": "CACC",
       "_links": {
@@ -255,7 +255,7 @@ X-Request-ID: 00000000-0000-4000-0000-000000000000
         "valueDate": "1992-01-12",
         "transactionDate": "1992-01-12",
         "debtorName": " ",
-        "remittanceInformationUnstructured": "Betaalverzoek geld van R. H. van Rijn",
+        "remittanceInformationUnstructured": "Betaalverzoek geld van Rembrandt H. van Rijn",
         "entryReference": "0000003",
         "endToEndId": "0000000000000000",
         "proprietaryBankTransactionCode": "Incoming transfer"
