@@ -1,0 +1,36 @@
+{
+  "EE_O_Consulta": {
+    "codigoRetorno": "1",
+    "Respuesta": {
+      "ListaIntervinientes": [{
+        "fechaCierre": "9999-12-31",
+        "codigoIdExterno": "51",
+        "relacionAcuerdoPersona": "01",
+        "fechaAlta": "2012-03-12",
+        "fechaInicio": "2012-03-12",
+        "indRepresentante": "6",
+        "ecvPersonaAcuerdo": "2",
+        "idExterno": "1234567AA",
+        "subtipoPersona": "F",
+        "numOrdenInterviniente": "0001",
+        "nombreInterviniente": "FRED FLINSTONE",
+        "idInternoPe": "123456"
+      }, {
+        "fechaCierre": "9999-12-31",
+        "codigoIdExterno": "51",
+        "relacionAcuerdoPersona": "02",
+        "fechaAlta": "2021-09-21",
+        "fechaInicio": "2021-09-21",
+        "indRepresentante": "6",
+        "ecvPersonaAcuerdo": "2",
+        "idExterno": "1234567B",
+        "subtipoPersona": "F",
+        "numOrdenInterviniente": "0002",
+        "nombreInterviniente": "WILMA FLINSTONE",
+        "idInternoPe": "1234567"
+      }],
+      "numeroRegistros": "2",
+      "masDatos": "0"
+    }
+  }
+}

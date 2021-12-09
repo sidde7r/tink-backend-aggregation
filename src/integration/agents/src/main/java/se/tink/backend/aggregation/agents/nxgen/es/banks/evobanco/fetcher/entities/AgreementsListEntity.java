@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entit
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
@@ -67,15 +69,25 @@ public class AgreementsListEntity {
         return cardData != null && creditCardCondition();
     }
 
+    public String getAccountNumber() {
+        return agreement;
+    }
+
     private boolean creditCardCondition() {
         return new BigDecimal(cardData.getCardCreditLimit()).compareTo(BigDecimal.ZERO) > 0
                 || new BigDecimal(cardData.getCreditCardDayATMLimit()).compareTo(BigDecimal.ZERO)
                         > 0;
     }
 
-    public Optional<TransactionalAccount> toTinkAccount(String holderName) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            AccountHoldersResponse accountHoldersResponse, String holderName) {
         String panForDebitCardAccount =
                 cardData != null && cardData.getPanToken() != null ? cardData.getPanToken() : "";
+        Party holder = new Party(holderName, Party.Role.HOLDER);
+        List<Party> singleParty = new ArrayList<>();
+        singleParty.add(holder);
+        List<Party> parties =
+                accountHoldersResponse != null ? accountHoldersResponse.getParties() : singleParty;
         return EvoBancoConstants.ACCOUNT_TYPE_MAPPER
                 .translate(aliasbe)
                 .flatMap(
@@ -95,7 +107,7 @@ public class AgreementsListEntity {
                                                                         iban))
                                                         .setProductName(accountType)
                                                         .build())
-                                        .addParties(new Party(holderName, Party.Role.HOLDER))
+                                        .addParties(parties)
                                         .putInTemporaryStorage(
                                                 Storage.PAN_TOKEN, panForDebitCardAccount)
                                         .setApiIdentifier(agreement)

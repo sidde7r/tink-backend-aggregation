@@ -34,6 +34,8 @@ public class EvoBancoConstants {
         static final String IDENTITY_DATA =
                 "evobanco/customers/customer-info/v1.1/fisica/{" + PARAM_ID + "}";
         static final String VALIDATE = "evobanco/apis/evo-consola-api/console/validate";
+        static final String ACCOUNT_HOLDERS_MASK =
+                "evobanco/accounts/agreements/v1/%s/intervinientes";
     }
 
     public static class Urls {
@@ -61,6 +63,9 @@ public class EvoBancoConstants {
         public static final URL FETCH_INVESTMENTS =
                 new URL(BASE_MOBILE_SERVICES + ApiService.INVESTMENTS_PATH);
         public static final URL FETCH_IDENTITY = new URL(BASE_API + ApiService.IDENTITY_DATA);
+        // URL masks
+        public static final String FETCH_ACCOUNT_HOLDERS =
+                BASE_API + ApiService.ACCOUNT_HOLDERS_MASK;
     }
 
     public static class ReturnCodes {
@@ -94,6 +99,7 @@ public class EvoBancoConstants {
         public static final String INTERNAL_ID_PE = "idInternoPe";
         public static final String PAGE_NUM = "numeroLlamadas";
         public static final String CARD_NUMBER = "panToken";
+        public static final String ECV_PERSON_AGREEMENT = "ecvPersonaAcuerdo";
     }
 
     public static class HeaderKeys {
@@ -147,6 +153,7 @@ public class EvoBancoConstants {
         public static final String CARD_STATE = "card-state";
         public static final String ACCESS_TOKEN = "access_token";
         public static final String PAN_TOKEN = "pan-token";
+        public static final String PERSON_AGREEMENT = "person_agreement";
     }
 
     public static class FormKey {

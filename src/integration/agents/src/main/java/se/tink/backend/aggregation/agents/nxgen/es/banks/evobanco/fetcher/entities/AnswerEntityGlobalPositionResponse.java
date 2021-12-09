@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -21,9 +22,17 @@ public class AnswerEntityGlobalPositionResponse {
         return agreementsList;
     }
 
-    public Collection<TransactionalAccount> getTransactionalAccounts(String holderName) {
-        return agreementsList.stream()
-                .map(agreementsListEntity -> agreementsListEntity.toTinkAccount(holderName))
+    public Collection<TransactionalAccount> getTransactionalAccounts(
+            String holderName, EvoBancoApiClient bankClient) {
+        return getAgreementsList().stream()
+                .map(
+                        agreementsListEntity -> {
+                            AccountHoldersResponse accountHoldersResponse =
+                                    bankClient.fetchAccountHolders(
+                                            agreementsListEntity.getAccountNumber());
+                            return agreementsListEntity.toTinkAccount(
+                                    accountHoldersResponse, holderName);
+                        })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

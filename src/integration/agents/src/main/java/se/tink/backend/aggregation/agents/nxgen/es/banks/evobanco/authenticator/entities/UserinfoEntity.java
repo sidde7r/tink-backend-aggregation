@@ -103,4 +103,8 @@ public class UserinfoEntity {
     public String getSurname2Client() {
         return surname2Client;
     }
+
+    public String getPersonAgreement() {
+        return ecvPersonAgreement;
+    }
 }

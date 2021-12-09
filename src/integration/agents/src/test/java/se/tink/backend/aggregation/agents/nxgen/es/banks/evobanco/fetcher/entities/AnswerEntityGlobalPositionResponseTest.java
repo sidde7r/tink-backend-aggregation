@@ -1,22 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AnswerEntityGlobalPositionResponseTest {
     private static final String TEST_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/evobanco/resources/";
+    private static final String HOLDER_NAME = "SZYMON MYSIAK";
 
     private AnswerEntityGlobalPositionResponse answerEntityGlobalPositionResponse;
+    private EvoBancoApiClient evoBancoApiClient;
+    AccountHoldersResponse accountHoldersResponse;
 
     @Before
     public void init() {
@@ -24,6 +33,15 @@ public class AnswerEntityGlobalPositionResponseTest {
                 SerializationUtils.deserializeFromString(
                         Paths.get(TEST_PATH + "global_position_response.json").toFile(),
                         AnswerEntityGlobalPositionResponse.class);
+        evoBancoApiClient = mock(EvoBancoApiClient.class);
+        when(evoBancoApiClient.fetchAccountHolders(anyString()))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_PATH, "account_holders.json").toFile(),
+                                AccountHoldersResponse.class));
+
+        SessionStorage sessionStorage = new SessionStorage();
+        sessionStorage.put(EvoBancoConstants.Storage.HOLDER_NAME, HOLDER_NAME);
     }
 
     @Test
@@ -32,7 +50,8 @@ public class AnswerEntityGlobalPositionResponseTest {
         // given
         // when
         Collection<TransactionalAccount> accounts =
-                answerEntityGlobalPositionResponse.getTransactionalAccounts("dummyHolderName");
+                answerEntityGlobalPositionResponse.getTransactionalAccounts(
+                        "dummyHolderName", evoBancoApiClient);
 
         answerEntityGlobalPositionResponse.getCreditCardAccounts();
 
