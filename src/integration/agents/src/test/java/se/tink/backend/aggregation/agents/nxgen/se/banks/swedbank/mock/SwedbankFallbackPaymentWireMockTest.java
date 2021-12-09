@@ -444,7 +444,35 @@ public class SwedbankFallbackPaymentWireMockTest {
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
-    // TBD: both normal = Swedank + Savingsbank, Savingsbank + Savingsbank
+    @Test
+    public void testPaymentMultiProfileBankGiroPaymentToExistingRecipient() throws Exception {
+
+        SwedbankDateUtils.setClock(fixedClock("2021-09-24T07:17:55Z"));
+
+        Transfer transfer = new Transfer();
+        transfer.setSource(new SwedishIdentifier("111111111111111"));
+        transfer.setDestination(new BankGiroIdentifier("9008004"));
+        setTransferParameters(transfer, TransferType.PAYMENT);
+        transfer.setDueDate(
+                Date.from(LocalDate.of(2021, 9, 28).atStartOfDay(DEFAULT_ZONE_ID).toInstant()));
+
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/swedbank-pis-multiprofile.aap";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE, "se-swedbank-fallback", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withAgentModule(new SwedbankFallbackWireMockTestModule())
+                        .withHttpDebugTrace()
+                        .withTransfer(transfer)
+                        .buildWithLogin(TransferCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+        Assert.assertTrue(true);
+    }
 
     private void setTransferParameters(Transfer transfer, TransferType transferType) {
         transfer.setAmount(ExactCurrencyAmount.inSEK(1));
