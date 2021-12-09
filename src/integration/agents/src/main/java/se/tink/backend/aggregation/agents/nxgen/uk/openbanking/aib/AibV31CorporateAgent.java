@@ -37,12 +37,12 @@ public final class AibV31CorporateAgent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withApiBaseURL(AibConstants.AIS_API_URL)
-                        .withWellKnownURL(AibConstants.WELL_KNOWN_CORPORATE_URL)
-                        .withOrganisationId(AibConstants.ORGANISATION_ID)
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
-                        .build();
+                new AibAisConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withApiBaseURL(AibConstants.AIS_API_URL)
+                                .withWellKnownURL(AibConstants.WELL_KNOWN_CORPORATE_URL)
+                                .withOrganisationId(AibConstants.ORGANISATION_ID)
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS));
     }
 
     @Inject
