@@ -1,14 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab;
 
 import java.util.Base64;
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Value
+@Getter
+@RequiredArgsConstructor
 public class KnabAuthorizationCredentials {
 
-    String clientId;
+    private final String clientId;
 
-    String clientSecret;
+    private final String clientSecret;
 
     public String encoded() {
         return Base64.getEncoder().encodeToString(value().getBytes());

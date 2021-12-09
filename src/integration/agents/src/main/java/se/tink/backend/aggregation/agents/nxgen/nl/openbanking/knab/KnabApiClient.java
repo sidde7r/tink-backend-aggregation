@@ -6,7 +6,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.BasicAuthorizationHeader;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.KnabAuthorizationHeader;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.rpc.ConsentStatusResponse;
@@ -60,7 +60,7 @@ public class KnabApiClient {
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE_CONTROL)
                 .header(
                         HeaderKeys.AUTHORIZATION,
-                        new BasicAuthorizationHeader(authorizationCredentials).value())
+                        new KnabAuthorizationHeader(authorizationCredentials).value())
                 .post(TokenResponse.class, tokenRequestFactory.applicationAccessTokenRequest())
                 .toTinkToken();
     }
