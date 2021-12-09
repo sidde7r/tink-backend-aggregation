@@ -83,7 +83,7 @@ public class CaterAllenAgent extends UkOpenBankingBaseAgent {
                                         .build())
                         .build();
 
-        if (componentProvider.getUnleashClient().isToggleEnable(toggle)) {
+        if (componentProvider.getUnleashClient().isToggleEnabled(toggle)) {
             log.info("[CaterAllenApiClient used with additional header]");
             return new CaterAllenApiClient(
                     httpClient,

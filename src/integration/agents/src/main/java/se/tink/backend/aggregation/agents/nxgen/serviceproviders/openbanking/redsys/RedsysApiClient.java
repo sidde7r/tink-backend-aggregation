@@ -426,7 +426,7 @@ public class RedsysApiClient {
                                         .build())
                         .build();
 
-        if (unleashClient.isToggleEnable(toggle)) {
+        if (unleashClient.isToggleEnabled(toggle)) {
             log.info("[REDSYS APP TO APP REDIRECT] Enabled.");
             return Urls.BIOMETRIC;
         } else {

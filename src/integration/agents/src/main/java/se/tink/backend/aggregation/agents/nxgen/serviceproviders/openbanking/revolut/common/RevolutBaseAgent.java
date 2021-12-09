@@ -142,7 +142,7 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
                                         .build())
                         .build();
 
-        if (unleashClient.isToggleEnable(toggle)) {
+        if (unleashClient.isToggleEnabled(toggle)) {
             return new ConsentStatusValidator(apiClient, persistentStorage);
         } else {
             return new ConsentStatusValidatorDisabled(apiClient, persistentStorage);

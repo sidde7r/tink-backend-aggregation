@@ -17,7 +17,7 @@ public class EidasMigrationToggle {
         Toggle toggle = createToggle(appId, providerName);
         try {
             final AvailableCertIds availableCertId =
-                    unleashClient.isToggleEnable(toggle)
+                    unleashClient.isToggleEnabled(toggle)
                             ? AvailableCertIds.OLD
                             : AvailableCertIds.DEFAULT;
             log.info("Enabled certId: {}", availableCertId.getValue());
