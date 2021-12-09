@@ -6,7 +6,7 @@ import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
 import se.tink.agent.sdk.storage.SerializableReference;
-import se.tink.agent.sdk.user_interaction.UserInteraction;
+import se.tink.agent.sdk.user_interaction.SwedishMobileBankIdInfo;
 
 public class SwedishMobileBankIdOpenAppStep implements NewConsentStep {
 
@@ -29,11 +29,11 @@ public class SwedishMobileBankIdOpenAppStep implements NewConsentStep {
                                 SerializableReference.class)
                         .orElse(null);
 
-        UserInteraction<String> swedishMobileBankIdAutostartToken =
+        SwedishMobileBankIdInfo swedishMobileBankIdInfo =
                 this.agentGetAutostartToken.getAutostartToken(reference);
 
         return NewConsentResponse.nextStep(this.nextStep)
-                .userInteraction(swedishMobileBankIdAutostartToken)
+                .userInteraction(swedishMobileBankIdInfo.intoUserInteraction())
                 .build();
     }
 }
