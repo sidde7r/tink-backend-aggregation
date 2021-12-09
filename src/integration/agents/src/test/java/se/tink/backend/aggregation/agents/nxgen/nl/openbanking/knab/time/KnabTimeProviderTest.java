@@ -36,7 +36,7 @@ public class KnabTimeProviderTest {
     @Test
     public void shouldReturnDate() {
         // when
-        LocalDate date = dateProvider.date();
+        LocalDate date = dateProvider.currentDate();
 
         // then
         assertThat(date).isEqualTo(zonedDateTime.toLocalDate());

@@ -72,7 +72,7 @@ public class KnabApiClient {
                 .post(
                         ConsentResponse.class,
                         ConsentRequest.builder()
-                                .validUntil(timeProvider.date().plusDays(90))
+                                .validUntil(timeProvider.currentDate().plusDays(90))
                                 .frequencyPerDay(4)
                                 .recurringIndicator(true)
                                 .combinedServiceIndicator(false)

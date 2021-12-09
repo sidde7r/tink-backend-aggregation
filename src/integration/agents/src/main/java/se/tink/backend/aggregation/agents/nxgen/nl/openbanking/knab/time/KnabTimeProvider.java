@@ -18,7 +18,7 @@ public class KnabTimeProvider {
 
     private final LocalDateTimeSource localDateTimeSource;
 
-    public LocalDate date() {
+    public LocalDate currentDate() {
         return localDateTimeSource.now(ZoneId.systemDefault()).toLocalDate();
     }
 
