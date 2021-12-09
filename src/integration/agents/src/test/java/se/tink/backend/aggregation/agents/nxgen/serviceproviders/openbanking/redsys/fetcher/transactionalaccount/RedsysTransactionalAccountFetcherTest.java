@@ -2,72 +2,54 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CertainDateTransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class RedsysTransactionalAccountFetcherTest {
 
-    private static final String SERVER_ERROR_RESPONSE =
-            "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"server_error\",\"text\":\"server_error\"}]}";
-    private static final String CONSENT_EXPIRED_RESPONSE =
-            "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"CONSENT_EXPIRED\",\"text\":\"CONSENT_EXPIRED\"}]}";
     private static final String ACCOUNT_RESPONSE =
             "{\"accounts\":[{\"resourceId\":\"ES018202000000000000000000000222222\",\"iban\":\"ES1714658336187317761933\",\"currency\":\"EUR\",\"ownerName\":\"JOHN DOE\",\"status\":\"enabled\",\"product\":\"CUENTA ONLINE\",\"balances\":[{\"balanceAmount\":{\"currency\":\"EUR\",\"amount\":\"1543.71\"},\"balanceType\":\"closingBooked\"},{\"balanceAmount\":{\"currency\":\"EUR\",\"amount\":\"1543.71\"},\"balanceType\":\"interimAvailable\"}],\"_links\":{\"balances\":{\"href\":\"/v1/accounts/ES018202000000000000000000000222222/balances\"},\"transactions\":{\"href\":\"/v1/accounts/ES018202000000000000000000000222222/transactions?withBalance=true&bookingStatus=both\"}}},{\"resourceId\":\"ES018202000000000000000000000222222\",\"iban\":\"ES6120957422817788187146\",\"currency\":\"EUR\",\"ownerName\":\"JOHN DOE\",\"cashAccountType\":\"SVGS\",\"status\":\"enabled\",\"product\":\"CUENTA VA CONTIGO\",\"balances\":[{\"balanceAmount\":{\"currency\":\"EUR\",\"amount\":\"1440.30\"},\"balanceType\":\"closingBooked\"},{\"balanceAmount\":{\"currency\":\"EUR\",\"amount\":\"1440.30\"},\"balanceType\":\"interimAvailable\"}],\"_links\":{\"balances\":{\"href\":\"/v1/accounts/ES018202000000000000000000000222222/balances\"},\"transactions\":{\"href\":\"/v1/accounts/ES018202000000000000000000000222222/transactions?withBalance=true&bookingStatus=both\"}}}]}";
     private RedsysTransactionalAccountFetcher accountFetcher;
     private RedsysApiClient apiClient;
     private RedsysConsentController consentController;
+    private TransactionPaginationHelper paginationHelper;
+    private AspspConfiguration aspspConfiguration;
 
     @Before
     public void setup() {
         apiClient = mock(RedsysApiClient.class);
         consentController = mock(RedsysConsentController.class);
+        when(consentController.getConsentId()).thenReturn("dummyConsentId");
+        paginationHelper = mock(CertainDateTransactionPaginationHelper.class);
+        aspspConfiguration = mock(AspspConfiguration.class);
         accountFetcher =
                 new RedsysTransactionalAccountFetcher(
-                        apiClient,
-                        mock(RedsysConsentController.class),
-                        mock(AspspConfiguration.class));
-    }
-
-    @Test(expected = SessionException.class)
-    public void shouldThrowSessionExceptionWhenConsentRevoked() {
-        // given
-        when(consentController.getConsentId()).thenReturn("DUMMY");
-        when(consentController.requestConsent()).thenReturn(true);
-        prepareErrorResponse(409, CONSENT_EXPIRED_RESPONSE);
-
-        // when
-        accountFetcher.getTransactionsFor(mock(TransactionalAccount.class), null);
-    }
-
-    @Test(expected = BankServiceException.class)
-    public void shouldThrowBankServiceExceptionWhenServerError() {
-        // given
-        when(consentController.getConsentId()).thenReturn("DUMMY");
-        prepareErrorResponse(400, SERVER_ERROR_RESPONSE);
-
-        // when
-        accountFetcher.getTransactionsFor(
-                mock(TransactionalAccount.class), mock(PaginationKey.class));
+                        apiClient, consentController, aspspConfiguration, paginationHelper);
     }
 
     @Test
@@ -115,11 +97,74 @@ public class RedsysTransactionalAccountFetcherTest {
         assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);
     }
 
-    private void prepareErrorResponse(int httpStatus, String errorResponse) {
-        final HttpResponse httpResponse = mock(HttpResponse.class);
-        when(httpResponse.getStatus()).thenReturn(httpStatus);
-        when(httpResponse.getBody(String.class)).thenReturn(errorResponse);
-        HttpResponseException hre = new HttpResponseException(null, httpResponse);
-        when(apiClient.fetchTransactions(any(), any(), any())).thenThrow(hre);
+    @Test
+    public void fetch_transactions_should_pagiante_if_nextKey_available() {
+        // given
+
+        TransactionalAccount account = mock(TransactionalAccount.class);
+        when(paginationHelper.getTransactionDateLimit(account))
+                .thenReturn(Optional.of(new Date(1638892290)));
+
+        BaseTransactionsResponse transactionsWithKey = mock(BaseTransactionsResponse.class);
+        PaginationKey paginationKey = mock(PaginationKey.class);
+        when(transactionsWithKey.nextKey()).thenReturn(paginationKey);
+        BaseTransactionsResponse transactionsWithoutKey = mock(BaseTransactionsResponse.class);
+        when(transactionsWithoutKey.nextKey()).thenReturn(null);
+
+        when(apiClient.fetchTransactions(any(), any(), eq(LocalDate.of(1970, 1, 19))))
+                .thenReturn(transactionsWithKey);
+
+        when(apiClient.fetchTransactionsWithKey(any(), any())).thenReturn(transactionsWithoutKey);
+
+        // when
+        accountFetcher.fetchTransactionsFor(account);
+
+        // then
+        verify(apiClient).fetchTransactions(any(), any(), eq(LocalDate.of(1970, 1, 19)));
+        verify(apiClient).fetchTransactionsWithKey(any(), any());
+    }
+
+    @Test
+    public void fetch_transactions_should_not_pagiante_if_nextKey_available() {
+        TransactionalAccount account = mock(TransactionalAccount.class);
+        BaseTransactionsResponse transactionsWithKey = mock(BaseTransactionsResponse.class);
+
+        when(paginationHelper.getTransactionDateLimit(account))
+                .thenReturn(Optional.of(new Date(1638892290)));
+
+        when(transactionsWithKey.nextKey()).thenReturn(null);
+
+        when(apiClient.fetchTransactions(any(), any(), eq(LocalDate.of(1970, 1, 19))))
+                .thenReturn(transactionsWithKey);
+
+        // when
+        accountFetcher.fetchTransactionsFor(account);
+
+        // then
+        verify(apiClient).fetchTransactions(any(), any(), eq(LocalDate.of(1970, 1, 19)));
+        verify(apiClient, never()).fetchTransactionsWithKey(any(), any());
+    }
+
+    @Test
+    public void fetch_transactions_should_ask_for_upcoming_transactions_if_supported() {
+        TransactionalAccount account = mock(TransactionalAccount.class);
+
+        when(paginationHelper.getTransactionDateLimit(account))
+                .thenReturn(Optional.of(new Date(1638892290)));
+        BaseTransactionsResponse transactions = mock(BaseTransactionsResponse.class);
+        when(transactions.nextKey()).thenReturn(null);
+
+        when(apiClient.fetchTransactions(any(), any(), eq(LocalDate.of(1970, 1, 19))))
+                .thenReturn(transactions);
+        when(apiClient.fetchPendingTransactions(any(), any())).thenReturn(transactions);
+
+        when(aspspConfiguration.supportsPendingTransactions()).thenReturn(true);
+
+        // when
+        accountFetcher.fetchTransactionsFor(account);
+
+        // then
+        verify(apiClient).fetchTransactions(any(), any(), eq(LocalDate.of(1970, 1, 19)));
+        verify(apiClient).fetchPendingTransactions(any(), any());
     }
 }

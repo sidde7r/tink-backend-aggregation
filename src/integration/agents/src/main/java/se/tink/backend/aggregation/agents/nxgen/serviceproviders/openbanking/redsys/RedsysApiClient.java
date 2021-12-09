@@ -7,15 +7,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import no.finn.unleash.UnleashContext;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
@@ -289,9 +289,11 @@ public class RedsysApiClient {
                 .get(AccountBalancesResponse.class);
     }
 
-    private LocalDate transactionsFromDate(String accountId) {
+    private LocalDate transactionsFromDate(String accountId, LocalDate lastDateOfTransaction) {
         if (hasDoneInitialFetch(accountId) || isAutoRefresh()) {
-            return LocalDate.now().minusDays(RedsysConstants.DEFAULT_REFRESH_DAYS);
+            return ObjectUtils.firstNonNull(
+                    lastDateOfTransaction,
+                    LocalDate.now().minusDays(RedsysConstants.DEFAULT_REFRESH_DAYS));
         } else {
             // This might trigger SCA
             return aspspConfiguration.oldestTransactionDate();
@@ -314,7 +316,13 @@ public class RedsysApiClient {
 
     private BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
             RequestBuilder builder) {
-        final HttpResponse response = builder.get(HttpResponse.class);
+        HttpResponse response = null;
+        try {
+            response = builder.get(HttpResponse.class);
+        } catch (HttpResponseException ex) {
+            handleKnownErrors(ex);
+        }
+
         final BaseTransactionsResponse<? extends TransactionEntity> transactionsResponse =
                 response.getBody(aspspConfiguration.getTransactionsResponseClass());
         // Add Request ID from response header
@@ -324,8 +332,47 @@ public class RedsysApiClient {
         return transactionsResponse;
     }
 
-    private BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
-            String accountId, String consentId, LocalDate fromDate, LocalDate toDate) {
+    private void handleKnownErrors(HttpResponseException hre) {
+        final ErrorResponse error = ErrorResponse.fromResponse(hre.getResponse());
+        if (error.hasErrorCode(ErrorCodes.CONSENT_EXPIRED)) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        } else if (HttpStatus.SC_BAD_REQUEST == hre.getResponse().getStatus()
+                && error.hasErrorCode(ErrorCodes.SERVER_ERROR)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+        throw hre;
+    }
+
+    public BaseTransactionsResponse<? extends TransactionEntity> fetchPendingTransactions(
+            String accountId, String consentId) {
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+
+        final RequestBuilder builder =
+                redsysSignedRequestFactory
+                        .createSignedRequest(
+                                makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
+                        .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.PENDING);
+        return fetchTransactions(builder);
+    }
+
+    public BaseTransactionsResponse<? extends TransactionEntity> fetchTransactionsWithKey(
+            PaginationKey nextKey, String consentId) {
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+        headers.put(HeaderKeys.REQUEST_ID, nextKey.getRequestId());
+
+        final RequestBuilder builder =
+                redsysSignedRequestFactory.createSignedRequest(
+                        makeApiUrl(nextKey.getPath()), null, headers);
+        return fetchTransactions(builder);
+    }
+
+    public BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
+            String accountId, String consentId, LocalDate dateOfLastTransation) {
+
+        final LocalDate toDate = LocalDate.now();
+        final LocalDate fromDate = transactionsFromDate(accountId, dateOfLastTransation);
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
         final Map<String, Object> headers = Maps.newHashMap();
@@ -342,38 +389,6 @@ public class RedsysApiClient {
                 fetchTransactions(builder);
         markFetchedAccount(accountId);
         return response;
-    }
-
-    public BaseTransactionsResponse<? extends TransactionEntity> fetchPendingTransactions(
-            String accountId, String consentId) {
-        final Map<String, Object> headers = Maps.newHashMap();
-        headers.put(HeaderKeys.CONSENT_ID, consentId);
-
-        final RequestBuilder builder =
-                redsysSignedRequestFactory
-                        .createSignedRequest(
-                                makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
-                        .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.PENDING);
-        return fetchTransactions(builder);
-    }
-
-    public BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
-            String accountId, String consentId, @Nullable PaginationKey key) {
-        if (Objects.isNull(key)) {
-            // Initial transactions request
-            final LocalDate toDate = LocalDate.now();
-            final LocalDate fromDate = transactionsFromDate(accountId);
-            return fetchTransactions(accountId, consentId, fromDate, toDate);
-        }
-
-        final Map<String, Object> headers = Maps.newHashMap();
-        headers.put(HeaderKeys.CONSENT_ID, consentId);
-        headers.put(HeaderKeys.REQUEST_ID, key.getRequestId());
-
-        final RequestBuilder builder =
-                redsysSignedRequestFactory.createSignedRequest(
-                        makeApiUrl(key.getPath()), null, headers);
-        return fetchTransactions(builder);
     }
 
     public PaymentInitiationResponse createPayment(
