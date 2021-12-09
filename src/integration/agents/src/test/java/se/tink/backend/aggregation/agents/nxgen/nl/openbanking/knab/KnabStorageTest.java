@@ -1,40 +1,34 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN;
 
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RunWith(MockitoJUnitRunner.class)
 public class KnabStorageTest {
 
-    private static final String CONSENT_ID_PERSISTENT_STORAGE_KEY = "consent_id";
+    private static final String CONSENT_ID = "consent_id";
 
     private final String persistedConsentId = "my-consent-id";
 
-    @Mock private OAuth2Token persistedToken;
+    private final OAuth2Token persistedToken =
+            OAuth2Token.createBearer("some-access-token", "some-refresh-token", 30);
 
-    @Mock private PersistentStorage persistentStorage;
+    private final PersistentStorage persistentStorage = new PersistentStorage();
 
-    @InjectMocks private KnabStorage storage;
+    private final KnabStorage storage = new KnabStorage(persistentStorage);
 
     @Before
     public void setUp() {
-        when(persistentStorage.getOptional(CONSENT_ID_PERSISTENT_STORAGE_KEY))
-                .thenReturn(Optional.of(persistedConsentId));
-        when(persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class))
-                .thenReturn(Optional.of(persistedToken));
+        persistentStorage.put(CONSENT_ID, persistedConsentId);
+        persistentStorage.put(OAUTH_2_TOKEN, persistedToken);
     }
 
     @Test
@@ -43,25 +37,18 @@ public class KnabStorageTest {
         Optional<String> consentId = storage.findConsentId();
 
         // then
-        then(persistentStorage).should().getOptional(CONSENT_ID_PERSISTENT_STORAGE_KEY);
-
-        // and
         assertThat(consentId).contains(persistedConsentId);
     }
 
     @Test
     public void shouldReturnEmptyOptionalIfConsentIdHasNotBeenPersisted() {
         // given
-        given(persistentStorage.getOptional(CONSENT_ID_PERSISTENT_STORAGE_KEY))
-                .willReturn(Optional.empty());
+        emptyStorage();
 
         // when
         Optional<String> consentId = storage.findConsentId();
 
         // then
-        then(persistentStorage).should().getOptional(CONSENT_ID_PERSISTENT_STORAGE_KEY);
-
-        // and
         assertThat(consentId).isEmpty();
     }
 
@@ -71,29 +58,18 @@ public class KnabStorageTest {
         Optional<OAuth2Token> token = storage.findBearerToken();
 
         // then
-        then(persistentStorage)
-                .should()
-                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
-
-        // and
         assertThat(token).contains(persistedToken);
     }
 
     @Test
     public void shouldReturnEmptyOptionalIfBearerTokenHasNotBeenPersisted() {
         // given
-        given(persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class))
-                .willReturn(Optional.empty());
+        emptyStorage();
 
         // when
         Optional<OAuth2Token> token = storage.findBearerToken();
 
         // then
-        then(persistentStorage)
-                .should()
-                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
-
-        // and
         assertThat(token).isEmpty();
     }
 
@@ -106,17 +82,23 @@ public class KnabStorageTest {
         storage.persistConsentId(consentIdToBePersisted);
 
         // then
-        then(persistentStorage)
-                .should()
-                .put(CONSENT_ID_PERSISTENT_STORAGE_KEY, consentIdToBePersisted);
+        assertThat(storage.findConsentId()).contains(consentIdToBePersisted);
     }
 
     @Test
     public void shouldPersistBearerToken() {
+        // given
+        OAuth2Token tokenToBePersisted =
+                OAuth2Token.createBearer("new-access-token", "new-refresh-token", 10);
+
         // when
-        storage.persistBearerToken(persistedToken);
+        storage.persistBearerToken(tokenToBePersisted);
 
         // then
-        then(persistentStorage).should().put(PersistentStorageKeys.OAUTH_2_TOKEN, persistedToken);
+        assertThat(storage.findBearerToken()).contains(tokenToBePersisted);
+    }
+
+    private void emptyStorage() {
+        persistentStorage.clear();
     }
 }
