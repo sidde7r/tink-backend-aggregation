@@ -180,7 +180,7 @@ public class KnabApiClient {
         public static final URL AUTHORIZE = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZE);
         public static final URL TOKEN = new URL(BASE_AUTH_URL + Endpoints.TOKEN);
         public static final URL CONSENT = new URL(BASE_API_URL + Endpoints.CONSENT);
-        public static final URL CONSENT_STATUS = new URL(CONSENT + "/{consent-id}/status");
+        public static final URL CONSENT_STATUS = new URL(BASE_API_URL + Endpoints.CONSENT_STATUS);
         public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
         public static final URL BALANCES = new URL(BASE_API_URL + Endpoints.BALANCES);
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
@@ -191,6 +191,7 @@ public class KnabApiClient {
         public static final String AUTHORIZE = "/connect/authorize";
         public static final String TOKEN = "/connect/token";
         public static final String CONSENT = "/openbanking/v2/consents";
+        public static final String CONSENT_STATUS = CONSENT + "/{consent-id}/status";
         public static final String ACCOUNTS = "/openbanking/v1/accounts";
         public static final String BALANCES = "/openbanking/v1/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
