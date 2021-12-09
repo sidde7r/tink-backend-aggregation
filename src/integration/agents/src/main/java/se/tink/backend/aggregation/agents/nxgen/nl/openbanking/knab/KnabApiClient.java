@@ -71,12 +71,7 @@ public class KnabApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
                 .post(
                         ConsentResponse.class,
-                        ConsentRequest.builder()
-                                .validUntil(timeProvider.currentDate().plusDays(90))
-                                .frequencyPerDay(4)
-                                .recurringIndicator(true)
-                                .combinedServiceIndicator(false)
-                                .build())
+                        new ConsentRequest(timeProvider.currentDate().plusDays(90), 4, true, false))
                 .getConsentId();
     }
 
@@ -155,7 +150,6 @@ public class KnabApiClient {
 
     @UtilityClass
     private static class HeaderKeys {
-
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String DATE = "Date";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
@@ -167,13 +161,11 @@ public class KnabApiClient {
 
     @UtilityClass
     private static class HeaderValues {
-
         public static final String NO_CACHE_CONTROL = "no-cache";
     }
 
     @UtilityClass
     static class Urls {
-
         public static final String BASE_AUTH_URL = "https://login.knab.nl";
         public static final String BASE_API_URL = "https://tpp-loket.knab.nl";
 

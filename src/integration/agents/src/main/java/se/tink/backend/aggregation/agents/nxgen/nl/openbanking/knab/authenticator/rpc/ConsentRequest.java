@@ -3,22 +3,22 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticat
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
 import java.util.List;
-import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.time.annotations.KnabDateJsonFormat;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Builder
 @JsonObject
+@RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class ConsentRequest {
 
-    @Builder.Default
-    private List<String> access = ImmutableList.of("accounts", "transactions", "balances");
+    private final List<String> access = ImmutableList.of("accounts", "transactions", "balances");
 
-    @KnabDateJsonFormat private LocalDate validUntil;
+    @KnabDateJsonFormat private final LocalDate validUntil;
 
-    private Integer frequencyPerDay;
+    private final Integer frequencyPerDay;
 
-    private Boolean recurringIndicator;
+    private final Boolean recurringIndicator;
 
-    private Boolean combinedServiceIndicator;
+    private final Boolean combinedServiceIndicator;
 }
