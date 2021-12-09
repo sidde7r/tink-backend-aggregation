@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Urls.FETCH_ACCOUNT_HOLDERS;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities.AccountHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.identitydata.rpc.EvoBancoIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments.rpc.InvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
@@ -44,7 +47,7 @@ public class EvoBancoApiClient {
 
     public LinkingLoginResponse1 link1(LinkingLoginRequest linkingLoginRequest) {
         HttpResponse response =
-                createRequest(EvoBancoConstants.Urls.LINKING_LOGIN)
+                createPostRequest(EvoBancoConstants.Urls.LINKING_LOGIN)
                         .headers(getEEHeaders())
                         .post(HttpResponse.class, linkingLoginRequest);
 
@@ -55,7 +58,7 @@ public class EvoBancoApiClient {
 
     public HttpResponse link2(LinkingLoginRequest linkingLoginRequest) {
         HttpResponse response =
-                createRequest(EvoBancoConstants.Urls.LINKING_LOGIN)
+                createPostRequest(EvoBancoConstants.Urls.LINKING_LOGIN)
                         .headers(getEEHeaders())
                         .post(HttpResponse.class, linkingLoginRequest);
 
@@ -66,7 +69,7 @@ public class EvoBancoApiClient {
 
     public LoginResponse login(LoginRequest loginRequest) {
         LoginResponse loginResponse =
-                createRequest(Urls.LOGIN_API_V1)
+                createPostRequest(Urls.LOGIN_API_V1)
                         .body(loginRequest, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(LoginResponse.class);
 
@@ -90,13 +93,15 @@ public class EvoBancoApiClient {
         sessionStorage.put(
                 Storage.ACCESS_TOKEN,
                 loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
-
+        sessionStorage.put(
+                EvoBancoConstants.Storage.PERSON_AGREEMENT,
+                loginResponse.getUserinfo().getPersonAgreement());
         return loginResponse;
     }
 
     public EELoginResponse eeLogin(EELoginRequest eeLoginRequest) {
         HttpResponse response =
-                createRequest(EvoBancoConstants.Urls.EE_LOGIN)
+                createPostRequest(EvoBancoConstants.Urls.EE_LOGIN)
                         .headers(getEEHeaders())
                         .post(HttpResponse.class, eeLoginRequest);
 
@@ -109,7 +114,7 @@ public class EvoBancoApiClient {
 
         try {
             HttpResponse response =
-                    createRequest(EvoBancoConstants.Urls.KEEP_ALIVE)
+                    createPostRequest(EvoBancoConstants.Urls.KEEP_ALIVE)
                             .headers(getEEHeaders())
                             .post(HttpResponse.class, keepAliveRequest);
 
@@ -127,7 +132,7 @@ public class EvoBancoApiClient {
     public GlobalPositionFirstTimeResponse globalPositionFirstTime() {
 
         HttpResponse response =
-                createRequest(EvoBancoConstants.Urls.GLOBAL_POSITION_FIRST_TIME)
+                createGetRequest(EvoBancoConstants.Urls.GLOBAL_POSITION_FIRST_TIME)
                         .headers(getEEHeaders())
                         .queryParams(getEEQueryParams())
                         .get(HttpResponse.class);
@@ -139,7 +144,7 @@ public class EvoBancoApiClient {
 
     public GlobalPositionResponse globalPosition() {
         HttpResponse response =
-                createRequest(EvoBancoConstants.Urls.FETCH_ACCOUNTS)
+                createGetRequest(EvoBancoConstants.Urls.FETCH_ACCOUNTS)
                         .headers(getEEHeaders())
                         .queryParams(getEEQueryParams())
                         .get(HttpResponse.class);
@@ -151,7 +156,7 @@ public class EvoBancoApiClient {
 
     public TransactionsResponse fetchTransactions(TransactionsPaginationRequest request) {
         HttpResponse response =
-                createRequest(EvoBancoConstants.Urls.FETCH_TRANSACTIONS)
+                createPostRequest(EvoBancoConstants.Urls.FETCH_TRANSACTIONS)
                         .headers(getEEHeaders())
                         .post(HttpResponse.class, request);
 
@@ -162,7 +167,7 @@ public class EvoBancoApiClient {
 
     public CardTransactionsResponse fetchCardTransactions(String cardNumber, int page) {
         HttpResponse response =
-                createRequest(EvoBancoConstants.Urls.FETCH_CARD_TRANSACTIONS)
+                createGetRequest(EvoBancoConstants.Urls.FETCH_CARD_TRANSACTIONS)
                         .headers(getEEHeaders())
                         .queryParam(
                                 EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
@@ -206,7 +211,7 @@ public class EvoBancoApiClient {
 
     public InvestmentsResponse fetchInvestments() {
         HttpResponse response =
-                createRequest(EvoBancoConstants.Urls.FETCH_INVESTMENTS)
+                createGetRequest(EvoBancoConstants.Urls.FETCH_INVESTMENTS)
                         .headers(getEEHeaders())
                         .queryParam(
                                 EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
@@ -228,7 +233,7 @@ public class EvoBancoApiClient {
     }
 
     public EvoBancoIdentityDataResponse fetchIdentityData() {
-        return createRequest(
+        return createGetRequest(
                         Urls.FETCH_IDENTITY.parameter(
                                 Urls.PARAM_ID, sessionStorage.get(Storage.USER_ID)))
                 .queryParam(
@@ -293,9 +298,35 @@ public class EvoBancoApiClient {
         sessionStorage.put(EvoBancoConstants.Storage.COD_SEC_IP, newCodSecIp);
     }
 
-    private RequestBuilder createRequest(URL url) {
+    private RequestBuilder createGetRequest(URL url) {
+        return client.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    private RequestBuilder createPostRequest(URL url) {
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    public AccountHoldersResponse fetchAccountHolders(String accountNumber) {
+        HttpResponse response =
+                createGetRequest(new URL(String.format(FETCH_ACCOUNT_HOLDERS, accountNumber)))
+                        .headers(getEEHeaders())
+                        .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(Storage.ACCESS_TOKEN))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.ENTITY_CODE,
+                                sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.USER_BE,
+                                sessionStorage.get(EvoBancoConstants.Storage.USER_BE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
+                                sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.ECV_PERSON_AGREEMENT,
+                                sessionStorage.get(EvoBancoConstants.Storage.PERSON_AGREEMENT))
+                        .get(HttpResponse.class);
+
+        return response.getBody(AccountHoldersResponse.class);
     }
 }

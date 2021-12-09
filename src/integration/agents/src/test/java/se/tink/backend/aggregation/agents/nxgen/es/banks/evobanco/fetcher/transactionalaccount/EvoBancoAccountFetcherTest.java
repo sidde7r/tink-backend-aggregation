@@ -14,6 +14,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities.AccountHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
@@ -48,6 +49,12 @@ public class EvoBancoAccountFetcherTest {
                                 Paths.get(TEST_DATA_PATH, "accounts_correct_response.json")
                                         .toFile(),
                                 GlobalPositionResponse.class));
+        when(evoBancoApiClient.fetchAccountHolders(anyString()))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "account_holders.json").toFile(),
+                                AccountHoldersResponse.class));
+
         // when
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
         accounts.iterator();
@@ -67,6 +74,12 @@ public class EvoBancoAccountFetcherTest {
                                 Paths.get(TEST_DATA_PATH, "accounts_correct_response.json")
                                         .toFile(),
                                 GlobalPositionResponse.class));
+        when(evoBancoApiClient.fetchAccountHolders(anyString()))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "account_holders.json").toFile(),
+                                AccountHoldersResponse.class));
+
         // when
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
 
@@ -84,8 +97,10 @@ public class EvoBancoAccountFetcherTest {
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo("IBAN1");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("Depósito");
         assertThat(account.getIdModule().getProductName()).isEqualTo("I");
-        assertThat(account.getParties().get(0).getName()).isEqualTo("Szymon Mysiak");
+        assertThat(account.getParties().get(0).getName()).isEqualTo("Fred Flinstone");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
+        assertThat(account.getParties().get(1).getName()).isEqualTo("Wilma Flinstone");
+        assertThat(account.getParties().get(1).getRole()).isEqualTo(Role.AUTHORIZED_USER);
     }
 
     private void assertCheckingAccountValid(TransactionalAccount account) {
@@ -98,8 +113,10 @@ public class EvoBancoAccountFetcherTest {
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo("IBAN2");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("Cuenta Inteligente");
         assertThat(account.getIdModule().getProductName()).isEqualTo("I");
-        assertThat(account.getParties().get(0).getName()).isEqualTo("Szymon Mysiak");
+        assertThat(account.getParties().get(0).getName()).isEqualTo("Fred Flinstone");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
+        assertThat(account.getParties().get(1).getName()).isEqualTo("Wilma Flinstone");
+        assertThat(account.getParties().get(1).getRole()).isEqualTo(Role.AUTHORIZED_USER);
     }
 
     @Test
@@ -117,6 +134,11 @@ public class EvoBancoAccountFetcherTest {
                                 Paths.get(TEST_DATA_PATH, "last_credit_card_transactions_page.json")
                                         .toFile(),
                                 CardTransactionsResponse.class));
+        when(evoBancoApiClient.fetchAccountHolders(anyString()))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "account_holders.json").toFile(),
+                                AccountHoldersResponse.class));
         // when
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
         TransactionalAccount debitCardAccount =
