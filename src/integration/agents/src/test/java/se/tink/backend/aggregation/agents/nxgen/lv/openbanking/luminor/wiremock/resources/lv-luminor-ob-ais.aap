@@ -15,13 +15,13 @@ RESPONSE 2
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"iban":"EE142200555555555555","currency":"EUR","accountName":null}]}
+{"accounts":[{"iban":"LV44UNLA0055555555555","currency":"EUR","accountName":null}]}
 
 REQUEST 3
 POST https://psd2.luminoropenbanking.com/v1/consents
 Content-Type: application/json
 
-{"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"2022-01-01","combinedServiceIndicator":false,"access":{"accounts":[{"iban":"EE142200555555555555"}]}}
+{"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"2022-01-01","combinedServiceIndicator":false,"access":{"accounts":[{"iban":"LV44UNLA0055555555555"}]}}
 
 RESPONSE 3
 200
@@ -47,7 +47,7 @@ RESPONSE 5
 200
 Content-Type: application/json
 
-{"accounts":[{"interestRate":"0","product":"Current account","annualLimitFee":"0","balances":[{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimAvailable","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"resourceId":"fakeID","_links":{"balances":{"href":"/v1/accounts/fakeID/balances"},"transactions":{"href":"/v1/accounts/fakeID/transactions"}},"iban":"EE142200555555555555","usage":null,"name":null,"ownerName":"ESBJORN FAKENAME","currency":"EUR","cardAccount":false,"bic":"RIKOLV2XXXX","status":"enabled"}]}
+{"accounts":[{"interestRate":"0","product":"Current account","annualLimitFee":"0","balances":[{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimAvailable","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"resourceId":"fakeID","_links":{"balances":{"href":"/v1/accounts/fakeID/balances"},"transactions":{"href":"/v1/accounts/fakeID/transactions"}},"iban":"LV44UNLA0055555555555","usage":null,"name":null,"ownerName":"ESBJORN FAKENAME","currency":"EUR","cardAccount":false,"bic":"RIKOLV2XXXX","status":"enabled"}]}
 
 REQUEST 6
 GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-04-03&dateTo=1992-04-10&bookingStatus=booked
@@ -57,7 +57,7 @@ RESPONSE 6
 200
 Content-Type: application/json
 
-{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"70484758-2/RMZB4X7RCL","endToEndId":"NOTPROVIDED","bookingDate":"2021-08-09","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"10.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"anotherEE142200555555555555"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"EE142200555555555555"}}
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"70484758-2/RMZB4X7RCL","endToEndId":"NOTPROVIDED","bookingDate":"2021-08-09","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"10.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"anotherLV44UNLA0055555555555"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"LV44UNLA0055555555555"}}
 
 REQUEST 7
 GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-03-20&dateTo=1992-04-09&bookingStatus=booked
@@ -67,7 +67,7 @@ RESPONSE 7
 200
 Content-Type: application/json
 
-{"balances":[{"balanceAmount":{"currency":"EUR","amount":1.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"68378533-C","endToEndId":null,"bookingDate":"2021-08-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-1.00"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"EE142200555555555555"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: Mēneša maksa par MINI komplekta izmantošanu par 07.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}},{"transactionId":"70484758-2/RMZB4X7RCL","endToEndId":"NOTPROVIDED","bookingDate":"2021-08-09","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"10.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"anotherEE142200555555555555"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"EE142200555555555555"}}
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":1.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"68378533-C","endToEndId":null,"bookingDate":"2021-08-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-1.00"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"LV44UNLA0055555555555"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: Mēneša maksa par MINI komplekta izmantošanu par 07.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}},{"transactionId":"70484758-2/RMZB4X7RCL","endToEndId":"NOTPROVIDED","bookingDate":"2021-08-09","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"10.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"anotherLV44UNLA0055555555555"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"LV44UNLA0055555555555"}}
 
 
 REQUEST 8
@@ -78,7 +78,7 @@ RESPONSE 8
 200
 Content-Type: application/json
 
-{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.00},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"62551631-0/RMZB4TV6GT","endToEndId":"NOTPROVIDED","bookingDate":"2021-07-12","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"2.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"LV67UNLA0050007539067"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}},{"transactionId":"62554052-C","endToEndId":null,"bookingDate":"2021-07-12","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-0.77"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"EE142200555555555555"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: DLQ6415527 Mēneša maksa par MINI komplekta izmantošanu par 06.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"EE142200555555555555"}}
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.00},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"62551631-0/RMZB4TV6GT","endToEndId":"NOTPROVIDED","bookingDate":"2021-07-12","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"2.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"LV67UNLA0050007539067"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}},{"transactionId":"62554052-C","endToEndId":null,"bookingDate":"2021-07-12","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-0.77"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"LV44UNLA0055555555555"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: DLQ6415527 Mēneša maksa par MINI komplekta izmantošanu par 06.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"LV44UNLA0055555555555"}}
 
 REQUEST 9
 GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-02-07&dateTo=1992-02-28&bookingStatus=booked
@@ -88,7 +88,7 @@ RESPONSE 9
 200
 Content-Type: application/json
 
-{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"59779198-C","endToEndId":null,"bookingDate":"2021-07-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-0.23"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"EE142200555555555555"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: DLQ6415527 Mēneša maksa par MINI komplekta izmantošanu par 06.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"EE142200555555555555"}}
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"59779198-C","endToEndId":null,"bookingDate":"2021-07-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-0.23"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"LV44UNLA0055555555555"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: DLQ6415527 Mēneša maksa par MINI komplekta izmantošanu par 06.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"LV44UNLA0055555555555"}}
 
 REQUEST 10
 GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-01-17&dateTo=1992-02-07&bookingStatus=booked
@@ -98,5 +98,5 @@ RESPONSE 10
 200
 Content-Type: application/json
 
-{"balances":[{"balanceAmount":{"currency":"EUR","amount":1.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"51099499-C","endToEndId":null,"bookingDate":"2021-06-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-1.00"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"EE142200555555555555"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: Mēneša maksa par MINI komplekta izmantošanu par 05.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"EE142200555555555555"}}
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":1.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"51099499-C","endToEndId":null,"bookingDate":"2021-06-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-1.00"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"LV44UNLA0055555555555"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: Mēneša maksa par MINI komplekta izmantošanu par 05.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"LV44UNLA0055555555555"}}
 

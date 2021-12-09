@@ -1,33 +1,33 @@
 {
   "accounts": [
     {
-      "accountNumber": "EE142200555555555555",
+      "accountNumber": "LT681234598765432108",
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "EUR",
-        "exactValue": 10.23,
         "scale": 2,
         "unscaledValue": 1023,
+        "exactValue": 10.23,
         "doubleValue": 10.23
       },
       "currencyCode": "EUR",
       "availableBalance": {
         "currencyCode": "EUR",
-        "exactValue": 10.23,
         "scale": 2,
         "unscaledValue": 1023,
+        "exactValue": 10.23,
         "doubleValue": 10.23
       },
-      "bankId": "EE142200555555555555",
+      "bankId": "LT681234598765432108",
       "excluded": false,
       "favored": false,
-      "name": "EE142200555555555555",
+      "name": "LT681234598765432108",
       "ownership": 1.0,
       "type": "CHECKING",
       "userModifiedExcluded": false,
       "userModifiedName": false,
       "userModifiedType": false,
-      "identifiers": "[\"iban://RIKOLV2XXXX/EE142200555555555555\"]",
+      "identifiers": "[\"iban://RIKOLV2XXXX/LT681234598765432108\"]",
       "closed": false,
       "holderName": "Esbjorn Fakename",
       "accountHolder": {
