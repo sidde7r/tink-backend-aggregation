@@ -1,16 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabApiClient;
@@ -18,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RunWith(MockitoJUnitRunner.class)
 public class KnabAuthenticatorTest {
@@ -45,9 +41,11 @@ public class KnabAuthenticatorTest {
 
     private final URL anonymousConsentApprovalUrl = URL.of("https://login.knab.nl.fake/authorize");
 
-    @Mock private KnabApiClient apiClient;
+    private final PersistentStorage persistentStorage = new PersistentStorage();
 
-    @Mock private KnabStorage storage;
+    private final KnabStorage storage = new KnabStorage(persistentStorage);
+
+    @Mock private KnabApiClient apiClient;
 
     private KnabAuthenticator authenticator;
 
@@ -57,108 +55,88 @@ public class KnabAuthenticatorTest {
                 new KnabAuthenticator(
                         new StrongAuthenticationState(authenticationState), apiClient, storage);
 
-        when(apiClient.applicationAccessToken()).thenReturn(applicationAccessToken);
-        when(apiClient.anonymousConsent(applicationAccessToken)).thenReturn(consentId);
-        when(apiClient.anonymousConsentApprovalUrl(scope(), authenticationState))
-                .thenReturn(anonymousConsentApprovalUrl);
-        when(apiClient.accessToken(accessTokenCode, authenticationState)).thenReturn(accessToken);
-        when(apiClient.refreshToken(refreshToken)).thenReturn(refreshedAccessToken);
-        when(apiClient.consentStatus(consentId, accessToken)).thenReturn(true);
-
-        when(storage.findConsentId()).thenReturn(Optional.of(consentId));
+        storage.persistConsentId(consentId);
     }
 
     @Test
     public void shouldReturnAuthorizationUrlAndRequestForAnonymousConsentBefore() {
+        // given
+        emptyStorage();
+
+        // and
+        bankAnonymousConsentFlow();
+
         // when
         URL authorizationUrl = authenticator.buildAuthorizeUrl(authenticationState);
 
         // then
-        InOrder inOrder = inOrder(apiClient, storage);
-
-        // and
-        then(apiClient).should(inOrder).applicationAccessToken();
-        then(apiClient).should(inOrder).anonymousConsent(applicationAccessToken);
-        then(storage).should(inOrder).persistConsentId(consentId);
-        then(apiClient).should(inOrder).anonymousConsentApprovalUrl(scope(), authenticationState);
-
-        // and
-        inOrder.verifyNoMoreInteractions();
-
-        // and
         assertThat(authorizationUrl).isEqualTo(anonymousConsentApprovalUrl);
+
+        // and
+        assertThat(storage.findConsentId()).contains(consentId);
     }
 
     @Test
     public void shouldReturnAccessToken() {
+        // given
+        bankRespondsWithAccessToken();
+
         // when
         OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(accessTokenCode);
 
         // then
-        then(apiClient).should().accessToken(accessTokenCode, authenticationState);
-
-        // and
         assertThat(accessToken).usingRecursiveComparison().isEqualTo(accessToken);
     }
 
     @Test
     public void shouldReturnAccessTokenAfterRefresh() {
+        // given
+        bankRespondsWithRefreshedAccessToken();
+
         // when
         OAuth2Token newAccessToken = authenticator.refreshAccessToken(refreshToken);
 
         // then
-        then(apiClient).should().refreshToken(refreshToken);
-
-        // and
-        then(storage).should().persistBearerToken(newAccessToken);
-
-        // and
         assertThat(newAccessToken).usingRecursiveComparison().isEqualTo(refreshedAccessToken);
+
+        // and
+        assertThat(storage.findBearerToken()).contains(refreshedAccessToken);
     }
 
     @Test
     public void shouldPersistAccessToken() {
+        // given
+        bankRespondsWithValidConsentStatus();
+
         // when
         authenticator.useAccessToken(accessToken);
 
         // then
-        then(apiClient).should().consentStatus(consentId, accessToken);
-
-        // and
-        then(storage).should().persistBearerToken(accessToken);
+        assertThat(storage.findBearerToken()).contains(accessToken);
     }
 
     @Test
     public void shouldNotPersistAccessTokenWithoutConsent() {
         // given
-        given(storage.findConsentId()).willReturn(Optional.empty());
+        noConsent();
 
         // when
         authenticator.useAccessToken(accessToken);
 
         // then
-        then(storage).should().findConsentId();
-
-        // and
-        then(storage).shouldHaveNoMoreInteractions();
+        assertThat(storage.findBearerToken()).isEmpty();
     }
 
     @Test
     public void shouldNotPersistAccessTokenWithoutValidConsent() {
         // given
-        given(apiClient.consentStatus(consentId, accessToken)).willReturn(false);
+        bankRespondsWithInvalidConsentStatus();
 
         // when
         authenticator.useAccessToken(accessToken);
 
         // then
-        then(storage).should().findConsentId();
-
-        // and
-        then(apiClient).should().consentStatus(consentId, accessToken);
-
-        // and
-        then(storage).shouldHaveNoMoreInteractions();
+        assertThat(storage.findBearerToken()).isEmpty();
     }
 
     private String scope() {
@@ -171,5 +149,36 @@ public class KnabAuthenticatorTest {
 
     private OAuth2Token applicationAccessToken() {
         return accessToken("some-application-access-token", null);
+    }
+
+    private void bankAnonymousConsentFlow() {
+        when(apiClient.applicationAccessToken()).thenReturn(applicationAccessToken);
+        when(apiClient.anonymousConsent(applicationAccessToken)).thenReturn(consentId);
+        when(apiClient.anonymousConsentApprovalUrl(scope(), authenticationState))
+                .thenReturn(anonymousConsentApprovalUrl);
+    }
+
+    private void bankRespondsWithAccessToken() {
+        when(apiClient.accessToken(accessTokenCode, authenticationState)).thenReturn(accessToken);
+    }
+
+    private void bankRespondsWithRefreshedAccessToken() {
+        when(apiClient.refreshToken(refreshToken)).thenReturn(refreshedAccessToken);
+    }
+
+    private void bankRespondsWithValidConsentStatus() {
+        when(apiClient.consentStatus(consentId, accessToken)).thenReturn(true);
+    }
+
+    private void bankRespondsWithInvalidConsentStatus() {
+        when(apiClient.consentStatus(consentId, accessToken)).thenReturn(false);
+    }
+
+    private void noConsent() {
+        storage.persistConsentId(null);
+    }
+
+    private void emptyStorage() {
+        persistentStorage.clear();
     }
 }
