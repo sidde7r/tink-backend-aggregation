@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.user_interaction.supplemental_information;
+package se.tink.agent.sdk.user_interaction;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableList;
@@ -14,6 +14,10 @@ public class SupplementalInformation {
 
     public ImmutableList<Field> getFields() {
         return fields;
+    }
+
+    public UserInteraction<SupplementalInformation> intoUserInteraction() {
+        return UserInteraction.supplementalInformation(this).userResponseRequired().build();
     }
 
     public static SupplementalInformation from(ImmutableList<Field> fields) {

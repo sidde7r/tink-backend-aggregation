@@ -1,8 +1,8 @@
 package se.tink.agent.sdk.authentication.authenticators.swedish_mobile_bankid;
 
 import se.tink.agent.sdk.storage.Reference;
-import se.tink.agent.sdk.user_interaction.UserInteraction;
+import se.tink.agent.sdk.user_interaction.SwedishMobileBankIdInfo;
 
 public interface SwedishMobileBankIdGetAutostartToken {
-    UserInteraction<String> getAutostartToken(Reference reference);
+    SwedishMobileBankIdInfo getAutostartToken(Reference reference);
 }

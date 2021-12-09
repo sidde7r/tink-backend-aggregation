@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.user_interaction.swedish_mobile_bankid;
+package se.tink.agent.sdk.user_interaction;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.annotation.Nullable;
@@ -9,6 +9,10 @@ public class SwedishMobileBankIdInfo {
 
     private SwedishMobileBankIdInfo(@Nullable String autostartToken) {
         this.autostartToken = autostartToken;
+    }
+
+    public UserInteraction<SwedishMobileBankIdInfo> intoUserInteraction() {
+        return UserInteraction.swedishMobileBankId(this);
     }
 
     public static SwedishMobileBankIdInfo withAutostartToken(String autostartToken) {

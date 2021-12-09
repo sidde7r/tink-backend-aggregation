@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
 import javax.annotation.Nullable;
-import se.tink.agent.sdk.user_interaction.supplemental_information.SupplementalInformation;
-import se.tink.agent.sdk.user_interaction.swedish_mobile_bankid.SwedishMobileBankIdInfo;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UserInteraction<T> {

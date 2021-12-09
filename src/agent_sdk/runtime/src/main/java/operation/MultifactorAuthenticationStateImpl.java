@@ -1,10 +1,10 @@
 package se.tink.agent.runtime.operation;
 
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
+import se.tink.agent.sdk.user_interaction.SupplementalInformation;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionBuilder;
-import se.tink.agent.sdk.user_interaction.supplemental_information.SupplementalInformation;
 
 // TODO: move this class
 public class MultifactorAuthenticationStateImpl implements MultifactorAuthenticationState {
