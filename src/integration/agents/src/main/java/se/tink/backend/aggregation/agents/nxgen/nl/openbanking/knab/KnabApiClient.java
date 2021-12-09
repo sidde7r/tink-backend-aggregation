@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.function.Supplier;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.BasicAuthorizationHeader;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.rpc.ConsentRequest;
@@ -152,7 +153,8 @@ public class KnabApiClient {
         return () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception());
     }
 
-    static class HeaderKeys {
+    @UtilityClass
+    private static class HeaderKeys {
 
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String DATE = "Date";
@@ -163,11 +165,13 @@ public class KnabApiClient {
         public static final String CACHE_CONTROL = "cache-control";
     }
 
-    static class HeaderValues {
+    @UtilityClass
+    private static class HeaderValues {
 
         public static final String NO_CACHE_CONTROL = "no-cache";
     }
 
+    @UtilityClass
     static class Urls {
 
         public static final String BASE_AUTH_URL = "https://login.knab.nl";
@@ -182,7 +186,8 @@ public class KnabApiClient {
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
     }
 
-    static class Endpoints {
+    @UtilityClass
+    private static class Endpoints {
         public static final String AUTHORIZE = "/connect/authorize";
         public static final String TOKEN = "/connect/token";
         public static final String CONSENT = "/openbanking/v2/consents";
@@ -192,10 +197,12 @@ public class KnabApiClient {
                 "/openbanking/v1/accounts/{accountId}/transactions";
     }
 
-    static class PathVariables {
+    @UtilityClass
+    private static class PathVariables {
         public static final String ACCOUNT_ID = "accountId";
     }
 
+    @UtilityClass
     static class QueryKeys {
         public static final String RESPONSE_TYPE = "response_type";
         public static final String STATE = "state";
@@ -208,6 +215,7 @@ public class KnabApiClient {
         public static final String DATE_TO = "dateTo";
     }
 
+    @UtilityClass
     static class QueryValues {
         public static final String CODE = "code";
         public static final String BOOKED = "booked";
