@@ -3,11 +3,11 @@ package src.agent_sdk.sdk.test.user_interaction;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.agent.sdk.user_interaction.SupplementalInformation;
+import se.tink.agent.sdk.user_interaction.SwedishMobileBankIdInfo;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionType;
-import se.tink.agent.sdk.user_interaction.supplemental_information.SupplementalInformation;
-import se.tink.agent.sdk.user_interaction.swedish_mobile_bankid.SwedishMobileBankIdInfo;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 

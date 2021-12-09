@@ -1,7 +1,7 @@
 package se.tink.agent.sdk.utils;
 
+import se.tink.agent.sdk.user_interaction.SupplementalInformation;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
-import se.tink.agent.sdk.user_interaction.supplemental_information.SupplementalInformation;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 

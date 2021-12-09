@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.user_interaction.supplemental_information;
+package se.tink.agent.sdk.user_interaction;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableList;

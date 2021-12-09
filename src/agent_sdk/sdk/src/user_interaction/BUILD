@@ -8,17 +8,13 @@ java_library_with_sources(
         "@agent_sdk_maven//:com_google_code_findbugs_jsr305",
         "@agent_sdk_maven//:org_projectlombok_lombok",
         "//src/agent_sdk:lombok_plugin",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
     ],
     intdeps = [
         "@tink_backend//src/libraries/serialization_utils",
         "//src/agent_sdk/sdk/src/models/field",
-        "//src/agent_sdk/sdk/src/user_interaction/swedish_mobile_bankid",
-        "//src/agent_sdk/sdk/src/user_interaction/supplemental_information",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
     ],
     visibility = ["//visibility:public"],
-    exports = [
-        "//src/agent_sdk/sdk/src/user_interaction/supplemental_information",
-        "//src/agent_sdk/sdk/src/user_interaction/swedish_mobile_bankid",
-    ],
 )

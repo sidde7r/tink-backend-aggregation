@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.user_interaction.swedish_mobile_bankid;
+package se.tink.agent.sdk.user_interaction;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.annotation.Nullable;
