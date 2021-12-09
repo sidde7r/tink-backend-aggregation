@@ -108,6 +108,12 @@ public class KnabWiremockTest {
         autoRefreshTest.assertExpectedData(expected);
     }
 
+    /**
+     * @deprecated This test can be removed 90 days after the merge, because no V1 API consents
+     *     would be valid for refresh at that time, and they all would need to be replaced by V2 API
+     *     consents. Remember to delete scenario file
+     *     "nl-knab-refresh-auto-with-deprecated-consent.aap"
+     */
     @Test
     @Deprecated
     @SneakyThrows
