@@ -11,6 +11,10 @@ public class SwedishMobileBankIdInfo {
         this.autostartToken = autostartToken;
     }
 
+    public UserInteraction<SwedishMobileBankIdInfo> intoUserInteraction() {
+        return UserInteraction.swedishMobileBankId(this);
+    }
+
     public static SwedishMobileBankIdInfo withAutostartToken(String autostartToken) {
         return new SwedishMobileBankIdInfo(autostartToken);
     }

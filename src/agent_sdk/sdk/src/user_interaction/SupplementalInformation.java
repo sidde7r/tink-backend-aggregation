@@ -16,6 +16,10 @@ public class SupplementalInformation {
         return fields;
     }
 
+    public UserInteraction<SupplementalInformation> intoUserInteraction() {
+        return UserInteraction.supplementalInformation(this).userResponseRequired().build();
+    }
+
     public static SupplementalInformation from(ImmutableList<Field> fields) {
         return new SupplementalInformation(fields);
     }
