@@ -88,10 +88,12 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.uk.openbanking.barclays.BarclaysV31BusinessAgent", 0.025)
                     .put("nxgen.uk.openbanking.barclays.BarclaysV31CorporateAgent", 0.025)
                     .put("nxgen.uk.openbanking.barclays.BarclaysV31WealthAgent", 0.025)
+                    .put("nxgen.uk.openbanking.cashplus.CashplusAgent", 0.01)
+                    .put("nxgen.uk.openbanking.handelsbanken.HandelsbankenCorporateAgent", 0.005)
                     .put("nxgen.uk.openbanking.nationwide.NationwideV31Agent", 0.05)
                     .put("nxgen.uk.openbanking.revolut.RevolutV31Agent", 0.033)
-                    .put("nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent", 0.025)
                     .put("nxgen.uk.openbanking.santander.SantanderV31Agent", 0.033)
+                    .put("nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent", 0.025)
                     .put("nxgen.demo.openbanking.demobank.DemobankAgent", 2.)
                     .put("nxgen.fi.openbanking.spankki.SPankkiAgent", 0.0025)
                     .put("nxgen.pt.openbanking.activobank.ActivoBankAgent", 0.01)
@@ -115,7 +117,6 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.pt.openbanking.unicre.UnicreAgent", 0.01)
                     .put("nxgen.fr.openbanking.bpcegroup.BpceGroupAgent", 0.04)
                     .put("nxgen.serviceproviders.openbanking.revolut.RevolutEEAAgent", 0.033)
-                    .put("nxgen.uk.openbanking.handelsbanken.HandelsbankenCorporateAgent", 0.005)
                     .build();
 
     private final MetricRegistry metricRegistry;
