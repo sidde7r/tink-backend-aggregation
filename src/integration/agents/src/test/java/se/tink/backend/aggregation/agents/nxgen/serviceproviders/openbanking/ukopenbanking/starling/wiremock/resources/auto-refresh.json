@@ -49,7 +49,13 @@
         "externalSystemIds" : {
             "PROVIDER_GIVEN_TRANSACTION_ID" : "05858a24-d2e9-48a8-a396-482a419cc273"
         },
-        "transactionDates" : [ ],
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-08-05",
+                "instant" : "2020-08-05T14:21:27.512Z"
+            }
+        } ],
         "proprietaryFinancialInstitutionType" : "MASTER_CARD",
         "merchantName" : "Market Cafe",
         "booked" : true
@@ -67,7 +73,13 @@
         "externalSystemIds" : {
             "PROVIDER_GIVEN_TRANSACTION_ID" : "f24c0674-b377-492f-af99-9cd770a58fba"
         },
-        "transactionDates" : [ ],
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-07-31",
+                "instant" : "2020-07-31T23:00:00.000Z"
+            }
+        } ],
         "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT",
         "booked" : true
     }, {
@@ -84,7 +96,13 @@
         "externalSystemIds" : {
             "PROVIDER_GIVEN_TRANSACTION_ID" : "a11a0674-b377-492f-af99-9cd770a58fba"
         },
-        "transactionDates" : [ ],
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-07-31",
+                "instant" : "2020-07-31T23:00:00.000Z"
+            }
+        } ],
         "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT",
         "booked" : false
     }, {
@@ -101,7 +119,13 @@
         "externalSystemIds" : {
             "PROVIDER_GIVEN_TRANSACTION_ID" : "b11x0674-b377-492f-af99-9cd770a58fba"
         },
-        "transactionDates" : [ ],
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-07-31",
+                "instant" : "2020-07-31T23:00:00.000Z"
+            }
+        } ],
         "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT",
         "booked" : false
     } ]
