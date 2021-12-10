@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import lombok.SneakyThrows;
 import org.junit.Ignore;
@@ -89,11 +87,7 @@ public final class IngBaseAuthenticationTestFixture {
         String resourcesPath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/authenticator/resources/";
 
-        String fileData =
-                new String(
-                        Files.readAllBytes(Paths.get(resourcesPath).resolve(fileName)),
-                        StandardCharsets.UTF_8);
-
-        return SerializationUtils.deserializeFromString(fileData, className);
+        return SerializationUtils.deserializeFromString(
+                Paths.get(resourcesPath, fileName).toFile(), className);
     }
 }
