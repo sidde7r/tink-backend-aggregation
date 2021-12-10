@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import java.util.HashMap;
 import javax.ws.rs.core.MediaType;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -34,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.MockSupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -52,11 +50,15 @@ public final class IngBaseAutoAuthenticationTest {
     private static final OAuth2Token REFRESHED_ACCESS_TOKEN =
             OAuth2Token.create("bearer", "ing_test_access_token", "ing_refresh_token", 899L);
 
-    private PersistentStorage persistentStorage;
+    private final PersistentStorage persistentStorage = new PersistentStorage();
+    private final IngBaseAuthenticationTestFixture testFixture =
+            new IngBaseAuthenticationTestFixture();
+    private final Credentials credentials =
+            testFixture.deserializeFromFile("ing_credentials.json", Credentials.class);
+    private final CredentialsRequest credentialsRequest =
+            testFixture.createCredentialsRequest(credentials, false);
+
     private Authenticator authenticationController;
-    private CredentialsRequest credentialsRequest;
-    private Credentials credentials;
-    private IngBaseAuthenticationTestFixture testFixture;
 
     @Mock private HttpResponse response;
     @Mock private Filter executionFilter;
@@ -64,18 +66,14 @@ public final class IngBaseAutoAuthenticationTest {
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        persistentStorage = new PersistentStorage();
-        testFixture = new IngBaseAuthenticationTestFixture();
-        credentials = testFixture.deserializeFromFile("ing_credentials.json", Credentials.class);
-        credentialsRequest = testFixture.createCredentialsRequest(credentials, false);
-        authenticationController = createAuthenticationController();
         given(executionFilter.handle(any())).willReturn(response);
+        authenticationController = createAuthenticationController();
     }
 
     @Test
     public void shouldAuthenticateSuccessfully() {
         // given
-        accessTokenIsValid();
+        validAccessToken();
 
         // then
         assertThatNoException()
@@ -88,7 +86,7 @@ public final class IngBaseAutoAuthenticationTest {
     @Test
     public void shouldAuthenticateUsingRefreshTokenWhenAccessTokenIsExpired() {
         // given
-        prepareTestDataWithExpiredAccessToken();
+        expiredAccessToken();
 
         // and
         bankReturnsAccessTokenBasedOnValidRefreshToken();
@@ -110,7 +108,7 @@ public final class IngBaseAutoAuthenticationTest {
     })
     public void shouldRetrySuccessfullyOnHttpClientExceptionWith(String exceptionMessage) {
         // given
-        prepareTestDataWithExpiredAccessToken();
+        expiredAccessToken();
 
         // and
         bankRespondsCorrectlyAfterSecondRequest(exceptionMessage);
@@ -127,7 +125,7 @@ public final class IngBaseAutoAuthenticationTest {
     public void shouldThrowProperExceptionWhenBankRespondsWith(
             int statusCode, AgentError agentError) {
         // given
-        prepareTestDataWithExpiredAccessToken();
+        expiredAccessToken();
 
         // and
         bankRespondsWithGivenStatus(statusCode);
@@ -151,7 +149,7 @@ public final class IngBaseAutoAuthenticationTest {
     @Test
     public void shouldThrowBankSideErrorWhenInvalidSignature() {
         // given
-        prepareTestDataWithExpiredAccessToken();
+        expiredAccessToken();
 
         // and
         bankRespondsWithUnauthorizedStatusAndInvalidSignature();
@@ -164,7 +162,7 @@ public final class IngBaseAutoAuthenticationTest {
     @Test
     public void shouldThrowSessionErrorAndRemoveOauth2TokenWhenBadRequest() {
         // given
-        prepareTestDataWithExpiredAccessToken();
+        expiredAccessToken();
 
         // and
         bankRespondsWithBadRequest();
@@ -184,7 +182,7 @@ public final class IngBaseAutoAuthenticationTest {
                                 "ing_error_response.json", ErrorResponse.class));
     }
 
-    private void accessTokenIsValid() {
+    private void validAccessToken() {
         persistentStorage.put("oauth2_access_token", ACCESS_TOKEN);
     }
 
@@ -221,7 +219,7 @@ public final class IngBaseAutoAuthenticationTest {
                 .isEqualTo(expectedToken);
     }
 
-    private void prepareTestDataWithExpiredAccessToken() {
+    private void expiredAccessToken() {
         persistentStorage.put("CLIENT_ID", "client_Id_test");
         OAuth2Token token = createExpiredOAuth2Token();
         persistentStorage.put("oauth2_access_token", token);
@@ -234,7 +232,7 @@ public final class IngBaseAutoAuthenticationTest {
 
     private AutoAuthenticationController createAuthenticationController() {
         SupplementalInformationHelper supplementalInfoHelper =
-                new MockSupplementalInformationHelper(new HashMap<>());
+                mock(SupplementalInformationHelper.class);
         return new AutoAuthenticationController(
                 credentialsRequest,
                 new AgentTestContext(credentials),
