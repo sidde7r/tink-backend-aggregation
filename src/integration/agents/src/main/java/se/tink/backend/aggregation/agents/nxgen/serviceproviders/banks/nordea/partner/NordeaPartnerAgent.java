@@ -46,12 +46,15 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private NordeaPartnerJweHelper jweHelper;
     protected NordeaPartnerAccountMapper accountMapper;
+    private boolean isOnStaging;
 
     @Inject
     public NordeaPartnerAgent(
             AgentComponentProvider componentProvider,
             NordeaPartnerKeystoreProvider keystoreProvider) {
         super(componentProvider);
+        isOnStaging =
+                "neston-staging".equalsIgnoreCase(componentProvider.getContext().getClusterId());
         apiClient =
                 new NordeaPartnerApiClient(
                         client,
@@ -164,7 +167,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider) {
         NordeaPartnerTransactionalAccountFetcher accountFetcher =
                 new NordeaPartnerTransactionalAccountFetcher(
-                        apiClient, getAccountMapper(), componentProvider, request);
+                        apiClient, getAccountMapper(), componentProvider, request, isOnStaging);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -190,7 +193,8 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     private CreditCardRefreshController constructCreditCardRefreshController(
             AgentComponentProvider componentProvider) {
         final NordeaPartnerCreditCardAccountFetcher fetcher =
-                new NordeaPartnerCreditCardAccountFetcher(apiClient, componentProvider, request);
+                new NordeaPartnerCreditCardAccountFetcher(
+                        apiClient, componentProvider, request, isOnStaging);
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,

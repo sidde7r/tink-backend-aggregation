@@ -6,8 +6,12 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.CardCategory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.entity.CardPermissionEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.entity.CardTransaction;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
@@ -16,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Getter
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardEntity {
@@ -52,6 +57,13 @@ public class CardEntity {
     private String atmAccountNumber;
     // Card's credit feature information. Not available for debit cards
     private CardCreditDetails credit;
+    private Object debit;
+    private Object parallelCards;
+    private Object usageLimits;
+    private CardPermissionEntity permissions;
+    private Object notifications;
+    private Object metadata;
+    private List<CardTransaction> transactions;
 
     @JsonIgnore
     private boolean isCreditCard() {

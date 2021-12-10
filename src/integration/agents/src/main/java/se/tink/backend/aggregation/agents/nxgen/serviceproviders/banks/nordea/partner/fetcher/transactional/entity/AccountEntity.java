@@ -47,6 +47,7 @@ public class AccountEntity {
     private InterestInfoEntity interestInfo;
     private FlexiDepositEntity flexiDeposit;
     private TransactionListSearchCriteriaEntity transactionListSearchCriteria;
+    private List<TransactionEntity> transactions;
 
     @JsonIgnore
     public String getHolderName() {

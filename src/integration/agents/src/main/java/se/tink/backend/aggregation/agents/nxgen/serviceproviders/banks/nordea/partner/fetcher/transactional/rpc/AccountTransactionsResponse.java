@@ -22,6 +22,7 @@ public class AccountTransactionsResponse {
 
     @Getter private String continuationKey;
     private List<TransactionEntity> result;
+    private List<TransactionEntity> transactions;
     private int totalSize;
 
     @JsonIgnore
