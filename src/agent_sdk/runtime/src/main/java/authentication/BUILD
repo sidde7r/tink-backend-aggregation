@@ -8,6 +8,7 @@ java_library(
     ],
     deps = [
         "//src/agent_sdk/runtime/src/main/java/authentication/processes",
+        "//src/agent_sdk/runtime/src/main/java/authentication/processes/berlingroup",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/generic",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/oauth2",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/oauth2_decoupled_app",
