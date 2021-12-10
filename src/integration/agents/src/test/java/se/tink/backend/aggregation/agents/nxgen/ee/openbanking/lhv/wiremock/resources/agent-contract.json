@@ -4,17 +4,17 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
-            "scale" : 2,
-            "unscaledValue" : 2233,
             "exactValue" : 22.33,
+            "unscaledValue" : 2233,
+            "scale" : 2,
             "doubleValue" : 22.33
         },
         "currencyCode" : "EUR",
         "availableBalance" : {
             "currencyCode" : "EUR",
-            "scale" : 2,
-            "unscaledValue" : 5555533,
             "exactValue" : 55555.33,
+            "unscaledValue" : 5555533,
+            "scale" : 2,
             "doubleValue" : 55555.33
         },
         "bankId" : "EE142200555555555555",
@@ -46,17 +46,17 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
-            "scale" : 2,
-            "unscaledValue" : 543233,
             "exactValue" : 5432.33,
+            "unscaledValue" : 543233,
+            "scale" : 2,
             "doubleValue" : 5432.33
         },
         "currencyCode" : "EUR",
         "availableBalance" : {
             "currencyCode" : "EUR",
-            "scale" : 2,
-            "unscaledValue" : 77733,
             "exactValue" : 777.33,
+            "unscaledValue" : 77733,
+            "scale" : 2,
             "doubleValue" : 777.33
         },
         "bankId" : "EE382200221020145685",
@@ -85,9 +85,531 @@
         "balance" : 5432.33
     } ],
     "transactions" : [ {
+        "amount" : -300.0,
+        "date" : 696769200000,
+        "description" : "Esbjorn Fakename",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202108271403132451-322154695"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202108271403132451-322154695",
+        "booked" : true
+    }, {
+        "amount" : -200.0,
+        "date" : 696769200000,
+        "description" : "Esbjorn Fakename",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202108271403133695-322155374"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202108271403133695-322155374",
+        "booked" : true
+    }, {
+        "amount" : 11.76,
+        "date" : 696769200000,
+        "description" : "Väärtpaberite müük (TKM1T)",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202109071405843909-324263424"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202109071405843909-324263424",
+        "booked" : true
+    }, {
+        "amount" : 117.6,
+        "date" : 696769200000,
+        "description" : "Väärtpaberite müük (TKM1T)",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202109071405843081-324262832"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202109071405843081-324262832",
+        "booked" : true
+    }, {
+        "amount" : 270.48,
+        "date" : 696769200000,
+        "description" : "Väärtpaberite müük (TKM1T)",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202109071405844225-324263627"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202109071405844225-324263627",
+        "booked" : true
+    }, {
+        "amount" : 246.96,
+        "date" : 696769200000,
+        "description" : "Väärtpaberite müük (TKM1T)",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202109071405843660-324263239"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202109071405843660-324263239",
+        "booked" : true
+    }, {
+        "amount" : -649.0,
+        "date" : 696769200000,
+        "description" : "Esbjorn Fakename",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202109071407888203-325839931"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202109071407888203-325839931",
+        "booked" : true
+    }, {
+        "amount" : 3500.0,
+        "date" : 696769200000,
+        "description" : "Jack Snow",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202110121423467359-338084068"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202110121423467359-338084068",
+        "booked" : true
+    }, {
+        "amount" : -2900.0,
+        "date" : 696769200000,
+        "description" : "Väärtpaberite ost (EGR1T)",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202110201426230615-340295635"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202110201426230615-340295635",
+        "booked" : true
+    }, {
+        "amount" : 1500.0,
+        "date" : 696769200000,
+        "description" : "Jack Snow",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111081435483215-347730266"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111081435483215-347730266",
+        "booked" : true
+    }, {
+        "amount" : -142.4,
+        "date" : 696769200000,
+        "description" : "AS Piletilevi Group",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111081435485441-347731802"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111081435485441-347731802",
+        "booked" : true
+    }, {
+        "amount" : -100.0,
+        "date" : 696769200000,
+        "description" : "Esbjorn Fakename",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111081435499074-347741453"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111081435499074-347741453",
+        "booked" : true
+    }, {
+        "amount" : -1000.0,
+        "date" : 696769200000,
+        "description" : "Esbjorn Fakename",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111081435502632-347743837"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111081435502632-347743837",
+        "booked" : true
+    }, {
+        "amount" : -15.0,
+        "date" : 696769200000,
+        "description" : "Elisa Eesti AS",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111081435504858-347745377"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111081435504858-347745377",
+        "booked" : true
+    }, {
+        "amount" : -93.4,
+        "date" : 696769200000,
+        "description" : "Maksekeskus AS",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111091435871843-348057063"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111091435871843-348057063",
+        "booked" : true
+    }, {
+        "amount" : -449.0,
+        "date" : 696769200000,
+        "description" : "Väärtpaberite ost (VIRSI)",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111101436127270-348265621"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111101436127270-348265621",
+        "booked" : true
+    }, {
+        "amount" : -3.0,
+        "date" : 696769200000,
+        "description" : "Ost-müük tehingu teenustasu (VIRSI)",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111101436127270-348265622"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111101436127270-348265622",
+        "booked" : true
+    }, {
+        "amount" : -14.96,
+        "date" : 696769200000,
+        "description" : "AS Eesti Liinirongid",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111101436929984-348980935"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-30",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "202111101436929984-348980935",
+        "booked" : true
+    }, {
         "amount" : -75.0,
         "date" : 696596400000,
-        "description" : "Payment",
+        "description" : "Jane Doe",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -116,7 +638,7 @@
     }, {
         "amount" : 660.0,
         "date" : 696769200000,
-        "description" : "1",
+        "description" : "Esbjorn",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -145,94 +667,7 @@
     }, {
         "amount" : 500.0,
         "date" : 696769200000,
-        "description" : "1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : {
-            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106301378706076-303310033"
-        },
-        "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : "1992-01-30",
-                "instant" : null
-            }
-        }, {
-            "type" : "BOOKING_DATE",
-            "value" : {
-                "date" : "1992-01-30",
-                "instant" : null
-            }
-        } ],
-        "transactionReference" : "202106301378706076-303310033",
-        "booked" : true
-    }, {
-        "amount" : -75.0,
-        "date" : 696596400000,
-        "description" : "Payment",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : {
-            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106281378178164-302887546"
-        },
-        "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : "1992-01-28",
-                "instant" : null
-            }
-        }, {
-            "type" : "BOOKING_DATE",
-            "value" : {
-                "date" : "1992-01-28",
-                "instant" : null
-            }
-        } ],
-        "transactionReference" : "202106281378178164-302887546",
-        "booked" : true
-    }, {
-        "amount" : 660.0,
-        "date" : 696769200000,
-        "description" : "1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : {
-            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106301378679415-303289656"
-        },
-        "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : "1992-01-30",
-                "instant" : null
-            }
-        }, {
-            "type" : "BOOKING_DATE",
-            "value" : {
-                "date" : "1992-01-30",
-                "instant" : null
-            }
-        } ],
-        "transactionReference" : "202106301378679415-303289656",
-        "booked" : true
-    }, {
-        "amount" : 500.0,
-        "date" : 696769200000,
-        "description" : "1",
+        "description" : "Esbjorn",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },

@@ -16,4 +16,14 @@ public class TransactionAmountEntity {
     public ExactCurrencyAmount getTinkAmount() {
         return new ExactCurrencyAmount(amount, currency);
     }
+
+    @JsonIgnore
+    protected boolean isCredit() {
+        return amount != null && amount.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    @JsonIgnore
+    protected boolean isDebit() {
+        return amount != null && amount.compareTo(BigDecimal.ZERO) < 0;
+    }
 }

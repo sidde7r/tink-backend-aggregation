@@ -41,19 +41,67 @@ RESPONSE 5
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"iban":"EE382200221020145685","currency":"EUR","name":"My account"},{"iban":"EE787700771005998777","currency":"EUR","name":"Naruto"}]}
+{
+  "accounts": [
+    {
+      "iban": "EE382200221020145685",
+      "currency": "EUR",
+      "name": "My account"
+    },
+    {
+      "iban": "EE787700771005998777",
+      "currency": "EUR",
+      "name": "Naruto"
+    }
+  ]
+}
 
 REQUEST 6
 POST https://api.lhv.eu/psd2/v1/consents
 Content-Type: application/json
 
-{"access":{"availableAccounts":"allAccounts","balances":[{"iban":"EE382200221020145685"},{"iban":"EE787700771005998777"}],"transactions":[{"iban":"EE382200221020145685"},{"iban":"EE787700771005998777"}]},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":true}
+{
+  "access": {
+    "availableAccounts": "allAccounts",
+    "balances": [
+      {
+        "iban": "EE382200221020145685"
+      },
+      {
+        "iban": "EE787700771005998777"
+      }
+    ],
+    "transactions": [
+      {
+        "iban": "EE382200221020145685"
+      },
+      {
+        "iban": "EE787700771005998777"
+      }
+    ]
+  },
+  "recurringIndicator": true,
+  "validUntil": "1992-07-09",
+  "frequencyPerDay": 4,
+  "combinedServiceIndicator": true
+}
 
 RESPONSE 6
 201
 Content-Type: application/json;charset=utf-8
 
-{"consentStatus":"received","consentId":"0cdd8383-38a5-45c5-8b01-fc4bffb325d3","_links":{"scaRedirect":{"href":"https://api.lhv.eu/psd2/ui/consent/0cdd8383-38a5-45c5-8b01-fc4bffb325d3"},"status":{"href":"https://api.lhv.eu/psd2/v1/consents/0cdd8383-38a5-45c5-8b01-fc4bffb325d3/status"}}}
+{
+  "consentStatus": "received",
+  "consentId": "0cdd8383-38a5-45c5-8b01-fc4bffb325d3",
+  "_links": {
+    "scaRedirect": {
+      "href": "https://api.lhv.eu/psd2/ui/consent/0cdd8383-38a5-45c5-8b01-fc4bffb325d3"
+    },
+    "status": {
+      "href": "https://api.lhv.eu/psd2/v1/consents/0cdd8383-38a5-45c5-8b01-fc4bffb325d3/status"
+    }
+  }
+}
 
 REQUEST 8
 GET https://api.lhv.eu/psd2/v1/consents/0cdd8383-38a5-45c5-8b01-fc4bffb325d3/status
@@ -71,7 +119,42 @@ RESPONSE 9
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"resourceId":"6103210e-d01e-4b53-adfc-01d53485a1ff","iban":"EE382200221020145685","currency":"EUR","product":"Multi currency account","cashAccountType":"CACC","name":"My account","_links":{"balances":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/balances"},"transactions":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/transactions"}}},{"resourceId":"97bc64d8-b742-4a97-a34b-d95db91c5fb6","iban":"EE142200555555555555","currency":"EUR","product":"Multi currency account","cashAccountType":"CACC","name":"Naruto","_links":{"balances":{"href":"https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/balances"},"transactions":{"href":"https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/transactions"}}}]}
+{
+  "accounts": [
+    {
+      "resourceId": "6103210e-d01e-4b53-adfc-01d53485a1ff",
+      "iban": "EE382200221020145685",
+      "currency": "EUR",
+      "product": "Multi currency account",
+      "cashAccountType": "CACC",
+      "name": "My account",
+      "_links": {
+        "balances": {
+          "href": "https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/balances"
+        },
+        "transactions": {
+          "href": "https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/transactions"
+        }
+      }
+    },
+    {
+      "resourceId": "97bc64d8-b742-4a97-a34b-d95db91c5fb6",
+      "iban": "EE142200555555555555",
+      "currency": "EUR",
+      "product": "Multi currency account",
+      "cashAccountType": "CACC",
+      "name": "Naruto",
+      "_links": {
+        "balances": {
+          "href": "https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/balances"
+        },
+        "transactions": {
+          "href": "https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/transactions"
+        }
+      }
+    }
+  ]
+}
 
 REQUEST 10
 GET https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/balances
@@ -80,7 +163,27 @@ RESPONSE 10
 200
 Content-Type: application/hal+json;charset=UTF-8
 
-{"account":{"iban":"EE382200221020145685"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"777.33"}},{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"5432.33"}}]}
+{
+  "account": {
+    "iban": "EE382200221020145685"
+  },
+  "balances": [
+    {
+      "balanceType": "interimAvailable",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "777.33"
+      }
+    },
+    {
+      "balanceType": "interimBooked",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "5432.33"
+      }
+    }
+  ]
+}
 
 REQUEST 11
 GET https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/balances
@@ -89,7 +192,27 @@ RESPONSE 11
 200
 Content-Type: application/hal+json;charset=UTF-8
 
-{"account":{"iban":"EE142200555555555555"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"55555.33"}},{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"22.33"}}]}
+{
+  "account": {
+    "iban": "EE142200555555555555"
+  },
+  "balances": [
+    {
+      "balanceType": "interimAvailable",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "55555.33"
+      }
+    },
+    {
+      "balanceType": "interimBooked",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "22.33"
+      }
+    }
+  ]
+}
 
 REQUEST 12
 GET https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff/transactions?dateFrom=1992-01-11&bookingStatus=booked
@@ -98,7 +221,73 @@ RESPONSE 12
 200
 Content-Type: application/json;charset=utf-8
 
-{"account":{"iban":"EE382200221020145685"},"transactions":{"booked":[{"entryReference":"202106281378178164-302887546","bookingDate":"1992-01-28","transactionAmount":{"currency":"EUR","amount":"-75.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE142200555555555555"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE787700771005998888"},"remittanceInformationUnstructured":"Payment"},{"entryReference":"202106301378679415-303289656","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"660.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE142200555555555555"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"},{"entryReference":"202106301378706076-303310033","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"500.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE142200555555555555"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"}],"_links":{"account":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff"}}}}
+{
+  "account": {
+    "iban": "EE382200221020145685"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "entryReference": "202106281378178164-302887546",
+        "bookingDate": "1992-01-28",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-75.00"
+        },
+        "creditorName": "Jane Doe",
+        "creditorAccount": {
+          "iban": "EE142200555555555555"
+        },
+        "debtorName": "Esbjorn",
+        "debtorAccount": {
+          "iban": "EE787700771005998888"
+        },
+        "remittanceInformationUnstructured": "Payment"
+      },
+      {
+        "entryReference": "202106301378679415-303289656",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "660.00"
+        },
+        "creditorName": "Jane Doe",
+        "creditorAccount": {
+          "iban": "EE787700771005998888"
+        },
+        "debtorName": "Esbjorn",
+        "debtorAccount": {
+          "iban": "EE142200555555555555"
+        },
+        "remittanceInformationUnstructured": "1",
+        "remittanceInformationStructured": "1"
+      },
+      {
+        "entryReference": "202106301378706076-303310033",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "500.00"
+        },
+        "creditorName": "Jane Doe",
+        "creditorAccount": {
+          "iban": "EE787700771005998888"
+        },
+        "debtorName": "Esbjorn",
+        "debtorAccount": {
+          "iban": "EE142200555555555555"
+        },
+        "remittanceInformationUnstructured": "1",
+        "remittanceInformationStructured": "1"
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff"
+      }
+    }
+  }
+}
 
 REQUEST 13
 GET https://api.lhv.eu/psd2/v1/accounts/97bc64d8-b742-4a97-a34b-d95db91c5fb6/transactions?dateFrom=1992-01-11&bookingStatus=booked
@@ -107,4 +296,273 @@ RESPONSE 13
 200
 Content-Type: application/json;charset=utf-8
 
-{"account":{"iban":"EE382200221020145685"},"transactions":{"booked":[{"entryReference":"202106281378178164-302887546","bookingDate":"1992-01-28","transactionAmount":{"currency":"EUR","amount":"-75.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE142200555555555555"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE787700771005998888"},"remittanceInformationUnstructured":"Payment"},{"entryReference":"202106301378679415-303289656","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"660.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE142200555555555555"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"},{"entryReference":"202106301378706076-303310033","bookingDate":"1992-01-30","transactionAmount":{"currency":"EUR","amount":"500.00"},"creditorName":"Jane Doe","creditorAccount":{"iban":"EE787700771005998888"},"debtorName":"Esbjorn","debtorAccount":{"iban":"EE142200555555555555"},"remittanceInformationUnstructured":"1","remittanceInformationStructured":"1"}],"_links":{"account":{"href":"https://api.lhv.eu/psd2/v1/accounts/6103210e-d01e-4b53-adfc-01d53485a1ff"}}}}
+{
+  "account": {
+    "iban": "EE382200221020145685"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "entryReference": "202108271403132451-322154695",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-300.00"
+        },
+        "creditorName": "Esbjorn Fakename",
+        "creditorAccount": {
+          "iban": "EE382200221020145685"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "Lhv konto"
+      },
+      {
+        "entryReference": "202108271403133695-322155374",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-200.00"
+        },
+        "creditorName": "Esbjorn Fakename",
+        "creditorAccount": {
+          "iban": "EE382200221020145685"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "Lhv konto"
+      },
+      {
+        "entryReference": "202109071405843909-324263424",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "11.76"
+        },
+        "remittanceInformationUnstructured": "Väärtpaberite müük (TKM1T)"
+      },
+      {
+        "entryReference": "202109071405843081-324262832",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "117.60"
+        },
+        "remittanceInformationUnstructured": "Väärtpaberite müük (TKM1T)"
+      },
+      {
+        "entryReference": "202109071405844225-324263627",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "270.48"
+        },
+        "remittanceInformationUnstructured": "Väärtpaberite müük (TKM1T)"
+      },
+      {
+        "entryReference": "202109071405843660-324263239",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "246.96"
+        },
+        "remittanceInformationUnstructured": "Väärtpaberite müük (TKM1T)"
+      },
+      {
+        "entryReference": "202109071407888203-325839931",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-649.00"
+        },
+        "creditorName": "Esbjorn Fakename",
+        "creditorAccount": {
+          "iban": "EE032311123456789015"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "Makse SEB rakendusest"
+      },
+      {
+        "entryReference": "202110121423467359-338084068",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "3500.00"
+        },
+        "creditorName": "**HASHED:qO**",
+        "creditorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "debtorName": "Jack Snow",
+        "debtorAccount": {
+          "iban": "EE032311123456789015"
+        },
+        "remittanceInformationUnstructured": "Makse SEB rakendusest"
+      },
+      {
+        "entryReference": "202110201426230615-340295635",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-2900.00"
+        },
+        "remittanceInformationUnstructured": "Väärtpaberite ost (EGR1T)"
+      },
+      {
+        "entryReference": "202111081435483215-347730266",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "1500.00"
+        },
+        "creditorName": "**HASHED:qO**",
+        "creditorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "debtorName": "Jack Snow",
+        "debtorAccount": {
+          "iban": "EE032311123456789015"
+        },
+        "remittanceInformationUnstructured": "Makse SEB rakendusest"
+      },
+      {
+        "entryReference": "202111081435485441-347731802",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-142.40"
+        },
+        "creditorName": "AS Piletilevi Group",
+        "creditorAccount": {
+          "iban": "EE427700771000486542"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "Arve nr 113415171212128 Eesti otsib su",
+        "remittanceInformationStructured": "113415171212128"
+      },
+      {
+        "entryReference": "202111081435499074-347741453",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-100.00"
+        },
+        "creditorName": "Esbjorn Fakename",
+        "creditorAccount": {
+          "iban": "EE382200221020145685"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "ülekanne miinus superstaari piletid"
+      },
+      {
+        "entryReference": "202111081435502632-347743837",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-1000.00"
+        },
+        "creditorName": "Esbjorn Fakename",
+        "creditorAccount": {
+          "iban": "EE521010011864747229"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "ühiskonto"
+      },
+      {
+        "entryReference": "202111081435504858-347745377",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-15.00"
+        },
+        "creditorName": "Elisa Eesti AS",
+        "creditorAccount": {
+          "iban": "EE307700771001076906"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "8443769",
+        "remittanceInformationStructured": "84437699"
+      },
+      {
+        "entryReference": "202111091435871843-348057063",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-93.40"
+        },
+        "creditorName": "Maksekeskus AS",
+        "creditorAccount": {
+          "iban": "EE947700771001609739"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "JRB Millerwood OÜ, minukoer.ee, 83019 (23966838)",
+        "remittanceInformationStructured": "10000000000188007601"
+      },
+      {
+        "entryReference": "202111101436127270-348265621",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-449.00"
+        },
+        "remittanceInformationUnstructured": "Väärtpaberite ost (VIRSI)",
+        "remittanceInformationStructured": ""
+      },
+      {
+        "entryReference": "202111101436127270-348265622",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-3.00"
+        },
+        "remittanceInformationUnstructured": "Ost-müük tehingu teenustasu (VIRSI)",
+        "remittanceInformationStructured": ""
+      },
+      {
+        "entryReference": "202111101436929984-348980935",
+        "bookingDate": "1992-01-30",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-14.96"
+        },
+        "creditorName": "AS Eesti Liinirongid",
+        "creditorAccount": {
+          "iban": "EE817700771001291164"
+        },
+        "debtorName": "**HASHED:qO**",
+        "debtorAccount": {
+          "iban": "EE787700771005998777"
+        },
+        "remittanceInformationUnstructured": "RD/EL; Ostukorv nr 14922599",
+        "remittanceInformationStructured": "149225995"
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "https://api.lhv.eu/psd2/v1/accounts/438f427b-8f08-4fa6-a23b-d6d89e8b05ba"
+      }
+    }
+  }
+}
