@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.errorhandle.ErrorResponse;
@@ -271,26 +273,41 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             PaymentMultiStepRequest paymentMultiStepRequest, Map<String, String> supplementalInfo)
             throws PaymentException {
         CreatePaymentResponse createPaymentResponse;
-        if (supplementalInfo == null || supplementalInfo.isEmpty()) {
-            try {
+        if (supplementalInfo != null && !supplementalInfo.isEmpty()) {
+            if (QueryValues.SUCCESS.equals(supplementalInfo.get(QueryKeys.RESULT))) {
                 createPaymentResponse =
-                        apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
-            } catch (HttpResponseException httpResponseException) {
-                ErrorResponse errorResponse =
-                        ErrorResponse.createFrom(httpResponseException.getResponse());
-                if (errorResponse != null
-                        && (errorResponse.errorManagementDescriptionEquals(
-                                        "Operation not allowed: authentication required.")
-                                || errorResponse.tppMessagesContainsError(
-                                        "GENERIC_ERROR", "Unknown Payment Identifier"))) {
-                    throw new PaymentAuthorizationTimeOutException();
-                } else {
-                    throw httpResponseException;
-                }
+                        fetchPaymentStatusOrThrowException(
+                                paymentMultiStepRequest,
+                                new PaymentAuthorizationCancelledByUserException());
+            } else {
+                throw new PaymentAuthorizationException();
             }
         } else {
             createPaymentResponse =
+                    fetchPaymentStatusOrThrowException(
+                            paymentMultiStepRequest, new PaymentAuthorizationTimeOutException());
+        }
+        return createPaymentResponse;
+    }
+
+    private CreatePaymentResponse fetchPaymentStatusOrThrowException(
+            PaymentMultiStepRequest paymentMultiStepRequest, PaymentException paymentException) {
+        CreatePaymentResponse createPaymentResponse;
+        try {
+            createPaymentResponse =
                     apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
+        } catch (HttpResponseException httpResponseException) {
+            ErrorResponse errorResponse =
+                    ErrorResponse.createFrom(httpResponseException.getResponse());
+            if (errorResponse != null
+                    && (errorResponse.errorManagementDescriptionEquals(
+                                    "Operation not allowed: authentication required.")
+                            || errorResponse.tppMessagesContainsError(
+                                    "GENERIC_ERROR", "Unknown Payment Identifier"))) {
+                throw paymentException;
+            } else {
+                throw httpResponseException;
+            }
         }
         return createPaymentResponse;
     }

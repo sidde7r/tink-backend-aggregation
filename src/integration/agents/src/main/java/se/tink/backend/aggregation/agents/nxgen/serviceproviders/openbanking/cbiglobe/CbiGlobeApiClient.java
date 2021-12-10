@@ -336,6 +336,11 @@ public class CbiGlobeApiClient {
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, Payment payment) {
+        String state = sessionStorage.get(QueryKeys.STATE);
+        String okFullRedirectUrl =
+                getRedirectUrl(state, QueryKeys.RESULT, QueryValues.SUCCESS).get();
+        String nokFullRedirectUrl =
+                getRedirectUrl(state, QueryKeys.RESULT, QueryValues.FAILURE).get();
         RequestBuilder requestBuilder =
                 createRequestInSession(
                                 Urls.PAYMENT_WITH_PATH_VARIABLES
@@ -349,18 +354,8 @@ public class CbiGlobeApiClient {
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode())
                         .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
-                        .header(
-                                HeaderKeys.TPP_REDIRECT_URI,
-                                getRedirectUrl(
-                                        sessionStorage.get(QueryKeys.STATE),
-                                        HeaderKeys.CODE,
-                                        HeaderValues.CODE))
-                        .header(
-                                HeaderKeys.TPP_NOK_REDIRECT_URI,
-                                getRedirectUrl(
-                                        sessionStorage.get(QueryKeys.STATE),
-                                        HeaderKeys.CODE,
-                                        HeaderValues.CODE));
+                        .header(HeaderKeys.TPP_REDIRECT_URI, okFullRedirectUrl)
+                        .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokFullRedirectUrl);
 
         return makeRequest(
                 addPsuIpAddressHeaderIfNeeded(requestBuilder),
@@ -370,8 +365,8 @@ public class CbiGlobeApiClient {
                 createPaymentRequest);
     }
 
-    private URL getRedirectUrl(String s, String code, String code2) {
-        return new URL(redirectUrl).queryParam(QueryKeys.STATE, s).queryParam(code, code2);
+    private URL getRedirectUrl(String state, String parameter, String value) {
+        return new URL(redirectUrl).queryParam(QueryKeys.STATE, state).queryParam(parameter, value);
     }
 
     public CreatePaymentResponse getPayment(Payment payment) {

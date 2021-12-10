@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpm.mock;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -20,39 +22,47 @@ import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class BpmAgentPaymentWiremockTest {
+public class BpmPaymentMockTest {
     private static final String BASE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/bpm/mock/resources/";
     private static final String CONFIGURATION_FILE = BASE_PATH + "configuration.yml";
 
     @Test
     public void testRecurringPaymentInitiation() throws Exception {
+        // given
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
 
         final String wireMockFilePath = BASE_PATH + "recurringPayment.aap";
 
-        LocalDate refDate = LocalDate.of(2021, 07, 10);
+        LocalDate refDate = LocalDate.of(2021, 7, 10);
         // build recurring payment
-        Payment payment =
-                createPayment()
-                        .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
-                        .withPaymentServiceType(PaymentServiceType.PERIODIC)
-                        .withFrequency(Frequency.MONTHLY)
-                        .withDayOfMonth(refDate.getDayOfMonth())
-                        .withStartDate(refDate)
-                        .withEndDate(refDate.plusMonths(2))
-                        .withExecutionRule(ExecutionRule.FOLLOWING)
-                        .build();
+        Payment payment = createRecurringPayment(refDate);
 
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(MarketCode.IT, "it-bpm-oauth2", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCredentialField("username", "dummy_psu_id")
                         .withPayment(payment)
-                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addCallbackData("state", "00000000-0000-4000-0000-000000000000")
+                        .addCallbackData("result", "success")
                         .buildWithoutLogin(PaymentCommand.class);
         agentWireMockPaymentTest.executePayment();
+
+        // then
+        assertThatCode(agentWireMockPaymentTest::executePayment).doesNotThrowAnyException();
+    }
+
+    private Payment createRecurringPayment(LocalDate refDate) {
+        return createPayment()
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                .withFrequency(Frequency.MONTHLY)
+                .withDayOfMonth(refDate.getDayOfMonth())
+                .withStartDate(refDate)
+                .withEndDate(refDate.plusMonths(2))
+                .withExecutionRule(ExecutionRule.FOLLOWING)
+                .build();
     }
 
     private Payment.Builder createPayment() {
