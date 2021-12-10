@@ -130,7 +130,7 @@ public class AccountResponse extends HtmlResponse {
         }
         return queryParams.stream()
                 .filter(param -> param.getName().equalsIgnoreCase(paramName))
-                .map(param -> param.getValue())
+                .map(NameValuePair::getValue)
                 .findFirst()
                 .orElseThrow(
                         () ->
