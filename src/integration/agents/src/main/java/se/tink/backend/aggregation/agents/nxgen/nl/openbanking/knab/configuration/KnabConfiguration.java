@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
-@JsonObject
 @Getter
+@JsonObject
 public class KnabConfiguration implements ClientConfiguration {
     @JsonProperty
     @Secret

@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class AccountInfoEntity {
 
     private String bban;

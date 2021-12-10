@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class AmountEntity {
     private String currency;
     private BigDecimal amount;

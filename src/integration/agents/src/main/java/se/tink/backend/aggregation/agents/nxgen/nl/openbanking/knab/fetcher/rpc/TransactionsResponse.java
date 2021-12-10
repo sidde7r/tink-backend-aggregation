@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class TransactionsResponse implements PaginatorResponse {
 
     private AccountInfoEntity account;

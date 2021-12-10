@@ -1,0 +1,15 @@
+{
+  "consentId": "00000000-0000-4000-0000-000000000000",
+  "consentStatus": "received",
+  "_links": {
+    "self": {
+      "href": "/consents/00000000-0000-4000-0000-000000000000"
+    },
+    "status": {
+      "href": "/consents/00000000-0000-4000-0000-000000000000/status"
+    },
+    "scaOAuth": {
+      "href": "https://login.knab.nl.fake/.well-known/openid-configuration"
+    }
+  }
+}

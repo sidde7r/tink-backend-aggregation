@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@SuppressWarnings("UnusedDeclaration")
 public class BalanceEntity implements BalanceMappable {
     private AmountEntity balanceAmount;
     private String balanceType;
