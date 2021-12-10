@@ -28,7 +28,7 @@ public class TinkApacheHttpRequestLoggingAdapter {
         return HarRequest.builder()
                 .timestamp(Date.from(requestTime))
                 .method(request.getRequestLine().getMethod())
-                .url(request.getRequestLine().getUri())
+                .url(mapUrl(request))
                 .httpVersion(request.getRequestLine().getProtocolVersion().toString())
                 .headers(mapHeaders(request.getAllHeaders()))
                 .body(mapRequestBody(request))
@@ -43,6 +43,10 @@ public class TinkApacheHttpRequestLoggingAdapter {
                 .headers(mapHeaders(response.getAllHeaders()))
                 .body(mapEntityBody(response.getEntity()))
                 .build();
+    }
+
+    private static String mapUrl(HttpRequest request) {
+        return getWrapped(request).getRequestLine().getUri();
     }
 
     private static Map<String, List<String>> mapHeaders(Header[] headers) {
