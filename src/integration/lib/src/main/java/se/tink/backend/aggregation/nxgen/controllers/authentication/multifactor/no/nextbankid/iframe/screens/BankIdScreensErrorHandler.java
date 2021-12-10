@@ -13,16 +13,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementLocator;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
 public class BankIdScreensErrorHandler {
 
-    private final BankIdWebDriver webDriver;
+    private final WebDriverService webDriver;
 
     /**
      * Throw exception when we found screen that we were not looking for (or didn't find any screen
@@ -51,7 +51,7 @@ public class BankIdScreensErrorHandler {
 
     private void throwUnexpectedErrorScreenException(
             BankIdScreen errorScreen, List<BankIdScreen> expectedScreens) {
-        BankIdElementLocator screenTextLocator =
+        ElementLocator screenTextLocator =
                 BankIdScreen.ALL_ERROR_SCREENS_WITH_ERROR_TEXT_LOCATORS.get(errorScreen);
 
         String screenText =
@@ -88,10 +88,10 @@ public class BankIdScreensErrorHandler {
                                 knownErrorCode, errorScreen, expectedScreens));
     }
 
-    private Optional<String> getScreenErrorText(BankIdElementLocator elementSelector) {
-        BankIdElementsSearchResult searchResult =
+    private Optional<String> getScreenErrorText(ElementLocator elementSelector) {
+        ElementsSearchResult searchResult =
                 webDriver.searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(elementSelector)
                                 .searchForSeconds(10)
                                 .build());

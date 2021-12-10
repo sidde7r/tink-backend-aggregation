@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.libraries.i18n.Catalog;
 
 public class BankIdIframeModuleTest {
@@ -16,7 +16,7 @@ public class BankIdIframeModuleTest {
     private Catalog catalog;
     private StatusUpdater statusUpdater;
     private SupplementalInformationController supplementalInformationController;
-    private BankIdWebDriver bankIdWebDriver;
+    private WebDriverService bankIdWebDriver;
     private BankIdAuthenticationState authenticationState;
 
     @Before
@@ -24,7 +24,7 @@ public class BankIdIframeModuleTest {
         catalog = mock(Catalog.class);
         statusUpdater = mock(StatusUpdater.class);
         supplementalInformationController = mock(SupplementalInformationController.class);
-        bankIdWebDriver = mock(BankIdWebDriver.class);
+        bankIdWebDriver = mock(WebDriverService.class);
         authenticationState = mock(BankIdAuthenticationState.class);
     }
 

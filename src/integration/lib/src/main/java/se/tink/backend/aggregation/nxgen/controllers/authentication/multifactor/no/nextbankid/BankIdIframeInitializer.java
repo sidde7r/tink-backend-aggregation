@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.integration.webdriver.service.WebDriverService;
 
 /**
  * BankID iframe can only be embedded on preregistered domains i.e. some bank's website address -
@@ -34,5 +34,5 @@ public interface BankIdIframeInitializer {
      *     SSN or, if they did it already during initialization process (on bank's website), a
      *     window to authenticate with their default BankID method straight away.
      */
-    BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver);
+    BankIdIframeFirstWindow initializeIframe(WebDriverService webDriver);
 }

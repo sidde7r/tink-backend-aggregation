@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.Authentic
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatcher;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatchers.ProxyResponseUrlSubstringMatcher;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,8 +28,8 @@ public class NordeaNoAuthenticator implements BankIdIframeAuthenticator {
     private final NordeaNoStorage storage;
 
     @Override
-    public String getSubstringOfUrlIndicatingAuthenticationFinish() {
-        return NORDEA_REDIRECT_BACK_TO_MOBILE_APP_URL;
+    public ProxyResponseMatcher getMatcherForResponseThatIndicatesAuthenticationWasFinished() {
+        return new ProxyResponseUrlSubstringMatcher(NORDEA_REDIRECT_BACK_TO_MOBILE_APP_URL);
     }
 
     @Override

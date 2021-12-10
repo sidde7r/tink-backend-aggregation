@@ -20,12 +20,12 @@ import org.mockito.InOrder;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -34,7 +34,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
     /*
     Mocks
      */
-    private BankIdWebDriver driver;
+    private WebDriverService driver;
     private BankIdScreensManager screensManager;
     private Catalog catalog;
     private SupplementalInformationController supplementalInformationController;
@@ -48,7 +48,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
 
     @Before
     public void setup() {
-        driver = mock(BankIdWebDriver.class);
+        driver = mock(WebDriverService.class);
         screensManager = mock(BankIdScreensManager.class);
         catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("whatever");
@@ -99,7 +99,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
         mocksToVerifyInOrder
                 .verify(driver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_REFERENCE_WORDS)
                                 .searchForSeconds(10)
                                 .build());
@@ -139,7 +139,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
         mocksToVerifyInOrder
                 .verify(driver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_REFERENCE_WORDS)
                                 .searchForSeconds(10)
                                 .build());

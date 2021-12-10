@@ -6,8 +6,8 @@ import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class BankIdIframeModule extends AbstractModule {
     private final Catalog catalog;
     private final StatusUpdater statusUpdater;
     private final SupplementalInformationController supplementalInformationController;
-    private final BankIdWebDriver bankIdWebDriver;
+    private final WebDriverService bankIdWebDriver;
     private final BankIdAuthenticationState authenticationState;
 
     @Override
@@ -27,7 +27,7 @@ public class BankIdIframeModule extends AbstractModule {
         bind(Catalog.class).toInstance(catalog);
         bind(StatusUpdater.class).toInstance(statusUpdater);
         bind(SupplementalInformationController.class).toInstance(supplementalInformationController);
-        bind(BankIdWebDriver.class).toInstance(bankIdWebDriver);
+        bind(WebDriverService.class).toInstance(bankIdWebDriver);
         bind(BankIdAuthenticationState.class).toInstance(authenticationState);
     }
 
@@ -39,7 +39,7 @@ public class BankIdIframeModule extends AbstractModule {
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
-            BankIdWebDriver bankIdWebDriver,
+            WebDriverService bankIdWebDriver,
             BankIdAuthenticationState authenticationState) {
 
         BankIdIframeModule bankIdModule =

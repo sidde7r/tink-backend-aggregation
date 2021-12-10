@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.DnbConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticator;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatcher;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatchers.ProxyResponseUrlSubstringMatcher;
 
 @RequiredArgsConstructor
 public class DnbAuthenticator implements BankIdIframeAuthenticator, AutoAuthenticator {
@@ -16,8 +18,8 @@ public class DnbAuthenticator implements BankIdIframeAuthenticator, AutoAuthenti
     private final DnbApiClient apiClient;
 
     @Override
-    public String getSubstringOfUrlIndicatingAuthenticationFinish() {
-        return DnbConstants.Url.FINISH_LOGIN;
+    public ProxyResponseMatcher getMatcherForResponseThatIndicatesAuthenticationWasFinished() {
+        return new ProxyResponseUrlSubstringMatcher(DnbConstants.Url.FINISH_LOGIN);
     }
 
     @Override

@@ -19,6 +19,7 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/no/nextbankid",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver/service",
         "//src/libraries/agent-storage",
         "//src/libraries/i18n",
         "//third_party:com_github_tomakehurst_wiremock",

@@ -25,12 +25,12 @@ import org.mockito.InOrder;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -40,7 +40,7 @@ public class BankIdAskUserToChoose2FAMethodNameStepTest {
     /*
     Mocks
      */
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
     private BankIdScreensManager screensManager;
     private Catalog catalog;
     private SupplementalInformationController supplementalInformationController;
@@ -54,7 +54,7 @@ public class BankIdAskUserToChoose2FAMethodNameStepTest {
 
     @Before
     public void setup() {
-        webDriver = mock(BankIdWebDriver.class);
+        webDriver = mock(WebDriverService.class);
         screensManager = mock(BankIdScreensManager.class);
         catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("anything not empty");
@@ -96,7 +96,7 @@ public class BankIdAskUserToChoose2FAMethodNameStepTest {
         mocksToVerifyInOrder
                 .verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL)
                                 .searchForSeconds(10)
                                 .build());
@@ -160,7 +160,7 @@ public class BankIdAskUserToChoose2FAMethodNameStepTest {
         mocksToVerifyInOrder
                 .verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL)
                                 .searchForSeconds(10)
                                 .build());

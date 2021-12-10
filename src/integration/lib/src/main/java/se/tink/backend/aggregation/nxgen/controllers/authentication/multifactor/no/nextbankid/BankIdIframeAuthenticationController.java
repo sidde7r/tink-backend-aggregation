@@ -9,11 +9,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 /**
@@ -58,9 +57,8 @@ public class BankIdIframeAuthenticationController
 
     private static final int WAIT_FOR_PROXY_RESPONSE_IN_SECONDS = 10;
 
-    private final BankIdWebDriver webDriver;
+    private final WebDriverService webDriver;
     private final AgentTemporaryStorage agentTemporaryStorage;
-    private final ProxyManager proxyManager;
     private final BankIdAuthenticationState authenticationState;
     private final BankIdIframeInitializer iframeInitializer;
     private final BankIdIframeAuthenticator iframeAuthenticator;
@@ -99,12 +97,12 @@ public class BankIdIframeAuthenticationController
             log.error(
                     "{} BankID iframe authentication error: {}\n{}",
                     e.getMessage(),
-                    webDriver.getFullPageSourceLog(),
+                    webDriver.getFullPageSourceLog(BankIdConstants.HtmlSelectors.BY_IFRAME),
                     e);
             throw e;
 
         } finally {
-            proxyManager.shutDownProxy();
+            webDriver.shutDownProxy();
             agentTemporaryStorage.remove(webDriver.getDriverId());
         }
     }
@@ -117,14 +115,13 @@ public class BankIdIframeAuthenticationController
     }
 
     private void setupProxyResponseListener() {
-        String urlToListenFor =
-                iframeAuthenticator.getSubstringOfUrlIndicatingAuthenticationFinish();
-        proxyManager.setUrlSubstringToListenFor(urlToListenFor);
+        webDriver.setProxyResponseMatcher(
+                iframeAuthenticator.getMatcherForResponseThatIndicatesAuthenticationWasFinished());
     }
 
     private ResponseFromProxy waitForAuthFinishUrlResponse() {
-        return proxyManager
-                .waitForProxyResponse(WAIT_FOR_PROXY_RESPONSE_IN_SECONDS)
+        return webDriver
+                .waitForMatchingProxyResponse(WAIT_FOR_PROXY_RESPONSE_IN_SECONDS)
                 .orElseThrow(() -> new IllegalStateException("Did not found proxy response"));
     }
 }

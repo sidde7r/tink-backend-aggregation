@@ -23,10 +23,10 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementLocator;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdScreensManagerTest {
@@ -36,7 +36,7 @@ public class BankIdScreensManagerTest {
     /*
     Mocks
      */
-    private BankIdWebDriver driver;
+    private WebDriverService driver;
     private BankIdScreensErrorHandler errorHandler;
 
     private InOrder mocksToVerifyInOrder;
@@ -48,7 +48,7 @@ public class BankIdScreensManagerTest {
 
     @Before
     public void setup() {
-        driver = mock(BankIdWebDriver.class);
+        driver = mock(WebDriverService.class);
 
         unexpectedScreenException = mock(RuntimeException.class);
         errorHandler = mock(BankIdScreensErrorHandler.class);
@@ -64,8 +64,7 @@ public class BankIdScreensManagerTest {
     @Test
     @Parameters(method = "shouldMakeCorrectElementsSearchQuery")
     public void should_make_correct_elements_search_query_for_screen_locators(
-            BankIdScreensQuery screensQuery,
-            BankIdElementsSearchQuery expectedElementsSearchQuery) {
+            BankIdScreensQuery screensQuery, ElementsSearchQuery expectedElementsSearchQuery) {
         // given
         // let's just find any screen, e.g. the first one - the exact screen doesn't matter
         BankIdScreen screenToBeFound = screensQuery.getScreensToWaitFor().get(0);
@@ -78,8 +77,8 @@ public class BankIdScreensManagerTest {
         // then
         assertThat(screen).isEqualTo(screenToBeFound);
 
-        ArgumentCaptor<BankIdElementsSearchQuery> captor =
-                ArgumentCaptor.forClass(BankIdElementsSearchQuery.class);
+        ArgumentCaptor<ElementsSearchQuery> captor =
+                ArgumentCaptor.forClass(ElementsSearchQuery.class);
         mocksToVerifyInOrder.verify(driver).searchForFirstMatchingLocator(captor.capture());
         assertThat(captor.getAllValues().size()).isEqualTo(1);
         assertThat(captor.getAllValues().get(0))
@@ -96,7 +95,7 @@ public class BankIdScreensManagerTest {
                             .waitForScreens(ENTER_SSN_SCREEN)
                             .waitForSeconds(10)
                             .build(),
-                    BankIdElementsSearchQuery.builder()
+                    ElementsSearchQuery.builder()
                             .searchFor(getScreensLocators(ENTER_SSN_SCREEN))
                             .searchForSeconds(10)
                             .build()),
@@ -106,7 +105,7 @@ public class BankIdScreensManagerTest {
                             .waitForSeconds(11)
                             .verifyNoErrorScreens(true)
                             .build(),
-                    BankIdElementsSearchQuery.builder()
+                    ElementsSearchQuery.builder()
                             .searchFor(getScreensLocators(ENTER_SSN_SCREEN))
                             .searchFor(getScreensLocators(BankIdScreen.getAllErrorScreens()))
                             .searchForSeconds(11)
@@ -116,7 +115,7 @@ public class BankIdScreensManagerTest {
                             .waitForScreens(BankIdScreen.getAll2FAMethodScreens())
                             .waitForSeconds(123)
                             .build(),
-                    BankIdElementsSearchQuery.builder()
+                    ElementsSearchQuery.builder()
                             .searchFor(getScreensLocators(BankIdScreen.getAll2FAMethodScreens()))
                             .searchForSeconds(123)
                             .build())
@@ -186,7 +185,7 @@ public class BankIdScreensManagerTest {
         BankIdScreen otherScreenDetected = allScreensExcept(screenToSearchFor).get(0);
         when(driver.searchForFirstMatchingLocator(any()))
                 // the first search is for screens from query
-                .thenReturn(BankIdElementsSearchResult.empty())
+                .thenReturn(ElementsSearchResult.empty())
                 // the second one is for all screen selectors to detect any known screen
                 .thenReturn(screenLocatorFoundResult(otherScreenDetected));
 
@@ -207,8 +206,8 @@ public class BankIdScreensManagerTest {
         // then
         assertThat(throwable).isEqualTo(notExpectedScreenError);
 
-        ArgumentCaptor<BankIdElementsSearchQuery> captor =
-                ArgumentCaptor.forClass(BankIdElementsSearchQuery.class);
+        ArgumentCaptor<ElementsSearchQuery> captor =
+                ArgumentCaptor.forClass(ElementsSearchQuery.class);
         mocksToVerifyInOrder
                 .verify(driver, times(2))
                 .searchForFirstMatchingLocator(captor.capture());
@@ -216,13 +215,13 @@ public class BankIdScreensManagerTest {
         assertThat(captor.getAllValues().size()).isEqualTo(2);
         assertThat(captor.getAllValues().get(0))
                 .isEqualToComparingFieldByFieldRecursively(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(screenToSearchFor.getLocatorToDetectScreen())
                                 .searchForSeconds(15)
                                 .build());
         assertThat(captor.getAllValues().get(1))
                 .isEqualToComparingFieldByFieldRecursively(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(
                                         BankIdScreen.getAllScreens().stream()
                                                 .map(BankIdScreen::getLocatorToDetectScreen)
@@ -247,22 +246,22 @@ public class BankIdScreensManagerTest {
         return BankIdScreen.getAllErrorScreens().toArray();
     }
 
-    private static List<BankIdElementLocator> getScreensLocators(BankIdScreen... screens) {
+    private static List<ElementLocator> getScreensLocators(BankIdScreen... screens) {
         return getScreensLocators(asList(screens));
     }
 
-    private static List<BankIdElementLocator> getScreensLocators(List<BankIdScreen> screens) {
+    private static List<ElementLocator> getScreensLocators(List<BankIdScreen> screens) {
         return screens.stream()
                 .map(BankIdScreen::getLocatorToDetectScreen)
                 .collect(Collectors.toList());
     }
 
-    private BankIdElementsSearchResult screenLocatorFoundResult(BankIdScreen bankIdScreen) {
+    private ElementsSearchResult screenLocatorFoundResult(BankIdScreen bankIdScreen) {
         WebElement elementFound = mock(WebElement.class);
         if (bankIdScreen == null) {
-            return BankIdElementsSearchResult.empty();
+            return ElementsSearchResult.empty();
         }
-        return BankIdElementsSearchResult.of(bankIdScreen.getLocatorToDetectScreen(), elementFound);
+        return ElementsSearchResult.of(bankIdScreen.getLocatorToDetectScreen(), elementFound);
     }
 
     private static List<BankIdScreen> allScreensExcept(BankIdScreen excludedScreen) {

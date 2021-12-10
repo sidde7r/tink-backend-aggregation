@@ -27,6 +27,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver/service",
         "//src/libraries/cryptography/hash",
         "//src/libraries/encoding",
         "//third_party:com_google_inject_guice",

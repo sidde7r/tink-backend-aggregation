@@ -12,8 +12,8 @@ import lombok.experimental.Accessors;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
 
 public class BankIdIframeAuthenticationResultTest {
 
@@ -23,7 +23,7 @@ public class BankIdIframeAuthenticationResultTest {
     @Test
     public void should_convert_selenium_cookies_to_apache_cookies() {
         // given
-        BankIdWebDriver driver = mock(BankIdWebDriver.class);
+        WebDriverService driver = mock(WebDriverService.class);
         when(driver.getCookies())
                 .thenReturn(
                         ImmutableSet.of(

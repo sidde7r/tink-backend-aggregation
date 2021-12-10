@@ -24,11 +24,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdVerifyAuthenticationStepTest {
@@ -36,7 +36,7 @@ public class BankIdVerifyAuthenticationStepTest {
     /*
     Mocks
      */
-    private BankIdWebDriver webDriver;
+    private WebDriverService webDriver;
     private BankIdScreensManager screensManager;
 
     private InOrder mocksToVerifyInOrder;
@@ -48,7 +48,7 @@ public class BankIdVerifyAuthenticationStepTest {
 
     @Before
     public void setup() {
-        webDriver = mock(BankIdWebDriver.class);
+        webDriver = mock(WebDriverService.class);
         screensManager = mock(BankIdScreensManager.class);
 
         mocksToVerifyInOrder = inOrder(webDriver, screensManager);
@@ -155,7 +155,7 @@ public class BankIdVerifyAuthenticationStepTest {
         mocksToVerifyInOrder
                 .verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_IFRAME)
                                 .searchOnlyOnce()
                                 .build());
@@ -165,7 +165,7 @@ public class BankIdVerifyAuthenticationStepTest {
         mocksToVerifyInOrder
                 .verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_PRIVATE_PASSWORD_ERROR_BUBBLE)
                                 .searchForSeconds(2)
                                 .build());

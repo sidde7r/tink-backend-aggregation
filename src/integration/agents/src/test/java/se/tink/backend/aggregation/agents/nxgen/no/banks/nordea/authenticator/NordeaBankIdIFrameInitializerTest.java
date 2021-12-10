@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
 
@@ -48,7 +48,7 @@ public class NordeaBankIdIFrameInitializerTest {
     private NordeaNoStorage storage;
     private RandomValueGenerator randomValueGenerator;
 
-    private BankIdWebDriver driver;
+    private WebDriverService driver;
     private InOrder mocksToVerifyInOrder;
 
     /*
@@ -62,7 +62,7 @@ public class NordeaBankIdIFrameInitializerTest {
         storage = mock(NordeaNoStorage.class);
         randomValueGenerator = mock(RandomValueGenerator.class);
 
-        driver = mock(BankIdWebDriver.class);
+        driver = mock(WebDriverService.class);
         mocksToVerifyInOrder = inOrder(authenticationClient, storage, randomValueGenerator, driver);
 
         iFrameInitializer =
@@ -94,7 +94,7 @@ public class NordeaBankIdIFrameInitializerTest {
         assertThat(firstWindowForIframe).isEqualTo(BankIdIframeFirstWindow.ENTER_SSN);
 
         verifyCorrectBankIdAuthUrlInitialization();
-        mocksToVerifyInOrder.verify(driver).getUrl(SAMPLE_BANK_ID_AUTHENTICATION_URL);
+        mocksToVerifyInOrder.verify(driver).get(SAMPLE_BANK_ID_AUTHENTICATION_URL);
         mocksToVerifyInOrder.verify(driver).clickButton(LOC_BANK_ID_METHOD_BUTTON);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }

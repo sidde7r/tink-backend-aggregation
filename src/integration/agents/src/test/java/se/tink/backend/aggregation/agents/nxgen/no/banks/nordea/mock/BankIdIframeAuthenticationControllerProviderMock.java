@@ -14,12 +14,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ProxyManager;
+import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
@@ -42,9 +42,8 @@ public class BankIdIframeAuthenticationControllerProviderMock
             UserAvailability userAvailability,
             AgentTemporaryStorage agentTemporaryStorage) {
 
-        BankIdWebDriver bankIdWebDriver = mock(BankIdWebDriver.class);
+        WebDriverService bankIdWebDriver = mock(WebDriverService.class);
 
-        ProxyManager proxyManager = mock(ProxyManager.class);
         ResponseFromProxy responseFromProxy =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(
@@ -52,7 +51,7 @@ public class BankIdIframeAuthenticationControllerProviderMock
                                 "Location",
                                         "http://redirect.url?key1=value1&code=AUTH_CODE&key2=value2",
                                 "someKey2", "someValue2"));
-        when(proxyManager.waitForProxyResponse(anyInt()))
+        when(bankIdWebDriver.waitForMatchingProxyResponse(anyInt()))
                 .thenReturn(Optional.of(responseFromProxy));
 
         BankIdAuthenticationState authenticationState = mock(BankIdAuthenticationState.class);
@@ -62,7 +61,6 @@ public class BankIdIframeAuthenticationControllerProviderMock
         return new BankIdIframeAuthenticationController(
                 bankIdWebDriver,
                 agentTemporaryStorage,
-                proxyManager,
                 authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,

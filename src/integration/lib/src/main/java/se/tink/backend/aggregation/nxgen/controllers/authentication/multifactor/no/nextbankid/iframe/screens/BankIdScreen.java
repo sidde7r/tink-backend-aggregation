@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
+import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 
 @Getter
 @RequiredArgsConstructor
@@ -39,9 +39,9 @@ public enum BankIdScreen {
                     MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN,
                     THIRD_PARTY_APP_METHOD_SCREEN);
 
-    public static final Map<BankIdScreen, BankIdElementLocator>
+    public static final Map<BankIdScreen, ElementLocator>
             ALL_ERROR_SCREENS_WITH_ERROR_TEXT_LOCATORS =
-                    ImmutableMap.<BankIdScreen, BankIdElementLocator>builder()
+                    ImmutableMap.<BankIdScreen, ElementLocator>builder()
                             .put(
                                     BANK_ID_ERROR_WITH_HEADING_SCREEN,
                                     HtmlLocators.LOC_BANK_ID_ERROR_WITH_HEADING_TEXT)
@@ -70,7 +70,7 @@ public enum BankIdScreen {
                 .collect(toList());
     }
 
-    public static BankIdScreen findScreenByItsLocator(BankIdElementLocator locator) {
+    public static BankIdScreen findScreenByItsLocator(ElementLocator locator) {
         return tryFindScreenByItsLocator(locator)
                 .orElseThrow(
                         () ->
@@ -80,14 +80,14 @@ public enum BankIdScreen {
                                                 BANK_ID_LOG_PREFIX, locator)));
     }
 
-    public static Optional<BankIdScreen> tryFindScreenByItsLocator(BankIdElementLocator locator) {
+    public static Optional<BankIdScreen> tryFindScreenByItsLocator(ElementLocator locator) {
         return getAllScreens().stream()
                 .filter(screen -> screen.getLocatorToDetectScreen() == locator)
                 .findFirst();
     }
 
     // locator that allows to detect that we're on a given screen
-    private final BankIdElementLocator locatorToDetectScreen;
+    private final ElementLocator locatorToDetectScreen;
 
     public boolean isErrorScreen() {
         return getAllErrorScreens().contains(this);

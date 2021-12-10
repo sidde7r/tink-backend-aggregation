@@ -22,11 +22,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatcher;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatchers.ProxyResponseUrlSubstringMatcher;
 
 @RequiredArgsConstructor
 public class DanskeBankNOManualAuthenticator
@@ -40,7 +42,7 @@ public class DanskeBankNOManualAuthenticator
     private final DanskeBankNOAuthInitializer authInitializer;
 
     @Override
-    public BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver) {
+    public BankIdIframeFirstWindow initializeIframe(WebDriverService webDriver) {
         String username = credentials.getField(Field.Key.USERNAME);
         String serviceCode = credentials.getField(Field.Key.PASSWORD);
         String bankIdPassword = credentials.getField(Field.Key.BANKID_PASSWORD);
@@ -59,8 +61,8 @@ public class DanskeBankNOManualAuthenticator
     }
 
     @Override
-    public String getSubstringOfUrlIndicatingAuthenticationFinish() {
-        return AUTHENTICATION_FINISH_URL;
+    public ProxyResponseMatcher getMatcherForResponseThatIndicatesAuthenticationWasFinished() {
+        return new ProxyResponseUrlSubstringMatcher(AUTHENTICATION_FINISH_URL);
     }
 
     @Override

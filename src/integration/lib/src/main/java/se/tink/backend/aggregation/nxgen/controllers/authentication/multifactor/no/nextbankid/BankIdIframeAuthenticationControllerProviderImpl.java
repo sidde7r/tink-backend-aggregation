@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverModule;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverModuleComponents;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeModule;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.WebDriverServiceModule;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
@@ -24,10 +22,8 @@ public class BankIdIframeAuthenticationControllerProviderImpl
             UserAvailability userAvailability,
             AgentTemporaryStorage agentTemporaryStorage) {
 
-        BankIdWebDriverModuleComponents webDriverModuleComponents =
-                BankIdWebDriverModule.initializeModule(agentTemporaryStorage);
-        BankIdWebDriver webDriver = webDriverModuleComponents.getWebDriver();
-        ProxyManager proxyManager = webDriverModuleComponents.getProxyManager();
+        WebDriverService webDriverService =
+                WebDriverServiceModule.createWebDriverService(agentTemporaryStorage);
 
         BankIdAuthenticationState authenticationState = new BankIdAuthenticationState();
 
@@ -36,13 +32,12 @@ public class BankIdIframeAuthenticationControllerProviderImpl
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
-                        webDriver,
+                        webDriverService,
                         authenticationState);
 
         return new BankIdIframeAuthenticationController(
-                webDriver,
+                webDriverService,
                 agentTemporaryStorage,
-                proxyManager,
                 authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,

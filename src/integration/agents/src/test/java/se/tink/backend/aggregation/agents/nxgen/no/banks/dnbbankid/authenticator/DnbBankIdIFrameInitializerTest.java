@@ -38,8 +38,8 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 
 @RunWith(JUnitParamsRunner.class)
 public class DnbBankIdIFrameInitializerTest {
@@ -49,7 +49,7 @@ public class DnbBankIdIFrameInitializerTest {
     /*
     Mocks
      */
-    private BankIdWebDriver driver;
+    private WebDriverService driver;
     private InOrder mocksToVerifyInOrder;
 
     /*
@@ -59,7 +59,7 @@ public class DnbBankIdIFrameInitializerTest {
 
     @Before
     public void setup() {
-        driver = mock(BankIdWebDriver.class);
+        driver = mock(WebDriverService.class);
         Credentials credentials = mock(Credentials.class);
         when(credentials.getField(Field.Key.USERNAME)).thenReturn(SAMPLE_SSN);
 
@@ -229,21 +229,21 @@ public class DnbBankIdIFrameInitializerTest {
     }
 
     private void verifyOpensWebsite() {
-        mocksToVerifyInOrder.verify(driver).getUrl(INIT_LOGIN);
+        mocksToVerifyInOrder.verify(driver).get(INIT_LOGIN);
     }
 
     private void verifyWaitsForSSNInput() {
         mocksToVerifyInOrder
                 .verify(driver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder().searchFor(LOC_SSN_INPUT).build());
+                        ElementsSearchQuery.builder().searchFor(LOC_SSN_INPUT).build());
     }
 
     private void verifyWaitsForCookiesButton() {
         mocksToVerifyInOrder
                 .verify(driver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_CLOSE_COOKIES_POPUP_BUTTON)
                                 .searchForSeconds(10)
                                 .build());
@@ -253,7 +253,7 @@ public class DnbBankIdIFrameInitializerTest {
         mocksToVerifyInOrder
                 .verify(driver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_IFRAME, LOC_ERROR_MESSAGE)
                                 .build());
     }

@@ -7,15 +7,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
 
 @Getter
 @EqualsAndHashCode
 @Builder
 public class BankIdIframeAuthenticationResult {
     private final ResponseFromProxy proxyResponseFromAuthFinishUrl;
-    private final BankIdWebDriver webDriver;
+    private final WebDriverService webDriver;
 
     public List<Cookie> getCookies() {
         return webDriver.getCookies().stream()

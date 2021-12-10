@@ -15,11 +15,11 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.DnbConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
 import se.tink.backend.aggregation.utils.ExecutionTimer;
+import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.searchelements.ElementLocator;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
+import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
     private final Credentials credentials;
 
     @Override
-    public BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver) {
+    public BankIdIframeFirstWindow initializeIframe(WebDriverService webDriver) {
         openDnbWebsite(webDriver);
         waitForSSNInput(webDriver);
         tryClosingCookiesWindow(webDriver);
@@ -41,21 +41,19 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
         return BankIdIframeFirstWindow.AUTHENTICATE_WITH_DEFAULT_2FA_METHOD;
     }
 
-    private void openDnbWebsite(BankIdWebDriver webDriver) {
-        webDriver.getUrl(DnbConstants.Url.INIT_LOGIN);
+    private void openDnbWebsite(WebDriverService webDriver) {
+        webDriver.get(DnbConstants.Url.INIT_LOGIN);
     }
 
-    private void waitForSSNInput(BankIdWebDriver webDriver) {
+    private void waitForSSNInput(WebDriverService webDriver) {
         webDriver
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
-                                .searchFor(HtmlLocators.LOC_SSN_INPUT)
-                                .build())
+                        ElementsSearchQuery.builder().searchFor(HtmlLocators.LOC_SSN_INPUT).build())
                 .getFirstFoundElement()
                 .orElseThrow(() -> new IllegalStateException("[DNB] SSN input field not found"));
     }
 
-    private void tryClosingCookiesWindow(BankIdWebDriver webDriver) {
+    private void tryClosingCookiesWindow(WebDriverService webDriver) {
         /*
         Sometimes popup with cookies can appear after many seconds - that's why we should wait for quite a long time
         here. We should monitor how often it happens and if it's frequent we might need to make changes in BankID
@@ -67,7 +65,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
                         () ->
                                 webDriver
                                         .searchForFirstMatchingLocator(
-                                                BankIdElementsSearchQuery.builder()
+                                                ElementsSearchQuery.builder()
                                                         .searchFor(
                                                                 HtmlLocators
                                                                         .LOC_CLOSE_COOKIES_POPUP_BUTTON)
@@ -82,21 +80,21 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
         maybeCloseCookiesButton.ifPresent(WebElement::click);
     }
 
-    private void enterSSN(BankIdWebDriver webDriver) {
+    private void enterSSN(WebDriverService webDriver) {
         log.info("[DNB] Setting SSN input value");
         webDriver.setValueToElement(
                 credentials.getField(Field.Key.USERNAME), HtmlLocators.LOC_SSN_INPUT);
     }
 
-    private void clickSubmitButton(BankIdWebDriver webDriver) {
+    private void clickSubmitButton(WebDriverService webDriver) {
         log.info("[DNB] Clicking submit button");
         webDriver.clickButton(HtmlLocators.LOC_SUBMIT_BUTTON);
     }
 
-    private void verifyNoErrors(BankIdWebDriver webDriver) {
-        BankIdElementsSearchResult searchResult =
+    private void verifyNoErrors(WebDriverService webDriver) {
+        ElementsSearchResult searchResult =
                 webDriver.searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(
                                         BankIdConstants.HtmlLocators.LOC_IFRAME,
                                         HtmlLocators.LOC_ERROR_MESSAGE)
@@ -105,7 +103,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
             throw BankIdNOError.INITIALIZATION_ERROR.exception();
         }
 
-        BankIdElementLocator locatorFound = searchResult.getLocatorFound();
+        ElementLocator locatorFound = searchResult.getLocatorFound();
         if (locatorFound == BankIdConstants.HtmlLocators.LOC_IFRAME) {
             log.info("[DNB] BankID iframe initialized successfully");
             return;
@@ -115,7 +113,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
         }
     }
 
-    private void throwErrorMessage(BankIdElementsSearchResult searchResult) {
+    private void throwErrorMessage(ElementsSearchResult searchResult) {
         String errorMessage =
                 searchResult
                         .getFirstFoundElement()

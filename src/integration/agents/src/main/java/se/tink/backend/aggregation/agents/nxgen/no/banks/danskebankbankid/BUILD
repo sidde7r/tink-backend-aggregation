@@ -18,6 +18,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver/service",
         "//src/libraries/agent-storage",
         "//src/libraries/uuid",
         "//third_party:com_google_inject_guice",
