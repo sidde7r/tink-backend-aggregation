@@ -20,6 +20,8 @@ public class KnabWiremockTest {
 
     private static final WireMockTestServer WIREMOCK_TEST_SERVER = new WireMockTestServer();
 
+    private static final String REFRESH_CONTRACT_FILENAME = "nl-knab-refresh-contract.json";
+
     private static final String CONSENT_ID = "consent_id";
 
     private final long accessTokenExpiresInSeconds = 3600;
@@ -67,7 +69,7 @@ public class KnabWiremockTest {
         // and
         AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(path("nl-knab-refresh-contract.json"));
+                        .parseContractOnBasisOfFile(path(REFRESH_CONTRACT_FILENAME));
 
         // when
         manualRefreshTest.executeRefresh();
@@ -99,7 +101,7 @@ public class KnabWiremockTest {
         // and
         AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(path("nl-knab-refresh-contract.json"));
+                        .parseContractOnBasisOfFile(path(REFRESH_CONTRACT_FILENAME));
 
         // when
         autoRefreshTest.executeRefresh();
@@ -139,7 +141,7 @@ public class KnabWiremockTest {
         // and
         AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(path("nl-knab-refresh-contract.json"));
+                        .parseContractOnBasisOfFile(path(REFRESH_CONTRACT_FILENAME));
 
         // when
         autoRefreshTest.executeRefresh();
