@@ -46,9 +46,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class IngBaseAutoAuthenticationTest {
 
     private static final OAuth2Token ACCESS_TOKEN =
-            OAuth2Token.create("bearer", "ing_access_token", "ing_refresh_token", 12345L);
+            OAuth2Token.createBearer("ing_access_token", "ing_refresh_token", 12345L);
     private static final OAuth2Token REFRESHED_ACCESS_TOKEN =
-            OAuth2Token.create("bearer", "ing_test_access_token", "ing_refresh_token", 899L);
+            OAuth2Token.createBearer("ing_test_access_token", "ing_refresh_token", 899L);
 
     private final PersistentStorage persistentStorage = new PersistentStorage();
     private final IngBaseAuthenticationTestFixture testFixture =
@@ -227,7 +227,7 @@ public final class IngBaseAutoAuthenticationTest {
     }
 
     private OAuth2Token createExpiredOAuth2Token() {
-        return OAuth2Token.create("bearer", "ing_access_token", "ing_refresh_token", -1);
+        return OAuth2Token.createBearer("ing_access_token", "ing_refresh_token", -1);
     }
 
     private AutoAuthenticationController createAuthenticationController() {
