@@ -20,10 +20,11 @@ public class DateValidationExceptionHandler implements ExceptionHandler<DateVali
             DateValidationException exception, ExceptionHandlerInput input) {
         input.getMetricAction().cancelled();
 
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute payment due to date validation failure. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);

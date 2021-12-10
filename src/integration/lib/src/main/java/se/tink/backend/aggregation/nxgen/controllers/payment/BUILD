@@ -2,13 +2,16 @@ load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "payment",
-    srcs = glob(["*.java"]),
+    srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/nemid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/signing",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/payment:enums",
@@ -20,6 +23,7 @@ java_library(
         "//src/libraries/pair",
         "//third_party:com_google_guava_guava",
         "//third_party:lombok_libs",
+        "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/payments_validations",
         "@tink_backend//src/libraries/uuid",

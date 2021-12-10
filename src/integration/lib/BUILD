@@ -97,6 +97,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",

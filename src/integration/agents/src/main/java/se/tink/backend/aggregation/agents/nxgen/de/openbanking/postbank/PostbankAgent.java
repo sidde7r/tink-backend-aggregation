@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentDependencyModules(modules = PostbankJwtModule.class)
@@ -112,7 +113,9 @@ public final class PostbankAgent extends DeutscheBankAgent
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, postbankPaymentAuthenticator, sessionStorage);
 
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+        return Optional.of(
+                new PaymentController(
+                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
     }
 
     @Override

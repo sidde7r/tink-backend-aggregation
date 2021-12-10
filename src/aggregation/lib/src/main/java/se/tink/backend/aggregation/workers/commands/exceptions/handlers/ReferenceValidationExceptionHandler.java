@@ -21,10 +21,11 @@ public class ReferenceValidationExceptionHandler
             ReferenceValidationException exception, ExceptionHandlerInput input) {
         input.getMetricAction().cancelled();
 
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute payment due to reference validation failure. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);

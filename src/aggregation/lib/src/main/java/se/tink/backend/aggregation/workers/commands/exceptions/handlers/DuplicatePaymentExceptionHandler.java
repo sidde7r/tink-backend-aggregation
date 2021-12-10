@@ -20,10 +20,11 @@ public class DuplicatePaymentExceptionHandler
     public AgentWorkerCommandResult handleException(
             DuplicatePaymentException exception, ExceptionHandlerInput input) {
         input.getMetricAction().cancelled();
-        log.info(
+        log.warn(
                 "[transferId: {}] Could not execute payment, duplicate payment detected. {}",
                 UUIDUtils.toTinkUUID(input.getTransfer().getId()),
-                exception.getMessage());
+                exception.getMessage(),
+                exception);
 
         SignableOperation signableOperation = input.getSignableOperation();
         signableOperation.setStatus(SignableOperationStatuses.CANCELLED);

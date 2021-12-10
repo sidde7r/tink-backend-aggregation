@@ -15,4 +15,12 @@ public class PaymentAuthorizationCancelledByUserException extends PaymentAuthori
     public PaymentAuthorizationCancelledByUserException() {
         super(MESSAGE, InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED);
     }
+
+    public PaymentAuthorizationCancelledByUserException(String message, Throwable cause) {
+        super(message, InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED, cause);
+    }
+
+    public PaymentAuthorizationCancelledByUserException(Throwable cause) {
+        super(MESSAGE, InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED, cause);
+    }
 }

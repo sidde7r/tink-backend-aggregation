@@ -31,7 +31,7 @@ public class BankIdExceptionHandler implements ExceptionHandler<BankIdException>
             case AUTHORIZATION_REQUIRED: // TODO: This should be a regular
                 // AuthorizationException
                 metricAction.cancelled();
-                log.info(
+                log.warn(
                         "[transferId: {}] {}",
                         UUIDUtils.toTinkUUID(transfer.getId()),
                         exception.getMessage());

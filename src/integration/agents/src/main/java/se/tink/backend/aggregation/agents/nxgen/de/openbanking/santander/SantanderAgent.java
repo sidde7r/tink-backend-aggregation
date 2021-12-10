@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -104,6 +105,10 @@ public final class SantanderAgent extends NextGenerationAgent
         final SantanderPaymentExecutorSelector paymentExecutorSelector =
                 new SantanderPaymentExecutorSelector(apiClient);
 
-        return Optional.of(new PaymentController(paymentExecutorSelector, paymentExecutorSelector));
+        return Optional.of(
+                new PaymentController(
+                        paymentExecutorSelector,
+                        paymentExecutorSelector,
+                        new PaymentControllerExceptionMapper()));
     }
 }

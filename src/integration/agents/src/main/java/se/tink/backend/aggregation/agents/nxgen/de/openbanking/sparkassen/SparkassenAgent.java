@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
@@ -162,7 +163,9 @@ public class SparkassenAgent extends NextGenerationAgent
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, sparkassenPaymentAuthenticator, sessionStorage);
 
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+        return Optional.of(
+                new PaymentController(
+                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
     }
 
     @Override

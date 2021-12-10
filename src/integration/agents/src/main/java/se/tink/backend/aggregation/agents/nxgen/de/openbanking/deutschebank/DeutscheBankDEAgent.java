@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.RedirectPaym
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
@@ -77,7 +78,9 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, redirectPaymentAuthenticator, sessionStorage);
 
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+        return Optional.of(
+                new PaymentController(
+                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
     }
 
     @Override

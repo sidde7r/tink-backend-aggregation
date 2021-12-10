@@ -1,200 +1,189 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import java.time.LocalDate;
-import org.junit.Rule;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.payment.enums.PaymentType;
-import se.tink.libraries.payment.rpc.Creditor;
-import se.tink.libraries.payment.rpc.Debtor;
-import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
+import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentConstants.BankId;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 
+@RunWith(JUnitParamsRunner.class)
 public class PaymentControllerTest {
 
-    @Rule public ExpectedException exception = ExpectedException.none();
+    private PaymentExecutor paymentExecutor;
 
-    private PaymentController paymentController;
-    private final String DESTINATION_IDENTIFIER = "90247471978";
-    private final String SOURCE_IDENTIFIER_BBAN = "90247471978";
-    private final String SOURCE_IDENTIFIER_IBAN_SE = "SE7280000810340009783242";
-    private final String SOURCE_IDENTIFIER_IBAN_GB = "GB33BUKB20201555555555";
-
-    @Test
-    public void testGetPaymentProductTypeForBbanToBbanIsDomestic() {
-        Payment payment =
-                new Payment.Builder()
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.0))
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.BBAN, DESTINATION_IDENTIFIER),
-                                        "Test Person"))
-                        .withDebtor(
-                                new Debtor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.BBAN,
-                                                SOURCE_IDENTIFIER_BBAN)))
-                        .withCurrency("SEK")
-                        .withExecutionDate(LocalDate.now())
-                        .withRemittanceInformation(
-                                createAndGetRemittanceInformation(null, "random"))
-                        .build();
-
-        paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(payment);
-
-        assertEquals(paymentType, PaymentType.DOMESTIC);
+    @Before
+    public void setup() {
+        paymentExecutor = mock(PaymentExecutor.class);
     }
 
     @Test
-    public void testGetPaymentProductTypeForBbanToIbanisDomesticFuture() {
+    @Parameters(method = "exceptionsForDefault")
+    public void shouldRethrowExceptionsWhenNotAuthExceptionAndUsingDefaultBehaviorInSignMethod(
+            AgentException exception) {
+        // given
+        given(paymentExecutor.sign(null)).willThrow(exception);
+        PaymentController paymentController = new PaymentController(paymentExecutor);
 
-        Payment payment =
-                new Payment.Builder()
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.0))
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, DESTINATION_IDENTIFIER),
-                                        "Test Person"))
-                        .withDebtor(
-                                new Debtor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.BBAN,
-                                                SOURCE_IDENTIFIER_BBAN)))
-                        .withCurrency("SEK")
-                        .withExecutionDate(LocalDate.now().plusDays(2))
-                        .withRemittanceInformation(
-                                createAndGetRemittanceInformation(null, "random"))
-                        .build();
+        // when
+        Throwable throwable = catchThrowable(() -> paymentController.sign(null));
 
-        paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(payment);
+        // then
+        assertThat(throwable).isEqualTo(exception);
+    }
 
-        assertEquals(paymentType, PaymentType.DOMESTIC_FUTURE);
+    private Object[] exceptionsForDefault() {
+        return new Object[] {
+            AuthorizationError.UNAUTHORIZED.exception(),
+            BankServiceError.ACCESS_EXCEEDED.exception(),
+            ThirdPartyError.INCORRECT_SECRETS.exception()
+        };
     }
 
     @Test
-    public void testGetPaymentProductTypeForIbanToIbanSEisDomestic() {
+    @Parameters(method = "exceptionsForDefaultAuth")
+    public void
+            shouldMapAuthExceptionsToDefaultPaymentExceptionWhenUsingDefaultBehaviorInSignMethod(
+                    AgentException exception) {
+        // given
+        given(paymentExecutor.sign(null)).willThrow(exception);
+        PaymentController paymentController = new PaymentController(paymentExecutor);
 
-        Payment payment =
-                new Payment.Builder()
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.0))
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, DESTINATION_IDENTIFIER),
-                                        "Test Person"))
-                        .withDebtor(
-                                new Debtor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN,
-                                                SOURCE_IDENTIFIER_IBAN_SE)))
-                        .withCurrency("SEK")
-                        .withExecutionDate(LocalDate.now())
-                        .withRemittanceInformation(
-                                createAndGetRemittanceInformation(null, "random"))
-                        .build();
+        // when
+        Throwable throwable = catchThrowable(() -> paymentController.sign(null));
 
-        paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(payment);
+        // then
+        assertThat(throwable)
+                .isInstanceOf(PaymentAuthorizationException.class)
+                .hasMessage("Payment could not be signed");
+    }
 
-        assertEquals(paymentType, PaymentType.DOMESTIC);
+    private Object[] exceptionsForDefaultAuth() {
+        return new Object[] {
+            LoginError.DEFAULT_MESSAGE.exception(),
+            SessionError.SESSION_EXPIRED.exception(),
+            BankIdNOError.INITIALIZATION_ERROR.exception(),
+            SupplementalInfoError.NO_VALID_CODE.exception()
+        };
     }
 
     @Test
-    public void testGetPaymentProductTypeForIbanToIbanGBisInternational() {
+    @Parameters(method = "exceptionsForDefaultBankId")
+    public void
+            shouldMapBankIdExceptionsToFittingPaymentExceptionWhenUsingDefaultBehaviorInSignMethod(
+                    AgentException exception, String expectedMessage) {
+        // given
+        given(paymentExecutor.sign(null)).willThrow(exception);
+        PaymentController paymentController = new PaymentController(paymentExecutor);
 
-        Payment payment =
-                new Payment.Builder()
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, DESTINATION_IDENTIFIER),
-                                        "Test Person"))
-                        .withDebtor(
-                                new Debtor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN,
-                                                SOURCE_IDENTIFIER_IBAN_GB)))
-                        .withCurrency("£")
-                        .withExecutionDate(LocalDate.now())
-                        .withRemittanceInformation(
-                                createAndGetRemittanceInformation(null, "random"))
-                        .build();
+        // when
+        Throwable throwable = catchThrowable(() -> paymentController.sign(null));
 
-        paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(payment);
+        // then
+        assertThat(throwable)
+                .isInstanceOf(PaymentAuthorizationException.class)
+                .hasMessage(expectedMessage);
+    }
 
-        assertEquals(paymentType, PaymentType.INTERNATIONAL);
+    private Object[] exceptionsForDefaultBankId() {
+        return new Object[] {
+            new Object[] {BankIdError.ACTIVATE_EXTENDED_BANKID.exception(), BankId.NO_EXTENDED_USE},
+            new Object[] {BankIdError.INTERRUPTED.exception(), BankId.INTERRUPTED},
+            new Object[] {BankIdError.TIMEOUT.exception(), BankId.TIMEOUT},
+            new Object[] {BankIdError.NO_CLIENT.exception(), BankId.NO_CLIENT},
+            new Object[] {BankIdError.CANCELLED.exception(), BankId.CANCELLED},
+            new Object[] {BankIdError.UNKNOWN.exception(), BankId.UNKNOWN}
+        };
     }
 
     @Test
-    public void testGetPaymentProductTypeForUnmappedCombination() {
-        exception.expect(IllegalStateException.class);
+    @Parameters(method = "exceptionsForDefaultCreate")
+    public void shouldRethrowAllExceptionsWhenUsingDefaultBehaviorInCreateMethod(
+            AgentException exception) {
+        // given
+        given(paymentExecutor.create(null)).willThrow(exception);
+        PaymentController paymentController = new PaymentController(paymentExecutor);
 
-        Payment payment =
-                new Payment.Builder()
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, DESTINATION_IDENTIFIER),
-                                        "Test Person"))
-                        .withDebtor(
-                                new Debtor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.BE,
-                                                SOURCE_IDENTIFIER_IBAN_GB)))
-                        .withCurrency("£")
-                        .withExecutionDate(LocalDate.now())
-                        .withRemittanceInformation(
-                                createAndGetRemittanceInformation(null, "random"))
-                        .build();
+        // when
+        Throwable throwable = catchThrowable(() -> paymentController.create(null));
 
-        paymentController = new PaymentController(mock(PaymentExecutor.class));
-        paymentController.getPaymentProductType(payment);
+        // then
+        assertThat(throwable).isEqualTo(exception);
+    }
+
+    private Object[] exceptionsForDefaultCreate() {
+        return new Object[] {
+            AuthorizationError.UNAUTHORIZED.exception(),
+            BankServiceError.ACCESS_EXCEEDED.exception(),
+            ThirdPartyError.INCORRECT_SECRETS.exception(),
+            LoginError.DEFAULT_MESSAGE.exception(),
+            SessionError.SESSION_EXPIRED.exception(),
+            BankIdNOError.INITIALIZATION_ERROR.exception(),
+            SupplementalInfoError.NO_VALID_CODE.exception(),
+            BankIdError.ACTIVATE_EXTENDED_BANKID.exception()
+        };
     }
 
     @Test
-    public void testGetPaymentProductTypeNullIdentifier() {
-        exception.expect(NullPointerException.class);
+    @Parameters(method = "exceptionsForNew")
+    // This test is not exhaustive, it just checks few things.
+    public void shouldMapExceptionProperlyWhenUsingNewStrategy(
+            AgentException exception, Class<PaymentException> expectedClass) {
+        // given
+        given(paymentExecutor.create(null)).willThrow(exception);
+        given(paymentExecutor.sign(null)).willThrow(exception);
+        PaymentController paymentController =
+                new PaymentController(
+                        paymentExecutor, null, new PaymentControllerExceptionMapper());
 
-        Payment payment =
-                new Payment.Builder()
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.0))
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.BBAN, DESTINATION_IDENTIFIER),
-                                        "Test Person"))
-                        .withDebtor(
-                                new Debtor(
-                                        AccountIdentifier.create(null, SOURCE_IDENTIFIER_IBAN_GB)))
-                        .withCurrency("SEK")
-                        .withExecutionDate(LocalDate.now())
-                        .withRemittanceInformation(
-                                createAndGetRemittanceInformation(null, "random"))
-                        .build();
+        // when
+        Throwable throwableSign = catchThrowable(() -> paymentController.sign(null));
+        Throwable throwableCreate = catchThrowable(() -> paymentController.create(null));
 
-        paymentController = new PaymentController(mock(PaymentExecutor.class));
-        paymentController.getPaymentProductType(payment);
+        // then
+        assertThat(throwableSign).isInstanceOf(expectedClass);
+        assertThat(throwableCreate).isInstanceOf(expectedClass);
     }
 
-    private RemittanceInformation createAndGetRemittanceInformation(
-            RemittanceInformationType type, String value) {
-        RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setType(type);
-        remittanceInformation.setValue(value);
-        return remittanceInformation;
+    private Object[] exceptionsForNew() {
+        return new Object[] {
+            new Object[] {
+                AuthorizationError.UNAUTHORIZED.exception(), PaymentAuthorizationException.class
+            },
+            new Object[] {
+                LoginError.DEFAULT_MESSAGE.exception(), PaymentAuthenticationException.class
+            },
+            new Object[] {
+                SessionError.SESSION_EXPIRED.exception(), PaymentAuthorizationException.class
+            },
+            new Object[] {BankIdNOError.INITIALIZATION_ERROR.exception(), PaymentException.class},
+            new Object[] {
+                SupplementalInfoError.NO_VALID_CODE.exception(),
+                PaymentAuthorizationCancelledByUserException.class
+            },
+            new Object[] {
+                BankIdError.ACTIVATE_EXTENDED_BANKID.exception(),
+                PaymentAuthorizationException.class
+            }
+        };
     }
 }
