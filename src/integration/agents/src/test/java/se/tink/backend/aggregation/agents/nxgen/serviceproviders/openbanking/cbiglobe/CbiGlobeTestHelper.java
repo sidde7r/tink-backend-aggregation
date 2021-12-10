@@ -9,7 +9,6 @@ import javax.ws.rs.core.MediaType;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -56,10 +55,10 @@ public class CbiGlobeTestHelper {
                 tinkHttpClient,
                 new CbiStorageProvider(
                         persistentStorage, new SessionStorage(), new TemporaryStorage()),
-                InstrumentType.ACCOUNTS,
                 cbiGlobeProviderConfiguration,
                 "psuIpAddress",
                 new RandomValueGeneratorImpl(),
-                new ActualLocalDateTimeSource());
+                new ActualLocalDateTimeSource(),
+                new CbiUrlProvider("https://example.com"));
     }
 }

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public final class CbiGlobeConstants {
@@ -27,61 +26,6 @@ public final class CbiGlobeConstants {
 
     public static class Urls {
         public static final String BASE_URL = "https://cbiglobeopenbankingapigateway.nexi.it";
-
-        public static final URL TOKEN = new URL(BASE_URL + ApiServices.TOKEN);
-        public static final URL CONSENTS = new URL(BASE_URL + ApiServices.CONSENTS);
-        public static final URL ALL_PSD2_CONSENTS =
-                new URL(BASE_URL + ApiServices.ALL_PSD2_CONSENTS);
-        public static final URL UPDATE_CONSENTS = new URL(BASE_URL + ApiServices.UPDATE_CONSENTS);
-        public static final URL ACCOUNTS = new URL(BASE_URL + ApiServices.ACCOUNTS);
-        public static final URL BALANCES = new URL(BASE_URL + ApiServices.BALANCES);
-        public static final URL TRANSACTIONS = new URL(BASE_URL + ApiServices.TRANSACTIONS);
-        public static final URL CONSENTS_STATUS = new URL(BASE_URL + ApiServices.CONSENTS_STATUS);
-        public static final URL ALL_PSD2_CONSENTS_STATUS =
-                new URL(BASE_URL + ApiServices.ALL_PSD2_CONSENTS_STATUS);
-        public static final URL PAYMENT = new URL(BASE_URL + ApiServices.PAYMENT);
-        public static final URL PAYMENT_WITH_PATH_VARIABLES =
-                new URL(BASE_URL + ApiServices.PAYMENT_WITH_PATH_VARIABLES);
-        public static final URL FETCH_PAYMENT = new URL(BASE_URL + ApiServices.FETCH_PAYMENT);
-        public static final URL FETCH_PAYMENT_STATUS =
-                new URL(BASE_URL + ApiServices.FETCH_PAYMENT_STATUS);
-        public static final URL CARD_ACCOUNTS = new URL(BASE_URL + ApiServices.CARD_ACCOUNTS);
-        public static final URL CARD_BALANCES = new URL(BASE_URL + ApiServices.CARD_BALANCES);
-        public static final URL CARD_TRANSACTIONS =
-                new URL(BASE_URL + ApiServices.CARD_TRANSACTIONS);
-    }
-
-    public static class ApiServices {
-        public static final String TOKEN = "/auth/oauth/v2/token";
-        public static final String CONSENTS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents";
-        public static final String ALL_PSD2_CONSENTS =
-                "/platform/enabler/psd2orchestrator/ais/3.0.0/consents";
-        public static final String UPDATE_CONSENTS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents";
-        public static final String ACCOUNTS =
-                "/platform/enabler/psd2orchestrator/ais/3.0.0/accounts";
-        public static final String BALANCES =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/balances";
-        public static final String TRANSACTIONS =
-                "/platform/enabler/psd2orchestrator/ais/2.4.0/accounts/{accountId}/transactions";
-        public static final String CONSENTS_STATUS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
-        public static final String ALL_PSD2_CONSENTS_STATUS =
-                "/platform/enabler/psd2orchestrator/ais/3.0.0/consents/{consentId}";
-        private static final String PAYMENT = "/platform/enabler/psd2orchestrator/pis/2.3.2";
-        private static final String PAYMENT_WITH_PATH_VARIABLES =
-                PAYMENT + "/{payment-service}/{payment-product}";
-        private static final String FETCH_PAYMENT =
-                "/platform/enabler/psd2orchestrator/pis/3.0.0/{payment-service}/{payment-product}/{payment-id}";
-        private static final String FETCH_PAYMENT_STATUS =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/{payment-service}/{payment-product}/{payment-id}/status";
-        public static final String CARD_ACCOUNTS =
-                "/platform/enabler/psd2orchestrator/ais/3.0.0/card-accounts";
-        public static final String CARD_BALANCES =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts/{accountId}/balances";
-        public static final String CARD_TRANSACTIONS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts/{accountId}/transactions";
     }
 
     public static class StorageKeys {

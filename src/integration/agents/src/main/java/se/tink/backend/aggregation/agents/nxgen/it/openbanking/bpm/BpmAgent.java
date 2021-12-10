@@ -24,14 +24,14 @@ public final class BpmAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient(boolean requestManual) {
+    protected CbiGlobeApiClient getApiClient() {
         return new BpmApiClient(
                 client,
                 new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                requestManual,
                 getProviderConfiguration(),
                 psuIpAddress,
                 randomValueGenerator,
-                localDateTimeSource);
+                localDateTimeSource,
+                urlProvider);
     }
 }

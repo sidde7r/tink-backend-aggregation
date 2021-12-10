@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.RequestContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentDetailsResponse;
@@ -66,29 +65,29 @@ public class CbiGlobeApiClient {
     private CbiGlobeConfiguration configuration;
     protected String redirectUrl;
     protected TemporaryStorage temporaryStorage;
-    protected InstrumentType instrumentType;
     private final CbiGlobeProviderConfiguration providerConfiguration;
     protected final String psuIpAddress;
     private final RandomValueGenerator randomValueGenerator;
     private final LocalDateTimeSource localDateTimeSource;
+    protected final CbiUrlProvider urlProvider;
 
     public CbiGlobeApiClient(
             TinkHttpClient client,
             CbiStorageProvider cbiStorageProvider,
-            InstrumentType instrumentType,
             CbiGlobeProviderConfiguration providerConfiguration,
             String psuIpAddress,
             RandomValueGenerator randomValueGenerator,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            CbiUrlProvider urlProvider) {
         this.client = client;
         this.persistentStorage = cbiStorageProvider.getPersistentStorage();
         this.sessionStorage = cbiStorageProvider.getSessionStorage();
         this.temporaryStorage = cbiStorageProvider.getTemporaryStorage();
-        this.instrumentType = instrumentType;
         this.providerConfiguration = providerConfiguration;
         this.psuIpAddress = psuIpAddress;
         this.randomValueGenerator = randomValueGenerator;
         this.localDateTimeSource = localDateTimeSource;
+        this.urlProvider = urlProvider;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -131,10 +130,14 @@ public class CbiGlobeApiClient {
         return addPsuIpAddressHeaderIfNeeded(rb);
     }
 
+    protected InstrumentType getSupportedInstrumentType() {
+        return InstrumentType.ACCOUNTS;
+    }
+
     private URL getAccountsUrl() {
-        return this.instrumentType.equals(InstrumentType.ACCOUNTS)
-                ? Urls.ACCOUNTS
-                : Urls.CARD_ACCOUNTS;
+        return InstrumentType.ACCOUNTS == getSupportedInstrumentType()
+                ? urlProvider.getAccountsUrl()
+                : urlProvider.getCardAccountsUrl();
     }
 
     private OAuth2Token getTokenFromStorage() {
@@ -148,7 +151,7 @@ public class CbiGlobeApiClient {
 
     public GetTokenResponse getToken(String clientId, String clientSecret) {
         return makeRequest(
-                createRequest(Urls.TOKEN)
+                createRequest(urlProvider.getTokenUrl())
                         .addBasicAuth(clientId, clientSecret)
                         .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
                         .queryParam(QueryKeys.SCOPE, QueryValues.PRODUCTION)
@@ -178,7 +181,10 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
-        URL consentUrl = isAllPsd2Supported() ? Urls.ALL_PSD2_CONSENTS : Urls.CONSENTS;
+        URL consentUrl =
+                isAllPsd2Supported()
+                        ? urlProvider.getAllPsd2ConsentsUrl()
+                        : urlProvider.getConsentsUrl();
         String okFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.SUCCESS);
         String nokFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.FAILURE);
         return createRequestInSession(consentUrl)
@@ -241,9 +247,9 @@ public class CbiGlobeApiClient {
     }
 
     private URL getBalancesUrl() {
-        return this.instrumentType.equals(InstrumentType.ACCOUNTS)
-                ? Urls.BALANCES
-                : Urls.CARD_BALANCES;
+        return InstrumentType.ACCOUNTS == getSupportedInstrumentType()
+                ? urlProvider.getBalancesUrl()
+                : urlProvider.getCardBalancesUrl();
     }
 
     public TransactionsResponse getTransactions(
@@ -282,9 +288,9 @@ public class CbiGlobeApiClient {
     }
 
     private URL getTransactionsUrl() {
-        return this.instrumentType.equals(InstrumentType.ACCOUNTS)
-                ? Urls.TRANSACTIONS
-                : Urls.CARD_TRANSACTIONS;
+        return InstrumentType.ACCOUNTS == getSupportedInstrumentType()
+                ? urlProvider.getTransactionsUrl()
+                : urlProvider.getCardTransactionsUrl();
     }
 
     private String getTotalPages(HttpResponse response, String apiIdentifier) {
@@ -321,7 +327,9 @@ public class CbiGlobeApiClient {
 
     private RequestBuilder createConsentStatusRequestBuilder(String consentType) {
         URL consentStatusUrl =
-                isAllPsd2Supported() ? Urls.ALL_PSD2_CONSENTS_STATUS : Urls.CONSENTS_STATUS;
+                isAllPsd2Supported()
+                        ? urlProvider.getAllPsd2ConsentsDetailsUrl()
+                        : urlProvider.getConsentsDetailsUrl();
 
         return createRequestInSession(
                 consentStatusUrl.parameter(
@@ -338,7 +346,8 @@ public class CbiGlobeApiClient {
             CreatePaymentRequest createPaymentRequest, Payment payment) {
         RequestBuilder requestBuilder =
                 createRequestInSession(
-                                Urls.PAYMENT_WITH_PATH_VARIABLES
+                                urlProvider
+                                        .getPaymentsUrl()
                                         .parameter(
                                                 PathParameterKeys.PAYMENT_SERVICE,
                                                 getPaymentService(payment))
@@ -377,7 +386,8 @@ public class CbiGlobeApiClient {
     public CreatePaymentResponse getPayment(Payment payment) {
         RequestBuilder requestBuilder =
                 createRequestInSession(
-                                Urls.FETCH_PAYMENT
+                                urlProvider
+                                        .getFetchPaymentUrl()
                                         .parameter(
                                                 PathParameterKeys.PAYMENT_SERVICE,
                                                 getPaymentService(payment))
@@ -400,7 +410,8 @@ public class CbiGlobeApiClient {
     public CreatePaymentResponse getPaymentStatus(Payment payment) {
         RequestBuilder requestBuilder =
                 createRequestInSession(
-                        Urls.FETCH_PAYMENT_STATUS
+                        urlProvider
+                                .getFetchPaymentStatusUrl()
                                 .parameter(
                                         PathParameterKeys.PAYMENT_SERVICE,
                                         getPaymentService(payment))

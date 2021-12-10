@@ -4,10 +4,9 @@ import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -19,19 +18,19 @@ public class BpmApiClient extends CbiGlobeApiClient {
     public BpmApiClient(
             TinkHttpClient client,
             CbiStorageProvider cbiStorageProvider,
-            boolean requestManual,
             CbiGlobeProviderConfiguration providerConfiguration,
             String psuIpAddress,
             RandomValueGenerator randomValueGenerator,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            CbiUrlProvider urlProvider) {
         super(
                 client,
                 cbiStorageProvider,
-                InstrumentType.ACCOUNTS,
                 providerConfiguration,
-                requestManual ? psuIpAddress : null,
+                psuIpAddress,
                 randomValueGenerator,
-                localDateTimeSource);
+                localDateTimeSource,
+                urlProvider);
     }
 
     @Override
@@ -43,8 +42,9 @@ public class BpmApiClient extends CbiGlobeApiClient {
             int page) {
         return addPsuIpAddressHeaderIfNeeded(
                         createRequestWithConsent(
-                                        Urls.TRANSACTIONS.parameter(
-                                                IdTags.ACCOUNT_ID, apiIdentifier))
+                                        urlProvider
+                                                .getTransactionsUrl()
+                                                .parameter(IdTags.ACCOUNT_ID, apiIdentifier))
                                 .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
                                 .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
                                 .queryParam(QueryKeys.DATE_TO, toDate.toString())

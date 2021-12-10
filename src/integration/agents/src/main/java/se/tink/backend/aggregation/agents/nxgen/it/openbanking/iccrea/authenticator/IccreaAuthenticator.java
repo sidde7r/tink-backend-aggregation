@@ -6,12 +6,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyFinishAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.libraries.i18n.Catalog;
 
 public class IccreaAuthenticator extends CbiGlobeAuthenticator {
 
@@ -21,15 +19,11 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
+            ConsentManager consentManager,
             CbiGlobeConfiguration configuration,
-            SupplementalInformationController supplementalInformationController,
-            Catalog catalog,
-            LocalDateTimeSource localDateTimeSource) {
-        super(apiClient, strongAuthenticationState, userState, configuration, localDateTimeSource);
-        this.consentProcessor =
-                new ConsentProcessor(
-                        consentManager,
-                        new UserInteractions(supplementalInformationController, catalog));
+            ConsentProcessor consentProcessor) {
+        super(apiClient, strongAuthenticationState, userState, consentManager, configuration);
+        this.consentProcessor = consentProcessor;
     }
 
     @Override

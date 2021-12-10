@@ -9,6 +9,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.ConsentProcessor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.UserInteractions;
@@ -36,29 +37,40 @@ public final class IccreaAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient(boolean requestManual) {
+    protected String getBaseUrl() {
+        return "https://psd2.iccreabanca.it";
+    }
+
+    @Override
+    protected CbiGlobeApiClient getApiClient() {
         return new IccreaApiClient(
                 client,
                 new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                requestManual,
                 getProviderConfiguration(),
                 psuIpAddress,
                 randomValueGenerator,
-                localDateTimeSource);
+                localDateTimeSource,
+                urlProvider);
     }
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
         if (authenticator == null) {
+            ConsentManager consentManager =
+                    new ConsentManager(apiClient, userState, localDateTimeSource, urlProvider);
+
             authenticator =
                     new IccreaAuthenticator(
                             apiClient,
                             strongAuthenticationState,
                             userState,
+                            consentManager,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
-                            supplementalInformationController,
-                            catalog,
-                            localDateTimeSource);
+                            new ConsentProcessor(
+                                    consentManager,
+                                    new UserInteractions(
+                                            supplementalInformationController, catalog),
+                                    urlProvider));
         }
 
         return authenticator;
@@ -74,7 +86,8 @@ public final class IccreaAgent extends CbiGlobeAgent {
                         strongAuthenticationState,
                         request.getProvider(),
                         new UserInteractions(supplementalInformationController, catalog),
-                        new ConsentManager(apiClient, userState, localDateTimeSource));
+                        new ConsentManager(apiClient, userState, localDateTimeSource, urlProvider),
+                        urlProvider);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }

@@ -11,11 +11,12 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HttpClientParams;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeBperRetryFilter;
@@ -55,24 +56,36 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected LocalDateTimeSource localDateTimeSource;
     protected RandomValueGenerator randomValueGenerator;
     protected final String psuIpAddress;
+    protected final CbiUrlProvider urlProvider;
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         psuIpAddress = request.getUserAvailability().getOriginatingUserIpOrDefault();
+        urlProvider = new CbiUrlProvider(getBaseUrl());
         providerConfiguration =
                 PayloadParser.parse(
                         request.getProvider().getPayload(), CbiGlobeProviderConfiguration.class);
         temporaryStorage = new TemporaryStorage();
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
-        apiClient = getApiClient(request.getUserAvailability().isUserPresent());
+        apiClient = getApiClient();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, credentials);
         authenticator = getAuthenticator();
         client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
         applyFilters(client);
+    }
+
+    /**
+     * Historically, all CBI banks were hosted on the same address. Now some of the banks have their
+     * own hosts.
+     *
+     * @return base url (protocol + host) where bank's API can be accessed.
+     */
+    protected String getBaseUrl() {
+        return Urls.BASE_URL;
     }
 
     protected CbiGlobeProviderConfiguration getProviderConfiguration() {
@@ -94,15 +107,15 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                         HttpClient.RETRY_SLEEP_MILLISECONDS_SLOW_AUTHENTICATION));
     }
 
-    protected CbiGlobeApiClient getApiClient(boolean requestManual) {
+    protected CbiGlobeApiClient getApiClient() {
         return new CbiGlobeApiClient(
                 client,
                 new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                InstrumentType.ACCOUNTS,
                 getProviderConfiguration(),
                 psuIpAddress,
                 randomValueGenerator,
-                localDateTimeSource);
+                localDateTimeSource,
+                urlProvider);
     }
 
     @Override
@@ -126,8 +139,9 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                             apiClient,
                             strongAuthenticationState,
                             userState,
-                            getAgentConfiguration().getProviderSpecificConfiguration(),
-                            localDateTimeSource);
+                            new ConsentManager(
+                                    apiClient, userState, localDateTimeSource, urlProvider),
+                            getAgentConfiguration().getProviderSpecificConfiguration());
         }
 
         return authenticator;

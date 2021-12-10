@@ -15,4 +15,9 @@ public final class FindomesticAgent extends CbiGlobeAgent {
     public FindomesticAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
     }
+
+    @Override
+    protected String getBaseUrl() {
+        return "https://openbanking.findomestic.com";
+    }
 }

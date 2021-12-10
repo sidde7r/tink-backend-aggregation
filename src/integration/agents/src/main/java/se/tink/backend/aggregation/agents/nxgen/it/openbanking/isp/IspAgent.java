@@ -33,6 +33,11 @@ public final class IspAgent extends CbiGlobeAgent
     }
 
     @Override
+    protected String getBaseUrl() {
+        return "https://tppinterface.intesasanpaolo.com";
+    }
+
+    @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
                 CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);

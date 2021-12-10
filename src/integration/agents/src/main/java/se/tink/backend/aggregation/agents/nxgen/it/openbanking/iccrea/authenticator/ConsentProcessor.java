@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.rpc.ConsentScaResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AuthenticationMethods;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ConsentProcessor {
-    private ConsentManager consentManager;
-    private UserInteractions userInteractions;
+    private final ConsentManager consentManager;
+    private final UserInteractions userInteractions;
+    private final CbiUrlProvider urlProvider;
 
     public void processConsent(ConsentScaResponse consentResponse) {
         ConsentResponse updateConsentResponse =
@@ -19,7 +20,7 @@ public class ConsentProcessor {
 
         consentManager.updatePsuCredentials(
                 updateConsentResponse.getPsuCredentials(),
-                Urls.UPDATE_CONSENTS.concat("/" + consentManager.getConsentId()),
+                urlProvider.getUpdateConsentsUrl().concat("/" + consentManager.getConsentId()),
                 ConsentResponse.class);
         userInteractions.displayPromptAndWaitForAcceptance();
         consentManager.waitForAcceptance();

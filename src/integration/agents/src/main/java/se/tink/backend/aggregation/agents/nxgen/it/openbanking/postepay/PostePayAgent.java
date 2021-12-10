@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authen
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -25,15 +26,15 @@ public final class PostePayAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient(boolean requestManual) {
+    protected CbiGlobeApiClient getApiClient() {
         return new BancoPostaApiClient(
                 client,
                 new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                requestManual,
                 getProviderConfiguration(),
                 psuIpAddress,
                 randomValueGenerator,
-                localDateTimeSource);
+                localDateTimeSource,
+                urlProvider);
     }
 
     @Override
@@ -44,8 +45,9 @@ public final class PostePayAgent extends CbiGlobeAgent {
                             apiClient,
                             strongAuthenticationState,
                             userState,
-                            getAgentConfiguration().getProviderSpecificConfiguration(),
-                            localDateTimeSource);
+                            new ConsentManager(
+                                    apiClient, userState, localDateTimeSource, urlProvider),
+                            getAgentConfiguration().getProviderSpecificConfiguration());
         }
         return authenticator;
     }

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.nexi;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -13,18 +14,23 @@ public class NexiApiClient extends CbiGlobeApiClient {
     public NexiApiClient(
             TinkHttpClient client,
             CbiStorageProvider cbiStorageProvider,
-            boolean requestManual,
             CbiGlobeProviderConfiguration providerConfiguration,
             String psuIpAddress,
             RandomValueGenerator randomValueGenerator,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            CbiUrlProvider urlProvider) {
         super(
                 client,
                 cbiStorageProvider,
-                InstrumentType.CARDS_ACCOUNTS,
                 providerConfiguration,
-                requestManual ? psuIpAddress : null,
+                psuIpAddress,
                 randomValueGenerator,
-                localDateTimeSource);
+                localDateTimeSource,
+                urlProvider);
+    }
+
+    @Override
+    protected InstrumentType getSupportedInstrumentType() {
+        return InstrumentType.CARDS_ACCOUNTS;
     }
 }
