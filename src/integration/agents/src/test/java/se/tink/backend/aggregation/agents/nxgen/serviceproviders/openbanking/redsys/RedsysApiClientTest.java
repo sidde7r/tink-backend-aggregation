@@ -101,6 +101,28 @@ public class RedsysApiClientTest {
     }
 
     @Test
+    public void shouldReturnRevokedByPSUResponse() {
+        // given
+        final String consentId = "12345678";
+        String expectedUrl = buildConsentUrl(consentId);
+        HttpResponseException httpResponseException = mock(HttpResponseException.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        given(httpResponse.getStatus()).willReturn(403);
+        given(httpResponse.getBody(String.class))
+                .willReturn(
+                        "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"RESOURCE_UNKNOWN\",\"text\":\"The consent hasn't been found\"}]}\n");
+        given(httpResponseException.getResponse()).willReturn(httpResponse);
+        given(signedRequestFactory.createSignedRequest(expectedUrl)).willReturn(requestBuilder);
+        given(requestBuilder.get(ConsentResponse.class)).willThrow(httpResponseException);
+
+        // when
+        ConsentResponse response = objectUnderTest.fetchConsent(consentId);
+
+        // then
+        Assertions.assertThat(response.getConsentStatus()).isEqualTo(ConsentStatus.REVOKED_BY_PSU);
+    }
+
+    @Test
     public void shouldRethrowHttpResponseException() {
         // given
         final String consentId = "12345678";

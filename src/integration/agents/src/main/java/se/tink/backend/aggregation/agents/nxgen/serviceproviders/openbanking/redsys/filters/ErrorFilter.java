@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.filters;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -22,15 +23,26 @@ public class ErrorFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        HttpResponse response = nextFilter(httpRequest);
+        try {
+            HttpResponse response = nextFilter(httpRequest);
 
-        if (response.getStatus() == httpCode) {
-            final ErrorResponse error = ErrorResponse.fromResponse(response);
-            if (error.hasErrorCode(errorCode)) {
-                throw runtimeError.exception();
+            if (response.getStatus() == httpCode) {
+                final ErrorResponse error = ErrorResponse.fromResponse(response);
+                if (error.hasErrorCode(errorCode)) {
+                    throw runtimeError.exception();
+                }
             }
-        }
 
-        return response;
+            return response;
+        } catch (HttpClientException ex) {
+            if (isRedsysTemporaryUnavailable(ex)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw ex;
+        }
+    }
+
+    private boolean isRedsysTemporaryUnavailable(HttpClientException ex) {
+        return ex.getMessage().contains("psd2.redsys.es:443 failed to respond");
     }
 }

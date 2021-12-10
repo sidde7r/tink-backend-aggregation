@@ -6,6 +6,7 @@ import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -72,6 +73,16 @@ import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeap
 
 @Slf4j
 public class RedsysApiClient {
+
+    private static final Map<String, ConsentStatus>
+            CONSENT_403_RESPONSE_ERROR_CODE_TO_CONSENT_STATUS_MAPPING = new HashMap<>();
+
+    static {
+        CONSENT_403_RESPONSE_ERROR_CODE_TO_CONSENT_STATUS_MAPPING.put(
+                "CONSENT_UNKNOWN", ConsentStatus.UNKNOWN);
+        CONSENT_403_RESPONSE_ERROR_CODE_TO_CONSENT_STATUS_MAPPING.put(
+                "RESOURCE_UNKNOWN", ConsentStatus.REVOKED_BY_PSU);
+    }
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -215,9 +226,12 @@ public class RedsysApiClient {
             return redsysSignedRequestFactory.createSignedRequest(url).get(ConsentResponse.class);
         } catch (HttpResponseException ex) {
             ErrorResponse errorResponse = ErrorResponse.fromResponse(ex.getResponse());
-            if (ex.getResponse().getStatus() == 403
-                    && errorResponse.hasErrorCode("CONSENT_UNKNOWN")) {
-                return new ConsentResponse(ConsentStatus.UNKNOWN);
+            if (ex.getResponse().getStatus() == 403) {
+                return CONSENT_403_RESPONSE_ERROR_CODE_TO_CONSENT_STATUS_MAPPING.entrySet().stream()
+                        .filter(e -> errorResponse.hasErrorCode(e.getKey()))
+                        .findAny()
+                        .map(e -> new ConsentResponse(e.getValue()))
+                        .orElseThrow(() -> ex);
             }
             throw ex;
         }

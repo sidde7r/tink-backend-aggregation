@@ -24,4 +24,8 @@ public enum ConsentStatus {
                 .findFirst()
                 .orElse(UNKNOWN);
     }
+
+    public String getStatusText() {
+        return statusText;
+    }
 }

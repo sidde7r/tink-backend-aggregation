@@ -22,7 +22,7 @@ public class ConsentResponse {
     public ConsentResponse() {}
 
     public ConsentResponse(ConsentStatus consentStatus) {
-        this.consentStatus = consentStatus.name();
+        this.consentStatus = consentStatus.getStatusText();
     }
 
     @JsonIgnore
