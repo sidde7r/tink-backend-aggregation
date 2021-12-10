@@ -16,12 +16,11 @@ public class FabricRequestBuilder {
     private final String userIp;
 
     RequestBuilder createRequest(URL url) {
-        RequestBuilder request = client.request(url);
-        request.header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID());
-        request.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
-        request.accept(MediaType.APPLICATION_JSON);
-        request.type(MediaType.APPLICATION_JSON);
-        return request;
+        return client.request(url)
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
     }
 
     RequestBuilder createRequestInSession(URL url, String consentId) {

@@ -44,7 +44,7 @@ public class FabricAuthApiClient {
 
     public AuthorizationResponse createAuthorizationObject(String authorizationPath) {
         return requestBuilder
-                .createRequest(new URL(baseUrl + API_PSD2_URL + authorizationPath))
+                .createRequest(buildUrlWithRawPath(authorizationPath))
                 .post(AuthorizationResponse.class);
     }
 
@@ -53,7 +53,7 @@ public class FabricAuthApiClient {
         try {
 
             return requestBuilder
-                    .createRequest(new URL(baseUrl + API_PSD2_URL + authorizationPath))
+                    .createRequest(buildUrlWithRawPath(authorizationPath))
                     .header(HeaderKeys.PSU_ID, username)
                     .put(
                             AuthorizationResponse.class,
@@ -66,7 +66,7 @@ public class FabricAuthApiClient {
     public AuthorizationResponse updateAuthorizationWithMethodId(
             String authorizationPath, String scaMethodId) {
         return requestBuilder
-                .createRequest(new URL(baseUrl + API_PSD2_URL + authorizationPath))
+                .createRequest(buildUrlWithRawPath(authorizationPath))
                 .put(
                         AuthorizationResponse.class,
                         new SelectAuthorizationMethodRequest(scaMethodId));
@@ -77,7 +77,7 @@ public class FabricAuthApiClient {
         try {
 
             return requestBuilder
-                    .createRequest(new URL(baseUrl + API_PSD2_URL + authorizationPath))
+                    .createRequest(buildUrlWithRawPath(authorizationPath))
                     .put(
                             AuthorizationStatusResponse.class,
                             new FinalizeAuthorizationRequest(smsOtp));
@@ -100,5 +100,9 @@ public class FabricAuthApiClient {
                         new URL(baseUrl + Urls.GET_CONSENT_DETAILS)
                                 .parameter(IdTags.CONSENT_ID, consentId))
                 .get(ConsentDetailsResponse.class);
+    }
+
+    private URL buildUrlWithRawPath(String endpointPath) {
+        return new URL(baseUrl + API_PSD2_URL + endpointPath);
     }
 }

@@ -10,6 +10,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @Getter
 public class AuthorizationResponse {
+
+    private static final String PSU_AUTHENTICATED = "psuAuthenticated";
+    private static final String SCA_METHOD_SELECTED = "scaMethodSelected";
+
     @JsonProperty("_links")
     private LinksEntity links;
 
@@ -19,4 +23,12 @@ public class AuthorizationResponse {
     @Setter private ScaMethodEntity chosenScaMethod;
     private ChallengeDataEntity challengeData;
     private String psuMessage;
+
+    public boolean isStatePsuAuthenticated() {
+        return PSU_AUTHENTICATED.equalsIgnoreCase(scaStatus);
+    }
+
+    public boolean isStateScaMethodSelected() {
+        return SCA_METHOD_SELECTED.equalsIgnoreCase(scaStatus);
+    }
 }

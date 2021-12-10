@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.AuthenticationKeys.AUTHENTICATION_FINALISED;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.AuthenticationKeys.AUTHENTICATION_PSU_AUTHENTICATED;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.AuthenticationKeys.SCA_METHOD_SELECTED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.AuthenticationKeys.SMS_SCA;
 
 import java.util.List;
@@ -55,17 +53,9 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
                         credentials.getField(Key.USERNAME),
                         credentials.getField(Key.PASSWORD));
 
-        if (AUTHENTICATION_PSU_AUTHENTICATED.equalsIgnoreCase(authorizationObject.getScaStatus())) {
-            authorizationObject = pickAndSelectScaMethod(authorizationObject);
-        } else if (SCA_METHOD_SELECTED.equalsIgnoreCase(authorizationObject.getScaStatus())
-                && !isSupportedMethod(authorizationObject.getChosenScaMethod())) {
-            throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
-        }
+        authorizationObject = pickAndSelectScaMethod(authorizationObject);
 
-        if (!SCA_METHOD_SELECTED.equalsIgnoreCase(authorizationObject.getScaStatus())) {
-            throw LoginError.DEFAULT_MESSAGE.exception(
-                    "Unexpected state after login/method selection!");
-        }
+        throwIfUnexpectedStateAfterSelection(authorizationObject);
 
         AuthorizationStatusResponse authorizationStatusResponse =
                 collectAndSendOtp(authorizationObject);
@@ -86,6 +76,14 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
 
     private AuthorizationResponse pickAndSelectScaMethod(
             AuthorizationResponse authorizationObject) {
+        if (authorizationObject.isStateScaMethodSelected()) {
+            if (isSupportedMethod(authorizationObject.getChosenScaMethod())) {
+                return authorizationObject;
+            } else {
+                throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
+            }
+        }
+
         List<ScaMethodEntity> allowedScaMethods =
                 authorizationObject.getScaMethods().stream()
                         .filter(this::isSupportedMethod)
@@ -111,6 +109,13 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
     private boolean isSupportedMethod(ScaMethodEntity scaMethodEntity) {
         return scaMethodEntity != null
                 && SMS_SCA.equalsIgnoreCase(scaMethodEntity.getAuthenticationType());
+    }
+
+    private void throwIfUnexpectedStateAfterSelection(AuthorizationResponse authorizationObject) {
+        if (!authorizationObject.isStateScaMethodSelected()) {
+            throw LoginError.DEFAULT_MESSAGE.exception(
+                    "Unexpected state after login/method selection!");
+        }
     }
 
     private AuthorizationStatusResponse collectAndSendOtp(

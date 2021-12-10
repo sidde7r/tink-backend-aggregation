@@ -80,6 +80,7 @@ public class FabricPaymentExecutorTest {
         when(requestBuilder.header(any(String.class), any(Object.class)))
                 .thenReturn(requestBuilder);
         when(requestBuilder.type(any(String.class))).thenReturn(requestBuilder);
+        when(requestBuilder.accept(any(String.class))).thenReturn(requestBuilder);
         when(requestBuilder.delete(FabricPaymentResponse.class))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
