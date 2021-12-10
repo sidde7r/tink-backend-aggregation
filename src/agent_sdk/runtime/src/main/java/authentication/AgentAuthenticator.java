@@ -2,6 +2,7 @@ package se.tink.agent.runtime.authentication;
 
 import com.google.common.collect.ImmutableList;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.berlingroup.BerlinGroupAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.generic.GenericAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.oauth2.Oauth2AuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.oauth2_decoupled_app.Oauth2DecoupledAppAuthenticationProcess;
@@ -12,6 +13,7 @@ import se.tink.agent.runtime.authentication.processes.username_password.Username
 import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.storage.Storage;
+import se.tink.agent.sdk.utils.TimeGenerator;
 
 public class AgentAuthenticator {
     private final AgentInstance agentInstance;
@@ -21,6 +23,7 @@ public class AgentAuthenticator {
     public AgentAuthenticator(
             AgentInstance agentInstance,
             Storage authenticationStorage,
+            TimeGenerator timeGenerator,
             MultifactorAuthenticationState multifactorAuthenticationState) {
         this.agentInstance = agentInstance;
         this.authenticationStorage = authenticationStorage;
@@ -32,7 +35,9 @@ public class AgentAuthenticator {
                         new ThirdPartyAppAuthenticationProcess(),
                         new SwedishMobileBankIdAuthenticationProcess(),
                         new UsernameAndPasswordAuthenticationProcess(),
-                        new Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess());
+                        new Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess(),
+                        new BerlinGroupAuthenticationProcess(
+                                timeGenerator, multifactorAuthenticationState));
     }
 
     public void authenticate(String request) {}
