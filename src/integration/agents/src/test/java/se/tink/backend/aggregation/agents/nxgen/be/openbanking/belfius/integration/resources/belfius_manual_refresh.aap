@@ -37,7 +37,7 @@ Cache-Control: no-store
 Content-Type: application/json;charset=utf-8
 Content-Length: 385
 
-{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":"900","refresh_token":"DUMMY_REFRESH_TOKEN","scope":"AIS","logical_id":"f2533843-785d-4499-b92f-61711101feed","iban":"BE39000000076000"}
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":"900","refresh_token":"DUMMY_REFRESH_TOKEN","scope":"AIS","logical_id":"f2533843-785d-4499-b92f-61711101feed","iban":"BE39000000076000", "sca_token": "DUMMY_SCA_TOKEN"}
 
 REQUEST 3
 GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed
@@ -61,9 +61,10 @@ Content-Length: 686
 {"product":"DUMMY_NAME","iban":"BE39000000076000","currency":"EUR","balance":789.01,"multicurrency":false,"account_name":"DUMMY_NAME","other_compartments":[],"_links":{"self":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed"},"transactions":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed/transactions"}}}
 
 REQUEST 4
-GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions
+GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?pagesize=400&date_from=1970-01-01
 Accept-Language: fr
 Accept: application/vnd.belfius.api+json; version=2
+SCA-Token: DUMMY_SCA_TOKEN
 Client-ID: DUMMY_ID
 redirect-uri: https://api.tink.se/api/v1/credentials/third-party/callback
 Request-ID: 00000000-0000-4000-0000-000000000000
@@ -82,9 +83,10 @@ Transfer-Encoding: chunked
 {"transactions":{"booked":[{"transaction_ref":"090548887U406","transaction_seqnumber":"EUR001","counterparty_info":"Somecounterparty Person","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"},{"transaction_ref":"090548887U406","transaction_seqnumber":"EUR001","counterparty_info":"Somecounterparty Person","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"},{"transaction_ref":"090548887U406","transaction_seqnumber":"EUR001","counterparty_info":"Somecounterparty Person","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"}],"next_page_key":"DUMMY_NEXT_PAGE_KEY"},"_links":{"self":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed/transactions"},"next":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY"},"account":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed"}}}
 
 REQUEST 5
-GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY
+GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY&pagesize=400&date_from=1970-01-01
 Accept-Language: fr
 Accept: application/vnd.belfius.api+json; version=2
+SCA-Token: DUMMY_SCA_TOKEN
 Client-ID: DUMMY_ID
 redirect-uri: https://api.tink.se/api/v1/credentials/third-party/callback
 Request-ID: 00000000-0000-4000-0000-000000000000
@@ -103,9 +105,10 @@ Transfer-Encoding: chunked
 {"transactions":{"booked":[{"transaction_ref":"090548887U406","transaction_seqnumber":"EUR001","counterparty_info":"Somecounterparty Person","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"},{"transaction_ref":"090548887U406","transaction_seqnumber":"EUR001","counterparty_info":"Somecounterparty Person","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"},{"transaction_ref":"090548887U406","transaction_seqnumber":"EUR001","counterparty_info":"Somecounterparty Person","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"}],"next_page_key":"DUMMY_NEXT_PAGE_KEY2"},"_links":{"self":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed/transactions"},"next":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY2"},"account":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed"}}}
 
 REQUEST 6
-GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY2
+GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY2&pagesize=400&date_from=1970-01-01
 Accept-Language: fr
 Accept: application/vnd.belfius.api+json; version=2
+SCA-Token: DUMMY_SCA_TOKEN
 Client-ID: DUMMY_ID
 redirect-uri: https://api.tink.se/api/v1/credentials/third-party/callback
 Request-ID: 00000000-0000-4000-0000-000000000000

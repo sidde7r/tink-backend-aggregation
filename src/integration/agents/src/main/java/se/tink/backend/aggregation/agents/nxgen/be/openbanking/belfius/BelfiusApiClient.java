@@ -4,9 +4,13 @@ import com.google.api.client.http.HttpStatusCodes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
@@ -33,7 +37,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.json.JsonUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public final class BelfiusApiClient {
+
+    private static final String SCA_INVALID = "Invalid JWT";
 
     private final TinkHttpClient client;
     private final BelfiusConfiguration configuration;
@@ -120,50 +127,94 @@ public final class BelfiusApiClient {
         }
     }
 
-    public FetchTransactionsResponse fetchTransactionsForAccount(
-            OAuth2Token oAuth2Token, String key, String logicalId) {
-
-        URL url =
-                new URL(Urls.FETCH_TRANSACTIONS_PATH)
-                        .parameter(StorageKeys.LOGICAL_ID, logicalId)
-                        .queryParam(QueryKeys.NEXT, key);
+    public FetchTransactionsResponse fetchTransactionsFromLast90Days(
+            OAuth2Token oAuth2Token, String nextKey, String logicalId) {
 
         HttpResponse httpResponse =
-                createRequestInSession(url)
-                        .header(HeaderKeys.ACCEPT, HeaderValues.TRANSACTION_ACCEPT)
-                        .addBearerToken(oAuth2Token)
-                        .get(HttpResponse.class);
+                makeFetchTransactionsCall(oAuth2Token, nextKey, logicalId, null, null, null);
 
-        return SerializationUtils.deserializeFromString(
-                JsonUtils.escapeNotSpecialSingleBackslashes(httpResponse.getBody(String.class)),
-                FetchTransactionsResponse.class);
+        return mapHttpResponseToFetchTransactionsResponse(httpResponse);
     }
 
-    public FetchTransactionsResponse fetchTransactionsForAccount(
-            OAuth2Token oAuth2Token, String logicalId, String scaToken, LocalDate dateFrom) {
+    public FetchTransactionsResponse fetchTransactionsFromDate(
+            OAuth2Token oAuth2Token,
+            String nextKey,
+            String logicalId,
+            String scaToken,
+            LocalDate dateFrom,
+            String pageSize) {
 
-        URL url =
-                new URL(Urls.FETCH_TRANSACTIONS_PATH).parameter(StorageKeys.LOGICAL_ID, logicalId);
-
-        if (StringUtils.isNotBlank(scaToken)) {
-            url = enrichWithDateFrom(url, dateFrom);
+        HttpResponse httpResponse;
+        try {
+            httpResponse =
+                    makeFetchTransactionsCall(
+                            oAuth2Token, nextKey, logicalId, scaToken, dateFrom, pageSize);
+        } catch (BankServiceException e) {
+            log.error(
+                    "Page size: {} too large when fetching transactions for account :{} from date: {}",
+                    pageSize,
+                    logicalId,
+                    dateFrom);
+            throw e;
+        } catch (HttpResponseException e) {
+            HttpResponse exceptionResponse = e.getResponse();
+            if (exceptionResponse.getStatus() == 401
+                    && exceptionResponse.getBody(String.class).contains(SCA_INVALID)) {
+                log.error(
+                        "SCA token was invalid, trying to fetch transactions from 90 days without SCA token.");
+            }
+            throw e;
         }
 
-        HttpResponse httpResponse =
+        return mapHttpResponseToFetchTransactionsResponse(httpResponse);
+    }
+
+    private HttpResponse makeFetchTransactionsCall(
+            OAuth2Token oAuth2Token,
+            String nextKey,
+            String logicalId,
+            String scaToken,
+            LocalDate dateFrom,
+            String pageSize) {
+
+        URL url = prepareUrlForTransactions(logicalId, nextKey, dateFrom, pageSize);
+
+        RequestBuilder requestBuilder =
                 createRequestInSession(url)
                         .header(HeaderKeys.ACCEPT, HeaderValues.TRANSACTION_ACCEPT)
-                        .header(HeaderValues.SCA_TOKEN, scaToken)
-                        .addBearerToken(oAuth2Token)
-                        .get(HttpResponse.class);
+                        .addBearerToken(oAuth2Token);
 
+        if (StringUtils.isNotBlank(scaToken)) {
+            requestBuilder.header(HeaderValues.SCA_TOKEN, scaToken);
+        }
+
+        return requestBuilder.get(HttpResponse.class);
+    }
+
+    private URL prepareUrlForTransactions(
+            String logicalId, String nextKey, LocalDate dateFrom, String pageSize) {
+        Map<String, String> queryParams = new HashMap<>();
+        if (StringUtils.isNotBlank(nextKey)) {
+            queryParams.put(QueryKeys.NEXT, nextKey);
+        }
+        if (dateFrom != null) {
+            final String formattedEarliestDate =
+                    dateFrom.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            queryParams.put(QueryKeys.FROM_DATE, formattedEarliestDate);
+        }
+        if (StringUtils.isNotBlank(pageSize)) {
+            queryParams.put(QueryKeys.PAGE_SIZE, pageSize);
+        }
+
+        return new URL(Urls.FETCH_TRANSACTIONS_PATH)
+                .parameter(StorageKeys.LOGICAL_ID, logicalId)
+                .queryParams(queryParams);
+    }
+
+    private FetchTransactionsResponse mapHttpResponseToFetchTransactionsResponse(
+            HttpResponse httpResponse) {
         return SerializationUtils.deserializeFromString(
                 JsonUtils.escapeNotSpecialSingleBackslashes(httpResponse.getBody(String.class)),
                 FetchTransactionsResponse.class);
-    }
-
-    public URL enrichWithDateFrom(URL urlToEnrich, LocalDate localDate) {
-        final String formattedEarliestDate =
-                localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return urlToEnrich.queryParam(QueryKeys.FROM_DATE, formattedEarliestDate);
     }
 }

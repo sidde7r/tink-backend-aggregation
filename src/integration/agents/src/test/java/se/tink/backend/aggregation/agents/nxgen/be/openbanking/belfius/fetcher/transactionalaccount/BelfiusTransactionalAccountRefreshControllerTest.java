@@ -120,16 +120,18 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
         configureProvider();
 
         BelfiusApiClient apiClient = getConfiguredBelfiusApiClient(agentConfiguration);
-        BelfiusTransactionalAccountFetcher accountTransactionFetcher =
-                new BelfiusTransactionalAccountFetcher(apiClient, persistentStorage);
+        BelfiusAccountFetcher accountFetcher =
+                new BelfiusAccountFetcher(apiClient, persistentStorage);
+        BelfiusTransactionFetcher transactionFetcher =
+                new BelfiusTransactionFetcher(apiClient, persistentStorage);
 
         refreshController =
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         new UpdateController(provider, user),
-                        accountTransactionFetcher,
+                        accountFetcher,
                         new TransactionKeyWithInitDateFromFetcherController<>(
-                                new RefreshInformationRequest(), accountTransactionFetcher));
+                                new RefreshInformationRequest(), transactionFetcher));
 
         defaultMockConfiguration();
     }
