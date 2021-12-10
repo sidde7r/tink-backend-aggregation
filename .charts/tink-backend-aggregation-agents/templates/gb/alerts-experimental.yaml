@@ -95,8 +95,9 @@ spec:
         )
 
     # =========== SHORT-TERM (1h) ===========
-    - alert: EXPERIMENTALRefreshErrorRateAbove20%GB
-      expr: 0.2 <= sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) <= 0.9
+    # This TH should be 10% or 20% right now I changed it to 50% as we don't have time to solve smaller issues, will change it back after 6.01 when OpenWorks migration will end
+    - alert: EXPERIMENTALRefreshErrorRateAbove50%GB
+      expr: 0.5 <= sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) <= 0.9
       for: 15m
       priority: P3
       labels:
@@ -120,9 +121,9 @@ spec:
           {{ .Values.grafanaClassLinkAbs1h }}
         summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
-
-    - alert: EXPERIMENTALLoginErrorRateAbove20%GB
-      expr: 0.2 <= sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) <= 0.9
+    # This TH should be 10% or 20% right now I changed it to 50% as we don't have time to solve smaller issues, will change it back after 6.01 when OpenWorks migration will end
+    - alert: EXPERIMENTALLoginErrorRateAbove50%GB
+      expr: 0.5 <= sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) <= 0.9
       for: 15m
       priority: P3
       labels:
