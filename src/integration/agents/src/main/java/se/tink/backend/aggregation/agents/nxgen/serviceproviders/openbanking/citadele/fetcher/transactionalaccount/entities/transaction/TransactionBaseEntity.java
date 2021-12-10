@@ -62,7 +62,7 @@ public class TransactionBaseEntity {
     }
 
     private String getDescription() {
-        return Stream.of(creditorName, remittanceInformationUnstructured)
+        return Stream.of(creditorName, debtorName, remittanceInformationUnstructured)
                 .filter(java.util.Objects::nonNull)
                 .findFirst()
                 .orElse(StringUtils.EMPTY);

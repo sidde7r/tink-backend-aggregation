@@ -87,7 +87,7 @@
     "transactions" : [ {
         "amount" : 65.0,
         "date" : 1618308000000,
-        "description" : "Mobilais maksājums",
+        "description" : "LastName FirstName",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -156,7 +156,7 @@
     }, {
         "amount" : 25.0,
         "date" : 1618653600000,
-        "description" : "Mobilais maksājums",
+        "description" : "LastName FirstName",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -179,7 +179,7 @@
     }, {
         "amount" : 25.0,
         "date" : 1618826400000,
-        "description" : "Mobilais maksājums",
+        "description" : "LastName FirstName",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
