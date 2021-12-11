@@ -30,7 +30,7 @@ public class EvoBancoConstants {
                 "SOA_RVIA/Empresa/PS/rest/v3/SE_RVA_VinculacionyLogin";
         static final String FETCH_CARD_TRANSACTIONS_PATH =
                 "SOA_RVIA/Empresa/PS/rest/v1/SE_RVA_ConsultaMovimientosTarjetaBE";
-        static final String INVESTMENTS_PATH = "EVO_PAI/v1/api/investments";
+        static final String INVESTMENTS_PATH = "evobanco/pai/v3/investments";
         static final String IDENTITY_DATA =
                 "evobanco/customers/customer-info/v1.1/fisica/{" + PARAM_ID + "}";
         static final String VALIDATE = "evobanco/apis/evo-consola-api/console/validate";
@@ -60,8 +60,7 @@ public class EvoBancoConstants {
                 new URL(BASE_MOBILE_SERVICES + ApiService.LINKING_LOGIN_PATH);
         public static final URL FETCH_CARD_TRANSACTIONS =
                 new URL(BASE_MOBILE_SERVICES + ApiService.FETCH_CARD_TRANSACTIONS_PATH);
-        public static final URL FETCH_INVESTMENTS =
-                new URL(BASE_MOBILE_SERVICES + ApiService.INVESTMENTS_PATH);
+        public static final URL FETCH_INVESTMENTS = new URL(BASE_API + ApiService.INVESTMENTS_PATH);
         public static final URL FETCH_IDENTITY = new URL(BASE_API + ApiService.IDENTITY_DATA);
         // URL masks
         public static final String FETCH_ACCOUNT_HOLDERS =
