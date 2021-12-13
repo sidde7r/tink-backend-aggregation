@@ -1,15 +1,15 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "instance",
     srcs = glob(["*.java"]),
-    visibility = [
-        "//src/agent_sdk/runtime:__subpackages__",
-    ],
-    deps = [
-        "//src/agent_sdk/sdk",
+    extdeps = [
         "@agent_sdk_maven//:com_google_guava_guava",
         "@agent_sdk_maven//:com_google_inject_guice",
         "@agent_sdk_maven//:org_slf4j_slf4j_api",
     ],
+    intdeps = [
+        "//src/agent_sdk/sdk",
+    ],
+    visibility = ["//src/agent_sdk/runtime:__subpackages__"],
 )
