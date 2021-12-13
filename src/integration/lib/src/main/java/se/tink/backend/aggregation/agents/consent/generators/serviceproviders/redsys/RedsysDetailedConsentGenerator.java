@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.consent.generators.serviceprovi
 import static se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope.BALANCES;
 import static se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope.TRANSACTIONS;
 
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -46,6 +47,7 @@ public class RedsysDetailedConsentGenerator implements ConsentGenerator<ConsentR
                         return Collections.emptySet();
                 }
             };
+    private static final ZoneId SPAIN_ZONE_ID = ZoneId.of("Europe/Paris");
 
     private final ScopesSupplier<RefreshableItem, RedsysScope> scopesProvider;
     private final List<AccountInfoEntity> accountInfoEntities;
@@ -94,7 +96,11 @@ public class RedsysDetailedConsentGenerator implements ConsentGenerator<ConsentR
         return ConsentRequestBody.builder()
                 .access(accessEntity)
                 .recurringIndicator(recurringIndicator)
-                .validUntil(localDateTimeSource.now().toLocalDate().plusDays(daysUntilExpiration))
+                .validUntil(
+                        localDateTimeSource
+                                .now(SPAIN_ZONE_ID)
+                                .toLocalDate()
+                                .plusDays(daysUntilExpiration))
                 .frequencyPerDay(frequencyPerDay)
                 .combinedServiceIndicator(true)
                 .build();
