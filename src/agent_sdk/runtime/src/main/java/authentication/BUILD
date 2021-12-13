@@ -1,12 +1,11 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-java_library(
+java_library_with_sources(
     name = "authentication",
-    srcs = glob(["*.java"]),
-    visibility = [
-        "//src/agent_sdk/runtime:__subpackages__",
+    extdeps = [
+        "@agent_sdk_maven//:com_google_guava_guava",
     ],
-    deps = [
+    intdeps = [
         "//src/agent_sdk/runtime/src/main/java/authentication/processes",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/berlingroup",
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/generic",
@@ -18,6 +17,6 @@ java_library(
         "//src/agent_sdk/runtime/src/main/java/authentication/processes/username_password",
         "//src/agent_sdk/runtime/src/main/java/instance",
         "//src/agent_sdk/sdk",
-        "@agent_sdk_maven//:com_google_guava_guava",
     ],
+    visibility = ["//src/agent_sdk/runtime:__subpackages__"],
 )
