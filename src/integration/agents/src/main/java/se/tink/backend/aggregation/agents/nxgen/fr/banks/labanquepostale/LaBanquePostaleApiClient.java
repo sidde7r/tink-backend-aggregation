@@ -89,7 +89,7 @@ public class LaBanquePostaleApiClient {
 
     private Optional<String> errorFromUri(URI uri) {
 
-        List<NameValuePair> query = URLEncodedUtils.parse(uri, StandardCharsets.UTF_8.toString());
+        List<NameValuePair> query = URLEncodedUtils.parse(uri, StandardCharsets.UTF_8);
 
         Map<String, String> m =
                 query.stream()
