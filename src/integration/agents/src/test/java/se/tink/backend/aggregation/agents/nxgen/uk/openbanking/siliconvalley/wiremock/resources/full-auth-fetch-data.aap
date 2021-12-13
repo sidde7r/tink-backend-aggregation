@@ -1,0 +1,701 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.svb.com/.well-known/openid-configuration
+x-fapi-financial-id: 0015800001ZEZ23AAH
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+X-Fapi-Financial-Id: 0015800001ZEZ23AAH
+
+{
+  "issuer": "https://openbanking.svb.com",
+  "authorization_endpoint": "https://api.svb.com/v1/api/oauth/authorize",
+  "token_endpoint": "https://openbanking.svb.com/v1/api/oauth/token",
+  "token_endpoint_auth_methods_supported": [
+    "private_key_jwt"
+  ],
+  "token_endpoint_auth_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "jwks_uri": "https://keystore.openbanking.org.uk/0015800001ZEZ23AAH/GhmOKA66dUk7bMGLetItle.jwks",
+  "registration_endpoint": "https://openbanking.svb.com/v3.1/register",
+  "scopes_supported": [
+    "openid",
+    "accounts",
+    "payments",
+    "fundsconfirmations"
+  ],
+  "claims_parameter_supported": true,
+  "claims_supported": [
+    "iss",
+    "application_type",
+    "exp",
+    "grant_types",
+    "iat",
+    "jti",
+    "redirect_uris",
+    "software_statement",
+    "acr",
+    "openbanking_intent_id"
+  ],
+  "response_types_supported": [
+    "code id_token"
+  ],
+  "request_object_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "claim_types_supported": [
+    "normal"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "refresh_token",
+    "client_credentials"
+  ],
+  "subject_types_supported": [
+    "public"
+  ],
+  "acr_values_supported": [
+    "urn:openbanking:psd2:sca"
+  ],
+  "request_parameter_supported": true,
+  "request_uri_parameter_supported": false,
+  "service_documentation": "https://developer.svb.com"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://openbanking.svb.com/v1/api/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+
+grant_type=client_credentials
+  &scope=accounts
+  &redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+  &client_id=DUMMY_CLIENT_ID
+  &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+  &client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token": "DUMMY_CLIENT_TOKEN",
+  "token_type": "Bearer",
+  "expires_in": 600,
+  "scope": "accounts"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://openbanking.svb.com/open-banking/v3.1/aisp/account-access-consents
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_CLIENT_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Permissions": [
+            "ReadAccountsDetail",
+            "ReadBalances",
+            "ReadTransactionsCredits",
+            "ReadTransactionsDebits",
+            "ReadTransactionsDetail"
+        ]
+    },
+    "Risk": {}
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+201
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "DUMMY_CONSENT_ID",
+        "CreationDateTime": "2021-09-02T11:07:21+01:00",
+        "Status": "AwaitingAuthorisation",
+        "StatusUpdateDateTime": "2021-09-02T11:07:21+01:00",
+        "Permissions": [
+            "ReadAccountsDetail",
+            "ReadBalances",
+            "ReadTransactionsCredits",
+            "ReadTransactionsDebits",
+            "ReadTransactionsDetail"
+        ]
+    },
+    "Risk": {},
+    "Links": {
+        "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID"
+    },
+    "Meta": {
+        "TotalPages": 1
+    }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 4
+GET https://keystore.openbanking.org.uk/0015800001ZEZ23AAH/GhmOKA66dUk7bMGLetItle.jwks
+x-fapi-financial-id: 0015800001ZEZ23AAH
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/jwk+json
+
+{
+  "keys" : [ {
+    "kid" : "6GOq1qSXJi47AeyxwGQcqf4s8YM",
+    "kty" : "RSA",
+    "n" : "0evimk3bIkp67fuuhv7vFegdXRZX9D6uNGrTBeKXnhOO0N3hn4a93FIY3uSs6ahII4tP1bnII6U9uIi1Tdw-N67-l4kOwMGItmaQVsLQDhn1S1HUk86ZZNnAlI2sfp-FEEyIdXP4vxsAfPwsbdORAKuHMI4nmhGa-tYaQ8nwLE7mduaupxecZIimNIbR-1a_0tlTSjezfTOP0yah-toKiPy-17Ix5Ocv9wA36lfZiwNVTMNqueUh-AXGI3FJ1cH_nHvKxhThJLTv2R7qd4HuQOaDWkuN_PcFuHnTGZqb5wz1IH81xS0f_cH9Bx0VuOgQIEWerz7Vu63NLkuZunnfww",
+    "e" : "AQAB",
+    "use" : "tls",
+    "x5c" : [ "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" ],
+    "x5t" : "aqP-7UB2wJU8ecxSD0dA6MfN_GU=",
+    "x5u" : "https://keystore.openbanking.org.uk/0015800001ZEZ23AAH/6GOq1qSXJi47AeyxwGQcqf4s8YM.pem",
+    "x5t#S256" : "agTEQVas7SjGKj85kHjQhiWyPOmxuRR5Cqjzsxs7Wp4="
+  }, {
+    "kid" : "T1_ELqb_w6vFzIfMqq0QuqY-YvI",
+    "kty" : "RSA",
+    "n" : "p4a9wqz2dlIkSLwDYPYBDpal_4Dd71-RelAe9djYwatPOmGHxNvDHbC6T6732RLDYi3WluFFHEVDfSMuVzNFkidZSvS4tpdMGef7KVXKNMp6xsncNz7uBVQ68yJkMNHc5SIGbsYwvblpbR2DfP6GX7uCTCX6T_7lvvXAuzLbJtXMLBhRr8yYwh_WjS_4JrYtdlfsV5-_HiZ1fnxSHxzW1VqF547mVq4iJmMV421Rh7mb8T3vESOEyw5FEfYXrYv8D3f_TaMqpV9EsmxfFJEDhn1m9543vuzDnEJipsebnUWJko0uRzvomKGz7xAko-e0YGJcP15Y6rzbDVOEBQmPZQ",
+    "e" : "AQAB",
+    "use" : "sig",
+    "x5c" : [ "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" ],
+    "x5t" : "oPH_1s5GH9kwgKYNzWe2ooxsPw8=",
+    "x5u" : "https://keystore.openbanking.org.uk/0015800001ZEZ23AAH/T1_ELqb_w6vFzIfMqq0QuqY-YvI.pem",
+    "x5t#S256" : "XaILsLh_kslA3vfNO9io9pflHpxg9Wi7FuPiCzte-vM="
+  } ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+POST https://openbanking.svb.com/v1/api/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+
+grant_type=authorization_code
+  &redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+  &client_id=DUMMY_CLIENT_ID
+  &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+  &client_assertion=RkFLRV9TSUdOQVRVUkUK
+  &code=DUMMY_CODE
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "token_type": "Bearer",
+    "expires_in": 600,
+    "refresh_token": "REFRESH_TOKEN",
+    "scope": "accounts",
+    "id_token": "DUMMY_ID_TOKEN"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "Currency": "GBP",
+        "AccountType": "Business",
+        "AccountSubType": "CurrentAccount",
+        "Nickname": "GBP ACCOUNT",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+            "Identification": "62100020150431"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/balances
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2021-09-02T05:10:25.229-05:00",
+        "Amount": {
+          "Amount": "63.44",
+          "Currency": "GBP"
+        },
+        "CreditLine": [
+          {
+            "Included": false,
+            "Amount": {
+              "Amount": "0.0",
+              "Currency": "GBP"
+            }
+          }
+        ]
+      },
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimBooked",
+        "DateTime": "2021-09-02T05:10:25.229-05:00",
+        "Amount": {
+          "Amount": "63.44",
+          "Currency": "GBP"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/balances"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-01-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "DUMMY_TRX1_ID",
+        "TransactionReference": "SB1IFP1193300233",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "1991-06-11T01:00:00Z",
+        "ValueDateTime": "1991-06-11T01:00:00Z",
+        "Amount": {
+          "Amount": "2.0",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "195",
+          "Issuer": "BAI"
+        },
+        "TransactionInformation": "TRX1",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked",
+          "Amount": {
+            "Amount": "1.0",
+            "Currency": "GBP"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-01-12T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z",
+    "Next": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-01-12T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&navTok=8abc4d46657afe42d0144081141fc4abef4c6ddd31036889462e17bb"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-01-12T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&navTok=8abc4d46657afe42d0144081141fc4abef4c6ddd31036889462e17bb
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "DUMMY_TRX2_ID",
+        "TransactionReference": "SB1IFP1193300233",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "1991-06-12T02:00:00Z",
+        "ValueDateTime": "1991-06-12T02:00:00Z",
+        "Amount": {
+          "Amount": "2.0",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "195",
+          "Issuer": "BAI"
+        },
+        "TransactionInformation": "TRX2",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked",
+          "Amount": {
+            "Amount": "2.5",
+            "Currency": "GBP"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-01-12T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&navTok=8abc4d46657afe42d0144081141fc4abef4c6ddd31036889462e17bb"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-10-12T00:00:00Z&toBookingDateTime=1992-01-10T23:59:59Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "DUMMY_TRX3_ID",
+        "TransactionReference": "SB1IFP1193300233",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "1990-05-11T01:00:00Z",
+        "ValueDateTime": "1990-05-11T01:00:00Z",
+        "Amount": {
+          "Amount": "2.0",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "195",
+          "Issuer": "BAI"
+        },
+        "TransactionInformation": "TRX3",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked",
+          "Amount": {
+            "Amount": "3.0",
+            "Currency": "GBP"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-10-14T00:00:00Z&toBookingDateTime=1992-01-11T23:59:59Z",
+    "Next": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-10-14T00:00:00Z&toBookingDateTime=1992-01-11T23:59:59Z&navTok=1cef4d46657afe42d0144081141fc4abef4c6ddd31036889462e17zz"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 11
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-10-14T00:00:00Z&toBookingDateTime=1992-01-11T23:59:59Z&navTok=1cef4d46657afe42d0144081141fc4abef4c6ddd31036889462e17zz
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "DUMMY_TRX4_ID",
+        "TransactionReference": "SB1IFP1193300233",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "1991-10-14T01:00:00Z",
+        "ValueDateTime": "1991-10-14T01:00:00Z",
+        "Amount": {
+          "Amount": "2.0",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "195",
+          "Issuer": "BAI"
+        },
+        "TransactionInformation": "TRX4",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked",
+          "Amount": {
+            "Amount": "3.0",
+            "Currency": "GBP"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-10-14T00:00:00Z&toBookingDateTime=1992-01-11T23:59:59Z&navTok=1cef4d46657afe42d0144081141fc4abef4c6ddd31036889462e17zz"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 12
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-07-13T00:00:00Z&toBookingDateTime=1991-10-11T23:59:59Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [ ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-07-16T00:00:00Z&toBookingDateTime=1991-10-13T23:59:59Z"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 13
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-04-13T00:00:00Z&toBookingDateTime=1991-07-12T23:59:59Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [ ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-04-17T00:00:00Z&toBookingDateTime=1991-07-15T23:59:59Z"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 14
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-01-12T00:00:00Z&toBookingDateTime=1991-04-12T23:59:59Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 14
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [ ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1991-01-17T00:00:00Z&toBookingDateTime=1991-04-16T23:59:59Z"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 15
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-10-13T00:00:00Z&toBookingDateTime=1991-01-11T23:59:59Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 15
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [ ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-10-19T00:00:00Z&toBookingDateTime=1991-01-16T23:59:59Z"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 16
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-07-14T00:00:00Z&toBookingDateTime=1990-10-12T23:59:59Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 16
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [ ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-07-14T00:00:00Z&toBookingDateTime=1990-10-12T23:59:59Z"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 17
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-04-14T00:00:00Z&toBookingDateTime=1990-07-13T23:59:59Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 17
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [ ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-04-14T00:00:00Z&toBookingDateTime=1990-07-13T23:59:59Z"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+----------------------------------------------------------------------------------
+REQUEST 18
+GET https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-04-10T00:00:00Z&toBookingDateTime=1990-04-13T23:59:59Z
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEZ23AAH
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 18
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [ ]
+  },
+  "Links": {
+    "Self": "https://openbanking.svb.com/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-04-10T00:00:00Z&toBookingDateTime=1990-04-13T23:59:59Z"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "62100020150431",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "GBP",
+      "scale" : 2,
+      "doubleValue" : 63.44,
+      "exactValue" : 63.44,
+      "unscaledValue" : 6344
+    },
+    "currencyCode" : "GBP",
+    "availableBalance" : {
+      "currencyCode" : "GBP",
+      "scale" : 2,
+      "doubleValue" : 63.44,
+      "exactValue" : 63.44,
+      "unscaledValue" : 6344
+    },
+    "bankId" : "62100020150431",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "GBP ACCOUNT",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"sort-code://62100020150431\"]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "BUSINESS",
+      "identities" : [ ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 63.44
+  } ],
+  "transactions" : [ {
+    "amount" : 2.0,
+    "date" : 676634400000,
+    "description" : "TRX1",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_TRX1_ID"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1991-06-11",
+        "instant" : "1991-06-11T01:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1991-06-11",
+        "instant" : "1991-06-11T01:00:00.000Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "195",
+    "transactionReference" : "SB1IFP1193300233",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : 2.0,
+    "date" : 676720800000,
+    "description" : "TRX2",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_TRX2_ID"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1991-06-12",
+        "instant" : "1991-06-12T02:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1991-06-12",
+        "instant" : "1991-06-12T02:00:00.000Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "195",
+    "transactionReference" : "SB1IFP1193300233",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : 2.0,
+    "date" : 642420000000,
+    "description" : "TRX3",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_TRX3_ID"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1990-05-11",
+        "instant" : "1990-05-11T01:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1990-05-11",
+        "instant" : "1990-05-11T01:00:00.000Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "195",
+    "transactionReference" : "SB1IFP1193300233",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : 2.0,
+    "date" : 687438000000,
+    "description" : "TRX4",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_TRX4_ID"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1991-10-14",
+        "instant" : "1991-10-14T01:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1991-10-14",
+        "instant" : "1991-10-14T01:00:00.000Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "195",
+    "transactionReference" : "SB1IFP1193300233",
+    "providerMarket" : "UK",
+    "booked" : true
+  } ]
+}
