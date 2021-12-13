@@ -141,7 +141,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "cb296ef341dd8c1a2153de83f3ac1acd5f12aa29",
+    commit = "b2a47ece8c95d9f0472626623c640dd734427e9f",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -1508,6 +1508,29 @@ http_archive(
 load("@com_github_atlassian_bazel_tools//multirun:deps.bzl", "multirun_dependencies")
 
 multirun_dependencies()
+
+# For Nix users
+
+RULES_NIXPKGS_COMMIT = "6178f2aae7a90370f2132abafa977701afc6fb4e"
+
+http_archive(
+    name = "io_tweag_rules_nixpkgs",
+    sha256 = "e721c383b3d5ca51ad123001d3fb26602aa330ddd9cf2a55d25ddd956c98030a",
+    strip_prefix = "rules_nixpkgs-{}".format(RULES_NIXPKGS_COMMIT),
+    urls = ["https://github.com/tweag/rules_nixpkgs/archive/{}.tar.gz".format(RULES_NIXPKGS_COMMIT)],
+)
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_git_repository", "nixpkgs_python_configure")
+
+nixpkgs_git_repository(
+    name = "nixpkgs_repository",
+    revision = "037936b7a307c7399cf0f3d9fabe37ea5b0b8534",
+    sha256 = "a6178b795602924f94b081b459fcb868cebc7d3d7d0c6e90306aba850beec629",
+)
+
+nixpkgs_python_configure(
+    repository = "@nixpkgs_repository",
+)
 
 # downloads and extracts binaries used for selenium WebDriver creation
 
