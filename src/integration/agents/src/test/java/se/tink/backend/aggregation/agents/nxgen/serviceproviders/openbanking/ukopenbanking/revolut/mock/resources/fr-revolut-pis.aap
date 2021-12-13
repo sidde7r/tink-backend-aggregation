@@ -1,0 +1,440 @@
+REQUEST 1
+GET https://oba.revolut.com/openid-configuration
+x-fapi-financial-id: 001580000103UAvAAM
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Mon, 13 Dec 2021 13:59:31 GMT
+Date: Mon, 13 Dec 2021 13:59:31 GMT
+Content-Type: application/json
+
+{
+
+    "authorization_endpoint": "https://oba.revolut.com/ui/index.html",
+
+    "claim_types_supported": [
+
+        "normal"
+
+    ],
+
+    "claims_parameter_supported": true,
+
+    "claims_supported": [
+
+        "openbanking_intent_id"
+
+    ],
+
+    "grant_types_supported": [
+
+        "authorization_code",
+
+        "client_credentials"
+
+    ],
+
+    "id_token_signing_alg_values_supported": [
+
+        "PS256"
+
+    ],
+
+    "issuer": "https://oba.revolut.com",
+
+    "jwks_uri": "https://oba.revolut.com/jwk",
+
+    "registration_endpoint": "https://oba.revolut.com/register",
+
+    "request_object_signing_alg_values_supported": [
+
+        "PS256"
+
+    ],
+
+    "request_parameter_supported": true,
+
+    "request_uri_parameter_supported": false,
+
+    "require_request_uri_registration": false,
+
+    "response_modes_supported": [
+
+        "form_post",
+
+        "fragment",
+
+        "query"
+
+    ],
+
+    "response_types_supported": [
+
+        "code id_token"
+
+    ],
+
+    "scopes_supported": [
+
+        "openid",
+
+        "accounts",
+
+        "payments",
+
+        "fundsconfirmations"
+
+    ],
+
+    "subject_types_supported": [
+
+        "public"
+
+    ],
+
+    "token_endpoint": "https://oba-auth.revolut.com/token",
+
+    "token_endpoint_auth_methods_supported": [
+
+        "tls_client_auth"
+
+    ],
+
+    "token_endpoint_auth_signing_alg_values_supported": [
+
+        "PS256"
+
+    ],
+
+    "userinfo_signing_alg_values_supported": [
+
+        "none"
+
+    ]
+
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://oba-auth.revolut.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Mon, 13 Dec 2021 13:59:31 GMT
+Date: Mon, 13 Dec 2021 13:59:31 GMT
+Content-Type: application/json
+
+{
+  "access_token": "eyJraWQiOiI1QkNSSnRQZ2xfSjF1R1ZLYlJSTlhobUlNM3ciLCJhbGciOiJQUzI1NiJ9.eyJjbGllbnRJZCI6Im**MASKEDql**IsInNjb3BlcyI6WyJwYXltZW50cyJdLCJleHAiOjE2Mzk0MDYzNzF9.higu3sISA7B9fsNdzMtVBLhnr0iohAm7ZTCLNLpBjjOgajEykbJooF6zGb-NFrGREGn0kS8DfopiKR4btEAowTVYI9odEwv1Sm0GlaUoJxIgkAw8d8r96WaRz32eUmuWiivDLk-ZcTvVxQrTlOStN0zGve1wy7jOiBg59PAOmRdohkMGOxwW_eeRCOCbeHzbCFXHrF5mHv3IX4qF97qKJ3Jm527k7wrHpi5_dzW6iYOUG_b7EX-I9C2xMG0BiLwwUQES5V9uYs22nPZii-TYgiIK1A5569_yFNPX8GSqS5jIUoaLtYtiJcA1DYI0T7T_aZphZWvMgoYjo_-AFbsIXg",
+  "token_type": "Bearer",
+  "expires_in": 2399
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+POST https://oba.revolut.com/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json; charset=UTF-8
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Risk": {
+    "PaymentContextCode": "Other"
+  },
+  "Data": {
+    "Initiation": {
+      "RemittanceInformation": {
+        "Unstructured": "Unstructured"
+      },
+      "EndToEndIdentification": "f0492f1e45e64195b78be68a3152501",
+      "InstructionIdentification": "f0492f1e45e64195b78be68a3152501b",
+      "CreditorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FR1420041010050500013M02606",
+        "Name": "Recipient Name"
+      },
+      "InstructedAmount": {
+        "Amount": "1.00",
+        "Currency": "EUR"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+201
+Date: Mon, 13 Dec 2021 13:59:32 GMT
+Date: Mon, 13 Dec 2021 13:59:32 GMT
+Content-Type: application/json
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Status": "AwaitingAuthorisation",
+    "StatusUpdateDateTime": "2021-12-13T13:59:32.173039Z",
+    "CreationDateTime": "2021-12-13T13:59:32.173039Z",
+    "ConsentId": "81eca420-b8d4-4952-aa56-c33e036eb5c2",
+    "Initiation": {
+      "RemittanceInformation": {
+        "Unstructured": "Unstructured"
+      },
+      "EndToEndIdentification": "f0492f1e45e64195b78be68a3152501",
+      "InstructionIdentification": "f0492f1e45e64195b78be68a3152501b",
+      "CreditorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FR1420041010050500013M02606",
+        "Name": "Recipient Name"
+      },
+      "InstructedAmount": {
+        "Amount": "1.00",
+        "Currency": "EUR"
+      }
+    }
+  },
+  "Risk": {
+    "PaymentContextCode": "Other"
+  },
+  "Links": {
+    "Self": "https://oba.revolut.com/domestic-payment-consents/81eca420-b8d4-4952-aa56-c33e036eb5c2"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+POST https://oba-auth.revolut.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&code=DUMMY_AUTH_CODE
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Date: Mon, 13 Dec 2021 14:00:35 GMT
+Date: Mon, 13 Dec 2021 14:00:35 GMT
+Content-Type: application/json
+
+{
+  "access_token_id": "cc5f762a-31f7-430f-a0ed-36a9c1f8cc1b",
+  "access_token": "oa_prod_i6qKsiYAGaJLKuEGPSREe7T0-htI2XjwZfBNa2IaRIk",
+  "token_type": "Bearer",
+  "expires_in": 86396,
+  "id_token": "eyJraWQiOiI1QkNSSnRQZ2xfSjF1R1ZLYlJSTlhobUlNM3ciLCJhbGciOiJQUzI1NiJ9.eyJpc3MiOiJodHRwczovL29iYS5yZXZvbHV0LmNvbSIsInN1YiI6IjgxZWNhNDIwLWI4ZDQtNDk1Mi1hYTU2LWMzM2UwMzZlYjVjMiIsImF1ZCI6Im**MASKEDql**IsIm5vbmNlIjoiZDg0MjE4ZWE4NDI4MjZiMiIsImV4cCI6MTYzOTQwNDYzNTE3NSwiaWF0IjoxNjM5NDA0MDM1fQ.bB0EPFg-wVP6O59or2EdJfpYYrioduv33htyqUOn39AWz5vWsz5JwEgtDYWjTEZk0Uj7cdOQ3kuieCmAeaxSDoxoXKBZt7UkZ3pwC5qBNw50nOFfiBdJwWFw5BRoIr4EUCQezmCMeN-Uid9LQ3i43P1Xm3yP3huT0yqYl254RWxFHeyS3nAV2L3i8jgmFu9LeJD25H781MPVmW83NeOztt5l_TNuMqj3zb-wRJctVRuZDVVJDW83eOnLpQYhFGUWsXfanHYZ0vs3Dwhk78ukT9X60wX-K8kAxkqSVyQKN9vxQDD_1O8HKfnP-3cNDl3ee5gc2aSBsioairiwrdiaQA"
+}
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+GET https://oba.revolut.com/jwk
+x-fapi-financial-id: 001580000103UAvAAM
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+200
+Date: Mon, 13 Dec 2021 14:00:35 GMT
+Date: Mon, 13 Dec 2021 14:00:35 GMT
+Content-Type: application/json
+
+{
+
+    "keys": [
+
+        {
+
+            "e": "AQAB",
+
+            "kid": "C59gdkbbs-dXJsTqeguLDMyaCZM",
+
+            "kty": "RSA",
+
+            "n": "ukXJHA0mo0jjLu6AQO07bfzPoWkGn6He1tF0b9iYyQjW6pbAotRU_N5B4MBp7po9oOxYpWbfzHgXVWpYz0_Kj5B7tfW-ADdEm1G17YTvxy0oHR1OC23gMvoZmmCqty3_g4JM4DXkKDHiOa76dkQcR7LBfvucllR1sbaQjXPRBFq3GOLqu1R__Cl8jYT-UJuxatCYjk49MpMSm_hvCkegn9l1B_8WKz0zWU7L009BBpapCtYxMHckcWelU95s1O6gPBHvO5tWYqaiGyXLMNfR7HtJM8gpv3Sq_Sfyjcf2lrWG7ADJZCBvvl4xhiJJMXxmuGSy30Tu_D_cjBNFr236YQ",
+
+            "use": "sig",
+
+            "x5c": [
+
+                "MIIFvDCCBKSgAwIBAgIEWf+uSjANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMjAwNjEyMDYzNTQ3WhcNMjEwNzEyMDcwNTQ3WjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDEwM1VBdkFBTTEfMB0GA1UEAxMWNndJM0pVNXgwbXBJRVU1U2pSaTdjRzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALpFyRwNJqNI4y7ugEDtO238z6FpBp+h3tbRdG/YmMkI1uqWwKLUVPzeQeDAae6aPaDsWKVm38x4F1VqWM9Pyo+Qe7X1vgA3RJtRte2E78ctKB0dTgtt4DL6GZpgqrct/4OCTOA15Cgx4jmu+nZEHEeywX77nJZUdbG2kI1z0QRatxji6rtUf/wpfI2E/lCbsWrQmI5OPTKTEpv4bwpHoJ/ZdQf/Fis9M1lOy9NPQQaWqQrWMTB3JHFnpVPebNTuoDwR7zubVmKmohslyzDX0ex7STPIKb90qv0n8o3H9pa1huwAyWQgb75eMYYiSTF8Zrhkst9E7vw/3IwTRa9t+mECAwEAAaOCApcwggKTMA4GA1UdDwEB/wQEAwIGwDAVBgNVHSUEDjAMBgorBgEEAYI3CgMMMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwHwYDVR0RBBgwFoIUb2JhLWF1dGgucmV2b2x1dC5jb20wPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUCXnFWE5S7cWIDn0/NysXyLeMRQswDQYJKoZIhvcNAQELBQADggEBAIG8LgMFrC0n2fYyPGBNGXEEeVUr5M7yzPFUFPh4yEiY8vcAmt4GVKBduQ3wYAB00silSGwXMsWe05Ml9bYgW4uNOxJHWGqzD+2e7Dj8EY9VUuZc0Kq6RhteGSQLYssbmgRUvpAmrll9WRmgtoCl4vzoEnV4fl4jLmZa8hBzbDMhZTzKWc/hXzplJ78s1mUyowrlJxSpyo96J8lIm4CMFuVff1tpEWkpM5x/4K6QTCAXvLWZyS93gm79LNEqYvjLZkgsWs4VJiQ6Bw8KlfwopSRQu008yjyZpRb5MMuclsIrgBgrwSN8ucEQz520ES0NntdY93rsU/r0OzXfI9a6NxM="
+
+            ],
+
+            "x5t": "oRP-UrpAqut0saITKJnRLLupPjc=",
+
+            "x5t#S256": "nYXoY78yMe9HcdhmdjzEPd1QsK8p3tpoxnf03hKFEsQ=",
+
+            "x5u": "https://keystore.openbanking.org.uk/001580000103UAvAAM/C59gdkbbs-dXJsTqeguLDMyaCZM.pem"
+
+        },
+
+        {
+
+            "e": "AQAB",
+
+            "kid": "Lb9zLw3sP0PvPBbRV89aTXWgcQ8",
+
+            "kty": "RSA",
+
+            "n": "mOAzVVSOEX7YkdLtB1SVCNFeUzf2wA-BoMDKux-eUMan7fB8T5SQlMISzvM5EpYPitX3hHF95OscTSLrfFxMizpj7Cz7KiZDIHJqlKiNbTawTedXoLuvyYCp1tYQMA9cgKjS8OPQT22WfqyICR8zhZjBrGArioPTLhnrPSHuQci9w5DdRBvGREjq82FHjvcFeXqJCFgF9B-0mSX0dN-uWBMhW8ZdtsVAceqDWJxorQipj26hdR8IlZ0NzQ9BSOX1U3iaM31V7qFYnX3qXxXYYgd8nVSrv_Kj278tAyXQ2sxfxzeGwrvXM0jEMhXFACv8zeW01SHhkmEhg_i0WJDUmQ",
+
+            "use": "sig",
+
+            "x5c": [
+
+                "MIIFmzCCBIOgAwIBAgIEWf9Z/jANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMTkwMzEyMTMwMzQ0WhcNMjAwNDEyMTMzMzQ0WjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDEwM1VBdkFBTTEfMB0GA1UEAxMWNndJM0pVNXgwbXBJRVU1U2pSaTdjRzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJjgM1VUjhF+2JHS7QdUlQjRXlM39sAPgaDAyrsfnlDGp+3wfE+UkJTCEs7zORKWD4rV94RxfeTrHE0i63xcTIs6Y+ws+yomQyByapSojW02sE3nV6C7r8mAqdbWEDAPXICo0vDj0E9tln6siAkfM4WYwaxgK4qD0y4Z6z0h7kHIvcOQ3UQbxkRI6vNhR473BXl6iQhYBfQftJkl9HTfrlgTIVvGXbbFQHHqg1icaK0IqY9uoXUfCJWdDc0PQUjl9VN4mjN9Ve6hWJ196l8V2GIHfJ1Uq7/yo9u/LQMl0NrMX8c3hsK71zNIxDIVxQAr/M3ltNUh4ZJhIYP4tFiQ1JkCAwEAAaOCAnYwggJyMA4GA1UdDwEB/wQEAwIGwDAVBgNVHSUEDjAMBgorBgEEAYI3CgMMMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUjYrp1hz8e9ozs2J+yybSuHOig3gwDQYJKoZIhvcNAQELBQADggEBAGf83nbMm7mk4974ib2Y/6DVmR4ksx4/AXVndMAMi+raLhA3ZYvAvP9lTisgw0d01ATNdozkmwg9v9MvD8bJay77MeNRFVuYnvqAb+6DhOhbkIGK1OSRcAczJNxXlvg1zR+0RPjDJq3HMi+NPrqbv83GVIbQCrVXxuFDAonPA9CizFydlw8js8j73Hf4CyFio56K/MB/NDiNmZOU2sHqaSJ+0LnuJIrTpCvT/pGX4wyDPWUPOqU3uis5C0NjB4gIWAodT2FW0NPQs/dwako1CM/bdU++j1t/43UzZxcnn4cvNabFmnLT/sBOaruaP9IYncVt02aLT1uU/WIgCacCFWU="
+
+            ],
+
+            "x5t": "6yE9zFcv_h9aOyvJk3wGUwGoRaI=",
+
+            "x5t#S256": "mjTrLXG38okkx0QeuaKL7affps50GjFLlxjWXPxQr18=",
+
+            "x5u": "https://keystore.openbanking.org.uk/001580000103UAvAAM/6wI3JU5x0mpIEU5SjRi7cG/Lb9zLw3sP0PvPBbRV89aTXWgcQ8.pem"
+
+        },
+
+        {
+
+            "e": "AQAB",
+
+            "kid": "5BCRJtPgl_J1uGVKbRRNXhmIM3w",
+
+            "kty": "RSA",
+
+            "n": "qKIvsgZaRR-PZ61SBvjTdCh5MHTSZaNaUGZhr72GNjA0Og93oOrtw9_B5TbafKoiWLs5wIAjUEQKgBgYH4YQ_v3ghAJHvtLBREi86uXlY8Wb4IuyoolPX70YlxHgjqizbrTHGD5iCS2J9d6Tw556qbNW3CA_jeixjJjhZ4bLPZiS-FYwEjnxvgwB7uiZJMOaQpTACm4N3DN01sXLOV-SVSLNSNXMuh0GvIk35EImiNA23YMNGUNEKs7P4n1xqfkA75G6JnuYrcFgLNVSGN7mzNQ9ELloLgsPLOZqSnVYpFYTX8G05DvQwDurHfKrAbd2FZb3K6UPYgBzX4FFgOFlpw",
+
+            "use": "sig",
+
+            "x5c": [
+
+                "MIIFvDCCBKSgAwIBAgIEWf/zmDANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMjEwNjE0MTI1NzMxWhcNMjIwNzE0MTMyNzMxWjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDEwM1VBdkFBTTEfMB0GA1UEAxMWNndJM0pVNXgwbXBJRVU1U2pSaTdjRzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKiiL7IGWkUfj2etUgb403QoeTB00mWjWlBmYa+9hjYwNDoPd6Dq7cPfweU22nyqIli7OcCAI1BECoAYGB+GEP794IQCR77SwURIvOrl5WPFm+CLsqKJT1+9GJcR4I6os260xxg+YgktifXek8OeeqmzVtwgP43osYyY4WeGyz2YkvhWMBI58b4MAe7omSTDmkKUwApuDdwzdNbFyzlfklUizUjVzLodBryJN+RCJojQNt2DDRlDRCrOz+J9can5AO+RuiZ7mK3BYCzVUhje5szUPRC5aC4LDyzmakp1WKRWE1/BtOQ70MA7qx3yqwG3dhWW9yulD2IAc1+BRYDhZacCAwEAAaOCApcwggKTMA4GA1UdDwEB/wQEAwIGwDAVBgNVHSUEDjAMBgorBgEEAYI3CgMMMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwHwYDVR0RBBgwFoIUb2JhLWF1dGgucmV2b2x1dC5jb20wPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUFC96p8YldngZiFJjKiniiwwcf/EwDQYJKoZIhvcNAQELBQADggEBAJIBnx0WzDsxIuEcrZ9F7ylgIb7PoTcRxrlnXbmEGDvB52exC7yGyLnys+Pit5RniUNI6xnI/jyXAObK9jhlk0UDdYjhBRdIdtT0gMfywHIvf7EHwLRgqmOZj2Z9+UgXnpFsqc2SbT0Oq65KsumGEWiHsAYJBhtobO224CQf/2dG5rR9xzH787QVek5aFf0Vuu2CD0cBYghcj+2vNOxp//Se+xvd6NPYYi04nkfD+f58w1DYh3QoXs1vKOTw1dQTUQCjsxiZhYjzjXl52aSmfgFtYpU1+6RU/tp/HTya+9AYAOPCzN+JUifhy2dn3kY2xs/dPOG/Z0A8+YTXlrICXm4="
+
+            ],
+
+            "x5t": "11S8PgO0TDwBREMbLQlELaCJu5U=",
+
+            "x5t#S256": "kvPKa8VBq49281WqAuit81OJNVYhz36yHHlAWxAQgsQ=",
+
+            "x5u": "https://keystore.openbanking.org.uk/001580000103UAvAAM/5BCRJtPgl_J1uGVKbRRNXhmIM3w.pem"
+
+        }
+
+    ]
+
+}
+
+-----------------------------------------------------------------------------------
+
+
+
+REQUEST 6 MATCH STATE6
+GET https://oba.revolut.com/domestic-payment-consents/81eca420-b8d4-4952-aa56-c33e036eb5c2/funds-confirmation
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+200
+Date: Mon, 13 Dec 2021 14:00:35 GMT
+Date: Mon, 13 Dec 2021 14:00:35 GMT
+Content-Type: application/json
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "FundsAvailableResult": {
+      "FundsAvailableDateTime": "2021-12-13T14:00:35.364741Z",
+      "FundsAvailable": true
+    }
+  },
+  "Links": {
+    "Self": "https://oba.revolut.com/domestic-payment-consents/81eca420-b8d4-4952-aa56-c33e036eb5c2/funds-confirmation"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+POST https://oba.revolut.com/domestic-payments
+Accept: application/json
+Content-Type: application/json; charset=UTF-8
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Risk": {
+    "PaymentContextCode": "Other"
+  },
+  "Data": {
+    "ConsentId": "81eca420-b8d4-4952-aa56-c33e036eb5c2",
+    "Initiation": {
+      "RemittanceInformation": {
+        "Unstructured": "Unstructured"
+      },
+      "EndToEndIdentification": "f0492f1e45e64195b78be68a3152501",
+      "InstructionIdentification": "f0492f1e45e64195b78be68a3152501b",
+      "CreditorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FR1420041010050500013M02606",
+        "Name": "Recipient Name"
+      },
+      "InstructedAmount": {
+        "Amount": "1.00",
+        "Currency": "EUR"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+201
+Date: Mon, 13 Dec 2021 14:00:35 GMT
+Date: Mon, 13 Dec 2021 14:00:35 GMT
+Content-Type: application/json
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "DomesticPaymentId": "61b75203-e7cc-a4a0-b341-4f40c992231f",
+    "Status": "AcceptedSettlementInProcess",
+    "StatusUpdateDateTime": "2021-12-13T14:00:35.722942Z",
+    "CreationDateTime": "2021-12-13T14:00:35.722942Z",
+    "ConsentId": "81eca420-b8d4-4952-aa56-c33e036eb5c2",
+    "Initiation": {
+      "CreditorAccount": {
+        "Name": "Recipient Name",
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FR1420041010050500013M02606"
+      },
+      "InstructedAmount": {
+        "Amount": "1.00",
+        "Currency": "EUR"
+      },
+      "RemittanceInformation": {
+        "Unstructured": "Unstructured"
+      },
+      "EndToEndIdentification": "f0492f1e45e64195b78be68a3152501",
+      "InstructionIdentification": "f0492f1e45e64195b78be68a3152501b"
+    }
+  },
+  "Links": {
+    "Self": "https://oba.revolut.com/domestic-payments/61b75203-e7cc-a4a0-b341-4f40c992231f"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}

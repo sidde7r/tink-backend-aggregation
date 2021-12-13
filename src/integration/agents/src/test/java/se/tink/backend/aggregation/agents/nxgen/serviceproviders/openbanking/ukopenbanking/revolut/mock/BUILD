@@ -7,7 +7,10 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/revolut/mock/resources",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/revolut"],
+    runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/revolut",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/revolut",
+    ],
     deps = [
         "//src/integration/amount",
         "//src/integration/enums",
