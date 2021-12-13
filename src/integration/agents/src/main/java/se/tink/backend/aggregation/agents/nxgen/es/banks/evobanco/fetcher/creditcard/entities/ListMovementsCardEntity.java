@@ -1,10 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants.ACCOUNT_TRANSACTION_NEG_SIGN;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants.ACCOUNT_TRANSACTION_PLUS_SIGN;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants.DATE_SEP;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants.SEQUENTIAL_NUMBER_PATTERN;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities.CustomerNotesListEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -164,17 +158,5 @@ public class ListMovementsCardEntity {
             log.warn("Unknown card transaction type {}", movementType);
         }
         return isCreditTransaction;
-    }
-
-    public CustomerNotesListEntity toCustomerNotesListEntity(int counter) {
-        return new CustomerNotesListEntity(
-                dateOperationTime.split(DATE_SEP)[0],
-                getDescription(),
-                dateOperationTime.split(DATE_SEP)[0],
-                "+".equals(amountSign)
-                        ? ACCOUNT_TRANSACTION_PLUS_SIGN
-                        : ACCOUNT_TRANSACTION_NEG_SIGN,
-                operationAmount,
-                String.format(SEQUENTIAL_NUMBER_PATTERN, counter));
     }
 }
