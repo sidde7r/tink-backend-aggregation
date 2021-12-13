@@ -5,6 +5,7 @@ java_library_with_sources(
     srcs = glob(["**/*.java"]),
     extdeps = [
         "@agent_sdk_maven//:com_google_guava_guava",
+        "@agent_sdk_maven//:com_google_code_findbugs_jsr305",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/authentication/new_consent",
