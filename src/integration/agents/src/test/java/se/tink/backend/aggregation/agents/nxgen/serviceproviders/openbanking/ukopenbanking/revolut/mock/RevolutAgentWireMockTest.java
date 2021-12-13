@@ -14,6 +14,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class RevolutAgentWireMockTest {
 
@@ -42,6 +44,9 @@ public class RevolutAgentWireMockTest {
     private Payment createMockedDomesticPayment() {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "GBP");
         LocalDate executionDate = LocalDate.now();
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.REFERENCE);
+        remittanceInformation.setValue("Donation");
         String currency = "GBP";
         return new Payment.Builder()
                 .withCreditor(
@@ -52,9 +57,7 @@ public class RevolutAgentWireMockTest {
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
-                .withRemittanceInformation(
-                        RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
-                                "Donation"))
+                .withRemittanceInformation(remittanceInformation)
                 .withUniqueId("0a44fcefbd524c5383707c3bbb77809a")
                 .build();
     }

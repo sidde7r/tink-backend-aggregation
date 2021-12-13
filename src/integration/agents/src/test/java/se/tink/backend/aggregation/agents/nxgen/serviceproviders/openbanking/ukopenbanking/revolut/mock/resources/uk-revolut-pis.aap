@@ -162,7 +162,7 @@ X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103UAvAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"RemittanceInformation":{"Unstructured":"Donation"}}}}
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"RemittanceInformation":{"Reference":"Donation"}}}}
 
 RESPONSE 3
 201
@@ -181,7 +181,7 @@ Referrer-Policy: ***
 Via: 1.1 google
 Alt-Svc: ***
 
-{"Data":{"Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-11-16T08:15:05.650031Z","CreationDateTime":"2020-11-16T08:15:05.650031Z","ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"RemittanceInformation":{"Unstructured":"Donation","Reference":"Donation"}}},"Risk":{"PaymentContextCode":"Other"},"Links":{"Self":"https://oba.revolut.com/domestic-payment-consents/1d955df7-f304-41de-a9bb-a330702f3551"},"Meta":{"TotalPages":1}}
+{"Data":{"Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-11-16T08:15:05.650031Z","CreationDateTime":"2020-11-16T08:15:05.650031Z","ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"RemittanceInformation":{"Reference":"Donation"}}},"Risk":{"PaymentContextCode":"Other"},"Links":{"Self":"https://oba.revolut.com/domestic-payment-consents/1d955df7-f304-41de-a9bb-a330702f3551"},"Meta":{"TotalPages":1}}
 
 REQUEST 4
 GET https://oba.revolut.com/jwk
@@ -269,7 +269,7 @@ X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103UAvAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"RemittanceInformation":{"Unstructured":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"RemittanceInformation":{"Reference":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
 RESPONSE 7
 201
@@ -301,4 +301,4 @@ RESPONSE 8
 Content-Type: application/json;charset=UTF-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Risk": {}, "Data": {"DomesticPaymentId": "2cf7553c-3c77-46e8-889b-f9b2c75505c5", "ConsentId": "1d955df7-f304-41de-a9bb-a330702f3551", "Status": "AcceptedSettlementCompleted", "Initiation": {"RemittanceInformation":{"Reference":"Donation","Unstructured":"Donation"}, "CreditorAccount":{"Name":"Amnesty","SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868"}, "InstructedAmount": {"Amount":"1.00","Currency":"GBP"}}}}
+{"Risk": {}, "Data": {"DomesticPaymentId": "2cf7553c-3c77-46e8-889b-f9b2c75505c5", "ConsentId": "1d955df7-f304-41de-a9bb-a330702f3551", "Status": "AcceptedSettlementCompleted", "Initiation": {"RemittanceInformation":{"Reference":"Donation"}, "CreditorAccount":{"Name":"Amnesty","SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868"}, "InstructedAmount": {"Amount":"1.00","Currency":"GBP"}}}}
