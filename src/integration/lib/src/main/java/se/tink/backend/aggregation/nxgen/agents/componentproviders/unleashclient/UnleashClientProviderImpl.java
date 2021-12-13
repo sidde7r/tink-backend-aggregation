@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclien
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.provider.UnleashClientProvider;
 
 public class UnleashClientProviderImpl implements UnleashClientProvider {
 

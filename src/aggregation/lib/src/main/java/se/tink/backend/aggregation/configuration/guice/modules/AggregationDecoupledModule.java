@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.api.MonitoringService;
 import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientProvider;
-import se.tink.backend.aggregation.configuration.FakeUnleashClient;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationDecoupledAapFileProvider;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
@@ -150,6 +149,7 @@ import se.tink.libraries.queue.sqs.QueueMessageAction;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.service.version.VersionInformation;
 import se.tink.libraries.tracing.jersey.filter.ServerTracingFilter;
+import se.tink.libraries.unleash.FakeUnleashClient;
 import se.tink.libraries.unleash.UnleashClient;
 
 /**
@@ -242,7 +242,7 @@ public class AggregationDecoupledModule extends AbstractModule {
                         configuration
                                 .getAgentsServiceConfiguration()
                                 .getTppSecretsServiceConfiguration());
-        bind(UnleashClient.class).toInstance(new FakeUnleashClient());
+        bind(UnleashClient.class).toInstance(new FakeUnleashClient(true));
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
 

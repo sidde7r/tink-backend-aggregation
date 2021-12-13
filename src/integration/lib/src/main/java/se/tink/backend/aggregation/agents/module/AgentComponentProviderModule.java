@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementali
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.libraries.unleash.provider.UnleashClientProvider;
 
 /** Module containing basic dependencies for running agent in production environment. */
 @RequiredArgsConstructor
