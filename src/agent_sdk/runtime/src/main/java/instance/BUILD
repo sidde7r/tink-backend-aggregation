@@ -10,6 +10,7 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/agent_sdk/sdk",
+        "//src/agent_sdk/runtime/src/main/java/environment",
     ],
     visibility = ["//src/agent_sdk/runtime:__subpackages__"],
 )
