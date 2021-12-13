@@ -1,0 +1,15 @@
+{
+  "scaStatus": "scaMethodSelected",
+  "chosenScaMethod": {
+    "authenticationType": "SMS_OTP",
+    "authenticationVersion": "v1",
+    "authenticationMethodId": "SMS_OTP",
+    "name": "SMS_OTP"
+  },
+  "authorisationId": "217980",
+  "_links": {
+    "authoriseTransaction": {
+      "href": "/v1/consents/139407/authorisations/217980"
+    }
+  }
+}

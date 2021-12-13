@@ -2062,7 +2062,7 @@ public class AgentWorkerOperationFactory {
         String credentialsId = request.getCredentials().getId();
         boolean isUserPresent = request.getUserAvailability().isUserPresent();
         return isUserPresent
-                && unleashClient.isToggleEnable(
+                && unleashClient.isToggleEnabled(
                         Toggle.of("supplemental-information-waiting-abort")
                                 .context(
                                         UnleashContext.builder()
@@ -2090,7 +2090,7 @@ public class AgentWorkerOperationFactory {
                                             .addProperty(Constants.Context.APP_ID.getValue(), appId)
                                             .build())
                             .build();
-            balanceCalculationEnabled = unleashClient.isToggleEnable(toggle);
+            balanceCalculationEnabled = unleashClient.isToggleEnabled(toggle);
         } catch (Exception e) {
             log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
             balanceCalculationEnabled = false;

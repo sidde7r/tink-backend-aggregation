@@ -110,7 +110,7 @@ public class UkOpenBankingTransactionPaginatorTest {
 
     @Test
     public void testRequestTimeProperlySaved() {
-        when(unleashClient.isToggleEnable(Mockito.any())).thenReturn(false);
+        when(unleashClient.isToggleEnabled(Mockito.any())).thenReturn(false);
 
         paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null);
 
@@ -127,7 +127,7 @@ public class UkOpenBankingTransactionPaginatorTest {
 
     @Test
     public void testFetchTransactionsForShortPeriod() {
-        when(unleashClient.isToggleEnable(Mockito.any())).thenReturn(false);
+        when(unleashClient.isToggleEnabled(Mockito.any())).thenReturn(false);
         when(persistentStorage.get("fetchedTxUntil:BI123")).thenReturn("2020-06-02T10:10:10");
 
         paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null);
@@ -156,7 +156,7 @@ public class UkOpenBankingTransactionPaginatorTest {
 
     @Test
     public void getTransactionsForShouldFetch24MonthsInstead23WhenUnleashIsActive() {
-        when(unleashClient.isToggleEnable(Mockito.any())).thenReturn(true);
+        when(unleashClient.isToggleEnabled(Mockito.any())).thenReturn(true);
 
         paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null);
 

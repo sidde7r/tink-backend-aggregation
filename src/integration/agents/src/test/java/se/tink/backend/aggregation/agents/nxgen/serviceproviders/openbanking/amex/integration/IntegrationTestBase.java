@@ -124,7 +124,7 @@ public abstract class IntegrationTestBase {
         when(agentContext.getMetricRegistry()).thenReturn(metricRegistry);
 
         UnleashClient unleashClient = mock(UnleashClient.class);
-        when(unleashClient.isToggleEnable(any())).thenReturn(true);
+        when(unleashClient.isToggleEnabled(any())).thenReturn(true);
         when(agentContext.getUnleashClient()).thenReturn(unleashClient);
 
         AgentTemporaryStorage agentTemporaryStorage = mock(AgentTemporaryStorage.class);

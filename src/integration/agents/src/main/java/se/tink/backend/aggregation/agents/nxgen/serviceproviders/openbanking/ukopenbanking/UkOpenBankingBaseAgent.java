@@ -570,7 +570,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                                             .addProperty(Constants.Context.APP_ID.getValue(), appId)
                                             .build())
                             .build();
-            balanceCalculationEnabled = componentProvider.getUnleashClient().isToggleEnable(toggle);
+            balanceCalculationEnabled =
+                    componentProvider.getUnleashClient().isToggleEnabled(toggle);
         } catch (Exception e) {
             log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
             balanceCalculationEnabled = false;

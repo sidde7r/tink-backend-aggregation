@@ -28,7 +28,7 @@ public class UkOpenBankingFlowTest {
     @Test
     public void shouldReturnEidasProxyFlowWhenTheToggleWasEnable() {
         // given
-        when(unleashClient.isToggleEnable(toggle)).thenReturn(true);
+        when(unleashClient.isToggleEnabled(toggle)).thenReturn(true);
 
         // when
         UkOpenBankingFlow ukOpenBankingFlow = toggleService.takeFlow();
@@ -40,7 +40,7 @@ public class UkOpenBankingFlowTest {
     @Test
     public void shouldReturnSecretServiceFlowWhenTheToggleWasUnable() {
         // given
-        when(unleashClient.isToggleEnable(toggle)).thenReturn(false);
+        when(unleashClient.isToggleEnabled(toggle)).thenReturn(false);
 
         // when
         UkOpenBankingFlow ukOpenBankingFlow = toggleService.takeFlow();

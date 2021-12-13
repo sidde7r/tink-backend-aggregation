@@ -243,7 +243,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
     private LocalDateTime calculateBiggestStartingDateForFetching(LocalDateTime now) {
         LocalDateTime startingDateForFetchingAsMuchAsPossible;
-        boolean is24Months = unleashClient.isToggleEnable(toggle);
+        boolean is24Months = unleashClient.isToggleEnabled(toggle);
         if (is24Months) {
             startingDateForFetchingAsMuchAsPossible = now.minusMonths(24);
         } else {

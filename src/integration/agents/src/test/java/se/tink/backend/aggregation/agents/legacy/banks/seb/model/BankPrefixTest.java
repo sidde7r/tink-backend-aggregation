@@ -326,11 +326,6 @@ public class BankPrefixTest {
         for (int i = 0; i < 1000; i++) {
             Assert.assertEquals("SEB", getBankPrefixFrom(String.format("5%03d1234567", i)));
         }
-        for (int i = 3; i < 5; i++) {
-            for (int j = 0; j < 10; j++) {
-                Assert.assertEquals("SEB", getBankPrefixFrom(String.format("91%d%d1234567", i, j)));
-            }
-        }
     }
 
     @Test

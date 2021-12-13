@@ -81,6 +81,13 @@ public class FabricConstants {
         public static final String PAYMENT_AUTHORIZATION_ID = "paymentAuthorizationId";
     }
 
+    public static final class AuthenticationKeys {
+        public static final String AUTHENTICATION_FINALISED = "finalised";
+        public static final String AUTHENTICATION_PSU_AUTHENTICATED = "psuAuthenticated";
+        public static final String SCA_METHOD_SELECTED = "scaMethodSelected";
+        public static final String SMS_SCA = "SMS_OTP";
+    }
+
     public static class QueryKeys {
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
@@ -98,21 +105,14 @@ public class FabricConstants {
         public static final String CONSENT_ID = "Consent-ID";
         public static final String TPP_REDIRECT_PREFERED = "TPP-Redirect-Preferred";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String PSU_ID = "psu-id";
     }
 
     public static class HeaderValues {
         public static final String TPP_REDIRECT_PREFERED = "true";
     }
 
-    public static class Consent {
-        public static final String ALL_ACCOUNTS = "allAccounts";
-        public static final String FREQUENCY_PER_DAY = "4";
-        public static final String VALID_UNTIL = "9999-12-31";
-        public static final String VALID = "valid";
-    }
-
     public static class Accounts {
-        public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
         public static final String CASH = "CASH";
     }
 

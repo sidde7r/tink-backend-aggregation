@@ -42,7 +42,7 @@ public class CertificateIdProviderTest {
     @Test
     public void shouldReturnOLD_EIDASCertIdWhenAppIdAndProviderNameAreAllowed() {
         // given
-        when(unleashClient.isToggleEnable(any())).thenReturn(true);
+        when(unleashClient.isToggleEnabled(any())).thenReturn(true);
 
         // when
         String result =
@@ -56,7 +56,7 @@ public class CertificateIdProviderTest {
     @Test
     public void shouldReturnDEFAULTCertIdWhenAppIdAndProviderNameAreNotAllowed() {
         // given
-        when(unleashClient.isToggleEnable(any())).thenReturn(false);
+        when(unleashClient.isToggleEnabled(any())).thenReturn(false);
 
         // when
         String result =

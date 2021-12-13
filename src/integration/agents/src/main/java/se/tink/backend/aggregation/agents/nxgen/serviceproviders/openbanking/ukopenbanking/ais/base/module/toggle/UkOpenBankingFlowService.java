@@ -25,6 +25,6 @@ public class UkOpenBankingFlowService {
     }
 
     private boolean isEidasProxyFlow() {
-        return unleashClient.isToggleEnable(toggle);
+        return unleashClient.isToggleEnabled(toggle);
     }
 }

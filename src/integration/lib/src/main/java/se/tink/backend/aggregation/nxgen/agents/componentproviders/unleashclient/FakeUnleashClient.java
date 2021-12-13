@@ -24,7 +24,7 @@ public class FakeUnleashClient extends UnleashClient {
     }
 
     @Override
-    public boolean isToggleEnable(Toggle toggle) {
+    public boolean isToggleEnabled(Toggle toggle) {
         return allTogglesEnabled;
     }
 }

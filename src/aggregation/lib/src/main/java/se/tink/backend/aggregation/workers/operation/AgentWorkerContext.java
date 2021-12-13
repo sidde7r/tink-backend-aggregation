@@ -791,7 +791,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         boolean isUserPresent = request.getUserAvailability().isUserPresent();
         return isUserPresent
                 && getUnleashClient()
-                        .isToggleEnable(
+                        .isToggleEnabled(
                                 Toggle.of("supplemental-information-waiting-abort")
                                         .context(
                                                 UnleashContext.builder()
