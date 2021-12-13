@@ -14,7 +14,7 @@ import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 public class UsernameAndPasswordAuthenticationProcess
         implements AuthenticationProcess<UsernameAndPasswordAuthenticator> {
     @Override
-    public Optional<UsernameAndPasswordAuthenticator> instantiateAuthenticator(
+    public Optional<UsernameAndPasswordAuthenticator> tryInstantiateAuthenticator(
             AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateUsernameAndPassword.class)

@@ -17,8 +17,15 @@ import se.tink.agent.sdk.utils.Sleeper;
 
 public class ThirdPartyAppAuthenticationProcess
         implements AuthenticationProcess<ThirdPartyAppAuthenticator> {
+
+    private final Sleeper sleeper;
+
+    public ThirdPartyAppAuthenticationProcess(Sleeper sleeper) {
+        this.sleeper = sleeper;
+    }
+
     @Override
-    public Optional<ThirdPartyAppAuthenticator> instantiateAuthenticator(
+    public Optional<ThirdPartyAppAuthenticator> tryInstantiateAuthenticator(
             AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateThirdPartyApp.class)
@@ -28,14 +35,13 @@ public class ThirdPartyAppAuthenticationProcess
     @Override
     public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
             ThirdPartyAppAuthenticator authenticator) {
-        Sleeper sleeper = null;
         return AuthenticationFlow.builder(
                         new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
                 .addStep(new ThirdPartyAppOpenAppStep(authenticator, ThirdPartyAppPollStep.class))
                 .addStep(
                         new ThirdPartyAppPollStep(
                                 authenticator,
-                                sleeper,
+                                this.sleeper,
                                 ThirdPartyAppOpenAppStep.class,
                                 GetConsentLifetimeStep.class))
                 .addStep(new GetConsentLifetimeStep(authenticator))

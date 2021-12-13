@@ -23,7 +23,7 @@ public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2
     }
 
     @Override
-    public Optional<Oauth2Authenticator> instantiateAuthenticator(AgentInstance agentInstance) {
+    public Optional<Oauth2Authenticator> tryInstantiateAuthenticator(AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateOauth2.class)
                 .map(AuthenticateOauth2::authenticator);

@@ -11,7 +11,7 @@ import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 
 public class GenericAuthenticationProcess implements AuthenticationProcess<GenericAuthenticator> {
     @Override
-    public Optional<GenericAuthenticator> instantiateAuthenticator(AgentInstance agentInstance) {
+    public Optional<GenericAuthenticator> tryInstantiateAuthenticator(AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateGeneric.class)
                 .map(AuthenticateGeneric::authenticator);

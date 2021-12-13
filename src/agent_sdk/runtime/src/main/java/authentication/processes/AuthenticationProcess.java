@@ -7,7 +7,7 @@ import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 
 public interface AuthenticationProcess<T> {
-    Optional<T> instantiateAuthenticator(AgentInstance agentInstance);
+    Optional<T> tryInstantiateAuthenticator(AgentInstance agentInstance);
 
     AuthenticationFlow<NewConsentStep> getNewConsentFlow(T authenticator);
 
