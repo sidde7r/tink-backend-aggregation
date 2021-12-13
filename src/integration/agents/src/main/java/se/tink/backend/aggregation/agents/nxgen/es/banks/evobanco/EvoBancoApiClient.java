@@ -213,6 +213,7 @@ public class EvoBancoApiClient {
         HttpResponse response =
                 createGetRequest(EvoBancoConstants.Urls.FETCH_INVESTMENTS)
                         .headers(getEEHeaders())
+                        .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(Storage.ACCESS_TOKEN))
                         .queryParam(
                                 EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
                                 sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE))
@@ -226,8 +227,6 @@ public class EvoBancoApiClient {
                                 EvoBancoConstants.QueryParamsKeys.USER_BE,
                                 sessionStorage.get(EvoBancoConstants.Storage.USER_BE))
                         .get(HttpResponse.class);
-
-        setNextCodSecIpHeader(response);
 
         return response.getBody(InvestmentsResponse.class);
     }

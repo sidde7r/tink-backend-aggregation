@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
@@ -39,7 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA, INVESTMENTS})
 public final class EvoBancoAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
