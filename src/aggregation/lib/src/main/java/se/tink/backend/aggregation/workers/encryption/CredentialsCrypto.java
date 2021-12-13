@@ -69,10 +69,8 @@ public class CredentialsCrypto {
                                     CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
                                     credentials.getId());
 
-            if (!Strings.isNullOrEmpty(cachedSensitiveData)) {
-                dataToDecrypt =
-                        pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
-            }
+            dataToDecrypt =
+                    pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
         }
 
         if (Strings.isNullOrEmpty(dataToDecrypt)) {
@@ -268,6 +266,9 @@ public class CredentialsCrypto {
     }
 
     private String pickMostRecentSensitiveData(String cached, String incoming) {
+        if (Strings.isNullOrEmpty(cached) && Strings.isNullOrEmpty(incoming)) {
+            return null;
+        }
         // Return the other one if one is null.
         if (Strings.isNullOrEmpty(cached)) {
             logger.info(
