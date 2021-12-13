@@ -1,0 +1,524 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://auth.obapi.bankofireland.com/oauth/as/b365/.well-known/openid-configuration
+x-fapi-financial-id: 0015800000jfQ9aAAE
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "version": "3.0",
+  "issuer": "https://auth.obapi.bankofireland.com",
+  "authorization_endpoint": "https://auth.obapi.bankofireland.com/oauth/as/b365/authorization.oauth2",
+  "token_endpoint": "https://api.obapi.bankofireland.com/oauth/as/token.oauth2",
+  "revocation_endpoint": "https://api.obapi.bankofireland.com/oauth/as/revoke_token.oauth2",
+  "jwks_uri": "https://auth.obapi.bankofireland.com/pf/JWKS",
+  "registration_endpoint": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.3/register",
+  "scopes_supported": [
+    "openid",
+    "payments",
+    "accounts"
+  ],
+  "claims_supported": [
+    "aud",
+    "exp",
+    "iat",
+    "iss",
+    "acr",
+    "openbanking_intent_id",
+    "refresh_token_expires_at",
+    "sub",
+    "jti",
+    "nonce",
+    "auth_time",
+    "c_hash",
+    "s_hash"
+  ],
+  "acr_values_supported": [
+    "urn:openbanking:psd2:sca"
+  ],
+  "response_types_supported": [
+    "code id_token"
+  ],
+  "response_modes_supported": [
+    "fragment"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "refresh_token",
+    "client_credentials"
+  ],
+  "subject_types_supported": [
+    "public"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "token_endpoint_auth_methods_supported": [
+    "**HASHED:DD**"
+  ],
+  "claim_types_supported": [
+    "normal"
+  ],
+  "claims_parameter_supported": true,
+  "request_parameter_supported": true,
+  "request_uri_parameter_supported": true,
+  "request_object_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "request_object_encryption_alg_values_supported": [],
+  "request_object_encryption_enc_values_supported": [],
+  "tls_client_certificate_bound_access_tokens": true
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://api.obapi.bankofireland.com/oauth/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jfQ9aAAE
+
+grant_type=client_credentials
+    &scope=accounts
+    &redirect_uri=DUMMY_REDIRECT_URL
+    &client_id=DUMMY_CLIENT_ID
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "access_token": "0001YFiVVc7jgGezmkFZvR1MCpl2",
+  "token_type": "**HASHED:cQ**",
+  "expires_in": 299
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/account-access-consents/DUMMY_CONSENT
+Content-Type: application/json
+x-fapi-financial-id: 0015800000jfQ9aAAE
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "ConsentId": "DUMMY_CONSENT",
+    "CreationDateTime": "2021-11-30T09:15:32+00:00",
+    "Status": "Authorised",
+    "StatusUpdateDateTime": "2021-11-30T09:17:23+00:00",
+    "Permissions": [
+      "ReadAccountsDetail",
+      "ReadBalances",
+      "ReadBeneficiariesDetail",
+      "ReadTransactionsCredits",
+      "ReadTransactionsDebits",
+      "ReadTransactionsDetail",
+      "ReadTransactionsBasic",
+      "ReadBeneficiariesBasic",
+      "ReadAccountsBasic"
+    ]
+  },
+  "Risk": {},
+  "Links": {
+    "Self": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/account-access-consents/DUMMY_CONSENT"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 0015800000jfQ9aAAE
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id:00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "Currency": "GBP",
+        "AccountType": "Business",
+        "AccountSubType": "CurrentAccount",
+        "Nickname": "Current Account",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+            "Identification": "90111111111111"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/balances
+Accept: application/json
+x-fapi-financial-id: 0015800000jfQ9aAAE
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "CreditDebitIndicator": "Credit",
+        "Type": "Expected",
+        "DateTime": "2021-12-11T21:16:51+00:00",
+        "Amount": {
+          "Amount": "937.70",
+          "Currency": "GBP"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/balances"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-03-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800000jfQ9aAAE
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Pending",
+        "BookingDateTime": "1992-04-10T00:00:00+00:00",
+        "ValueDateTime": "1992-04-10T00:00:00+00:00",
+        "Amount": {
+          "Amount": "9.99",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "553"
+        },
+        "TransactionInformation": "09DEC Delta Ireland",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Expected",
+          "Amount": {
+            "Amount": "937.70",
+            "Currency": "GBP"
+          }
+        }
+      },
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "D356EAB0333084513605BE9B7031C8",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-04-09T00:00:00+00:00",
+        "ValueDateTime": "1992-04-09T00:00:00+00:00",
+        "Amount": {
+          "Amount": "5.50",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "221"
+        },
+        "TransactionInformation": "POSC01DEC APPLEGREEN"
+      },
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "D338DCBC0D30808729512C6B4AE25A",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-04-07T00:00:00+00:00",
+        "ValueDateTime": "1992-04-07T00:00:00+00:00",
+        "Amount": {
+          "Amount": "127.68",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "554"
+        },
+        "TransactionInformation": "365 Online  Aquarius",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Expected",
+          "Amount": {
+            "Amount": "1650.00",
+            "Currency": "GBP"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=2021-09-14T16:28:26Z",
+    "Next": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-03-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&page=2&transactionRetrievalKey=2-211213-211212"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-03-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&page=2&transactionRetrievalKey=2-211213-211212
+Accept: application/json
+x-fapi-financial-id: 0015800000jfQ9aAAE
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "3BF1801979308087295023F97B1965",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-04-03T00:00:00+00:00",
+        "ValueDateTime": "1992-04-03T00:00:00+00:00",
+        "Amount": {
+          "Amount": "340.00",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "548"
+        },
+        "TransactionInformation": "365 Online  KOZDROJ W",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Expected",
+          "Amount": {
+            "Amount": "1650.00",
+            "Currency": "GBP"
+          }
+        }
+      },
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "1909BEDA66303280824813EF5EA024",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-04-02T00:00:00+00:00",
+        "ValueDateTime": "1992-04-02T00:00:00+00:00",
+        "Amount": {
+          "Amount": "188.00",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "545"
+        },
+        "TransactionInformation": "POS13NOV IKEA LTD 113"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=2021-09-14T16:28:26Z&page=2&transactionRetrievalKey=2-211213-211212",
+    "Prev": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=2021-09-14T16:28:26Z&page=1&transactionRetrievalKey=2-211213-211212",
+    "Next": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-03-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&page=3&transactionRetrievalKey=2-211213-211212"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-03-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&page=3&transactionRetrievalKey=2-211213-211212
+Accept: application/json
+x-fapi-financial-id: 0015800000jfQ9aAAE
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "0E7F8AC88D303280824759FB58512D",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-04-01T00:00:00+00:00",
+        "ValueDateTime": "1992-04-01T00:00:00+00:00",
+        "Amount": {
+          "Amount": "97.01",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "545"
+        },
+        "TransactionInformation": "POS12NOV LILLEYS DUBL",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Expected",
+          "Amount": {
+            "Amount": "2181.52",
+            "Currency": "GBP"
+          }
+        }
+      },
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "1A01E375463003078346EA1EA672CF",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-03-30T00:00:00+00:00",
+        "ValueDateTime": "1992-03-30T00:00:00+00:00",
+        "Amount": {
+          "Amount": "100.00",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "545"
+        },
+        "TransactionInformation": "POS01NOV 2CO.COM*NINO"
+      },
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "1EB690BD9029956776498A610FD55B",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-03-20T00:00:00+00:00",
+        "ValueDateTime": "1992-03-20T00:00:00+00:00",
+        "Amount": {
+          "Amount": "61.46",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "545"
+        },
+        "TransactionInformation": "POS30OCT MCDADE RETAI",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Expected",
+          "Amount": {
+            "Amount": "1818.74",
+            "Currency": "GBP"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=2021-09-14T16:28:26Z&page=3&transactionRetrievalKey=2-211213-211212",
+    "Prev": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=2021-09-14T16:28:26Z&page=2&transactionRetrievalKey=2-211213-211212",
+    "Next": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-03-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&page=4&transactionRetrievalKey=2-211213-211212"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1992-03-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z&page=4&transactionRetrievalKey=2-211213-211212
+Accept: application/json
+x-fapi-financial-id: 0015800000jfQ9aAAE
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "0732674F6329956776483E719A5C4B",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-03-18T00:00:00+00:00",
+        "ValueDateTime": "1992-03-18T00:00:00+00:00",
+        "Amount": {
+          "Amount": "39.20",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "221"
+        },
+        "TransactionInformation": "POSC30OCT HOMEBASE",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Expected",
+          "Amount": {
+            "Amount": "1818.74",
+            "Currency": "GBP"
+          }
+        }
+      },
+      {
+        "AccountId": "DUMMY_ACCOUNT_ID",
+        "TransactionId": "C33DF6F76A29586083162F6E91BE6D",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "1992-03-11T00:00:00+01:00",
+        "ValueDateTime": "1992-03-11T00:00:00+01:00",
+        "Amount": {
+          "Amount": "16.76",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "221"
+        },
+        "TransactionInformation": "POSC15OCT Delta Irela"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=2021-09-14T16:28:26Z&page=4&transactionRetrievalKey=2-211213-211212",
+    "Prev": "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=2021-09-14T16:28:26Z&page=3&transactionRetrievalKey=2-211213-211212"
+  },
+  "Meta": {}
+}

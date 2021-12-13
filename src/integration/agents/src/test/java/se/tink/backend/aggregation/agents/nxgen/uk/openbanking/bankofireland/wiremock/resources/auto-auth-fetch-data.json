@@ -1,0 +1,340 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "90111111111111",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "GBP",
+      "scale" : 2,
+      "doubleValue" : 947.69,
+      "exactValue" : 947.69,
+      "unscaledValue" : 94769
+    },
+    "currencyCode" : "GBP",
+    "availableBalance" : {
+      "currencyCode" : "GBP",
+      "scale" : 2,
+      "doubleValue" : 937.7,
+      "exactValue" : 937.7,
+      "unscaledValue" : 93770
+    },
+    "bankId" : "90111111111111",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Current Account",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"sort-code://90111111111111\"]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "BUSINESS",
+      "identities" : [ ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 947.69
+  } ],
+  "transactions" : [ {
+    "amount" : -9.99,
+    "date" : 702900000000,
+    "description" : "09DEC Delta Ireland",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-04-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-04-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "553",
+    "providerMarket" : "UK",
+    "booked" : false
+  }, {
+    "amount" : -5.5,
+    "date" : 702813600000,
+    "description" : "POSC01DEC APPLEGREEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "D356EAB0333084513605BE9B7031C8"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-04-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-04-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "221",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -127.68,
+    "date" : 702640800000,
+    "description" : "365 Online  Aquarius",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "D338DCBC0D30808729512C6B4AE25A"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-04-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-04-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "554",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -340.0,
+    "date" : 702295200000,
+    "description" : "365 Online  KOZDROJ W",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "3BF1801979308087295023F97B1965"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-04-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-04-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "548",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -188.0,
+    "date" : 702208800000,
+    "description" : "POS13NOV IKEA LTD 113",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1909BEDA66303280824813EF5EA024"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-04-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-04-02",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "545",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -97.01,
+    "date" : 702122400000,
+    "description" : "POS12NOV LILLEYS DUBL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "0E7F8AC88D303280824759FB58512D"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-04-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-04-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "545",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -100.0,
+    "date" : 701949600000,
+    "description" : "POS01NOV 2CO.COM*NINO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1A01E375463003078346EA1EA672CF"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-03-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-03-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "545",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -61.46,
+    "date" : 701089200000,
+    "description" : "POS30OCT MCDADE RETAI",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1EB690BD9029956776498A610FD55B"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-03-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-03-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "545",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -39.2,
+    "date" : 700916400000,
+    "description" : "POSC30OCT HOMEBASE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "0732674F6329956776483E719A5C4B"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-03-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-03-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "221",
+    "providerMarket" : "UK",
+    "booked" : true
+  }, {
+    "amount" : -16.76,
+    "date" : 700225200000,
+    "description" : "POSC15OCT Delta Irela",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "C33DF6F76A29586083162F6E91BE6D"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "1992-03-10",
+        "instant" : "1992-03-10T23:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "1992-03-10",
+        "instant" : "1992-03-10T23:00:00.000Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "221",
+    "providerMarket" : "UK",
+    "booked" : true
+  } ]
+}
