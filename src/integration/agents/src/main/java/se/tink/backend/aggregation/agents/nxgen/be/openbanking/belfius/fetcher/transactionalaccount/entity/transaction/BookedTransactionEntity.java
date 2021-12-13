@@ -11,7 +11,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class TransactionEntity {
+public class BookedTransactionEntity {
 
     private BigDecimal amount;
     private String currency;

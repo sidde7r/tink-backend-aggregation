@@ -1,5 +1,5 @@
 {
-    "error_description": "User/System has deactivated the consent. Tpp has to start over with the api /consent-uris",
-    "error_code": "20005",
-    "error": "no_active_consent"
+    "error_description": "User has deactivated its consent in the channel. Tpp has to start over with /consent-uris flow",
+    "error_code": "B14800-3013-000000",
+    "error": "NO_ACTIVE_CONSENT"
 }

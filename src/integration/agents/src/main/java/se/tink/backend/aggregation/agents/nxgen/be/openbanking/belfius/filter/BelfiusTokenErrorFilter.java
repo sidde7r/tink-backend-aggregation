@@ -20,7 +20,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class BelfiusTokenErrorFilter extends Filter {
 
     private static final List<String> INVALID_TOKEN_MESSAGES =
-            ImmutableList.of("refresh token is not valid", "access_token is not valid");
+            ImmutableList.of(
+                    "refresh token is not valid",
+                    "invalid refresh token",
+                    "access_token is not valid",
+                    "invalid access token");
 
     private final PersistentStorage persistentStorage;
     private final Date sessionExpiryDate;

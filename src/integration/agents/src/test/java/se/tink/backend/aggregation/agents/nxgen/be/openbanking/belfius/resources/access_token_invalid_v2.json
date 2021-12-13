@@ -1,0 +1,5 @@
+{
+    "error": "FAILED_SECURITY_VALIDATION",
+    "error_code": "GEN-1203-100003",
+    "error_description": "Invalid access token."
+}

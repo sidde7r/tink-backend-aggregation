@@ -27,9 +27,11 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -65,9 +67,9 @@ import se.tink.libraries.user.rpc.User;
 @RunWith(JUnitParamsRunner.class)
 public class BelfiusTransactionalAccountRefreshControllerTest {
 
-    private static final String RESOURCES_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius/resources/";
-
+    private static final String BASE_RESOURCES_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius/";
+    private static final String RESOURCES_PATH = BASE_RESOURCES_PATH + "resources/";
     private static final String TEST_LOGICAL_ID = "SOME_LOGICAL_ID";
     private static final String TEST_USER = "USER_NAME";
     private static final int TEST_RETRY_SLEEP_MS = 1;
@@ -246,6 +248,17 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
     }
 
     @Test
+    public void shouldThrowAccountRefreshExceptionWhenBankRespondsWithError() {
+        // given
+        bankRespondsWithErrorAccountNotSupported();
+
+        // expect
+        assertThatThrownBy(() -> refreshController.fetchCheckingAccounts())
+                .isInstanceOf(AccountRefreshException.class)
+                .hasMessageContaining("This account is not allowed for this type of request.");
+    }
+
+    @Test
     @Parameters
     public void shouldRetryOnErrorsSuccessfully(String message) {
         // given
@@ -308,6 +321,16 @@ public class BelfiusTransactionalAccountRefreshControllerTest {
             new Object[] {"connect timed out", BankServiceError.BANK_SIDE_FAILURE.exception()},
             new Object[] {"connection reset", BankServiceError.BANK_SIDE_FAILURE.exception()},
         };
+    }
+
+    private void bankRespondsWithErrorAccountNotSupported() {
+        given(response.getStatus()).willReturn(403);
+        given(response.getBody(ErrorResponse.class))
+                .willReturn(
+                        deserializeFromFile(
+                                BASE_RESOURCES_PATH
+                                        + "authenticator/resources/belfius_account_not_supported_error.json",
+                                ErrorResponse.class));
     }
 
     private <T> void assertEqualsIgnoringIds(T result, T expected) {

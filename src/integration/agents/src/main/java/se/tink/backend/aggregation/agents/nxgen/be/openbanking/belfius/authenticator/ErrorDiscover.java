@@ -8,6 +8,7 @@ class ErrorDiscover {
         return ex.getResponse().getStatus() == 403
                 && ex.getResponse()
                         .getBody(String.class)
+                        .toLowerCase()
                         .contains("\"error\":\"channel_not_permitted\"");
     }
 }

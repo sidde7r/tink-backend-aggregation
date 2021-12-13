@@ -1,5 +1,5 @@
 {
-    "type": "DUMMY_NAME",
+    "product": "DUMMY_NAME",
     "iban": "BE39000000076000",
     "currency": "EUR",
     "balance": 789.01,

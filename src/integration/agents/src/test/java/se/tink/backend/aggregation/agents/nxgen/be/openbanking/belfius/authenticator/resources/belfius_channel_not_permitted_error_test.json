@@ -1,0 +1,5 @@
+{
+    "error": "channel_not_permitted",
+    "error_code": "20003",
+    "error_description": "This account can not be consultated via electronical channel."
+}

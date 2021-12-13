@@ -60,10 +60,10 @@ public final class BelfiusConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String BASE_ACCEPT = "application/vnd.belfius.api+json; version=";
-        public static final String CONSENT_VERSION = "2";
-        public static final String TOKEN_VERSION = "1.1";
-        public static final String ACCOUNT_VERSION = "1";
-        public static final String TRANSACTION_VERSION = "1.2";
+        public static final String CONSENT_VERSION = "3";
+        public static final String TOKEN_VERSION = "2";
+        public static final String ACCOUNT_VERSION = "2";
+        public static final String TRANSACTION_VERSION = "2";
         public static final String PAYMENT_VERSION = "1";
         public static final String CONSENT_ACCEPT = BASE_ACCEPT + CONSENT_VERSION;
         public static final String TOKEN_ACCEPT = BASE_ACCEPT + TOKEN_VERSION;
@@ -93,8 +93,8 @@ public final class BelfiusConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorCodes {
-        public static final String ACCOUNT_NOT_SUPPORTED = "20003";
-        public static final String NOT_SUPPORTED = "20004";
+        public static final String CHANNEL_NOT_PERMITTED = "B14800-3007-000000";
+        public static final String ACCOUNT_NOT_SUPPORTED = "B14800-3008-000000";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

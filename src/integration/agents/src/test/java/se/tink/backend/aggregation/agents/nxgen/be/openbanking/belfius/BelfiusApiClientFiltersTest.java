@@ -198,8 +198,20 @@ public class BelfiusApiClientFiltersTest {
                 401,
                 ErrorResponse.class,
                 deserializeFromFile(
+                        RESOURCES_PATH + "refresh_token_invalid_v3.json", ErrorResponse.class)
+            },
+            {
+                401,
+                ErrorResponse.class,
+                deserializeFromFile(
                         RESOURCES_PATH + "access_token_invalid.json", ErrorResponse.class)
             },
+            {
+                401,
+                ErrorResponse.class,
+                deserializeFromFile(
+                        RESOURCES_PATH + "access_token_invalid_v2.json", ErrorResponse.class)
+            }
         };
     }
 
