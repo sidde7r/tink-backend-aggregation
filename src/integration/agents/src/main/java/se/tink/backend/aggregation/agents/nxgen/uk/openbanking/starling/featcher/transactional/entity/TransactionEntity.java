@@ -1,20 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_OFFSET;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.TransactionDateMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkObInstantDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 public class TransactionEntity {
@@ -36,14 +38,14 @@ public class TransactionEntity {
 
     private String direction;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date updatedAt;
+    @JsonDeserialize(using = UkObInstantDeserializer.class)
+    private Instant updatedAt;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date transactionTime;
+    @JsonDeserialize(using = UkObInstantDeserializer.class)
+    private Instant transactionTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date settlementTime;
+    @JsonDeserialize(using = UkObInstantDeserializer.class)
+    private Instant settlementTime;
 
     private String source;
     private String sourceSubType;
@@ -75,11 +77,11 @@ public class TransactionEntity {
         }
 
         if (hasSettlementTime()) {
-            builder.setDate(settlementTime);
-            builder.setTransactionDates(buildBookingDate(settlementTime));
+            builder.setDate(getDateOfTransaction(settlementTime));
+            builder.setTransactionDates(getTransactionDates(settlementTime));
         } else {
-            builder.setDate(transactionTime);
-            builder.setTransactionDates(buildBookingDate(transactionTime));
+            builder.setDate(getDateOfTransaction(transactionTime));
+            builder.setTransactionDates(getTransactionDates(transactionTime));
         }
 
         if (isMerchantCounterPartyType()) {
@@ -89,12 +91,19 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    private TransactionDates buildBookingDate(Date date) {
+    private Date getDateOfTransaction(Instant instant) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return simpleDateFormat.parse(instant.toString());
+        } catch (ParseException e) {
+            return Date.from(instant);
+        }
+    }
+
+    @JsonIgnore
+    private TransactionDates getTransactionDates(Instant date) {
         return TransactionDates.builder()
-                .setBookingDate(
-                        new AvailableDateInformation()
-                                .setInstant(date.toInstant())
-                                .setDate(date.toInstant().atZone(DEFAULT_OFFSET).toLocalDate()))
+                .setBookingDate(TransactionDateMapper.prepareTransactionDate(date))
                 .build();
     }
 
