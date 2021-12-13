@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -51,11 +53,30 @@ public class NordeaPartnerMarketUtil {
         } else return getPaginationDateYearBack(componentProvider);
     }
 
-    private static LocalDate getPaginationDateYearBack(AgentComponentProvider componentProvider) {
+    public static LocalDate getPaginationDateYearBack(AgentComponentProvider componentProvider) {
         return componentProvider
                 .getLocalDateTimeSource()
                 .now(ZoneId.systemDefault())
                 .toLocalDate()
                 .minus(1, ChronoUnit.YEARS);
+    }
+
+    public static LocalDate getStartDate(
+            List<se.tink.backend.agents.rpc.Account> ac, AgentComponentProvider componentProvider) {
+        Date best =
+                Date.from(
+                        getPaginationDateYearBack(componentProvider)
+                                .atStartOfDay()
+                                .toInstant(ZoneOffset.UTC));
+        if (ac.isEmpty() || ac.stream().anyMatch(account -> account.getCertainDate() == null)) {
+            return getPaginationDateYearBack(componentProvider);
+        }
+        for (se.tink.backend.agents.rpc.Account account : ac) {
+            Date certainDate = (account.getCertainDate());
+            if (certainDate.compareTo(best) > 0) {
+                best = certainDate;
+            }
+        }
+        return best.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

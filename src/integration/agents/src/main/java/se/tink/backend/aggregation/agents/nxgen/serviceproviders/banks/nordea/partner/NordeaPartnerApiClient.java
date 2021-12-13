@@ -11,6 +11,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.EndPoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.PathParamsKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.QueryParamsKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.QueryParamsValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerJweHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.rpc.CardListResponse;
@@ -145,15 +146,22 @@ public class NordeaPartnerApiClient {
                 CardTransactionListResponse.class);
     }
 
-    public void fetchAllData() {
+    public void fetchAllData(LocalDate startDate) {
         AccountListResponse accountListResponse =
-                requestRefreshableGet(request(EndPoints.ALL_DATA), AccountListResponse.class);
+                requestRefreshableGet(
+                        request(EndPoints.ALL_DATA)
+                                .queryParam(
+                                        QueryParamsKeys.START_DATE,
+                                        startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                                .queryParam(
+                                        QueryParamsKeys.INCLUDE, QueryParamsValues.INCLUDE_VALUES),
+                        AccountListResponse.class);
         storeDataInSessionStorage(accountListResponse);
     }
 
     public AccountListResponse getAllData() {
         if (sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA).isEmpty()) {
-            fetchAllData();
+            fetchAllData(LocalDate.now().minusYears(1));
         }
         String accounts = sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA);
         return SerializationUtils.deserializeFromString(accounts, AccountListResponse.class);

@@ -23,8 +23,7 @@ public class NordeaPartnerConstants {
         public static final String ACCOUNT_TRANSACTIONS = ACCOUNTS + "/{account_id}/transactions";
         public static final String CARDS = PARTNER_PATH + "/cards";
         public static final String CARD_TRANSACTIONS = CARDS + "/{card_id}/transactions";
-        public static final String ALL_DATA =
-                PARTNER_PATH + "/products-with-transactions?include=accounts,cards";
+        public static final String ALL_DATA = PARTNER_PATH + "/products-with-transactions";
     }
 
     public class PathParamsKeys {
@@ -38,6 +37,11 @@ public class NordeaPartnerConstants {
         public static final String START_DATE = "start_date";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
+        public static final String INCLUDE = "include";
+    }
+
+    public class QueryParamsValues {
+        public static final String INCLUDE_VALUES = "accounts,cards";
     }
 
     public class Jwt {

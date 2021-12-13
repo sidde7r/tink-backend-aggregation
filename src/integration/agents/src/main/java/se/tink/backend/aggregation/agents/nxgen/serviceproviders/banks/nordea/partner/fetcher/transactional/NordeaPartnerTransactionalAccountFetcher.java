@@ -41,7 +41,8 @@ public class NordeaPartnerTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         if (isOnStaging) {
-            apiClient.fetchAllData();
+            apiClient.fetchAllData(
+                    NordeaPartnerMarketUtil.getStartDate(request.getAccounts(), componentProvider));
             return apiClient.getAllData().toTinkTransactionalAccounts(accountMapper);
         }
         return apiClient.fetchAccounts().toTinkTransactionalAccounts(accountMapper);
@@ -50,6 +51,7 @@ public class NordeaPartnerTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
+
         if (isOnStaging) {
             AccountListResponse accounts = apiClient.getAllData();
 
@@ -70,11 +72,12 @@ public class NordeaPartnerTransactionalAccountFetcher
                         Optional.of(false));
             }
         }
-        final LocalDate dateLimit =
-                NordeaPartnerMarketUtil.getPaginationStartDate(account, request, componentProvider);
 
         if (apiClient.isUserPresent()) {
             try {
+                final LocalDate dateLimit =
+                        NordeaPartnerMarketUtil.getPaginationStartDate(
+                                account, request, componentProvider);
                 final AccountTransactionsResponse response =
                         apiClient.fetchAccountTransaction(
                                 account.getApiIdentifier(), key, dateLimit);
