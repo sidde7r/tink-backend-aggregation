@@ -188,12 +188,6 @@ public class EvoBancoApiClient {
         return response.getBody(CardTransactionsResponse.class);
     }
 
-    public TransactionsResponse fetchDebitCardTransactions(String cardNumber) {
-        CardTransactionsResponse debitCardTransactionsResponse =
-                fetchCardTransactionsResponse(cardNumber);
-        return debitCardTransactionsResponse.toTransactionsResponse();
-    }
-
     public CardTransactionsResponse fetchCardTransactionsResponse(String cardNumber) {
         try {
             return fetchCardTransactions(cardNumber, 0);

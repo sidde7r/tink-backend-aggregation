@@ -13,14 +13,11 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities.AccountHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -84,7 +81,7 @@ public class EvoBancoAccountFetcherTest {
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
 
         // then
-        assertThat(accounts).hasSize(4);
+        assertThat(accounts).hasSize(3);
     }
 
     private void assertSavingAccountValid(TransactionalAccount account) {
@@ -117,52 +114,5 @@ public class EvoBancoAccountFetcherTest {
         assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
         assertThat(account.getParties().get(1).getName()).isEqualTo("Wilma Flinstone");
         assertThat(account.getParties().get(1).getRole()).isEqualTo(Role.AUTHORIZED_USER);
-    }
-
-    @Test
-    public void shouldReturnTransactionsWhenIsTheTransactionPageForDebitCardAccount() {
-        // given
-        when(evoBancoApiClient.globalPosition())
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "accounts_correct_response.json")
-                                        .toFile(),
-                                GlobalPositionResponse.class));
-        when(evoBancoApiClient.fetchCardTransactionsResponse(anyString()))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "last_credit_card_transactions_page.json")
-                                        .toFile(),
-                                CardTransactionsResponse.class));
-        when(evoBancoApiClient.fetchAccountHolders(anyString()))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "account_holders.json").toFile(),
-                                AccountHoldersResponse.class));
-        // when
-        Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
-        TransactionalAccount debitCardAccount =
-                accounts.stream()
-                        .filter(
-                                account ->
-                                        !""
-                                                .equals(
-                                                        account.getFromTemporaryStorage(
-                                                                EvoBancoConstants.Storage
-                                                                        .PAN_TOKEN)))
-                        .findFirst()
-                        .orElse(null);
-        String panToken =
-                debitCardAccount.getFromTemporaryStorage(EvoBancoConstants.Storage.PAN_TOKEN);
-        CardTransactionsResponse cardTransactionsResponse =
-                evoBancoApiClient.fetchCardTransactionsResponse(panToken);
-        TransactionsResponse trxResponse = cardTransactionsResponse.toTransactionsResponse();
-        Collection<? extends Transaction> transactions = trxResponse.getTinkTransactions();
-
-        // then
-        assertThat(accounts).hasSize(4);
-        assertThat(debitCardAccount).isNotNull();
-        assertThat(panToken).isEqualTo("9999999999996999");
-        assertThat(transactions).hasSize(27);
     }
 }

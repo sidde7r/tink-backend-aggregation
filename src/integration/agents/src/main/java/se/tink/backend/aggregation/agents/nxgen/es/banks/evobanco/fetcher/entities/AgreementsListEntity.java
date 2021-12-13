@@ -81,8 +81,6 @@ public class AgreementsListEntity {
 
     public Optional<TransactionalAccount> toTinkAccount(
             AccountHoldersResponse accountHoldersResponse, String holderName) {
-        String panForDebitCardAccount =
-                cardData != null && cardData.getPanToken() != null ? cardData.getPanToken() : "";
         Party holder = new Party(holderName, Party.Role.HOLDER);
         List<Party> singleParty = new ArrayList<>();
         singleParty.add(holder);
@@ -108,8 +106,6 @@ public class AgreementsListEntity {
                                                         .setProductName(accountType)
                                                         .build())
                                         .addParties(parties)
-                                        .putInTemporaryStorage(
-                                                Storage.PAN_TOKEN, panForDebitCardAccount)
                                         .setApiIdentifier(agreement)
                                         .build());
     }

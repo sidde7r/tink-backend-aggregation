@@ -151,7 +151,6 @@ public class EvoBancoConstants {
         public static final String USER_INFO = "user-info";
         public static final String CARD_STATE = "card-state";
         public static final String ACCESS_TOKEN = "access_token";
-        public static final String PAN_TOKEN = "pan-token";
         public static final String PERSON_AGREEMENT = "person_agreement";
     }
 
@@ -169,7 +168,6 @@ public class EvoBancoConstants {
                             "Cuenta Inteligente EVO",
                             "Cuenta Inteligente",
                             "Cuenta Joven",
-                            "TARJETA DE DÉBITO",
                             "Cuenta Base")
                     .put(TransactionalAccountType.SAVINGS, "Depósito", "Deposito")
                     .build();

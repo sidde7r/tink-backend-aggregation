@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
@@ -29,29 +28,20 @@ public class EvoBancoTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<RepositioningEntity> getTransactionsFor(
             TransactionalAccount account, RepositioningEntity key) {
-        final boolean isDebitCardAccount =
-                StringUtils.isNoneEmpty(account.getFromTemporaryStorage(Storage.PAN_TOKEN));
 
-        TransactionsPaginationRequest request = null;
-        if (!isDebitCardAccount) {
-            EeIConsultationMovementsPostponedViewEntity
-                    eeIConsultationMovementsPostponedViewEntity =
-                            new EeIConsultationMovementsPostponedViewEntity.Builder()
-                                    .withUserbe(sessionStorage.get(Storage.USER_BE))
-                                    .withAgreement(account.getApiIdentifier())
-                                    .withRepositioning(key)
-                                    .withAgreementbe(sessionStorage.get(Storage.AGREEMENT_BE))
-                                    .withEntityCode(sessionStorage.get(Storage.ENTITY_CODE))
-                                    .build();
+        EeIConsultationMovementsPostponedViewEntity eeIConsultationMovementsPostponedViewEntity =
+                new EeIConsultationMovementsPostponedViewEntity.Builder()
+                        .withUserbe(sessionStorage.get(Storage.USER_BE))
+                        .withAgreement(account.getApiIdentifier())
+                        .withRepositioning(key)
+                        .withAgreementbe(sessionStorage.get(Storage.AGREEMENT_BE))
+                        .withEntityCode(sessionStorage.get(Storage.ENTITY_CODE))
+                        .build();
 
-            request =
-                    new TransactionsPaginationRequest(eeIConsultationMovementsPostponedViewEntity);
-        }
+        TransactionsPaginationRequest request =
+                new TransactionsPaginationRequest(eeIConsultationMovementsPostponedViewEntity);
         try {
-            return isDebitCardAccount
-                    ? bankClient.fetchDebitCardTransactions(
-                            account.getFromTemporaryStorage(Storage.PAN_TOKEN))
-                    : bankClient.fetchTransactions(request);
+            return bankClient.fetchTransactions(request);
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
 
