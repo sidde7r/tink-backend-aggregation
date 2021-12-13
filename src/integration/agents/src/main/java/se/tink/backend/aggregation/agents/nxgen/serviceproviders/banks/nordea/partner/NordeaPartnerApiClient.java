@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaPartnerApiClient {
 
@@ -144,6 +145,19 @@ public class NordeaPartnerApiClient {
                 CardTransactionListResponse.class);
     }
 
+    public void fetchAllData() {
+        AccountListResponse accountListResponse =
+                requestRefreshableGet(request(EndPoints.ALL_DATA), AccountListResponse.class);
+        storeDataInSessionStorage(accountListResponse);
+    }
+
+    public AccountListResponse getAllData() {
+        if (sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA).isEmpty()) {
+            fetchAllData();
+        }
+        String accounts = sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA);
+        return SerializationUtils.deserializeFromString(accounts, AccountListResponse.class);
+    }
     // By request from Nordea some refreshes are not to be done when the user is not present.
     public boolean isUserPresent() {
         return userIsPresent;
@@ -151,5 +165,9 @@ public class NordeaPartnerApiClient {
 
     public String getMarket() {
         return provider.getMarket();
+    }
+
+    private void storeDataInSessionStorage(AccountListResponse accountListResponse) {
+        sessionStorage.put(NordeaPartnerConstants.SessionStorage.ALL_DATA, accountListResponse);
     }
 }

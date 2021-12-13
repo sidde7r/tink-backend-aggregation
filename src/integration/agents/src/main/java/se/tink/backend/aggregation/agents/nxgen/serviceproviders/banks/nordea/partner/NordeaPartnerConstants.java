@@ -23,6 +23,8 @@ public class NordeaPartnerConstants {
         public static final String ACCOUNT_TRANSACTIONS = ACCOUNTS + "/{account_id}/transactions";
         public static final String CARDS = PARTNER_PATH + "/cards";
         public static final String CARD_TRANSACTIONS = CARDS + "/{card_id}/transactions";
+        public static final String ALL_DATA =
+                PARTNER_PATH + "/products-with-transactions?include=accounts,cards";
     }
 
     public class PathParamsKeys {
@@ -59,5 +61,9 @@ public class NordeaPartnerConstants {
     public static class CardCategory {
         public static final String COMBINED = "combined";
         public static final String CREDIT = "credit";
+    }
+
+    public static class SessionStorage {
+        public static final String ALL_DATA = "all_data";
     }
 }
