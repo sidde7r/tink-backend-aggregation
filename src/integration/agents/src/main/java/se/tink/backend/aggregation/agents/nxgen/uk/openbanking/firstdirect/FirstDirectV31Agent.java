@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.RequiredReferenceRemittanceInfoDomesticSchedulerPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.PaymentRequestWithRequiredReferenceRemittanceInfoValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcBankSideErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.signature.HsbcSignatureCreator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -84,6 +85,7 @@ public final class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
                         flowFacade.getJwtSinger(),
                         componentProvider.getRandomValueGenerator()));
         this.componentProvider = componentProvider;
+        client.addFilter(new HsbcBankSideErrorFilter());
     }
 
     @Override
