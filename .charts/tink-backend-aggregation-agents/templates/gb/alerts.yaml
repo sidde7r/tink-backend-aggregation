@@ -1,125 +1,198 @@
+#  APPROACH ALERTS V. 2.0
+#
+# When a time series appears for the first time, event associated with its creation
+# is missed by increase() since we don't have a reference point (no observable increase).
+# This is due to metrics not being zero-initialized.
+# Assuming query interval of one hour, the approach makes use of the following heuristics:
+# if a time series is "old", that is appeared more than an hour ago, increase() behaves correctly.
+# However, if a time series has appeared more recently, we want to be able to count the first event,
+# thus adding 1 to the result. Effectively, we want to calculate:
+#
+# if (time series is old) then increase(...) else increase(...) + 1
+#
+# Determining if a time series is "old" or not is done in an extremely hacky fashion
+# of counting a number of target scrapes within the last hour.
+# A series is considered to be "old" if and only if it contains at least
+# <query interval> / <scrape interval> = 1h / 10s = 360 data points
+# (361 is possible to due to off-by-one errors and scrape latencies)
+#
+# The expression above is equivalent to
+#   1 + increase(...) - (if "old" then 1 else 0)
+#   =
+#   1 + increase(...) - floor(<number_of_data_points> / 360)
+#
+# floor(increase(...)) is used instead of raw increase(...) to account for
+# its undesirable extrapolation behavior and floating-point inaccuracies.
+#
+# One corner case where this approach fails: when a time series appeared more than
+# <query interval> ago, but there was a counter reset in the meantime.
+# This is an event rare enough not to significantly affect the end result.
+
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
   name: alerts-gb
   namespace: agents
 spec:
+  interval: 5m
   rules:
-    - alert: LoginSuccessRateLowWithAttemptLimitGB
+    # Precompute GB metrics
+    - record: sum:all_logins_gb:delta1h
       expr: |
-        # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|cancelled_due_to_third_party_app_timeout|unavailable", market="GB", provider_type!="test"}[60m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB", provider_type!="test"}[60m])) by (action,className,provider) < 0.90)
-        # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB", provider_type!="test"}[60m])) by (action,className,provider) > 5
-      for: 5m
-      labels:
-        severity: urgent
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaClassLink }}
-          {{ .Values.grafanaLink }}
-          Please check if the problem is not caused by API maintenance here https://openbanking.atlassian.net/wiki/spaces/DZ/pages/441614754/API+Downtime
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last hour.
-        tags: {{ .Values.tags }}
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", market="GB", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", market="GB", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:all_refreshes_per_type_gb:delta1h
+      expr: |
+        sum by (className, type) (
+          1 + floor(increase(tink_agent_refresh_total{action="refresh", market="GB", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_refresh_total{action="refresh", market="GB", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:unavailable_or_cancelled_logins_gb:delta1h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="GB", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"unavailable|cancelled.*", market="GB", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:failed_logins_gb:delta1h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="GB", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="GB", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:unsuccessful_on_demand_logins_gb:delta1h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="GB", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="GB", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:unsuccessful_background_logins_gb:delta1h
+      expr: |
+        sum by (className) (
+          1 + floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="GB", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="GB", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:failed_refreshes_per_type_gb:delta1h
+      expr: |
+        sum by (className, type) (
+          1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="GB", provider_type!="test"}[1h]))
+          -
+          floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="GB", provider_type!="test"}[1h]) / 360)
+        )
+    - record: sum:unavailable_refreshes_per_type_gb:delta1h
+      expr: |
+        sum by (className, type) (
+        1 + floor(increase(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="GB", provider_type!="test"}[1h]))
+        -
+        floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="GB", provider_type!="test"}[1h]) / 360)
+        )
 
-    - alert: RefreshSuccessRateLowWithAttemptLimitGB
-      expr: |
-        # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="GB", provider_type!="test"}[60m])) by (className,provider,type)
-            / sum(increase(tink_agent_refresh_total{market="GB", provider_type!="test"}[60m])) by (className,provider,type) < 0.90)
-        # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="GB", provider_type!="test"}[60m])) by (className,provider,type) > 5
-      for: 5m
-      labels:
-        severity: urgent
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-          Please check if the problem is not caused by API maintenance here https://openbanking.atlassian.net/wiki/spaces/DZ/pages/441614754/API+Downtime
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last hour for <{ $labels.type }>.
-        tags: {{ .Values.tags }}
-    ### Bank side failures
-    - alert: BankServerUnavailableForLoginGB
-      expr: |
-        # Unavailable outcome above 50%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable", market="GB", provider_type!="test"}[30m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className,provider) > 0.50)
-        # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className,provider) > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: BankServerUnavailableForRefreshGB
-      expr: |
-        # Unavailable outcome above 50%
-        (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="GB", provider_type!="test"}[30m])) by (className,type)
-            / sum(increase(tink_agent_refresh_total{market="GB", provider_type!="test"}[30m])) by (className,type) > 0.50)
-        # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="GB", provider_type!="test"}[30m])) by (className,type) > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaClassLink }}
-          {{ .Values.grafanaLink }}
-        summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes for <{ $labels.type }>.
-        tags: {{ .Values.tags }}
-    ### Agent level login failures
-    - alert: HighProviderFailedLoginRatioGB
-      expr: |
-        # Never trigger on agents with less than 40 login attempts past 60 minutes.
-        # This filters out small agents which are less critical to fix quickly
-        sum(increase(tink_agent_login_total{action="login", market="GB", provider_type!="test"}[1h])) BY (className,provider) > 40 and
-        # Agents where more than 20% of the login attempts fail.
-        sum(increase(tink_agent_login_total{action="login",outcome="failed", market="GB"}[30m])) BY (className,provider) / sum(increase(tink_agent_login_total{action="login", market="GB"}[30m])) BY (className,provider) > 0.20
-      for: 30m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: To learn more check out the metric `tink_agent_login_total`. This
-          alert never triggers on agents that did less than 10 operations in the
-          past 60 minutes.
-          {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Agent <{ $labels.className }> has failed over 20%
-          of its login attempts the past 60 minutes.
-        tags: {{ .Values.tags }}
-
-    ### Provider level fails
-    - alert: HighProviderErrorRatioGB
-      expr: |
-        # Never triggers on providers that did less than 10 operations past 60
-        # minutes. This filters out small providers which are less critical to fix
-        # quickly.
-        sum(increase(tink_executions_total{market="GB", provider_type!="test"}[1h])) BY (provider) > 10 and
-        # Providers where over 50% of the requests have failed.
-        ratio:tink_provider_errors:delta60m > 50
+    # =========== SHORT-TERM (1h) ===========
+    # This TH should be 10% or 20% right now I changed it to 50% as we don't have time to solve smaller issues, will change it back after 6.01 when OpenWorks migration will end
+    - alert: RefreshErrorRateAbove50%GB
+      expr: 0.5 <= sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) <= 0.9
       for: 15m
+      priority: P3
       labels:
-        severity: urgent
-        priority: P1
+        severity: ping
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Provider <{ $labels.provider }> has failed over 50%
-          of its operations the past 60 minutes
-        tags: {{ .Values.tags }}
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: RefreshErrorRateAbove90%GB
+      expr: sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 2) > 0.9
+      for: 15m
+      priority: P1
+      labels:
+        severity: urgent
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+    # This TH should be 10% or 20% right now I changed it to 50% as we don't have time to solve smaller issues, will change it back after 6.01 when OpenWorks migration will end
+    - alert: LoginErrorRateAbove50%GB
+      expr: 0.5 <= sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) <= 0.9
+      for: 15m
+      priority: P3
+      labels:
+        severity: ping
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: LoginErrorRateAbove90%GB
+      expr: sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
+      for: 15m
+      priority: P1
+      labels:
+        severity: urgent
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: BackgroundLoginErrorRateAbove90%GB
+      expr: sum:unsuccessful_background_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
+      for: 15m
+      priority: P2
+      labels:
+        severity: urgent
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Background login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: OnDemandLoginErrorRateAbove90%GB
+      expr: sum:unsuccessful_on_demand_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
+      for: 15m
+      priority: P2
+      labels:
+        severity: urgent
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: On-demand login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+
+    - alert: RefreshUnavailableErrorRateAbove90%GB
+      expr: sum:unavailable_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 2) > 0.9
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Refresh of <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: BankOrUserErrorRateAbove90%GB
+      expr: sum:unavailable_or_cancelled_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs1h }}
+          {{ .Values.grafanaClassLinkAbs1h }}
+        summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
