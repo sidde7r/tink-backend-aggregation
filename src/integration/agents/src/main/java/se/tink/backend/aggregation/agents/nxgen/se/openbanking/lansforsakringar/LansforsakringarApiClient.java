@@ -30,8 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.SignBasketResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TokenFormCredentials;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TokenFormOauth;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.CreateBasketResponse;
@@ -108,7 +107,6 @@ public class LansforsakringarApiClient {
                         .accept(MediaType.APPLICATION_JSON)
                         .type(MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
-                        .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                         .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                         .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
         setPsuIp(builder);
@@ -144,36 +142,6 @@ public class LansforsakringarApiClient {
                 .post(ConsentResponse.class, BodyValues.EMPTY_BODY);
     }
 
-    public ConsentResponse createConsent(OAuth2Token credentials) {
-        return createRequest(new URL(Urls.CONSENT))
-                .addBearerToken(credentials)
-                .header(HeaderKeys.PSU_ID, getCredentials().getField(Field.Key.USERNAME))
-                .header(HeaderKeys.PSU_ID_TYPE, HeaderValues.PSU_ID_TYPE)
-                .header(HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, true)
-                .post(ConsentResponse.class, BodyValues.EMPTY_BODY);
-    }
-
-    public ConsentResponse authorizeConsent(OAuth2Token credentialsToken) {
-        return createRequest(
-                        new URL(Urls.CONSENT_PROVIDED)
-                                .parameter(QueryKeys.CONSENT_ID, storageHelper.getConsentId()))
-                .addBearerToken(credentialsToken)
-                .header(HeaderKeys.PSU_ID, getCredentials().getField(Field.Key.USERNAME))
-                .header(HeaderKeys.PSU_ID_TYPE, HeaderValues.PSU_ID_TYPE)
-                .header(HeaderKeys.DECOUPLED, true)
-                .body("{}")
-                .post(ConsentResponse.class);
-    }
-
-    public ConsentResponse getScaStatus(String scaStatusEndpoint) {
-        return createRequest(new URL(Urls.BASE_API_URL + scaStatusEndpoint))
-                .addBearerToken(storageHelper.getOAuth2Token().get())
-                .header(HeaderKeys.PSU_ID, getCredentials().getField(Field.Key.USERNAME))
-                .header(HeaderKeys.PSU_ID_TYPE, HeaderValues.PSU_ID_TYPE)
-                .header(HeaderKeys.DECOUPLED, true)
-                .get(ConsentResponse.class);
-    }
-
     public ConsentStatusResponse getConsentStatus() {
         String consentId = storageHelper.getConsentId();
         if (StringUtils.isEmpty(consentId)) {
@@ -203,36 +171,14 @@ public class LansforsakringarApiClient {
                 .getUrl();
     }
 
-    public URL buildDecoupledAuthorizeUrl(String state, String authorizationId) {
-        return createRequest(new URL(Urls.AUTHORIZATION))
-                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
-                .queryParam(QueryKeys.AUTHORIZATION_ID, authorizationId)
-                .queryParam(QueryKeys.STATE, state)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .getUrl();
-    }
-
     public OAuth2Token exchangeAuthorizationCode(String code) {
-        final TokenFormOauth form =
-                TokenFormOauth.builder()
-                        .clientId(getConfiguration().getClientId())
-                        .grantType(FormValues.AUTHORIZATION_CODE)
-                        .code(code)
-                        .clientSecret(getConfiguration().getClientSecret())
-                        .redirectUri(getRedirectUrl())
-                        .build();
-
-        URL tokenUrl = new URL(Urls.TOKEN);
-        return postToken(form, tokenUrl);
-    }
-
-    public OAuth2Token generateCredentialsToken() {
-        final TokenFormCredentials form =
-                TokenFormCredentials.builder()
-                        .clientId(getConfiguration().getClientId())
-                        .grantType(QueryKeys.CLIENT_CREDENTIALS)
-                        .clientSecret(getConfiguration().getClientSecret())
+        final TokenForm form =
+                TokenForm.builder()
+                        .setClientId(getConfiguration().getClientId())
+                        .setGrantType(FormValues.AUTHORIZATION_CODE)
+                        .setCode(code)
+                        .setClientSecret(getConfiguration().getClientSecret())
+                        .setRedirectUri(getRedirectUrl())
                         .build();
 
         URL tokenUrl = new URL(Urls.TOKEN);
