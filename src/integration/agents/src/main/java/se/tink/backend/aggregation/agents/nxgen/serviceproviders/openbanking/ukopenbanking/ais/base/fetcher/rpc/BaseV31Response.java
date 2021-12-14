@@ -34,6 +34,6 @@ public class BaseV31Response<T> {
     }
 
     protected Optional<String> searchLink(String linkId) {
-        return Optional.ofNullable(links).map(links -> links.get(linkId));
+        return Optional.ofNullable(links).map(linkMap -> linkMap.get(linkId));
     }
 }
