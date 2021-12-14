@@ -55,6 +55,7 @@ public final class HsbcV31BusinessAgent extends UkOpenBankingBaseAgent {
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
         this.componentProvider = componentProvider;
+        client.addFilter(new HsbcBankSideErrorFilter());
     }
 
     @Override
