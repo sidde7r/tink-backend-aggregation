@@ -44,7 +44,8 @@ public final class NatWestV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(
+                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withOrganisationId(NatWestConstants.ORGANISATION_ID)
                         .withApiBaseURL(NatWestConstants.AIS_API_URL)
                         .withWellKnownURL(NatWestConstants.PERSONAL_WELL_KNOWN_URL)
