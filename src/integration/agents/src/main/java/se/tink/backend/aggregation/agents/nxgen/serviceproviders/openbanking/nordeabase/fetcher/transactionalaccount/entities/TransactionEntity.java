@@ -66,10 +66,12 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction(String providerMarket) {
 
+        LocalDate trxDate = bookingDate != null ? bookingDate : transactionDate;
+
         Builder builder =
                 Transaction.builder()
                         .setAmount(getAmount())
-                        .setDate(bookingDate)
+                        .setDate(trxDate)
                         .setDescription(getDescription())
                         .setPending(isPending())
                         .addExternalSystemIds(
