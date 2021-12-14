@@ -1,5 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis;
 
+import static se.tink.libraries.transfer.enums.RemittanceInformationType.INVOICE;
+import static se.tink.libraries.transfer.enums.RemittanceInformationType.KID;
+import static se.tink.libraries.transfer.enums.RemittanceInformationType.OCR;
+import static se.tink.libraries.transfer.enums.RemittanceInformationType.REFERENCE;
+import static se.tink.libraries.transfer.enums.RemittanceInformationType.RF;
+import static se.tink.libraries.transfer.enums.RemittanceInformationType.UNSTRUCTURED;
+
+import io.vavr.collection.List;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +27,11 @@ import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DemobankDtoMappers {
+
+    private static final List<RemittanceInformationType>
+            ALLOWED_STRUCTURED_REMITTANCE_INFORMATION_TYPES =
+                    List.of(REFERENCE, OCR, RF, KID, INVOICE);
+
     public Optional<AccountIdentifierDto> createDebtorAccount(Payment payment) {
         return Optional.ofNullable(payment.getDebtor())
                 .map(
@@ -46,21 +59,24 @@ public class DemobankDtoMappers {
     }
 
     public String createUnstructuredRemittanceInfo(Payment payment) {
-        return (payment.getRemittanceInformation().getType()
-                        == RemittanceInformationType.UNSTRUCTURED)
+        return (payment.getRemittanceInformation().getType() == UNSTRUCTURED)
                 ? payment.getRemittanceInformation().getValue()
                 : null;
     }
 
     public RemittanceInformationStructuredDto createStructuredRemittanceInfo(Payment payment) {
-        return (payment.getRemittanceInformation().getType() == RemittanceInformationType.REFERENCE
-                        || payment.getRemittanceInformation().getType()
-                                == RemittanceInformationType.OCR)
-                ? RemittanceInformationStructuredDto.builder()
-                        .reference(payment.getRemittanceInformation().getValue())
-                        .referenceType(payment.getRemittanceInformation().getType().name())
-                        .build()
-                : null;
+        if (hasStructuredRemittanceInformation(payment)) {
+            return RemittanceInformationStructuredDto.builder()
+                    .reference(payment.getRemittanceInformation().getValue())
+                    .referenceType(payment.getRemittanceInformation().getType().name())
+                    .build();
+        }
+        return null;
+    }
+
+    private boolean hasStructuredRemittanceInformation(Payment payment) {
+        return ALLOWED_STRUCTURED_REMITTANCE_INFORMATION_TYPES.contains(
+                payment.getRemittanceInformation().getType());
     }
 
     public RemittanceInformation createRemittanceInformation(
@@ -69,10 +85,10 @@ public class DemobankDtoMappers {
         final RemittanceInformation remittanceInformation = new RemittanceInformation();
 
         if (StringUtils.isNotBlank(remittanceInformationUnstructured)) {
-            remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+            remittanceInformation.setType(UNSTRUCTURED);
             remittanceInformation.setValue(remittanceInformationUnstructured);
         } else {
-            remittanceInformation.setType(RemittanceInformationType.REFERENCE);
+            remittanceInformation.setType(REFERENCE);
             remittanceInformation.setValue(remittanceInformationStructured.getReference());
         }
 
