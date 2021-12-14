@@ -84,6 +84,7 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                         flowFacade.getJwtSinger(),
                         componentProvider.getRandomValueGenerator()));
         this.componentProvider = componentProvider;
+        client.addFilter(new HsbcBankSideErrorFilter());
     }
 
     @Override
