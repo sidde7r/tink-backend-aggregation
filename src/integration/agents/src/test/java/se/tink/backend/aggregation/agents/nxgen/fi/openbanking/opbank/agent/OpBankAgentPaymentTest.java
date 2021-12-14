@@ -98,7 +98,7 @@ public class OpBankAgentPaymentTest {
                         creditorDebtorManager.get(OpBankAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "CreditorName");
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-        remittanceInformation.setValue("PIS Agent OP");
+        remittanceInformation.setValue("Tink Test");
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
