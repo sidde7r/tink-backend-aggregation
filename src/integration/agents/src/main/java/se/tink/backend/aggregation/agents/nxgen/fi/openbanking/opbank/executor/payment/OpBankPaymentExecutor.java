@@ -120,17 +120,18 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                         oAuth2Token, paymentMultiStepRequest.getPayment().getUniqueId());
         PaymentStatus paymentStatus = createPaymentResponse.getTinkStatus();
 
-        if (PaymentStatus.SIGNED.equals(paymentStatus)
-                || PaymentStatus.PAID.equals(paymentStatus)
-                || PaymentStatus.SETTLEMENT_COMPLETED.equals(paymentStatus)) {
-            return new PaymentMultiStepResponse(
-                    paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
-        } else if (PaymentStatus.REJECTED.equals(paymentStatus)) {
-            throw new PaymentRejectedException("Payment rejected by Bank");
-        } else if (PaymentStatus.CANCELLED.equals(paymentStatus)) {
-            throw new PaymentCancelledException("Payment Cancelled by PSU");
-        } else {
-            throw new PaymentAuthorizationException();
+        switch (paymentStatus) {
+            case SIGNED:
+            case PAID:
+            case SETTLEMENT_COMPLETED:
+                return new PaymentMultiStepResponse(
+                        paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
+            case REJECTED:
+                throw new PaymentRejectedException("Payment rejected by Bank");
+            case CANCELLED:
+                throw new PaymentCancelledException("Payment Cancelled by PSU");
+            default:
+                throw new PaymentAuthorizationException();
         }
     }
 
