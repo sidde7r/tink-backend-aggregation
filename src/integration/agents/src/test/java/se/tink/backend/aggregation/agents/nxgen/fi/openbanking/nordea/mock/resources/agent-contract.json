@@ -1,502 +1,496 @@
 {
-    "accounts": [
-        {
-            "accountNumber": "FI1410093000123458",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "EUR",
-                "exactValue": -438.07,
-                "scale": 2,
-                "unscaledValue": -43807,
-                "doubleValue": -438.07
-            },
-            "currencyCode": "EUR",
-            "availableBalance": {
-                "currencyCode": "EUR",
-                "exactValue": 66.49,
-                "scale": 2,
-                "unscaledValue": 6649,
-                "doubleValue": 66.49
-            },
-            "creditLimit": {
-                "currencyCode": "EUR",
-                "exactValue": 504.56,
-                "scale": 2,
-                "unscaledValue": 50456,
-                "doubleValue": 504.56
-            },
-            "bankId": "FI1410093000123458",
-            "excluded": false,
-            "favored": false,
-            "name": "KÄYTTÖTILI",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://NDEAFIHH/FI1410093000123458\", \"bban://10093000123458\"]",
-            "closed": false,
-            "holderName": "Account_name",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Account_name",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": -438.07
+    "accounts" : [ {
+        "accountNumber" : "FI1410093000123458",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : -43807,
+            "doubleValue" : -438.07,
+            "exactValue" : -438.07
         },
-        {
-            "accountNumber": "************6641",
-            "accountExclusion": "NONE",
-            "exactAvailableCredit": {
-                "currencyCode": "EUR",
-                "doubleValue": 50000.0,
-                "unscaledValue": 500000,
-                "scale": 1,
-                "exactValue": 50000.0
-            },
-            "exactBalance": {
-                "currencyCode": "EUR",
-                "doubleValue": 23456.12,
-                "unscaledValue": 2345612,
-                "scale": 2,
-                "exactValue": 23456.12
-            },
-            "currencyCode": "EUR",
-            "bankId": "6641",
-            "excluded": false,
-            "favored": false,
-            "name": "Nordea Gold",
-            "ownership": 1.0,
-            "type": "CREDIT_CARD",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"masked-pan://************6641\"]",
-            "closed": false,
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": []
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 50000.0,
-            "balance": 23456.12
-        }
-    ],
-    "transactions": [
-        {
-            "amount": -199.9,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "currencyCode" : "EUR",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 6649,
+            "doubleValue" : 66.49,
+            "exactValue" : 66.49
         },
-        {
-            "amount": -9200.0,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "creditLimit" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 50456,
+            "doubleValue" : 504.56,
+            "exactValue" : 504.56
         },
-        {
-            "amount": -2588.22,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "bankId" : "FI1410093000123458",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "KÄYTTÖTILI",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://NDEAFIHH/FI1410093000123458\",\"bban://10093000123458\"]",
+        "closed" : false,
+        "holderName" : "Account_name",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Account_name",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "amount": -171.0,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : -438.07
+    }, {
+        "accountNumber" : "************6641",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "EUR",
+            "scale" : 1,
+            "unscaledValue" : 500000,
+            "doubleValue" : 50000.0,
+            "exactValue" : 50000.0
         },
-        {
-            "amount": -2086.28,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 2345612,
+            "doubleValue" : 23456.12,
+            "exactValue" : 23456.12
         },
-        {
-            "amount": -597.55,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "currencyCode" : "EUR",
+        "bankId" : "6641",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Nordea Gold",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"masked-pan://************6641\"]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
         },
-        {
-            "amount": -543.0,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 50000.0,
+        "balance" : 23456.12
+    } ],
+    "transactions" : [ {
+        "amount" : -199.9,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -180.42,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -9200.0,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -64.0,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -2588.22,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -354.0,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -171.0,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -108.62,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -2086.28,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -1450.0,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -597.55,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -965.36,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -543.0,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -4495.0,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -180.42,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -1168.68,
-            "date": 694263600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -64.0,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -0.97,
-            "date": 694263600000,
-            "description": "counterparty_name",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "2007061432KKS12449"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                }
-            ],
-            "proprietaryFinancialInstitutionType": "type_description_values",
-            "providerMarket": "FI"
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -354.0,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -10.13,
-            "date": 694263600000,
-            "description": "counterparty_name",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "200703258875D72579"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                }
-            ],
-            "proprietaryFinancialInstitutionType": "type_description_values",
-            "providerMarket": "FI"
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -108.62,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -22.96,
-            "date": 694263600000,
-            "description": "counterparty_name",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "200702258875DZ0196"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                }
-            ],
-            "proprietaryFinancialInstitutionType": "type_description_values",
-            "providerMarket": "FI"
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1450.0,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -7.03,
-            "date": 694263600000,
-            "description": "counterparty_name",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "200622258875DN9033"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                }
-            ],
-            "proprietaryFinancialInstitutionType": "type_description_values",
-            "providerMarket": "FI"
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -965.36,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
         },
-        {
-            "amount": -6.2,
-            "date": 694263600000,
-            "description": "counterparty_name*Peekaupunkiseudun",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "200622258875DJ7749"
-            },
-            "transactionDates": [
-                {
-                    "type": "VALUE_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                },
-                {
-                    "type": "BOOKING_DATE",
-                    "value": {
-                        "date": "1992-01-01",
-                        "instant": null
-                    }
-                }
-            ],
-            "proprietaryFinancialInstitutionType": "type_description_values",
-            "providerMarket": "FI"
-        }
-    ]
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -4495.0,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -1168.68,
+        "date" : 694263600000,
+        "description" : "narrative",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "narrative"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -2.7,
+        "date" : 1639479600000,
+        "description" : "counter party name",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "providerMarket" : "FI",
+        "booked" : false
+    }, {
+        "amount" : -0.97,
+        "date" : 694263600000,
+        "description" : "counterparty_name",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "2007061432KKS12449"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "type_description_values",
+        "providerMarket" : "FI",
+        "booked" : true
+    }, {
+        "amount" : -10.13,
+        "date" : 694263600000,
+        "description" : "counterparty_name",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "200703258875D72579"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "type_description_values",
+        "providerMarket" : "FI",
+        "booked" : true
+    }, {
+        "amount" : -22.96,
+        "date" : 694263600000,
+        "description" : "counterparty_name",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "200702258875DZ0196"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "type_description_values",
+        "providerMarket" : "FI",
+        "booked" : true
+    }, {
+        "amount" : -7.03,
+        "date" : 694263600000,
+        "description" : "counterparty_name",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "200622258875DN9033"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "type_description_values",
+        "providerMarket" : "FI",
+        "booked" : true
+    }, {
+        "amount" : -6.2,
+        "date" : 694263600000,
+        "description" : "counterparty_name*Peekaupunkiseudun",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "200622258875DJ7749"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "1992-01-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "type_description_values",
+        "providerMarket" : "FI",
+        "booked" : true
+    } ]
 }
