@@ -28,7 +28,7 @@ public class SavingsAccountEntityTest {
         assertTrue(optionalSavingsAccount.isPresent());
         TransactionalAccount savingsAccount = optionalSavingsAccount.get();
 
-        assertThat(savingsAccount.getIdModule().getUniqueId()).isEqualTo("savingAccountId123");
+        assertThat(savingsAccount.getIdModule().getUniqueId()).isEqualTo("7654321");
         assertThat(savingsAccount.getIdModule().getAccountNumber()).isEqualTo("7654321");
         assertThat(savingsAccount.getIdModule().getAccountName()).isEqualTo("Sparkonto");
         assertThat(savingsAccount.getApiIdentifier()).isEqualTo("savingAccountId123");

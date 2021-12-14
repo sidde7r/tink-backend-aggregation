@@ -72,7 +72,7 @@
             "scale" : 2
         },
         "currencyCode" : "SEK",
-        "bankId" : "savingAccountId123",
+        "bankId" : "7654321",
         "excluded" : false,
         "favored" : false,
         "name" : "Sparkonto",
