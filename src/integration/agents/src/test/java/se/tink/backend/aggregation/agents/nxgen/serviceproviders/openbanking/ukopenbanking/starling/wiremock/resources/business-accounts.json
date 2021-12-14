@@ -61,7 +61,7 @@
         "booked" : true
     }, {
         "amount" : 0.01,
-        "date" : 1596276000000,
+        "date" : 1596189600000,
         "description" : "July Interest Earned",
         "internalPayload" : { },
         "originalAmount" : 0.0,
