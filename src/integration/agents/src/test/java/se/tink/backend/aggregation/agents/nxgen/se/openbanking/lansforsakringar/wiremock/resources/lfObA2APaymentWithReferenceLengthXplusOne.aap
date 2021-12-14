@@ -1,39 +1,115 @@
+
 REQUEST 1
-POST https://api.bank.lansforsakringar.se:443/openbanking/ano/v2/consents
+POST https://secure397.lansforsakringar.se/as/token.oauth2
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=dummyClient&grant_type=client_credentials&client_secret=dummySecret
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Thu, 04 Mar 2021 15:36:00 GMT
+Date: Thu, 04 Mar 2021 15:36:00 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token":"token",
+  "token_type":"Bearer",
+  "expires_in":299
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://api.bank.lansforsakringar.se:443/openbanking/ano/v3/consents
 Accept: application/json
 Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Desktop Mode
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+TPP-NOK-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
 
 {}
 
 -----------------------------------------------------------------------------------
-RESPONSE 1
+RESPONSE 2
 201
-Date: Fri, 01 Oct 2021 13:38:06 GMT
-Date: Fri, 01 Oct 2021 13:38:06 GMT
 Content-Type: application/json;charset=utf-8
 
 {
-  "consentId": "**MASKEDlY**",
+  "consentId": "consentID",
   "consentStatus": "RECEIVED",
-  "authorisationId": "e4dc5fea-2098-4724-9290-4ea3e169c8ea",
   "_links": {
     "self": {
-      "href": "/openbanking/sec/v2/consents/**MASKEDlY**"
+      "href": "/openbanking/sec/v2/consents/consentID"
     },
     "status": {
-      "href": "/openbanking/sec/v2/consents/**MASKEDlY**/status"
+      "href": "/openbanking/sec/v2/consents/consentID/status"
     },
-    "scaOAuth": {
-      "href": "https://secure397.lansforsakringar.se/.well-known/openid-configuration"
-    },
-    "scaStatus": {
-      "href": "/openbanking/sec/v2/consents/**MASKEDlY**/authorisations/e4dc5fea-2098-4724-9290-4ea3e169c8ea"
+    "startAuthorisation": {
+      "href": "/openbanking/ano/v3/consents/consentID/authorisations"
     }
   }
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 2
+REQUEST 3
+POST https://api.bank.lansforsakringar.se:443/openbanking/ano/v3/consents/consentID/authorisations
+Content-Type: application/json
+Accept: application/json
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+TPP-NOK-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+Decoupled: true
+
+{}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+201
+Content-Type: application/json
+Accept: application/json
+
+{
+  "scaStatus": "RECEIVED",
+  "consentId": "consentID",
+  "authorisationId": "authorisationId",
+  "_links": {
+    "self": {
+      "href": "/openbanking/sec/v2/consents/consentID"
+    },
+    "status": {
+      "href": "/openbanking/sec/v2/consents/consentID/status"
+    },
+    "scaOAuth": {
+      "href": "https://secure397.lansforsakringar.se/.well-known/openid-configuration"
+    },
+    "scaStatus": {
+      "href": "/openbanking/ano/v3/consents/consentID/authorisations/authorisationId"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.bank.lansforsakringar.se:443/openbanking/ano/v3/consents/consentID/authorisations/authorisationId
+Content-Type: application/json
+Accept: application/json
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+TPP-NOK-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+Decoupled: true
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json
+
+{
+"scaStatus":"FINALISED",
+"authorisationCode":"code"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
 POST https://secure397.lansforsakringar.se/as/token.oauth2
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
@@ -41,7 +117,7 @@ Accept: application/json
 client_id=dummyClient&grant_type=authorization_code&code=code&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
 
 -----------------------------------------------------------------------------------
-RESPONSE 2 SET STATE3
+RESPONSE 6 SET STATE3
 200
 Date: Fri, 01 Oct 2021 13:38:18 GMT
 Date: Fri, 01 Oct 2021 13:38:19 GMT
@@ -56,13 +132,13 @@ Content-Type: application/json;charset=utf-8
 
 -----------------------------------------------------------------------------------
 
-REQUEST 3 MATCH STATE3
+REQUEST 7 MATCH STATE3
 GET https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/accountnumbers
 Accept: application/json
 Content-Type: application/json
 
 -----------------------------------------------------------------------------------
-RESPONSE 3 SET STATE4
+RESPONSE 7 SET STATE4
 200
 Date: Fri, 01 Oct 2021 13:39:03 GMT
 Date: Fri, 01 Oct 2021 13:39:03 GMT
