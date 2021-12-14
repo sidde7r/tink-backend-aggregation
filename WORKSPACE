@@ -523,6 +523,14 @@ jvm_maven_import_external(
 )
 
 jvm_maven_import_external(
+    name = "io_grpc_grpc_auth",
+    artifact = "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
+    artifact_sha256 = "c0bd4ad63b905823061919f8bdd7371f45dc680ffa208d212fdc228515b01770",
+    licenses = ["notice"],
+    server_urls = ["https://repo1.maven.org/maven2"],
+)
+
+jvm_maven_import_external(
     name = "io_grpc_grpc_protobuf_lite",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
     artifact_sha256 = "ae4bbcd9bf7ad4856660807d8cba7ef4ff428f0b615bf663ba308d9a76bcab3c",
@@ -572,6 +580,14 @@ jvm_maven_import_external(
 )
 
 jvm_maven_import_external(
+    name = "io_grpc_grpc_stub",
+    artifact = "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
+    artifact_sha256 = "65b01e451013d6c9f2de1392abf47190a397cbbd7f5a45e3cc9df509671a0cf8",
+    licenses = ["notice"],
+    server_urls = ["https://repo1.maven.org/maven2"],
+)
+
+jvm_maven_import_external(
     name = "joda_time_joda_time",
     artifact = "joda-time:joda-time:2.9.9",
     artifact_sha256 = "b049a43c1057942e6acfbece008e4949b2e35d1658d0c8e06f4485397e2fa4e7",
@@ -595,9 +611,10 @@ jvm_maven_import_external(
 
 jvm_maven_import_external(
     name = "com_google_api_grpc_proto_google_common_protos",
-    artifact = "com.google.api.grpc:proto-google-common-protos:0.1.9",
-    artifact_sha256 = "bf76dcb173f6c6083ccf452f093b53500621e701645df47671c47043c7b5491f",
-    server_urls = MAVEN_REPOS,
+    artifact = "com.google.api.grpc:proto-google-common-protos:1.16.0",
+    artifact_sha256 = "e6eff21b0a5cc049b0bf2c571fac23abe8dd9d5f9143189f501c04164dc37da2",
+    licenses = ["notice"],
+    server_urls = ["https://repo1.maven.org/maven2"],
 )
 
 jvm_maven_import_external(
@@ -605,6 +622,22 @@ jvm_maven_import_external(
     artifact = "com.google.protobuf:protobuf-java:3.5.1",
     artifact_sha256 = "b5e2d91812d183c9f053ffeebcbcda034d4de6679521940a19064714966c2cd4",
     server_urls = MAVEN_REPOS,
+)
+
+jvm_maven_import_external(
+    name = "com_google_protobuf_protobuf_java_util",
+    artifact = "com.google.protobuf:protobuf-java-util:%s" % PROTOBUF_VERSION,
+    artifact_sha256 = "5650c66dc2c617fd0b8f58e148b42a6c6a1f57ddbef4cbe86302aefff99ea025",
+    licenses = ["notice"],
+    server_urls = ["https://repo1.maven.org/maven2"],
+)
+
+jvm_maven_import_external(
+    name = "failsafe",
+    artifact = "net.jodah:failsafe:2.3.1",
+    artifact_sha256 = "82d2a9a491e9d6b98f0d45f6fcd2c21bf609694fe1e49b19cc032b751c8e9b74",
+    licenses = ["notice"],
+    server_urls = ["https://repo1.maven.org/maven2"],
 )
 
 # Used by java_grpc_library
@@ -616,6 +649,22 @@ http_archive(
     urls = [
         "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_VERSION,
     ],
+)
+
+jvm_maven_import_external(
+    name = "io_grpc_grpc_protobuf",
+    artifact = "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
+    artifact_sha256 = "ee8cef64c7e10dd373aabd3a4b2ec4878e6d5b3ba43cbf55f3876ddaa79266ea",
+    licenses = ["notice"],
+    server_urls = ["https://repo1.maven.org/maven2"],
+)
+
+jvm_maven_import_external(
+    name = "io_grpc_grpc_testing",
+    artifact = "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
+    artifact_sha256 = "63449d55902efd7d73dccd84f7c7e77c9c727d5c6e798ed98ca19d36f07d38a5",
+    licenses = ["notice"],
+    server_urls = ["https://repo1.maven.org/maven2"],
 )
 
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
@@ -665,6 +714,7 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.fasterxml:classmate:1.0.0",
         "com.github.rholder:guava-retrying:2.0.0",
+        "com.google.guava:guava:25.1-jre",
         "com.google.inject:guice:4.2.2",
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.googlecode.libphonenumber:libphonenumber:5.7",
@@ -706,11 +756,14 @@ maven_install(
         "io.jaegertracing:jaeger-core:1.0.0",
         "io.jaegertracing:jaeger-thrift:1.0.0",
         "io.netty:netty-buffer:4.1.50.Final",
+        "io.netty:netty-codec-dns:4.1.50.Final",
         "io.netty:netty-codec-http2:4.1.50.Final",
         "io.netty:netty-codec:4.1.50.Final",
         "io.netty:netty-common:4.1.50.Final",
         "io.netty:netty-handler:4.1.50.Final",
         "io.netty:netty-resolver:4.1.50.Final",
+        "io.netty:netty-resolver-dns:4.1.50.Final",
+        "io.netty:netty-tcnative-boringssl-static:%s" % IO_NETTY_BORINGSSL_VERSION,
         "io.netty:netty-transport:4.1.50.Final",
         "io.opencensus:opencensus-api:0.21.0",
         "io.opencensus:opencensus-contrib-grpc-metrics:0.21.0",
@@ -736,6 +789,7 @@ maven_install(
         "javax.inject:javax.inject:1",
         "javax.validation:validation-api:2.0.1.Final",
         "javax.xml.bind:jaxb-api:2.3.1",
+        "net.jodah:failsafe:2.4.0",
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "no.finn.unleash:unleash-client-java:4.1.0",
         "org.apache.commons:commons-lang3:3.9",
@@ -771,6 +825,7 @@ maven_install(
         "org.glassfish.jaxb:jaxb-runtime:2.3.3",
         "org.iban4j:iban4j:3.1.0",
         "org.reflections:reflections:0.9.11",
+        "org.slf4j:slf4j-api:1.7.30",
         maven.artifact(
             group = "de.jollyday",
             artifact = "jollyday",
@@ -798,7 +853,6 @@ maven_install(
         "com.google.errorprone:error_prone_annotations",
         "com.google.errorprone:javac-shaded",
         "com.google.googlejavaformat:google-java-format",
-        "com.google.guava:guava",
         "com.google.http-client:google-http-client",
         "com.google.instrumentation:instrumentation-api",
         "com.google.protobuf:protobuf-java-util",
@@ -820,7 +874,6 @@ maven_install(
         "net.java.dev.jna:jna",
         "net.java.dev.jna:platform",
         "net.jcip:jcip-annotations",
-        "net.jodah:failsafe",
         "net.jpountz.lz4:lz4",
         "org.elasticsearch:elasticsearch",
         "org.hamcrest:hamcrest-all",
@@ -839,7 +892,6 @@ maven_install(
         "org.jvnet.jaxb2_commons:jaxb2-basics-runtime",
         "org.slf4j:jcl-over-slf4j",
         "org.slf4j:jul-to-slf4j",
-        "org.slf4j:slf4j-api",
         "org.w3c.css:sac",
         "org.webbitserver:webbit",
         "org.xerial.snappy:snappy-java",
@@ -1484,6 +1536,8 @@ aggregation_pin()
 maven_install(
     name = "grpc_libraries",
     artifacts = [
+        "com.google.protobuf:protobuf-java:%s" % PROTOBUF_VERSION,
+        "com.google.protobuf:protobuf-java-util:%s" % PROTOBUF_VERSION,
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
@@ -1509,8 +1563,6 @@ maven_install(
         "com.google.guava:listenablefuture",
         "com.google.j2objc:j2objc-annotations",
         "com.google.protobuf.nano:protobuf-javanano",
-        "com.google.protobuf:protobuf-java",
-        "com.google.protobuf:protobuf-java-util",
         "com.google.protobuf:protobuf-javalite",
         "io.grpc:grpc-context",
         "io.netty:netty-buffer",
