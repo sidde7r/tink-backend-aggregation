@@ -28,28 +28,28 @@ public class SwedbankSEConstants {
                                     "swedbank",
                                     "p0Tp9pvvHe7vvuGb",
                                     false,
-                                    "SwedbankMOBPrivateIOS/7.34.0_(iOS;_14.7.1)_Apple/iPhone13,2"))
+                                    "SwedbankMOBPrivateIOS/7.37.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .put(
                             "swedbank-business",
                             new ProfileParameters(
                                     "swedbank-business",
-                                    "HqXVSMDAD34PIgN4",
+                                    "nk2EwMK7B5eZqP7p",
                                     false,
-                                    "SwedbankMOBCorporateIOS/3.20.0_(iOS;_14.7.1)_Apple/iPhone13,2"))
+                                    "SwedbankMOBCorporateIOS/3.24.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .put(
                             "savingsbank",
                             new ProfileParameters(
                                     "savingsbank",
-                                    "s4mU7VvNJbwAonvB",
+                                    "OtS1S038Xov7IK9h",
                                     true,
-                                    "SavingbankMOBPrivateIOS/7.34.0_(iOS;_14.4.2)_Apple/iPhone10,4"))
+                                    "SavingbankMOBPrivateIOS/7.38.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .put(
                             "savingsbank-business",
                             new ProfileParameters(
                                     "savingsbank-business",
-                                    "tHQA7jfZiyeNEz0c",
+                                    "gOPBCdXSKBkwzYxH",
                                     true,
-                                    "SavingbankMOBCorporateIOS/3.20.0_(iOS;_14.4.2)_Apple/iPhone10,4"))
+                                    "SavingbankMOBCorporateIOS/3.24.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .build();
 
     public static final TypeMapper<InstrumentModule.InstrumentType> INSTRUMENT_TYPE_MAP =
