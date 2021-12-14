@@ -8,6 +8,9 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures.currentAccount;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures.savingsAccount;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +19,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.BalanceFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.IdentifierFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures;
@@ -32,6 +37,7 @@ public class TransactionalAccountMapperTest {
     private TransactionalAccountMapper mapper;
     private TransactionalAccountBalanceMapper balanceMapper;
     private DefaultIdentifierMapper identifierMapper;
+    private Collection<AccountBalanceEntity> accountBalancesCollection;
 
     @Before
     public void setUp() {
@@ -46,6 +52,8 @@ public class TransactionalAccountMapperTest {
         when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList()))
                 .thenReturn(IdentifierFixtures.sortCodeIdentifier());
         when(identifierMapper.getUniqueIdentifier(any())).thenCallRealMethod();
+        accountBalancesCollection =
+                new ArrayList<>(Arrays.asList(BalanceFixtures.expectedBalance()));
     }
 
     @Test
@@ -66,11 +74,11 @@ public class TransactionalAccountMapperTest {
                 .thenReturn(Optional.of(creditLimit), Optional.empty());
 
         TransactionalAccount result1 =
-                mapper.map(currentAccount(), Collections.emptyList(), Collections.emptyList())
+                mapper.map(currentAccount(), accountBalancesCollection, Collections.emptyList())
                         .get();
 
         TransactionalAccount result2 =
-                mapper.map(currentAccount(), Collections.emptyList(), Collections.emptyList())
+                mapper.map(currentAccount(), accountBalancesCollection, Collections.emptyList())
                         .get();
 
         // then
@@ -99,7 +107,7 @@ public class TransactionalAccountMapperTest {
         when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList()))
                 .thenReturn(expectedIdentifier);
         TransactionalAccount mappingResult =
-                mapper.map(currentAccount(), Collections.emptyList(), Collections.emptyList())
+                mapper.map(currentAccount(), accountBalancesCollection, Collections.emptyList())
                         .get();
 
         // then
@@ -119,9 +127,11 @@ public class TransactionalAccountMapperTest {
 
         // when
         TransactionalAccount currentAccountResult =
-                mapper.map(currentAccount, Collections.emptyList(), Collections.emptyList()).get();
+                mapper.map(currentAccount, accountBalancesCollection, Collections.emptyList())
+                        .get();
         TransactionalAccount savingsAccountResult =
-                mapper.map(savingsAccount, Collections.emptyList(), Collections.emptyList()).get();
+                mapper.map(savingsAccount, accountBalancesCollection, Collections.emptyList())
+                        .get();
 
         // then
         assertThat(currentAccountResult.getType()).isEqualByComparingTo(AccountTypes.CHECKING);
@@ -135,7 +145,7 @@ public class TransactionalAccountMapperTest {
 
         // when
         TransactionalAccount result =
-                mapper.map(input, Collections.emptyList(), Collections.emptyList()).get();
+                mapper.map(input, accountBalancesCollection, Collections.emptyList()).get();
 
         // then
         assertThat(result.getApiIdentifier()).isEqualTo(input.getAccountId());
@@ -148,7 +158,7 @@ public class TransactionalAccountMapperTest {
 
         // when
         TransactionalAccount result =
-                mapper.map(account, Collections.emptyList(), Collections.emptyList()).get();
+                mapper.map(account, accountBalancesCollection, Collections.emptyList()).get();
 
         // then
         List<AccountIdentifier> expectedMappedIdentifiers =
@@ -168,7 +178,7 @@ public class TransactionalAccountMapperTest {
         // when
         when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
         TransactionalAccount mappingResult =
-                mapper.map(account, Collections.emptyList(), parties).get();
+                mapper.map(account, accountBalancesCollection, parties).get();
 
         // then
         List<String> allPosibleHolders =
@@ -176,5 +186,37 @@ public class TransactionalAccountMapperTest {
         allPosibleHolders.add(primaryId.getOwnerName());
 
         assertThat(mappingResult.getHolderName().toString()).isIn(allPosibleHolders);
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenBalancesAreEmpty() {
+        // given
+        AccountEntity account = TransactionalAccountFixtures.currentAccount();
+        AccountIdentifierEntity primaryId = IdentifierFixtures.ibanIdentifier();
+        List<PartyV31Entity> parties = PartyFixtures.parties();
+
+        // when
+        when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
+        final Optional<TransactionalAccount> transactionalAccounts =
+                mapper.map(account, Collections.emptyList(), parties);
+
+        // then
+        assertThat(transactionalAccounts).isEmpty();
+    }
+
+    @Test
+    public void shouldNotReturnEmptyOptionalWhenBalancesAreNotEmpty() {
+        // given
+        AccountEntity account = TransactionalAccountFixtures.currentAccount();
+        AccountIdentifierEntity primaryId = IdentifierFixtures.ibanIdentifier();
+        List<PartyV31Entity> parties = PartyFixtures.parties();
+
+        // when
+        when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
+        final Optional<TransactionalAccount> transactionalAccounts =
+                mapper.map(account, accountBalancesCollection, parties);
+
+        // then
+        assertThat(transactionalAccounts).isNotEmpty();
     }
 }

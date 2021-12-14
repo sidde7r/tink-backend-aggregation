@@ -7,6 +7,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.CreditCardFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.IdentifierFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.PartyFixtures;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
@@ -33,6 +37,7 @@ public class CreditCardAccountMapperTest {
     private CreditCardAccountMapper mapper;
     private CreditCardBalanceMapper balanceMapper;
     private DefaultIdentifierMapper identifierMapper;
+    private Collection<AccountBalanceEntity> accountBalancesCollection;
 
     @Before
     public void setUp() {
@@ -49,6 +54,8 @@ public class CreditCardAccountMapperTest {
                 .thenReturn(IdentifierFixtures.panIdentifier());
         mapper = new CreditCardAccountMapper(balanceMapper, identifierMapper);
         when(identifierMapper.getUniqueIdentifier(any())).thenCallRealMethod();
+        accountBalancesCollection =
+                new ArrayList<>(Arrays.asList(BalanceFixtures.expectedBalance()));
     }
 
     @Test
@@ -90,7 +97,7 @@ public class CreditCardAccountMapperTest {
         CreditCardAccount mappingResult =
                 mapper.map(
                                 CreditCardFixtures.creditCardAccount(),
-                                Collections.emptyList(),
+                                accountBalancesCollection,
                                 Collections.emptyList())
                         .get();
 
@@ -115,7 +122,7 @@ public class CreditCardAccountMapperTest {
         CreditCardAccount mappingResult =
                 mapper.map(
                                 CreditCardFixtures.creditCardAccount(),
-                                Collections.emptyList(),
+                                accountBalancesCollection,
                                 Collections.emptyList())
                         .get();
 
@@ -133,7 +140,7 @@ public class CreditCardAccountMapperTest {
         // when
         when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
         CreditCardAccount mappingResult =
-                mapper.map(creditCardAccount, Collections.emptyList(), parties).get();
+                mapper.map(creditCardAccount, accountBalancesCollection, parties).get();
 
         // then
         List<String> allPossibleHolders =
@@ -141,5 +148,37 @@ public class CreditCardAccountMapperTest {
         allPossibleHolders.add(primaryId.getOwnerName());
 
         assertThat(mappingResult.getHolderName().toString()).isIn(allPossibleHolders);
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenBalancesAreEmpty() {
+        // given
+        AccountEntity account = TransactionalAccountFixtures.currentAccount();
+        AccountIdentifierEntity primaryId = IdentifierFixtures.ibanIdentifier();
+        List<PartyV31Entity> parties = PartyFixtures.parties();
+
+        // when
+        when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
+        final Optional<CreditCardAccount> transactionalAccounts =
+                mapper.map(account, Collections.emptyList(), parties);
+
+        // then
+        assertThat(transactionalAccounts).isEmpty();
+    }
+
+    @Test
+    public void shouldNotReturnEmptyOptionalWhenBalancesAreNotEmpty() {
+        // given
+        AccountEntity account = TransactionalAccountFixtures.currentAccount();
+        AccountIdentifierEntity primaryId = IdentifierFixtures.ibanIdentifier();
+        List<PartyV31Entity> parties = PartyFixtures.parties();
+
+        // when
+        when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
+        final Optional<CreditCardAccount> transactionalAccounts =
+                mapper.map(account, accountBalancesCollection, parties);
+
+        // then
+        assertThat(transactionalAccounts).isNotEmpty();
     }
 }
