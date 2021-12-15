@@ -17,6 +17,8 @@ public class CertificateIdProviderTest {
     private static final String CLUSTER_ID = "clusterId";
     private static final String PROVIDER_NAME = "providerName";
     private static final String MARKET_CODE = "IT";
+    private static final String UK_MARKET_CODE = "UK";
+
     @Mock private UnleashClient unleashClient;
     private CertificateIdProvider certificateIdentityService;
 
@@ -26,17 +28,42 @@ public class CertificateIdProviderTest {
     }
 
     @Test
-    public void shouldReturnUKOBCertIdWhenMarketsCodeIsUK() {
+    public void shouldReturnUKOBCertIdWhenMarketCodeIsUK() {
+        // when
+        String result =
+                certificateIdentityService.getCertId(
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, UK_MARKET_CODE, true);
+
+        // then
+        assertThat(result).isEqualTo("UKOB");
+    }
+
+    @Test
+    public void shouldReturnUKOBCertIdWhenMarketCodeIsUKAppIdAndProviderNameAreNotAllowed() {
         // given
-        String ukMarketCode = "UK";
+        when(unleashClient.isToggleEnabled(any())).thenReturn(false);
 
         // when
         String result =
                 certificateIdentityService.getCertId(
-                        APP_ID, CLUSTER_ID, PROVIDER_NAME, ukMarketCode, true);
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, UK_MARKET_CODE, true);
 
         // then
         assertThat(result).isEqualTo("UKOB");
+    }
+
+    @Test
+    public void shouldReturnOLD_EIDASCertIdWhenMarketCodeIsUKAndAppIdAndProviderNameAreAllowed() {
+        // given
+        when(unleashClient.isToggleEnabled(any())).thenReturn(true);
+
+        // when
+        String result =
+                certificateIdentityService.getCertId(
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, UK_MARKET_CODE, true);
+
+        // then
+        assertThat(result).isEqualTo("OLD_EIDAS");
     }
 
     @Test

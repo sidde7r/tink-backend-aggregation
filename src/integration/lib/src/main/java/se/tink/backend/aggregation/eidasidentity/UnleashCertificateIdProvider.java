@@ -23,9 +23,13 @@ public class UnleashCertificateIdProvider implements CertificateIdProvider {
             boolean isOpenBanking) {
         AvailableCertIds certId = AvailableCertIds.DEFAULT;
         if (Stream.of("UK", "GB").anyMatch(market -> market.equalsIgnoreCase(marketCode))) {
-            certId = AvailableCertIds.UKOB;
+            certId =
+                    eidasMigrationToggle.getEnabledCertId(
+                            appId, providerName, AvailableCertIds.UKOB);
         } else if (isOpenBanking) {
-            certId = eidasMigrationToggle.getEnabledCertId(appId, providerName);
+            certId =
+                    eidasMigrationToggle.getEnabledCertId(
+                            appId, providerName, AvailableCertIds.DEFAULT);
         }
         log.info(
                 "[CertIdProvider] Provide `{}` certId for [appId: `{}`, clusterId: `{}`, providerName: `{}`, marketCode: `{}`]",

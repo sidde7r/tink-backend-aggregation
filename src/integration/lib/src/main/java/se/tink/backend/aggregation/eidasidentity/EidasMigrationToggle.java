@@ -13,13 +13,14 @@ public class EidasMigrationToggle {
 
     private final UnleashClient unleashClient;
 
-    public AvailableCertIds getEnabledCertId(String appId, String providerName) {
+    public AvailableCertIds getEnabledCertId(
+            String appId, String providerName, AvailableCertIds certIdForDisabledToggle) {
         Toggle toggle = createToggle(appId, providerName);
         try {
             final AvailableCertIds availableCertId =
                     unleashClient.isToggleEnabled(toggle)
                             ? AvailableCertIds.OLD
-                            : AvailableCertIds.DEFAULT;
+                            : certIdForDisabledToggle;
             log.info("Enabled certId: {}", availableCertId.getValue());
             return availableCertId;
         } catch (Exception e) {
