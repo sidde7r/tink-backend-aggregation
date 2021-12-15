@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetBalancesResponse;
@@ -16,6 +17,10 @@ public class LansforsakringarStorageHelper {
 
     public void setConsentId(String consentId) {
         persistentStorage.put(LansforsakringarConstants.StorageKeys.CONSENT_ID, consentId);
+    }
+
+    public void setAuthorisationId(String authorisationId) {
+        persistentStorage.put(StorageKeys.AUTHORISATION_ID, authorisationId);
     }
 
     public void setOAuth2Token(OAuth2Token refreshToken) {
@@ -37,6 +42,10 @@ public class LansforsakringarStorageHelper {
 
     public String getConsentId() {
         return persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID);
+    }
+
+    public String getAuthorisationId() {
+        return persistentStorage.get(StorageKeys.AUTHORISATION_ID);
     }
 
     public Optional<OAuth2Token> getOAuth2Token() {
