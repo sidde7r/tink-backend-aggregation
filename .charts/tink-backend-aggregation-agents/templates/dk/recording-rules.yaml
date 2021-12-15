@@ -4,7 +4,7 @@ metadata:
   name: dk-recording-rules
   namespace: agents
 spec:
-  interval: 5m
+  interval: 2m30s
   rules:
     - record: increase:all_logins_dk:delta1h
       expr: floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]))
