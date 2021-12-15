@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.enums.MarketCode;
 
 @JsonObject
 public class TransactionEntity {
@@ -69,7 +70,8 @@ public class TransactionEntity {
                         .setAmount(transactionAmount)
                         .setDescription(reference)
                         .setPending(isPending())
-                        .setProprietaryFinancialInstitutionType(source);
+                        .setProprietaryFinancialInstitutionType(source)
+                        .setProviderMarket(String.valueOf(MarketCode.UK));
 
         if (hasFeedItemUid()) {
             builder.addExternalSystemIds(
