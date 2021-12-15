@@ -308,7 +308,7 @@ public class CmcicApiClient implements FrAispApiClient {
     private URL authorizeRequest(RequestBuilder request) {
         return request.queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
-                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParamRaw(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge())
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .getUrl();
