@@ -29,6 +29,11 @@ public final class MpsAgent extends CbiGlobeAgent {
     }
 
     @Override
+    protected String getBaseUrl() {
+        return "https://openbanking.mps.it";
+    }
+
+    @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
                 CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);

@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
@@ -66,12 +66,14 @@ public class ConsentManager {
     private final LocalDateTimeSource localDateTimeSource;
     private final long sleepTime;
     private final int retryAttempts;
+    private final CbiUrlProvider urlProvider;
 
     public ConsentManager(
             CbiGlobeApiClient apiClient,
             CbiUserState userState,
-            LocalDateTimeSource localDateTimeSource) {
-        this(apiClient, userState, localDateTimeSource, SLEEP_TIME, RETRY_ATTEMPTS);
+            LocalDateTimeSource localDateTimeSource,
+            CbiUrlProvider urlProvider) {
+        this(apiClient, userState, localDateTimeSource, SLEEP_TIME, RETRY_ATTEMPTS, urlProvider);
     }
 
     public ConsentResponse createAllPsd2Consent(String state, AccessType allPsd2) {
@@ -182,7 +184,8 @@ public class ConsentManager {
         UpdateAuthenticationMethodRequest body =
                 new UpdateAuthenticationMethodRequest(authenticationMethodId);
 
-        return apiClient.updateConsent(body, Urls.UPDATE_CONSENTS.concat("/" + consentId));
+        return apiClient.updateConsent(
+                body, urlProvider.getUpdateConsentsUrl().concat("/" + consentId));
     }
 
     public <T> T updatePsuCredentials(

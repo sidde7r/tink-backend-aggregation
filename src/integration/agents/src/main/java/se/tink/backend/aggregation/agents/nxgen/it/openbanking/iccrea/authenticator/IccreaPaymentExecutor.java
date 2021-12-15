@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authentic
 import java.util.Map;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PaymentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
@@ -17,6 +17,7 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
 
     private final UserInteractions userInteractions;
     private final ConsentManager consentManager;
+    private final CbiUrlProvider urlProvider;
 
     public IccreaPaymentExecutor(
             CbiGlobeApiClient apiClient,
@@ -25,7 +26,8 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
             StrongAuthenticationState strongAuthenticationState,
             Provider provider,
             UserInteractions userInteractions,
-            ConsentManager consentManager) {
+            ConsentManager consentManager,
+            CbiUrlProvider urlProvider) {
         super(
                 apiClient,
                 supplementalInformationHelper,
@@ -34,6 +36,7 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
                 provider);
         this.userInteractions = userInteractions;
         this.consentManager = consentManager;
+        this.urlProvider = urlProvider;
     }
 
     @Override
@@ -42,7 +45,7 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
                 consentManager.updatePsuCredentials(
                         createPaymentResponse.getPsuCredentials(),
                         new URL(
-                                Urls.PAYMENT
+                                urlProvider.getRawPaymentUrl()
                                         + createPaymentResponse
                                                 .getLinks()
                                                 .getUpdatePsuAuthentication()
@@ -52,7 +55,7 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
         consentManager.changeAuthenticationMethod(
                 paymentAuthorizationResponse,
                 new URL(
-                        Urls.PAYMENT
+                        urlProvider.getRawPaymentUrl()
                                 + paymentAuthorizationResponse
                                         .getLinks()
                                         .getAuthorizeUrl()

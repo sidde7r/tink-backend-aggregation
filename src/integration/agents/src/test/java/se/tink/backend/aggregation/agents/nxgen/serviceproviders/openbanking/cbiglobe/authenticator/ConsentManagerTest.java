@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
@@ -62,6 +62,7 @@ public class ConsentManagerTest {
     private static final String PASSWORD = "password";
 
     private ConsentManager consentManager;
+    private CbiUrlProvider urlProvider;
     private CbiGlobeApiClient apiClient;
     private CbiUserState userState;
 
@@ -69,9 +70,15 @@ public class ConsentManagerTest {
     public void init() {
         apiClient = mock(CbiGlobeApiClient.class);
         userState = mock(CbiUserState.class);
-
+        urlProvider = new CbiUrlProvider("https://example.com");
         consentManager =
-                new ConsentManager(apiClient, userState, new ActualLocalDateTimeSource(), 100L, 3);
+                new ConsentManager(
+                        apiClient,
+                        userState,
+                        new ActualLocalDateTimeSource(),
+                        100L,
+                        3,
+                        urlProvider);
         when(userState.getUsername()).thenReturn(USERNAME);
         when(userState.getPassword()).thenReturn(PASSWORD);
     }
@@ -188,13 +195,13 @@ public class ConsentManagerTest {
         // when
         consentManager.updatePsuCredentials(
                 psuCredentialsResponse,
-                Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                urlProvider.getUpdateConsentsUrl().concat("/" + CONSENT_ID),
                 ConsentResponse.class);
 
         // then
         verify(apiClient)
                 .updatePsuCredentials(
-                        eq(Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID)),
+                        eq(urlProvider.getUpdateConsentsUrl().concat("/" + CONSENT_ID)),
                         eq(updateConsentPsuCredentialsRequest),
                         eq(ConsentResponse.class));
     }
@@ -377,7 +384,7 @@ public class ConsentManagerTest {
 
         when(userState.getConsentId()).thenReturn(CONSENT_ID);
         when(apiClient.updatePsuCredentials(
-                        Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                        urlProvider.getUpdateConsentsUrl().concat("/" + CONSENT_ID),
                         updateConsentPsuCredentialsRequest,
                         ConsentResponse.class))
                 .thenThrow(exception);
@@ -388,7 +395,7 @@ public class ConsentManagerTest {
                         () ->
                                 consentManager.updatePsuCredentials(
                                         psuCredentialsResponse,
-                                        Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                                        urlProvider.getUpdateConsentsUrl().concat("/" + CONSENT_ID),
                                         ConsentResponse.class));
         // then
         assertThat(throwable)

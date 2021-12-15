@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.rpc.ConsentScaResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
@@ -48,7 +49,8 @@ public class ConsentDecoupledStepTest {
         ConsentProcessor consentProcessor =
                 new ConsentProcessor(
                         consentManager,
-                        new UserInteractions(supplementalInformationController, catalog));
+                        new UserInteractions(supplementalInformationController, catalog),
+                        new CbiUrlProvider("https://example.com"));
         this.step =
                 new ConsentDecoupledStep(
                         consentProcessor, consentManager, strongAuthenticationState);

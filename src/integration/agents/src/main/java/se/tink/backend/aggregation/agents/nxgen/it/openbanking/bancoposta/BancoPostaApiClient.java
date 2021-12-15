@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ConsentScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -17,19 +17,19 @@ public class BancoPostaApiClient extends CbiGlobeApiClient {
     public BancoPostaApiClient(
             TinkHttpClient client,
             CbiStorageProvider cbiStorageProvider,
-            boolean requestManual,
             CbiGlobeProviderConfiguration providerConfiguration,
             String psuIpAddress,
             RandomValueGenerator randomValueGenerator,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            CbiUrlProvider urlProvider) {
         super(
                 client,
                 cbiStorageProvider,
-                InstrumentType.ACCOUNTS,
                 providerConfiguration,
-                requestManual ? psuIpAddress : null,
+                psuIpAddress,
                 randomValueGenerator,
-                localDateTimeSource);
+                localDateTimeSource,
+                urlProvider);
     }
 
     @Override

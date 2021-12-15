@@ -19,14 +19,19 @@ public final class BancaCarigeAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient(boolean requestManual) {
+    protected CbiGlobeApiClient getApiClient() {
         return new BancaCarigeApiClient(
                 client,
                 new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                requestManual,
                 getProviderConfiguration(),
                 psuIpAddress,
                 randomValueGenerator,
-                localDateTimeSource);
+                localDateTimeSource,
+                urlProvider);
+    }
+
+    @Override
+    protected String getBaseUrl() {
+        return "https://openbanking.carige.it";
     }
 }

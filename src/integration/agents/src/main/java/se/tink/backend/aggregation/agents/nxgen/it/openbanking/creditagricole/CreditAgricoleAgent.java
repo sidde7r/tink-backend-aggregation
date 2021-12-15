@@ -15,4 +15,9 @@ public final class CreditAgricoleAgent extends CbiGlobeAgent {
     public CreditAgricoleAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
     }
+
+    @Override
+    protected String getBaseUrl() {
+        return "https://openbanking.credit-agricole.it";
+    }
 }
