@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class ICSConstants {
 
     public static final class Urls {
@@ -19,14 +17,11 @@ public class ICSConstants {
     public static final class QueryKeys {
         public static final String ACCOUNT_REQUEST_ID = "AccountRequestId";
         public static final String CLIENT_ID = "client_id";
-        public static final String CLIENT_SECRET = "client_secret";
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String STATE = "state";
         public static final String GRANT_TYPE = "grant_type";
         public static final String RESPONSE_TYPE = "response_type";
-        public static final String AUTH_CODE = "code";
-        public static final String REFRESH_TOKEN = "refresh_token";
         public static final String FROM_BOOKING_DATE = "fromBookingDate";
         public static final String TO_BOOKING_DATE = "toBookingDate";
     }
@@ -38,15 +33,6 @@ public class ICSConstants {
 
     public static final class Transaction {
         public static final String DEBIT = "Debit";
-    }
-
-    public enum OAuthGrantTypes {
-        @JsonProperty("client_credentials")
-        CLIENT_CREDENTIALS,
-        @JsonProperty("authorization_code")
-        AUTHORIZATION_CODE,
-        @JsonProperty("refresh_token")
-        REFRESH_TOKEN,
     }
 
     public static final class HeaderKeys {
@@ -74,6 +60,20 @@ public class ICSConstants {
 
         // Not required to send actual values, sending dummy data
         public static final String FINANCIAL_ID = "e3213dfd-435fgrd5-e7edr4";
+    }
+
+    public static final class FormKeys {
+        public static final String SCOPE = "scope";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CLIENT_SECRET = "client_secret";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String AUTHENTICATION_CODE = "code";
+    }
+
+    public static final class FormValues {
+        public static final String SCOPE_ACCOUNTS = "accounts";
     }
 
     public static class ErrorMessages {

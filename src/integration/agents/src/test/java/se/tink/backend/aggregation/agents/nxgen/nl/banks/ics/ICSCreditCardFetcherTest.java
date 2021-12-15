@@ -1,136 +1,147 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.ics;
 
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.nl.banks.ics.TestHelper.TEST_MESSAGE;
+import static se.tink.backend.aggregation.agents.nxgen.nl.banks.ics.TestHelper.getCreditCardAccount;
+import static se.tink.backend.aggregation.agents.nxgen.nl.banks.ics.TestHelper.getCreditTransactionResponse;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
-import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSTimeProvider;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ICSCreditCardFetcherTest {
 
-    private ICSApiClient client;
-    private ICSCreditCardFetcher icsCreditCardFetcher;
+    private final LocalDateTimeSource localDateTimeSource = new ConstantLocalDateTimeSource();
 
-    private final Date fromDate = new Date();
-    private final Date toDate = new Date();
+    private final ICSTimeProvider timeProvider =
+            new ICSTimeProvider(localDateTimeSource, new PersistentStorage());
+
+    private final LocalDate today = timeProvider.now();
+
+    private final LocalDate earliestFromDate = localDate(timeProvider.getConsentTransactionDate());
+
+    private final LocalDate fromDate = (today.minusDays(20));
+
+    private final LocalDate toDate = (today.minusDays(10));
+
+    private final CreditCardAccount account = getCreditCardAccount();
+
+    private final String accountId = account.getApiIdentifier();
+
+    @Mock private ICSApiClient client;
+
+    @InjectMocks private ICSCreditCardFetcher creditCardFetcher;
 
     @Before
-    public void setUp() throws Exception {
-        fromDate.setTime(99999999);
-        toDate.setTime(9999999999999L);
-        client = mock(ICSApiClient.class);
-        PersistentStorage persistentStorage = mock(PersistentStorage.class);
-        icsCreditCardFetcher = new ICSCreditCardFetcher(client, persistentStorage);
+    public void setUp() {
+        creditCardFetcher =
+                new ICSCreditCardFetcher(
+                        client, new ICSTimeProvider(localDateTimeSource, new PersistentStorage()));
     }
 
     @Test
-    public void shouldReturnEmptyPaginatorResponseWhenToDateIsBiggerOrEqualFromDate() {
+    public void shouldFetchTransactions() {
         // given
-        HttpResponseException responseException = Mockito.mock(HttpResponseException.class);
-        PaginatorResponse paginatorResponse = PaginatorResponseImpl.createEmpty();
+        given(client.getTransactionsByDate(accountId, fromDate, toDate))
+                .willReturn(getCreditTransactionResponse());
 
         // when
-        when(client.getTransactionsByDate(
-                        TestHelper.ACCOUNT_ID, LocalDate.now().minusDays(2), LocalDate.now()))
-                .thenThrow(responseException);
+        PaginatorResponse response =
+                creditCardFetcher.getTransactionsFor(account, date(fromDate), date(toDate));
 
         // then
-        assertThat(
-                        icsCreditCardFetcher.getTransactionsFor(
-                                TestHelper.getCreditCardAccount(), fromDate, fromDate))
-                .usingRecursiveComparison()
-                .isEqualTo(paginatorResponse);
+        assertThat(response).usingRecursiveComparison().isEqualTo(getCreditTransactionResponse());
     }
 
     @Test
-    public void shouldReturnEmptyPaginatorResponseWhenToDateIsEarlierFromFromDate() {
+    public void shouldAdjustFromDateWhileFetchingTransactions() {
         // given
-        PaginatorResponse paginatorResponse = PaginatorResponseImpl.createEmpty(false);
-        LocalDate localDate = LocalDate.of(2286, 11, 20);
+        LocalDate longLongTimeAgo = earliestFromDate.minusDays(1);
 
         // when
-        doThrow(mockException(HttpStatus.SC_UNAUTHORIZED))
-                .when(client)
-                .getTransactionsByDate(TestHelper.ACCOUNT_ID, getFallbackFromDate(), localDate);
+        creditCardFetcher.getTransactionsFor(account, date(longLongTimeAgo), date(toDate));
 
         // then
-        assertThat(
-                        icsCreditCardFetcher.getTransactionsFor(
-                                TestHelper.getCreditCardAccount(), fromDate, toDate))
-                .usingRecursiveComparison()
-                .isEqualTo(paginatorResponse);
+        then(client).should().getTransactionsByDate(accountId, earliestFromDate, toDate);
     }
 
     @Test
-    public void shouldReturnWhenToDateIsEarlierFromFromDate() {
-        // given
-        LocalDate localDate = LocalDate.of(2286, 11, 20);
-
+    public void shouldReturnEmptyResponseWhenToDateAndFromDateAreEqual() {
         // when
-        doThrow(mockException(HttpStatus.SC_OK))
-                .when(client)
-                .getTransactionsByDate(TestHelper.ACCOUNT_ID, getFallbackFromDate(), localDate);
+        PaginatorResponse response =
+                creditCardFetcher.getTransactionsFor(account, date(toDate), date(toDate));
 
         // then
-        assertThatThrownBy(
-                        () ->
-                                icsCreditCardFetcher.getTransactionsFor(
-                                        TestHelper.getCreditCardAccount(), fromDate, toDate))
-                .isInstanceOf(HttpResponseException.class)
-                .hasMessage(TEST_MESSAGE);
+        assertThat(response).isEqualTo(PaginatorResponseImpl.createEmpty());
     }
 
     @Test
-    public void shouldReturnCreditTransactionResponseWhenResponseIsAvailable() {
+    public void shouldReturnEmptyResponseWhenToDateIsBeforeFromDate() {
         // given
-        CreditTransactionsResponse creditTransactionsResponse =
-                TestHelper.getCreditTransactionResponse();
-        LocalDate localDate = LocalDate.of(2286, 11, 20);
+        LocalDate earlierThanFromDate = fromDate.minusDays(1);
 
         // when
-        doReturn(creditTransactionsResponse)
-                .when(client)
-                .getTransactionsByDate(TestHelper.ACCOUNT_ID, getFallbackFromDate(), localDate);
+        PaginatorResponse response =
+                creditCardFetcher.getTransactionsFor(
+                        account, date(fromDate), date(earlierThanFromDate));
 
         // then
-        assertThat(
-                        icsCreditCardFetcher.getTransactionsFor(
-                                TestHelper.getCreditCardAccount(), fromDate, toDate))
-                .usingRecursiveComparison()
-                .isEqualTo(creditTransactionsResponse);
+        assertThat(response).isEqualTo(PaginatorResponseImpl.createEmpty());
     }
 
-    private LocalDate getFallbackFromDate() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.YEAR, -2);
-        c.add(Calendar.DATE, -89);
-        return c.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    @Test
+    public void shouldReturnEmptyResponseOnUnauthorizedStatusCode() {
+        // given
+        bankRespondsWithUnauthorizedStatusCode();
+
+        // when
+        PaginatorResponse response =
+                creditCardFetcher.getTransactionsFor(account, date(fromDate), date(toDate));
+
+        // then
+        assertThat(response).isEqualTo(PaginatorResponseImpl.createEmpty(false));
     }
 
-    private HttpResponseException mockException(int status) {
-        HttpResponseException exception = mock(HttpResponseException.class, RETURNS_DEEP_STUBS);
-        when((Object) exception.getResponse().getStatus()).thenReturn(status);
-        when((Object) exception.getMessage()).thenReturn(TestHelper.TEST_MESSAGE);
-        return exception;
+    private void bankRespondsWithUnauthorizedStatusCode() {
+        // given
+        HttpResponse httpResponse = mock(HttpResponse.class);
+
+        // and
+        given(httpResponse.getStatus()).willReturn(SC_UNAUTHORIZED);
+
+        // and
+        given(client.getTransactionsByDate(any(), any(), any()))
+                .willThrow(new HttpResponseException(mock(HttpRequest.class), httpResponse));
+    }
+
+    private Date date(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private LocalDate localDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

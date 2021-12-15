@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthTokenFactory;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
@@ -23,7 +24,6 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -47,25 +47,32 @@ public final class ICSAgent extends NextGenerationAgent
         super(componentProvider);
         configureHttpClient(client);
 
-        final AgentConfiguration<ICSConfiguration> agentConfiguration =
+        AgentConfiguration<ICSConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(ICSConfiguration.class);
-        final ICSConfiguration icsConfiguration =
+        ICSConfiguration providerConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
 
-        final String customerIpAddress =
-                request.getUserAvailability().isUserPresent() ? userIp : "";
+        String customerIpAddress = request.getUserAvailability().isUserPresent() ? userIp : "";
+
+        ICSTimeProvider timeProvider =
+                new ICSTimeProvider(
+                        componentProvider.getLocalDateTimeSource(), getPersistentStorage());
         apiClient =
                 new ICSApiClient(
                         client,
                         sessionStorage,
                         persistentStorage,
                         agentConfiguration.getRedirectUrl(),
-                        icsConfiguration,
+                        providerConfiguration,
                         customerIpAddress,
-                        componentProvider);
-
-        final LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        creditCardRefreshController = constructCreditCardRefreshController(localDateTimeSource);
+                        componentProvider,
+                        new ICSOAuthTokenFactory(
+                                providerConfiguration.getClientId(),
+                                providerConfiguration.getClientSecret(),
+                                agentConfiguration.getRedirectUrl()),
+                        timeProvider,
+                        componentProvider.getRandomValueGenerator());
+        creditCardRefreshController = constructCreditCardRefreshController(timeProvider);
     }
 
     @Override
@@ -115,16 +122,16 @@ public final class ICSAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController(
-            LocalDateTimeSource localDateTimeSource) {
+            ICSTimeProvider timeProvider) {
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new ICSAccountFetcher(apiClient),
+                new ICSAccountFetcher(apiClient, timeProvider),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
-                                        new ICSCreditCardFetcher(apiClient, persistentStorage))
-                                .setLocalDateTimeSource(localDateTimeSource)
+                                        new ICSCreditCardFetcher(apiClient, timeProvider))
+                                .setLocalDateTimeSource(timeProvider.getLocalDateTimeSource())
                                 .build(),
                         null));
     }

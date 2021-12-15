@@ -15,11 +15,12 @@ import se.tink.backend.aggregation.agents.consent.generators.nl.ics.IcsConsentGe
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.OAuthGrantTypes;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthGrantTypes;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthTokenFactory;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ClientCredentialTokenResponse;
@@ -28,8 +29,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.utils.ICSUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -54,6 +55,9 @@ public class ICSApiClient {
     private final ICSConfiguration configuration;
     private final String customerIpAddress;
     private final AgentComponentProvider componentProvider;
+    private final ICSOAuthTokenFactory tokenFactory;
+    private final ICSTimeProvider timeProvider;
+    private final RandomValueGenerator randomValueGenerator;
 
     public ICSConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
@@ -71,9 +75,7 @@ public class ICSApiClient {
     public RequestBuilder createAuthorizeRequest(String state, String accountRequestId) {
 
         return createAuthRequest(Urls.OAUTH_AUTHORIZE)
-                .queryParam(
-                        QueryKeys.GRANT_TYPE,
-                        OAuthGrantTypes.AUTHORIZATION_CODE.toString().toLowerCase())
+                .queryParam(QueryKeys.GRANT_TYPE, ICSOAuthGrantTypes.AUTHORIZATION_CODE.toString())
                 .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
                 .queryParam(QueryKeys.ACCOUNT_REQUEST_ID, accountRequestId)
@@ -82,20 +84,10 @@ public class ICSApiClient {
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE);
     }
 
-    private RequestBuilder createTokenRequest(OAuthGrantTypes grantType) {
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
-
-        return createRequest(Urls.OAUTH_TOKEN)
-                .queryParam(QueryKeys.GRANT_TYPE, grantType.toString().toLowerCase())
-                .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.CLIENT_SECRET, clientSecret);
-    }
-
     private RequestBuilder createRequestInSession(String url, OAuth2Token token) {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
-        final String xInteractionId = ICSUtils.getInteractionId();
+        final String xInteractionId = randomValueGenerator.getUUID().toString();
 
         return createRequest(url)
                 .addBearerToken(token)
@@ -109,9 +101,9 @@ public class ICSApiClient {
     }
 
     public AccountSetupResponse setupAccount(OAuth2Token token) {
-        final Date fromDate = ICSUtils.getFromDate();
-        final Date toDate = ICSUtils.getToAndExpiredDate();
-        final Date expirationDate = ICSUtils.getToAndExpiredDate();
+        final Date fromDate = timeProvider.getFromDate();
+        final Date toDate = timeProvider.getToAndExpiredDate();
+        final Date expirationDate = timeProvider.getToAndExpiredDate();
 
         List<String> permissions =
                 new IcsConsentGenerator(componentProvider, ICSConfiguration.getIcsScopes())
@@ -120,7 +112,7 @@ public class ICSApiClient {
         final AccountSetupRequest request =
                 new AccountSetupRequest().setup(permissions, fromDate, toDate, expirationDate);
 
-        final String lastLoggedTime = ICSUtils.getLastLoggedTime(new Date());
+        final String lastLoggedTime = timeProvider.getLastLoggedTime();
 
         return createRequestInSession(Urls.ACCOUNT_SETUP, token)
                 .header(HeaderKeys.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, lastLoggedTime)
@@ -128,30 +120,30 @@ public class ICSApiClient {
     }
 
     public ClientCredentialTokenResponse fetchTokenWithClientCredential() {
-        return createTokenRequest(OAuthGrantTypes.CLIENT_CREDENTIALS)
-                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
-                .get(ClientCredentialTokenResponse.class);
+        return createRequest(Urls.OAUTH_TOKEN)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(tokenFactory.clientCredentialsToken())
+                .post(ClientCredentialTokenResponse.class);
     }
 
     public OAuth2Token fetchToken(String authCode) {
-        final String state =
-                sessionStorage
-                        .get(StorageKeys.STATE, String.class)
-                        .filter(not(Strings::isNullOrEmpty))
-                        .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_STATE));
+        sessionStorage
+                .get(StorageKeys.STATE, String.class)
+                .filter(not(Strings::isNullOrEmpty))
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_STATE));
 
-        return createTokenRequest(OAuthGrantTypes.AUTHORIZATION_CODE)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
-                .queryParam(QueryKeys.AUTH_CODE, authCode)
-                .queryParam(QueryKeys.STATE, state)
-                .get(TokenResponse.class)
+        return createRequest(Urls.OAUTH_TOKEN)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(tokenFactory.consentAuthorizationToken(authCode))
+                .post(TokenResponse.class)
                 .toTinkToken();
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        return createTokenRequest(OAuthGrantTypes.REFRESH_TOKEN)
-                .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
-                .get(TokenResponse.class)
+        return createRequest(Urls.OAUTH_TOKEN)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(tokenFactory.refreshToken(refreshToken))
+                .post(TokenResponse.class)
                 .toTinkToken();
     }
 
