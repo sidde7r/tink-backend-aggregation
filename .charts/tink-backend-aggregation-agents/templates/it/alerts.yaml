@@ -173,9 +173,9 @@ spec:
 
     - alert: manual_login_error_rate_over_50%_due_to_bank_side_error_it
       expr: |
-        (sum by(provider, className) (increase (tink_agent_login_total{ environment="production",market="IT", outcome="unavailable", action="login-manual"}[1h]))
-        / sum:IT:provider_className:production:login-manual:delta1h > 0.5 )
-        and (sum:IT:provider_className:production:login-manual:delta1h) > 5)
+        (sum by(provider, className) (increase (tink_agent_login_total{market="IT", outcome="unavailable", action="login-manual"}[1h]))
+        / sum:IT:provider_className:login-manual:delta1h > 0.5 )
+        and (sum:IT:provider_className:login-manual:delta1h) > 5)
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -190,9 +190,9 @@ spec:
 
     - alert: auto_login_error_rate_over_50%_due_to_bank_side_error_it
       expr: |
-        (sum by(provider, className, action) (increase (tink_agent_login_total{ environment="production",market="IT", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
-        / sum:IT:provider_className:production:login-manual:delta1h > 0.5 )
-        and (sum:IT:provider_className:production:login-manual:delta1h > 5)
+        (sum by(provider, className, action) (increase (tink_agent_login_total{market="IT", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
+        / sum:IT:provider_className:login-manual:delta1h > 0.5 )
+        and (sum:IT:provider_className:login-manual:delta1h > 5)
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent

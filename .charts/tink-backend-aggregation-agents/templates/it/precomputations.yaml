@@ -8,7 +8,7 @@ spec:
 
   # Precompute IT metrics
   - record: sum:IT:all_manual_attempts:not_failed:delta1h:action_className
-    expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginAction }},  {{ .Values.temporaryErrorsAuth }}, market="IT", provider_type!="test"}[1h])) by (action,className)
+    expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginAction }}, {{ .Values.temporaryErrorsAuth }}, market="IT", provider_type!="test"}[1h])) by (action,className)
 
   - record: sum:IT:all_manual_attempts:delta1h:action_className
     expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginAction }}, market="IT", provider_type!="test"}[1h])) by (action,className)
@@ -16,11 +16,11 @@ spec:
   - record: sum:IT:all_manual_attempts:not_unavailable:delta1h:action_className
     expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginAction }}, {{ .Values.bankErrorsAuth }} , market="IT", provider_type!="test"}[1h])) by (action,className)
 
-  - record: sum:IT:provider_className:production:login-manual:delta1h
-    expr: sum by(provider, className) (increase (tink_agent_login_total{ environment="production",market="IT", action="login-manual"}[1h]))
+  - record: sum:IT:provider_className:login-manual:delta1h
+    expr: sum by(provider, className) (increase (tink_agent_login_total{market="IT", action="login-manual"}[1h]))
 
-  - record: sum:IT:provider_className_action:production:login-auto-and-cron:delta1h
-    expr: sum by(provider, className, action) (increase (tink_agent_login_total{ environment="production",market="IT", action=~"login-auto|login-cron"}[1h]))
+  - record: sum:IT:provider_className_action:login-auto-and-cron:delta1h
+    expr: sum by(provider, className, action) (increase (tink_agent_login_total{market="IT", action=~"login-auto|login-cron"}[1h]))
 
   - record: sum:IT:className_type:not_failed_unavailable_partially_completed:delta1h:className
     expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="IT"}[1h]))

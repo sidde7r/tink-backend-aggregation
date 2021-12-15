@@ -19,11 +19,11 @@ spec:
   - record: sum:DE:all_manual_attempts:not_unavailable:delta1h:action_className
     expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginAction }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[1h])) by (action,className)
 
-  - record: sum:DE:className:production:login-manual:delta1h
-    expr: sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h]))
+  - record: sum:DE:className:login-manual:delta1h
+    expr: sum by(className) (increase (tink_agent_login_total{market="DE", action="login-manual"}[1h]))
 
-  - record: sum:DE:className:production:login-auto-and-cron:delta1h
-    expr: sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h]))
+  - record: sum:DE:className:login-auto-and-cron:delta1h
+    expr: sum by(className) (increase (tink_agent_login_total{market="DE", action=~"login-auto|login-cron"}[1h]))
 
   - record: sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
     expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[1h]))
