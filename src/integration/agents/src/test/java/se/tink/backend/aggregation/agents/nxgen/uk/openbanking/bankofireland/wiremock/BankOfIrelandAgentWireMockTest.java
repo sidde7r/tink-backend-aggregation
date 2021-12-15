@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofireland.wi
 
 import com.google.common.collect.Sets;
 import java.util.Set;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -11,8 +10,6 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-// Todo: Ignore should be removed when we move to UkOpenBankingV31AisExperimental completely
-@Ignore
 public class BankOfIrelandAgentWireMockTest {
 
     private static final String PROVIDER_NAME = "uk-bankofireland-oauth2";
