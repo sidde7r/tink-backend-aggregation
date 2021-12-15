@@ -112,6 +112,37 @@ public class DateRangeCalculatorTest {
     }
 
     @Test
+    public void shouldNotApplyCertainDateLimitDueToMissingCertainDate() {
+        // given
+        OffsetDateTime proposedFromDateTime =
+                LocalDate.of(2021, 1, 15).atStartOfDay().atOffset(ZoneOffset.UTC);
+        given(helper.getTransactionDateLimit(account)).willReturn(Optional.empty());
+
+        // when
+        OffsetDateTime fromDateTime =
+                calculator.applyCertainDateLimit(account, proposedFromDateTime);
+
+        // then
+        assertThat(fromDateTime).isEqualTo(proposedFromDateTime);
+    }
+
+    @Test
+    public void shouldNotApplyCertainDateLimitDueToMoreStrictProposalDate() {
+        // given
+        OffsetDateTime proposedFromDateTime =
+                LocalDate.of(2021, 1, 15).atStartOfDay().atOffset(ZoneOffset.UTC);
+        given(helper.getTransactionDateLimit(account))
+                .willReturn(optionalDate(2021, 1, 1, 13, 0, 0, ZoneOffset.UTC));
+
+        // when
+        OffsetDateTime fromDateTime =
+                calculator.applyCertainDateLimit(account, proposedFromDateTime);
+
+        // then
+        assertThat(fromDateTime).isEqualTo(proposedFromDateTime);
+    }
+
+    @Test
     public void shouldApplyCertainDateLimit() {
         // given
         OffsetDateTime proposedFromDateTime =
@@ -126,21 +157,6 @@ public class DateRangeCalculatorTest {
         // then
         assertThat(fromDateTime)
                 .isEqualTo(LocalDate.of(2021, 1, 20).atStartOfDay().atOffset(ZoneOffset.UTC));
-    }
-
-    @Test
-    public void shouldNotApplyCertainDateLimit() {
-        // given
-        OffsetDateTime proposedFromDateTime =
-                LocalDate.of(2021, 1, 15).atStartOfDay().atOffset(ZoneOffset.UTC);
-        given(helper.getTransactionDateLimit(account)).willReturn(Optional.empty());
-
-        // when
-        OffsetDateTime fromDateTime =
-                calculator.applyCertainDateLimit(account, proposedFromDateTime);
-
-        // then
-        assertThat(fromDateTime).isEqualTo(proposedFromDateTime);
     }
 
     private Optional<Date> optionalDate(

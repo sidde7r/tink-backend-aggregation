@@ -58,6 +58,7 @@ public class UkObTransactionPaginationController<ACCOUNT extends Account>
     private void calculateFinalFromDateIfUninitialised(ACCOUNT account) {
         if (finalFromDateTime == null) {
             finalFromDateTime = ukCalculator.calculateFinalFromDate(account, toDateTime);
+            log.info("[TRANSACTION FETCHING] Calculated finalFromDateTime: {}", finalFromDateTime);
         }
     }
 
