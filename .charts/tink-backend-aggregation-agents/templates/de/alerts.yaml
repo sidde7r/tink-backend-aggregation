@@ -13,12 +13,12 @@ spec:
   - alert: login_success_rate_between_70_and_80_de
     expr: |
       # Successful/Cancelled attempts above 80%
-      (sum:DE:all_manual_attempts:not_failed:delta1h:action_className
-          / sum:DE:all_manual_attempts:delta1h:action_className < 0.80)
-      and (sum:DE:all_manual_attempts:not_failed:delta1h:action_className
-                  / sum:DE:all_manual_attempts:delta1h:action_className >= 0.70)
+      (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
+          / sum:DE:action_className:all_manual_attempts:delta1h < 0.80)
+      and (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
+                  / sum:DE:action_className:all_manual_attempts:delta1h >= 0.70)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta1h:action_className > 5
+      and sum:DE:action_className:all_manual_attempts:delta1h > 5
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -32,12 +32,12 @@ spec:
 
   - alert: login_success_rate_between_60_and_70_de
     expr: |
-      (sum:DE:all_manual_attempts:not_failed:delta1h:action_className
-          / sum:DE:all_manual_attempts:delta1h:action_className < 0.70)
-      and (sum:DE:all_manual_attempts:not_failed:delta1h:action_className
-                  / sum:DE:all_manual_attempts:delta1h:action_className >= 0.60)
+      (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
+          / sum:DE:action_className:all_manual_attempts:delta1h < 0.70)
+      and (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
+                  / sum:DE:action_className:all_manual_attempts:delta1h >= 0.60)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta1h:action_className > 5
+      and sum:DE:action_className:all_manual_attempts:delta1h > 5
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -51,12 +51,12 @@ spec:
 
   - alert: login_success_rate_between_50_and_60_de
     expr: |
-      (sum:DE:all_manual_attempts:not_failed:delta1h:action_className
-          / sum:DE:all_manual_attempts:delta1h:action_className < 0.60)
-      and (sum:DE:all_manual_attempts:not_failed:delta1h:action_className
-                  / sum:DE:all_manual_attempts:delta1h:action_className >= 0.50)
+      (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
+          / sum:DE:action_className:all_manual_attempts:delta1h < 0.60)
+      and (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
+                  / sum:DE:action_className:all_manual_attempts:delta1h >= 0.50)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta1h:action_className > 5
+      and sum:DE:action_className:all_manual_attempts:delta1h > 5
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -70,10 +70,10 @@ spec:
 
   - alert: manual_login_success_rate_below_50_de
     expr: |
-      (sum:DE:all_manual_attempts:not_failed:delta1h:action_className
-          / sum:DE:all_manual_attempts:delta1h:action_className < 0.50)
+      (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
+          / sum:DE:action_className:all_manual_attempts:delta1h < 0.50)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta1h:action_className > 5
+      and sum:DE:action_className:all_manual_attempts:delta1h > 5
     for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
@@ -89,12 +89,12 @@ spec:
   - alert: bank_success_rate_between_70_and_80_de
     expr: |
       # Unavailable outcome above 50%
-      (sum:DE:all_manual_attempts:not_unavailable:delta1h:action_className
-          / sum:DE:all_manual_attempts:delta1h:action_className < 0.80)
-      and (sum:DE:all_manual_attempts:not_unavailable:delta1h:action_className
-                      / sum:DE:all_manual_attempts:delta1h:action_className >= 0.70)
+      (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
+          / sum:DE:action_className:all_manual_attempts:delta1h < 0.80)
+      and (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
+                      / sum:DE:action_className:all_manual_attempts:delta1h >= 0.70)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta1h:action_className > 5
+      and sum:DE:action_className:all_manual_attempts:delta1h > 5
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -109,12 +109,12 @@ spec:
   - alert: bank_success_rate_between_60_and_70_de
     expr: |
       # Unavailable outcome above 50%
-      (sum:DE:all_manual_attempts:not_unavailable:delta1h:action_className
-          / sum:DE:all_manual_attempts:delta1h:action_className < 0.70)
-      and (sum:DE:all_manual_attempts:not_unavailable:delta1h:action_className
-                  / sum:DE:all_manual_attempts:delta1h:action_className >= 0.60)
+      (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
+          / sum:DE:action_className:all_manual_attempts:delta1h < 0.70)
+      and (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
+                  / sum:DE:action_className:all_manual_attempts:delta1h >= 0.60)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta1h:action_className > 5
+      and sum:DE:action_className:all_manual_attempts:delta1h > 5
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -129,12 +129,12 @@ spec:
   - alert: bank_success_rate_between_50_and_60_de
     expr: |
       # Unavailable outcome above 50%
-      (sum:DE:all_manual_attempts:not_unavailable:delta1h:action_className
-          / sum:DE:all_manual_attempts:delta1h:action_className < 0.60)
-      and (sum:DE:all_manual_attempts:not_unavailable:delta1h:action_className
-                      / sum:DE:all_manual_attempts:delta1h:action_className >= 0.50)
+      (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
+          / sum:DE:action_className:all_manual_attempts:delta1h < 0.60)
+      and (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
+                      / sum:DE:action_className:all_manual_attempts:delta1h >= 0.50)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta1h:action_className > 5
+      and sum:DE:action_className:all_manual_attempts:delta1h > 5
     for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
@@ -149,10 +149,10 @@ spec:
   - alert: bank_success_rate_below_50_de
     expr: |
       # Unavailable outcome above 50%
-      (sum:DE:all_manual_attempts:not_unavailable:delta1h:action_className
-          / sum:DE:all_manual_attempts:delta1h:action_className < 0.50)
+      (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
+          / sum:DE:action_className:all_manual_attempts:delta1h < 0.50)
       # At least this many attempts.
-      and sum:DE:all_manual_attempts:delta1h:action_className > 5
+      and sum:DE:action_className:all_manual_attempts:delta1h > 5
     for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
@@ -206,10 +206,10 @@ spec:
   - alert: agent_refreshes_below45_greater35_due_to_all_error_for_specific_product_in_de
     expr: |
       (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h < 0.45)
+          / sum:DE:className_type:all_refreshes:delta1h < 0.45)
       and sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h)
-          / sum:DE:refreshes:delta1h >= 0.35)
-       and sum:DE:refreshes:delta1h > 20
+          / sum:DE:className_type:all_refreshes:delta1h >= 0.35)
+       and sum:DE:className_type:all_refreshes:delta1h > 20
     for: 30m
     labels:
       severity: ping
@@ -224,10 +224,10 @@ spec:
   - alert: agent_refreshes_below35_greater25_due_to_all_error_for_specific_product_in_de
     expr: |
       (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h < 0.35)
+          / sum:DE:className_type:all_refreshes:delta1h < 0.35)
       and (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h >= 0.25)
-       and sum:DE:refreshes:delta1h > 20
+          / sum:DE:className_type:all_refreshes:delta1h >= 0.25)
+       and sum:DE:className_type:all_refreshes:delta1h > 20
     for: 30m
     labels:
       severity: urgent
@@ -242,10 +242,10 @@ spec:
   - alert: agent_refreshes_below25_greater15_due_to_all_error_for_specific_product_in_de
     expr: |
       (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h < 0.25)
+          / sum:DE:className_type:all_refreshes:delta1h < 0.25)
       and (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h >= 0.15)
-       and sum:DE:refreshes:delta1h > 20
+          / sum:DE:className_type:all_refreshes:delta1h >= 0.15)
+       and sum:DE:className_type:all_refreshes:delta1h > 20
     for: 30m
     labels:
       severity: urgent
@@ -260,8 +260,8 @@ spec:
   - alert: agent_refreshes_below15_due_to_all_error_for_specific_product_in_de
     expr: |
       (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h < 0.15)
-       and sum:DE:refreshes:delta1h > 20
+          / sum:DE:className_type:all_refreshes:delta1h < 0.15)
+       and sum:DE:className_type:all_refreshes:delta1h > 20
     for: 30m
     labels:
       severity: urgent
@@ -280,10 +280,10 @@ spec:
   - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_for_specific_product_in_de
     expr: |
       (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h < 0.6)
+          / sum:DE:className_type:all_refreshes:delta1h < 0.6)
       and (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h >= 0.5)
-       and sum:DE:refreshes:delta1h > 20
+          / sum:DE:className_type:all_refreshes:delta1h >= 0.5)
+       and sum:DE:className_type:all_refreshes:delta1h > 20
     for: 30m
     labels:
       severity: ping
@@ -298,10 +298,10 @@ spec:
   - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_for_specific_product_in_de
     expr: |
       (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h < 0.5)
+          / sum:DE:className_type:all_refreshes:delta1h < 0.5)
       and (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h >= 0.4)
-       and sum:DE:refreshes:delta1h > 20
+          / sum:DE:className_type:all_refreshes:delta1h >= 0.4)
+       and sum:DE:className_type:all_refreshes:delta1h > 20
     for: 30m
     labels:
       severity: urgent
@@ -316,10 +316,10 @@ spec:
   - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_for_specific_product_in_de
     expr: |
       (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h < 0.4)
+          / sum:DE:className_type:all_refreshes:delta1h < 0.4)
       and (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h >= 0.3)
-       and sum:DE:refreshes:delta1h > 20
+          / sum:DE:className_type:all_refreshes:delta1h >= 0.3)
+       and sum:DE:className_type:all_refreshes:delta1h > 20
     for: 30m
     labels:
       severity: urgent
@@ -334,8 +334,8 @@ spec:
   - alert: agent_refreshes_below30_due_to_partially_completed_error_for_specific_product_in_de
     expr: |
       sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:refreshes:delta1h < 0.3
-       and sum:DE:refreshes:delta1h > 20
+          / sum:DE:className_type:all_refreshes:delta1h < 0.3
+       and sum:DE:className_type:all_refreshes:delta1h > 20
     for: 30m
     labels:
       severity: urgent
