@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class FortisTestData {
 
     static final String BULK_ERROR_MESSAGE =
