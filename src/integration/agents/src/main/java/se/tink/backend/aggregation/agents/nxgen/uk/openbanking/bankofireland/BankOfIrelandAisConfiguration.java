@@ -74,7 +74,11 @@ public class BankOfIrelandAisConfiguration extends UkOpenBankingV31Ais {
                 scaValidator,
                 new DateRangeCalculator<>(
                         localDateTimeSource, DEFAULT_OFFSET, transactionPaginationHelper),
-                Period.ofDays(90),
+                // Temporary decreased limit for expired SCA case (auto refreshes) -
+                // until transactionBookedDateGte from RefreshScope is as reliable as old
+                // certainDate
+                // https://tink.slack.com/archives/CSK4994QH/p1639582461330900
+                Period.ofDays(30),
                 Period.ofYears(2));
     }
 }
