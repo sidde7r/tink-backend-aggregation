@@ -52,7 +52,7 @@ public class BankOfIrelandAisConfiguration extends UkOpenBankingV31Ais {
                                 AccountTransactionsV31Response
                                         .toAccountTransactionPaginationResponse(response))),
                 constructUkObDateCalculator(),
-                Period.ofDays(30));
+                Period.ofYears(2));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class BankOfIrelandAisConfiguration extends UkOpenBankingV31Ais {
                         AccountTransactionsV31Response.class,
                         (AccountTransactionsV31Response::toCreditCardPaginationResponse)),
                 constructUkObDateCalculator(),
-                Period.ofDays(30));
+                Period.ofYears(2));
     }
 
     private <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
