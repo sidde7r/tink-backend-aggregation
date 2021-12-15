@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.degussabank.mock.payment;
 
 import java.time.LocalDate;
+import org.assertj.core.api.Assertions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -20,7 +21,7 @@ import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class DegussaPaymentWiremockTest {
+public class DegussaPaymentMockTest {
     private static final String BASE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/degussabank/mock/payment/resources/";
 
@@ -32,7 +33,8 @@ public class DegussaPaymentWiremockTest {
     }
 
     @Test
-    public void testSepaPaymentInitiation() throws Exception {
+    public void testSepaPaymentInitiation() {
+        // given
         final String wireMockFilePath = BASE_PATH + "sepa.aap";
 
         Payment payment =
@@ -51,11 +53,15 @@ public class DegussaPaymentWiremockTest {
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addCallbackData("smsTan", "123456")
                         .buildWithoutLogin(PaymentCommand.class);
-        agentWireMockPaymentTest.executePayment();
+
+        // then
+        Assertions.assertThatCode(agentWireMockPaymentTest::executePayment)
+                .doesNotThrowAnyException();
     }
 
     @Test
-    public void testRecurringPaymentInitiation() throws Exception {
+    public void testRecurringPaymentInitiation() {
+        // given
         final String wireMockFilePath = BASE_PATH + "recurring.aap";
 
         LocalDate refDate = LocalDate.of(2021, 1, 12);
@@ -81,7 +87,10 @@ public class DegussaPaymentWiremockTest {
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addCallbackData("smsTan", "123456")
                         .buildWithoutLogin(PaymentCommand.class);
-        agentWireMockPaymentTest.executePayment();
+
+        // then
+        Assertions.assertThatCode(agentWireMockPaymentTest::executePayment)
+                .doesNotThrowAnyException();
     }
 
     private Payment.Builder createRealDomesticPayment() {

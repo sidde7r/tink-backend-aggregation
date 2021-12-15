@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.mock.payment;
 
+import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
+
+import org.assertj.core.api.Assertions;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
@@ -29,7 +34,8 @@ public class TargobankPaymentMockTest {
     }
 
     @Test
-    public void testSepaPaymentInitiation() throws Exception {
+    public void testSepaPaymentInitiation() {
+        // given
         final String wireMockFilePath = BASE_PATH + "sepa.aap";
 
         Payment payment =
@@ -47,7 +53,66 @@ public class TargobankPaymentMockTest {
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addCallbackData("authenticationMethodId", "923")
                         .buildWithoutLogin(PaymentCommand.class);
-        agentWireMockPaymentTest.executePayment();
+
+        // then
+        Assertions.assertThatCode(agentWireMockPaymentTest::executePayment)
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testSepaPaymentInitiationTimeout() {
+        // given
+        final String wireMockFilePath = BASE_PATH + "sepa_timeout.aap";
+
+        Payment payment =
+                createRealDomesticPayment()
+                        .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                        .build();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(MarketCode.DE, "de-targobank-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCredentialField("username", "dummy_psu_id")
+                        .addCredentialField("password", "test_password")
+                        .addCallbackData("selectAuthMethodField", "2")
+                        .withPayment(payment)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addCallbackData("authenticationMethodId", "923")
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        // when
+        Throwable throwable = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        Assertions.assertThat(throwable).isInstanceOf(PaymentAuthorizationTimeOutException.class);
+    }
+
+    @Test
+    public void testSepaPaymentInitiationIncorrectCredentials() {
+        // given
+        final String wireMockFilePath = BASE_PATH + "sepa_incorrect_credentials.aap";
+
+        Payment payment =
+                createRealDomesticPayment()
+                        .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                        .build();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(MarketCode.DE, "de-targobank-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCredentialField("username", "dummy_psu_id")
+                        .addCredentialField("password", "incorrect_password")
+                        .addCallbackData("selectAuthMethodField", "2")
+                        .withPayment(payment)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addCallbackData("authenticationMethodId", "923")
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        // when
+        Throwable throwable = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        Assertions.assertThat(throwable).isInstanceOf(PaymentAuthenticationException.class);
     }
 
     private Payment.Builder createRealDomesticPayment() {

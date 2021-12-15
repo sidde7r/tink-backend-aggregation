@@ -25,10 +25,10 @@ X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 
-{"transactionStatus":"RCVD","paymentId":"3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q","_links":{"self":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q"},"status":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/status"},"startAuthorisationWithPsuAuthentication":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations"}}}
+{"transactionStatus":"RCVD","paymentId":"3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx","_links":{"self":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx"},"status":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/status"},"startAuthorisationWithPsuAuthentication":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations"}}}
 
 REQUEST 2
-POST https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations
+POST https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations
 Content-Type: application/json
 X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-Address: 127.0.0.1
@@ -52,10 +52,10 @@ X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 
-{"scaMethods":[{"authenticationType":"SMS_OTP","authenticationMethodId":"921","name":"smsTAN","explanation":"TAN-Nummer"},{"authenticationType":"PUSH_OTP","authenticationMethodId":"923","name":"easyTAN solution","explanation":"TAN-Nummer"}],"_links":{"selectAuthenticationMethod":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"},"scaStatus":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"}},"scaStatus":"psuAuthenticated","authorisationId":"f95cb627-214c-437e-a3fd-3a0ede6a72db"}
+{"scaMethods":[{"authenticationType":"SMS_OTP","authenticationMethodId":"921","name":"smsTAN","explanation":"TAN-Nummer"},{"authenticationType":"PUSH_OTP","authenticationMethodId":"923","name":"easyTAN solution","explanation":"TAN-Nummer"}],"_links":{"selectAuthenticationMethod":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"},"scaStatus":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"}},"scaStatus":"psuAuthenticated","authorisationId":"f95cb627-214c-437e-a3fd-3a0ede6a72db"}
 
 REQUEST 3
-PUT https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db
+PUT https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db
 Content-Type: application/json
 X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-Address: 127.0.0.1
@@ -80,10 +80,10 @@ X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 
-{"_links":{"scaStatus":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"}},"scaStatus":"scaMethodSelected","psuMessage":"nochallenge"}
+{"_links":{"scaStatus":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"}},"scaStatus":"scaMethodSelected","psuMessage":"nochallenge"}
 
 REQUEST 4
-GET https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db
+GET https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db
 Content-Type: application/json
 X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-Address: 127.0.0.1
@@ -107,7 +107,7 @@ X-XSS-Protection: 1; mode=block
 {"scaStatus":"finalised"}
 
 REQUEST 5
-GET https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF_lI9ojHshGZRVA_HEGh3jFM8qPXP9tQvIkxiKvzbrnemXVn64p3BFxOenR5KnA7sKzohF4HfSdMWF3876hAweK_n7HJlg=_=_psGLvQpt9Q/status
+GET https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/status
 Accept: application/json
 Content-Type: application/json
 X-Request-ID: 00000000-0000-4000-0000-000000000000

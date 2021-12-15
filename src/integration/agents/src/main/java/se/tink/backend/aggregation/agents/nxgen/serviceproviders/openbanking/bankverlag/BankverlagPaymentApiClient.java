@@ -28,21 +28,17 @@ public class BankverlagPaymentApiClient implements PaymentApiClient {
 
         return requestBuilder
                 .createRequest(
-                        requestBuilder
-                                .createRequest(
-                                        Urls.CREATE_PAYMENT
-                                                .parameter(
-                                                        PAYMENT_SERVICE,
-                                                        PaymentService.getPaymentService(
-                                                                paymentRequest
-                                                                        .getPayment()
-                                                                        .getPaymentServiceType()))
-                                                .parameter(
-                                                        PAYMENT_PRODUCT,
-                                                        PaymentProduct.getPaymentProduct(
-                                                                paymentRequest
-                                                                        .getPayment()
-                                                                        .getPaymentScheme())))
+                        Urls.CREATE_PAYMENT
+                                .parameter(
+                                        PAYMENT_SERVICE,
+                                        PaymentService.getPaymentService(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getPaymentServiceType()))
+                                .parameter(
+                                        PAYMENT_PRODUCT,
+                                        PaymentProduct.getPaymentProduct(
+                                                paymentRequest.getPayment().getPaymentScheme()))
                                 .getUrl())
                 .body(createPaymentRequest)
                 .post(CreatePaymentResponse.class);

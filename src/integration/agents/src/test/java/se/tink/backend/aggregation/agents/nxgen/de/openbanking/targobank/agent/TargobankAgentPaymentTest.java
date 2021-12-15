@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.degussabank;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.agent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +15,6 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
-import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Payment.Builder;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -23,13 +22,13 @@ import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class DegussabankAgentPaymentTest {
+public class TargobankAgentPaymentTest {
 
     private final ArgumentManager<ArgumentManager.UsernamePasswordArgumentEnum>
             usernamePasswordManager =
                     new ArgumentManager<>(ArgumentManager.UsernamePasswordArgumentEnum.values());
-    private final ArgumentManager<DegussabankAgentPaymentTest.Arg> creditorDebtorManager =
-            new ArgumentManager<>(DegussabankAgentPaymentTest.Arg.values());
+    private final ArgumentManager<TargobankAgentPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(TargobankAgentPaymentTest.Arg.values());
     private static final String TRANSFER_DATE_FORMAT = "yyyy/MM/dd 'at' HH:mm";
 
     private AgentIntegrationTest.Builder builder;
@@ -40,7 +39,7 @@ public class DegussabankAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-degussabank-ob")
+                new AgentIntegrationTest.Builder("de", "de-targobank-ob")
                         .addCredentialField(
                                 Key.USERNAME,
                                 usernamePasswordManager.get(
@@ -49,7 +48,7 @@ public class DegussabankAgentPaymentTest {
                                 Key.PASSWORD,
                                 usernamePasswordManager.get(
                                         ArgumentManager.UsernamePasswordArgumentEnum.PASSWORD))
-                        .setFinancialInstitutionId("f76b2c92bef511eb85290242ac130003")
+                        .setFinancialInstitutionId("dc5eceed69b748439a49ec1e4feb1c1c")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
@@ -83,7 +82,7 @@ public class DegussabankAgentPaymentTest {
         builder.build().testTinkLinkPayment(createRecurringPayment().build());
     }
 
-    private Payment.Builder createRecurringPayment() {
+    private Builder createRecurringPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         setUnstructuredRemittanceInformation(remittanceInformation);
         LocalDate startDate = BasePaymentExecutor.createStartDateForRecurringPayment(2);
@@ -99,11 +98,11 @@ public class DegussabankAgentPaymentTest {
                 .withDayOfMonth(transferDayOfMonth);
     }
 
-    private Payment.Builder createSepaPayment() {
+    private Builder createSepaPayment() {
         return createRealDomesticPayment().withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
     }
 
-    private Payment.Builder createSepaInstantPayment() {
+    private Builder createSepaInstantPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         setUnstructuredRemittanceInformation(remittanceInformation);
 
@@ -112,19 +111,18 @@ public class DegussabankAgentPaymentTest {
                 .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER);
     }
 
-    private Payment.Builder createRealDomesticPayment() {
+    private Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         setUnstructuredRemittanceInformation(remittanceInformation);
 
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(
-                                DegussabankAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+                        creditorDebtorManager.get(TargobankAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Test Creditor");
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(DegussabankAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+                        creditorDebtorManager.get(TargobankAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
