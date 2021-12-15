@@ -96,6 +96,23 @@ public class BpceGroupTransactionalAccountFetcherTest {
         assertThat(transactionalAccounts.get(0).getName()).isEqualTo("COMPTE DE DEPOT");
     }
 
+    @Test
+    public void shouldNotMapAnyAccounts() {
+        // given
+        when(bpceGroupApiClientMock.fetchAccountsFromCacheIfPossible())
+                .thenReturn(AccountsResponse.empty());
+
+        // when
+        Collection<TransactionalAccount> accounts =
+                bpceGroupTransactionalAccountFetcher.fetchAccounts();
+
+        // then
+        assertThat(accounts).isEmpty();
+        verify(bpceGroupApiClientMock).fetchAccountsFromCacheIfPossible();
+        verify(bpceGroupApiClientMock, never()).recordCustomerConsent(any());
+        verify(bpceGroupApiClientMock, never()).fetchBalances(any());
+    }
+
     private static AccountsResponse getAccountsResponse() {
         return SerializationUtils.deserializeFromString(
                 "{\n"

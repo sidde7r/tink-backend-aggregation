@@ -166,13 +166,32 @@ public class BpceGroupApiClientTest {
         // given
         final String url = SERVER_URL + "/stet/psd2/v1/accounts";
         final AccountsResponse expectedResponse = getAccountsResponse();
-        setUpHttpClientMockForApi(url, expectedResponse);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponse.getStatus()).thenReturn(200);
+        when(httpResponse.getBody(AccountsResponse.class)).thenReturn(expectedResponse);
+        setUpHttpClientMockForApi(url, httpResponse);
 
         // when
         final AccountsResponse actualResponse = bpceGroupApiClient.fetchAccounts();
 
         // then
         assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    public void shouldHandleNoContentAccountResponse() {
+        // given
+        final String url = SERVER_URL + "/stet/psd2/v1/accounts";
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponse.getStatus()).thenReturn(204);
+        setUpHttpClientMockForApi(url, httpResponse);
+
+        // when
+        final AccountsResponse actualResponse = bpceGroupApiClient.fetchAccounts();
+
+        // then
+        assertThat(actualResponse.getAccounts()).isEmpty();
+        assertThat(actualResponse.getConnectedPsu()).isNull();
     }
 
     @Test

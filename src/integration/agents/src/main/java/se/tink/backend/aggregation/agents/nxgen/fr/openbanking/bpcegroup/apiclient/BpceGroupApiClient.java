@@ -125,10 +125,7 @@ public class BpceGroupApiClient implements FrAispApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-        final RequestBuilder requestBuilder =
-                httpClient.request(createUrlWithBasePath(ENDPOINT_ACCOUNTS));
-        AccountsResponse accountsResponse =
-                sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, AccountsResponse.class);
+        AccountsResponse accountsResponse = getAccountResponse();
         // [PENG-402] Temporary log to investigate 403 TMRQ errors
         log.info("[API CLIENT] Connected PSU hash: {}", getConnectedPsuHash(accountsResponse));
         return storeAndGetAccountsResponse(accountsResponse);
@@ -155,6 +152,19 @@ public class BpceGroupApiClient implements FrAispApiClient {
 
         return sendRequestAndGetResponse(
                 requestBuilder, HttpMethod.GET, TransactionsResponse.class);
+    }
+
+    private AccountsResponse getAccountResponse() {
+        final RequestBuilder requestBuilder =
+                httpClient.request(createUrlWithBasePath(ENDPOINT_ACCOUNTS));
+
+        HttpResponse httpResponse =
+                sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, HttpResponse.class);
+        if (httpResponse.getStatus() == 204) {
+            return AccountsResponse.empty();
+        }
+
+        return httpResponse.getBody(AccountsResponse.class);
     }
 
     private <T> T sendRequestAndGetResponse(
