@@ -21,7 +21,7 @@ spec:
         priority: P1
         who: connectivity-nazguls
       annotations:
-        description:
+        description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
         summary: Payments success rate is below 20% due to temporary errors, actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
         tags: {{ .Values.tags }}
 
@@ -41,7 +41,7 @@ spec:
         priority: P2
         who: connectivity-nazguls
       annotations:
-        description:
+        description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
         summary: Payments success rate is between 20% and 40% due to temporary errors, actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
         tags: {{ .Values.tags }}
 
@@ -61,8 +61,7 @@ spec:
         priority: P3
         who: connectivity-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
         summary: Payments success rate is between 40% and 60% due to temporary errors, actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
         tags: {{ .Values.tags }}
 
@@ -83,8 +82,7 @@ spec:
         priority: P1
         who: connectivity-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
         summary: Payments success rate is below 80% due to bank side errors, actual    is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
         tags: {{ .Values.tags }}
 
@@ -104,8 +102,7 @@ spec:
         priority: {{ .Values.p3WaitTimeBeforeFiringAlert }}
         who: connectivity-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
         summary: Payments success rate is between 40% and 80% due to bank side errors, actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
         tags: {{ .Values.tags }}
 
@@ -126,8 +123,7 @@ spec:
         priority: P1
         who: connectivity-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
         summary: Payments success rate is below 80% due to auth errors actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 10 attempts.
         tags: {{ .Values.tags }}
 
@@ -148,7 +144,6 @@ spec:
         priority: P1
         who: connectivity-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
         summary: Payments success rate is below 80% due to various errors, actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 10 attempts.
         tags: {{ .Values.tags }}
