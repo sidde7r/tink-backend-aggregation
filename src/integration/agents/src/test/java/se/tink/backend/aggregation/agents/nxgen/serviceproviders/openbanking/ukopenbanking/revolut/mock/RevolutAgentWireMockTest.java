@@ -9,10 +9,13 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class RevolutAgentWireMockTest {
 
@@ -41,6 +44,9 @@ public class RevolutAgentWireMockTest {
     private Payment createMockedDomesticPayment() {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "GBP");
         LocalDate executionDate = LocalDate.now();
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.REFERENCE);
+        remittanceInformation.setValue("Donation");
         String currency = "GBP";
         return new Payment.Builder()
                 .withCreditor(
@@ -51,10 +57,45 @@ public class RevolutAgentWireMockTest {
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
+                .withRemittanceInformation(remittanceInformation)
+                .withUniqueId("0a44fcefbd524c5383707c3bbb77809a")
+                .build();
+    }
+
+    @Test
+    public void testRevolutEuroPayment() throws Exception {
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/revolut/mock/resources/fr-revolut-pis.aap";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(MarketCode.FR, "fr-revolut-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withHttpDebugTrace()
+                        .withPayment(createMockedSepaPayment())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    private Payment createMockedSepaPayment() {
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "EUR");
+        LocalDate executionDate = LocalDate.now();
+        String currency = "EUR";
+        return new Payment.Builder()
+                .withCreditor(
+                        new Creditor(
+                                new IbanIdentifier("FR1420041010050500013M02606"),
+                                "Recipient Name"))
+                .withExactCurrencyAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(currency)
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
-                                "Donation"))
-                .withUniqueId("0a44fcefbd524c5383707c3bbb77809a")
+                                "Unstructured"))
+                .withUniqueId("f0492f1e45e64195b78be68a3152501b")
                 .build();
     }
 }

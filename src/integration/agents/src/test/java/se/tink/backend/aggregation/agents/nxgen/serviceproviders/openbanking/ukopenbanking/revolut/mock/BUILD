@@ -7,7 +7,10 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/revolut/mock/resources",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/revolut"],
+    runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/revolut",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/revolut",
+    ],
     deps = [
         "//src/integration/amount",
         "//src/integration/enums",
@@ -16,6 +19,8 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_inject_guice",
         "//third_party:org_mockito_mockito_core",
