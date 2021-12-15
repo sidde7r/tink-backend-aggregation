@@ -13,6 +13,8 @@ import se.tink.libraries.enums.MarketCode;
 
 public class DanskebankV31Constant {
 
+    private static final String MARKET = "MARKET";
+
     public static final List<UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code>
             ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS =
                     ImmutableList.of(DANSKE_BANK_ACCOUNT_NUMBER, IBAN);
@@ -24,20 +26,25 @@ public class DanskebankV31Constant {
 
         public static class V31 {
             public static final String AIS_BASE = "https://psd2-api.danskebank.com/psd2/v3.1/aisp";
+            public static final String PIS_BASE = "https://psd2-api.danskebank.com/psd2/v3.1/pisp";
             private static final String WELL_KNOWN =
                     "https://psd2-api.danskebank.com/psd2/{MARKET}/private/.well-known/openid-configuration";
-            private static final String WELL_KNOWN_BUISNESS =
+            private static final String WELL_KNOWN_BUSINESS =
                     "https://psd2-api.danskebank.com/psd2/{MARKET}/business/.well-known/openid-configuration";
 
             public static URL getWellKnownUrl(@Nonnull final MarketCode market) {
 
-                return new URL(WELL_KNOWN).parameter("MARKET", market.name().toLowerCase());
+                return new URL(WELL_KNOWN).parameter(MARKET, market.name().toLowerCase());
             }
 
             public static URL getWellKnownBusinessUrl(@Nonnull final MarketCode market) {
 
-                return new URL(WELL_KNOWN_BUISNESS)
-                        .parameter("MARKET", market.name().toLowerCase());
+                return new URL(WELL_KNOWN_BUSINESS).parameter(MARKET, market.name().toLowerCase());
+            }
+
+            public static URL getPisBaseUrl() {
+
+                return new URL(PIS_BASE);
             }
         }
     }

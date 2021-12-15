@@ -4,6 +4,7 @@ public class UkOpenBankingPaymentConstants {
 
     public static final String CONSENT_ID_KEY = "consentId";
     public static final String PAYMENT_ID_KEY = "paymentId";
+    public static final String MARKET = "market";
 
     public static class ErrorMessage {
         public static final String CREDITOR_VALIDATION_FAILURE =
