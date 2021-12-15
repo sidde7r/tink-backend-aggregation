@@ -80,6 +80,12 @@ public class CardEntity {
 
         final String maskedCreditCardNumber = credit.getMaskedCreditCardNumber();
         final String cardAlias = MoreObjects.firstNonNull(nickname, maskedCreditCardNumber);
+        String accountName;
+        if (isOnStaging) {
+            accountName = MoreObjects.firstNonNull(nickname, productCode);
+        } else {
+            accountName = cardAlias;
+        }
 
         final CreditCardBuildStep builder =
                 CreditCardAccount.nxBuilder()
@@ -105,7 +111,7 @@ public class CardEntity {
                                 IdModule.builder()
                                         .withUniqueIdentifier(cardId)
                                         .withAccountNumber(maskedCreditCardNumber)
-                                        .withAccountName(cardAlias)
+                                        .withAccountName(accountName)
                                         .addIdentifier(
                                                 new MaskedPanIdentifier(maskedCreditCardNumber))
                                         .build())
