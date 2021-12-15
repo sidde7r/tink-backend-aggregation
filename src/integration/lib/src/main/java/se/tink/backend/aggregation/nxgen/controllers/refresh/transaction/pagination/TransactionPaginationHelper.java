@@ -5,9 +5,11 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
+@Slf4j
 public abstract class TransactionPaginationHelper {
     @VisibleForTesting static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
     @VisibleForTesting static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
@@ -66,6 +68,11 @@ public abstract class TransactionPaginationHelper {
 
             if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
                     && overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
+                log.info(
+                        "[TRANSACTION FETCHING] Safety thresholds for {} certain date met. Fetched transaction before this date {}. Overlapping transaction days: {}",
+                        transactionDateLimit,
+                        transactionsBeforeCertainDate,
+                        overlappingTransactionDays);
                 return true;
             }
         }
