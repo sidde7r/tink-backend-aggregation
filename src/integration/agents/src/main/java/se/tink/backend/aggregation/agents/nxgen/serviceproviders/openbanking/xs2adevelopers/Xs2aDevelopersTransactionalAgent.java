@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -188,7 +189,9 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
 
         return Optional.of(
                 new PaymentController(
-                        xs2aDevelopersPaymentExecutor, xs2aDevelopersPaymentExecutor));
+                        xs2aDevelopersPaymentExecutor,
+                        xs2aDevelopersPaymentExecutor,
+                        new PaymentControllerExceptionMapper()));
     }
 
     @Override

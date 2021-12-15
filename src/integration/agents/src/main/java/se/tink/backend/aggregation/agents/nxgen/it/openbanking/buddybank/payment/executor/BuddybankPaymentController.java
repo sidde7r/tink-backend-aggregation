@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerAgentExceptionMapper;
 
 public class BuddybankPaymentController extends PaymentController {
 
@@ -26,8 +27,10 @@ public class BuddybankPaymentController extends PaymentController {
     private final BuddybankApiClient apiClient;
 
     public BuddybankPaymentController(
-            UnicreditPaymentExecutor paymentExecutor, UnicreditBaseApiClient apiClient) {
-        super(paymentExecutor, paymentExecutor);
+            UnicreditPaymentExecutor paymentExecutor,
+            PaymentControllerAgentExceptionMapper exceptionMapper,
+            UnicreditBaseApiClient apiClient) {
+        super(paymentExecutor, paymentExecutor, exceptionMapper);
 
         this.apiClient = (BuddybankApiClient) apiClient;
     }
