@@ -10,9 +10,11 @@ java_library_with_sources(
         "//src/libraries/i18n",
         "//src/libraries/cryptography",
         "//src/libraries/date",
+        "//src/libraries/encoding",
         "//src/libraries/pair",
         "//src/integration/amount",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/strings",
     ],
     visibility = [
         "//src/agent_sdk/sdk:__subpackages__",
@@ -22,8 +24,10 @@ java_library_with_sources(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
         "//src/libraries/cryptography",
         "//src/libraries/date",
+        "//src/libraries/encoding",
         "//src/libraries/i18n",
         "//src/libraries/pair",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/strings",
     ],
 )

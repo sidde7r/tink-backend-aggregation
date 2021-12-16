@@ -21,6 +21,9 @@ java_library_with_sources(
         "//src/libraries/encoding",
     ],
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/libraries/cryptography/hash",
+    ],
 )
 
 junit_test(
