@@ -26,7 +26,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Login success rate is between 70 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Login success rate is between 70 - 80% ( <{ value | humanizePercentage }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes..
       tags: {{ .Values.tags }}
 
@@ -45,7 +45,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Login success rate is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Login success rate is between 60 - 70% ( <{ value | humanizePercentage }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
@@ -64,7 +64,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Login success rate is between 50 - 60 % ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Login success rate is between 50 - 60 % ( <{ value | humanizePercentage }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
@@ -81,7 +81,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Login success rate is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Login success rate is below 50% ( <{ value | humanizePercentage }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
@@ -102,7 +102,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Bank errors rate is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }>
+      summary: Bank errors rate is between 20 - 30% ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
@@ -122,7 +122,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Bank errors rate is between 30 - 40% ( <{ $value }> ) for <{ $labels.className }>
+      summary: Bank errors rate is between 30 - 40% ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
@@ -142,7 +142,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Bank errors rate is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }>
+      summary: Bank errors rate is between 40 - 50% ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the {{ .Values.p3WaitTimeBeforeFiringAlert }} 30 minutes.
       tags: {{ .Values.tags }}
 
@@ -160,7 +160,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Bank errors rate is below 50% ( <{ $value }> ) for <{ $labels.className }>
+      summary: Bank errors rate is below 50% ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
@@ -217,7 +217,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Refresh unavailable rate is between 35 - 45% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is between 35 - 45% because of all issues ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last 30 minutes for <{ $labels.type }>
       tags: {{ .Values.tags }}
 
@@ -235,7 +235,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Refresh unavailable rate is between 25 - 35% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is between 25 - 35% because of all issues ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last 30 minutes for <{ $labels.type }>
       tags: {{ .Values.tags }}
 
@@ -253,7 +253,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Refresh unavailable rate is between 15 - 25% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is between 15 - 25% because of all issues ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last 30 minutes for <{ $labels.type }>
       tags: {{ .Values.tags }}
 
@@ -269,7 +269,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Refresh unavailable rate is below 15% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is below 15% because of all issues ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last 30 minutes for <{ $labels.type }>
       tags: {{ .Values.tags }}
 
@@ -291,7 +291,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Refresh unavailable rate is between 50 - 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is between 50 - 60% because of all issues ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last 30 minutes for <{ $labels.type }>
       tags: {{ .Values.tags }}
 
@@ -309,7 +309,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Refresh unavailable rate is between 40 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is between 40 - 50% because of all issues ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last 30 minutes for <{ $labels.type }>
       tags: {{ .Values.tags }}
 
@@ -327,7 +327,7 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Refresh unavailable rate is between 30 - 40% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is between 30 - 40% because of all issues ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last 30 minutes for <{ $labels.type }>
       tags: {{ .Values.tags }}
 
@@ -343,6 +343,6 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }}|Kibana> \n <{{ .Values.grafanaClassLinkAbs1h }}|Grafana>
-      summary: Refresh unavailable rate is below 30% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is below 30% because of all issues ( <{ value | humanizePercentage }> ) for <{ $labels.className }>
         the last 30 minutes for <{ $labels.type }>
       tags: {{ .Values.tags }}
