@@ -101,7 +101,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding/messagebodywriter",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/comparor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",

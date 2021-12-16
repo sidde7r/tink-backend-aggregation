@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Headers.SHOULD_SENT_X_SIGNATURE_HEADER;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.utils.serialization.body.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -29,7 +30,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.filters.
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientModule;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientProvider;
-import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
