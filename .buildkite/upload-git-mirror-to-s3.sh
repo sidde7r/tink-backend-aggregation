@@ -2,12 +2,19 @@
 set -xeuo pipefail
 
 echo "--- Creating archive of git-mirror directory"
-tar -cvf git-github-com-tink-ab-tink-backend-aggregation-git.tar \
+REPO=git-github-com-tink-ab-tink-backend-aggregation-git
+CURDATE=$(date "+%Y%m%d-%H%M%S")
+TARFILE="$REPO.$BUILDKITE_COMMIT.$CURDATE.tar"
+tar -cvf "$TARFILE" \
   -C /var/lib/buildkite-agent/git-mirrors \
-  git-github-com-tink-ab-tink-backend-aggregation-git
+  "$REPO"
+
+echo -n "$TARFILE" > "$REPO"
 
 echo "--- Uploading to S3"
-aws s3 cp git-github-com-tink-ab-tink-backend-aggregation-git.tar \
-  s3://tink-build-shared-data-build-production/git-github-com-tink-ab-tink-backend-aggregation-git.tar
+aws s3 cp "$TARFILE" \
+  "s3://tink-build-shared-data-build-production/$TARFILE"
 
-rm git-github-com-tink-ab-tink-backend-aggregation-git.tar
+aws s3 cp "$REPO" "s3://tink-build-shared-data-build-production/$REPO"
+rm "$TARFILE"
+rm "$REPO"
