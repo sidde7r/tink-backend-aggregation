@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys;
 
+import java.time.ZoneId;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
@@ -36,6 +37,7 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
                         return RedsysScope.ALL_PSD2;
                 }
             };
+    private static final ZoneId SPAIN_ZONE_ID = ZoneId.of("Europe/Paris");
 
     private final WeightedScopeSupplier<RefreshableItem, RedsysScope> scopeSupplier;
     private final LocalDateTimeSource localDateTimeSource;
@@ -81,7 +83,7 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
                 .recurringIndicator(true)
                 .validUntil(
                         localDateTimeSource
-                                .now()
+                                .now(SPAIN_ZONE_ID)
                                 .toLocalDate()
                                 .plusDays(RedsysScope.MAX_EXPIRATION_DAYS))
                 .frequencyPerDay(RedsysScope.MAX_DAILY_FREQUENCY)
