@@ -4,7 +4,7 @@ java_library_with_sources(
     name = "common_steps",
     srcs = glob(["*.java"]),
     extdeps = [
-        "@agent_sdk_maven//:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/authentication/new_consent",

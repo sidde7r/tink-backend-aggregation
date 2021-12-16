@@ -975,13 +975,21 @@ load("@lombok_maven//:defs.bzl", pin_lombok = "pinned_maven_install")
 pin_lombok()
 
 SPRING_FRAMEWORK_VERSION = "5.2.8.RELEASE"
+
 SPRING_SECURITY_VERSION = "5.3.4.RELEASE"
+
 SPRING_BOOT_VERSION = "2.3.3.RELEASE"
+
 JACKSON_VERSION = "2.11.2"
+
 SLF4J_VERSION = "1.8.0-beta4"
+
 NETTY_VERSION = "4.1.51.Final"
+
 MYSQL_CONNECTOR_VERSION = "5.1.49"
+
 NETTY_BORINGSSL_VERSION = "2.0.30.Final"
+
 BOUNCYCASTLE_VERSION = "1.59"
 
 maven_install(
@@ -4117,12 +4125,3 @@ git_repository(
     commit = "19ec01a93637c5cc180ee523f25b190a79adcc35",
     remote = "https://github.com/graknlabs/bazel-distribution",
 )
-
-# Agent SDK
-load("//src/agent_sdk:deps.bzl", "agent_sdk_deps")
-
-agent_sdk_deps()
-
-load("@agent_sdk_maven//:defs.bzl", pin_agent_sdk_maven = "pinned_maven_install")
-
-pin_agent_sdk_maven()

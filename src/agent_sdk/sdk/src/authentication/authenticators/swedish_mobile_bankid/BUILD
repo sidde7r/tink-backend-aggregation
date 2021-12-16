@@ -4,7 +4,7 @@ java_library_with_sources(
     name = "swedish_mobile_bankid",
     srcs = glob(["**/*.java"]),
     extdeps = [
-        "@agent_sdk_maven//:com_google_code_findbugs_jsr305",
+        "@aggregation//:com_google_code_findbugs_jsr305",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/authentication/new_consent",

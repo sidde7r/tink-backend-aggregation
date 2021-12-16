@@ -4,9 +4,9 @@ java_library_with_sources(
     name = "instance",
     srcs = glob(["*.java"]),
     extdeps = [
-        "@agent_sdk_maven//:com_google_guava_guava",
-        "@agent_sdk_maven//:com_google_inject_guice",
-        "@agent_sdk_maven//:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_google_inject_guice",
+        "@aggregation//:org_slf4j_slf4j_api",
     ],
     intdeps = [
         "//src/agent_sdk/sdk",

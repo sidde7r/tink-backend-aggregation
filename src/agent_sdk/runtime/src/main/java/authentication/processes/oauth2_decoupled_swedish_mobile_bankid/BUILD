@@ -4,8 +4,8 @@ java_library_with_sources(
     name = "oauth2_decoupled_swedish_mobile_bankid",
     srcs = glob(["*.java"]),
     extdeps = [
-        "@agent_sdk_maven//:com_google_guava_guava",
-        "@agent_sdk_maven//:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_slf4j_slf4j_api",
     ],
     intdeps = [
         "//src/agent_sdk/runtime/src/main/java/authentication/processes",
