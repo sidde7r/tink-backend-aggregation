@@ -5,6 +5,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agent_sdk/sdk/src/utils/serialization/body",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
@@ -13,7 +14,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/authentication/encap3",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding/messagebodywriter",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",

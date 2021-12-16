@@ -1,8 +1,10 @@
-package se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter;
+package src.agent_sdk.sdk.test.utils.serialization.body;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -12,32 +14,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
+import se.tink.agent.sdk.utils.serialization.body.NoEscapeOfBackslashMessageBodyWriter;
 
 public class NoEscapeOfBackslashMessageBodyWriterTest {
 
     private NoEscapeOfBackslashMessageBodyWriter noEscapeBodyWriter;
-    private MessageBodyWriter defaultMessageBodyWriter;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         noEscapeBodyWriter = new NoEscapeOfBackslashMessageBodyWriter(HashMap.class);
-
-        // a bit strange, but this way we can get the default message body writer for Json
-        NextGenTinkHttpClient httpClient =
-                NextGenTinkHttpClient.builder(
-                                new FakeLogMasker(),
-                                LogMasker.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
-                        .build();
-        defaultMessageBodyWriter =
-                httpClient
-                        .getInternalClient()
-                        .getMessageBodyWorkers()
-                        .getMessageBodyWriter(
-                                HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Test
@@ -61,15 +46,6 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
     }
 
     @Test
-    public void notApplicableForEscaping() throws Exception {
-        TestData input = new TestData("propertyname", "property\\/value");
-
-        String output = testWriteObjectAsString(input, defaultMessageBodyWriter);
-
-        assertTrue(output.contains("\\\\"));
-    }
-
-    @Test
     public void objectsOfCorrectClassAreWriteable() throws Exception {
         assertTrue(
                 noEscapeBodyWriter.isWriteable(
@@ -83,19 +59,6 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
                         TestData.class, null, null, MediaType.APPLICATION_JSON_TYPE));
     }
 
-    @Test
-    public void defaultImplementationAcceptsAll() throws Exception {
-        assertTrue(
-                defaultMessageBodyWriter.isWriteable(
-                        HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE));
-        assertTrue(
-                defaultMessageBodyWriter.isWriteable(
-                        TestData.class,
-                        null,
-                        TestData.class.getAnnotations(),
-                        MediaType.APPLICATION_JSON_TYPE));
-    }
-
     private String testWriteObjectAsString(Object o, MessageBodyWriter aBodyWriter)
             throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -104,7 +67,8 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
         return baos.toString("UTF-8");
     }
 
-    @JsonObject
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     static class TestData {
         String name;
         String value;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter;
+package se.tink.agent.sdk.utils.serialization.body;
 
 import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
