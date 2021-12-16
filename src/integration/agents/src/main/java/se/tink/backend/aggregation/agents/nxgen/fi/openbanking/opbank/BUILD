@@ -30,6 +30,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
         "//src/libraries/agent-storage",
         "//src/libraries/date",
         "//src/libraries/serialization",
