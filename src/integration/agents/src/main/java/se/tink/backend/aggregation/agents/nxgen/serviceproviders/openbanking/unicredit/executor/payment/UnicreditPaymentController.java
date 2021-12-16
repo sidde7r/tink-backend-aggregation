@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerAgentExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -23,10 +24,11 @@ public class UnicreditPaymentController extends PaymentController {
 
     public UnicreditPaymentController(
             UnicreditPaymentExecutor paymentExecutor,
+            PaymentControllerAgentExceptionMapper exceptionMapper,
             SupplementalInformationHelper supplementalInformationHelper,
             UnicreditStorage unicreditStorage,
             StrongAuthenticationState strongAuthenticationState) {
-        super(paymentExecutor, paymentExecutor);
+        super(paymentExecutor, paymentExecutor, exceptionMapper);
 
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.unicreditStorage = unicreditStorage;

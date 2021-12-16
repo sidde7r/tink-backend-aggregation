@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class BuddybankAgent extends UnicreditBaseAgent {
@@ -46,6 +47,7 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
         return Optional.of(
                 new BuddybankPaymentController(
                         new UnicreditPaymentExecutor(apiClient, new UnicreditApiClientRetryer()),
+                        new PaymentControllerExceptionMapper(),
                         apiClient));
     }
 

@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -143,6 +144,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         return Optional.of(
                 new UnicreditPaymentController(
                         new UnicreditPaymentExecutor(apiClient, new UnicreditApiClientRetryer()),
+                        new PaymentControllerExceptionMapper(),
                         supplementalInformationHelper,
                         unicreditStorage,
                         strongAuthenticationState));

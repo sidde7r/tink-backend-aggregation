@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -182,7 +183,9 @@ public abstract class FabricAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState);
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+        return Optional.of(
+                new PaymentController(
+                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
     }
 
     @Override

@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
@@ -88,6 +89,8 @@ public final class IccreaAgent extends CbiGlobeAgent {
                         new UserInteractions(supplementalInformationController, catalog),
                         new ConsentManager(apiClient, userState, localDateTimeSource, urlProvider),
                         urlProvider);
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+        return Optional.of(
+                new PaymentController(
+                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
     }
 }

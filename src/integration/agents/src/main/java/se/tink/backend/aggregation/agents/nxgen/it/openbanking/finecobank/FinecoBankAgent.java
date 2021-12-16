@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -171,7 +172,9 @@ public final class FinecoBankAgent extends NextGenerationAgent
 
         FinecoPaymentFetcher paymentFetcher = new FinecoPaymentFetcher(apiClient);
 
-        return Optional.of(new PaymentController(paymentExecutor, paymentFetcher));
+        return Optional.of(
+                new PaymentController(
+                        paymentExecutor, paymentFetcher, new PaymentControllerExceptionMapper()));
     }
 
     @Override
