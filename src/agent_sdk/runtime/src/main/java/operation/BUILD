@@ -4,7 +4,7 @@ java_library_with_sources(
     name = "operation",
     srcs = glob(["*.java"]),
     extdeps = [
-        "@agent_sdk_maven//:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/operation",

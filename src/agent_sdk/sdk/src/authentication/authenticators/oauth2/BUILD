@@ -4,10 +4,9 @@ java_library_with_sources(
     name = "oauth2",
     srcs = glob(["**/*.java"]),
     extdeps = [
-        "@agent_sdk_maven//:com_google_guava_guava",
-        "@agent_sdk_maven//:org_projectlombok_lombok",
-        "@agent_sdk_maven//:org_slf4j_slf4j_api",
-        "//src/agent_sdk:lombok_plugin",
+        "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_slf4j_slf4j_api",
+        "//src/agent_sdk:lombok_libs",
     ],
     intdeps = [
         "@tink_backend//src/libraries/serialization_utils",

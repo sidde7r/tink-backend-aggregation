@@ -4,8 +4,7 @@ java_library_with_sources(
     name = "berlingroup",
     srcs = glob(["**/*.java"]),
     extdeps = [
-        "@agent_sdk_maven//:org_projectlombok_lombok",
-        "//src/agent_sdk:lombok_plugin",
+        "//src/agent_sdk:lombok_libs",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/authentication/new_consent",

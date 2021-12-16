@@ -4,10 +4,10 @@ java_library_with_sources(
     name = "storage",
     srcs = glob(["*.java"]),
     extdeps = [
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:lombok_libs",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "//src/agent_sdk:lombok_libs",
     ],
     intdeps = [
         "@tink_backend//src/libraries/serialization_utils",

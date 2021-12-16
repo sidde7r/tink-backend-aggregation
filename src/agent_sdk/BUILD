@@ -1,5 +1,5 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
-load("@rules_java//java:defs.bzl", "java_plugin")
+load("@rules_java//java:defs.bzl", "java_library", "java_plugin")
 
 codeowners(
     name = "owners",
@@ -17,6 +17,16 @@ java_plugin(
         "//src/agent_sdk:__subpackages__",
     ],
     deps = [
-        "@agent_sdk_maven//:org_projectlombok_lombok",
+        "@aggregation//:org_projectlombok_lombok",
+    ],
+)
+
+java_library(
+    name = "lombok_libs",
+    licenses = ["notice"],
+    visibility = ["//visibility:public"],
+    exports = [
+        ":lombok_plugin",
+        "@aggregation//:org_projectlombok_lombok",
     ],
 )

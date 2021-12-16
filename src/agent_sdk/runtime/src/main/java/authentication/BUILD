@@ -3,7 +3,7 @@ load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 java_library_with_sources(
     name = "authentication",
     extdeps = [
-        "@agent_sdk_maven//:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
     intdeps = [
         "//src/agent_sdk/runtime/src/main/java/authentication/processes",
