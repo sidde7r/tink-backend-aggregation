@@ -6994,6 +6994,10 @@ agentsServiceConfiguration:
       tink:
         testApiKey: dummyTestKey
         prodApiKey: dummyProdKey
+    076ddae848704fc09c63b924729f23b3:
+      tink:
+        testApiKey: dummyTestKey
+        prodApiKey: dummyProdKey
     508f1f5e1fb311ec96210242ac130002:
       testApiKey: dummyTestKey
       prodApiKey: dummyProdKey
