@@ -89,7 +89,7 @@ public class SavingsAccountEntity {
 
     private IdModule buildId() {
         return IdModule.builder()
-                .withUniqueIdentifier(accountId)
+                .withUniqueIdentifier(accountNumber)
                 .withAccountNumber(accountNumber)
                 .withAccountName(name)
                 .addIdentifier(AccountIdentifier.create(AccountIdentifierType.TINK, accountNumber))
