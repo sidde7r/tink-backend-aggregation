@@ -48,13 +48,10 @@ public class UkOpenBankingLocalKeySignerModuleForDecoupledMode extends AbstractM
 
     private EidasIdentity eidasIdentity(
             CompositeAgentContext context, Class<? extends Agent> agentClass) {
-        log.info(
-                "[UkOpenBankingLocalKeySignerModuleForDecoupledMode] certId is: {}",
-                context.getCertId());
         return new EidasIdentity(
                 context.getClusterId(),
                 context.getAppId(),
-                "UKOB",
+                context.getCertId(),
                 context.getProviderId(),
                 agentClass);
     }
