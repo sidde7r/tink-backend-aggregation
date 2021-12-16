@@ -64,7 +64,7 @@ spec:
 
     # =========== LONG-TERM (12h) ALERTS ===========
     - alert: LongTermBankOrUserErrorRateAbove90%PL
-      expr: sum:unavailable_or_cancelled_logins_pl:delta12h / (sum:all_logins_pl:delta12h > 2) > 0.9
+      expr: sum:unavailable_or_cancelled_logins_pl:delta12h / (sum:all_logins_pl:delta12h >= 5) > 0.9
       labels:
         severity: urgent
         priority: P2
