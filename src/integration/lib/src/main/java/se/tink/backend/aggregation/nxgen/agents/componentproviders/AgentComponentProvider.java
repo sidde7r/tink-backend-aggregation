@@ -1,7 +1,15 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders;
 
 import com.google.inject.Inject;
+import java.util.HashMap;
 import java.util.Optional;
+import se.tink.agent.runtime.operation.ProviderImpl;
+import se.tink.agent.runtime.operation.StaticBankCredentialsImpl;
+import se.tink.agent.runtime.operation.UserImpl;
+import se.tink.agent.sdk.operation.Provider;
+import se.tink.agent.sdk.operation.StaticBankCredentials;
+import se.tink.agent.sdk.operation.User;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
@@ -20,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.provider.UnleashClientProvider;
 
@@ -39,6 +48,9 @@ public class AgentComponentProvider
     private final UnleashClientProvider unleashClientProvider;
     private final AgentTemporaryStorageProvider agentTemporaryStorageProvider;
     private final MockServerUrlProvider mockServerUrlProvider;
+    private final User user;
+    private final StaticBankCredentials staticBankCredentials;
+    private final Provider provider;
 
     @Inject
     public AgentComponentProvider(
@@ -56,6 +68,53 @@ public class AgentComponentProvider
         this.unleashClientProvider = unleashClientProvider;
         this.agentTemporaryStorageProvider = agentTemporaryStorageProvider;
         this.mockServerUrlProvider = mockServerUrlProvider;
+
+        CredentialsRequest credentialsRequest = agentContextProvider.getCredentialsRequest();
+        this.user = mapToSdkUser(credentialsRequest);
+        this.staticBankCredentials = mapToSdkStaticBankCredentials(credentialsRequest);
+        this.provider = mapToSdkProvider(credentialsRequest);
+    }
+
+    private User mapToSdkUser(CredentialsRequest credentialsRequest) {
+        String locale =
+                Optional.ofNullable(credentialsRequest.getUser())
+                        .map(se.tink.libraries.user.rpc.User::getLocale)
+                        .orElse(null);
+        UserAvailability userAvailability = credentialsRequest.getUserAvailability();
+
+        if (userAvailability == null) {
+            return new UserImpl(false, false, null, locale);
+        }
+
+        return new UserImpl(
+                userAvailability.isUserPresent(),
+                userAvailability.isUserAvailableForInteraction(),
+                userAvailability.getOriginatingUserIp(),
+                locale);
+    }
+
+    private StaticBankCredentials mapToSdkStaticBankCredentials(
+            CredentialsRequest credentialsRequest) {
+        Credentials credentials = credentialsRequest.getCredentials();
+        if (credentials == null) {
+            return new StaticBankCredentialsImpl(new HashMap<>());
+        }
+
+        return new StaticBankCredentialsImpl(credentials.getFields());
+    }
+
+    private Provider mapToSdkProvider(CredentialsRequest credentialsRequest) {
+        se.tink.backend.agents.rpc.Provider rpcProvider = credentialsRequest.getProvider();
+
+        if (rpcProvider == null) {
+            return new ProviderImpl(null, null, null, null);
+        }
+
+        return new ProviderImpl(
+                rpcProvider.getMarket(),
+                rpcProvider.getName(),
+                rpcProvider.getCurrency(),
+                rpcProvider.getPayload());
     }
 
     @Override
@@ -126,5 +185,17 @@ public class AgentComponentProvider
     @Override
     public Optional<String> getMockServerUrl() {
         return mockServerUrlProvider.getMockServerUrl();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public StaticBankCredentials getStaticBankCredentials() {
+        return staticBankCredentials;
+    }
+
+    public Provider getProvider() {
+        return provider;
     }
 }
