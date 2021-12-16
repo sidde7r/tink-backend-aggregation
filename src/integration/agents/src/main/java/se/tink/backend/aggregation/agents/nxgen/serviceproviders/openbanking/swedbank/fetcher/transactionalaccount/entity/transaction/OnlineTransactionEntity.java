@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Optional;
+import se.tink.agent.sdk.utils.serialization.local_date.LocalDateDeserializer;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 
 public class OnlineTransactionEntity extends TransactionEntity {
     @JsonDeserialize(using = LocalDateDeserializer.class)

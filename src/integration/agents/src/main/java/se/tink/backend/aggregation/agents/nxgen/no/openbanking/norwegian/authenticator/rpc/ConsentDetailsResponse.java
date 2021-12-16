@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import se.tink.agent.sdk.utils.serialization.local_date.LocalDateTimeDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateTimeDeserializer;
 
 @JsonObject
 @Getter

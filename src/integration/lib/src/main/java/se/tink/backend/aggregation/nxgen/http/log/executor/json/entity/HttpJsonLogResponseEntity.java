@@ -6,8 +6,8 @@ import java.util.Map;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import se.tink.agent.sdk.utils.serialization.local_date.LocalDateTimeSerializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.utils.json.serializers.LocalDateTimeSerializer;
 
 @Getter
 @EqualsAndHashCode

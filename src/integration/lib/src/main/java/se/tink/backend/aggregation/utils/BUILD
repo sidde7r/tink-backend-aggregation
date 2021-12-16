@@ -4,7 +4,11 @@ java_library(
     name = "utils",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/agent_sdk/sdk/src/utils/serialization/local_date",
+    ],
     deps = [
+        "//src/agent_sdk/sdk/src/utils/serialization/local_date",
         "//src/integration/models",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/serialization",

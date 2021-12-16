@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils.json.deserializers;
+package se.tink.agent.sdk.utils.serialization.local_date;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class LocalDateOffsetDeserializer extends StdDeserializer<LocalDate> {
+public class LocalDateDMYFormatDeserializer extends StdDeserializer<LocalDate> {
 
-    private LocalDateOffsetDeserializer() {
+    private LocalDateDMYFormatDeserializer() {
         super(LocalDate.class);
     }
 
@@ -18,6 +18,6 @@ public class LocalDateOffsetDeserializer extends StdDeserializer<LocalDate> {
             JsonParser jsonParser, DeserializationContext deserializationContext)
             throws IOException {
         return LocalDate.parse(
-                jsonParser.readValueAs(String.class), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                jsonParser.readValueAs(String.class), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

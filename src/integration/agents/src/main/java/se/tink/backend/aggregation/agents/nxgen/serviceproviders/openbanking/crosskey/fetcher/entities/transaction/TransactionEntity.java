@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
+import se.tink.agent.sdk.utils.serialization.local_date.LocalDateTimeDeserializer;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
@@ -19,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateTimeDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
