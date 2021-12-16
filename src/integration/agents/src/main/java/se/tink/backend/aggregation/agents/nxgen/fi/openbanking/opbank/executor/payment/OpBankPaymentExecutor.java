@@ -44,6 +44,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 
 public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -73,12 +74,19 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         TokenResponse newToken = this.apiClient.fetchNewToken(OpBankConstants.TokenValues.PAYMENTS);
 
         Payment payment = paymentRequest.getPayment();
+
+        final String message =
+                payment.getRemittanceInformation().getType()
+                                == RemittanceInformationType.UNSTRUCTURED
+                        ? payment.getRemittanceInformation().getValue()
+                        : null;
+
         CreatePaymentRequest request =
                 CreatePaymentRequest.builder()
                         .creditorToPayee(payment.getCreditor())
                         .debtorToPayer(payment.getDebtor())
                         .amount(payment.getExactCurrencyAmount())
-                        .message(payment.getRemittanceInformation().getValue())
+                        .message(message)
                         .paymentOrder(payment.getPaymentScheme())
                         .count(payment)
                         .build();
