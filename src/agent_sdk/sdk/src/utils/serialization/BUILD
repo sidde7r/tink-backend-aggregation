@@ -8,11 +8,11 @@ java_library_with_sources(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
     intdeps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/agent_sdk/sdk/src/utils/serialization/annotations",
     ],
     visibility = ["//src/agent_sdk/sdk:__subpackages__"],
     exports = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/agent_sdk/sdk/src/utils/serialization/annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
