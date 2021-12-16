@@ -6,27 +6,26 @@ metadata:
 spec:
   rules:
 
-  # Precompute DE metrics
-  - record: sum:DE:refreshes:delta60m
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))
+  - record: sum:DE:action_className:all_manual_attempts:not_failed:delta1h
+    expr: sum by (action,className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", {{ .Values.manualLoginAction }}, {{ .Values.temporaryErrorsAuth }}}[1h]))
 
-  - record: sum:DE:all_manual_attempts:not_failed:delta60m:action_className
-    expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginAction }}, {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
+  - record: sum:DE:action_className:all_manual_attempts:delta1h
+    expr: sum by (action,className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", {{ .Values.manualLoginAction }}}[1h]))
 
-  - record: sum:DE:all_manual_attempts:delta60m:action_className
-    expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginAction }}, market="DE", provider_type!="test"}[60m])) by (action,className)
+  - record: sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
+    expr: sum by (action,className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", {{ .Values.manualLoginAction }}, {{ .Values.bankErrorsAuth }}}[1h]))
 
-  - record: sum:DE:all_manual_attempts:not_unavailable:delta60m:action_className
-    expr: sum(increase(tink_agent_login_total{ {{ .Values.manualLoginAction }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
+  - record: sum:DE:className:login-manual:delta1h
+    expr: sum by (className) (increase (tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual"}[1h]))
 
-  - record: sum:DE:className:production:login-manual:delta1h
-    expr: sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h]))
+  - record: sum:DE:className:login-auto-and-cron:delta1h
+    expr: sum by (className) (increase (tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron"}[1h]))
 
-  - record: sum:DE:className:production:login-auto-and-cron:delta1h
-    expr: sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h]))
+  - record: sum:DE:className_type:all_refreshes:delta1h
+    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="DE"}[1h]))
 
-  - record: sum:DE:className_type:not_failed_unavailable_partially_completed:delta60m
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m]))
+  - record: sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
+    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="DE", {{ .Values.allErrorsRefresh }}}[1h]))
 
-  - record: sum:DE:className_type:not_partially_completed:delta60m
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m]))
+  - record: sum:DE:className_type:not_partially_completed:delta1h
+    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="DE", {{ .Values.partiallyCompletedErrorRefresh }}}[1h]))
