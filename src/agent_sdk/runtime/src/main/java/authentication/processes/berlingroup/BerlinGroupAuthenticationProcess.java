@@ -27,7 +27,7 @@ public class BerlinGroupAuthenticationProcess
     }
 
     @Override
-    public Optional<BerlinGroupAuthenticator> instantiateAuthenticator(
+    public Optional<BerlinGroupAuthenticator> tryInstantiateAuthenticator(
             AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateBerlinGroup.class)

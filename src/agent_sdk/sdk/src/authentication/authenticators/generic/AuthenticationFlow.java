@@ -1,24 +1,25 @@
 package se.tink.agent.sdk.authentication.authenticators.generic;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import java.util.Optional;
+import javax.annotation.Nullable;
 import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 
 public class AuthenticationFlow<T> {
-    private final Class<? extends T> startStep;
-    private final ImmutableList<T> steps;
+    private final String startStepId;
+    private final ImmutableMap<String, T> steps;
 
-    AuthenticationFlow(Class<? extends T> startStep, ImmutableList<T> steps) {
-        this.startStep = startStep;
+    AuthenticationFlow(String startStepId, ImmutableMap<String, T> steps) {
+        this.startStepId = startStepId;
         this.steps = steps;
     }
 
-    public Class<? extends T> getStartStep() {
-        return startStep;
-    }
+    public Optional<T> getStep(@Nullable String stepId) {
+        // Pick the start step if `stepId` is null.
+        String stepIdToFind = Optional.ofNullable(stepId).orElse(this.startStepId);
 
-    public ImmutableList<T> getSteps() {
-        return steps;
+        return Optional.ofNullable(this.steps.get(stepIdToFind));
     }
 
     public static AuthenticationFlowBuilder<NewConsentStep> builder(NewConsentStep entryPoint) {

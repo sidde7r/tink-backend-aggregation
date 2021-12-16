@@ -18,8 +18,15 @@ import se.tink.agent.sdk.utils.Sleeper;
 
 public class Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess
         implements AuthenticationProcess<Oauth2DecoupledSwedishMobileBankIdAuthenticator> {
+
+    private final Sleeper sleeper;
+
+    public Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess(Sleeper sleeper) {
+        this.sleeper = sleeper;
+    }
+
     @Override
-    public Optional<Oauth2DecoupledSwedishMobileBankIdAuthenticator> instantiateAuthenticator(
+    public Optional<Oauth2DecoupledSwedishMobileBankIdAuthenticator> tryInstantiateAuthenticator(
             AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateOauth2DecoupledSwedishMobileBankId.class)
@@ -29,7 +36,6 @@ public class Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess
     @Override
     public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
             Oauth2DecoupledSwedishMobileBankIdAuthenticator authenticator) {
-        Sleeper sleeper = null;
 
         return AuthenticationFlow.builder(
                         new ThirdPartyAppInitStep(
@@ -40,7 +46,7 @@ public class Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess
                 .addStep(
                         new ThirdPartyAppPollStep(
                                 authenticator,
-                                sleeper,
+                                this.sleeper,
                                 SwedishMobileBankIdOpenAppStep.class,
                                 Oauth2FetchAccessToken.class))
                 .addStep(new Oauth2FetchAccessToken(authenticator))

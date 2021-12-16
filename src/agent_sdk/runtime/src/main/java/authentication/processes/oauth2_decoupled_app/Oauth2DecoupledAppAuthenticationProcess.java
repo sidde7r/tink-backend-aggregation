@@ -18,8 +18,15 @@ import se.tink.agent.sdk.utils.Sleeper;
 
 public class Oauth2DecoupledAppAuthenticationProcess
         implements AuthenticationProcess<Oauth2DecoupledAppAuthenticator> {
+
+    private final Sleeper sleeper;
+
+    public Oauth2DecoupledAppAuthenticationProcess(Sleeper sleeper) {
+        this.sleeper = sleeper;
+    }
+
     @Override
-    public Optional<Oauth2DecoupledAppAuthenticator> instantiateAuthenticator(
+    public Optional<Oauth2DecoupledAppAuthenticator> tryInstantiateAuthenticator(
             AgentInstance agentInstance) {
         return agentInstance
                 .instanceOf(AuthenticateOauth2DecoupledApp.class)
@@ -29,15 +36,13 @@ public class Oauth2DecoupledAppAuthenticationProcess
     @Override
     public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
             Oauth2DecoupledAppAuthenticator authenticator) {
-        Sleeper sleeper = null;
-
         return AuthenticationFlow.builder(
                         new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
                 .addStep(new ThirdPartyAppOpenAppStep(authenticator, ThirdPartyAppPollStep.class))
                 .addStep(
                         new ThirdPartyAppPollStep(
                                 authenticator,
-                                sleeper,
+                                this.sleeper,
                                 ThirdPartyAppOpenAppStep.class,
                                 Oauth2FetchAccessToken.class))
                 .addStep(new Oauth2FetchAccessToken(authenticator))

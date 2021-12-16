@@ -6,7 +6,6 @@ import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionBuilder;
 
-// TODO: move this class
 public class MultifactorAuthenticationStateImpl implements MultifactorAuthenticationState {
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
 

@@ -1,22 +1,30 @@
 package se.tink.agent.sdk.authentication.authenticators.generic;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
 
 public class AuthenticationFlowBuilder<T> {
-    private final Class<? extends T> startStep;
-    private final ImmutableList.Builder<T> steps;
+    private final String startStepId;
+    private final HashMap<String, T> steps;
 
     AuthenticationFlowBuilder(T entryPoint) {
-        this.startStep = (Class<? extends T>) entryPoint.getClass();
-        this.steps = ImmutableList.<T>builder().add(entryPoint);
+        this.startStepId = entryPoint.getClass().toString();
+        this.steps = new HashMap<>();
+        addStep(entryPoint);
     }
 
     public AuthenticationFlowBuilder<T> addStep(T step) {
-        this.steps.add(step);
+        String stepId = step.getClass().toString();
+        if (steps.containsKey(stepId)) {
+            throw new IllegalStateException(
+                    String.format("Duplicate authentication step added: '%s'.", stepId));
+        }
+        this.steps.put(stepId, step);
         return this;
     }
 
     public AuthenticationFlow<T> build() {
-        return new AuthenticationFlow<>(this.startStep, this.steps.build());
+        ImmutableMap<String, T> immutableSteps = ImmutableMap.copyOf(this.steps);
+        return new AuthenticationFlow<>(this.startStepId, immutableSteps);
     }
 }
