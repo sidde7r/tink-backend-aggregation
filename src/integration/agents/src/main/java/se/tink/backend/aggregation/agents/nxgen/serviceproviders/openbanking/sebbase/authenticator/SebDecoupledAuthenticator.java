@@ -18,13 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HintCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.PollResponses;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.rpc.ErrorResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -155,16 +151,14 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
             return refreshUsingDecoupled(refreshToken);
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
-            if (response.getStatus() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
-                if (isAlreadyUsedRefreshTokenError(response)) {
-                    log.warn("Refresh access token failed due to reusing an old token.");
-                    // We don't have a valid token stored, we have to trigger a new SCA to get a
-                    // valid token and make the credential BG refreshable again.
-                    throw SessionError.SESSION_EXPIRED.exception();
-                }
-
-                return refreshUsingRedirect(refreshToken);
+            if (response.getStatus() == HttpStatus.SC_UNPROCESSABLE_ENTITY
+                    && isAlreadyUsedRefreshTokenError(response)) {
+                log.warn("Refresh access token failed due to reusing an old token.");
+                // We don't have a valid token stored, we have to trigger a new SCA to get a
+                // valid token and make the credential BG refreshable again.
+                throw SessionError.SESSION_EXPIRED.exception();
             }
+            log.warn("Error message: " + e.getMessage());
             throw e;
         }
     }
@@ -180,24 +174,6 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
                                         .redirectUri(redirectUrl)
                                         .build())
                         .toTinkToken());
-    }
-
-    private Optional<OAuth2Token> refreshUsingRedirect(String refreshToken) {
-        try {
-            RefreshRequest requestForm =
-                    new RefreshRequest(
-                            refreshToken,
-                            configuration.getClientId(),
-                            configuration.getClientSecret(),
-                            QueryValues.REFRESH_TOKEN_GRANT);
-            return Optional.ofNullable(apiClient.refreshToken(Urls.TOKEN, requestForm));
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
-                    || e.getResponse().getBody(TokenErrorResponse.class).isInvalidGrant()) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-            throw e;
-        }
     }
 
     private boolean isAlreadyUsedRefreshTokenError(HttpResponse httpResponse) {
