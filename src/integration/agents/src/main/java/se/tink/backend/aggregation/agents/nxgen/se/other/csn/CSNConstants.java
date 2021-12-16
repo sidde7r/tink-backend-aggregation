@@ -16,6 +16,8 @@ public class CSNConstants {
 
         static final String LOAN_TRANSACTIONS =
                 BASE_URL + "/api/inbetalning-api-webb/rest/inbetalningar/registrerade";
+
+        static final String VERIFY_URL = BASE_URL + "/mina-sidor.html";
     }
 
     public static class BankIdStatus {
@@ -49,11 +51,13 @@ public class CSNConstants {
 
     static class HeaderKeys {
         static final String REFERER = "Referer";
+        static final String REFERER_POLICY = "Referrer Policy";
         static final String CSN_AUTHORIZATION = "CSN_Authorization";
     }
 
     static class HeaderValues {
         static final String BEARER = "Bearer ";
         static final String USER_AGENT = "Mozilla/5.0";
+        static final String CROSS_ORIGIN = "strict-origin-when-cross-origin";
     }
 }
