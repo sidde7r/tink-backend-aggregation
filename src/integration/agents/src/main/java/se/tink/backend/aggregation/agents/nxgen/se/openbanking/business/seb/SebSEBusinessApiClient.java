@@ -128,7 +128,7 @@ public class SebSEBusinessApiClient extends SebBaseApiClient {
         if (credentialsRequest.getUserAvailability().isUserPresent()) {
             requestBuilder.header(
                     SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
-                    credentialsRequest.getOriginatingUserIp());
+                    credentialsRequest.getUserAvailability().getOriginatingUserIpOrDefault());
         }
 
         return requestBuilder;

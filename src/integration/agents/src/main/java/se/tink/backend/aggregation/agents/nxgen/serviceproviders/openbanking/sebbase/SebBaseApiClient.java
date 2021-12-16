@@ -124,7 +124,7 @@ public abstract class SebBaseApiClient {
         if (credentialsRequest.getUserAvailability().isUserPresent()) {
             requestBuilder.header(
                     SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
-                    credentialsRequest.getOriginatingUserIp());
+                    credentialsRequest.getUserAvailability().getOriginatingUserIpOrDefault());
         }
 
         return requestBuilder;
