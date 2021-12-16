@@ -1,0 +1,27 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://authorize.sebgroup.com/auth/v3/tokens
+Accept: application/json
+Content-Type: application/json
+
+{
+  "client_id": "dummyId",
+  "client_secret": "dummySecret",
+  "redirect_uri": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+  "refresh_token": "dummyRefreshToken"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+422
+Date: Thu, 09 Dec 2021 10:27:21 GMT
+Date: Thu, 09 Dec 2021 10:27:20 GMT
+Content-Type: application/json
+
+{
+  "detail": null,
+  "title": "The provided id has already been used to retrieve an access token",
+  "status": 422,
+  "type": "Invalid parameter value"
+}
