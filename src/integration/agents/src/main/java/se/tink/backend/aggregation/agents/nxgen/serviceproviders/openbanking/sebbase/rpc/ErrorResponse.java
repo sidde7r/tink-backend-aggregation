@@ -29,4 +29,8 @@ public class ErrorResponse {
     public boolean isPollTimeout() {
         return SebCommonConstants.PollResponses.TIMEOUT.equalsIgnoreCase(type);
     }
+
+    public boolean isAlreadyUsedRefreshTokenError() {
+        return SebCommonConstants.ErrorMessages.REFRESH_TOKEN_ALREADY_USED.equalsIgnoreCase(title);
+    }
 }

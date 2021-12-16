@@ -113,6 +113,8 @@ public class SebCommonConstants {
         public static final String SEB_SPECIFIC_ERROR = "SEB specific error has occurred.";
         public static final String REQUIRES_EXTRA_VERIFICATION =
                 "Message from SEB - SEB needs you to verify your BankID before you can continue using the service. Visit www.seb.se or open the SEB app to verify your BankID. Note that you must be a customer of SEB to be able to use the service.";
+        public static final String REFRESH_TOKEN_ALREADY_USED =
+                "The provided id has already been used to retrieve an access token";
     }
 
     public static class HttpClient {

@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Locale;
 import java.util.Optional;
+import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -28,9 +30,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@Slf4j
 public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
     private final SebBaseApiClient apiClient;
@@ -150,7 +154,15 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
         try {
             return refreshUsingDecoupled(refreshToken);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+            HttpResponse response = e.getResponse();
+            if (response.getStatus() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+                if (isAlreadyUsedRefreshTokenError(response)) {
+                    log.warn("Refresh access token failed due to reusing an old token.");
+                    // We don't have a valid token stored, we have to trigger a new SCA to get a
+                    // valid token and make the credential BG refreshable again.
+                    throw SessionError.SESSION_EXPIRED.exception();
+                }
+
                 return refreshUsingRedirect(refreshToken);
             }
             throw e;
@@ -186,5 +198,14 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
             }
             throw e;
         }
+    }
+
+    private boolean isAlreadyUsedRefreshTokenError(HttpResponse httpResponse) {
+        if (!MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.isAlreadyUsedRefreshTokenError();
     }
 }
