@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.MessageBodyWriter;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.agent.sdk.utils.serialization.body.NoEscapeOfBackslashMessageBodyWriter;
@@ -32,7 +33,9 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
 
         String output = testWriteObjectAsString(input, noEscapeBodyWriter);
 
-        assertFalse(output.contains("\\"));
+        String expectedOutput = "{\n" + "  \"propertyname\" : \"property value\"\n" + "}";
+
+        Assert.assertEquals(expectedOutput, output);
     }
 
     @Test
@@ -42,7 +45,9 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
 
         String output = testWriteObjectAsString(input, noEscapeBodyWriter);
 
-        assertTrue(output.contains("\\"));
+        String expectedOutput = "{\n" + "  \"propertyname\" : \"property\\/value\"\n" + "}";
+
+        Assert.assertEquals(expectedOutput, output);
     }
 
     @Test
@@ -59,7 +64,7 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
                         TestData.class, null, null, MediaType.APPLICATION_JSON_TYPE));
     }
 
-    private String testWriteObjectAsString(Object o, MessageBodyWriter aBodyWriter)
+    private String testWriteObjectAsString(Object o, MessageBodyWriter<Object> aBodyWriter)
             throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

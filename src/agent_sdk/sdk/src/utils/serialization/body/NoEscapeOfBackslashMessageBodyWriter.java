@@ -17,10 +17,10 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public class NoEscapeOfBackslashMessageBodyWriter extends JacksonJsonProvider {
 
-    private final List<Class> escapableClasses;
+    private final List<Class<?>> escapableClasses;
     private final ObjectMapper objectMapper;
 
-    public NoEscapeOfBackslashMessageBodyWriter(Class... escapableClasses) {
+    public NoEscapeOfBackslashMessageBodyWriter(Class<?>... escapableClasses) {
         this.escapableClasses = Arrays.asList(escapableClasses);
         objectMapper =
                 new ObjectMapper(

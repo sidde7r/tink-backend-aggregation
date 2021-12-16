@@ -9,10 +9,12 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/utils/serialization/annotations",
+        "//src/agent_sdk/sdk/src/utils/serialization/body",
     ],
     visibility = ["//src/agent_sdk/sdk:__subpackages__"],
     exports = [
         "//src/agent_sdk/sdk/src/utils/serialization/annotations",
+        "//src/agent_sdk/sdk/src/utils/serialization/body",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
