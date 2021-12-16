@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class NorwegianConstants {
 
@@ -22,15 +23,15 @@ public class NorwegianConstants {
                     HeaderKeys.TPP_CLIENT_ID,
                     HeaderKeys.TPP_REDIRECT_URI);
 
-    @SuppressWarnings("java:S1075")
     public static class URLs {
-        public static final String BASE_URL = "https://api.banknorwegian.com/openbanking";
-        public static final String TOKEN_URL = "https://identity.banknorwegian.no/connect/token";
-        public static final String ACCOUNTS_PATH = "/accounts";
-        public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
-        public static final String TRANSACTIONS_PATH = "/accounts/{accountResourceId}/transactions";
-        public static final String CONSENT_PATH = "/consents";
-        public static final String CONSENT_DETAILS_PATH = "/consents/{consentId}";
+        public static final URL BASE_URL = new URL("https://api.banknorwegian.com/openbanking");
+        public static final URL TOKEN_URL =
+                new URL("https://identity.banknorwegian.no/connect/token");
+        public static final URL ACCOUNTS = BASE_URL.concat("/accounts");
+        public static final URL BALANCES = ACCOUNTS.concat("/{accountResourceId}/balances");
+        public static final URL TRANSACTIONS = ACCOUNTS.concat("/{accountResourceId}/transactions");
+        public static final URL CONSENT = BASE_URL.concat("/consents");
+        public static final URL CONSENT_DETAILS = CONSENT.concat("/{consentId}");
     }
 
     public static class ErrorMessages {

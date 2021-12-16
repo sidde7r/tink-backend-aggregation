@@ -90,7 +90,7 @@ public class NorwegianApiClient {
                         .setCodeVerifier(codeVerifier)
                         .build();
 
-        return client.request(new URL(NorwegianConstants.URLs.TOKEN_URL))
+        return client.request(NorwegianConstants.URLs.TOKEN_URL)
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(TokenResponse.class)
@@ -98,7 +98,7 @@ public class NorwegianApiClient {
     }
 
     public OAuth2Token exchangeRefreshToken(RefreshRequest request) {
-        return client.request(new URL(NorwegianConstants.URLs.TOKEN_URL))
+        return client.request(NorwegianConstants.URLs.TOKEN_URL)
                 .header(
                         HeaderKeys.AUTHORIZATION,
                         HeaderValues.BASIC
@@ -120,11 +120,8 @@ public class NorwegianApiClient {
 
     public BalanceResponse getBalance(String resourceId) {
         return createRequestInSession(
-                        new URL(
-                                        NorwegianConstants.URLs.BASE_URL
-                                                + NorwegianConstants.URLs.BALANCES_PATH)
-                                .parameter(
-                                        NorwegianConstants.IdTags.ACCOUNT_RESOURCE_ID, resourceId))
+                        NorwegianConstants.URLs.BALANCES.parameter(
+                                NorwegianConstants.IdTags.ACCOUNT_RESOURCE_ID, resourceId))
                 .get(BalanceResponse.class);
     }
 
@@ -148,11 +145,8 @@ public class NorwegianApiClient {
         SimpleDateFormat sdf = new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
 
         return createRequestInSession(
-                        new URL(
-                                        NorwegianConstants.URLs.BASE_URL
-                                                + NorwegianConstants.URLs.TRANSACTIONS_PATH)
-                                .parameter(
-                                        NorwegianConstants.IdTags.ACCOUNT_RESOURCE_ID, resourceId))
+                        NorwegianConstants.URLs.TRANSACTIONS.parameter(
+                                NorwegianConstants.IdTags.ACCOUNT_RESOURCE_ID, resourceId))
                 .queryParam(QueryKeys.DATE_FROM, sdf.format(dateFrom))
                 .queryParam(QueryKeys.DATE_TO, sdf.format(dateTo))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKING_STATUS_BOTH)
@@ -169,9 +163,7 @@ public class NorwegianApiClient {
                                 .plus(90, ChronoUnit.DAYS)
                                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         RequestBuilder request =
-                client.request(
-                                NorwegianConstants.URLs.BASE_URL
-                                        + NorwegianConstants.URLs.CONSENT_PATH)
+                client.request(NorwegianConstants.URLs.CONSENT)
                         .type(MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.TPP_CLIENT_ID, norwegianConfiguration.getClientId())
                         .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
@@ -202,10 +194,8 @@ public class NorwegianApiClient {
         }
 
         return createRequestInSession(
-                        new URL(
-                                        NorwegianConstants.URLs.BASE_URL
-                                                + NorwegianConstants.URLs.CONSENT_DETAILS_PATH)
-                                .parameter(NorwegianConstants.IdTags.CONSENT_ID, consentId))
+                        NorwegianConstants.URLs.CONSENT_DETAILS.parameter(
+                                NorwegianConstants.IdTags.CONSENT_ID, consentId))
                 .get(ConsentDetailsResponse.class);
     }
 
@@ -241,10 +231,6 @@ public class NorwegianApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-        return createRequestInSession(
-                        new URL(
-                                NorwegianConstants.URLs.BASE_URL
-                                        + NorwegianConstants.URLs.ACCOUNTS_PATH))
-                .get(AccountsResponse.class);
+        return createRequestInSession(NorwegianConstants.URLs.ACCOUNTS).get(AccountsResponse.class);
     }
 }
