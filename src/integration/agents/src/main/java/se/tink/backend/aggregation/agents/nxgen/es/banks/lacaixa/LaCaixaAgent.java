@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.La
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.filter.LaCaixaRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.filter.LaCaixaSessionExpiredFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.session.LaCaixaSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -115,6 +116,7 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
                 new LaCaixaRetryFilter(
                         RetryFilterValues.MAX_ATTEMPTS,
                         RetryFilterValues.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new LaCaixaSessionExpiredFilter(persistentStorage));
     }
 
     private String getInstallationId(Credentials credentials) {
