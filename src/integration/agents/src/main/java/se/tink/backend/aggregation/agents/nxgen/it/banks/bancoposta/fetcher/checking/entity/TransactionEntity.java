@@ -8,10 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import se.tink.agent.sdk.utils.serialization.local_date.LocalDateDMYFormatDeserializer;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDMYFormatDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject

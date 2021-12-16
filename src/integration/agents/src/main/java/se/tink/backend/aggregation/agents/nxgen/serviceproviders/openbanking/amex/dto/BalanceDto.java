@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.Data;
+import se.tink.agent.sdk.utils.serialization.local_date.LocalDateDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)

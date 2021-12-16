@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.Getter;
+import se.tink.agent.sdk.utils.serialization.local_date.LocalDateDMYFormatDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDMYFormatDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils.json.serializers;
+package se.tink.agent.sdk.utils.serialization.local_date;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
