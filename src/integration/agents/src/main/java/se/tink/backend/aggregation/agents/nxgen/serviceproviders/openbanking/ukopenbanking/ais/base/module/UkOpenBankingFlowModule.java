@@ -5,12 +5,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.module.agentclass.AgentClass;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 
+@Slf4j
 public final class UkOpenBankingFlowModule extends AbstractModule {
 
     @Override
@@ -23,6 +25,7 @@ public final class UkOpenBankingFlowModule extends AbstractModule {
     @Singleton
     public EidasIdentity eidasIdentity(
             CompositeAgentContext context, @AgentClass Class<? extends Agent> agentClass) {
+        log.info("[UkOpenBankingFlowModule] certId is: {}", context.getCertId());
         return new EidasIdentity(
                 context.getClusterId(),
                 context.getAppId(),

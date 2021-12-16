@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.module.agentclass.AgentClass;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 
+@Slf4j
 public class UkOpenBankingLocalKeySignerModuleForDecoupledMode extends AbstractModule {
     private static final Class<UkOpenBankingConfiguration> CONFIGURATION_CLASS =
             UkOpenBankingConfiguration.class;
@@ -46,6 +48,9 @@ public class UkOpenBankingLocalKeySignerModuleForDecoupledMode extends AbstractM
 
     private EidasIdentity eidasIdentity(
             CompositeAgentContext context, Class<? extends Agent> agentClass) {
+        log.info(
+                "[UkOpenBankingLocalKeySignerModuleForDecoupledMode] certId is: {}",
+                context.getCertId());
         return new EidasIdentity(
                 context.getClusterId(),
                 context.getAppId(),
