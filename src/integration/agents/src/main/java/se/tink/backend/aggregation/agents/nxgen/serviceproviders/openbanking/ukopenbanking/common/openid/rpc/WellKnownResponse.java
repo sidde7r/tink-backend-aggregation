@@ -52,6 +52,10 @@ public class WellKnownResponse {
         return Optional.of(String.join(" ", scopes));
     }
 
+    public boolean supportsScope(String scope) {
+        return scopesSupported.contains(scope);
+    }
+
     public Optional<SigningAlgorithm> getPreferredIdTokenSigningAlg(
             List<SigningAlgorithm> supportedAlgs) {
         return supportedAlgs.stream()
