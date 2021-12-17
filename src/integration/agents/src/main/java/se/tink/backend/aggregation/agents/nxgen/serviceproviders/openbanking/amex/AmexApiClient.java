@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
@@ -67,16 +69,21 @@ public class AmexApiClient {
                         .redirectUri(redirectUrl)
                         .build();
 
-        return httpClient
-                .request(Urls.RETRIEVE_TOKEN_PATH)
-                .body(tokenRequest, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(
-                        AmericanExpressConstants.Headers.X_AMEX_API_KEY,
-                        amexConfiguration.getClientId())
-                .header(
-                        AmericanExpressConstants.Headers.AUTHENTICATION,
-                        amexMacGenerator.generateAuthMacValue(AmexGrantType.AUTHORIZATION_CODE))
-                .post(TokenResponseDto.class);
+        TokenResponseDto post =
+                httpClient
+                        .request(Urls.RETRIEVE_TOKEN_PATH)
+                        .body(tokenRequest, MediaType.APPLICATION_FORM_URLENCODED)
+                        .header(Headers.X_AMEX_API_KEY, amexConfiguration.getClientId())
+                        .header(
+                                Headers.AUTHENTICATION,
+                                amexMacGenerator.generateAuthMacValue(
+                                        AmexGrantType.AUTHORIZATION_CODE))
+                        .post(TokenResponseDto.class);
+
+        Long reductionValue = Duration.ofHours(4).getSeconds();
+        post.setExpiresIn(post.getExpiresIn() - reductionValue);
+
+        return post;
     }
 
     public Optional<TokenResponseDto> refreshAccessToken(String refreshToken) {
