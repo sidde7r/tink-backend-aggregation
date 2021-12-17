@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.TransactionDetailsBaseEntity;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TriodosBookedTransactionEntity extends TransactionDetailsBaseEntity {
@@ -15,7 +14,7 @@ public class TriodosBookedTransactionEntity extends TransactionDetailsBaseEntity
 
     @Override
     public Transaction toTinkTransaction() {
-        Builder builder =
+        Transaction.Builder builder =
                 Transaction.builder()
                         .setPending(false)
                         .setAmount(triodosBalanceAmountEntity.toAmount(isDebit()))
@@ -24,8 +23,11 @@ public class TriodosBookedTransactionEntity extends TransactionDetailsBaseEntity
         if (shouldSetPayload()) {
             builder.setPayload(
                     TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL, getCounterPartyName());
+            builder.setPayload(
+                    TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL,
+                    getCounterpartyAccountIban());
         }
-        return (Transaction) builder.build();
+        return builder.build();
     }
 
     public String getTransactionDescription() {

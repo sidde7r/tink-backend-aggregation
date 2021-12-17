@@ -1,0 +1,42 @@
+{
+  "account": {
+    "iban": "NL30RABO0000000000"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "00000000-0000-4000-0000-000000000000",
+        "bookingDate": "2021-04-19",
+        "valueDate": "2021-04-19",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "21.60"
+        },
+        "creditorAccount": {},
+        "remittanceInformationUnstructured": "Test credit booked transaction description",
+        "proprietaryBankTransactionCode": "ID",
+        "endToEndIdentification": "16-04-21 22:20 0030006656539436"
+      }
+    ],
+    "pending": [
+      {
+        "transactionId": "00000000-0000-4000-0000-000000000000",
+        "bookingDate": "2021-04-19",
+        "valueDate": "2021-04-19",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "25.60"
+        },
+        "creditorAccount": {},
+        "remittanceInformationUnstructured": "Test credit pending transaction description",
+        "proprietaryBankTransactionCode": "ID",
+        "endToEndIdentification": "16-04-21 22:20 0030006656539430"
+      }
+    ],
+    "_links": {
+      "account": "/nl/v1/accounts/00000000-0000-5000-0000-000000000000",
+      "first": "/nl/v1/accounts/00000000-0000-5000-0000-000000000000/transactions?bookingStatus=both&dateFrom=2000-10-10",
+      "next": "/nl/v1/accounts/00000000-0000-5000-0000-000000000000/transactions?edgeToken=V11hb1HqLsHUSs0DVLNH8sIfOippayAKefPrbUvq4TRt9Ibm2g4vld41ti9PgjlvsBg8VB1NWyYY%3D"
+    }
+  }
+}

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -34,6 +35,16 @@ public abstract class TransactionDetailsBaseEntity {
         }
 
         return remittanceInformationUnstructured;
+    }
+
+    public String getCounterpartyAccountIban() {
+        return Optional.ofNullable(creditorAccount)
+                .map(CreditorAccountEntity::getIban)
+                .orElseGet(
+                        () ->
+                                Optional.ofNullable(debtorAccount)
+                                        .map(DebtorAccountEntity::getIban)
+                                        .orElse(null));
     }
 
     private boolean isDebitTransaction() {
