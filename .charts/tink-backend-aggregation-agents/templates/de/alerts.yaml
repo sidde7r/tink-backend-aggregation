@@ -6,19 +6,8 @@ metadata:
 spec:
   rules:
 
-  ## Login success rates - for DE because of a lot of TIMEOUTs and INCORRECT_CREDENTIALS
-  ## and being aware of the issue - we will assume all auth errors as successful refreshes.
-  ## To discover agents with really low SR there are long term alerts prepared.
-  ## is action grouping needed ??
   - alert: login_success_rate_between_70_and_80_de
-    expr: |
-      # Successful/Cancelled attempts above 80%
-      (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
-          / sum:DE:action_className:all_manual_attempts:delta1h < 0.80)
-      and (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
-                  / sum:DE:action_className:all_manual_attempts:delta1h >= 0.70)
-      # At least this many attempts.
-      and sum:DE:action_className:all_manual_attempts:delta1h > 5
+    expr: 0.7 <= sum:DE:action_className:all_manual_attempts:not_failed:delta1h / (sum:DE:action_className:all_manual_attempts:delta1h > 5) < 0.8
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -26,18 +15,12 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Login success rate is between 70 - 80% ( <{ $value | humanizePercentage }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Login success rate is between 70 - 80% ( <{ $value | humanizePercentage }> ) for <{ $labels.className }> 
         the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes..
       tags: {{ .Values.tags }}
 
   - alert: login_success_rate_between_60_and_70_de
-    expr: |
-      (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
-          / sum:DE:action_className:all_manual_attempts:delta1h < 0.70)
-      and (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
-                  / sum:DE:action_className:all_manual_attempts:delta1h >= 0.60)
-      # At least this many attempts.
-      and sum:DE:action_className:all_manual_attempts:delta1h > 5
+    expr: 0.6 <= sum:DE:action_className:all_manual_attempts:not_failed:delta1h / (sum:DE:action_className:all_manual_attempts:delta1h > 5) < 0.7
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -45,18 +28,12 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Login success rate is between 60 - 70% ( <{ $value | humanizePercentage }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Login success rate is between 60 - 70% ( <{ $value | humanizePercentage }> ) for <{ $labels.className }> 
         the {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
   - alert: login_success_rate_between_50_and_60_de
-    expr: |
-      (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
-          / sum:DE:action_className:all_manual_attempts:delta1h < 0.60)
-      and (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
-                  / sum:DE:action_className:all_manual_attempts:delta1h >= 0.50)
-      # At least this many attempts.
-      and sum:DE:action_className:all_manual_attempts:delta1h > 5
+    expr: 0.5 <= sum:DE:action_className:all_manual_attempts:not_failed:delta1h / (sum:DE:action_className:all_manual_attempts:delta1h > 5) < 0.6
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -64,16 +41,12 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Login success rate is between 50 - 60 % ( <{ $value | humanizePercentage }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Login success rate is between 50 - 60 % ( <{ $value | humanizePercentage }> ) for <{ $labels.className }> 
         the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
-  - alert: manual_login_success_rate_below_50_de
-    expr: |
-      (sum:DE:action_className:all_manual_attempts:not_failed:delta1h
-          / sum:DE:action_className:all_manual_attempts:delta1h < 0.50)
-      # At least this many attempts.
-      and sum:DE:action_className:all_manual_attempts:delta1h > 5
+  - alert: login_success_rate_below_50_de
+    expr: sum:DE:action_className:all_manual_attempts:not_failed:delta1h / (sum:DE:action_className:all_manual_attempts:delta1h > 5) < 0.5
     for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
@@ -81,20 +54,13 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Login success rate is below 50% ( <{ $value | humanizePercentage }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Login success rate is below 50% ( <{ $value | humanizePercentage }> ) for <{ $labels.className }> 
         the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
   ### Bank side failures
   - alert: bank_success_rate_between_70_and_80_de
-    expr: |
-      # Unavailable outcome above 50%
-      (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
-          / sum:DE:action_className:all_manual_attempts:delta1h < 0.80)
-      and (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
-                      / sum:DE:action_className:all_manual_attempts:delta1h >= 0.70)
-      # At least this many attempts.
-      and sum:DE:action_className:all_manual_attempts:delta1h > 5
+    expr: 0.7 <= sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h / (sum:DE:action_className:all_manual_attempts:delta1h > 5) < 0.8
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -107,14 +73,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: bank_success_rate_between_60_and_70_de
-    expr: |
-      # Unavailable outcome above 50%
-      (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
-          / sum:DE:action_className:all_manual_attempts:delta1h < 0.70)
-      and (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
-                  / sum:DE:action_className:all_manual_attempts:delta1h >= 0.60)
-      # At least this many attempts.
-      and sum:DE:action_className:all_manual_attempts:delta1h > 5
+    expr: 0.6 <= sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h / (sum:DE:action_className:all_manual_attempts:delta1h > 5) < 0.7
     for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
     labels:
       severity: ping
@@ -127,14 +86,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: bank_success_rate_between_50_and_60_de
-    expr: |
-      # Unavailable outcome above 50%
-      (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
-          / sum:DE:action_className:all_manual_attempts:delta1h < 0.60)
-      and (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
-                      / sum:DE:action_className:all_manual_attempts:delta1h >= 0.50)
-      # At least this many attempts.
-      and sum:DE:action_className:all_manual_attempts:delta1h > 5
+    expr: 0.5 <= sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h / (sum:DE:action_className:all_manual_attempts:delta1h > 5) < 0.6
     for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
@@ -147,12 +99,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: bank_success_rate_below_50_de
-    expr: |
-      # Unavailable outcome above 50%
-      (sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h
-          / sum:DE:action_className:all_manual_attempts:delta1h < 0.50)
-      # At least this many attempts.
-      and sum:DE:action_className:all_manual_attempts:delta1h > 5
+    expr: sum:DE:action_className:all_manual_attempts:not_unavailable:delta1h / (sum:DE:action_className:all_manual_attempts:delta1h > 5) < 0.5
     for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
@@ -160,15 +107,18 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Bank errors rate is below 50% ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
+      summary: Bank errors rate is above 50% ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
         the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
+  # These two alerts below work in opposite way of others, here we look at "error rate being high == bad", instead of "success rate being low == bad"
+
   - alert: manual_login_error_rate_over_50%_due_to_bank_side_error_de
     expr: |
-      (sum by(className) (increase (tink_agent_login_total{market="DE", outcome="unavailable", action="login-manual"}[1h]))
-      / sum:DE:className:login-manual:delta1h > 0.5 )
-      and sum:DE:className:login-manual:delta1h > 5
+      0.5 < 
+      sum by(className) (increase (tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="unavailable"}[1h])) 
+      / 
+      (sum by (className) (increase (tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual"}[1h])) > 5)
     for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
@@ -176,15 +126,16 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Manual login error rate more than 50% ( <{ $value * 100}> ) % for agent <{ $labels.className }>
-        the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
+      summary: Manual login error rate due to bank unavailable is <{ $value | humanizePercentage }> for agent <{ $labels.className }>
+        in the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
 
   - alert: auto_login_error_rate_over_50%_due_to_bank_side_error_de
     expr: |
-      (sum by(className) (increase (tink_agent_login_total{market="DE", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
-      / sum:DE:className:login-auto-and-cron:delta1h > 0.5 )
-      and sum:DE:className:login-auto-and-cron:delta1h > 5
+      0.5 < 
+      sum by(action, className) (increase (tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="unavailable"}[1h])) 
+      / 
+      (sum by (action, className) (increase (tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron"}[1h])) > 5)
     for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
     labels:
       severity: urgent
@@ -192,24 +143,15 @@ spec:
       who: integration-nazguls
     annotations:
       description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Auto login error rate more than 50% ( <{ $value * 100 }>  ) % for agent <{ $labels.className }>
-        the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
+      summary: Auto login error rate due to bank unavailable is <{ $value | humanizePercentage }> for action <{ $labels.action }> and agent <{ $labels.className }>
+        in the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
       tags: {{ .Values.tags }}
-
-  ## Long term alerts
-  ## removed due to problems with prometheus performance
-
 
   #################################
   ### AllErrors - Agent Refresh ###
   #################################
   - alert: agent_refreshes_below45_greater35_due_to_all_error_for_specific_product_in_de
-    expr: |
-      (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h < 0.45)
-      and sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h)
-          / sum:DE:className_type:all_refreshes:delta1h >= 0.35)
-       and sum:DE:className_type:all_refreshes:delta1h > 20
+    expr: 0.35 <= sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.45
     for: 30m
     labels:
       severity: ping
@@ -222,12 +164,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: agent_refreshes_below35_greater25_due_to_all_error_for_specific_product_in_de
-    expr: |
-      (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h < 0.35)
-      and (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h >= 0.25)
-       and sum:DE:className_type:all_refreshes:delta1h > 20
+    expr: 0.25 <= sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.35
     for: 30m
     labels:
       severity: urgent
@@ -240,12 +177,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: agent_refreshes_below25_greater15_due_to_all_error_for_specific_product_in_de
-    expr: |
-      (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h < 0.25)
-      and (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h >= 0.15)
-       and sum:DE:className_type:all_refreshes:delta1h > 20
+    expr: 0.15 <= sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.25
     for: 30m
     labels:
       severity: urgent
@@ -258,10 +190,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: agent_refreshes_below15_due_to_all_error_for_specific_product_in_de
-    expr: |
-      (sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h < 0.15)
-       and sum:DE:className_type:all_refreshes:delta1h > 20
+    expr: sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.15
     for: 30m
     labels:
       severity: urgent
@@ -278,12 +207,7 @@ spec:
   ###############################################
 
   - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_for_specific_product_in_de
-    expr: |
-      (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h < 0.6)
-      and (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h >= 0.5)
-       and sum:DE:className_type:all_refreshes:delta1h > 20
+    expr: 0.5 <= sum:DE:className_type:not_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.6
     for: 30m
     labels:
       severity: ping
@@ -296,12 +220,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_for_specific_product_in_de
-    expr: |
-      (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h < 0.5)
-      and (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h >= 0.4)
-       and sum:DE:className_type:all_refreshes:delta1h > 20
+    expr: 0.4 <= sum:DE:className_type:not_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.5
     for: 30m
     labels:
       severity: urgent
@@ -314,12 +233,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_for_specific_product_in_de
-    expr: |
-      (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h < 0.4)
-      and (sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h >= 0.3)
-       and sum:DE:className_type:all_refreshes:delta1h > 20
+    expr: 0.3 <= sum:DE:className_type:not_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.4
     for: 30m
     labels:
       severity: urgent
@@ -332,10 +246,7 @@ spec:
       tags: {{ .Values.tags }}
 
   - alert: agent_refreshes_below30_due_to_partially_completed_error_for_specific_product_in_de
-    expr: |
-      sum:DE:className_type:not_partially_completed:delta1h
-          / sum:DE:className_type:all_refreshes:delta1h < 0.3
-       and sum:DE:className_type:all_refreshes:delta1h > 20
+    expr: sum:DE:className_type:not_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.3
     for: 30m
     labels:
       severity: urgent
