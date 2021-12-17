@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.utils;
 
 import com.google.common.base.Preconditions;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import javax.annotation.Nullable;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 
@@ -25,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
  * information about the lifetime of the tokens returned by the ASPSP. If the API documentation does
  * not provide any information about the lifetime of the token, we should default to 90 days.
  */
-@Slf4j
 public class OpenBankingTokenExpirationDateHelper {
     private static final int DEFAULT_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_LIFETIME_UNIT = ChronoUnit.DAYS;
@@ -98,20 +95,6 @@ public class OpenBankingTokenExpirationDateHelper {
         }
 
         if (!token.isRefreshTokenExpirationPeriodSpecified()) {
-            if (!token.getRefreshToken().isPresent()) {
-                // Rewrite the token's expiry to the default value if it does not have a refresh
-                // token. This is because some banks give us a token with an expiry of 600 seconds,
-                // and no refresh token, even though we asked for longer access.
-                long tokenExpiryInSeconds =
-                        Duration.of(tokenLifetime, tokenLifetimeUnit).getSeconds();
-                long originalExpiryInSeconds = token.getExpiresInSeconds();
-                log.info(
-                        "Updating the token expiry date to {} seconds, original value: {}, diff: {}.",
-                        tokenExpiryInSeconds,
-                        originalExpiryInSeconds,
-                        tokenExpiryInSeconds - originalExpiryInSeconds);
-                token.setExpiresInSeconds(tokenExpiryInSeconds);
-            }
             return getExpirationDateFrom(tokenLifetime, tokenLifetimeUnit);
         }
 
