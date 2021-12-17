@@ -12,7 +12,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-class NemIdChoose2FAMethodField {
+public class NemIdChoose2FAMethodField {
 
     public static final String FIELD_KEY = "selectAuthMethodField";
 
