@@ -104,7 +104,12 @@ public class OpenBankingTokenExpirationDateHelper {
                 // and no refresh token, even though we asked for longer access.
                 long tokenExpiryInSeconds =
                         Duration.of(tokenLifetime, tokenLifetimeUnit).getSeconds();
-                log.info("Updating the token expiry date to {} seconds.", tokenExpiryInSeconds);
+                long originalExpiryInSeconds = token.getExpiresInSeconds();
+                log.info(
+                        "Updating the token expiry date to {} seconds, original value: {}, diff: {}.",
+                        tokenExpiryInSeconds,
+                        originalExpiryInSeconds,
+                        tokenExpiryInSeconds - originalExpiryInSeconds);
                 token.setExpiresInSeconds(tokenExpiryInSeconds);
             }
             return getExpirationDateFrom(tokenLifetime, tokenLifetimeUnit);
