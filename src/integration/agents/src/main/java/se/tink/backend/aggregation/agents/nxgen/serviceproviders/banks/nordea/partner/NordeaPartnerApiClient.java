@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class NordeaPartnerApiClient {
 
     private final TinkHttpClient client;
@@ -147,6 +149,7 @@ public class NordeaPartnerApiClient {
     }
 
     public void fetchAllData(LocalDate startDate) {
+        log.info("Nordea Partner: before fetching all");
         AccountListResponse accountListResponse =
                 requestRefreshableGet(
                         request(EndPoints.ALL_DATA)
@@ -157,6 +160,7 @@ public class NordeaPartnerApiClient {
                                         QueryParamsKeys.INCLUDE, QueryParamsValues.INCLUDE_VALUES),
                         AccountListResponse.class);
         storeDataInSessionStorage(accountListResponse);
+        log.info("Nordea Partner: After fetching all");
     }
 
     public AccountListResponse getAllData() {

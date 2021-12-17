@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Collection;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -36,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
+@Slf4j
 public abstract class NordeaPartnerAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -53,6 +55,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider,
             NordeaPartnerKeystoreProvider keystoreProvider) {
         super(componentProvider);
+        log.info("Nordea Partner: Start of the agent");
         isOnStaging =
                 "neston-staging".equalsIgnoreCase(componentProvider.getContext().getClusterId());
         apiClient =
