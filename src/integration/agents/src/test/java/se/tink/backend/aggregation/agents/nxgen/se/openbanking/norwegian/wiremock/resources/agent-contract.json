@@ -1,0 +1,1285 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "10372997001",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "scale" : 0,
+      "exactValue" : 0,
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 0,
+      "exactValue" : -468,
+      "doubleValue" : -468.0,
+      "unscaledValue" : -468
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "364a679522f54fc596d10d376a7b1a2b",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CreditCard",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"bban://10372997001\"]",
+    "closed" : false,
+    "holderName" : "Owner Name",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Owner Name",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -468.0
+  } ],
+  "transactions" : [ {
+    "amount" : -169.0,
+    "date" : 1638615600000,
+    "description" : "Aimo Solution AB Stockholm SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1186310244"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -190.0,
+    "date" : 1638010800000,
+    "description" : "Aimo Solution AB Stockholm SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1181280086"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 2325.47,
+    "date" : 1637838000000,
+    "description" : "från Name Owner",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1179527186"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -109.0,
+    "date" : 1637406000000,
+    "description" : "NETFLIX.COM 020790637 NL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1176945448"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -315.61,
+    "date" : 1636887600000,
+    "description" : "www.madmonq.gg PRAHA CZ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1172569365"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -25.26,
+    "date" : 1636542000000,
+    "description" : "LIM*RIDE COST WARSZAWA PL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1170223336"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -62.59,
+    "date" : 1636542000000,
+    "description" : "UBER   *TRIP HELP.UBER.COM NL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1170269898"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1212.22,
+    "date" : 1636196400000,
+    "description" : "Dropbox db.tt/cchelp IE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1168196317"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -211.03,
+    "date" : 1636023600000,
+    "description" : "Amazon.com*YZ5CZ3383 Amzn.com/bill US",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1167497143"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 6468.06,
+    "date" : 1635156000000,
+    "description" : "från Name Owner",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1160460971"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 718.24,
+    "date" : 1634810400000,
+    "description" : "AMZN Mktp DE AMAZON.DE LU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1158437020"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -354.0,
+    "date" : 1634810400000,
+    "description" : "HAYMARKET BY SCANDIC STOCKHOLM SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1158475718"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -109.0,
+    "date" : 1634637600000,
+    "description" : "NETFLIX.COM 020790637 NL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1157717888"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -346.0,
+    "date" : 1634551200000,
+    "description" : "BRUNNSVIKENS TRADGARD SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1157154126"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -195.0,
+    "date" : 1634551200000,
+    "description" : "BRUNNSVIKENS TRADGARD SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1157181588"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -138.0,
+    "date" : 1634464800000,
+    "description" : "MAX STOCKHOLM VASAGATAN STOCKHOLM SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1156704383"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -75.0,
+    "date" : 1634378400000,
+    "description" : "Aimo Solution AB Stockholm SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1155829296"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -118.9,
+    "date" : 1634205600000,
+    "description" : "NARAPOTEKET I FROSUNDA SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1153269268"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -100.0,
+    "date" : 1634119200000,
+    "description" : "COOP SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1152901446"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -736.0,
+    "date" : 1633946400000,
+    "description" : "Klarna adlibris.se Stockholm SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1152097216"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -251.2,
+    "date" : 1633860000000,
+    "description" : "STORA COOP BROMMA BROMMA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1151419105"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -161.6,
+    "date" : 1633860000000,
+    "description" : "JULA SVERIGE AB BROMMA BROMMA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1151578117"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -651.0,
+    "date" : 1633860000000,
+    "description" : "CYKLOTEKET B2 AB BROMMA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1151557514"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -854.9,
+    "date" : 1633773600000,
+    "description" : "HM SE0144 Solna SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1150797786"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -220.0,
+    "date" : 1633773600000,
+    "description" : "APOTEK HJARTAT MALL OF SC SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1151031185"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -20.0,
+    "date" : 1633341600000,
+    "description" : "AIK TRAFFEN . MANN CAT SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1148475742"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1069.46,
+    "date" : 1633082400000,
+    "description" : "AMZN Mktp DE*AX0639MR5 AMAZON.DE LU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1146657749"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -30.0,
+    "date" : 1632736800000,
+    "description" : "MAX MALL OF SCANDINAVIA SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1143740159"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -153.0,
+    "date" : 1632391200000,
+    "description" : "NARAPOTEKET I FROSUNDA SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1141352399"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 6909.78,
+    "date" : 1632132000000,
+    "description" : "från Name Owner",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139617527"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -109.0,
+    "date" : 1632132000000,
+    "description" : "NETFLIX.COM 020790637 NL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139739702"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -228.0,
+    "date" : 1632132000000,
+    "description" : "XXL SPORT & VIL BROMMA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139862056"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1082.0,
+    "date" : 1632132000000,
+    "description" : "BAUHAUS BROMMA BROMMA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139836051"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -207.0,
+    "date" : 1632132000000,
+    "description" : "Joe  The Juice Bromma SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139746582"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -15.0,
+    "date" : 1632132000000,
+    "description" : "NYX*Unattended-SE MannCateringi SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139794627"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -139.0,
+    "date" : 1631959200000,
+    "description" : "Aimo Solution AB Stockholm SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1138632848"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -228.0,
+    "date" : 1631872800000,
+    "description" : "StickerApp Sweden AB Lomma SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1138120848"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -94.0,
+    "date" : 1631786400000,
+    "description" : "MAX MALL OF SCANDINAVIA SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1137740022"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -360.0,
+    "date" : 1631700000000,
+    "description" : "MIN DOKTOR KLINIKEN MO SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1135788514"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -819.0,
+    "date" : 1631700000000,
+    "description" : "HORNBACH SUNDBYBERG SUNDBYBERG SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1135734457"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -861.18,
+    "date" : 1600509600000,
+    "description" : "AMZN Mktp DE*RW7ST9RF5 800-279-6620 LU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "933690276"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -109.0,
+    "date" : 1600509600000,
+    "description" : "NETFLIX.COM 020790637 NL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "933865213"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -80.0,
+    "date" : 1599818400000,
+    "description" : "QUICK STAR SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "928077700"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1620.78,
+    "date" : 1598349600000,
+    "description" : "EURONICS  1 BIELLA IT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "918497828"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -20391.86,
+    "date" : 1598090400000,
+    "description" : "WWW.DECATHLON.COM MILANO IT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "916530386"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -109.0,
+    "date" : 1597917600000,
+    "description" : "NETFLIX.COM 020790637 NL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "915457643"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 1923.34,
+    "date" : 1597831200000,
+    "description" : "från Name Owner",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "914772108"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -444.78,
+    "date" : 1597572000000,
+    "description" : "DAC SOMEDIS 06MENTON FR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "913633514"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -790.61,
+    "date" : 1597572000000,
+    "description" : "INTERMARCHE 06MENTON FR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "913633510"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -330.87,
+    "date" : 1597053600000,
+    "description" : "NOVA COOP CARBURANTI BIE BIELLA IT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "908731424"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -335.09,
+    "date" : 1596621600000,
+    "description" : "STOP OIL BENZINKUT SHO SATORALJAUJHE HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "905809059"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 435.76,
+    "date" : 1596103200000,
+    "description" : "IKEA lakberendezes online Budapest HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "901984696"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 1332.03,
+    "date" : 1596016800000,
+    "description" : "WIZZ AIR BUDAPEST HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "901695559"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -436.93,
+    "date" : 1595930400000,
+    "description" : "Anyukam Mondta Etterem Encs HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "901019034"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 31642.49,
+    "date" : 1595584800000,
+    "description" : "från Name Owner",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "897782427"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -81.57,
+    "date" : 1595671200000,
+    "description" : "FAIPARI TERMEK-BARKAC SATORALJAUJHE HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "898518274"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 96.42,
+    "date" : 1595412000000,
+    "description" : "IKEA lakberendezes online Budapest HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "896870416"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1203.73,
+    "date" : 1595325600000,
+    "description" : "RYANAIR DUBLIN IE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "896126094"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1290.36,
+    "date" : 1595239200000,
+    "description" : "TESCO 41007 SATORALJAUJHE HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "895959489"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -109.0,
+    "date" : 1595152800000,
+    "description" : "NETFLIX.COM 020790637 NL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "895204450"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -2258.37,
+    "date" : 1594461600000,
+    "description" : "IKEA lakberendezes online Budapest HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "889252419"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -13735.06,
+    "date" : 1594375200000,
+    "description" : "IKEA lakberendezes online Budapest HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "888691306"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -169.0,
+    "date" : 1593856800000,
+    "description" : "ASN SPEL & TOBAK SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "885611542"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -638.03,
+    "date" : 1593770400000,
+    "description" : "Amazon.it*VD4FK1UP5 www.amazon.it LU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "885025704"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1332.03,
+    "date" : 1593856800000,
+    "description" : "WIZZ AIR BUDAPEST HU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "885575268"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -224.25,
+    "date" : 1593424800000,
+    "description" : "DRESSMANN 394 SOLNA SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "881914598"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -149.0,
+    "date" : 1593424800000,
+    "description" : "DECATHLON MALL OF SCANDIN SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "881983419"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -801.14,
+    "date" : 1593424800000,
+    "description" : "LIDL 350 /SOLNA CENTRUM SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "881572680"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1899.21,
+    "date" : 1593424800000,
+    "description" : "EDX, INC. CAMBRIDGE US",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "882220675"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -198.0,
+    "date" : 1593165600000,
+    "description" : "SYSTEMBOLAGET SOLNA EX SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "880672315"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 141.26,
+    "date" : 1593079200000,
+    "description" : "AMZN Mktp IT 800-279-6620 LU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "879450917"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -846.66,
+    "date" : 1592992800000,
+    "description" : "ICA KVANTUM MALL OF SCAND SOLNA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "879021944"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -266.0,
+    "date" : 1592906400000,
+    "description" : "Aimo Solution AB Stockholm SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "878333354"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1756.0,
+    "date" : 1592906400000,
+    "description" : "DECATHLON JERFELLA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "878391148"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1995.0,
+    "date" : 1592906400000,
+    "description" : "Lekmer AB Jaerfaella SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "878549373"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -3770.0,
+    "date" : 1592820000000,
+    "description" : "NORRANGENS ALPACKA SALA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "877856711"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1637.0,
+    "date" : 1592820000000,
+    "description" : "IKEA BARKARBY JERFELLA SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "877950376"
+    },
+    "transactionDates" : [ ],
+    "booked" : true
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FULLNAME",
+      "value" : "Owner Name"
+    } ],
+    "dateOfBirth" : null
+  }
+}
