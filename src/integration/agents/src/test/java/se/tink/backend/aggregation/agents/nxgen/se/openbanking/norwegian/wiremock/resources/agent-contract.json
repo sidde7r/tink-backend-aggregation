@@ -4,17 +4,17 @@
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "SEK",
+      "scale" : 0,
       "exactValue" : 0,
       "doubleValue" : 0.0,
-      "unscaledValue" : 0,
-      "scale" : 0
+      "unscaledValue" : 0
     },
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "scale" : 0,
       "exactValue" : -468,
       "doubleValue" : -468.0,
-      "unscaledValue" : -468,
-      "scale" : 0
+      "unscaledValue" : -468
     },
     "currencyCode" : "SEK",
     "bankId" : "364a679522f54fc596d10d376a7b1a2b",
@@ -53,7 +53,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1186310244"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -67,7 +69,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1181280086"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -81,7 +85,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1179527186"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -95,7 +101,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1176945448"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -109,7 +117,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1172569365"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -123,7 +133,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1170223336"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -137,7 +149,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1170269898"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -151,7 +165,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1168196317"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -165,7 +181,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1167497143"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -179,7 +197,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1160460971"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -193,7 +213,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1158437020"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -207,7 +229,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1158475718"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -221,7 +245,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1157717888"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -235,7 +261,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1157154126"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -249,7 +277,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1157181588"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -263,7 +293,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1156704383"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -277,7 +309,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1155829296"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -291,7 +325,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1153269268"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -305,7 +341,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1152901446"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -319,7 +357,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1152097216"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -333,7 +373,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1151419105"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -347,7 +389,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1151578117"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -361,7 +405,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1151557514"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -375,7 +421,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1150797786"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -389,7 +437,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1151031185"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -403,7 +453,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1148475742"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -417,7 +469,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1146657749"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -431,7 +485,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1143740159"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -445,7 +501,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1141352399"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -459,7 +517,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139617527"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -473,7 +533,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139739702"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -487,7 +549,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139862056"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -501,7 +565,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139836051"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -515,7 +581,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139746582"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -529,7 +597,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1139794627"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -543,7 +613,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1138632848"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -557,7 +629,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1138120848"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -571,7 +645,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1137740022"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -585,7 +661,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1135788514"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -599,7 +677,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1135734457"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -613,7 +693,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "933690276"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -627,7 +709,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "933865213"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -641,7 +725,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "928077700"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -655,7 +741,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "918497828"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -669,7 +757,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "916530386"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -683,7 +773,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "915457643"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -697,7 +789,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "914772108"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -711,7 +805,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "913633514"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -725,7 +821,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "913633510"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -739,7 +837,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "908731424"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -753,7 +853,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "905809059"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -767,7 +869,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "901984696"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -781,7 +885,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "901695559"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -795,7 +901,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "901019034"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -809,7 +917,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "897782427"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -823,7 +933,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "898518274"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -837,7 +949,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "896870416"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -851,7 +965,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "896126094"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -865,7 +981,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "895959489"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -879,7 +997,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "895204450"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -893,7 +1013,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "889252419"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -907,7 +1029,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "888691306"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -921,7 +1045,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "885611542"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -935,7 +1061,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "885025704"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -949,7 +1077,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "885575268"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -963,7 +1093,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "881914598"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -977,7 +1109,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "881983419"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -991,7 +1125,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "881572680"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1005,7 +1141,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "882220675"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1019,7 +1157,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "880672315"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1033,7 +1173,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "879450917"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1047,7 +1189,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "879021944"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1061,7 +1205,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "878333354"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1075,7 +1221,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "878391148"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1089,7 +1237,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "878549373"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1103,7 +1253,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "877856711"
+    },
     "transactionDates" : [ ],
     "booked" : true
   }, {
@@ -1117,7 +1269,9 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "877950376"
+    },
     "transactionDates" : [ ],
     "booked" : true
   } ],
