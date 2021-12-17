@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
@@ -43,8 +42,6 @@ public class BBankAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(BBankConstants.ORGANISATION_ID)
                         .withWellKnownURL(BBankConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(BBankConstants.AIS_API_URL)
-                        .withAllowedAccountOwnershipTypes(
-                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTY, PartyEndpoint.PARTY)
                         .build();
     }

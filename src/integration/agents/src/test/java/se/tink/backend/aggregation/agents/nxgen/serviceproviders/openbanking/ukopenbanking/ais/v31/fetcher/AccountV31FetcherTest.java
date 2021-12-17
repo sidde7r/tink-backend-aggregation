@@ -14,22 +14,18 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.util.Sets;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.BalanceFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.CreditCardFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 
@@ -44,7 +40,7 @@ public class AccountV31FetcherTest {
     @Test
     public void returnOnlyAccountsSupportedByMapper() {
         // when
-        setUpWithoutBusiness();
+        setUpTest();
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
                         ImmutableList.of(
@@ -99,7 +95,7 @@ public class AccountV31FetcherTest {
     @Test
     public void returnOnlyAccountsSupportedByMapperEvenIfBusinessAccountsAreReturned() {
         // when
-        setUpWithoutBusiness();
+        setUpTest();
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
                         ImmutableList.of(
@@ -152,7 +148,7 @@ public class AccountV31FetcherTest {
     @Test
     public void returnPersonalAndBusinessAccountsToTheMapper() {
         // when
-        setUpWithBusiness();
+        setUpTest();
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
                         ImmutableList.of(
@@ -205,7 +201,7 @@ public class AccountV31FetcherTest {
     @Test
     public void allFetchedDataIsPassedToMapper() {
         // given
-        setUpWithoutBusiness();
+        setUpTest();
         AccountEntity account = TransactionalAccountFixtures.savingsAccount();
         AccountBalanceEntity balance = BalanceFixtures.balanceCredit();
         List<PartyV31Entity> parties = PartyFixtures.parties();
@@ -224,7 +220,7 @@ public class AccountV31FetcherTest {
     @Test
     public void shouldReturnEmptyAccountList() {
         // given
-        setUpWithoutBusiness();
+        setUpTest();
         AccountEntity account = TransactionalAccountFixtures.currentAccountWithEmptyAccountId();
         when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));
 
@@ -235,19 +231,8 @@ public class AccountV31FetcherTest {
         assertThat(accounts).hasSize(0);
     }
 
-    private void setUpWithoutBusiness() {
-        setUpTest(AccountOwnershipType.PERSONAL);
-    }
-
-    private void setUpWithBusiness() {
-        setUpTest(AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS);
-    }
-
-    private void setUpTest(AccountOwnershipType... accountOwnershipTypes) {
+    private void setUpTest() {
         Account mockedAccount = mock(Account.class);
-        UkOpenBankingAisConfig aisConfig = mock(UkOpenBankingAisConfig.class);
-        when(aisConfig.getAllowedAccountOwnershipTypes())
-                .thenReturn(Sets.newLinkedHashSet(accountOwnershipTypes));
         accountMapper = mock(AccountMapper.class);
         when(accountMapper.map(any(), anyCollection(), anyCollection()))
                 .thenReturn(Optional.of(mockedAccount));
@@ -258,11 +243,6 @@ public class AccountV31FetcherTest {
         instrumentation = new FetcherInstrumentationRegistry();
 
         accountFetcher =
-                new AccountV31Fetcher(
-                        apiClient,
-                        partyFetcher,
-                        new DefaultAccountTypeMapper(aisConfig),
-                        accountMapper,
-                        instrumentation);
+                new AccountV31Fetcher(apiClient, partyFetcher, accountMapper, instrumentation);
     }
 }

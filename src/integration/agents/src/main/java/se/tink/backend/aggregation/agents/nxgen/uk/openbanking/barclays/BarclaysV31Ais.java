@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.AccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.CreditCardAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.fetcher.BarclaysPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -18,20 +17,16 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BarclaysV31Ais extends UkOpenBankingV31Ais {
 
-    private final AccountTypeMapper accountTypeMapper;
     private final PartyFetcher barclaysPartyFetcher;
 
     public BarclaysV31Ais(
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            UkOpenBankingApiClient apiClient,
-            AccountTypeMapper accountTypeMapper) {
+            UkOpenBankingApiClient apiClient) {
         super(aisConfig, persistentStorage, localDateTimeSource);
-        this.accountTypeMapper = accountTypeMapper;
         this.barclaysPartyFetcher =
-                new BarclaysPartyFetcher(
-                        apiClient, aisConfig, accountTypeMapper, persistentStorage);
+                new BarclaysPartyFetcher(apiClient, aisConfig, persistentStorage);
     }
 
     @Override
@@ -42,7 +37,6 @@ public class BarclaysV31Ais extends UkOpenBankingV31Ais {
                 new AccountV31Fetcher<>(
                         apiClient,
                         barclaysPartyFetcher,
-                        accountTypeMapper,
                         defaultTransactionalAccountMapper(),
                         instrumentation));
     }
@@ -55,7 +49,6 @@ public class BarclaysV31Ais extends UkOpenBankingV31Ais {
                 new AccountV31Fetcher<>(
                         apiClient,
                         barclaysPartyFetcher,
-                        accountTypeMapper,
                         defaultCreditCardAccountMapper(),
                         instrumentation));
     }

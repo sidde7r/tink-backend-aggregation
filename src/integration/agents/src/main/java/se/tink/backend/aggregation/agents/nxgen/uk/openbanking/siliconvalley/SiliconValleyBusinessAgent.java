@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
@@ -37,7 +36,6 @@ public class SiliconValleyBusinessAgent extends UkOpenBankingBaseAgent {
                         UkOpenBankingAisConfiguration.builder()
                                 .withOrganisationId(SiliconValleyConstants.ORGANISATION_ID)
                                 .withWellKnownURL(SiliconValleyConstants.WELL_KNOWN_URL)
-                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                                 .withApiBaseURL(SiliconValleyConstants.AIS_API_URL));
     }
 

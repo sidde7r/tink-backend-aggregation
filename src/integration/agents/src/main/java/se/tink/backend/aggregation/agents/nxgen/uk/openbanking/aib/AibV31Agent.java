@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
@@ -43,7 +42,6 @@ public final class AibV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 new AibAisConfiguration(
                         UkOpenBankingAisConfiguration.builder()
-                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                                 .withApiBaseURL(AibConstants.AIS_API_URL)
                                 .withWellKnownURL(AibConstants.WELL_KNOWN_PERSONAL_URL)
                                 .withOrganisationId(AibConstants.ORGANISATION_ID));

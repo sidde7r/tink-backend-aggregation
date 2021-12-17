@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
@@ -31,7 +30,6 @@ public final class FirstTrustV31CorporateAgent extends UkOpenBankingBaseAgent {
         aisConfig =
                 new FirstTrustCorporateAisConfiguration(
                         UkOpenBankingAisConfiguration.builder()
-                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                                 .withOrganisationId(FirstTrustConstants.ORGANISATION_ID)
                                 .withApiBaseURL(FirstTrustConstants.AIS_API_URL)
                                 .withWellKnownURL(FirstTrustConstants.CORPORATE_WELL_KNOWN_URL));

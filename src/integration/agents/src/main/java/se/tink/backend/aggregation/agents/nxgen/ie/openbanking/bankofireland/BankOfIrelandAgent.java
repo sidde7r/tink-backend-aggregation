@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingEUFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
@@ -26,7 +25,6 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
         aisConfig =
                 new BoiAisConfiguration(
                         UkOpenBankingAisConfiguration.builder()
-                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                                 .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
                                 .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
                                 .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL));

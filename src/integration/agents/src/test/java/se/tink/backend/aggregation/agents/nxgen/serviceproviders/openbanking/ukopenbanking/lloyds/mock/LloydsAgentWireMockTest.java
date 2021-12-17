@@ -56,7 +56,6 @@ public class LloydsAgentWireMockTest {
                                 RefreshableItem.CHECKING_ACCOUNTS,
                                 RefreshableItem.CHECKING_TRANSACTIONS)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .enableHttpDebugTrace()
                         .build();
 
         final AgentContractEntity expected =
@@ -71,11 +70,11 @@ public class LloydsAgentWireMockTest {
     }
 
     @Test
-    public void shouldExcludeBusinessAccount() throws Exception {
+    public void shouldFetchBusinessAccount() throws Exception {
 
         // given
-        final String wireMockFilePath = RESOURCES_PATH + "exclude-business-account.aap";
-        final String contractFilePath = RESOURCES_PATH + "exclude-business-account.json";
+        final String wireMockFilePath = RESOURCES_PATH + "fetch-business-account.aap";
+        final String contractFilePath = RESOURCES_PATH + "fetch-business-account.json";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);

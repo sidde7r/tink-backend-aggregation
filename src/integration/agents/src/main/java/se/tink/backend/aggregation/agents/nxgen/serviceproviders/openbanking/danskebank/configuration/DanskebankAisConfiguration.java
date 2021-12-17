@@ -2,12 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.da
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
-import java.util.Collections;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -67,11 +64,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
                         UkObScope.READ_TRANSACTIONS_DEBITS,
                         UkObScope.READ_TRANSACTIONS_DETAIL)
                 .build();
-    }
-
-    @Override
-    public Set<AccountOwnershipType> getAllowedAccountOwnershipTypes() {
-        return Collections.singleton(AccountOwnershipType.PERSONAL);
     }
 
     @Override

@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
@@ -49,8 +48,6 @@ public class ClydesdaleAgent extends UkOpenBankingBaseAgent {
                         .withWellKnownURL(ClydesdaleConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(ClydesdaleConstants.AIS_API_URL)
                         .withPartyEndpoints(PartyEndpoint.PARTY, PartyEndpoint.ACCOUNT_ID_PARTY)
-                        .withAllowedAccountOwnershipTypes(
-                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .build();
     }
 

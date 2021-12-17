@@ -17,15 +17,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @Slf4j
 public class HsbcKineticPartyFetcher extends PartyV31Fetcher {
 
-    private final AccountTypeMapper accountTypeMapper;
-
     public HsbcKineticPartyFetcher(
             UkOpenBankingApiClient apiClient,
             UkOpenBankingAisConfig config,
-            PersistentStorage persistentStorage,
-            AccountTypeMapper accountTypeMapper) {
+            PersistentStorage persistentStorage) {
         super(apiClient, config, persistentStorage, PARTIES_SCA_LIMIT_MINUTES);
-        this.accountTypeMapper = accountTypeMapper;
     }
 
     @Override
@@ -40,6 +36,6 @@ public class HsbcKineticPartyFetcher extends PartyV31Fetcher {
     }
 
     private boolean isCreditCard(AccountEntity account) {
-        return accountTypeMapper.getAccountType(account).equals(AccountTypes.CREDIT_CARD);
+        return AccountTypeMapper.getAccountType(account).equals(AccountTypes.CREDIT_CARD);
     }
 }

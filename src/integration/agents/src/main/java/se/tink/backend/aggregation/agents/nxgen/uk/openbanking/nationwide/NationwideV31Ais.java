@@ -8,8 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.CreditCardAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -21,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class NationwideV31Ais extends UkOpenBankingV31Ais {
 
     private final CreditCardAccountMapper creditCardAccountMapper;
-    private final AccountTypeMapper accountTypeMapper;
     private final PartyFetcher nationwidePartyFetcher;
 
     public NationwideV31Ais(
@@ -32,7 +29,6 @@ public class NationwideV31Ais extends UkOpenBankingV31Ais {
             UkOpenBankingApiClient apiClient) {
         super(aisConfig, persistentStorage, localDateTimeSource);
         this.creditCardAccountMapper = nationwideCreditCardAccountMapper;
-        this.accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
         this.nationwidePartyFetcher = new PartyV31Fetcher(apiClient, aisConfig, persistentStorage);
     }
 
@@ -44,7 +40,6 @@ public class NationwideV31Ais extends UkOpenBankingV31Ais {
                 new AccountV31Fetcher<>(
                         apiClient,
                         nationwidePartyFetcher,
-                        accountTypeMapper,
                         defaultTransactionalAccountMapper(),
                         instrumentation));
     }
@@ -57,7 +52,6 @@ public class NationwideV31Ais extends UkOpenBankingV31Ais {
                 new AccountV31Fetcher<>(
                         apiClient,
                         nationwidePartyFetcher,
-                        accountTypeMapper,
                         creditCardAccountMapper,
                         instrumentation));
     }

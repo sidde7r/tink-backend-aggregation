@@ -5,8 +5,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
-public interface AccountTypeMapper {
-    TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+public class AccountTypeMapper {
+
+    private static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CurrentAccount", "EMoney")
                     .put(AccountTypes.CREDIT_CARD, "CreditCard", "ChargeCard", "PrePaidCard")
@@ -15,13 +16,13 @@ public interface AccountTypeMapper {
                     .put(AccountTypes.MORTGAGE, "Mortgage")
                     .build();
 
-    TypeMapper<AccountOwnershipType> ACCOUNT_OWNERSHIP_MAPPER =
+    private static final TypeMapper<AccountOwnershipType> ACCOUNT_OWNERSHIP_MAPPER =
             TypeMapper.<AccountOwnershipType>builder()
                     .put(AccountOwnershipType.BUSINESS, "Business")
                     .put(AccountOwnershipType.PERSONAL, "Personal")
                     .build();
 
-    default AccountTypes getAccountType(AccountEntity accountEntity) {
+    public static AccountTypes getAccountType(AccountEntity accountEntity) {
         String rawSubtype = accountEntity.getRawAccountSubType();
         return ACCOUNT_TYPE_MAPPER
                 .translate(rawSubtype)
@@ -31,7 +32,7 @@ public interface AccountTypeMapper {
                                         "Unexpected account subType:" + rawSubtype));
     }
 
-    default AccountOwnershipType getAccountOwnershipType(AccountEntity account) {
+    public static AccountOwnershipType getAccountOwnershipType(AccountEntity account) {
         String rawAccountType = account.getRawAccountType();
         return ACCOUNT_OWNERSHIP_MAPPER
                 .translate(rawAccountType)
@@ -40,6 +41,4 @@ public interface AccountTypeMapper {
                                 new IllegalArgumentException(
                                         "Unexpected account type:" + rawAccountType));
     }
-
-    boolean supportsAccountOwnershipType(AccountEntity accountEntity);
 }
