@@ -89,6 +89,7 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
                             ConnectivityErrorFactory.providerError(
                                     ProviderErrors.PROVIDER_UNAVAILABLE));
                     wasCircuitBreaked = true;
+                    logger.info("Operation aborted due to provider being circuit broken.");
                     return AgentWorkerCommandResult.ABORT;
                 } else if (Objects.equal(
                         circuitBreakerConfiguration.getMode(), CircuitBreakerMode.TEST)) {
