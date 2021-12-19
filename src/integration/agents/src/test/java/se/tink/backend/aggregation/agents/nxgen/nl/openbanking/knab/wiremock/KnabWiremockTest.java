@@ -20,7 +20,8 @@ public class KnabWiremockTest {
 
     private static final WireMockTestServer WIREMOCK_TEST_SERVER = new WireMockTestServer();
 
-    private static final String REFRESH_CONTRACT_FILENAME = "nl-knab-refresh-contract.json";
+    private static final String REFRESH_CONTRACT_FILENAME =
+            "nl-knab-refresh-with-savings-account-contract.json";
 
     private static final String CONSENT_ID = "consent_id";
 
@@ -49,7 +50,6 @@ public class KnabWiremockTest {
     @Test
     @SneakyThrows
     public void shouldPerformManualRefresh() {
-
         // given
         AgentWireMockRefreshTest manualRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -81,7 +81,6 @@ public class KnabWiremockTest {
     @Test
     @SneakyThrows
     public void shouldPerformAutoRefresh() {
-
         // given
         AgentWireMockRefreshTest autoRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -120,7 +119,6 @@ public class KnabWiremockTest {
     @Deprecated
     @SneakyThrows
     public void shouldPerformAutoRefreshForDeprecatedConsentApiV1() {
-
         // given
         AgentWireMockRefreshTest autoRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -141,7 +139,8 @@ public class KnabWiremockTest {
         // and
         AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(path(REFRESH_CONTRACT_FILENAME));
+                        .parseContractOnBasisOfFile(
+                                path("nl-knab-refresh-without-savings-account-contract.json"));
 
         // when
         autoRefreshTest.executeRefresh();

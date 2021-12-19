@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab;
 
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import org.apache.http.client.config.CookieSpecs;
@@ -35,7 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilte
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
-@AgentCapabilities({CHECKING_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class KnabAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
