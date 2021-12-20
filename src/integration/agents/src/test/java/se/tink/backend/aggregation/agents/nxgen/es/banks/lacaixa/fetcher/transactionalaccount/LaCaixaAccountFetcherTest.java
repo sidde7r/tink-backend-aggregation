@@ -89,9 +89,9 @@ public class LaCaixaAccountFetcherTest {
         assertThat(account.getExactBalance().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("48.65"));
         assertThat(account.getIdModule().getAccountName()).isEqualTo("Chunga");
-        assertThat(account.getParties().get(0).getName()).isEqualTo("JOHN DOE LOE");
+        assertThat(account.getParties().get(0).getName()).isEqualTo("John Doe Loe");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);
-        assertThat(account.getParties().get(1).getName()).isEqualTo("JOHNNY DONNY LONNY");
+        assertThat(account.getParties().get(1).getName()).isEqualTo("Johnny Donny Lonny");
         assertThat(account.getParties().get(1).getRole()).isEqualTo(AUTHORIZED_USER);
     }
 
@@ -101,7 +101,7 @@ public class LaCaixaAccountFetcherTest {
         assertThat(account.getExactBalance().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("250.00"));
         assertThat(account.getIdModule().getAccountName()).isEqualTo("imagin");
-        assertThat(account.getParties().get(0).getName()).isEqualTo("ALICE DOE NOE");
+        assertThat(account.getParties().get(0).getName()).isEqualTo("Alice Doe Noe");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);
     }
 }

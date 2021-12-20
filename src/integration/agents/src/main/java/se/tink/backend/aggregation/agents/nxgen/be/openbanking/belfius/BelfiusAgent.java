@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.BelfiusTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.BelfiusAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.BelfiusTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.filter.BelfiusClientConfigurator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -22,10 +23,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.KeyWithInitiDateFromFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @Slf4j
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -93,15 +97,17 @@ public final class BelfiusAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final BelfiusTransactionalAccountFetcher accountTransactionFetcher =
-                new BelfiusTransactionalAccountFetcher(apiClient, persistentStorage);
+        final AccountFetcher<TransactionalAccount> accountFetcher =
+                new BelfiusAccountFetcher(apiClient, persistentStorage);
+
+        final KeyWithInitiDateFromFetcher<TransactionalAccount, String> transactionFetcher =
+                new BelfiusTransactionFetcher(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                accountTransactionFetcher,
-                new TransactionKeyWithInitDateFromFetcherController<>(
-                        request, accountTransactionFetcher));
+                accountFetcher,
+                new TransactionKeyWithInitDateFromFetcherController<>(request, transactionFetcher));
     }
 
     @Override

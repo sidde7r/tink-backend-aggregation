@@ -89,6 +89,7 @@ public final class BelfiusConstants {
         public static final String TO_DATE = "date_to";
         public static final String NEXT = "next";
         public static final String SCOPE = "scope";
+        public static final String PAGE_SIZE = "pagesize";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

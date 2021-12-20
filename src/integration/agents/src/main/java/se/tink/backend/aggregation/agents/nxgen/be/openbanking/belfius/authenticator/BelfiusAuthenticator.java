@@ -96,6 +96,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
                 apiClient.postToken(new URL(Urls.TOKEN_PATH), refreshTokenEntity);
         persistentStorage.put(StorageKeys.ID_TOKEN, tokenResponse.getIdToken());
         persistentStorage.put(StorageKeys.LOGICAL_ID, tokenResponse.getLogicalId());
+        persistentStorage.remove(StorageKeys.SCA_TOKEN);
         return OAuth2Token.create(
                 tokenResponse.getTokenType(),
                 tokenResponse.getAccessToken(),
