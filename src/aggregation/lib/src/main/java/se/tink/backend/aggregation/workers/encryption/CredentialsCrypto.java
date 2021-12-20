@@ -6,7 +6,9 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import net.spy.memcached.internal.OperationFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -231,11 +233,31 @@ public class CredentialsCrypto {
         // a request will never have stale data in the first place.
         // This cache is read in class `CredentialsCrypto`
         try {
-            cacheClient.set(
-                    CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
-                    request.getCredentials().getId(),
-                    CACHE_EXPIRE_TIME,
-                    serializedEncryptedCredentials);
+            Future<?> future =
+                    cacheClient.set(
+                            CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
+                            request.getCredentials().getId(),
+                            CACHE_EXPIRE_TIME,
+                            serializedEncryptedCredentials);
+
+            try {
+                Object result = future.get();
+                if (OperationFuture.class.isAssignableFrom(future.getClass())) {
+                    OperationFuture<Boolean> operationFuture = (OperationFuture<Boolean>) future;
+                    logger.info(
+                            "Cache operation result status: {}, result: {}",
+                            operationFuture.getStatus(),
+                            result);
+                } else {
+                    logger.warn(
+                            "Cache operation result received class: {}, result: {}",
+                            future.getClass(),
+                            result);
+                }
+            } catch (Exception e) {
+                logger.error("Error while getting result", e);
+            }
+
             logger.info(
                     "cached sensitive data with timestamp: {}",
                     formatDate(encryptedCredentials.getTimestamp()));
