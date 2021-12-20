@@ -73,13 +73,10 @@ public class ErrorMessageBuilder {
 
             Set<Long> contractNumbers = contractNumbersByErrorType.get(errorType);
 
-            switch (errorType) {
-                case TEMPORARY_ERROR:
-                    errors.add(getTranslatedTemporaryError(contractNumbers));
-                    break;
-                case APPROVAL_ERROR:
-                    errors.add(getTranslatedApprovalError(contractNumbers));
-                    break;
+            if (errorType == ErrorType.TEMPORARY_ERROR) {
+                errors.add(getTranslatedTemporaryError(contractNumbers));
+            } else if (errorType == ErrorType.APPROVAL_ERROR) {
+                errors.add(getTranslatedApprovalError(contractNumbers));
             }
         }
 
