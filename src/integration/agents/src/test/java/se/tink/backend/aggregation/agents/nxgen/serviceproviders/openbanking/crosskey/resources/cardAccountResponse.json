@@ -2,7 +2,7 @@
   "Data": {
     "Account": [
       {
-        "AccountId": "1111Card",
+        "AccountId": "SE4550000000058398257466",
         "Currency": "EUR",
         "AccountType": "Personal",
         "AccountSubType": "CreditCard",
@@ -10,7 +10,7 @@
         "Account": [
           {
             "SchemeName": "UK.OBIE.IBAN",
-            "Identification": "Identification1",
+            "Identification": "SE4550000000058398257466",
             "Name": "Name"
           }
         ]

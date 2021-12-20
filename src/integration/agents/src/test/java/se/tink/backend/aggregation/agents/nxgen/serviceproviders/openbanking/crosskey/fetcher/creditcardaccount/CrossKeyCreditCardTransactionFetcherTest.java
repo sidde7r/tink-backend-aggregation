@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrossKeyTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseApiClient;
@@ -22,9 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrossKeyCreditCardTransactionFetcherTest {
-
     @Mock CrosskeyBaseApiClient apiClient;
-
     private CrossKeyCreditCardTransactionFetcher creditCardTransactionFetcher;
 
     @Before
@@ -53,6 +52,11 @@ public class CrossKeyCreditCardTransactionFetcherTest {
         assertEquals("SUPERMARKET", transaction1.getDescription());
         assertEquals(-1443.01, transaction1.getExactAmount().getDoubleValue(), 0.001);
         assertEquals("EUR", transaction1.getExactAmount().getCurrencyCode());
+        assertEquals(
+                "20201116392992358787",
+                transaction1
+                        .getExternalSystemIds()
+                        .get(TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID));
         assertFalse(transaction1.isPending());
     }
 
