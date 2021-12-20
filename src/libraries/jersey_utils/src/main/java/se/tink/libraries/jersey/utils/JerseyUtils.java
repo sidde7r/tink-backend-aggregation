@@ -4,10 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.filter.Filterable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.tracing.jersey.filter.ClientTracingFilter;
 
+@Slf4j
 public class JerseyUtils {
     public static Client getClient(List<String> pinnedCertificates) {
         return new InterContainerJerseyClientFactory(getPinnedCertificates(pinnedCertificates))
@@ -20,6 +24,7 @@ public class JerseyUtils {
             boolean disableRequestCompression,
             ClientConfig config) {
 
+        Instant start = Instant.now();
         InterClusterJerseyClientFactory interClusterJerseyClientFactory =
                 new InterClusterJerseyClientFactory(config);
 
@@ -34,6 +39,7 @@ public class JerseyUtils {
 
         Client client = interClusterJerseyClientFactory.build();
         client.addFilter(new ClientTracingFilter());
+        log.info("Build client in {}ms", Duration.between(start, Instant.now()).toMillis());
 
         return client;
     }
