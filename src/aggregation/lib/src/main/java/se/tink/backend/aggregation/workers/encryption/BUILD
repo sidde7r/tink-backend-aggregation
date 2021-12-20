@@ -30,6 +30,7 @@ java_library(
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
+        "//third_party:net_spy_spymemcached",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
