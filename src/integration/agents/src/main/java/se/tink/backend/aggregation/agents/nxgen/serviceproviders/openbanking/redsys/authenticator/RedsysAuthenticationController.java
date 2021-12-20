@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -18,12 +19,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RedsysAuthenticationController extends OAuth2AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(RedsysAuthenticationController.class);
     private final ConsentController consentController;
     private final PersistentStorage persistentStorage;
+    private final OAuth2Authenticator oAuth2Authenticator;
 
     public RedsysAuthenticationController(
             PersistentStorage persistentStorage,
@@ -38,6 +41,7 @@ public class RedsysAuthenticationController extends OAuth2AuthenticationControll
                 authenticator,
                 credentials,
                 strongAuthenticationState);
+        this.oAuth2Authenticator = authenticator;
         this.consentController = consentController;
         this.persistentStorage = persistentStorage;
     }
@@ -48,6 +52,11 @@ public class RedsysAuthenticationController extends OAuth2AuthenticationControll
         // Perform oAuth2 authentication
         final ThirdPartyAppResponse<String> oauthResponse = super.collect(reference);
 
+        // Redsys token is valid only for 500 sec and it's needed even for fetching. So just in case
+        // additional refresh token is requested after authentication to get it valid for entire
+        // fetching phase
+        refreshToken();
+
         // Request consent
         if (!consentController.requestConsent()) {
             LOG.info("Did not get consent");
@@ -56,6 +65,24 @@ public class RedsysAuthenticationController extends OAuth2AuthenticationControll
         }
 
         return oauthResponse;
+    }
+
+    private void refreshToken() {
+        String refreshToken = getPreviousRefreshTokenFromStorage();
+        OAuth2Token newToken = oAuth2Authenticator.refreshAccessToken(refreshToken);
+        if (!newToken.isValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, newToken);
+        oAuth2Authenticator.useAccessToken(newToken);
+    }
+
+    private String getPreviousRefreshTokenFromStorage() {
+        return persistentStorage
+                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception)
+                .getRefreshToken()
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
     @Override
