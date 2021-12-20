@@ -102,6 +102,9 @@ public class AmexApiClient {
                                             AmexGrantType.REFRESH_TOKEN))
                             .post(TokenResponseDto.class);
 
+            Long reductionValue = Duration.ofHours(4).getSeconds();
+            response.setExpiresIn(response.getExpiresIn() - reductionValue);
+
             return Optional.ofNullable(response);
         } catch (SessionException ex) {
             log.error("Refresh token failed.");
