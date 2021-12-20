@@ -2,17 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentic
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@AllArgsConstructor
 public class ClaimEntity {
     private AuthorizationIdEntity authorizationId;
 
     @JsonInclude(Include.NON_NULL)
     private AcrEntity acr;
-
-    public ClaimEntity(AuthorizationIdEntity authorizationId, AcrEntity acr) {
-        this.authorizationId = authorizationId;
-        this.acr = acr;
-    }
 }

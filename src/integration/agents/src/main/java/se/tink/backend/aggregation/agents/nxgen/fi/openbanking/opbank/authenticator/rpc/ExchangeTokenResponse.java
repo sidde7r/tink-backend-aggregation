@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentic
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
+@Getter
 public class ExchangeTokenResponse {
 
     @JsonProperty("refresh_token")
@@ -28,34 +30,6 @@ public class ExchangeTokenResponse {
 
     @JsonProperty("token_type")
     private String tokenType;
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public String getIdToken() {
-        return idToken;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public int getExpiresIn() {
-        return expiresIn;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
 
     @JsonIgnore
     public OAuth2Token toOauth2Token() {

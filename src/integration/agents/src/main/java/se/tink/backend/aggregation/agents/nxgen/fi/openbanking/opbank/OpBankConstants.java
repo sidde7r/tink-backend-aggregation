@@ -30,6 +30,11 @@ public final class OpBankConstants {
         public static final String OAUTH_TOKEN = BASE_URL + "/oauth/token";
         public static final String ACCOUNTS_AUTHORIZATION =
                 BASE_URL + "/accounts-psd2/v1/authorizations";
+        public static final String CREATE_SEPA_PAYMENT =
+                BASE_URL + "/payments-psd2/v1/sepa-payments";
+        public static final String VERIFY_SEPA_PAYMENT =
+                BASE_URL + "/payments-psd2/v1/sepa-payments/";
+        public static final String SUBMIT_SEPA_PAYMENT = CREATE_SEPA_PAYMENT;
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + "/accounts-psd2/v1/accounts");
         public static final URL GET_ACCOUNT_TRANSACTIONS =
                 new URL(GET_ACCOUNTS + "/{accountId}/transactions");
@@ -41,6 +46,9 @@ public final class OpBankConstants {
     }
 
     public static class StorageKeys {
+        public static final String URL = "URL";
+        public static final String STATE = "State";
+        public static final String CODE = "Code";
         public static final String ACCOUNT_ID = "accountId";
         public static final String CARD_ID = "cardId";
     }
@@ -57,6 +65,8 @@ public final class OpBankConstants {
         public static final String X_CUSTOMER_USER_AGENT = "x-customer-user-agent";
         public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
+        public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
+        public static final String X_JWS_SIGNATURE = "x-jws-signature";
     }
 
     public static class HeaderValues {
@@ -65,8 +75,12 @@ public final class OpBankConstants {
 
     public static class TokenValues {
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "openid accounts";
+        public static final String SCOPE_AIS = "openid accounts";
+        public static final String SCOPE_PIS = "openid payments";
         public static final int MAX_AGE = 86400;
+        public static final String ACCOUNTS = "accounts";
+        public static final String PAYMENTS = "payments";
+        public static final String ARC_VALUES = "urn:openbanking:psd2:sca";
     }
 
     public static class JWTHeaderValues {
@@ -86,6 +100,7 @@ public final class OpBankConstants {
         public static final String OPENID_ACCOUNTS = "openid accounts";
         static final int MAX_TRANSACTION_HISTORY_LENGTH_IN_DAYS = 729;
         static final int MAX_CONSENT_LENGTH_IN_DAYS = 89;
+        public static final String OPENID_PAYMENTS = "openid payments";
     }
 
     public static class RefreshTokenFormKeys {
@@ -93,8 +108,14 @@ public final class OpBankConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
+        public static final String REDIRECT_URI = "redirect_uri";
         public static final int DEFAULT_TOKEN_LIFETIME = 45;
         public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
+    }
+
+    public static class RefreshTokenFormValues {
+        public static final String CLIENT_CREDENTIALS = "client_credentials";
+        public static final String AUTHORIZATION_CODE = "authorization_code";
     }
 
     public static class Filters {
