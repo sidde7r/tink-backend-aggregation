@@ -29,7 +29,6 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
 
     private final UkOpenBankingApiClient apiClient;
     private final PartyFetcher partyFetcher;
-    private final AccountTypeMapper accountTypeMapper;
     private final AccountMapper<T> accountMapper;
     private final FetcherInstrumentationRegistry instrumentation;
 
@@ -51,11 +50,10 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
                         .collect(Collectors.toList()));
         return Observable.fromIterable(allAccountEntities)
                 .filter(AccountEntity::hasAccountId)
-                .filter(accountTypeMapper::supportsAccountOwnershipType)
                 .filter(
                         acc ->
                                 accountMapper.supportsAccountType(
-                                        accountTypeMapper.getAccountType(acc)))
+                                        AccountTypeMapper.getAccountType(acc)))
                 .flatMapSingle(
                         account ->
                                 Single.zip(
@@ -72,24 +70,24 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
     private void instrument(List<AccountEntity> allAccountEntities) {
         Set<AccountTypes> distinctTypes =
                 allAccountEntities.stream()
-                        .map(accountTypeMapper::getAccountType)
+                        .map(AccountTypeMapper::getAccountType)
                         .collect(Collectors.toSet());
 
         for (AccountTypes type : distinctTypes) {
             long personalAccountsSeenByType =
                     allAccountEntities.stream()
-                            .filter(acc -> accountTypeMapper.getAccountType(acc) == type)
+                            .filter(acc -> AccountTypeMapper.getAccountType(acc) == type)
                             .filter(
                                     acc ->
-                                            accountTypeMapper.getAccountOwnershipType(acc)
+                                            AccountTypeMapper.getAccountOwnershipType(acc)
                                                     == AccountOwnershipType.PERSONAL)
                             .count();
             long businessAccountsSeenByType =
                     allAccountEntities.stream()
-                            .filter(acc -> accountTypeMapper.getAccountType(acc) == type)
+                            .filter(acc -> AccountTypeMapper.getAccountType(acc) == type)
                             .filter(
                                     acc ->
-                                            accountTypeMapper.getAccountOwnershipType(acc)
+                                            AccountTypeMapper.getAccountOwnershipType(acc)
                                                     == AccountOwnershipType.BUSINESS)
                             .count();
 

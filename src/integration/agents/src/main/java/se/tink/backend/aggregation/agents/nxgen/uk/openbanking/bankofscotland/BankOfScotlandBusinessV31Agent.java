@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
@@ -40,7 +39,6 @@ public final class BankOfScotlandBusinessV31Agent extends UkOpenBankingBaseAgent
                         .withApiBaseURL(BankOfScotlandConstants.AIS_API_URL)
                         .withWellKnownURL(BankOfScotlandConstants.WELL_KNOWN_URL_BUSINESS)
                         .withOrganisationId(BankOfScotlandConstants.ORGANIZATION_ID)
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

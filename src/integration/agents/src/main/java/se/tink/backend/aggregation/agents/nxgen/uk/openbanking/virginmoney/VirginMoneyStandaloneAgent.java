@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
@@ -37,8 +36,6 @@ public class VirginMoneyStandaloneAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(
-                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withOrganisationId(VirginMoneyConstants.ORGANISATION_ID)
                         .withWellKnownURL(VirginMoneyConstants.STANDALONE_WELL_KNOWN_URL)
                         .withApiBaseURL(VirginMoneyConstants.STANDALONE_AIS_API_URL)

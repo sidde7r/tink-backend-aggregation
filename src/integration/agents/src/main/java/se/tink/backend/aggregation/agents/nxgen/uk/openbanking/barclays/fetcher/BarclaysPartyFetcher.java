@@ -15,24 +15,12 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
 public class BarclaysPartyFetcher extends PartyV31Fetcher {
-    private final AccountTypeMapper accountTypeMapper;
 
     public BarclaysPartyFetcher(
             UkOpenBankingApiClient apiClient,
             UkOpenBankingAisConfig config,
-            AccountTypeMapper accountTypeMapper,
             PersistentStorage persistentStorage) {
         super(apiClient, config, persistentStorage);
-        this.accountTypeMapper = accountTypeMapper;
-    }
-
-    public BarclaysPartyFetcher(
-            UkOpenBankingApiClient apiClient,
-            UkOpenBankingAisConfig config,
-            PersistentStorage storage,
-            AccountTypeMapper accountTypeMapper) {
-        super(apiClient, config, storage);
-        this.accountTypeMapper = accountTypeMapper;
     }
 
     @Override
@@ -46,12 +34,11 @@ public class BarclaysPartyFetcher extends PartyV31Fetcher {
     }
 
     private boolean isCreditCard(AccountEntity account) {
-        return accountTypeMapper.getAccountType(account).equals(AccountTypes.CREDIT_CARD);
+        return AccountTypeMapper.getAccountType(account).equals(AccountTypes.CREDIT_CARD);
     }
 
     private boolean isBusinessAccount(AccountEntity account) {
-        return accountTypeMapper
-                .getAccountOwnershipType(account)
+        return AccountTypeMapper.getAccountOwnershipType(account)
                 .equals(AccountOwnershipType.BUSINESS);
     }
 }

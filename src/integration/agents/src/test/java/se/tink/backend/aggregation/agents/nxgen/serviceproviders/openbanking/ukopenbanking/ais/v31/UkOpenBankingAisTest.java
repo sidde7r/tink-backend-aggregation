@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 
 public class UkOpenBankingAisTest {
@@ -17,7 +16,6 @@ public class UkOpenBankingAisTest {
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
                         .withWellKnownURL("wellKnown")
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withPartyEndpoints(PartyEndpoint.PARTY)
                         .build();
         UkOpenBankingAisConfiguration configWithTwoPartyPermissions =
@@ -25,7 +23,6 @@ public class UkOpenBankingAisTest {
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
                         .withWellKnownURL("wellKnown")
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withPartyEndpoints(
                                 PartyEndpoint.PARTY,
                                 PartyEndpoint.ACCOUNT_ID_PARTIES,

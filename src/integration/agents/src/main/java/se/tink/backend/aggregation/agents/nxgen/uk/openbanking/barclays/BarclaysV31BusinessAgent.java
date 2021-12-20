@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.filter.BarclaysInvalidDataFilter;
@@ -44,7 +42,6 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(BarclaysConstants.AIS_API_URL)
                         .withWellKnownURL(BarclaysConstants.BUSINESS_WELL_KNOWN_URL)
                         .withPartyEndpoints(UkOpenBankingConstants.PartyEndpoint.ACCOUNT_ID_PARTIES)
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 
@@ -64,12 +61,7 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new BarclaysV31Ais(
-                aisConfig,
-                persistentStorage,
-                localDateTimeSource,
-                apiClient,
-                new DefaultAccountTypeMapper(aisConfig));
+        return new BarclaysV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
     }
 
     @Override

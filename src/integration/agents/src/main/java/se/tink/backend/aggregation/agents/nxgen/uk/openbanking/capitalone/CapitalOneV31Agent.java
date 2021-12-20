@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
@@ -47,8 +46,7 @@ public final class CapitalOneV31Agent extends UkOpenBankingBaseAgent {
                         UkOpenBankingAisConfiguration.builder()
                                 .withOrganisationId(CapitalOneConstants.ORGANISATION_ID)
                                 .withApiBaseURL(CapitalOneConstants.AIS_BASE_URL)
-                                .withWellKnownURL(CapitalOneConstants.WELL_KNOWN_URL)
-                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL));
+                                .withWellKnownURL(CapitalOneConstants.WELL_KNOWN_URL));
     }
 
     @Inject

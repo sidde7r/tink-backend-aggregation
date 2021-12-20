@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
@@ -36,8 +35,6 @@ public final class UlsterV31UniversalAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(
-                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withOrganisationId(UlsterConstants.ORG_ID)
                         .withApiBaseURL(UlsterConstants.AIS_API_URL)
                         .withWellKnownURL(UlsterConstants.UNIVERSAL_LINKS_WELL_KNOWN_URL)

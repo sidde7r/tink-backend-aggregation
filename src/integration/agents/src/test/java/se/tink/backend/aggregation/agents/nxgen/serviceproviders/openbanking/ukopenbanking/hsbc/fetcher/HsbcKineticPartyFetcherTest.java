@@ -35,7 +35,6 @@ public class HsbcKineticPartyFetcherTest {
 
     @Mock private UkOpenBankingAisConfig config;
     @Mock private PersistentStorage storage;
-    @Mock private AccountTypeMapper accountTypeMapper;
     @Mock private UkOpenBankingApiClient apiClient;
     @InjectMocks private HsbcKineticPartyFetcher hsbcFetcher;
     private List<PartyV31Entity> parties;
@@ -67,7 +66,7 @@ public class HsbcKineticPartyFetcherTest {
                                         .toString())); // check if sca is expired
         given(storage.get(eq("recent_identity_data_list"), Mockito.any(TypeReference.class)))
                 .willReturn(Optional.of(parties)); // restoreParties
-        given(accountTypeMapper.getAccountType(account))
+        given(AccountTypeMapper.getAccountType(account))
                 .willReturn(CHECKING); // isCreditCard -> false
 
         // when
@@ -83,7 +82,7 @@ public class HsbcKineticPartyFetcherTest {
     public void shouldNotFetchNeitherRestoreIfScaExpiredAndNothingStored() {
         // given
         given(config.isAccountPartyEndpointEnabled()).willReturn(true);
-        given(accountTypeMapper.getAccountType(account))
+        given(AccountTypeMapper.getAccountType(account))
                 .willReturn(CREDIT_CARD); // isCreditCard -> true
 
         // when
@@ -105,7 +104,7 @@ public class HsbcKineticPartyFetcherTest {
                                         .toString())); // sca not expired
         given(storage.get(eq("recent_identity_data_list"), Mockito.any(TypeReference.class)))
                 .willReturn(Optional.of(parties)); // restoreParties
-        given(accountTypeMapper.getAccountType(account))
+        given(AccountTypeMapper.getAccountType(account))
                 .willReturn(CHECKING); // isCreditCard -> false
         given(apiClient.fetchAccountParty(any())).willReturn(Optional.of(parties.get(0)));
 
