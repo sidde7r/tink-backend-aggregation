@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.workers.commands.migrations.implementations.b
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea.NordeaSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordeadk.NordeaDkAccountMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.skandiabanken.SkandiaBankenSanitizingMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.volvofinans.VolvofinansSEUIDMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.brokers.avanza.AvanzaStripClearingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.creditcards.norwegian.NorwegianSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.other.csn.CSNSanitizingMigration;
@@ -75,6 +76,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                     .put("moregolfmastercard-bankid", new EnterCardAccountIdMigration())
                     .put("fi-nordea-thirdpartyapp", new NordeaCreditcardAccountMigration())
                     .put("no-nordea-bankid", new NordeaCreditcardAccountMigration())
+                    .put("volvofinans-bankid", new VolvofinansSEUIDMigration())
                     .build();
 
     public MigrateCredentialsAndAccountsWorkerCommand(
