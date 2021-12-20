@@ -1,3 +1,5 @@
+# Description on how events are counted in this approach is available on the Confluence page:
+# https://tinkab.atlassian.net/wiki/spaces/INT/pages/6036291705/
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
@@ -6,99 +8,39 @@ metadata:
 spec:
   interval: 2m30s
   rules:
-    - record: increase:all_logins_dk:delta1h
-      expr: floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]))
-    - record: sum:all_logins_dk:delta1h
-      expr: |
-        sum by (className) (
-          (increase:all_logins_dk:delta1h
-           and
-           (tink_agent_login_total{action="login", market="DK", provider_type!="test"} offset 1h
-            unless tink_agent_login_total{action="login", market="DK", provider_type!="test"}))
-          or
-          (1 + increase:all_logins_dk:delta1h - floor(count_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[1h]) / 360))
-        )
+    # Recording rules with 'internal' prefix are not meant to be used in alerting rules,
+    # but rather to build other recording rules or for graphing purposes, e.g. in Grafana.
+    # They come with labels which allows for easier aggregation across different markets within a team.
+    # Grouping is done implicitly per agent.
 
-    # ALL LOGIN ATTEMPTS (4h)
-    - record: increase:all_logins_dk:delta4h
-      expr: floor(increase(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[4h]))
-    - record: sum:all_logins_dk:delta4h
-      expr: |
-        sum by (className) (
-          (increase:all_logins_dk:delta4h
-           and
-           (tink_agent_login_total{action="login", market="DK", provider_type!="test"} offset 4h
-            unless tink_agent_login_total{action="login", market="DK", provider_type!="test"}))
-          or
-          (1 + increase:all_logins_dk:delta4h - floor(count_over_time(tink_agent_login_total{action="login", market="DK", provider_type!="test"}[4h]) / 1440))
-        )
+    # Interval is set to 2m30s so that the rules are always available for querying in
+    # Thanos querier or Grafana (metrics become stale after 5 minutes)
 
-    # FAILED LOGIN ATTEMPTS (1h)
-    - record: increase:failed_logins_dk:delta1h
-      expr: floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]))
-    - record: sum:failed_logins_dk:delta1h
+    # Query selector 'tink_agent_login_total{...}' can be cached in a recording rule to avoid repetition,
+    # but this effectively caches most of the metric which is very ineffective disk storage-wise
+    - record: internal:sum:all_logins_by_outcome_action_dk:delta1h
       expr: |
-        sum by (className) (
-          (increase:failed_logins_dk:delta1h
+        sum by (className, action, outcome) (
+          (floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h]))
            and
-           (tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"} offset 1h
-            unless tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}))
-          or
-          (1 + increase:failed_logins_dk:delta1h - floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="DK", provider_type!="test"}[1h]) / 360))
-        )
+           (tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"} offset 1h
+            unless tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}))
+          or (1 + floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h]) / 360))
+        ) > 0
+      labels:
+        recording_rule_type: agent_logins_by_action_outcome_delta1h
+        recording_rule_market: DK
 
-    # UNSUCCESSFUL BACKGROUND LOGINS (4h)
-    - record: increase:unsuccessful_background_logins_dk:delta4h
-      expr: floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}[4h]))
-    - record: sum:unsuccessful_background_logins_dk:delta4h
+    - record: internal:sum:all_refreshes_by_type_outcome_dk:delta1h
       expr: |
-        sum by (className) (
-          (increase:unsuccessful_background_logins_dk:delta4h
-           and
-           (tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"} offset 4h
-            unless tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}))
-          or
-          (1 + increase:unsuccessful_background_logins_dk:delta4h - floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="DK", provider_type!="test"}[4h]) / 1440))
-        )
-
-    # UNSUCCESSFUL ON-DEMAND LOGINS (4h)
-    - record: increase:unsuccessful_on_demand_logins_dk:delta4h
-      expr: floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}[4h]))
-    - record: sum:unsuccessful_on_demand_logins_dk:delta4h
-      expr: |
-        sum by (className) (
-          (increase:unsuccessful_on_demand_logins_dk:delta4h
-           and
-           (tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"} offset 4h
-            unless tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}))
-          or
-          (1 + increase:unsuccessful_on_demand_logins_dk:delta4h - floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="DK", provider_type!="test"}[4h]) / 1440))
-        )
-
-    # ALL REFRESH ATTEMPTS PER TYPE (1h)
-    - record: increase:all_refreshes_per_type_dk:delta1h
-      expr: floor(increase(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]))
-    - record: sum:all_refreshes_per_type_dk:delta1h
-      expr: |
-        sum by (className, type) (
-          (increase:all_refreshes_per_type_dk:delta1h
+        sum by (className, type, outcome) (
+          (floor(increase(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]))
            and
            (tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"} offset 1h
             unless tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}))
           or
-          (1 + increase:all_refreshes_per_type_dk:delta1h - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]) / 360))
-        )
-
-    # FAILED REFRESH ATTEMPTS PER TYPE (1h)
-    - record: increase:failed_refreshes_per_type_dk:delta1h
-      expr: floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}[1h]))
-    - record: sum:failed_refreshes_per_type_dk:delta1h
-      expr: |
-        sum by (className, type) (
-          (increase:failed_refreshes_per_type_dk:delta1h
-           and
-           (tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"} offset 1h
-            unless tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}))
-          or
-          (1 + increase:failed_refreshes_per_type_dk:delta1h - floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="DK", provider_type!="test"}[1h]) / 360))
-        )
+          (1 + floor(increase(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]) / 360))
+        ) > 0
+      labels:
+        recording_rule_type: agent_refreshes_by_type_outcome_delta1h
+        recording_rule_market: DK
