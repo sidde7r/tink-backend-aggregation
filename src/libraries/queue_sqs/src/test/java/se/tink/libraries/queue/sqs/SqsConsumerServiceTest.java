@@ -1,6 +1,8 @@
 package se.tink.libraries.queue.sqs;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -35,7 +37,7 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration);
+                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
 
         try {
             consumerService.start();
@@ -49,7 +51,7 @@ public class SqsConsumerServiceTest {
     public void whenUnstartedSqsConsumerShouldNotThrowIfStopped() {
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration);
+                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
 
         try {
             consumerService.stop();
@@ -66,7 +68,7 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration);
+                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
 
         // when
         consumerService.start();
@@ -82,7 +84,7 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration);
+                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
 
         // when
         consumerService.start();
@@ -101,7 +103,7 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration);
+                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
 
         // when
         consumerService.start();
@@ -120,7 +122,7 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration);
+                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
 
         // when
         consumerService.start();
@@ -143,7 +145,7 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration);
+                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
 
         // when
         consumerService.consume();
@@ -151,6 +153,37 @@ public class SqsConsumerServiceTest {
         // then
         inOrder.verify(prioritySqsConsumer, times(1)).consume();
         inOrder.verify(regularSqsConsumer, times(1)).consume();
+    }
+
+    @Test
+    public void shouldConsumeFromRegularQueueBasedOnMinimumConsumptionPercentage()
+            throws Exception {
+        final int ITERATIONS = 1000;
+        final float REGULAR_QUEUE_MIN_CONSUMPTION = 0.5f;
+        // given
+        when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
+                .thenReturn(true);
+        when(regularSqsConsumer.isConsumerReady()).thenReturn(true);
+        when(prioritySqsConsumer.isConsumerReady()).thenReturn(true);
+        when(prioritySqsConsumer.consume()).thenReturn(true);
+
+        SqsConsumerService consumerService =
+                new SqsConsumerService(
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        agentsServiceConfiguration,
+                        REGULAR_QUEUE_MIN_CONSUMPTION);
+
+        // when
+        for (int i = 0; i < ITERATIONS; i++) {
+            consumerService.consume();
+        }
+
+        // then
+        verify(prioritySqsConsumer, times(ITERATIONS)).consume();
+
+        verify(regularSqsConsumer, atLeast((int) (ITERATIONS * 0.45))).consume();
+        verify(regularSqsConsumer, atMost((int) (ITERATIONS * 0.55))).consume();
     }
 
     @Test
@@ -164,7 +197,7 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration);
+                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
 
         // when
         consumerService.consume();

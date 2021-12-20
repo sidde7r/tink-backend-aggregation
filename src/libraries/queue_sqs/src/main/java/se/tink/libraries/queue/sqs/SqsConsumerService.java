@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.RateLimiter;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
@@ -16,8 +17,11 @@ import se.tink.libraries.queue.QueueConsumerService;
 
 public class SqsConsumerService extends ManagedSafeStop implements QueueConsumerService {
 
-    private final AbstractExecutionThreadService service;
     private static final Logger log = LoggerFactory.getLogger(SqsConsumerService.class);
+    private final float regularQueueMinConsumption;
+    private final Random random = new Random();
+
+    private final AbstractExecutionThreadService service;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final SqsConsumer regularSqsConsumer;
     private final SqsConsumer prioritySqsConsumer;
@@ -27,12 +31,17 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
     public SqsConsumerService(
             @Named("regularSqsConsumer") SqsConsumer regularSqsConsumer,
             @Named("prioritySqsConsumer") SqsConsumer prioritySqsConsumer,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            @Named("regularQueueMinConsumption") float regularQueueMinConsumption) {
         this.regularSqsConsumer = regularSqsConsumer;
         this.prioritySqsConsumer = prioritySqsConsumer;
         consumeFromPriorityQueue =
                 agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue");
-        log.info("Configured with consumeFromPriorityQueue={}", consumeFromPriorityQueue);
+        this.regularQueueMinConsumption = regularQueueMinConsumption;
+        log.info(
+                "Configured with consumeFromPriorityQueue={}, regularQueueMinConsumption={}",
+                consumeFromPriorityQueue,
+                regularQueueMinConsumption);
         this.service =
                 new AbstractExecutionThreadService() {
 
@@ -64,8 +73,15 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
     void consume() throws IOException {
         boolean consumeFromRegularQueue = true;
         if (consumeFromPriorityQueue) {
-            // consume from regular queue only if the priority queue is empty
-            consumeFromRegularQueue = !prioritySqsConsumer.consume();
+            // consume from regular queue only if the priority queue is empty OR
+            // this is whitelisted percentage of traffic.
+            // Background: due to long lasting lag (long tail of rate limited providers) the
+            // priority delivery takes very long time and makes it hard/impossible for regular bg
+            // refreshes to perform. As a very short term mitigation small percentage of traffic
+            // will always go through (even if priority delivery is not yet finished)
+            boolean priorityQueueEmpty = !prioritySqsConsumer.consume();
+            consumeFromRegularQueue =
+                    priorityQueueEmpty || random.nextFloat() <= regularQueueMinConsumption;
         }
         if (consumeFromRegularQueue) {
             regularSqsConsumer.consume();
