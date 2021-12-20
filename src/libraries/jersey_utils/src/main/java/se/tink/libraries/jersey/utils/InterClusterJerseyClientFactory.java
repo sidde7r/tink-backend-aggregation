@@ -134,11 +134,13 @@ public class InterClusterJerseyClientFactory {
 
         RequestConfig reguestConfig = this.internalRequestConfigBuilder.build();
 
+        start = Instant.now();
         CloseableHttpClient httpClient =
                 internalHttpClientBuilder
                         .setSslcontext(sslContext)
                         .setDefaultRequestConfig(reguestConfig)
                         .build();
+        log.info("Build HttpClient in {}ms", Duration.between(start, Instant.now()).toMillis());
 
         TinkApacheHttpClient4Handler httpHandler =
                 new TinkApacheHttpClient4Handler(httpClient, new BasicCookieStore(), false);
