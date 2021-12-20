@@ -43,14 +43,14 @@ public class Calculations {
                         .append(pendingTransactions.size())
                         .append("\n");
 
-                Optional<ExactCurrencyAmount> sum = sum(pendingTransactions, currencyCode);
+                ExactCurrencyAmount sum = sum(pendingTransactions, currencyCode);
                 summary.append(TRANSACTIONS_SUM_MSG).append(sum).append("\n");
 
-                Optional<ExactCurrencyAmount> result = sum.map(inputBalance::subtract);
+                ExactCurrencyAmount result = inputBalance.subtract(sum);
                 summary.append(CALCULATION_RESULT_MSG).append(result);
 
                 logSummary(summary);
-                return result;
+                return Optional.ofNullable(result);
             };
 
     public static final Calculation subtractPendingTransactionsWithBookingDateAfterBalanceSnapshot =
@@ -77,14 +77,14 @@ public class Calculations {
                         .append(filteredTransactions.size())
                         .append("\n");
 
-                Optional<ExactCurrencyAmount> sum = sum(filteredTransactions, currencyCode);
+                ExactCurrencyAmount sum = sum(filteredTransactions, currencyCode);
                 summary.append(TRANSACTIONS_SUM_MSG).append(sum).append("\n");
 
-                Optional<ExactCurrencyAmount> result = sum.map(inputBalance::subtract);
+                ExactCurrencyAmount result = inputBalance.subtract(sum);
                 summary.append(CALCULATION_RESULT_MSG).append(result);
 
                 logSummary(summary);
-                return result;
+                return Optional.ofNullable(result);
             };
 
     public static final Calculation addPendingTransactionsWithBookingDateAfterBalanceSnapshot =
@@ -111,14 +111,14 @@ public class Calculations {
                         .append(filteredTransactions.size())
                         .append("\n");
 
-                Optional<ExactCurrencyAmount> sum = sum(filteredTransactions, currencyCode);
+                ExactCurrencyAmount sum = sum(filteredTransactions, currencyCode);
                 summary.append(TRANSACTIONS_SUM_MSG).append(sum).append("\n");
 
-                Optional<ExactCurrencyAmount> result = sum.map(inputBalance::add);
+                ExactCurrencyAmount result = inputBalance.add(sum);
                 summary.append(CALCULATION_RESULT_MSG).append(result);
 
                 logSummary(summary);
-                return result;
+                return Optional.ofNullable(result);
             };
 
     public static final Calculation addBookedTransactionsWithBookingDateAfterBalanceSnapshot =
@@ -145,15 +145,23 @@ public class Calculations {
                         .append(filteredTransactions.size())
                         .append("\n");
 
-                Optional<ExactCurrencyAmount> sum = sum(filteredTransactions, currencyCode);
+                ExactCurrencyAmount sum = sum(filteredTransactions, currencyCode);
                 summary.append(TRANSACTIONS_SUM_MSG).append(sum).append("\n");
 
-                Optional<ExactCurrencyAmount> result = sum.map(inputBalance::add);
+                ExactCurrencyAmount result = inputBalance.add(sum);
                 summary.append(CALCULATION_RESULT_MSG).append(result);
 
                 logSummary(summary);
-                return result;
+                return Optional.ofNullable(result);
             };
+
+    public static ExactCurrencyAmount sum(List<Transaction> transactions, String currencyCode) {
+        return transactions.stream()
+                .map(Transaction::getAmount)
+                .map(amount -> ExactCurrencyAmount.of(amount, currencyCode))
+                .reduce(ExactCurrencyAmount::add)
+                .orElse(ExactCurrencyAmount.zero(currencyCode));
+    }
 
     private static List<Transaction> getPendingTransactions(List<Transaction> transactions) {
         return transactions.stream().filter(Transaction::isPending).collect(Collectors.toList());
@@ -170,14 +178,6 @@ public class Calculations {
                         TransactionBookingDateComparator.isTransactionBookingDateAfter(
                                 balanceSnapshotTime))
                 .collect(Collectors.toList());
-    }
-
-    private static Optional<ExactCurrencyAmount> sum(
-            List<Transaction> transactions, String currencyCode) {
-        return transactions.stream()
-                .map(Transaction::getAmount)
-                .map(amount -> ExactCurrencyAmount.of(amount, currencyCode))
-                .reduce(ExactCurrencyAmount::add);
     }
 
     private static void logSummary(StringBuilder msg) {

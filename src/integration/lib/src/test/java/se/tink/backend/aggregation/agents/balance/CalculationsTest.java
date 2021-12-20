@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.balance.Calculations.addPending
 import static se.tink.backend.aggregation.agents.balance.Calculations.returnBalanceAmountAsIs;
 import static se.tink.backend.aggregation.agents.balance.Calculations.subtractPendingTransactions;
 import static se.tink.backend.aggregation.agents.balance.Calculations.subtractPendingTransactionsWithBookingDateAfterBalanceSnapshot;
+import static se.tink.backend.aggregation.agents.balance.Calculations.sum;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -157,5 +158,35 @@ public class CalculationsTest {
 
         // then
         assertThat(result).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(150.00));
+    }
+
+    @Test
+    public void shouldReturnAsIsIfTransactionSumIsZero() {
+        // given
+        Pair<ExactCurrencyAmount, Instant> balanceWithSnapshotTime =
+                Pair.of(ONE_HUNDRED_EURO, BALANCE_SNAPSHOT_INSTANT);
+
+        List<Transaction> transactions =
+                Collections.singletonList(
+                        SerializationUtils.deserializeFromString(
+                                BOOKED_INCOMING_TRANSACTION_100_EUR_BEFORE_SNAPSHOT,
+                                Transaction.class));
+
+        // when
+        Optional<ExactCurrencyAmount> result =
+                addBookedTransactionsWithBookingDateAfterBalanceSnapshot.evaluate(
+                        balanceWithSnapshotTime, transactions);
+
+        // then
+        assertThat(result).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(100.00));
+    }
+
+    @Test
+    public void shouldDefaultTransactionSumToZeroIfNoTransactions() {
+        // when
+        ExactCurrencyAmount result = sum(Collections.emptyList(), "EUR");
+
+        // then
+        assertThat(result).isEqualTo(ExactCurrencyAmount.zero("EUR"));
     }
 }
