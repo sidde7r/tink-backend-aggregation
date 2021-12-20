@@ -12,10 +12,10 @@
             },
             "exactBalance" : {
                 "currencyCode" : "GBP",
-                "exactValue" : 0.0,
-                "unscaledValue" : 0,
+                "exactValue" : -15600.0,
+                "unscaledValue" : -156000,
                 "scale" : 1,
-                "doubleValue" : 0.0
+                "doubleValue" : -15600.0
             },
             "currencyCode": "GBP",
             "bankId": "55240",
@@ -43,7 +43,7 @@
             "flags": "[]",
             "balances": [],
             "availableCredit": 15600.0,
-            "balance": 0.0
+            "balance": -15600.0
         }
     ],
     "transactions": [
