@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueEncoder;
@@ -31,6 +32,7 @@ public class SqsQueueModule extends AbstractModule {
         bind(QueueMessageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
         bind(QueueConsumerService.class).to(SqsConsumerService.class).in(Scopes.SINGLETON);
         bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
+        bindConstant().annotatedWith(Names.named("regularQueueMinConsumption")).to(0.05f);
         log.info("Configuring SqsQueueModule");
     }
 
