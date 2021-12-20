@@ -37,8 +37,6 @@ public class VanquisAgentWiremockTest {
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.CREDITCARD_ACCOUNTS)
                         .addPersistentStorageData(AIS_ACCESS_TOKEN_KEY, DUMMY_OAUTH2_TOKEN)
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         // when
