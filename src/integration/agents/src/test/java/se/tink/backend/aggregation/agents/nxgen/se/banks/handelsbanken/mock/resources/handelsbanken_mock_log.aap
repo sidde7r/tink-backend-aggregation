@@ -440,9 +440,196 @@ Vary: Accept-Encoding
 Connection: close
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
-{"_links":{"open-account":{"href":"https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=123Token132","gaScreenName":"accounts / open account"}},"links":[{"rel":"open-account","href":"https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=123Token132","type":"application/json","gaScreenName":"accounts / open account"}],"ownAccountGroupTitle":"","othersAccountGroupTitle":null,"externalAccountGroupTitle":null,"accountGroups":[{"title":null,"bic":null,"type":"OWN_ACCOUNT","accounts":[{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/111224444/transactions?isCard=true&authToken=123Token123","gaScreenName":"accounts / account details"},"card-transactions":{"href":"https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/111224444/transactions?isCard=true&authToken=123Token123","type":"application/json","gaScreenName":"accounts / account details"},{"rel":"card-transactions","href":"https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Allkortskonto","number":"111224444","numberFormatted":"11 224 4444","balance":{"amount":-10000.00,"amountFormatted":"-10 000,00","unit":"kr","currency":"SEK"},"holderName":"FirstName CARD","displayBalance":true,"isCard":true,"amountAvailable":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/332211222/transactions?isCard=false&authToken=123Token132","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/332211222/transactions?isCard=false&authToken=123Token132","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Allkonto","number":"332211222","numberFormatted":"332 211 222","balance":{"amount":13403.88,"amountFormatted":"13 403,88","unit":"kr","currency":"SEK"},"holderName":"FirstName LastName","displayBalance":true,"isCard":false,"amountAvailable":{"amount":13403.88,"amountFormatted":"13 403,88","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/123456789/transactions?isCard=false&authToken=123Token132","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/123456789/transactions?isCard=false&authToken=123Token132","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Joint account","number":"123456789","numberFormatted":"123 456 789","balance":{"amount":79144.56,"amountFormatted":"79 144,56","unit":"kr","currency":"SEK"},"holderName":"FirstName LastName","displayBalance":true,"isCard":false,"amountAvailable":{"amount":79144.56,"amountFormatted":"79 144,56","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/444414444/transactions?isCard=false&authToken=123Token132","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/444414444/transactions?isCard=false&authToken=123Token132","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Plan B","number":"444414444","numberFormatted":"444 414 444","balance":{"amount":5550.00,"amountFormatted":"5 550,00","unit":"kr","currency":"SEK"},"holderName":"FirstName LastName","displayBalance":true,"isCard":false,"amountAvailable":{"amount":5550.00,"amountFormatted":"5 550,00","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null}]}]}
-#{"_links":{"open-account":{"href":"https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=123Token123","gaScreenName":"accounts / open account"}},"links":[{"rel":"open-account","href":"https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=123Token123","type":"application/json","gaScreenName":"accounts / open account"}],"ownAccountGroupTitle":"","othersAccountGroupTitle":null,"externalAccountGroupTitle":null,"accountGroups":[{"title":null,"bic":null,"type":"OWN_ACCOUNT","accounts":[{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/444411333/transactions?isCard=false&authToken=123Token123","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/444411333/transactions?isCard=false&authToken=123Token123","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Allkonto","number":"444411333","numberFormatted":"444 4111 333","balance":{"amount":0.92,"amountFormatted":"0,92","unit":"kr","currency":"SEK"},"holderName":"Jennie Nordberg","displayBalance":true,"isCard":false,"amountAvailable":{"amount":0.92,"amountFormatted":"0,92","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/33366333/transactions?isCard=true&authToken=123Token123","gaScreenName":"accounts / account details"},"card-transactions":{"href":"https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/33366333/transactions?isCard=true&authToken=123Token123","type":"application/json","gaScreenName":"accounts / account details"},{"rel":"card-transactions","href":"https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Allkortskonto","number":"33366333","numberFormatted":"33 366 333","balance":{"amount":-10000.00,"amountFormatted":"-10 000,00","unit":"kr","currency":"SEK"},"holderName":"Jennie Nordberg","displayBalance":true,"isCard":true,"amountAvailable":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/444422111/transactions?isCard=false&authToken=123Token123","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/444422111/transactions?isCard=false&authToken=123Token123","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Sparkonto","number":"444422111","numberFormatted":"444 422 111","balance":{"amount":5699.00,"amountFormatted":"5 699,00","unit":"kr","currency":"SEK"},"holderName":"Jennie Nordberg","displayBalance":true,"isCard":false,"amountAvailable":{"amount":5699.00,"amountFormatted":"5 699,00","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null}]}]}
-
+{
+	"_links": {
+		"open-account": {
+			"href": "https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=123Token132",
+			"gaScreenName": "accounts / open account"
+		}
+	},
+	"links": [
+		{
+			"rel": "open-account",
+			"href": "https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=123Token132",
+			"type": "application/json",
+			"gaScreenName": "accounts / open account"
+		}
+	],
+	"ownAccountGroupTitle": "",
+	"othersAccountGroupTitle": null,
+	"externalAccountGroupTitle": null,
+	"accountGroups": [
+		{
+			"title": null,
+			"bic": null,
+			"type": "OWN_ACCOUNT",
+			"accounts": [
+				{
+					"_links": {
+						"transactions": {
+							"href": "https://m2.handelsbanken.se/app/priv/accounts/111224444/transactions?isCard=true&authToken=123Token123",
+							"gaScreenName": "accounts / account details"
+						},
+						"card-transactions": {
+							"href": "https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123",
+							"gaScreenName": "accounts / account details"
+						}
+					},
+					"links": [
+						{
+							"rel": "transactions",
+							"href": "https://m2.handelsbanken.se/app/priv/accounts/111224444/transactions?isCard=true&authToken=123Token123",
+							"type": "application/json",
+							"gaScreenName": "accounts / account details"
+						},
+						{
+							"rel": "card-transactions",
+							"href": "https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123",
+							"type": "application/json",
+							"gaScreenName": "accounts / account details"
+						}
+					],
+					"name": "Allkortskonto",
+					"number": "111224444",
+					"numberFormatted": "11 224 4444",
+					"balance": {
+						"amount": -10000.0,
+						"amountFormatted": "-10 000,00",
+						"unit": "kr",
+						"currency": "SEK"
+					},
+					"holderName": "FirstName CARD",
+					"displayBalance": true,
+					"isCard": true,
+					"amountAvailable": {
+						"amount": 0.0,
+						"amountFormatted": "0,00",
+						"unit": "kr",
+						"currency": "SEK"
+					},
+					"clearingNumber": null,
+					"overDraft": false,
+					"warningTextShort": null,
+					"warningTextLong": null
+				},
+				{
+					"_links": {
+						"transactions": {
+							"href": "https://m2.handelsbanken.se/app/priv/accounts/332211222/transactions?isCard=false&authToken=123Token132",
+							"gaScreenName": "accounts / account details"
+						}
+					},
+					"links": [
+						{
+							"rel": "transactions",
+							"href": "https://m2.handelsbanken.se/app/priv/accounts/332211222/transactions?isCard=false&authToken=123Token132",
+							"type": "application/json",
+							"gaScreenName": "accounts / account details"
+						}
+					],
+					"name": "Allkonto",
+					"number": "332211222",
+					"numberFormatted": "332 211 222",
+					"balance": {
+						"amount": 13403.88,
+						"amountFormatted": "13 403,88",
+						"unit": "kr",
+						"currency": "SEK"
+					},
+					"holderName": "FirstName LastName",
+					"displayBalance": true,
+					"isCard": false,
+					"amountAvailable": {
+						"amount": 13403.88,
+						"amountFormatted": "13 403,88",
+						"unit": "kr",
+						"currency": "SEK"
+					},
+					"clearingNumber": null,
+					"overDraft": false,
+					"warningTextShort": null,
+					"warningTextLong": null
+				},
+				{
+					"_links": {
+						"transactions": {
+							"href": "https://m2.handelsbanken.se/app/priv/accounts/123456789/transactions?isCard=false&authToken=123Token132",
+							"gaScreenName": "accounts / account details"
+						}
+					},
+					"links": [
+						{
+							"rel": "transactions",
+							"href": "https://m2.handelsbanken.se/app/priv/accounts/123456789/transactions?isCard=false&authToken=123Token132",
+							"type": "application/json",
+							"gaScreenName": "accounts / account details"
+						}
+					],
+					"name": "Joint account",
+					"number": "123456789",
+					"numberFormatted": "123 456 789",
+					"balance": {
+						"amount": 79144.56,
+						"amountFormatted": "79 144,56",
+						"unit": "kr",
+						"currency": "SEK"
+					},
+					"holderName": "FirstName LastName",
+					"displayBalance": true,
+					"isCard": false,
+					"amountAvailable": {
+						"amount": 79144.56,
+						"amountFormatted": "79 144,56",
+						"unit": "kr",
+						"currency": "SEK"
+					},
+					"clearingNumber": null,
+					"overDraft": false,
+					"warningTextShort": null,
+					"warningTextLong": null
+				},
+				{
+					"_links": {
+						"transactions": {
+							"href": "https://m2.handelsbanken.se/app/priv/accounts/444414444/transactions?isCard=false&authToken=123Token132",
+							"gaScreenName": "accounts / account details"
+						}
+					},
+					"links": [
+						{
+							"rel": "transactions",
+							"href": "https://m2.handelsbanken.se/app/priv/accounts/444414444/transactions?isCard=false&authToken=123Token132",
+							"type": "application/json",
+							"gaScreenName": "accounts / account details"
+						}
+					],
+					"name": "Plan B",
+					"number": "444414444",
+					"numberFormatted": "444 414 444",
+					"balance": {
+						"amount": 5550.0,
+						"amountFormatted": "5 550,00",
+						"unit": "kr",
+						"currency": "SEK"
+					},
+					"holderName": "FirstName LastName",
+					"displayBalance": true,
+					"isCard": false,
+					"amountAvailable": {
+						"amount": 5550.0,
+						"amountFormatted": "5 550,00",
+						"unit": "kr",
+						"currency": "SEK"
+					},
+					"clearingNumber": null,
+					"overDraft": false,
+					"warningTextShort": null,
+					"warningTextLong": null
+				}
+			]
+		}
+	]
+}
 
 REQUEST 13
 GET https://m2.handelsbanken.se/app/priv/accounts/332211222/transactions?isCard=false&authToken=123Token132
@@ -1386,28 +1573,6 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 {"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/111224444/transactions?isCard=true&authToken=123Token123"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/111224444/transactions?isCard=true&authToken=123Token123","type":"application/json"}],"owners":[],"transactions":[{"date":"2021-01-15","amount":{"amount":null,"amountFormatted":"-360,00"},"description":"ÅRSAVGIFT","orderNbr":0}],"cardInvoiceInfo":{"balance":{"amount":-10000.00,"amountFormatted":"-10 000,00","unit":"SEK","currency":"SEK"},"balanceInvoiced":{"amount":0.00,"amountFormatted":"0,00","unit":"SEK","currency":"SEK"},"balanceNotInvoiced":{"amount":0.00,"amountFormatted":"0,00","unit":"SEK","currency":"SEK"},"bankgironumber":null,"credit":{"amount":10000,"amountFormatted":"10 000,00","unit":"SEK","currency":"SEK"},"credited":null,"dueUnpaid":null,"ocrNumber":null,"spendable":{"amount":0.00,"amountFormatted":"0,00","unit":"SEK","currency":"SEK"},"spendableNoCredit":null,"usedCredit":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},"items":null,"emptyDisclaimer":null}
 
-REQUEST 12CC
-GET https://m2.handelsbanken.se/app/priv/accounts/111224444/transactions?isCard=true&authToken=123Token132
-Accept: application/json,application/xml
-X-Aggregator: Tink Testing
-
-RESPONSE 12CC
-200
-Date: Mon, 24 May 2021 08:11:56 GMT
-Server: Apache
-X-Frame-Options: SAMEORIGIN
-X-XSS-Protection: 1; mode=block
-X-Content-Type-Options: nosniff
-Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Type: application/json;charset=UTF-8
-Via: 1.1 xsemobap101.itek.shb.biz
-Vary: Accept-Encoding
-Connection: close
-Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-
-{"account":{"_links":{"account-info":{"href":"https://m2.handelsbanken.se/app/priv/accounts/111224444/account-info?hasBalance=false&authToken=123Token132","title":"Kontoinformation och inställningar","gaScreenName":"accounts / account details / account information and settings"},"card-transactions":{"href":"https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123","gaScreenName":"accounts / account details"}},"links":[{"rel":"card-transactions","href":"https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123","type":"application/json","gaScreenName":"accounts / account details"},{"rel":"account-info","href":"https://m2.handelsbanken.se/app/priv/accounts/111224444/account-info?hasBalance=false&authToken=123Token123","type":"application/json","title":"Kontoinformation och inställningar","gaScreenName":"accounts / account details / account information and settings"}],"name":"Allkortskonto","number":"111224444","numberFormatted":"11 122 4444","balance":{"amount":-10000.00,"amountFormatted":"-10 000,00","unit":"kr","currency":"SEK"},"holderName":null,"displayBalance":true,"isCard":true,"amountAvailable":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"clearingNumber":"6378","overDraft":false,"warningTextShort":null,"warningTextLong":null},"transactions":[],"cardInvoiceInfo":{"balance":{"amount":null,"amountFormatted":"-10 000,00","currency":"SEK"},"balanceInvoiced":{"amount":null,"amountFormatted":"0,00","currency":"SEK"},"balanceNotInvoiced":{"amount":null,"amountFormatted":"0,00","currency":"SEK"},"bankgironumber":null,"credit":{"amount":null,"amountFormatted":"10 000,00","currency":"SEK"},"credited":null,"dueUnpaid":null,"ocrNumber":null,"spendable":{"amount":null,"amountFormatted":"0,00","currency":"SEK"},"spendableNoCredit":{"amount":null,"amountFormatted":"-10 000,00","currency":"SEK"},"usedCredit":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null}}
 
 REQUEST 13CC
 GET https://m2.handelsbanken.se/app/priv/accounts/111224444/transactions?isCard=true&authToken=123Token123
