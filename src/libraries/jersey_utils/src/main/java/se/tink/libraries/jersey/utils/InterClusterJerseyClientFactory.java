@@ -15,9 +15,12 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
@@ -30,6 +33,7 @@ import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
 
 // The client built by this factory must be used when communicating from AND to the
 // aggregation cluster.
+@Slf4j
 public class InterClusterJerseyClientFactory {
     private static final int READ_TIMEOUT_MS = (int) TimeUnit.MINUTES.toMillis(10);
     private static final int CONNECT_TIMEOUT_MS = (int) TimeUnit.SECONDS.toMillis(10);
@@ -69,11 +73,13 @@ public class InterClusterJerseyClientFactory {
         ByteArrayInputStream clientCertificateStream =
                 new ByteArrayInputStream(clientCertificateBytes);
         try {
+            Instant start = Instant.now();
             KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
             keyStore.load(clientCertificateStream, password.toCharArray());
 
             internalSslContextBuilder.loadKeyMaterial(
                     keyStore, null); // the keyStore doesn't have a PW.
+            log.info("Build KeyStore in {}ms", Duration.between(start, Instant.now()).toMillis());
             return this;
         } catch (KeyStoreException
                 | NoSuchProviderException
@@ -117,12 +123,14 @@ public class InterClusterJerseyClientFactory {
     }
 
     public Client build() {
+        Instant start = Instant.now();
         SSLContext sslContext;
         try {
             sslContext = internalSslContextBuilder.build();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new IllegalStateException(e);
         }
+        log.info("Build SSL context in {}ms", Duration.between(start, Instant.now()).toMillis());
 
         RequestConfig reguestConfig = this.internalRequestConfigBuilder.build();
 
