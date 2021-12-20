@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
 import org.apache.commons.collections4.ListUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
@@ -56,5 +57,18 @@ public class BankEntity {
                                         .replace("-", "")
                                         .contains(organizationNumber.replace("-", "")))
                 .findFirst();
+    }
+
+    @JsonIgnore
+    public boolean isSavingsBank() {
+        // First element of BANK_IDS ("08999") is Swedbank, the rest are Sparbanken bank IDs
+        return (SwedbankConstants.BANK_IDS.contains(bankId))
+                && (!SwedbankConstants.BANK_IDS.get(0).equalsIgnoreCase(bankId));
+    }
+
+    @JsonIgnore
+    public boolean isSwedbank() {
+        // First element of BANK_IDS ("08999") is Swedbank, the rest are Sparbanken bank IDs
+        return SwedbankConstants.BANK_IDS.get(0).equalsIgnoreCase(bankId);
     }
 }

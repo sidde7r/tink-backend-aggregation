@@ -48,20 +48,23 @@ public class BaseTransferExecutor {
 
             PaymentBaseinfoResponse paymentBaseInfo = bankProfile.getPaymentBaseinfoResponse();
 
-            AccountIdentifier transferSourceAccount =
-                    SwedbankTransferHelper.getSourceAccount(transfer);
+            if (paymentBaseInfo != null) {
 
-            Optional<TransferDestinationAccountEntity> transferDestinationAccountEntity =
-                    paymentBaseInfo.getSourceAccount(transferSourceAccount);
+                AccountIdentifier transferSourceAccount =
+                        SwedbankTransferHelper.getSourceAccount(transfer);
 
-            if (transferDestinationAccountEntity.isPresent()) {
-                String sourceAccountId =
-                        paymentBaseInfo.validateAndGetSourceAccountId(
-                                transferDestinationAccountEntity.get());
+                Optional<TransferDestinationAccountEntity> transferDestinationAccountEntity =
+                        paymentBaseInfo.getSourceAccount(transferSourceAccount);
 
-                apiClient.selectProfile(bankProfile);
+                if (transferDestinationAccountEntity.isPresent()) {
+                    String sourceAccountId =
+                            paymentBaseInfo.validateAndGetSourceAccountId(
+                                    transferDestinationAccountEntity.get());
 
-                return sourceAccountId;
+                    apiClient.selectProfile(bankProfile);
+
+                    return sourceAccountId;
+                }
             }
         }
         throw createSourceNotFoundException();

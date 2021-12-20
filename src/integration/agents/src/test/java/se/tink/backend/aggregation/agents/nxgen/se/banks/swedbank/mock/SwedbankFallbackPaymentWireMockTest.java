@@ -8,8 +8,11 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.TransferCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.mock.module.SwedbankFallbackWireMockTestModule;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
@@ -19,6 +22,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -371,6 +375,103 @@ public class SwedbankFallbackPaymentWireMockTest {
                     "The payment could not be made because an identical payment is already registered",
                     e.getMessage());
         }
+    }
+
+    @Test
+    public void testRefreshAllAccounts2ProfileNormalYouth() throws Exception {
+
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/swedbank_mock_refresh_multi_profiles_normal_youth.aap";
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/agent-contract-two-accounts-normal-youth.json";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-swedbank-fallback")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .withAgentTestModule(new SwedbankFallbackWireMockTestModule())
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    // first youth (limited), second normal
+    @Test
+    public void testRefreshAllAccounts2ProfilesYouthNormal() throws Exception {
+
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/swedbank_mock_refresh_multi_profiles_youth_normal.aap";
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/agent-contract-two-accounts-youth-normal.json";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-swedbank-fallback")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .withAgentTestModule(new SwedbankFallbackWireMockTestModule())
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testPaymentMultiProfileBankGiroPaymentToExistingRecipient() throws Exception {
+
+        SwedbankDateUtils.setClock(fixedClock("2021-09-24T07:17:55Z"));
+
+        Transfer transfer = new Transfer();
+        transfer.setSource(new SwedishIdentifier("111111111111111"));
+        transfer.setDestination(new BankGiroIdentifier("9008004"));
+        setTransferParameters(transfer, TransferType.PAYMENT);
+        transfer.setDueDate(
+                Date.from(LocalDate.of(2021, 9, 28).atStartOfDay(DEFAULT_ZONE_ID).toInstant()));
+
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/swedbank-pis-multiprofile.aap";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE, "se-swedbank-fallback", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withAgentModule(new SwedbankFallbackWireMockTestModule())
+                        .withHttpDebugTrace()
+                        .withTransfer(transfer)
+                        .buildWithLogin(TransferCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+        Assert.assertTrue(true);
     }
 
     private void setTransferParameters(Transfer transfer, TransferType transferType) {
