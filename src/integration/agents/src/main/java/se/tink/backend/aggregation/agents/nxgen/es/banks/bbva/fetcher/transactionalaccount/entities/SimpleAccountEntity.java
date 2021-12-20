@@ -6,6 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SimpleAccountEntity {
     private CurrentBalanceEntity currentBalance;
 
+    public SimpleAccountEntity() {
+        currentBalance = new CurrentBalanceEntity();
+    }
+
     public CurrentBalanceEntity getCurrentBalance() {
         return currentBalance;
     }

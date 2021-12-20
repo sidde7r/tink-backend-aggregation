@@ -29,6 +29,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/libraries/agent-storage",
         "//src/libraries/strings",
+        "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",

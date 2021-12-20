@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
-import java.time.Clock;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -11,12 +10,13 @@ import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 public final class BbvaConstants {
 
     public static final class Fetchers {
-        public static final Clock CLOCK = Clock.system(ZoneId.of(Defaults.TIMEZONE_CET));
         public static final long BACKOFF = 3000;
         public static final int MAX_TRY_ATTEMPTS = 5;
-        public static final int PAGE_SIZE = 40;
+        public static final int PAGE_SIZE = 500;
         public static final long MAX_NUM_MONTHS_FOR_FETCH = 72L;
         public static final List<String> OPERATION_TYPES = Collections.singletonList("BOTH");
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+        public static final int RETRY_ATTEMPTS = 2;
     }
 
     public enum Error {
@@ -49,8 +49,6 @@ public final class BbvaConstants {
     public static final class Defaults {
         public static final String CURRENCY = "EUR";
         public static final String TIMEZONE_CET = "CET";
-        public static final String FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE =
-                "FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE";
     }
 
     public static final class AccountType {
@@ -82,37 +80,36 @@ public final class BbvaConstants {
 
     public static final class Url {
         public static final String PARAM_ID = "ID";
-        public static final String BASE_URL = "https://servicios.bbva.es";
-        public static final String ASO = BASE_URL + "/ASO";
+        public static final String BASE_URL = "https://asoexternos.grupobbva.com";
+        public static final String ASO = BASE_URL + "/TPPs";
 
-        public static final String TICKET = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
-        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03";
-        public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
+        public static final String TICKET = BASE_URL + "/TPPs/TechArchitecture/grantingTickets/V02";
+        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/TPPs/financialDashBoard/V03";
+        public static final String LOAN_DETAILS = BASE_URL + "/TPPs/loans/V01/{" + PARAM_ID + "}";
 
-        public static final String REFRESH_TICKET =
-                BASE_URL + "/ASO/grantingTicketActions/V01/refreshGrantingTicket";
+        public static final String REFRESH_TICKET = BASE_URL + "/TPPs/contextualData/V02/";
+        public static final String UPDATE_ACCOUNT_TRANSACTION =
+                BASE_URL + "/TPPs/accountTransactions/V02/updateAccountTransactions";
         public static final String ACCOUNT_TRANSACTION =
-                BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
+                BASE_URL + "/TPPs/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String CREDIT_CARD_TRANSACTIONS =
-                BASE_URL + "/ASO/cardTransactions/V01/";
+                BASE_URL + "/TPPs/cardTransactions/V01/listIntegratedCardTransactions/";
         public static final String IDENTITY_DATA =
-                BASE_URL + "/ASO/contextualData/V02/{" + PARAM_ID + "}";
+                BASE_URL + "/TPPs/contextualData/V02/{" + PARAM_ID + "}";
         public static final String HISTORICAL_DATE =
-                BASE_URL + "/ASO/contracts/v0/financial-investment/historical-date";
+                BASE_URL + "/TPPs/contracts/v0/financial-investment/historical-date";
         public static final String FINANCIAL_INVESTMENTS =
-                BASE_URL + "/ASO/contracts/v0/financial-investment/daily-summaries";
+                BASE_URL + "/TPPs/contracts/v0/financial-investment/daily-summaries";
         public static final String PARTICIPANTS =
-                BASE_URL + "/ASO/contracts/V01/{" + PARAM_ID + "}/participants/";
+                BASE_URL + "/TPPs/contracts/V01/{" + PARAM_ID + "}/participants/";
         public static final String IN_FORCE_CONDITIONS =
-                BASE_URL + "/ASO/contracts/V01/{" + PARAM_ID + "}/inForceConditions";
+                BASE_URL + "/TPPs/contracts/V01/{" + PARAM_ID + "}/inForceConditions";
     }
 
     public enum Headers implements HeaderEnum {
-        CONSUMER_ID("ConsumerID", LoginParameter.CONSUMER_ID),
-        BBVA_USER_AGENT(
-                "BBVA-User-Agent",
-                "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi"),
-        REFERER("Referer", "https://movil.bbva.es/versions/woody/9.0.7/index.html");
+        CHROME_UA(
+                "User-Agent",
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36");
 
         private final String key;
         private final String value;
@@ -140,11 +137,16 @@ public final class BbvaConstants {
 
     public static final class PostParameter {
         public static final String AUTH_OTP_STATE = "05";
-        public static final String SEARCH_TYPE = "SEARCH";
+        public static final String SEARCH_TEXT = "";
+        public static final String ORDER_TYPE = "DESC_ORDER";
+        public static final String ORDER_FIELD = "DATE_FIELD";
         public static final String ISIN_ID_TYPE = "ISIN";
         public static final String ANY_ISIN = "000000000000";
         public static final String ANY_MARKET = "0000";
         public static final int START_DATE_YEAR_AGO = -30;
+        public static final String SORTED_BY = "TRANSACTION_DATE";
+        public static final String SORTED_TYPE = "DESC";
+        public static final boolean SHOW_CONTRACT_TRANSACTIONS = true;
     }
 
     public static final class LoginParameter {
@@ -153,7 +155,7 @@ public final class BbvaConstants {
         public static final String AUTH_TYPE = "02";
         public static final String AUTH_OTP_TYPE = "121";
         public static final String USER_VALUE_PREFIX = "0019-";
-        public static final String CONSUMER_ID = "00000013";
+        public static final String CONSUMER_ID = "00000258";
     }
 
     public static final class Messages {
@@ -179,7 +181,6 @@ public final class BbvaConstants {
 
     public static class TimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
-        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
 
     public static class Proxy {
@@ -201,5 +202,19 @@ public final class BbvaConstants {
         public static final String OWNER = "TIT";
         public static final String AUTHORIZED = "PAU";
         public static final String REPRESENTATIVE = "REP";
+    }
+
+    public static class Dates {
+        public static final DateTimeFormatter YYYY_MM_DD_FORMAT =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        public static final String START_OF_DAY = "T00:00:00.000Z";
+        public static final String END_OF_DAY = "T23:59:59.999Z";
+        public static final String CARD_STAMP_DATE_KEY = "stamp-date";
+        public static final String OPENING_DATE_KEY = "opening-date";
+    }
+
+    public static class ExtendedPeriod {
+        public static final String OTP_SMS_SUFFIX = "otp-sms=";
+        public static final long NINETY_DAYS = 90;
     }
 }

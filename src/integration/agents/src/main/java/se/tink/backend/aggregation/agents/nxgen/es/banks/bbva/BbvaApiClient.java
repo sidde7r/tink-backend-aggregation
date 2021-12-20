@@ -1,14 +1,41 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.CARD_STAMP_DATE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.END_OF_DAY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.OPENING_DATE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.START_OF_DAY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.YYYY_MM_DD_FORMAT;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ExtendedPeriod.OTP_SMS_SUFFIX;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers.RETRY_ATTEMPTS;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers.TIMEOUT_RETRY_SLEEP_MILLISECONDS;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.PostParameter.SHOW_CONTRACT_TRANSACTIONS;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.PostParameter.SORTED_BY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.PostParameter.SORTED_TYPE;
+
+import com.github.rholder.retry.Retryer;
+import com.github.rholder.retry.RetryerBuilder;
+import com.github.rholder.retry.StopStrategies;
+import com.github.rholder.retry.WaitStrategies;
 import com.google.common.collect.ImmutableList;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
@@ -23,6 +50,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ParticipantsDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.SearchFiltersEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.TransactionDateEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.FinancialInvestmentRequest;
@@ -31,24 +62,28 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AmountFilterEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.DateFilterEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.FilterEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.UpdateTransactionsContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.UpdateTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.UpdateTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.filter.BbvaInvestmentAccountBlockedFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @Slf4j
@@ -56,35 +91,29 @@ public class BbvaApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final String userAgent;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final PersistentStorage persistentStorage;
-    private final LocalDateTimeSource localDateTimeSource;
-    private String openingAccountDateStr;
+    private final TransactionPaginationHelper transactionPaginationHelper;
 
     public BbvaApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            PersistentStorage persistentStorage,
-            AgentComponentProvider componentProvider) {
+            TransactionPaginationHelper transactionPaginationHelper) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.persistentStorage = persistentStorage;
-        this.userAgent =
-                String.format(
-                        Headers.BBVA_USER_AGENT.getValue(),
-                        componentProvider.getRandomValueGenerator().generateRandomHexEncoded(64));
         client.addFilter(new BbvaInvestmentAccountBlockedFilter());
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.transactionPaginationHelper = transactionPaginationHelper;
     }
 
     public HttpResponse isAlive() {
-        return createRequestInSession(BbvaConstants.Url.REFRESH_TICKET)
-                .accept(MediaType.WILDCARD_TYPE)
-                .queryParam(QueryKeys.ISALIVE_CUSTOMER_ID, getUserId())
-                .post(HttpResponse.class);
+        if (StringUtils.isNotBlank(getUserId())) {
+            return createGetRequestInSession(BbvaConstants.Url.REFRESH_TICKET + getUserId())
+                    .accept(MediaType.WILDCARD_TYPE)
+                    .get(HttpResponse.class);
+        } else {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -96,39 +125,33 @@ public class BbvaApiClient {
     }
 
     private RequestBuilder createLoginRequest() {
-        return createRequest(BbvaConstants.Url.TICKET)
-                .header(Headers.CONSUMER_ID)
-                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
+        return createPostRequest(BbvaConstants.Url.TICKET).header(Headers.CHROME_UA);
     }
 
     public void logout() {
-        createRequest(BbvaConstants.Url.TICKET)
-                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
-                .header(HeaderKeys.TSEC_KEY, getTsec())
-                .delete();
+        // nothing to do
     }
 
     public FinancialDashboardResponse fetchFinancialDashboard() {
-        return createRequestInSession(BbvaConstants.Url.FINANCIAL_DASHBOARD)
+        return createGetRequestInSession(BbvaConstants.Url.FINANCIAL_DASHBOARD)
                 .queryParam(QueryKeys.DASHBOARD_CUSTOMER_ID, getUserId())
                 .queryParam(QueryKeys.DASHBOARD_FILTER, QueryValues.DASHBOARD_FILTER)
                 .get(FinancialDashboardResponse.class);
     }
 
+    public AccountTransactionsResponse fetchAccountTransactionsToForceOtp(
+            Account account, String pageKey) {
+        return fetchAccountTransactions(account, pageKey, true);
+    }
+
     public AccountTransactionsResponse fetchAccountTransactions(Account account, String pageKey) {
-        TransactionsRequest body;
-        RequestBuilder request;
+        return fetchAccountTransactions(account, pageKey, false);
+    }
 
-        if (isFetchingTransactionsOlderThan90DaysPossible()) {
-            request = buildAccountTransactionFullHistoryRequest(pageKey);
-            body = createAccountTransactionsFullHistoryRequestBody(account);
-            log.info("[FETCH ACCOUNT TRANSACTIONS] Fetching full transaction history");
-        } else {
-            request = buildAccountTransactionRequest(pageKey);
-            body = createAccountTransactionsRequestBody(account);
-            log.info("[FETCH ACCOUNT TRANSACTIONS] Fetching only 90 days of transaction history");
-        }
-
+    public AccountTransactionsResponse fetchAccountTransactions(
+            Account account, String pageKey, boolean firstRequest) {
+        TransactionsRequest body = createAccountTransactionsRequestBody(account);
+        RequestBuilder request = buildAccountTransactionRequest(pageKey, firstRequest);
         try {
             return request.post(AccountTransactionsResponse.class, body);
         } catch (HttpResponseException e) {
@@ -149,61 +172,96 @@ public class BbvaApiClient {
         }
     }
 
-    public CreditCardTransactionsResponse fetchCreditCardTransactions(
+    public CreditCardTransactionsRequest createCreditCardTransactionsRequestBody(Account account) {
+        LocalDateTime fromTransactionDate = getDateForFetchHistoryTransactions(account, true);
+        final TransactionDateEntity transactionDateEntity =
+                new TransactionDateEntity(
+                        YYYY_MM_DD_FORMAT.format(fromTransactionDate) + START_OF_DAY,
+                        YYYY_MM_DD_FORMAT.format(LocalDateTime.now()) + END_OF_DAY);
+        return CreditCardTransactionsRequest.builder()
+                .withSortedBy(SORTED_BY)
+                .withSortedType(SORTED_TYPE)
+                .withCards(ImmutableList.of(new CardEntity().setId(account.getApiIdentifier())))
+                .withShowContractTransactions(SHOW_CONTRACT_TRANSACTIONS)
+                .withCustomerId(getUserId())
+                .withSearchFilters(new SearchFiltersEntity(transactionDateEntity))
+                .build();
+    }
+
+    public Optional<CreditCardTransactionsResponse> fetchCreditCardTransactions(
             Account account, String keyIndex) {
-        return createRequestInSession(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
-                .queryParam(QueryKeys.CONTRACT_ID, account.getApiIdentifier())
-                .queryParam(
-                        QueryKeys.CARD_TRANSACTION_TYPE,
-                        BbvaConstants.AccountType.CREDIT_CARD_SHORT_TYPE)
-                .queryParam(QueryKeys.PAGINATION_OFFSET, keyIndex)
-                .get(CreditCardTransactionsResponse.class);
+        log.info("Pagination key: {}", keyIndex);
+        CreditCardTransactionsRequest body = createCreditCardTransactionsRequestBody(account);
+        try {
+            return Optional.of(
+                    createPostRequestInSession(Url.CREDIT_CARD_TRANSACTIONS)
+                            .post(CreditCardTransactionsResponse.class, body));
+        } catch (HttpResponseException e) {
+            if (isEmptyCreditCardTransactions(e)) {
+                return Optional.empty();
+            }
+            throw e;
+        } catch (HttpClientException e) {
+            throw e;
+        }
+    }
+
+    private boolean isEmptyCreditCardTransactions(HttpResponseException httpResponseException) {
+        return httpResponseException != null
+                && httpResponseException.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT;
     }
 
     public FinancialInvestmentResponse fetchFinancialInvestment(
             FinancialInvestmentRequest request) {
-        return createRequestInSession(BbvaConstants.Url.FINANCIAL_INVESTMENTS)
+        return createPostRequestInSession(BbvaConstants.Url.FINANCIAL_INVESTMENTS)
                 .post(FinancialInvestmentResponse.class, request);
     }
 
     public HistoricalDateResponse fetchInvestmentHistoricalDate(HistoricalDateRequest request) {
-        return createRequestInSession(BbvaConstants.Url.HISTORICAL_DATE)
+        return createPostRequestInSession(BbvaConstants.Url.HISTORICAL_DATE)
                 .post(HistoricalDateResponse.class, request);
     }
 
     public LoanDetailsResponse fetchLoanDetails(String loanId) {
-        return createRequestInSession(
+        return createGetRequestInSession(
                         URL.of(BbvaConstants.Url.LOAN_DETAILS)
                                 .parameter(BbvaConstants.Url.PARAM_ID, loanId)
                                 .get())
                 .get(LoanDetailsResponse.class);
     }
 
-    public TransactionsRequest createAccountTransactionsRequestBody(Account account) {
+    public TransactionsRequest createAccountTransactionsDefaultRequestBody(Account account) {
         return TransactionsRequest.builder()
                 .withCustomer(new UserEntity(getUserId()))
-                .withSearchType(BbvaConstants.PostParameter.SEARCH_TYPE)
+                .withSearchText(PostParameter.SEARCH_TEXT)
+                .withOrderField(PostParameter.ORDER_FIELD)
+                .withOrderType(PostParameter.ORDER_TYPE)
                 .withAccountContracts(ImmutableList.of(getAccountContract(account)))
                 .build();
     }
 
-    public TransactionsRequest createAccountTransactionsFullHistoryRequestBody(Account account) {
-        LocalDateTime fromTransactionDate =
-                getDateForFetchHistoryTransactions(account.getApiIdentifier());
-        LocalDateTime toTransactionDate = localDateTimeSource.now();
+    public TransactionsRequest createAccountTransactionsRequestBody(Account account) {
+        LocalDateTime fromTransactionDate = getDateForFetchHistoryTransactions(account);
         final DateFilterEntity dateFilterEntity =
-                new DateFilterEntity(fromTransactionDate.toString(), toTransactionDate.toString());
+                new DateFilterEntity(
+                        YYYY_MM_DD_FORMAT.format(fromTransactionDate) + START_OF_DAY,
+                        YYYY_MM_DD_FORMAT.format(LocalDateTime.now()) + END_OF_DAY);
         return TransactionsRequest.builder()
                 .withCustomer(new UserEntity(getUserId()))
-                .withSearchType(BbvaConstants.PostParameter.SEARCH_TYPE)
+                .withSearchText(PostParameter.SEARCH_TEXT)
+                .withOrderField(PostParameter.ORDER_FIELD)
+                .withOrderType(PostParameter.ORDER_TYPE)
                 .withAccountContracts(ImmutableList.of(getAccountContract(account)))
-                .withError(true)
-                .withFilter(new FilterEntity(dateFilterEntity, Fetchers.OPERATION_TYPES))
+                .withFilter(
+                        new FilterEntity(
+                                new AmountFilterEntity(),
+                                dateFilterEntity,
+                                Fetchers.OPERATION_TYPES))
                 .build();
     }
 
     public IdentityDataResponse fetchIdentityData() {
-        return createRequestInSession(
+        return createGetRequestInSession(
                         URL.of(Url.IDENTITY_DATA)
                                 .parameter(BbvaConstants.Url.PARAM_ID, getUserId())
                                 .get())
@@ -211,68 +269,95 @@ public class BbvaApiClient {
     }
 
     public ParticipantsDataEntity fetchParticipants(String accountId) {
-        return createRequestInSession(
+        return createGetRequestInSession(
                         URL.of(Url.PARTICIPANTS).parameter(Url.PARAM_ID, accountId).get())
                 .get(ParticipantsDataEntity.class);
     }
 
     public AccountInfoEntity fetchMoreAccountInformation(String accountId) {
-        return createRequestInSession(
+        return createGetRequestInSession(
                         URL.of(BbvaConstants.Url.IN_FORCE_CONDITIONS)
                                 .parameter(Url.PARAM_ID, accountId)
                                 .get())
                 .get(AccountInfoEntity.class);
     }
 
+    @SneakyThrows
     private AccountTransactionsResponse fetchAccountTransactionsWithOtp(
+            HttpResponse exceptionResponse, TransactionsRequest request) {
+        Retryer<AccountTransactionsResponse> fetchAccountTransactionsWithOtpRetryer =
+                getFetchAccountTransactionsWithOtpRetryer();
+        return fetchAccountTransactionsWithOtpRetryer.call(
+                () -> retrieveAccountTransactionsWithOtp(exceptionResponse, request));
+    }
+
+    private AccountTransactionsResponse retrieveAccountTransactionsWithOtp(
             HttpResponse exceptionResponse, TransactionsRequest request) {
         RequestBuilder otpBuilder =
                 createAccountTransactionsHistoryRequestWithOtp(exceptionResponse);
         HttpResponse httpResponse = otpBuilder.post(HttpResponse.class, request);
-
         setTsec(httpResponse.getHeaders().getFirst(HeaderKeys.TSEC_KEY));
-
         return httpResponse.getBody(AccountTransactionsResponse.class);
     }
 
-    private RequestBuilder buildAccountTransactionFullHistoryRequest(String pageKey) {
+    private Retryer<AccountTransactionsResponse> getFetchAccountTransactionsWithOtpRetryer() {
+        return RetryerBuilder.<AccountTransactionsResponse>newBuilder()
+                .retryIfException(HttpClientException.class::isInstance)
+                .withWaitStrategy(
+                        WaitStrategies.fixedWait(
+                                TIMEOUT_RETRY_SLEEP_MILLISECONDS, TimeUnit.MILLISECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
+                .build();
+    }
+
+    private RequestBuilder buildAccountTransactionRequest(String pageKey, boolean firstRequest) {
         if (isFirstPageOfAccountTransactions(pageKey)) {
-            return createRequestOtpInSession()
+            return createRequestOtpInSession(firstRequest)
                     .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
                     .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
         }
         return createPaginationRequest(pageKey);
     }
 
-    private RequestBuilder buildAccountTransactionRequest(String pageKey) {
-        if (isFirstPageOfAccountTransactions(pageKey)) {
-            return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
-                    .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
-                    .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
-        }
-        return createPaginationRequest(pageKey);
+    public void fetchUpdateTransactions(List<TransactionalAccount> accounts) {
+        List<UpdateTransactionsContractEntity> contracts = new ArrayList<>();
+        accounts.forEach(
+                account ->
+                        contracts.add(
+                                new UpdateTransactionsContractEntity(account.getApiIdentifier())));
+        UpdateTransactionsRequest updateTransactionsRequest =
+                UpdateTransactionsRequest.builder().withContracts(contracts).build();
+        createPostRequestInSession(Url.UPDATE_ACCOUNT_TRANSACTION)
+                .post(UpdateTransactionsResponse.class, updateTransactionsRequest);
     }
 
     private RequestBuilder createPaginationRequest(String pageKey) {
         // check if key is url
         if (pageKey.contains("accountTransactions")) {
-            return createRequestInSession(Url.ASO + pageKey);
+            return createPostRequestInSession(Url.ASO + pageKey);
         }
-        return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
+        return createPostRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
                 .queryParam(QueryKeys.PAGINATION_OFFSET, pageKey)
                 .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
     }
 
     private RequestBuilder createAccountTransactionsHistoryRequestWithOtp(HttpResponse response) {
         String otp = supplementalInformationHelper.waitForOtpInput();
+        if (otp != null && !otp.startsWith(OTP_SMS_SUFFIX)) {
+            otp = OTP_SMS_SUFFIX + otp;
+        }
         return createRequestOtpInSession(response, otp)
                 .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
                 .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
     }
 
-    private RequestBuilder createRequestOtpInSession() {
-        return createRequestInSession(Url.ACCOUNT_TRANSACTION)
-                .header(HeaderKeys.AUTHENTICATION_TYPE, PostParameter.AUTH_OTP_STATE);
+    private RequestBuilder createRequestOtpInSession(boolean sendAuthenticationTypeHeader) {
+        if (sendAuthenticationTypeHeader) {
+            return createGetRequestInSession(Url.ACCOUNT_TRANSACTION)
+                    .header(HeaderKeys.AUTHENTICATION_TYPE, PostParameter.AUTH_OTP_STATE);
+        } else {
+            return createGetRequestInSession(Url.ACCOUNT_TRANSACTION);
+        }
     }
 
     private RequestBuilder createRequestOtpInSession(HttpResponse httpResponse, String otp) {
@@ -280,31 +365,66 @@ public class BbvaApiClient {
                 httpResponse.getHeaders().getFirst(HeaderKeys.AUTHENTICATION_STATE);
         String authenticationData =
                 httpResponse.getHeaders().getFirst(HeaderKeys.AUTHENTICATION_DATA) + "=" + otp;
-        return createRequestOtpInSession()
+        return createRequestOtpInSession(true)
                 .header(HeaderKeys.AUTHENTICATION_STATE, authenticationState)
                 .header(HeaderKeys.AUTHENTICATION_DATA, authenticationData);
     }
 
-    private RequestBuilder createRequestInSession(String url) {
-        return createRequest(url)
-                .header(Headers.REFERER)
-                .header(HeaderKeys.TSEC_KEY, getTsec())
-                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
+    private RequestBuilder createGetRequestInSession(String url) {
+        return createGetRequest(url).header(HeaderKeys.TSEC_KEY, getTsec());
     }
 
-    private RequestBuilder createRequest(String url) {
+    private RequestBuilder createPostRequestInSession(String url) {
+        return createPostRequest(url).header(HeaderKeys.TSEC_KEY, getTsec());
+    }
+
+    private RequestBuilder createGetRequest(String url) {
+        return client.request(url).header(Headers.CHROME_UA).type(MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createPostRequest(String url) {
         return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
+                .header(Headers.CHROME_UA)
+                .accept(MediaType.WILDCARD)
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    private LocalDateTime getDateForFetchHistoryTransactions(String accountId) {
-        LocalDateTime currentDate = localDateTimeSource.now();
-        if (Strings.isNullOrEmpty(this.openingAccountDateStr)) {
-            this.openingAccountDateStr = fetchMoreAccountInformation(accountId).getOpeningDate();
+    private LocalDateTime getDateForFetchHistoryTransactions(Account account) {
+        return getDateForFetchHistoryTransactions(account, false);
+    }
+
+    private LocalDateTime getDateForFetchHistoryTransactions(
+            Account account, boolean isCreditCard) {
+        Optional<Date> limitDateOptional =
+                transactionPaginationHelper.getTransactionDateLimit(account);
+        if (limitDateOptional.isPresent()) {
+            return limitDateOptional
+                    .get()
+                    .toInstant()
+                    .atZone(ZoneId.of(Defaults.TIMEZONE_CET))
+                    .toLocalDateTime();
         }
-        LocalDateTime openingAccountDate =
-                LocalDateTime.of(LocalDate.parse(this.openingAccountDateStr), LocalTime.MAX);
+        LocalDateTime currentDate = LocalDateTime.now(ZoneId.of(Defaults.TIMEZONE_CET));
+        String accountId = account.getApiIdentifier();
+        String openingAccountDateStr;
+        LocalDateTime openingAccountDate;
+        if (isCreditCard) {
+            openingAccountDateStr = account.getFromTemporaryStorage(CARD_STAMP_DATE_KEY);
+            long dateLong = Long.parseLong(openingAccountDateStr);
+            openingAccountDate =
+                    LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(dateLong), ZoneId.of(Defaults.TIMEZONE_CET));
+
+        } else {
+            openingAccountDateStr = sessionStorage.get(accountId + OPENING_DATE_KEY);
+            if (Strings.isNullOrEmpty(openingAccountDateStr)) {
+                openingAccountDateStr = fetchMoreAccountInformation(accountId).getOpeningDate();
+                sessionStorage.put(accountId + OPENING_DATE_KEY, openingAccountDateStr);
+            }
+            openingAccountDate =
+                    LocalDateTime.of(LocalDate.parse(openingAccountDateStr), LocalTime.MAX);
+        }
+
         LocalDateTime maximumDate =
                 currentDate
                         .minusMonths(BbvaConstants.Fetchers.MAX_NUM_MONTHS_FOR_FETCH)
@@ -326,17 +446,8 @@ public class BbvaApiClient {
                 && ErrorCode.OTP_SYSTEM_ERROR_CODE.equals(errorResponse.getSystemErrorCode());
     }
 
-    private boolean isFetchingTransactionsOlderThan90DaysPossible() {
-        return Boolean.parseBoolean(
-                persistentStorage.get(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE));
-    }
-
-    private boolean isFirstPageOfAccountTransactions(String pageKey) {
+    public boolean isFirstPageOfAccountTransactions(String pageKey) {
         return Strings.isNullOrEmpty(pageKey);
-    }
-
-    private String getUserAgent() {
-        return userAgent;
     }
 
     private String getTsec() {

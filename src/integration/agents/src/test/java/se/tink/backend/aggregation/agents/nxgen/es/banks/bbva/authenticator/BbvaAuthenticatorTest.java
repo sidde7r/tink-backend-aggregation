@@ -14,9 +14,11 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -25,6 +27,8 @@ public class BbvaAuthenticatorTest {
     private Credentials credentials;
     private BbvaAuthenticator authenticator;
     private BbvaApiClient apiClient;
+    private TransactionPaginationHelper transactionPaginationHelper;
+    private PersistentStorage persistentStorage;
 
     @Before
     public void setUp() {
@@ -36,7 +40,8 @@ public class BbvaAuthenticatorTest {
                 new BbvaAuthenticator(
                         apiClient,
                         mock(SupplementalInformationHelper.class),
-                        mock(CredentialsRequest.class));
+                        mock(CredentialsRequest.class),
+                        mock(TransactionPaginationHelper.class));
     }
 
     @Test
@@ -165,7 +170,8 @@ public class BbvaAuthenticatorTest {
                 new BbvaAuthenticator(
                         apiClient,
                         mock(SupplementalInformationHelper.class),
-                        mock(CredentialsRequest.class));
+                        mock(CredentialsRequest.class),
+                        mock(TransactionPaginationHelper.class));
 
         // when
         Throwable thrown = catchThrowable(() -> authenticator.authenticate(credentials));

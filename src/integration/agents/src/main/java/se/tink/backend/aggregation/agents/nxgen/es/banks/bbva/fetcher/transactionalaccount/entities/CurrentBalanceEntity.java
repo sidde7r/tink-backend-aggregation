@@ -8,6 +8,11 @@ public class CurrentBalanceEntity {
     private AmountEntity accountingBalance;
     private AmountEntity availableBalance;
 
+    public CurrentBalanceEntity() {
+        accountingBalance = new AmountEntity();
+        availableBalance = new AmountEntity();
+    }
+
     public AmountEntity getAccountingBalance() {
         return accountingBalance;
     }

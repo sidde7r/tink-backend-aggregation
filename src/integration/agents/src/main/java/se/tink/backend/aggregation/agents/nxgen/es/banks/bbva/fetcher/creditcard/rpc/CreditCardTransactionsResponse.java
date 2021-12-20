@@ -16,14 +16,14 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     private boolean moreResults;
     private String totalResults;
     private CreditCardTransactionsPaginationEntity pagination;
-    private List<CreditCardTransactionEntity> items;
+    private List<CreditCardTransactionEntity> cardsTransactions;
 
     public CreditCardTransactionsResponse() {}
 
     @JsonIgnore
     @Override
     public Collection<CreditCardTransaction> getTinkTransactions() {
-        return items.map(CreditCardTransactionEntity::toTinkTransaction).toJavaList();
+        return cardsTransactions.map(CreditCardTransactionEntity::toTinkTransaction).toJavaList();
     }
 
     @JsonIgnore
