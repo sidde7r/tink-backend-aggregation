@@ -15,6 +15,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
@@ -235,13 +236,20 @@ public class OpenIdApiClient {
     }
 
     public URL buildAuthorizeUrl(String state, String nonce, ClientMode mode, String callbackUri) {
+        List<String> requiredScopes;
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
         URL authorizationEndpointUrl = wellKnownConfiguration.getAuthorizationEndpoint();
 
         String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
         String clientId = providerConfiguration.getClientId();
-        List<String> requiredScopes = createScopeList(mode);
+
+        if (cachedWellKnownResponse.isOfflineAccessSupported()) {
+            requiredScopes = createScopeWithOfflineAccessParam(mode);
+        } else {
+            requiredScopes = createScopeList(mode);
+        }
+
         String scopeArray =
                 wellKnownConfiguration
                         .verifyAndGetScopes(requiredScopes)
@@ -284,7 +292,11 @@ public class OpenIdApiClient {
     }
 
     public List<String> createScopeList(ClientMode mode) {
-        return Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, mode.getValue());
+        return Arrays.asList(Scopes.OPEN_ID, mode.getValue());
+    }
+
+    public List<String> createScopeWithOfflineAccessParam(ClientMode mode) {
+        return Arrays.asList(Scopes.OPEN_ID, mode.getValue(), Scopes.OFFLINE_ACCESS);
     }
 
     public Optional<Map<String, PublicKey>> getJwkPublicKeys() {

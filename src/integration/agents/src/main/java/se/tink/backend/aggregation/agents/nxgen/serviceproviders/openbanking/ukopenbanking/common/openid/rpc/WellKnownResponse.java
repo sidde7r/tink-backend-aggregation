@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.TokenEndpointAuthMethod;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -42,6 +43,14 @@ public class WellKnownResponse {
 
     public URL getJwksUri() {
         return new URL(jwksUri);
+    }
+
+    public List<String> getScopesSupported() {
+        return scopesSupported;
+    }
+
+    public Boolean isOfflineAccessSupported() {
+        return scopesSupported.contains(Scopes.OFFLINE_ACCESS);
     }
 
     public Optional<String> verifyAndGetScopes(List<String> scopes) {
