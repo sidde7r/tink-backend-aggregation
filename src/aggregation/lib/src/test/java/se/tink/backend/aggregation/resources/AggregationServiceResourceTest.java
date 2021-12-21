@@ -141,5 +141,11 @@ public class AggregationServiceResourceTest {
         QueueProducer providePriorityQueueProducer() {
             return mock(QueueProducer.class);
         }
+
+        @Provides
+        @Named("priorityRetryQueueProducer")
+        QueueProducer providePriorityRetryQueueProducer() {
+            return mock(QueueProducer.class);
+        }
     }
 }

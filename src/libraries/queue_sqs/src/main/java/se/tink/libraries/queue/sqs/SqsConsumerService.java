@@ -18,30 +18,35 @@ import se.tink.libraries.queue.QueueConsumerService;
 public class SqsConsumerService extends ManagedSafeStop implements QueueConsumerService {
 
     private static final Logger log = LoggerFactory.getLogger(SqsConsumerService.class);
-    private final float regularQueueMinConsumption;
+    // this is the ratio at which regular sqs queue will be interleaved with consumption from
+    // priority retry queue
+    private final float regularQueueInterleaveRatio;
     private final Random random = new Random();
 
     private final AbstractExecutionThreadService service;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final SqsConsumer regularSqsConsumer;
     private final SqsConsumer prioritySqsConsumer;
+    private final SqsConsumer priorityRetrySqsConsumer;
     private final boolean consumeFromPriorityQueue;
 
     @Inject
     public SqsConsumerService(
             @Named("regularSqsConsumer") SqsConsumer regularSqsConsumer,
             @Named("prioritySqsConsumer") SqsConsumer prioritySqsConsumer,
+            @Named("priorityRetrySqsConsumer") SqsConsumer priorityRetrySqsConsumer,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            @Named("regularQueueMinConsumption") float regularQueueMinConsumption) {
+            @Named("regularQueueInterleaveRatio") float regularQueueInterleaveRatio) {
         this.regularSqsConsumer = regularSqsConsumer;
         this.prioritySqsConsumer = prioritySqsConsumer;
+        this.priorityRetrySqsConsumer = priorityRetrySqsConsumer;
         consumeFromPriorityQueue =
                 agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue");
-        this.regularQueueMinConsumption = regularQueueMinConsumption;
+        this.regularQueueInterleaveRatio = regularQueueInterleaveRatio;
         log.info(
-                "Configured with consumeFromPriorityQueue={}, regularQueueMinConsumption={}",
+                "Configured with consumeFromPriorityQueue={}, regularQueueInterleaveRatio={}",
                 consumeFromPriorityQueue,
-                regularQueueMinConsumption);
+                regularQueueInterleaveRatio);
         this.service =
                 new AbstractExecutionThreadService() {
 
@@ -73,15 +78,17 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
     void consume() throws IOException {
         boolean consumeFromRegularQueue = true;
         if (consumeFromPriorityQueue) {
-            // consume from regular queue only if the priority queue is empty OR
-            // this is whitelisted percentage of traffic.
-            // Background: due to long lasting lag (long tail of rate limited providers) the
-            // priority delivery takes very long time and makes it hard/impossible for regular bg
-            // refreshes to perform. As a very short term mitigation small percentage of traffic
-            // will always go through (even if priority delivery is not yet finished)
             boolean priorityQueueEmpty = !prioritySqsConsumer.consume();
+            boolean priorityRetryQueueEmpty = !priorityRetrySqsConsumer.consume();
+
+            // Consume from regular queue when:
+            // - both priority queues are empty OR
+            // - priorityQueue is empty but priorityRetryQueue is not & this is just certain
+            // fraction of workload (regularQueueInterleaveRatio)
             consumeFromRegularQueue =
-                    priorityQueueEmpty || random.nextFloat() <= regularQueueMinConsumption;
+                    priorityQueueEmpty && priorityRetryQueueEmpty
+                            || priorityQueueEmpty
+                                    && random.nextFloat() <= regularQueueInterleaveRatio;
         }
         if (consumeFromRegularQueue) {
             regularSqsConsumer.consume();
@@ -100,7 +107,9 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
 
     private boolean shouldStart() {
         if (consumeFromPriorityQueue) {
-            return regularSqsConsumer.isConsumerReady() && prioritySqsConsumer.isConsumerReady();
+            return regularSqsConsumer.isConsumerReady()
+                    && prioritySqsConsumer.isConsumerReady()
+                    && priorityRetrySqsConsumer.isConsumerReady();
         }
         return regularSqsConsumer.isConsumerReady();
     }

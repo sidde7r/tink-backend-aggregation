@@ -37,6 +37,15 @@ public class SqsQueueModuleTest {
     }
 
     @Test
+    public void shouldReturnPriorityRetryQueueProducer() {
+        Injector injector = init();
+        QueueProducer priorityQueueProducer =
+                injector.getInstance(
+                        Key.get(QueueProducer.class, Names.named("priorityRetryQueueProducer")));
+        assertThat(priorityQueueProducer).isNotNull();
+    }
+
+    @Test
     public void shouldThrowIfTryingToGetNonExistingBean() {
         Injector injector = init();
         Throwable t =
