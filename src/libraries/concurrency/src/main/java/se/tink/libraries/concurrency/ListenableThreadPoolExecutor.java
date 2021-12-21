@@ -258,6 +258,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                 rejectedHandler.handle(future, queue);
             } catch (RejectedExecutionException e) {
                 log.warn("[ListenableThreadPoolExecutor] Task rejected.", e);
+                throw e;
             }
 
             // If we come here, we expect the rejectedHandler to have put `future` on `queue`.
