@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityErrorDetails.ProviderErrors;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
@@ -38,6 +39,10 @@ import src.libraries.connectivity_errors.ConnectivityErrorFactory;
  * That is, operations that are high-throughput should probably use a circuit breaker.
  */
 public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
+    // This is a temporary fix/experiment to skip CircuitBreaker for the Snoop app.
+    // Do NOT add more appIds here.
+    private static final String SNOOP_APP_ID = "a6a018f4f823493db857943db6fad7df";
+
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -55,8 +60,13 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
+        if (isSnoopAndBackgroundRefresh()) {
+            return AgentWorkerCommandResult.CONTINUE;
+        }
+
         Credentials credentials = context.getRequest().getCredentials();
         Provider provider = context.getRequest().getProvider();
+
         wasCircuitBreaked = false;
 
         final CircuitBreakerConfiguration circuitBreakerConfiguration =
@@ -107,6 +117,10 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     protected void doPostProcess() throws Exception {
+        if (isSnoopAndBackgroundRefresh()) {
+            return;
+        }
+
         final CircuitBreakerStatistics circuitBreakerStatistics =
                 state.getCircuitBreakerStatistics().get(context.getRequest().getProvider());
 
@@ -120,5 +134,10 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
                 circuitBreakerStatistics.registerSuccess();
             }
         }
+    }
+
+    private boolean isSnoopAndBackgroundRefresh() {
+        CredentialsRequest request = context.getRequest();
+        return SNOOP_APP_ID.equals(context.getAppId()) && !request.isUserPresent();
     }
 }
