@@ -17,6 +17,3 @@ spec:
 
   - record: DE:agent_transfer:className:cancelled:delta1h
     expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="cancelled"}[1h]))
-
-  - record: DE:agent_transfer:className:all_errors:delta1h
-    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="DE", outcome=~"cancelled|unavailable|failed"}[1h]))

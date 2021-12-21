@@ -7,111 +7,115 @@ spec:
   rules:
 
   #-------------------------------------------------------------------------------------------------------------------
-  # All errors alerts
+  # Internal/unhandled errors alerts
   #-------------------------------------------------------------------------------------------------------------------
-  - alert: agent_refreshes_below45_greater35_due_to_all_error_for_specific_product_in_de
-    expr: 0.35 <= sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.45
-    for: 30m
-    labels:
-      severity: ping
-      priority: P4
-      who: integration-nazguls
-    annotations:
-      description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Refresh unavailable rate is between 35 - 45% because of all issues ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
-        the last 30 minutes for <{ $labels.type }>
-      tags: {{ .Values.tags }}
-
-  - alert: agent_refreshes_below35_greater25_due_to_all_error_for_specific_product_in_de
-    expr: 0.25 <= sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.35
-    for: 30m
-    labels:
-      severity: urgent
-      priority: P3
-      who: integration-nazguls
-    annotations:
-      description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Refresh unavailable rate is between 25 - 35% because of all issues ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
-        the last 30 minutes for <{ $labels.type }>
-      tags: {{ .Values.tags }}
-
-  - alert: agent_refreshes_below25_greater15_due_to_all_error_for_specific_product_in_de
-    expr: 0.15 <= sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.25
-    for: 30m
-    labels:
-      severity: urgent
-      priority: P2
-      who: integration-nazguls
-    annotations:
-      description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Refresh unavailable rate is between 15 - 25% because of all issues ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
-        the last 30 minutes for <{ $labels.type }>
-      tags: {{ .Values.tags }}
-
-  - alert: agent_refreshes_below15_due_to_all_error_for_specific_product_in_de
-    expr: sum:DE:className_type:not_failed_unavailable_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.15
-    for: 30m
+  - alert: de_refresh_failed_rate_over_80%
+    expr: 0.8 <= DE:agent_refresh:className_type:failed_or_partially_completed:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20)
+    for: 10m
     labels:
       severity: urgent
       priority: P1
-      who: integration-nazguls
+      who: connectivity-nazguls
     annotations:
-      description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Refresh unavailable rate is below 15% because of all issues ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
-        the last 30 minutes for <{ $labels.type }>
+      description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
       tags: {{ .Values.tags }}
 
-  #-------------------------------------------------------------------------------------------------------------------
-  # Partially completed alerts
-  #-------------------------------------------------------------------------------------------------------------------
-  - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_for_specific_product_in_de
-    expr: 0.5 <= sum:DE:className_type:not_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.6
-    for: 30m
-    labels:
-      severity: ping
-      priority: P4
-      who: integration-nazguls
-    annotations:
-      description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Refresh unavailable rate is between 50 - 60% because of all issues ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
-        the last 30 minutes for <{ $labels.type }>
-      tags: {{ .Values.tags }}
-
-  - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_for_specific_product_in_de
-    expr: 0.4 <= sum:DE:className_type:not_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.5
-    for: 30m
-    labels:
-      severity: urgent
-      priority: P3
-      who: integration-nazguls
-    annotations:
-      description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Refresh unavailable rate is between 40 - 50% because of all issues ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
-        the last 30 minutes for <{ $labels.type }>
-      tags: {{ .Values.tags }}
-
-  - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_for_specific_product_in_de
-    expr: 0.3 <= sum:DE:className_type:not_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.4
-    for: 30m
+  - alert: de_refresh_failed_rate_between_60%_and_80%
+    expr: 0.6 <= DE:agent_refresh:className_type:failed_or_partially_completed:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20) < 0.8
+    for: 15m
     labels:
       severity: urgent
       priority: P2
-      who: integration-nazguls
+      who: connectivity-nazguls
     annotations:
-      description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Refresh unavailable rate is between 30 - 40% because of all issues ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
-        the last 30 minutes for <{ $labels.type }>
+      description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 15 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
       tags: {{ .Values.tags }}
 
-  - alert: agent_refreshes_below30_due_to_partially_completed_error_for_specific_product_in_de
-    expr: sum:DE:className_type:not_partially_completed:delta1h / (sum:DE:className_type:all_refreshes:delta1h > 20) < 0.3
-    for: 30m
+  - alert: de_refresh_failed_rate_between_40%_and_60%
+    expr: 0.4 <= DE:agent_refresh:className_type:failed_or_partially_completed:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20) < 0.6
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Bank side errors alerts
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: de_refresh_unavailable_rate_over_80%
+    expr: 0.8 <= DE:agent_refresh:className_type:unavailable:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20)
+    for: 10m
     labels:
       severity: urgent
       priority: P1
-      who: integration-nazguls
+      who: connectivity-nazguls
     annotations:
-      description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>      <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      summary: Refresh unavailable rate is below 30% because of all issues ( <{ $value | humanizePercentage }> ) for <{ $labels.className }>
-        the last 30 minutes for <{ $labels.type }>
+      description: Unavailable outcome is when agent throws BankServiceException
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
       tags: {{ .Values.tags }}
+
+  - alert: de_refresh_unavailable_rate_between_60%_and_80%
+    expr: 0.6 <= DE:agent_refresh:className_type:unavailable:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20) < 0.8
+    for: 15m
+    labels:
+      severity: urgent
+      priority: P2
+      who: connectivity-nazguls
+    annotations:
+      description: Unavailable outcome is when agent throws BankServiceException
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 15 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: de_refresh_unavailable_rate_between_40%_and_60%
+    expr: 0.4 <= DE:agent_refresh:className_type:unavailable:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20) < 0.6
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Unavailable outcome is when agent throws BankServiceException
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }} 

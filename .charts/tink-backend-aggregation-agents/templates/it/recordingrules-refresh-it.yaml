@@ -6,11 +6,11 @@ metadata:
 spec:
   rules:
 
-  - record: sum:IT:className_type:all_refreshes:delta1h
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT"}[1h]))
+  - record: IT:agent_refresh:className_type:all_refreshes:delta1h
+    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT"}[1h]))
 
-  - record: sum:IT:className_type:not_failed_unavailable_partially_completed:delta1h
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT", {{ .Values.allErrorsRefresh }}}[1h]))
+  - record: IT:agent_refresh:className_type:failed_or_partially_completed:delta1h
+    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT", outcome=~"failed|partially_completed"}[1h]))
 
-  - record: sum:IT:className_type:not_partially_completed:delta1h
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT", {{ .Values.partiallyCompletedErrorRefresh }}}[1h]))
+  - record: IT:agent_refresh:className_type:unavailable:delta1h
+    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT", outcome="unavailable"}[1h]))
