@@ -791,7 +791,362 @@ Vary: Accept-Encoding
 Connection: close
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
-{"emptyDisclaimer":null,"cvcInfo":"Fyll i CVC/CVV-koden nedan. Du hittar koden på kortets baksida (tre siffror).","cards":[{"_links":{"card-wallet-payment-sign":{"href":"https://m2.handelsbanken.se/app/priv/cards/wallet-payment/C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4/_waXgW2U9U-BSW8RzIX4m678mZ627SBP82ZYZL-S5Xs/activate?cardHolder=Ik4SiGRb2lqb98bp6DdHiMtNqnCDfkyndAnU5y2Pp78&authToken=123Token132","title":"Lägg till kort i Apple Wallet och aktivera Apple Pay","gaScreenName":"cards / wallet payment / sign"},"change-internet-state":{"href":"https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4&internetOpen=false&abroadOpen=true&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=123Token132"},"change-abroad-state":{"href":"https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4&internetOpen=true&abroadOpen=false&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=123Token132"},"block-status":{"href":"https://m2.handelsbanken.se/app/priv/cards/C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4/block-status?authToken=123Token132","gaScreenName":"cards / block card"},"card-offer":{"href":"https://m2.handelsbanken.se/app/priv/cards/offer?cardType=BANKKORT_MASTERCARD&authToken=123Token132","type":"application/pdf","title":"Erbjudanden Bankkort"}},"links":[{"rel":"card-wallet-payment-sign","href":"https://m2.handelsbanken.se/app/priv/cards/wallet-payment/C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4/_waXgW2U9U-BSW8RzIX4m678mZ627SBP82ZYZL-S5Xs/activate?cardHolder=Ik4SiGRb2lqb98bp6DdHiMtNqnCDfkyndAnU5y2Pp78&authToken=123Token132","type":"application/json","title":"Lägg till kort i Apple Wallet och aktivera Apple Pay","gaScreenName":"cards / wallet payment / sign"},{"rel":"block-status","href":"https://m2.handelsbanken.se/app/priv/cards/C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4/block-status?authToken=123Token132","type":"application/json","gaScreenName":"cards / block card"},{"rel":"change-internet-state","href":"https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4&internetOpen=false&abroadOpen=true&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=123Token132","type":"application/json"},{"rel":"change-abroad-state","href":"https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4&internetOpen=true&abroadOpen=false&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=123Token132","type":"application/json"},{"rel":"card-offer","href":"https://m2.handelsbanken.se/app/priv/cards/offer?cardType=BANKKORT_MASTERCARD&authToken=123Token132","type":"application/pdf","title":"Erbjudanden Bankkort"}],"name":"Bankkort Mastercard","arrangementName":null,"numberMasked":"5226 **** **** 0064","amountAvailable":{"amount":13403.88,"amountFormatted":"13 403,88","unit":"SEK","currency":"SEK"},"balance":{"amount":0,"amountFormatted":"0,00","unit":"SEK","currency":"SEK"},"statusText":null,"internetOpen":true,"abroadOpen":true,"blocked":false,"typeCode":"6","numberEncrypted":"C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4","dueDate":null,"newCard":false,"items":null,"blockCreditCardDetails":null,"emptyDisclaimer":null,"accountNumber":"332211222","walletInfo":{"returnCode":"00","walletList":[{"panUniqueReferenceNumber":"FAPLMC000012016186d8a612cb4f4a2fae039d3a55a72018","isEligible":true,"reasonCode":"00","walletId":"103"},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""},{"panUniqueReferenceNumber":"","isEligible":false,"reasonCode":"","walletId":""}]}}],"extraCards":[{"title":null,"heading":"Vill du ansöka om kort?","subHeading":[{"label":null,"value":"Ansök om våra kort i internetbanken."},{"label":null,"value":"Eller ring oss så hjälper vi dig."}],"contact":{"type":"PHONE","description":"Kontakta oss","contact":"+46771778899","specialText":null}}],"cardOffers":[{"_links":{"card-offer":{"href":"https://europe.priceless.com/sv-se/shb","type":"text/html","gaScreenName":"cards / card offer / private"}},"links":[{"rel":"card-offer","href":"https://europe.priceless.com/sv-se/shb","type":"text/html","gaScreenName":"cards / card offer / private"}],"heading":"För dig med kort","title":"Förmåner och erbjudanden","offerType":"PRIVATE"}]}
+{
+	"emptyDisclaimer": null,
+	"cvcInfo": "Fyll i CVC/CVV-koden nedan. Du hittar koden på kortets baksida (tre siffror).",
+	"cards": [
+		{
+			"_links": {
+				"card-wallet-payment-sign": {
+					"href": "https://m2.handelsbanken.se/app/priv/cards/wallet-payment/C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4/_waXgW2U9U-BSW8RzIX4m678mZ627SBP82ZYZL-S5Xs/activate?cardHolder=Ik4SiGRb2lqb98bp6DdHiMtNqnCDfkyndAnU5y2Pp78&authToken=123Token132",
+					"title": "Lägg till kort i Apple Wallet och aktivera Apple Pay",
+					"gaScreenName": "cards / wallet payment / sign"
+				},
+				"change-internet-state": {
+					"href": "https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4&internetOpen=false&abroadOpen=true&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=123Token132"
+				},
+				"change-abroad-state": {
+					"href": "https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4&internetOpen=true&abroadOpen=false&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=123Token132"
+				},
+				"block-status": {
+					"href": "https://m2.handelsbanken.se/app/priv/cards/C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4/block-status?authToken=123Token132",
+					"gaScreenName": "cards / block card"
+				},
+				"card-offer": {
+					"href": "https://m2.handelsbanken.se/app/priv/cards/offer?cardType=BANKKORT_MASTERCARD&authToken=123Token132",
+					"type": "application/pdf",
+					"title": "Erbjudanden Bankkort"
+				}
+			},
+			"links": [
+				{
+					"rel": "card-wallet-payment-sign",
+					"href": "https://m2.handelsbanken.se/app/priv/cards/wallet-payment/C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4/_waXgW2U9U-BSW8RzIX4m678mZ627SBP82ZYZL-S5Xs/activate?cardHolder=Ik4SiGRb2lqb98bp6DdHiMtNqnCDfkyndAnU5y2Pp78&authToken=123Token132",
+					"type": "application/json",
+					"title": "Lägg till kort i Apple Wallet och aktivera Apple Pay",
+					"gaScreenName": "cards / wallet payment / sign"
+				},
+				{
+					"rel": "block-status",
+					"href": "https://m2.handelsbanken.se/app/priv/cards/C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4/block-status?authToken=123Token132",
+					"type": "application/json",
+					"gaScreenName": "cards / block card"
+				},
+				{
+					"rel": "change-internet-state",
+					"href": "https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4&internetOpen=false&abroadOpen=true&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=123Token132",
+					"type": "application/json"
+				},
+				{
+					"rel": "change-abroad-state",
+					"href": "https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4&internetOpen=true&abroadOpen=false&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=123Token132",
+					"type": "application/json"
+				},
+				{
+					"rel": "card-offer",
+					"href": "https://m2.handelsbanken.se/app/priv/cards/offer?cardType=BANKKORT_MASTERCARD&authToken=123Token132",
+					"type": "application/pdf",
+					"title": "Erbjudanden Bankkort"
+				}
+			],
+      "name": "Allkort Mastercard",
+			"arrangementName": "Allkort Mastercard",
+			"numberMasked": "5226 **** **** 0064",
+			"amountAvailable": {
+				"amount": 13403.88,
+				"amountFormatted": "13 403,88",
+				"unit": "SEK",
+				"currency": "SEK"
+			},
+			"balance": {
+				"amount": 0,
+				"amountFormatted": "0,00",
+				"unit": "SEK",
+				"currency": "SEK"
+			},
+			"statusText": null,
+			"internetOpen": true,
+			"abroadOpen": true,
+			"blocked": false,
+			"typeCode": "6",
+			"numberEncrypted": "C6eyceXdKyDockr8nKaZLHEvHMTEt5WVj4wY0HPUte4",
+			"dueDate": null,
+			"newCard": false,
+			"items": null,
+			"blockCreditCardDetails": null,
+			"emptyDisclaimer": null,
+			"accountNumber": "332211222",
+			"walletInfo": {
+				"returnCode": "00",
+				"walletList": [
+					{
+						"panUniqueReferenceNumber": "FAPLMC000012016186d8a612cb4f4a2fae039d3a55a72018",
+						"isEligible": true,
+						"reasonCode": "00",
+						"walletId": "103"
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					}
+				]
+			}
+		},
+		{
+			"_links": {
+				"cards": {
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/wallet-payment/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/NnKE-CAq6CN53OLq7MApqg/activate?cardHolder=cHiJBjDYYqMaykt-9kymaQ&authToken=authToken=123Token123",
+					"title": "Lägg till kort i Apple Wallet och aktivera Apple Pay",
+					"gaScreenName": "**HASHED:as** / wallet payment / sign"
+				},
+				"change-internet-state": {
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/change-state?openCloseKey=al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4&internetOpen=false&abroadOpen=true&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=authToken=123Token123"
+				},
+				"change-abroad-state": {
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/change-state?openCloseKey=al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4&internetOpen=true&abroadOpen=false&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=authToken=123Token123"
+				},
+				"card-transactions": {
+					"href": "https://m2.handelsbanken.se/app/priv/111224444/-zj6zKHP0AaZ4EkhFY-bCg/YbJfFHDPsQhopYeVoBvCHw/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/113528210488/075/transactions?cardType=PLATINUM&authToken=123Token123",
+					"title": "",
+					"gaScreenName": "**HASHED:as** / card details"
+				},
+				"block-status": {
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/block-status?authToken=123Token123",
+					"gaScreenName": "**HASHED:as** / block card"
+				},
+				"card-offer": {
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/offer?cardType=PLATINUM&authToken=authToken=123Token123",
+					"type": "**HASHED:ke**",
+					"title": "Erbjudanden Platinum"
+				}
+			},
+			"links": [
+				{
+					"rel": "**HASHED:yb**-sign",
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/wallet-payment/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/NnKE-CAq6CN53OLq7MApqg/activate?cardHolder=cHiJBjDYYqMaykt-9kymaQ&authToken=authToken=123Token123",
+					"type": "**HASHED:us**",
+					"title": "Lägg till kort i Apple Wallet och aktivera Apple Pay",
+					"gaScreenName": "**HASHED:as** / wallet payment / sign"
+				},
+				{
+					"rel": "card-transactions",
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/-zj6zKHP0AaZ4EkhFY-bCg/YbJfFHDPsQhopYeVoBvCHw/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/transactions?cardType=PLATINUM&authToken=**HASHED:s4**",
+					"type": "**HASHED:us**",
+					"title": "",
+					"gaScreenName": "**HASHED:as** / card details"
+				},
+				{
+					"rel": "block-status",
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/block-status?authToken=**HASHED:s4**",
+					"type": "**HASHED:us**",
+					"gaScreenName": "**HASHED:as** / block card"
+				},
+				{
+					"rel": "change-internet-state",
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/change-state?openCloseKey=al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4&internetOpen=false&abroadOpen=true&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=**HASHED:s4**",
+					"type": "**HASHED:us**"
+				},
+				{
+					"rel": "change-abroad-state",
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/change-state?openCloseKey=al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4&internetOpen=true&abroadOpen=false&isNewCardList=gC9vh8Jhjfkop0Rkk_ywfA&authToken=**HASHED:s4**",
+					"type": "**HASHED:us**"
+				},
+				{
+					"rel": "card-offer",
+					"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/offer?cardType=PLATINUM&authToken=**HASHED:s4**",
+					"type": "**HASHED:ke**",
+					"title": "Erbjudanden Platinum"
+				}
+			],
+			"name": "Platinum",
+			"arrangementName": "Platinum",
+			"numberMasked": "5432 **** **** 1234",
+			"amountAvailable": {
+				"amount": 58588.7,
+				"amountFormatted": "58 588,70",
+				"unit": "SEK",
+				"currency": "SEK"
+			},
+			"balance": {
+				"amount": 0,
+				"amountFormatted": "0,00",
+				"unit": "SEK",
+				"currency": "SEK"
+			},
+			"statusText": null,
+			"internetOpen": true,
+			"abroadOpen": true,
+			"blocked": false,
+			"typeCode": "L",
+			"numberEncrypted": "987654321",
+			"dueDate": null,
+			"newCard": false,
+			"items": null,
+			"blockCreditCardDetails": null,
+			"emptyDisclaimer": null,
+			"accountNumber": null,
+			"walletInfo": {
+				"returnCode": "00",
+				"walletList": [
+					{
+						"panUniqueReferenceNumber": "1111111111",
+						"isEligible": true,
+						"reasonCode": "00",
+						"walletId": "103"
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					},
+					{
+						"panUniqueReferenceNumber": "",
+						"isEligible": false,
+						"reasonCode": "",
+						"walletId": ""
+					}
+				]
+			}
+		}
+	],
+	"extraCards": [
+		{
+			"title": null,
+			"heading": "Vill du ansöka om kort?",
+			"subHeading": [
+				{
+					"label": null,
+					"value": "Ansök om våra kort i internetbanken."
+				},
+				{
+					"label": null,
+					"value": "Eller ring oss så hjälper vi dig."
+				}
+			],
+			"contact": {
+				"type": "PHONE",
+				"description": "Kontakta oss",
+				"contact": "+46123456789",
+				"specialText": null
+			}
+		}
+	],
+	"cardOffers": [
+		{
+			"_links": {
+				"card-offer": {
+					"href": "https://europe.priceless.com/sv-se/shb",
+					"type": "text/html",
+					"gaScreenName": "cards / card offer / private"
+				}
+			},
+			"links": [
+				{
+					"rel": "card-offer",
+					"href": "https://europe.priceless.com/sv-se/shb",
+					"type": "text/html",
+					"gaScreenName": "cards / card offer / private"
+				}
+			],
+			"heading": "För dig med kort",
+			"title": "Förmåner och erbjudanden",
+			"offerType": "PRIVATE"
+		}
+	]
+}
 
 REQUEST 21
 GET https://m2.handelsbanken.se/app/priv/loan?authToken=123Token132
@@ -1549,7 +1904,7 @@ Connection: close
 
 {"_links":{"infopage-pending-transactions":{"href":"https://m2.handelsbanken.se/app/priv/infopage?alias=pending.transactions&service=PRIV&authToken=123Token123","title":"Om kommande transaktioner"},"pending-transactions-filter":{"href":"https://m2.handelsbanken.se/app/priv/pending-transactions/filter?user=&transfers=true&authToken=123Token123","title":"filter"},"pending-transactions-about":{"href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_kommande","type":"text/html"}},"links":[{"rel":"pending-transactions-about","href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_kommande","type":"text/html"},{"rel":"infopage-pending-transactions","href":"https://m2.handelsbanken.se/app/priv/infopage?alias=pending.transactions&service=PRIV&authToken=123Token123","type":"application/json","title":"Om kommande transaktioner"},{"rel":"pending-transactions-filter","href":"https://m2.handelsbanken.se/app/priv/pending-transactions/filter?user=&transfers=true&authToken=**HASHED:Aj**","type":"application/json","title":"filter"}],"title":"","transactionGroups":[{"title":"Saifullah Khushhal","type":"ACCOUNT_OWN","transactions":[{"_links":{"autogiro-detail":{"href":"https://m2.handelsbanken.se/app/priv/autogiro/46006446830?authToken=**HASHED:Aj**","gaScreenName":"Payments Transfers / Pending payments / Payment autogiro details"}},"links":[{"rel":"autogiro-detail","href":"https://m2.handelsbanken.se/app/priv/autogiro/46006446830?authToken=123Token123","type":"application/json","gaScreenName":"Payments Transfers / Pending payments / Payment autogiro details"}],"recipient":{"name":"nordicwell","reference":"5487-9044","additionalInfo":"Autogiro"},"amount":{"amount":499.00,"amountFormatted":"499,00","unit":"kr","currency":"SEK"},"dueDate":"2021-04-26"}],"amountTotal":{"amount":499.00,"amountFormatted":"499,00","unit":"kr","currency":"SEK"},"numberOfTransactions":{"quantityFormatted":"1","unit":"st","header":"Antal betalningar:"},"account":{"name":"Saifullah Khushhal","number":"123454321","numberFormatted":"123 454 321","balance":null,"holderName":"Saifullah Khushhal","displayBalance":true,"isCard":false,"amountAvailable":{"amount":9272.38,"amountFormatted":"9 272,38","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null}}],"amountTotal":{"amount":499.00,"amountFormatted":"499,00","unit":"kr","currency":"SEK"},"numberOfTransactions":{"quantityFormatted":"1","unit":"st","header":"Antal betalningar:"},"otherTransactionHolders":[],"datePicker":{"firstDate":"2021-04-23","lastDate":"2022-04-23","disableSaturdays":false,"disableSundays":false,"selectedDate":"2021-05-23"}}
 
-#credit card
+#credit card all kort
 REQUEST 23CC
 GET https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123
 Accept: application/json,application/xml
@@ -1596,6 +1951,475 @@ Connection: close
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 {"account":{"_links":{"account-info":{"href":"https://m2.handelsbanken.se/app/priv/accounts/111224444/account-info?hasBalance=false&authToken=123Token132","title":"Kontoinformation och inställningar","gaScreenName":"accounts / account details / account information and settings"},"card-transactions":{"href":"https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123","gaScreenName":"accounts / account details"}},"links":[{"rel":"card-transactions","href":"https://m2.handelsbanken.se/app/priv/cards/eKfgxHSSF94fJhtqvKm74Q/YbJfFHDPsQhopYeVoBvCHw/YbJfFHDPsQhopYeVoBvCHw/transactions?cardType=ALLKORT&authToken=123Token123","type":"application/json","gaScreenName":"accounts / account details"},{"rel":"account-info","href":"https://m2.handelsbanken.se/app/priv/accounts/111224444/account-info?hasBalance=false&authToken=123Token123","type":"application/json","title":"Kontoinformation och inställningar","gaScreenName":"accounts / account details / account information and settings"}],"name":"Allkortskonto","number":"111224444","numberFormatted":"11 224 444","balance":{"amount":-10000.00,"amountFormatted":"-10 000,00","unit":"kr","currency":"SEK"},"holderName":null,"displayBalance":true,"isCard":true,"amountAvailable":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"clearingNumber":"6378","overDraft":false,"warningTextShort":null,"warningTextLong":null},"transactions":[{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"-460,00"},"dueDate":"2020-05-11"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"460,00"},"dueDate":"2020-05-11"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"-75,00"},"dueDate":"2020-05-06"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"-1 400,00"},"dueDate":"2020-05-04"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Månadsöverf"},"amount":{"amount":null,"amountFormatted":"505,00"},"dueDate":"2020-04-30"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"1 000,00"},"dueDate":"2020-04-27"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"42,00"},"dueDate":"2020-04-17"},{"recipient":{"name":null,"reference":null,"additionalInfo":"DISPRÄNTA"},"amount":{"amount":null,"amountFormatted":"-87,00"},"dueDate":"2020-04-15"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"-250,00"},"dueDate":"2020-04-07"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"-50,00"},"dueDate":"2020-04-06"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"-500,00"},"dueDate":"2020-04-01"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"-200,00"},"dueDate":"2020-03-31"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Månadsöverf"},"amount":{"amount":null,"amountFormatted":"505,00"},"dueDate":"2020-03-31"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"500,00"},"dueDate":"2020-03-30"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"76,00"},"dueDate":"2020-03-18"},{"recipient":{"name":null,"reference":null,"additionalInfo":"DISPRÄNTA"},"amount":{"amount":null,"amountFormatted":"-82,00"},"dueDate":"2020-03-16"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Överf Mobil"},"amount":{"amount":null,"amountFormatted":"-500,00"},"dueDate":"2020-02-28"},{"recipient":{"name":null,"reference":null,"additionalInfo":"Månadsöverf"},"amount":{"amount":null,"amountFormatted":"505,00"},"dueDate":"2020-02-28"}],"cardInvoiceInfo":{"balance":{"amount":null,"amountFormatted":"-10 000,00","currency":"SEK"},"balanceInvoiced":{"amount":null,"amountFormatted":"0,00","currency":"SEK"},"balanceNotInvoiced":{"amount":null,"amountFormatted":"0,00","currency":"SEK"},"bankgironumber":null,"credit":{"amount":null,"amountFormatted":"10 000,00","currency":"SEK"},"credited":null,"dueUnpaid":null,"ocrNumber":null,"spendable":{"amount":null,"amountFormatted":"0,00","currency":"SEK"},"spendableNoCredit":{"amount":null,"amountFormatted":"-10 000,00","currency":"SEK"},"usedCredit":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null}}
+
+REQUEST 14CC
+GET https://m2.handelsbanken.se/app/priv/111224444/-zj6zKHP0AaZ4EkhFY-bCg/YbJfFHDPsQhopYeVoBvCHw/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/113528210488/075/transactions?cardType=PLATINUM&authToken=123Token123
+Accept: application/json,application/xml
+X-Aggregator: Tink Testing
+
+RESPONSE 14CC
+200
+Date: Mon, 09 Aug 2021 11:13:30 GMT
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Type: application/json;charset=UTF-8
+Via: 1.1 xsemobap101.itek.shb.biz
+Vary: Accept-Encoding
+Connection: close
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+{
+"_links": {
+		"card-deposit-transactions": {
+			"href": "https://m2.handelsbanken.se/app/priv/111224444/-zj6zKHP0AaZ4EkhFY-bCg/deposit-transactions?cardType=PLATINUM&authToken=123Token123",
+			"gaScreenName": "**HASHED:as** / card details / payments in"
+		},
+		"card-more-transactions": {
+			"href": "https://m2.handelsbanken.se/app/priv/111224444/-zj6zKHP0AaZ4EkhFY-bCg/abcdef/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/113528210488/075/transactions?cardType=PLATINUM&authToken=123Token123",
+			"title": "Fler transaktioner"
+		}
+	},
+	"links": [
+		{
+			"rel": "card-deposit-transactions",
+			"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/-zj6zKHP0AaZ4EkhFY-bCg/deposit-transactions?cardType=PLATINUM&authToken=**HASHED:s4**",
+			"type": "**HASHED:us**",
+			"gaScreenName": "**HASHED:as** / card details / payments in"
+		},
+		{
+			"rel": "card-more-transactions",
+			"href": "https://m2.handelsbanken.se/app/priv/**HASHED:as**/-zj6zKHP0AaZ4EkhFY-bCg/YbJfFHDPsQhopYeVoBvCHw/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/113528210488/075/transactions?cardType=PLATINUM&authToken=**HASHED:s4**",
+			"type": "**HASHED:us**",
+			"title": "Fler transaktioner"
+		}
+	],
+	"owners": [
+
+	],
+	"transactions": [
+		{
+			"date": "2021-08-09",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-56,00"
+			},
+			"description": "PREL.7-ELEVEN 421612",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-08-02",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-216,00"
+			},
+			"description": "BANK RESTAURANG",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-30",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-80,00"
+			},
+			"description": "PRESSBYR$N 4205143",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-30",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-145,00"
+			},
+			"description": "ICHA ICHA",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-30",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-38,43"
+			},
+			"description": "KRONANS APOTEK",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-29",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-233,00"
+			},
+			"description": "BASTARD BURGERS",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-29",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-49,90"
+			},
+			"description": "CLAS OHLSON",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-29",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-630,00"
+			},
+			"description": "RICHARD O MATTE",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-27",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-545,00"
+			},
+			"description": "SYSTEMBOLAGET STOCKH",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-26",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-144,00"
+			},
+			"description": "PRESSBYR$N 4205143",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-26",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-115,00"
+			},
+			"description": "RESTAURANG RICE",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-16",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-84,00"
+			},
+			"description": "KARINGONS BRYGG",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-16",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-183,00"
+			},
+			"description": "Skafferiet, Karingon",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-17",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-390,00"
+			},
+			"description": "KARINGONS BRYGG",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-18",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-508,24"
+			},
+			"description": "INGO VAREKIL",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-15",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-93,00"
+			},
+			"description": "Skafferiet, Karingon",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-15",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-102,00"
+			},
+			"description": "Skafferiet, Karingon",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-14",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-480,00"
+			},
+			"description": "iZ *Lotshotellet A",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-07-08",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-48,00"
+			},
+			"description": "SIMSONS RESTAUR",
+			"orderNbr": 0
+		}
+	],
+	"cardInvoiceInfo": {
+		"balance": null,
+		"balanceInvoiced": {
+			"amount": 0.0,
+			"amountFormatted": "0,00",
+			"unit": "SEK",
+			"currency": "SEK"
+		},
+		"balanceNotInvoiced": {
+			"amount": -16411.3,
+			"amountFormatted": "-16 411,30",
+			"unit": "SEK",
+			"currency": "SEK"
+		},
+		"bankgironumber": "1234-5678",
+		"credit": {
+			"amount": 75000.0,
+			"amountFormatted": "75 000,00",
+			"unit": "SEK",
+			"currency": "SEK"
+		},
+		"credited": null,
+		"dueUnpaid": null,
+		"ocrNumber": "000114123456789",
+		"spendable": {
+			"amount": 58588.7,
+			"amountFormatted": "58 588,70",
+			"unit": "SEK",
+			"currency": "SEK"
+		},
+		"spendableNoCredit": null,
+		"usedCredit": null,
+		"overDraft": false,
+		"warningTextShort": null,
+		"warningTextLong": null
+	},
+	"items": null,
+	"emptyDisclaimer": null
+}
+
+#card more transactions
+REQUEST 15cc
+GET https://m2.handelsbanken.se/app/priv/111224444/-zj6zKHP0AaZ4EkhFY-bCg/abcdef/al3R0V2PkgFFHQX3Ia-N2nEvHMTEt5WVj4wY0HPUte4/113528210488/075/transactions?cardType=PLATINUM&authToken=123Token123
+Accept: application/json,application/xml
+X-Aggregator: Tink Testing
+
+RESPONSE 15cc
+200
+Date: Mon, 09 Aug 2021 11:13:30 GMT
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Type: application/json;charset=UTF-8
+Via: 1.1 xsemobap101.itek.shb.biz
+Vary: Accept-Encoding
+Connection: close
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+{
+"owners": null,
+	"transactions": [
+		{
+			"date": "2020-05-18",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-1 000,00"
+			},
+			"description": "Revolut**1234*",
+			"orderNbr": 0
+		},
+		{
+			"date": "2020-05-16",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-178,90"
+			},
+			"description": "PLANTAGEN BROMM",
+			"orderNbr": 0
+		},
+		{
+			"date": "2020-05-17",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-156,00"
+			},
+			"description": "BETALA P",
+			"orderNbr": 0
+		},
+		{
+			"date": "2020-05-14",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-106,71"
+			},
+			"description": "UDEMY: ONLINE COURSE",
+			"orderNbr": 0
+		},
+		{
+			"date": "2020-05-13",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-1 000,00"
+			},
+			"description": "Revolut**1234*",
+			"orderNbr": 0
+		},
+		{
+			"date": "2020-05-11",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-139,00"
+			},
+			"description": "C MORE",
+			"orderNbr": 0
+		},
+		{
+			"date": "2020-05-08",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-210,00"
+			},
+			"description": "TAXI STOCKHOLM",
+			"orderNbr": 0
+		},
+		{
+			"date": "2020-05-08",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "-540,00"
+			},
+			"description": "BAGPIPERS INN",
+			"orderNbr": 0
+		}
+	],
+	"cardInvoiceInfo": null,
+	"items": null,
+	"emptyDisclaimer": null
+}
+
+#card deposit transactions
+REQUEST 16CCDT
+GET https://m2.handelsbanken.se/app/priv/111224444/-zj6zKHP0AaZ4EkhFY-bCg/deposit-transactions?cardType=PLATINUM&authToken=123Token123
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.6:11.5
+X-Aggregator: Tink Testing
+
+
+RESPONSE 16CCDT
+200
+Date: Mon, 09 Aug 2021 11:13:30 GMT
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Type: application/json;charset=UTF-8
+Via: 1.1 xsemobap101.itek.shb.biz
+Vary: Accept-Encoding
+Connection: close
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+{
+"_links": {
+		"card-deposit-context": {
+			"href": "https://m2.handelsbanken.se/app/priv/payment/card-deposit-context?bgNo=1234-5678&ocrNo=000114123456789&authToken=c8dfc3c79ae7",
+			"type": "application/json",
+			"title": "",
+			"gaScreenName": "pay transfer / new payment"
+		}
+	},
+	"emptyDisclaimer": null,
+	"transactions": [
+		{
+			"date": "2021-11-30",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "11 111,22"
+			},
+			"description": "BG-INBET. AUTOGIRO",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-09-30",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "22 222,22"
+			},
+			"description": "BG-INBET. AUTOGIRO",
+			"orderNbr": 0
+		},
+		{
+			"date": "2021-09-22",
+			"amount": {
+				"amount": null,
+				"amountFormatted": "10 000,00"
+			},
+			"description": "BG-INBETALNING OCR",
+			"orderNbr": 0
+		}
+	],
+	"cardInvoiceInfo": {
+		"balance": null,
+		"balanceInvoiced": {
+			"amount": -20511.49,
+			"amountFormatted": "-20 511,49",
+			"unit": "SEK",
+			"currency": "SEK"
+		},
+		"balanceNotInvoiced": {
+			"amount": -7295.39,
+			"amountFormatted": "-7 295,39",
+			"unit": "SEK",
+			"currency": "SEK"
+		},
+		"bankgironumber": "1234-5678",
+		"credit": {
+			"amount": 75000.0,
+			"amountFormatted": "75 000,00",
+			"unit": "SEK",
+			"currency": "SEK"
+		},
+		"credited": null,
+		"dueUnpaid": null,
+		"ocrNumber": "000114123456789",
+		"spendable": {
+			"amount": 47193.12,
+			"amountFormatted": "47 193,12",
+			"unit": "SEK",
+			"currency": "SEK"
+		},
+		"spendableNoCredit": null,
+		"usedCredit": null,
+		"overDraft": false,
+		"warningTextShort": null,
+		"warningTextLong": null
+	}
+}
 
 REQUEST 27IN
 GET https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken=123Token132
