@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands.login;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.MetricActionComposite;
@@ -10,6 +11,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import src.libraries.interaction_counter.InteractionCounter;
 
 @AllArgsConstructor
+@Slf4j
 public class MetricsFactory {
 
     static class MetricName {
@@ -24,21 +26,23 @@ public class MetricsFactory {
     public MetricActionIface createLoginMetric(
             CredentialsRequest credentialsRequest,
             InteractionCounter supplementalInformationInteractionCounter) {
-        MetricAction action =
+        MetricAction baseAction =
                 agentWorkerCommandMetricState.buildAction(metricForAction(MetricName.LOGIN));
+        String secondaryActionName;
+
         if (isBackgroundCronRefresh(credentialsRequest)) {
-            return new MetricActionComposite(
-                    action,
-                    agentWorkerCommandMetricState.buildAction(
-                            metricForAction(MetricName.LOGIN_CRON)));
+            secondaryActionName = MetricName.LOGIN_CRON;
+        } else {
+            secondaryActionName =
+                    wasAnyUserInteraction(
+                                    credentialsRequest, supplementalInformationInteractionCounter)
+                            ? MetricName.LOGIN_MANUAL
+                            : MetricName.LOGIN_AUTO;
         }
-        MetricAction actionLoginType =
-                wasAnyUserInteraction(credentialsRequest, supplementalInformationInteractionCounter)
-                        ? agentWorkerCommandMetricState.buildAction(
-                                metricForAction(MetricName.LOGIN_MANUAL))
-                        : agentWorkerCommandMetricState.buildAction(
-                                metricForAction(MetricName.LOGIN_AUTO));
-        return new MetricActionComposite(action, actionLoginType);
+        log.info("Picked " + secondaryActionName + " as secondary login metric name.");
+        return new MetricActionComposite(
+                baseAction,
+                agentWorkerCommandMetricState.buildAction(metricForAction(secondaryActionName)));
     }
 
     private boolean isBackgroundCronRefresh(CredentialsRequest credentialsRequest) {

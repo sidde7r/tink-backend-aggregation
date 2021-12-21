@@ -115,12 +115,10 @@ public class LoginExecutor {
     private void logUserInteractionStatus(
             CredentialsRequest request, InteractionCounter interactionCounter) {
         LOGGER.info(
-                "Request type: {}, isCreate: {}, isUpdate: {}",
+                "Request type: {}, isCreate: {}, isUpdate: {}. Authentication required user interaction: {}",
                 request.getType(),
                 request.isCreate(),
-                request.isUpdate());
-        LOGGER.info(
-                "Authentication required user interaction: {}",
+                request.isUpdate(),
                 MetricsFactory.wasAnyUserInteraction(request, interactionCounter));
     }
 
