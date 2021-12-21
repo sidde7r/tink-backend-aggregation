@@ -74,9 +74,18 @@ public class SqsConsumer {
             consume(sqsMessage.getBody());
             sqsQueue.consumed();
         } catch (RejectedExecutionException e) {
-            log.warn("Failed to consume message of '{}' SQS. Requeuing it.", name, e);
+            log.warn(
+                    "[SqsConsumer] Failed to consume message of '{}' SQS. Requeuing it. SqsMessageId: {}",
+                    name,
+                    sqsMessage.getMessageId(),
+                    e);
             producer.requeue(sqsMessage.getBody());
             sqsQueue.requeued();
+        } catch (IOException e) {
+            log.error(
+                    "[SqsConsumer] Unexpected error happened during consuming of message. SqsMessageId: {}",
+                    sqsMessage.getMessageId(),
+                    e);
         }
     }
 
@@ -87,6 +96,7 @@ public class SqsConsumer {
 
     @VisibleForTesting
     void delete(Message message) {
+        log.info("[SqsConsumer] Deleting message: {}", message.getMessageId());
         sqsQueue.getSqs()
                 .deleteMessage(
                         new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));
