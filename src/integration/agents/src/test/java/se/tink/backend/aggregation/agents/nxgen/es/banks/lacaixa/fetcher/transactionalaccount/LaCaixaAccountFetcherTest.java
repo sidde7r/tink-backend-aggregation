@@ -3,14 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transa
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.*;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.DATE_REGEX_YYYYMMDD;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.AUTHORIZED_USER;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
 
 import java.math.BigDecimal;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -25,6 +29,7 @@ public class LaCaixaAccountFetcherTest {
     private static final String SECOND_ACCOUNT_REFERENCE = "Qlf2";
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa/resources";
+    private static final String ACC_REF = "4599851319407040";
 
     @Before
     public void setup() {
@@ -103,5 +108,27 @@ public class LaCaixaAccountFetcherTest {
         assertThat(account.getIdModule().getAccountName()).isEqualTo("imagin");
         assertThat(account.getParties().get(0).getName()).isEqualTo("ALICE DOE NOE");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);
+    }
+
+    @Test
+    public void shouldFetchAndMapTransactionsToTinkTransactions() {
+        // given
+        when(laCaixaApiClient.fetchNextAccountTransactions(ACC_REF, true))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "accounts_transactions_response.json")
+                                        .toFile(),
+                                AccountTransactionResponse.class));
+
+        // when
+        AccountTransactionResponse transactions =
+                laCaixaApiClient.fetchNextAccountTransactions(ACC_REF, true);
+
+        // then
+        transactions.getTinkTransactions().forEach(transaction -> {
+            LocalDate date = transaction.getTransactionDates().getDates().get(1).getValue().getDate();
+            Boolean isValidTinkDate = null == date || date.toString().matches(DATE_REGEX_YYYYMMDD);
+            assertThat(isValidTinkDate).isTrue();
+        });
     }
 }
