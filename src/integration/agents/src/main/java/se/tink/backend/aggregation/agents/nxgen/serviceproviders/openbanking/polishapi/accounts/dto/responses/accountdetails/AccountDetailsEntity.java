@@ -187,7 +187,9 @@ public class AccountDetailsEntity {
                 .withCardNumber(accountNumber)
                 .withBalance(ExactCurrencyAmount.of(availableBalance, currency))
                 .withAvailableCredit(getAvailableCredit())
-                .withCardAlias(accountType.getDescription())
+                .withCardAlias(
+                        ObjectUtils.firstNonNull(
+                                accountType.getDescription(), accountType.getCode()))
                 .build();
     }
 
