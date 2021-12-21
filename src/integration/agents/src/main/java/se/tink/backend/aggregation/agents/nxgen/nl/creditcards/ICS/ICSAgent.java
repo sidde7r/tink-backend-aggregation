@@ -49,7 +49,7 @@ public final class ICSAgent extends NextGenerationAgent
 
         AgentConfiguration<ICSConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(ICSConfiguration.class);
-        ICSConfiguration providerConfiguration =
+        ICSConfiguration icsConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
 
         String customerIpAddress = request.getUserAvailability().isUserPresent() ? userIp : "";
@@ -63,12 +63,12 @@ public final class ICSAgent extends NextGenerationAgent
                         sessionStorage,
                         persistentStorage,
                         agentConfiguration.getRedirectUrl(),
-                        providerConfiguration,
+                        icsConfiguration,
                         customerIpAddress,
                         componentProvider,
                         new ICSOAuthTokenFactory(
-                                providerConfiguration.getClientId(),
-                                providerConfiguration.getClientSecret(),
+                                icsConfiguration.getClientId(),
+                                icsConfiguration.getClientSecret(),
                                 agentConfiguration.getRedirectUrl()),
                         timeProvider,
                         componentProvider.getRandomValueGenerator());
