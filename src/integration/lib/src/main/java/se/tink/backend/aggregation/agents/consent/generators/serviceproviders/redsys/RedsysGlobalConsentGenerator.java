@@ -83,8 +83,9 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
         LocalDateTime nowLocal = localDateTimeSource.now();
         LocalDate validUntil = nowMadrid.toLocalDate().plusDays(RedsysScope.MAX_EXPIRATION_DAYS);
         log.info(
-                "Consent validUntil debug: NOW (local): %s; NOW (Madrid): %s; validUntil: %s",
-                nowLocal, nowMadrid, validUntil);
+                String.format(
+                        "Consent validUntil debug: NOW (local): %s; NOW (Madrid): %s; validUntil: %s",
+                        nowLocal, nowMadrid, validUntil));
         return ConsentRequestBody.builder()
                 .access(AccessEntity.ofAllPsd2())
                 .recurringIndicator(true)
