@@ -92,7 +92,6 @@ public class ICSConstants {
     }
 
     public static final class StorageKeys {
-        public static final String STATE = "state";
         public static final String TOKEN = "token";
         public static final String ACCOUNT_ID = "accountId";
         public static final String TRANSACTION_FROM_DATE = "transactionFromDate";

@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
-import static io.vavr.Predicates.not;
-
-import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -73,7 +70,6 @@ public class ICSApiClient {
     }
 
     public RequestBuilder createAuthorizeRequest(String state, String accountRequestId) {
-
         return createAuthRequest(Urls.OAUTH_AUTHORIZE)
                 .queryParam(QueryKeys.GRANT_TYPE, ICSOAuthGrantTypes.AUTHORIZATION_CODE.toString())
                 .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
@@ -127,11 +123,6 @@ public class ICSApiClient {
     }
 
     public OAuth2Token fetchToken(String authCode) {
-        sessionStorage
-                .get(StorageKeys.STATE, String.class)
-                .filter(not(Strings::isNullOrEmpty))
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_STATE));
-
         return createRequest(Urls.OAUTH_TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .body(tokenFactory.consentAuthorizationToken(authCode))

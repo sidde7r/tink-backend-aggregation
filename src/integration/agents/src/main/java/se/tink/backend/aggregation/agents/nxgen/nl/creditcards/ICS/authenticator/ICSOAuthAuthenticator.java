@@ -48,7 +48,6 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
                         .getData();
 
         storeTransactionFromDate(accountRequestData.getTransactionFromDate());
-        sessionStorage.put(StorageKeys.STATE, state);
         // refresh expiry date is sent in the account request data, not in the token
         sessionStorage.put(StorageKeys.EXPIRATION_DATE, accountRequestData.getExpirationDate());
         return client.createAuthorizeRequest(state, accountRequestData.getAccountRequestId())
