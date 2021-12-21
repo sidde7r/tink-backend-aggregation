@@ -34,7 +34,7 @@ public class DemobankConstants {
         public static final URL OAUTH_AUTHORIZE = new URL(BASE_URL + "/oauth/authorize");
         public static final URL ACCOUNTS = new URL(BASE_URL + "/api/accounts");
         public static final URL TRANSACTIONS =
-                new URL(BASE_URL + "/api/account/{accountId}/transactions");
+                new URL(BASE_URL + "/api/account/{accountId}/transactions/paging");
         public static final URL HOLDERS = new URL(BASE_URL + "/api/account/{accountId}/holders");
         public static final URL USER = new URL(BASE_URL + "/api/user");
 
@@ -91,6 +91,7 @@ public class DemobankConstants {
         public static final String STATE = "state";
         public static final String DATE_FROM = "from";
         public static final String DATE_TO = "to";
+        public static final String PAGE_TOKEN = "pageToken";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String SCOPE = "scope";
         public static final String PAYMENT_ID = "payment_id";
