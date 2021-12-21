@@ -240,9 +240,25 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
     public ListenableFuture<?> execute(T r) {
         WrappedRunnableListenableFutureTask<T, ?> future =
                 new WrappedRunnableListenableFutureTask<>(r, null);
+        return execute(future);
+    }
 
+    @Override
+    public <V> ListenableFuture<V> execute(T r, V v) {
+        WrappedRunnableListenableFutureTask<T, V> future =
+                new WrappedRunnableListenableFutureTask<>(r, v);
+        return execute(future);
+    }
+
+    private <V> WrappedRunnableListenableFutureTask<T, V> execute(
+            WrappedRunnableListenableFutureTask<T, V> future) {
         if (!queue.offer(future)) {
-            rejectedHandler.handle(future, queue);
+            log.warn("[ListenableThreadPoolExecutor] Queue couldn't offer");
+            try {
+                rejectedHandler.handle(future, queue);
+            } catch (RejectedExecutionException e) {
+                log.warn("[ListenableThreadPoolExecutor] Task rejected.", e);
+            }
 
             // If we come here, we expect the rejectedHandler to have put `future` on `queue`.
             // Otherwise it violates
@@ -256,30 +272,6 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
 
         future.addListener(finishedRunningIncrementor, MoreExecutors.directExecutor());
         future.addListener(decrementGaugeRunnable, MoreExecutors.directExecutor());
-
-        return future;
-    }
-
-    @Override
-    public <V> ListenableFuture<V> execute(T r, V v) {
-        WrappedRunnableListenableFutureTask<T, V> future =
-                new WrappedRunnableListenableFutureTask<>(r, v);
-
-        if (!queue.offer(future)) {
-            rejectedHandler.handle(future, queue);
-
-            // If we come here, we expect the rejectedHandler to have put `future` on `queue`.
-            // Otherwise it violates
-            // the contract the defined for `RejectedExecutionHandler`.
-        }
-
-        queuedItems.inc();
-
-        // Make sure we log errors.
-        Futures.addCallback(future, errorLoggingCallback, MoreExecutors.directExecutor());
-
-        future.addListener(finishedRunningIncrementor, MoreExecutors.directExecutor());
-
         return future;
     }
 

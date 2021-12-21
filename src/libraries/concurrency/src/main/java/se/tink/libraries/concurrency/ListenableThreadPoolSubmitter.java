@@ -104,6 +104,10 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
                         log.error(
                                 "Unexpected error in when trying to delegate a Runnable to thread pool.",
                                 e);
+                    } else {
+                        log.warn(
+                                "[ListenableThreadPoolSubmitter] Received RejectedExecutionException",
+                                e);
                     }
                 }
             }

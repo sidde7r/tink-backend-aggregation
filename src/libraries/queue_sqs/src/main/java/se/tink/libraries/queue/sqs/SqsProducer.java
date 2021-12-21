@@ -34,21 +34,25 @@ public class SqsProducer implements QueueProducer {
             sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
             sqsQueue.produced();
         } catch (IOException e) {
-            logger.error("Could not send message");
+            logger.error("[SQSProducer] Could not send message", e);
         }
         // TODO introduce metrics
     }
 
     @Override
     public void requeue(String encodedMessageBody) {
-        SendMessageRequest sendMessageStandardQueue =
-                new SendMessageRequest()
-                        .withQueueUrl(sqsQueue.getUrl())
-                        .withMessageBody(encodedMessageBody)
-                        // With delay seconds can max hide a message for 15 min.
-                        .withDelaySeconds(
-                                randomTimeoutSeconds(REQUEUE_DELAY_MIN, REQUEUE_DELAY_MAX));
-        sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
+        try {
+            SendMessageRequest sendMessageStandardQueue =
+                    new SendMessageRequest()
+                            .withQueueUrl(sqsQueue.getUrl())
+                            .withMessageBody(encodedMessageBody)
+                            // With delay seconds can max hide a message for 15 min.
+                            .withDelaySeconds(
+                                    randomTimeoutSeconds(REQUEUE_DELAY_MIN, REQUEUE_DELAY_MAX));
+            sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
+        } catch (RuntimeException e) {
+            logger.error("[SQSProducer] Couldn't requeue message", e);
+        }
     }
 
     @Override

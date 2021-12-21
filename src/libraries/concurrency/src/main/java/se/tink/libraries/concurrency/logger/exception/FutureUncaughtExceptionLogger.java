@@ -18,7 +18,7 @@ public class FutureUncaughtExceptionLogger implements FutureCallback<Object> {
     @Override
     public void onFailure(Throwable throwable) {
         if (throwable instanceof CancellationException) {
-            log.debug("Throwing away cancelled future", throwable);
+            log.warn("Throwing away cancelled future", throwable);
             return;
         }
 
