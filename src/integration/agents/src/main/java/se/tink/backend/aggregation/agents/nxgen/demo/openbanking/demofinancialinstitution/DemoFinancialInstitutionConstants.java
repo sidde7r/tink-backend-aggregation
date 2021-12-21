@@ -5,7 +5,7 @@ public class DemoFinancialInstitutionConstants {
 
     public static class Urls {
         public static final String ACCOUNTS = "/accounts";
-        public static final String TRANSACTIONS = ACCOUNTS + "/{accountNumber}/transactions";
+        public static final String TRANSACTIONS = ACCOUNTS + "/{accountNumber}/transactions/paging";
     }
 
     public static class Storage {
@@ -28,5 +28,9 @@ public class DemoFinancialInstitutionConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+    }
+
+    public static class QueryParams {
+        public static final String PAGE_TOKEN = "pageToken";
     }
 }
