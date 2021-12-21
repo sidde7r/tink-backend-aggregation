@@ -95,7 +95,7 @@ Connection: keep-alive
 []
 
 REQUEST 5
-GET https://demobank.production.global.tink.se/api/account/7328dca1e1b34b3caaf4a059731b9df5/transactions?from=1992-01-12&to=1992-04-10
+GET https://demobank.production.global.tink.se/api/account/7328dca1e1b34b3caaf4a059731b9df5/transactions/paging
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer foo
@@ -116,10 +116,10 @@ Date: Thu, 04 Nov 2021 15:30:09 GMT
 Keep-Alive: ***
 Connection: keep-alive
 
-[{"id":1001,"date":"1992-04-09","description":"McDonalds","currency":"SEK","mutability":null,"amount":"-84.50","pending":false},{"id":1002,"date":"1992-03-31","description":"Spotify","currency":"SEK","mutability":null,"amount":"-99.00","pending":false},{"id":1003,"date":"1992-03-31","description":"Netflix","currency":"SEK","mutability":null,"amount":"-99.00","pending":false}]
+{"transactions": [{"id":1001,"date":"1992-04-09","description":"McDonalds","currency":"SEK","mutability":null,"amount":"-84.50","pending":false},{"id":1002,"date":"1992-03-31","description":"Spotify","currency":"SEK","mutability":null,"amount":"-99.00","pending":false},{"id":1003,"date":"1992-03-31","description":"Netflix","currency":"SEK","mutability":null,"amount":"-99.00","pending":false}], "nextPageToken": "aaa"}
 
 REQUEST 6
-GET https://demobank.production.global.tink.se/api/account/7328dca1e1b34b3caaf4a059731b9df5/transactions?from=1991-10-14&to=1992-01-11
+GET https://demobank.production.global.tink.se/api/account/7328dca1e1b34b3caaf4a059731b9df5/transactions/paging?pageToken=aaa
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer foo
@@ -140,10 +140,10 @@ Date: Thu, 04 Nov 2021 15:30:09 GMT
 Keep-Alive: ***
 Connection: keep-alive
 
-[]
+{"transactions": []}
 
 REQUEST 7
-GET https://demobank.production.global.tink.se/api/account/7328dca1e1b34b3caaf4a059731b9df5/transactions?from=1991-07-16&to=1991-10-13
+GET https://demobank.production.global.tink.se/api/account/8372a288acc74722a52d24dc4750c368/transactions/paging
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer foo
@@ -164,10 +164,10 @@ Date: Thu, 04 Nov 2021 15:30:09 GMT
 Keep-Alive: ***
 Connection: keep-alive
 
-[]
+{"transactions": [{"id":1001,"date":"1992-03-31","description":"Insaettning","currency":"SEK","mutability":null,"amount":"10000.00","pending":false},{"id":1002,"date":"1992-03-30","description":"Insaettning","currency":"SEK","mutability":null,"amount":"100000.00","pending":false}], "nextPageToken": "aaa"}
 
 REQUEST 8
-GET https://demobank.production.global.tink.se/api/account/7328dca1e1b34b3caaf4a059731b9df5/transactions?from=1991-04-17&to=1991-07-15
+GET https://demobank.production.global.tink.se/api/account/8372a288acc74722a52d24dc4750c368/transactions/paging?pageToken=aaa
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer foo
@@ -188,10 +188,10 @@ Date: Thu, 04 Nov 2021 15:30:09 GMT
 Keep-Alive: ***
 Connection: keep-alive
 
-[]
+{"transactions": []}
 
 REQUEST 9
-GET https://demobank.production.global.tink.se/api/account/7328dca1e1b34b3caaf4a059731b9df5/transactions?from=1991-01-17&to=1991-04-16
+GET https://demobank.production.global.tink.se/api/account/fc9e720ec96c4e1f88cf733eef2aed98/transactions/paging
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer foo
@@ -208,14 +208,14 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:09 GMT
+Date: Thu, 04 Nov 2021 15:30:10 GMT
 Keep-Alive: ***
 Connection: keep-alive
 
-[]
+{"transactions": [{"id":1001,"date":"1992-04-09","description":"ICA","currency":"SEK","mutability":null,"amount":"-130.00","pending":false},{"id":1002,"date":"1992-03-27","description":"MediaMarkt","currency":"SEK","mutability":null,"amount":"-14399.00","pending":false}], "nextPageToken": "aaa"}
 
 REQUEST 10
-GET https://demobank.production.global.tink.se/api/account/8372a288acc74722a52d24dc4750c368/transactions?from=1992-01-12&to=1992-04-10
+GET https://demobank.production.global.tink.se/api/account/fc9e720ec96c4e1f88cf733eef2aed98/transactions/paging?pageToken=aaa
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer foo
@@ -232,236 +232,20 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:09 GMT
+Date: Thu, 04 Nov 2021 15:30:10 GMT
 Keep-Alive: ***
 Connection: keep-alive
 
-[{"id":1001,"date":"1992-03-31","description":"Insaettning","currency":"SEK","mutability":null,"amount":"10000.00","pending":false},{"id":1002,"date":"1992-03-30","description":"Insaettning","currency":"SEK","mutability":null,"amount":"100000.00","pending":false}]
+{"transactions": []}
 
 REQUEST 11
-GET https://demobank.production.global.tink.se/api/account/8372a288acc74722a52d24dc4750c368/transactions?from=1991-10-14&to=1992-01-11
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 11
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:09 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[]
-
-REQUEST 12
-GET https://demobank.production.global.tink.se/api/account/8372a288acc74722a52d24dc4750c368/transactions?from=1991-07-16&to=1991-10-13
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 12
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:09 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[]
-
-REQUEST 13
-GET https://demobank.production.global.tink.se/api/account/8372a288acc74722a52d24dc4750c368/transactions?from=1991-04-17&to=1991-07-15
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 13
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:09 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[]
-
-REQUEST 14
-GET https://demobank.production.global.tink.se/api/account/8372a288acc74722a52d24dc4750c368/transactions?from=1991-01-17&to=1991-04-16
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 14
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:09 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[]
-
-REQUEST 15
-GET https://demobank.production.global.tink.se/api/account/fc9e720ec96c4e1f88cf733eef2aed98/transactions?from=1992-01-12&to=1992-04-10
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 15
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:10 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[{"id":1001,"date":"1992-04-09","description":"ICA","currency":"SEK","mutability":null,"amount":"-130.00","pending":false},{"id":1002,"date":"1992-03-27","description":"MediaMarkt","currency":"SEK","mutability":null,"amount":"-14399.00","pending":false}]
-
-REQUEST 16
-GET https://demobank.production.global.tink.se/api/account/fc9e720ec96c4e1f88cf733eef2aed98/transactions?from=1991-10-14&to=1992-01-11
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 16
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:10 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[]
-
-REQUEST 17
-GET https://demobank.production.global.tink.se/api/account/fc9e720ec96c4e1f88cf733eef2aed98/transactions?from=1991-07-16&to=1991-10-13
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 17
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:10 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[]
-
-REQUEST 18
-GET https://demobank.production.global.tink.se/api/account/fc9e720ec96c4e1f88cf733eef2aed98/transactions?from=1991-04-17&to=1991-07-15
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 18
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:10 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[]
-
-REQUEST 19
-GET https://demobank.production.global.tink.se/api/account/fc9e720ec96c4e1f88cf733eef2aed98/transactions?from=1991-01-17&to=1991-04-16
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer foo
-X-Aggregator: Tink Testing
-
-RESPONSE 19
-200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 04 Nov 2021 15:30:10 GMT
-Keep-Alive: ***
-Connection: keep-alive
-
-[]
-
-REQUEST 20
 GET https://demobank.production.global.tink.se/api/user
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer foo
 X-Aggregator: Tink Testing
 
-RESPONSE 20
+RESPONSE 11
 200
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block

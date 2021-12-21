@@ -58,7 +58,6 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.st
 import se.tink.backend.aggregation.agents.payments.TypedPaymentControllerable;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -71,7 +70,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -121,14 +120,12 @@ public final class DemobankAgent extends NextGenerationAgent
     private final String callbackUri;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final RandomValueGenerator randomValueGenerator;
-    private final LocalDateTimeSource localDateTimeSource;
 
     @Inject
     public DemobankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.callbackUri = getCallbackUri();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         apiClient = new DemobankApiClient(client, persistentStorage, callbackUri);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
@@ -170,10 +167,8 @@ public final class DemobankAgent extends NextGenerationAgent
                 demobankTransactionalAccountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(
-                                        demobankTransactionalAccountFetcher)
-                                .setLocalDateTimeSource(this.localDateTimeSource)
-                                .build()));
+                        new TransactionKeyPaginationController<>(
+                                demobankTransactionalAccountFetcher)));
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
@@ -186,9 +181,7 @@ public final class DemobankAgent extends NextGenerationAgent
                 demobankCreditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(demobankCreditCardFetcher)
-                                .setLocalDateTimeSource(this.localDateTimeSource)
-                                .build()));
+                        new TransactionKeyPaginationController(demobankCreditCardFetcher)));
     }
 
     @Override
