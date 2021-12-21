@@ -52,17 +52,17 @@ public class RedsysAuthenticationController extends OAuth2AuthenticationControll
         // Perform oAuth2 authentication
         final ThirdPartyAppResponse<String> oauthResponse = super.collect(reference);
 
-        // Redsys token is valid only for 500 sec and it's needed even for fetching. So just in case
-        // additional refresh token is requested after authentication to get it valid for entire
-        // fetching phase
-        refreshToken();
-
         // Request consent
         if (!consentController.requestConsent()) {
             LOG.info("Did not get consent");
             removeStoredTokens();
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
         }
+
+        // Redsys token is valid only for 500 sec and it's needed even for fetching. So just in case
+        // additional refresh token is requested after authentication to get it valid for entire
+        // fetching phase
+        refreshToken();
 
         return oauthResponse;
     }
