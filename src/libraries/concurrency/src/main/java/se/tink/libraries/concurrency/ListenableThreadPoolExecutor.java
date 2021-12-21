@@ -279,6 +279,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
         Futures.addCallback(future, errorLoggingCallback, MoreExecutors.directExecutor());
 
         future.addListener(finishedRunningIncrementor, MoreExecutors.directExecutor());
+        future.addListener(decrementGaugeRunnable, MoreExecutors.directExecutor());
 
         return future;
     }
