@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.newday;
 
 import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -10,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.JsonWebKeySet;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -72,10 +69,5 @@ public class NewDayApiClient extends UkOpenBankingApiClient {
 
         cachedJwkPublicKeys = jsonWebKeySet.getAllKeysMap();
         return Optional.ofNullable(cachedJwkPublicKeys);
-    }
-
-    @Override
-    public List<String> createScopeList(ClientMode mode) {
-        return Arrays.asList(mode.getValue(), NewDayConstants.OFFLINE_ACCESS);
     }
 }

@@ -22,7 +22,7 @@ public class CreationAgentWiremockTest {
     private static final String DUMMY_CODE = "DUMMY_CODE";
 
     @Test
-    public void manualRefreshAll() throws Exception {
+    public void testAutoRefresh() throws Exception {
         // Given
         final String wireMockServerFilePath = RESOURCES_PATH + "manual-refresh-all.aap";
         final String wireMockContractFilePath = RESOURCES_PATH + "manual-refresh-all-contract.json";

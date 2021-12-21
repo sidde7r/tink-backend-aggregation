@@ -102,7 +102,7 @@ Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 x-fapi-financial-id: 0015800001HQQsjAAH
 
-grant_type=client_credentials&scope=openid+accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
 
 -----------------------------------------------------------------------------------
 RESPONSE 3
@@ -198,7 +198,7 @@ Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 x-fapi-financial-id: 0015800001HQQsjAAH
 
-grant_type=authorization_code&scope=openid+accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK&code=DUMMY_CODE
+grant_type=authorization_code&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK&code=DUMMY_CODE
 
 -----------------------------------------------------------------------------------
 RESPONSE 6

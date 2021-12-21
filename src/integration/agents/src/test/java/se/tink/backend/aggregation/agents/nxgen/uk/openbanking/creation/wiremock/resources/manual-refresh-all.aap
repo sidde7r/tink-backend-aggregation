@@ -1,99 +1,13 @@
 
 -----------------------------------------------------------------------------------
 REQUEST 1
-GET https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/.well-known/openid-configuration
-x-fapi-financial-id: 0015800001HQQsjAAH
-
------------------------------------------------------------------------------------
-RESPONSE 1
-200
-Content-Type: application/json
-
-{
-  "issuer": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards",
-  "authorization_endpoint": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/auth",
-  "token_endpoint": "https://token-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/token",
-  "jwks_uri": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/certs",
-  "grant_types_supported": [
-    "authorization_code",
-    "refresh_token",
-    "client_credentials"
-  ],
-  "response_types_supported": [
-    "code id_token"
-  ],
-  "subject_types_supported": [
-    "public",
-    "pairwise"
-  ],
-  "id_token_signing_alg_values_supported": [
-    "**HASHED:Dd**"
-  ],
-  "request_object_signing_alg_values_supported": [
-    "**HASHED:Dd**"
-  ],
-  "registration_endpoint": "https://api-psd2.creation.co.uk/open-banking/v3.2/tpp/register",
-  "token_endpoint_auth_methods_supported": [
-    "**HASHED:O+**"
-  ],
-  "token_endpoint_auth_signing_alg_values_supported": [
-    "**HASHED:Dd**"
-  ],
-  "claims_supported": [
-    "aud",
-    "sub",
-    "iss",
-    "auth_time",
-    "name",
-    "given_name",
-    "family_name",
-    "preferred_username",
-    "email",
-    "acr",
-    "openbanking_intent_id",
-    "acr"
-  ],
-  "claim_types_supported": [
-    "normal"
-  ],
-  "claims_parameter_supported": true,
-  "scopes_supported": [
-    "openid",
-    "offline_access",
-    "accounts"
-  ],
-  "request_parameter_supported": true,
-  "request_uri_parameter_supported": false,
-  "acr_values_supported": [
-    "urn:openbanking:psd2:sca",
-    "urn:openbanking:psd2:ca"
-  ]
-}
-
------------------------------------------------------------------------------------
-REQUEST 2
-POST https://token-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/token
-Content-Type: application/x-www-form-urlencoded
-Accept: application/json
-
-grant_type=client_credentials&scope=openid+accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
-
------------------------------------------------------------------------------------
-RESPONSE 2
-200
-Content-Type: application/json
-
-{"access_token":"DUMMY_TOKEN","expires_in":1800,"refresh_expires_in":300,"refresh_token":"DUMMY_REFRESH_TOKEN","token_type":"bearer","not-before-policy":0,"session_state":"9cd3c7ff-1fcb-42c4-8e07-c411098f4ea6","scope":"accounts"}
-
------------------------------------------------------------------------------------
-REQUEST 3
 GET https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts
 Accept: application/json
 x-fapi-financial-id: 0015800001HQQsjAAH
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
-RESPONSE 3
+RESPONSE 1
 200
 Content-Type: application/json;charset=utf-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -126,14 +40,14 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 4
+REQUEST 2
 GET https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/balances
 Accept: application/json
 x-fapi-financial-id: 0015800001HQQsjAAH
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
-RESPONSE 4
+RESPONSE 2
 200
 Content-Type: application/json;charset=utf-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -172,14 +86,14 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 5
+REQUEST 3
 GET https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800001HQQsjAAH
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
-RESPONSE 5
+RESPONSE 3
 200
 Content-Type: application/json;charset=utf-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
