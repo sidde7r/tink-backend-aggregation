@@ -15,8 +15,10 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup/payment",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
@@ -24,6 +26,9 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/retry",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//src/libraries/i18n",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
@@ -37,6 +42,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
 

@@ -23,23 +23,26 @@ public class BankVerlagApiClientTest {
     private BankverlagApiClient apiClient;
     private TinkHttpClient client;
     private BankverlagStorage storage;
+    private BankverlagRequestBuilder requestBuilder;
 
     private final String PASSWORD = "dummyPassword";
     private final String USERNAME = "dummyUsername";
     private final String URL = "dummyUrl";
+    private final String USER_IP = "127.0.0.1";
 
     @Before
     public void init() {
         client = mock(TinkHttpClient.class);
         BankverlagHeaderValues headerValues = new BankverlagHeaderValues("dummyAspsp", "dummyIp");
         storage = new BankverlagStorage(new PersistentStorage(), new SessionStorage());
+        requestBuilder =
+                new BankverlagRequestBuilder(
+                        client, new RandomValueGeneratorImpl(), USER_IP, headerValues);
 
         apiClient =
                 new BankverlagApiClient(
-                        client,
-                        headerValues,
+                        requestBuilder,
                         storage,
-                        new RandomValueGeneratorImpl(),
                         new ConstantLocalDateTimeSource(),
                         mock(BankverlagErrorHandler.class));
     }
@@ -54,6 +57,7 @@ public class BankVerlagApiClientTest {
         when(client.request(any(URL.class))).thenReturn(requestBuilder);
         when(requestBuilder.accept(any(MediaType.class))).thenReturn(requestBuilder);
         when(requestBuilder.accept(any(String.class))).thenReturn(requestBuilder);
+        when(requestBuilder.type(any(MediaType.class))).thenReturn(requestBuilder);
         when(requestBuilder.type(any(String.class))).thenReturn(requestBuilder);
         when(requestBuilder.header(any(), any())).thenReturn(requestBuilder);
         when(requestBuilder.post(any(), any())).thenReturn(response);

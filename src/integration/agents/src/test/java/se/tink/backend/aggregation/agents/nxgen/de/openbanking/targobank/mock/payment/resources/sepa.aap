@@ -1,0 +1,131 @@
+REQUEST 1
+POST https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"debtorAccount":{"iban":"DE40300209005380419896"},"creditorAccount":{"iban":"DE95760400610770740900"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"Test Creditor","remittanceInformationUnstructured":"SepaReferenceToCreditor"}
+
+RESPONSE 1
+201
+Date: Tue, 07 Dec 2021 11:37:14 GMT
+Date: Tue, 07 Dec 2021 11:37:15 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+ASPSP-Notification-Support: ***
+1Location: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{"transactionStatus":"RCVD","paymentId":"3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx","_links":{"self":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx"},"status":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/status"},"startAuthorisationWithPsuAuthentication":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations"}}}
+
+REQUEST 2
+POST https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 2
+201
+Date: Tue, 07 Dec 2021 11:37:15 GMT
+Date: Tue, 07 Dec 2021 11:37:18 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Aspsp-Sca-Approach: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{"scaMethods":[{"authenticationType":"SMS_OTP","authenticationMethodId":"921","name":"smsTAN","explanation":"TAN-Nummer"},{"authenticationType":"PUSH_OTP","authenticationMethodId":"923","name":"easyTAN solution","explanation":"TAN-Nummer"}],"_links":{"selectAuthenticationMethod":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"},"scaStatus":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"}},"scaStatus":"psuAuthenticated","authorisationId":"f95cb627-214c-437e-a3fd-3a0ede6a72db"}
+
+REQUEST 3
+PUT https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"923"}
+
+RESPONSE 3
+200
+Date: Tue, 07 Dec 2021 11:37:21 GMT
+Date: Tue, 07 Dec 2021 11:37:27 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+Aspsp-Sca-Approach: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{"_links":{"scaStatus":{"href":"https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db"}},"scaStatus":"scaMethodSelected","psuMessage":"nochallenge"}
+
+REQUEST 4
+GET https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/authorisations/f95cb627-214c-437e-a3fd-3a0ede6a72db
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Tue, 07 Dec 2021 11:37:51 GMT
+Date: Tue, 07 Dec 2021 11:37:53 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+X-Request-Id: 00e0c7e0-bd00-4f80-8378-0a45404d675f
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{"scaStatus":"finalised"}
+
+REQUEST 5
+GET https://psd2.bvxs2a.de/targobank/v1/payments/sepa-credit-transfers/3TwqwqxApd4iDF-lI9ojHshGZRVA-HEGh3jFM8qPXP9tQvIkx/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Tue, 07 Dec 2021 11:37:54 GMT
+Date: Tue, 07 Dec 2021 11:37:54 GMT
+1Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+
+{"transactionStatus":"ACTC","fundsAvailable":true}

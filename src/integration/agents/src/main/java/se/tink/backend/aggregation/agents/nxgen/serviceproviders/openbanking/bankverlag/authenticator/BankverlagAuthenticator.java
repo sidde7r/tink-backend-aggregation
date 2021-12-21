@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
@@ -23,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.detail.FieldBuilder;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
@@ -50,7 +50,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
     protected final BankverlagApiClient apiClient;
     private final SupplementalInformationController supplementalInformationController;
     private final BankverlagStorage storage;
-    private final Credentials credentials;
+    protected final Credentials credentials;
     private final FieldBuilder fieldBuilder;
     private final String aspspId;
     private final String aspspName;
@@ -105,14 +105,18 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
 
         ConsentResponse consentResponse = createAndSaveConsent();
 
+        initializeAuthorization(consentResponse.getLinks(), credentials);
+        verifyConsentValidity(consentResponse.getConsentId());
+    }
+
+    protected void initializeAuthorization(LinksEntity linkEntity, Credentials credentials) {
         AuthorizationResponse authResponseAfterLogin =
                 apiClient.initializeAuthorization(
-                        consentResponse.getLinks().getStartAuthorisationWithPsuAuthentication(),
+                        linkEntity.getStartAuthorisationWithPsuAuthentication(),
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 
         authorize(authResponseAfterLogin);
-        verifyConsentValidity(consentResponse.getConsentId());
     }
 
     protected void validateInput(Credentials credentials) {
@@ -170,8 +174,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     protected List<ScaMethodEntity> getSupportedScaMethods(
             AuthorizationResponse authResponseAfterLogin) {
-        List<ScaMethodEntity> methods =
-                authResponseAfterLogin.getScaMethods().stream().collect(Collectors.toList());
+        List<ScaMethodEntity> methods = authResponseAfterLogin.getScaMethods();
 
         if (methods.isEmpty()) {
             throw LoginError.NOT_SUPPORTED.exception(ErrorMessages.NO_SUPPORTED_METHOD_FOUND);
