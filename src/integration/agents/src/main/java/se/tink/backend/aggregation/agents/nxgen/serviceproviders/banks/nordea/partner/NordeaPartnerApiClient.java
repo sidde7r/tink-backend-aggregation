@@ -150,6 +150,7 @@ public class NordeaPartnerApiClient {
 
     public void fetchAllData(LocalDate startDate) {
         log.info("Nordea Partner: before fetching all");
+        log.info("Fetching all data from date: " + startDate);
         AccountListResponse accountListResponse =
                 requestRefreshableGet(
                         request(EndPoints.ALL_DATA)
@@ -165,6 +166,9 @@ public class NordeaPartnerApiClient {
 
     public AccountListResponse getAllData() {
         if (sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA).isEmpty()) {
+            log.info(
+                    "Session storage empty. Getting all data from date: "
+                            + LocalDate.now().minusYears(1));
             fetchAllData(LocalDate.now().minusYears(1));
         }
         String accounts = sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA);
