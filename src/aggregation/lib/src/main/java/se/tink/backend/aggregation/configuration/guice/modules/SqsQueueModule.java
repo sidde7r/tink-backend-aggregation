@@ -33,6 +33,7 @@ public class SqsQueueModule extends AbstractModule {
         bind(QueueConsumerService.class).to(SqsConsumerService.class).in(Scopes.SINGLETON);
         bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
         bindConstant().annotatedWith(Names.named("regularQueueInterleaveRatio")).to(0.25f);
+        bindConstant().annotatedWith(Names.named("retryQueueInterleaveRatio")).to(0.35f);
         log.info("Configuring SqsQueueModule");
     }
 

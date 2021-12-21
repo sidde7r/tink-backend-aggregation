@@ -21,6 +21,9 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
     // this is the ratio at which regular sqs queue will be interleaved with consumption from
     // priority retry queue
     private final float regularQueueInterleaveRatio;
+    // this is the ratio at which retry sqs queue will be interleaved with consumption from
+    // priority queue
+    private final float retryQueueInterleaveRatio;
     private final Random random = new Random();
 
     private final AbstractExecutionThreadService service;
@@ -36,13 +39,15 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
             @Named("prioritySqsConsumer") SqsConsumer prioritySqsConsumer,
             @Named("priorityRetrySqsConsumer") SqsConsumer priorityRetrySqsConsumer,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            @Named("regularQueueInterleaveRatio") float regularQueueInterleaveRatio) {
+            @Named("regularQueueInterleaveRatio") float regularQueueInterleaveRatio,
+            @Named("retryQueueInterleaveRatio") float retryQueueInterleaveRatio) {
         this.regularSqsConsumer = regularSqsConsumer;
         this.prioritySqsConsumer = prioritySqsConsumer;
         this.priorityRetrySqsConsumer = priorityRetrySqsConsumer;
         consumeFromPriorityQueue =
                 agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue");
         this.regularQueueInterleaveRatio = regularQueueInterleaveRatio;
+        this.retryQueueInterleaveRatio = retryQueueInterleaveRatio;
         log.info(
                 "Configured with consumeFromPriorityQueue={}, regularQueueInterleaveRatio={}",
                 consumeFromPriorityQueue,
@@ -79,20 +84,38 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
         boolean consumeFromRegularQueue = true;
         if (consumeFromPriorityQueue) {
             boolean priorityQueueEmpty = !prioritySqsConsumer.consume();
-            boolean priorityRetryQueueEmpty = !priorityRetrySqsConsumer.consume();
-
-            // Consume from regular queue when:
-            // - both priority queues are empty OR
-            // - priorityQueue is empty but priorityRetryQueue is not & this is just certain
-            // fraction of workload (regularQueueInterleaveRatio)
+            boolean priorityRetryQueueEmpty = true;
+            if (shouldConsumeFromPriorityRetryQueue(priorityQueueEmpty)) {
+                priorityRetryQueueEmpty = !priorityRetrySqsConsumer.consume();
+            }
             consumeFromRegularQueue =
-                    priorityQueueEmpty && priorityRetryQueueEmpty
-                            || priorityQueueEmpty
-                                    && random.nextFloat() <= regularQueueInterleaveRatio;
+                    shouldConsumeFromRegularQueue(priorityQueueEmpty, priorityRetryQueueEmpty);
         }
         if (consumeFromRegularQueue) {
             regularSqsConsumer.consume();
         }
+    }
+
+    private boolean shouldConsumeFromRegularQueue(
+            boolean priorityQueueEmpty, boolean priorityRetryQueueEmpty) {
+        // Consume from regular queue when:
+        // - both priority queues are empty OR
+        // - priorityQueue is empty but priorityRetryQueue is not & this is just a certain
+        // fraction of workload (regularQueueInterleaveRatio)
+        return priorityQueueEmpty && priorityRetryQueueEmpty
+                || priorityQueueEmpty && random.nextFloat() <= regularQueueInterleaveRatio;
+    }
+
+    private boolean shouldConsumeFromPriorityRetryQueue(boolean priorityQueueEmpty) {
+        // Consume from retry priority queue when:
+        // - priority queue is empty OR
+        // - priority queue is not empty & this is just a certain fraction of workload
+        // (retryQueueInterleaveRatio).
+        // Only fraction of workload is handled to achieve the following:
+        // - minimize situations when priority queue and priority retry queue are consuming the same
+        // provider at the same time
+        // - help achieve better scattering of requests (so that providers are more interleaved)
+        return priorityQueueEmpty || random.nextFloat() <= retryQueueInterleaveRatio;
     }
 
     @Override

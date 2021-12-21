@@ -43,6 +43,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         try {
@@ -61,6 +62,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         try {
@@ -82,6 +84,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         // when
@@ -102,6 +105,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         // when
@@ -126,6 +130,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         // when
@@ -150,6 +155,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         // when
@@ -174,6 +180,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         // when
@@ -183,9 +190,11 @@ public class SqsConsumerServiceTest {
         assertThat(consumerService.isRunning()).isTrue();
     }
 
-    /**
-     * Scenario: - priority sqs is not empty Expectation: should consume only from priority sqs and
-     * priority retry sqs. Regular sqs should not be consumed because priority sqs is not empty
+    /*
+     * Scenario:
+     * - priority sqs is not empty
+     * - priority retry queue is to be interleaved at ration 1.0
+     * Expectation: should consume only from priority sqs and priority retry sqs. Regular sqs should not be consumed because priority sqs is not empty
      */
     @Test
     public void shouldConsumeFromPriorityQueuesOnly() throws Exception {
@@ -202,7 +211,8 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
-                        0.0f);
+                        0.0f,
+                        1.0f);
 
         // when
         consumerService.consume();
@@ -213,10 +223,12 @@ public class SqsConsumerServiceTest {
         inOrder.verify(regularSqsConsumer, never()).consume();
     }
 
-    /**
-     * Scenario: - priority sqs is empty - priority retry sqs is not empty - regular queue is to
-     * interleave (at 1.0 ratio) with priority retry queue Expectation: should consume from all
-     * queues.
+    /*
+     * Scenario:
+     * - priority sqs is empty
+     * - priority retry sqs is not empty and it to interleave (at 1.0 ratio) with priority sqs
+     * - regular queue is to interleave (at 1.0 ratio) with priority retry queue
+     * Expectation: should consume from all queues.
      */
     @Test
     public void shouldConsumeFromAllQueuesOnly() throws Exception {
@@ -234,6 +246,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        1.0f,
                         1.0f);
 
         // when
@@ -245,6 +258,46 @@ public class SqsConsumerServiceTest {
         inOrder.verify(regularSqsConsumer, times(1)).consume();
     }
 
+    @Test
+    public void shouldConsumeFromRetryQueueBasedOnRetryQueueInterleaveRatio() throws Exception {
+        final int ITERATIONS = 1000;
+        final float RETRY_QUEUE_INTERLEAVE_RATIO = 0.6f;
+        // given
+        when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
+                .thenReturn(true);
+        when(prioritySqsConsumer.consume()).thenReturn(true);
+        when(priorityRetrySqsConsumer.consume()).thenReturn(true);
+
+        SqsConsumerService consumerService =
+                new SqsConsumerService(
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        RETRY_QUEUE_INTERLEAVE_RATIO);
+
+        // when
+        for (int i = 0; i < ITERATIONS; i++) {
+            consumerService.consume();
+        }
+
+        // then
+        verify(prioritySqsConsumer, times(ITERATIONS)).consume();
+
+        verify(priorityRetrySqsConsumer, atLeast((int) (ITERATIONS * 0.55))).consume();
+        verify(priorityRetrySqsConsumer, atMost((int) (ITERATIONS * 0.65))).consume();
+
+        verify(regularSqsConsumer, never()).consume();
+    }
+
+    /*
+     * Scenario:
+     * - priority sqs is empty
+     * - priority retry sqs is not empty
+     * - regular queue is to interleave (at 1.0 ratio) with priority retry queue
+     * Expectation: should consume from retry queue at given ratio, should consume from priority retry queue each time
+     */
     @Test
     public void shouldConsumeFromRegularQueueBasedOnRegularQueueInterleaveRatio() throws Exception {
         final int ITERATIONS = 1000;
@@ -261,7 +314,8 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
-                        REGULAR_QUEUE_INTERLEAVE_RATIO);
+                        REGULAR_QUEUE_INTERLEAVE_RATIO,
+                        0.0f);
 
         // when
         for (int i = 0; i < ITERATIONS; i++) {
@@ -290,6 +344,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         // when
@@ -318,6 +373,7 @@ public class SqsConsumerServiceTest {
                         prioritySqsConsumer,
                         priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
+                        0.0f,
                         0.0f);
 
         // when
