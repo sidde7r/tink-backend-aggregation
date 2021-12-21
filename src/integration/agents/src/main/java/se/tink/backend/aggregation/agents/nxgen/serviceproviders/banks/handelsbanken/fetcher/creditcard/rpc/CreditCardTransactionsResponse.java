@@ -21,4 +21,8 @@ public abstract class CreditCardTransactionsResponse<CreditCard extends Handelsb
     public Optional<URL> getPaginationKey() {
         return searchLink(HandelsbankenConstants.URLS.Links.CARD_MORE_TRANSACTIONS);
     }
+
+    public Optional<URL> getDepositTransactionsUrl() {
+        return searchLink(HandelsbankenConstants.URLS.Links.CARD_DEPOSIT_TRANSACTIONS);
+    }
 }
