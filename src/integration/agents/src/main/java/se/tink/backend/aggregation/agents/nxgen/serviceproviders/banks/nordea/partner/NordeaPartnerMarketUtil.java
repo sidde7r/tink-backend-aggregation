@@ -8,10 +8,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@Slf4j
 public class NordeaPartnerMarketUtil {
 
     public static String getLocaleDescription(String market) {
@@ -49,6 +51,7 @@ public class NordeaPartnerMarketUtil {
                         .findFirst();
 
         if (certainDate.isPresent()) {
+            log.info("Certain date for getPaginationStartDate: " + certainDate);
             return certainDate.get().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         } else return getPaginationDateYearBack(componentProvider);
     }
@@ -73,6 +76,7 @@ public class NordeaPartnerMarketUtil {
         }
         for (se.tink.backend.agents.rpc.Account account : ac) {
             Date certainDate = (account.getCertainDate());
+            log.info("Certain date for getStartDate: " + certainDate);
             if (certainDate.compareTo(best) > 0) {
                 best = certainDate;
             }
