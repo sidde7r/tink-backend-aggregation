@@ -4,6 +4,7 @@ metadata:
   name: recordingrules-payments-de
   namespace: agents
 spec:
+  interval: 2m30s
   rules:
 
   - record: DE:agent_transfer:className:all_payments:delta1h

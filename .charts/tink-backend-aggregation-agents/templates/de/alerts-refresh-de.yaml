@@ -4,6 +4,7 @@ metadata:
   name: alerts-refresh-de
   namespace: agents
 spec:
+  interval: 2m30s
   rules:
 
   #-------------------------------------------------------------------------------------------------------------------
@@ -118,4 +119,4 @@ spec:
         Checking last hour, with at least 20 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }} 
+      tags: {{ .Values.tags }}

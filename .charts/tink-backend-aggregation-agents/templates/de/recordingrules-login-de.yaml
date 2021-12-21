@@ -4,6 +4,7 @@ metadata:
   name: recordingrules-login-de
   namespace: agents
 spec:
+  interval: 2m30s
   rules:
 
   #-------------------------------------------------------------------------------------------------------------------

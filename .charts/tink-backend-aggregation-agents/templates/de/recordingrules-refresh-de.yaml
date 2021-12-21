@@ -4,6 +4,7 @@ metadata:
   name: recordingrules-refresh-de
   namespace: agents
 spec:
+  interval: 2m30s
   rules:
 
   - record: DE:agent_refresh:className_type:all_refreshes:delta1h
