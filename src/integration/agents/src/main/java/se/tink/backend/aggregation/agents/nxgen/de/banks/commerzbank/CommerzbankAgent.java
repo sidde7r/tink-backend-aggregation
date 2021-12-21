@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class CommerzbankAgent extends NextGenerationAgent
@@ -40,6 +41,7 @@ public final class CommerzbankAgent extends NextGenerationAgent
     @Inject
     public CommerzbankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        client.addFilter(new TimeoutFilter());
         apiClient = new CommerzbankApiClient(client);
 
         creditCardRefreshController = constructCreditCardRefreshController();
