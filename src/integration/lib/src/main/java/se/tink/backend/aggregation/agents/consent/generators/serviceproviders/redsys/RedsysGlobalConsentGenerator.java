@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -77,15 +79,16 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
                     .combinedServiceIndicator(isCombinedServiceIndicatorRequired)
                     .build();
         }
-
+        LocalDateTime nowMadrid = localDateTimeSource.now(SPAIN_ZONE_ID);
+        LocalDateTime nowLocal = localDateTimeSource.now();
+        LocalDate validUntil = nowMadrid.toLocalDate().plusDays(RedsysScope.MAX_EXPIRATION_DAYS);
+        log.info(
+                "Consent validUntil debug: NOW (local): %s; NOW (Madrid): %s; validUntil: %s",
+                nowLocal, nowMadrid, validUntil);
         return ConsentRequestBody.builder()
                 .access(AccessEntity.ofAllPsd2())
                 .recurringIndicator(true)
-                .validUntil(
-                        localDateTimeSource
-                                .now(SPAIN_ZONE_ID)
-                                .toLocalDate()
-                                .plusDays(RedsysScope.MAX_EXPIRATION_DAYS))
+                .validUntil(validUntil)
                 .frequencyPerDay(RedsysScope.MAX_DAILY_FREQUENCY)
                 .combinedServiceIndicator(isCombinedServiceIndicatorRequired)
                 .build();
