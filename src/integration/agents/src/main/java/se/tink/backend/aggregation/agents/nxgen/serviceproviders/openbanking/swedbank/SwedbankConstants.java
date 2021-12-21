@@ -328,7 +328,8 @@ public final class SwedbankConstants {
                             "Valutakonto",
                             "Current",
                             "Limit",
-                            "Limit_revolving")
+                            "Limit_revolving",
+                            "Privatkonto kombi")
                     // TODO: check savings account for new types for Baltics
                     .put(
                             TransactionalAccountType.SAVINGS,
