@@ -1,0 +1,135 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "10000000000",
+      "accountExclusion": "NONE",
+      "exactAvailableCredit": {
+        "currencyCode": "EUR",
+        "doubleValue": 149.99,
+        "unscaledValue": 14999,
+        "exactValue": 149.99,
+        "scale": 2
+      },
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "doubleValue": -350.01,
+        "unscaledValue": -35001,
+        "exactValue": -350.01,
+        "scale": 2
+      },
+      "currencyCode": "EUR",
+      "bankId": "10000000000",
+      "excluded": false,
+      "favored": false,
+      "name": "Diamond Membership",
+      "ownership": 1.0,
+      "type": "CREDIT_CARD",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"other://10000000000\"]",
+      "closed": false,
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "M. Python",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[]",
+      "balances": [],
+      "availableCredit": 149.99,
+      "balance": -350.01
+    }
+  ],
+  "transactions": [
+    {
+      "amount": 450.00,
+      "date": 702813600000,
+      "description": "REVOLUT**0001* INTERNET LTU",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "MESSAGE": "Money Transfer",
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "REVOLUT**0000* INTERNET LTU"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -100.00,
+      "date": 699447600000,
+      "description": "PAYPAL *GROCERIES 000000000000 DEU",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "MESSAGE": "Grocery Stores",
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "PAYPAL *GROCERIES 000000000000 DEU"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -49.99,
+      "date": 696942000000,
+      "description": "PAYPAL *COMPUTER 000000000000 DEU",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "MESSAGE": "Computer Software Stores",
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "PAYPAL *COMPUTER 000000000000 DEU"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -10.00,
+      "date": 673092000000,
+      "description": "MY MOBILE NETWORK B.V. NLD",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "MESSAGE": "Telecom Service",
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MY MOBILE NETWORK B.V. NLD"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -50.00,
+      "date": 673092000000,
+      "description": "REVOLUT**0000* GBR LTU",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "MESSAGE": "Money Transfer",
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "REVOLUT**0000* GBR LTU"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountSetupRequest {
+
     @JsonProperty("Data")
     private DataRequestEntity data = new DataRequestEntity();
 
