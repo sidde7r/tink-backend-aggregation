@@ -1,0 +1,22 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: recordingrules-payments-it
+  namespace: agents
+spec:
+  rules:
+
+  - record: IT:agent_transfer:className:all_payments:delta1h
+    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="IT"}[1h]))
+
+  - record: IT:agent_transfer:className:failed:delta1h
+    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="IT", outcome="failed"}[1h]))
+
+  - record: IT:agent_transfer:className:unavailable:delta1h
+    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="IT", outcome="unavailable"}[1h]))
+
+  - record: IT:agent_transfer:className:cancelled:delta1h
+    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="IT", outcome="cancelled"}[1h]))
+
+  - record: IT:agent_transfer:className:all_errors:delta1h
+    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="IT", outcome=~"cancelled|unavailable|failed"}[1h]))

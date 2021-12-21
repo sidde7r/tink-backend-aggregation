@@ -312,7 +312,6 @@ codeowners(
         "/.charts/tink-backend-aggregation-agents/templates/precomputations.yaml",
     ],
     teams = [
-        "@tink-ab/aggregation-nazguls-maintainer",
         "@tink-ab/aggregation-thundercats-maintainer",
     ],
 )

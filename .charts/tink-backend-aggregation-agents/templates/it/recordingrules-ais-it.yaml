@@ -14,13 +14,3 @@ spec:
 
   - record: sum:IT:action_className:all_manual_attempts:not_unavailable:delta1h
     expr: sum by (action,className) (increase(tink_agent_login_total{ provider_type!="test", market="IT", action="login-manual", {{ .Values.bankErrorsAuth }}}[1h]))
-
-  - record: sum:IT:className_type:all_refreshes:delta1h
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT"}[1h]))
-
-  - record: sum:IT:className_type:not_failed_unavailable_partially_completed:delta1h
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT", {{ .Values.allErrorsRefresh }}}[1h]))
-
-  - record: sum:IT:className_type:not_partially_completed:delta1h
-    expr: sum by (className,type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT", {{ .Values.partiallyCompletedErrorRefresh }}}[1h]))
-
