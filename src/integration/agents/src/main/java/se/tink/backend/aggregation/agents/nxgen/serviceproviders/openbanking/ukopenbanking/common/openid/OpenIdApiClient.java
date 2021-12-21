@@ -236,16 +236,16 @@ public class OpenIdApiClient {
     }
 
     public URL buildAuthorizeUrl(String state, String nonce, ClientMode mode, String callbackUri) {
-        List<String> requiredScopes;
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
         URL authorizationEndpointUrl = wellKnownConfiguration.getAuthorizationEndpoint();
 
+        List<String> requiredScopes;
         String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
         String clientId = providerConfiguration.getClientId();
 
         if (cachedWellKnownResponse.isOfflineAccessSupported()) {
-            requiredScopes = createScopeWithOfflineAccessParam(mode);
+            requiredScopes = createScopeWithOfflineAccess(mode);
         } else {
             requiredScopes = createScopeList(mode);
         }
@@ -256,7 +256,7 @@ public class OpenIdApiClient {
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                "Provider does not support required scopes: "
+                                                "[OpenIdApiClient] Provider does not support required scopes: "
                                                         + String.join(" ", requiredScopes)));
         String redirectUri =
                 Optional.ofNullable(callbackUri).filter(s -> !s.isEmpty()).orElse(redirectUrl);
@@ -295,7 +295,7 @@ public class OpenIdApiClient {
         return Arrays.asList(Scopes.OPEN_ID, mode.getValue());
     }
 
-    public List<String> createScopeWithOfflineAccessParam(ClientMode mode) {
+    public List<String> createScopeWithOfflineAccess(ClientMode mode) {
         return Arrays.asList(Scopes.OPEN_ID, mode.getValue(), Scopes.OFFLINE_ACCESS);
     }
 
