@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.framework.wiremock.configuration;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import java.util.Collections;
 import java.util.Map;
 
 public final class WireMockConfiguration {
@@ -58,15 +57,9 @@ public final class WireMockConfiguration {
         }
 
         public WireMockConfiguration build() {
-
-            if (callbackData == null) {
-                callbackData = Collections.emptyMap();
-            }
-
             if (agentModule == null) {
                 agentModule = new AbstractModule() {}; // Empty Module
             }
-
             return new WireMockConfiguration(configurationPath, callbackData, agentModule);
         }
     }

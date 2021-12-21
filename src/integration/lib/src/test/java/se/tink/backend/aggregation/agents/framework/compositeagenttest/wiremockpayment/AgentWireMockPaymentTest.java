@@ -153,7 +153,7 @@ public final class AgentWireMockPaymentTest {
         private final String providerName;
         private final String wireMockFilePath;
         private final Map<String, String> credentialFields;
-        private final Map<String, String> callbackData;
+        private Map<String, String> callbackData;
         private final Map<String, String> persistentStorageData;
         private final Map<String, String> sessionStorageData;
         private final Map<String, String> cache;
@@ -214,6 +214,17 @@ public final class AgentWireMockPaymentTest {
          */
         public Builder addCallbackData(String key, String value) {
             callbackData.put(key, value);
+            return this;
+        }
+
+        /**
+         * Add null callback data to simulate timeout After this method is executed addCallbackData
+         * will fail
+         *
+         * @return This builder.
+         */
+        public Builder withoutCallbackData() {
+            callbackData = null;
             return this;
         }
 

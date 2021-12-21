@@ -1,0 +1,172 @@
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://psd2.api.commerzbank.com/berlingroup/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+TPP-Redirect-URI:  https://127.0.0.1:7357/api/v1/thirdparty/callback
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-ADDRESS: 127.0.0.1
+TPP-Explicit-Authorisation-Preferred: false
+
+{
+  "creditorAccount": {
+    "iban": "DE89370400440532013000"
+  },
+  "creditorName": "Creditor Name",
+  "debtorAccount": {
+    "iban": "DE27500105175141353468"
+  },
+  "instructedAmount": {
+    "currency": "EUR",
+    "amount": 1.0
+  },
+  "remittanceInformationUnstructured": "remittance information to creditor"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+Date: Wed, 15 Dec 2021 08:57:27 GMT
+Date: Wed, 15 Dec 2021 08:57:27 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-Notification-Support: ***
+ASPSP-SCA-Approach: ***
+Location: https://psd2.api.commerzbank.com/berlingroup/v1/payments/SEPA_CREDIT_TRANSFERS/12345678
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self' https://*.as8677.net; script-src 'self' https://*.googleapis.com 'sha256-xZedWFjrwG8mDrHj7kBAAbNSAupPJMrhwVcnbRtyjOA='; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://*.googleapis.com; font-src 'self' https://*.gstatic.com; object-src 'none'
+Content-Security-Policy: default-src 'self' https://*.as8677.net;
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 742
+
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "12345678",
+  "_links": {
+    "scaOAuth": {
+      "href": "https://psd2.api.commerzbank.com/berlingroup/.well-known/openid-configuration?authorizationId=90123456"
+    },
+    "scaStatus": {
+      "href": "https://psd2.api.commerzbank.com/berlingroup/v1/payments/sepa-credit-transfers/12345678/authorisations/90123456"
+    },
+    "self": {
+      "href": "https://psd2.api.commerzbank.com/berlingroup/v1/payments/sepa-credit-transfers/12345678"
+    },
+    "status": {
+      "href": "https://psd2.api.commerzbank.com/berlingroup/v1/payments/sepa-credit-transfers/12345678/status"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://psd2.api.commerzbank.com/berlingroup/.well-known/openid-configuration?authorizationId=90123456
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Wed, 15 Dec 2021 08:57:27 GMT
+Date: Wed, 15 Dec 2021 08:57:27 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self' https://*.as8677.net; script-src 'self' https://*.googleapis.com 'sha256-xZedWFjrwG8mDrHj7kBAAbNSAupPJMrhwVcnbRtyjOA='; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://*.googleapis.com; font-src 'self' https://*.gstatic.com; object-src 'none'
+Content-Security-Policy: default-src 'self' https://*.as8677.net;
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 629
+
+{
+  "issuer" : "https://psd2.api.commerzbank.com",
+  "authorization_endpoint" : "https://psd2.redirect.commerzbank.com/public/berlingroup/authorize/90123456",
+  "token_endpoint" : "https://psd2.api.commerzbank.com/berlingroup/v1/token",
+  "userinfo_endpoint" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts",
+  "scopes_supported" : [ "account", "payment" ],
+  "response_types_supported" : [ "code" ],
+  "grant_types_supported" : [ "client_credentials", "authorization_code", "refresh_token" ],
+  "code_challenge_methods_supported" : [ "S256" ],
+  "subject_types_supported" : [ "public" ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://psd2.api.commerzbank.com/berlingroup/v1/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Wed, 15 Dec 2021 08:57:59 GMT
+Date: Wed, 15 Dec 2021 08:57:59 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self' https://*.as8677.net; script-src 'self' https://*.googleapis.com 'sha256-xZedWFjrwG8mDrHj7kBAAbNSAupPJMrhwVcnbRtyjOA='; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://*.googleapis.com; font-src 'self' https://*.gstatic.com; object-src 'none'
+Content-Security-Policy: default-src 'self' https://*.as8677.net;
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 328
+
+{
+  "access_token" : "access",
+  "token_type" : "bearer",
+  "expires_in" : 300,
+  "refresh_token" : "refresh",
+  "scope" : "PIS:12345678"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://psd2.api.commerzbank.com/berlingroup/v1/payments/sepa-credit-transfers/12345678
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer access
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Wed, 15 Dec 2021 08:57:59 GMT
+Date: Wed, 15 Dec 2021 08:58:00 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self' https://*.as8677.net; script-src 'self' https://*.googleapis.com 'sha256-xZedWFjrwG8mDrHj7kBAAbNSAupPJMrhwVcnbRtyjOA='; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://*.googleapis.com; font-src 'self' https://*.gstatic.com; object-src 'none'
+Content-Security-Policy: default-src 'self' https://*.as8677.net;
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 524
+
+{
+  "transactionStatus" : "ACCP",
+  "instructionIdentification" : "-",
+  "debtorName" : "-",
+  "debtorAccount" : {
+    "iban" : "DE27500105175141353468"
+  },
+  "instructedAmount" : {
+    "currency" : "EUR",
+    "amount" : 1.000
+  },
+  "creditorAccount" : {
+    "iban" : "DE89370400440532013000"
+  },
+  "creditorName" : "Creditor name",
+  "remittanceInformationUnstructured" : "remittance information to creditor",
+  "remittanceInformationStructuredArray" : [ {
+    "reference" : "-",
+    "referenceType" : "-",
+    "referenceIssuer" : "-"
+  } ]
+}
