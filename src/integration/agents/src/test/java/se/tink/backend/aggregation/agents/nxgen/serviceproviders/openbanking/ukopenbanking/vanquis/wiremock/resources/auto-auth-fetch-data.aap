@@ -1,6 +1,33 @@
 
 -----------------------------------------------------------------------------------
 REQUEST 1
+GET https://auth.openbanking.vanquis.co.uk/.well-known/openid-configuration
+x-fapi-financial-id: 0015800001ZEc2PAAT
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+
+{"issuer":"https://auth.openbanking.vanquis.co.uk","authorization_endpoint":"https://auth.openbanking.vanquis.co.uk/connect/authorize","token_endpoint":"https://mtls.auth.openbanking.vanquis.co.uk/connect/token","userinfo_endpoint":"https://mtls.auth.openbanking.vanquis.co.uk/connect/userinfo","registration_endpoint":"https://mtls.auth.openbanking.vanquis.co.uk/connect/register","jwks_uri":"https://keystore.openbanking.org.uk/0015800001ZEc2PAAT/0015800001ZEc2PAAT.jwks","grant_types_supported":["authorization_code","client_credentials","refresh_token"],"response_types_supported":["code id_token"],"scopes_supported":["openid","offline_access","accounts","payments","fundsconfirmations"],"claims_supported":["ReadAccountsBasic","ReadAccountsDetail","ReadBalances","ReadOffers","ReadProducts","ReadStatementsBasic","ReadStatementsDetail","ReadTransactionsBasic","ReadTransactionsCredits","ReadTransactionsDebits","ReadTransactionsDetail","acr","openbanking_intent_id"],"id_token_signing_alg_values_supported":["PS256","PS384","PS512"],"request_object_signing_alg_values_supported":["PS256","PS384","PS512"],"token_endpoint_auth_methods_supported":["private_key_jwt"],"token_endpoint_auth_signing_alg_values_supported":["PS256","PS384","PS512"],"response_modes_supported":["fragment","form_post","query"],"claims_parameter_supported":true,"request_parameter_supported":true,"tls_client_certificate_bound_access_tokens":true}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://mtls.auth.openbanking.vanquis.co.uk/connect/token
+x-fapi-financial-id: 0015800001ZEc2PAAT
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"DUMMY_ACCESS_TOKEN","expires_in":600,"token_type":"Bearer","scope":"accounts offline_access"}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
 GET https://mtls.data.openbanking.vanquis.co.uk/open-banking/v3.1/aisp/accounts
 Accept: application/json
 x-fapi-financial-id: 0015800001ZEc2PAAT
@@ -8,7 +35,7 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
-RESPONSE 1
+RESPONSE 3
 200
 Content-Type: application/json;charset=utf-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -40,7 +67,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 2
+REQUEST 4
 GET https://mtls.data.openbanking.vanquis.co.uk/open-banking/v3.1/aisp/accounts/d02671bf-489b-8a52-66c7-a6ad6b4efd7d/balances
 Accept: application/json
 x-fapi-financial-id: 0015800001ZEc2PAAT
@@ -48,7 +75,7 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
-RESPONSE 2
+RESPONSE 4
 200
 Content-Type: application/json;charset=utf-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
