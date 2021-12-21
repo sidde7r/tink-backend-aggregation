@@ -1,6 +1,7 @@
 package se.tink.libraries.queue.sqs;
 
 import com.amazonaws.services.sqs.model.SendMessageRequest;
+import com.amazonaws.services.sqs.model.SendMessageResult;
 import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
@@ -31,7 +32,11 @@ public class SqsProducer implements QueueProducer {
                             .withMessageBody(encodingHandler.encode(t))
                             .withMessageAttributes(
                                     null); // FIXME: probably we want to use that in the future
-            sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
+            SendMessageResult sendMessageResult =
+                    sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
+            logger.info(
+                    "[SQSProducer] Requeued message with new id: {}",
+                    sendMessageResult.getMessageId());
             sqsQueue.produced();
         } catch (IOException e) {
             logger.error("[SQSProducer] Could not send message", e);
@@ -49,7 +54,11 @@ public class SqsProducer implements QueueProducer {
                             // With delay seconds can max hide a message for 15 min.
                             .withDelaySeconds(
                                     randomTimeoutSeconds(REQUEUE_DELAY_MIN, REQUEUE_DELAY_MAX));
-            sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
+            SendMessageResult sendMessageResult =
+                    sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
+            logger.info(
+                    "[SQSProducer] Requeued message with new id: {}",
+                    sendMessageResult.getMessageId());
         } catch (RuntimeException e) {
             logger.error("[SQSProducer] Couldn't requeue message", e);
         }
