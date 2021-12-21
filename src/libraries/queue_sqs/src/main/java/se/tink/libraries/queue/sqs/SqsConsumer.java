@@ -97,9 +97,14 @@ public class SqsConsumer {
     @VisibleForTesting
     void delete(Message message) {
         log.info("[SqsConsumer] Deleting message: {}", message.getMessageId());
-        sqsQueue.getSqs()
-                .deleteMessage(
-                        new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));
+        try {
+            sqsQueue.getSqs()
+                    .deleteMessage(
+                            new DeleteMessageRequest(
+                                    sqsQueue.getUrl(), message.getReceiptHandle()));
+        } catch (RuntimeException e) {
+            log.error("[SqsConsumer Failed to delete: {}", message.getMessageId(), e);
+        }
     }
 
     boolean isConsumerReady() {
