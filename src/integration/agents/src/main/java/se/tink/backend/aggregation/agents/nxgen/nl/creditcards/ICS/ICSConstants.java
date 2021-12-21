@@ -62,20 +62,6 @@ public class ICSConstants {
         public static final String FINANCIAL_ID = "e3213dfd-435fgrd5-e7edr4";
     }
 
-    public static final class FormKeys {
-        public static final String SCOPE = "scope";
-        public static final String CLIENT_ID = "client_id";
-        public static final String CLIENT_SECRET = "client_secret";
-        public static final String GRANT_TYPE = "grant_type";
-        public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String REDIRECT_URI = "redirect_uri";
-        public static final String AUTHENTICATION_CODE = "code";
-    }
-
-    public static final class FormValues {
-        public static final String SCOPE_ACCOUNTS = "accounts";
-    }
-
     public static class ErrorMessages {
         public static final String CONSENT_ERROR = "consent_error";
         public static final String INVALID_TOKEN = "invalid_token";

@@ -49,8 +49,7 @@ public final class ICSAgent extends NextGenerationAgent
 
         AgentConfiguration<ICSConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(ICSConfiguration.class);
-        ICSConfiguration icsConfiguration =
-                agentConfiguration.getProviderSpecificConfiguration();
+        ICSConfiguration icsConfiguration = agentConfiguration.getProviderSpecificConfiguration();
 
         String customerIpAddress = request.getUserAvailability().isUserPresent() ? userIp : "";
 
