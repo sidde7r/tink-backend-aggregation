@@ -70,8 +70,7 @@ public class CrosskeyBaseApiClientTest {
                         spyRequest,
                         agentConfiguration,
                         qsealcSigner,
-                        "FI",
-                        "127.0.0.1");
+                        "FI");
 
         when(requestBuilder.header(anyString(), anyString())).thenReturn(requestBuilder);
     }

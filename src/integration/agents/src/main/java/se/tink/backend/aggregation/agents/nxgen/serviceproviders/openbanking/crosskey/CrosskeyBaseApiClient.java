@@ -81,8 +81,7 @@ public class CrosskeyBaseApiClient {
             CredentialsRequest credentialsRequest,
             AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
-            String providerMarket,
-            String userIp) {
+            String providerMarket) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.credentialsRequest = credentialsRequest;
@@ -94,7 +93,13 @@ public class CrosskeyBaseApiClient {
         redirectUrl = agentConfiguration.getRedirectUrl();
         this.certificateSerialNumber = getCertificateSerialNumber(agentConfiguration);
         this.providerMarket = providerMarket;
-        this.userIp = userIp;
+        this.userIp = getUserIp(credentialsRequest);
+    }
+
+    private String getUserIp(CredentialsRequest credentialsRequest) {
+        return credentialsRequest.getUserAvailability().isUserPresent()
+                ? credentialsRequest.getUserAvailability().getOriginatingUserIp()
+                : null;
     }
 
     private String getCertificateSerialNumber(
