@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco.fetcher.TescoPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class TescoV31Ais extends UkOpenBankingV31Ais {
@@ -16,8 +17,9 @@ public class TescoV31Ais extends UkOpenBankingV31Ais {
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            UkOpenBankingApiClient apiClient) {
-        super(aisConfig, persistentStorage, localDateTimeSource);
+            UkOpenBankingApiClient apiClient,
+            TransactionPaginationHelper transactionPaginationHelper) {
+        super(aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
         this.tescoPartyFetcher = new TescoPartyFetcher(apiClient, aisConfig, persistentStorage);
     }
 

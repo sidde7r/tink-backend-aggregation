@@ -39,7 +39,8 @@ public class VanquisAis extends UkOpenBankingV31Ais {
                 ukOpenBankingAisConfig,
                 persistentStorage,
                 creditCardAccountMapper,
-                localDateTimeSource);
+                localDateTimeSource,
+                transactionPaginationHelper);
         this.scaValidator = new ScaExpirationValidator(persistentStorage, Limits.SCA_IN_MINUTES);
         this.transactionPaginationHelper = transactionPaginationHelper;
     }
@@ -74,7 +75,7 @@ public class VanquisAis extends UkOpenBankingV31Ais {
                 Period.ofDays(30));
     }
 
-    private <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
+    protected <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
         return new UkObDateCalculator<>(
                 scaValidator,
                 new DateRangeCalculator<>(

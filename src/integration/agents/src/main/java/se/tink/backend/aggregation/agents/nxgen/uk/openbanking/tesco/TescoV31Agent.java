@@ -65,7 +65,12 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new TescoV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
+        return new TescoV31Ais(
+                aisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                apiClient,
+                transactionPaginationHelper);
     }
 
     @Override

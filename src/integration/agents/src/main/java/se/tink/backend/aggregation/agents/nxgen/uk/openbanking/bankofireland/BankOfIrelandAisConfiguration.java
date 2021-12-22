@@ -32,7 +32,11 @@ public class BankOfIrelandAisConfiguration extends UkOpenBankingV31Ais {
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
             TransactionPaginationHelper transactionPaginationHelper) {
-        super(ukOpenBankingAisConfig, persistentStorage, localDateTimeSource);
+        super(
+                ukOpenBankingAisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                transactionPaginationHelper);
         this.scaValidator =
                 new ScaExpirationValidator(
                         persistentStorage, UkOpenBankingV31Constants.Limits.SCA_IN_MINUTES);
@@ -69,7 +73,7 @@ public class BankOfIrelandAisConfiguration extends UkOpenBankingV31Ais {
                 Period.ofYears(2));
     }
 
-    private <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
+    protected <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
         return new UkObDateCalculator<>(
                 scaValidator,
                 new DateRangeCalculator<>(

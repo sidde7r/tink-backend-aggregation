@@ -33,7 +33,11 @@ public class SiliconValleyAis extends UkOpenBankingV31Ais {
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
             TransactionPaginationHelper transactionPaginationHelper) {
-        super(ukOpenBankingAisConfig, persistentStorage, localDateTimeSource);
+        super(
+                ukOpenBankingAisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                transactionPaginationHelper);
         this.scaValidator = new ScaExpirationValidator(persistentStorage, Limits.SCA_IN_MINUTES);
         this.transactionPaginationHelper = transactionPaginationHelper;
     }
@@ -68,7 +72,7 @@ public class SiliconValleyAis extends UkOpenBankingV31Ais {
                 Period.ofDays(90));
     }
 
-    private <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
+    protected <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
         return new UkObDateCalculator<>(
                 scaValidator,
                 new DateRangeCalculator<>(

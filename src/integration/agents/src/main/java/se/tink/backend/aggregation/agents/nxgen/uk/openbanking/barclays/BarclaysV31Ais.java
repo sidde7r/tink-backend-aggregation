@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.fetcher.BarclaysPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
@@ -23,8 +24,9 @@ public class BarclaysV31Ais extends UkOpenBankingV31Ais {
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            UkOpenBankingApiClient apiClient) {
-        super(aisConfig, persistentStorage, localDateTimeSource);
+            UkOpenBankingApiClient apiClient,
+            TransactionPaginationHelper transactionPaginationHelper) {
+        super(aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
         this.barclaysPartyFetcher =
                 new BarclaysPartyFetcher(apiClient, aisConfig, persistentStorage);
     }

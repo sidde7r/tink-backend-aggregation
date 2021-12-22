@@ -382,7 +382,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
 REQUEST 10
-GET https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.1/aisp/accounts/Ymx06B8NK4elHTwElRL-nw/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
+GET https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.1/aisp/accounts/Ymx06B8NK4elHTwElRL-nw/transactions?fromBookingDateTime=1990-04-10T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 00158000016i44JAAQ
 Authorization: Bearer DUMMY_ACCESS_TOKEN

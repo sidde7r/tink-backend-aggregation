@@ -76,7 +76,8 @@ public class PermanentTsbAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new PermanentTsbAis(aisConfig, persistentStorage, localDateTimeSource);
+        return new PermanentTsbAis(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     private static String getQsealCertificateWithBeginAndEndAnchorLines(

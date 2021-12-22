@@ -63,7 +63,8 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 persistentStorage,
                 localDateTimeSource,
-                new HsbcKineticPartyFetcher(apiClient, aisConfig, persistentStorage));
+                new HsbcKineticPartyFetcher(apiClient, aisConfig, persistentStorage),
+                transactionPaginationHelper);
     }
 
     @Override

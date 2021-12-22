@@ -60,7 +60,12 @@ public class VirginMoneyAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new VirginMoneyV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
+        return new VirginMoneyV31Ais(
+                aisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                apiClient,
+                transactionPaginationHelper);
     }
 
     @Override

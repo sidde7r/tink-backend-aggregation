@@ -21,17 +21,17 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class MonzoV31Ais extends UkOpenBankingV31Ais {
 
     private final PartyFetcher monzoPartyFetcher;
-    private final TransactionPaginationHelper paginationHelper;
+    private final TransactionPaginationHelper transactionPaginationHelper;
 
     public MonzoV31Ais(
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
             UkOpenBankingApiClient apiClient,
-            TransactionPaginationHelper paginationHelper) {
-        super(aisConfig, persistentStorage, localDateTimeSource);
+            TransactionPaginationHelper transactionPaginationHelper) {
+        super(aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
         this.monzoPartyFetcher = new PartyV31Fetcher(apiClient, aisConfig, persistentStorage);
-        this.paginationHelper = paginationHelper;
+        this.transactionPaginationHelper = transactionPaginationHelper;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
                                         .toAccountTransactionPaginationResponse(
                                                 response, new MonzoTransactionMapper()),
                         localDateTimeSource,
-                        paginationHelper));
+                        transactionPaginationHelper));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
                                 AccountTransactionsV31Response.toCreditCardPaginationResponse(
                                         response, new MonzoTransactionMapper(), account),
                         localDateTimeSource,
-                        paginationHelper));
+                        transactionPaginationHelper));
     }
 
     @Override

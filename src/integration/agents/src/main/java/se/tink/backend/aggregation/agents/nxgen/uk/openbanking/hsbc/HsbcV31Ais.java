@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc;
 
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
+
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -9,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
@@ -22,8 +26,9 @@ public class HsbcV31Ais extends UkOpenBankingV31Ais {
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            PartyFetcher partyFetcher) {
-        super(aisConfig, persistentStorage, localDateTimeSource);
+            PartyFetcher partyFetcher,
+            TransactionPaginationHelper transactionPaginationHelper) {
+        super(aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
         this.hsbcPartyFetcher = partyFetcher;
     }
 
@@ -54,5 +59,10 @@ public class HsbcV31Ais extends UkOpenBankingV31Ais {
     @Override
     public PartyFetcher makePartyFetcher(UkOpenBankingApiClient apiClient) {
         return hsbcPartyFetcher;
+    }
+
+    @Override
+    protected ScaExpirationValidator getScaValidator() {
+        return new ScaExpirationValidator(persistentStorage, SCA_LIMIT_MINUTES);
     }
 }

@@ -38,6 +38,7 @@ public class UlsterRepublicOfIrelandCorporateAgent extends UkOpenBankingBaseAgen
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        return new UkOpenBankingV31Ais(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 }
