@@ -27,7 +27,7 @@ public class ThirdPartyAppInitStep implements NewConsentStep {
                 this.agentInitAuthentication.initThirdPartyAppAuthentication();
         handleStatus(thirdPartyAppResult.getStatus());
 
-        SerializableReference reference = thirdPartyAppResult.getReference();
+        SerializableReference reference = thirdPartyAppResult.getReference().orElse(null);
         request.getAuthenticationStorage()
                 .put(ThirdPartyAppAuthenticator.STATE_KEY_REFERENCE, reference);
 
