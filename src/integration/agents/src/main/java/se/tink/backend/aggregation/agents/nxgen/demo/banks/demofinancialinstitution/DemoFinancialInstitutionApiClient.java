@@ -5,6 +5,7 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.configuration.DemoFinancialInstitutionConfiguration;
@@ -68,7 +69,12 @@ public class DemoFinancialInstitutionApiClient {
         return createRequestInSession(url).get(FetchTransactionsResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactionsForNextUrl(URL nextUrl) {
-        return createRequestInSession(nextUrl).get(FetchTransactionsResponse.class);
+    public FetchTransactionsResponse fetchTransactions(String accountNumber, String nextPageToken) {
+        final URL url =
+                createBaseUrl()
+                        .concat(Urls.TRANSACTIONS)
+                        .parameter("accountNumber", accountNumber)
+                        .queryParam(QueryParams.PAGE_TOKEN, nextPageToken);
+        return createRequestInSession(url).get(FetchTransactionsResponse.class);
     }
 }
