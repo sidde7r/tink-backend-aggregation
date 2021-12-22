@@ -257,8 +257,7 @@ public class OpenIdAuthenticationController
                                             "callbackData did not contain code. CallbackUri: {}, Data received: {}",
                                             callbackUri,
                                             SerializationUtils.serializeToString(callbackData));
-                                    throw new IllegalStateException(
-                                            "callbackData did not contain code.");
+                                    throw SessionError.SESSION_EXPIRED.exception();
                                 });
 
         String state = getCallbackElement(callbackData, OpenIdConstants.Params.STATE).orElse(null);

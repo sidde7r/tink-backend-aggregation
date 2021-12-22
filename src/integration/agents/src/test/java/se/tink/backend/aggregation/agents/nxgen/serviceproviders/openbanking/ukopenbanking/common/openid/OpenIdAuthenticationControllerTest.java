@@ -1,5 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,8 +20,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -17,16 +31,6 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenIdAuthenticationControllerTest {
@@ -51,6 +55,7 @@ public class OpenIdAuthenticationControllerTest {
 
     @Before
     public void setup() {
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn("randomSupplementalKey");
         openIdAuthenticationController =
                 new OpenIdAuthenticationController(
                         persistentStorage,
@@ -167,5 +172,22 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         assertThat(thrown).isExactlyInstanceOf(BankServiceException.class);
+    }
+
+    @Test
+    public void shouldThrowSessionExpiredExceptionWhenCODECallbackParamMissing() {
+        // given
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        anyString(),
+                        eq(ThirdPartyAppConstants.WAIT_FOR_MINUTES),
+                        eq(TimeUnit.MINUTES)))
+                .thenReturn(Optional.of(new HashMap<>()));
+
+        // when
+        Throwable thrown =
+                catchThrowable(() -> openIdAuthenticationController.collect("randomString"));
+
+        // then
+        assertThat(thrown).isInstanceOf(SessionError.SESSION_EXPIRED.exception().getClass());
     }
 }
