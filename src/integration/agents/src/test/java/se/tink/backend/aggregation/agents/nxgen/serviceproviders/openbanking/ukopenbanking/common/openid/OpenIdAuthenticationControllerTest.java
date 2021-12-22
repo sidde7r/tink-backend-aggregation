@@ -1,14 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +17,16 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenIdAuthenticationControllerTest {
@@ -47,7 +48,6 @@ public class OpenIdAuthenticationControllerTest {
     @Mock private OpenIdAuthenticationValidator authenticationValidator;
 
     private OpenIdAuthenticationController openIdAuthenticationController;
-    private OAuth2Token oAuth2Token;
 
     @Before
     public void setup() {
@@ -67,7 +67,7 @@ public class OpenIdAuthenticationControllerTest {
     @Test
     public void shouldCompleteAutoAuthenticationWhenAccessTokenIsStillValid() {
         // given
-        oAuth2Token = createValidOAuth2Token();
+        OAuth2Token oAuth2Token = createValidOAuth2Token();
         when(persistentStorage.get(
                         OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(oAuth2Token));
@@ -76,6 +76,15 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         verify(apiClient).instantiateAisAuthFilter(oAuth2Token);
+    }
+
+    private OAuth2Token createValidOAuth2Token() {
+        return OAuth2Token.create(
+                DUMMY_TOKEN_TYPE,
+                DUMMY_ACCESS_TOKEN,
+                DUMMY_REFRESH_TOKEN,
+                DUMMY_ACCESS_EXPIRES_IN_SECONDS,
+                200);
     }
 
     @Test
@@ -96,6 +105,16 @@ public class OpenIdAuthenticationControllerTest {
         // then
         verify(apiClient).refreshAccessToken("dummy_refresh_token", ClientMode.ACCOUNTS);
         verify(apiClient).instantiateAisAuthFilter(refreshedOAuth2Token);
+    }
+
+    private OAuth2Token createInvalidOAuth2Token() {
+        return OAuth2Token.create(
+                DUMMY_TOKEN_TYPE,
+                DUMMY_ACCESS_TOKEN,
+                DUMMY_REFRESH_TOKEN,
+                DUMMY_ID_TOKEN,
+                0,
+                DUMMY_REFRESH_EXPIRES_IN_SECONDS);
     }
 
     @Test
@@ -148,30 +167,5 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         assertThat(thrown).isExactlyInstanceOf(BankServiceException.class);
-    }
-
-    private OAuth2Token createValidOAuth2Token() {
-        oAuth2Token =
-                OAuth2Token.create(
-                        DUMMY_TOKEN_TYPE,
-                        DUMMY_ACCESS_TOKEN,
-                        DUMMY_REFRESH_TOKEN,
-                        DUMMY_ACCESS_EXPIRES_IN_SECONDS,
-                        200);
-
-        return oAuth2Token;
-    }
-
-    private OAuth2Token createInvalidOAuth2Token() {
-        OAuth2Token invalidOAuth2Token =
-                OAuth2Token.create(
-                        DUMMY_TOKEN_TYPE,
-                        DUMMY_ACCESS_TOKEN,
-                        DUMMY_REFRESH_TOKEN,
-                        DUMMY_ID_TOKEN,
-                        0,
-                        DUMMY_REFRESH_EXPIRES_IN_SECONDS);
-
-        return invalidOAuth2Token;
     }
 }
