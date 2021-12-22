@@ -76,6 +76,9 @@ public class AgentComponentProvider
     }
 
     private User mapToSdkUser(CredentialsRequest credentialsRequest) {
+        if (credentialsRequest == null) {
+            return null;
+        }
         String locale =
                 Optional.ofNullable(credentialsRequest.getUser())
                         .map(se.tink.libraries.user.rpc.User::getLocale)
@@ -95,6 +98,9 @@ public class AgentComponentProvider
 
     private StaticBankCredentials mapToSdkStaticBankCredentials(
             CredentialsRequest credentialsRequest) {
+        if (credentialsRequest == null) {
+            return null;
+        }
         Credentials credentials = credentialsRequest.getCredentials();
         if (credentials == null) {
             return new StaticBankCredentialsImpl(new HashMap<>());
@@ -104,6 +110,9 @@ public class AgentComponentProvider
     }
 
     private Provider mapToSdkProvider(CredentialsRequest credentialsRequest) {
+        if (credentialsRequest == null) {
+            return null;
+        }
         se.tink.backend.agents.rpc.Provider rpcProvider = credentialsRequest.getProvider();
 
         if (rpcProvider == null) {
