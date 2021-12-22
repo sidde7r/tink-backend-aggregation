@@ -29,7 +29,8 @@ public class GranularBalancesMapperTest {
     @Test
     public void shouldMapLatestBalanceIfDuplicatedBalanceTypesFound() {
         given(forwardAvailable1.getType()).willReturn(UkObBalanceType.FORWARD_AVAILABLE);
-        given(forwardAvailable1.getAmount()).willReturn(ExactCurrencyAmount.of(10.00, "GBP"));
+        given(forwardAvailable1.getAmountWithoutCreditLine())
+                .willReturn(ExactCurrencyAmount.of(10.00, "GBP"));
         given(forwardAvailable1.getDateTime())
                 .willReturn(
                         LocalDate.of(2000, 1, 1)
@@ -38,7 +39,8 @@ public class GranularBalancesMapperTest {
                                 .toInstant());
 
         given(forwardAvailable2.getType()).willReturn(UkObBalanceType.FORWARD_AVAILABLE);
-        given(forwardAvailable2.getAmount()).willReturn(ExactCurrencyAmount.of(20.00, "GBP"));
+        given(forwardAvailable2.getAmountWithoutCreditLine())
+                .willReturn(ExactCurrencyAmount.of(20.00, "GBP"));
         given(forwardAvailable2.getDateTime())
                 .willReturn(
                         LocalDate.of(2000, 1, 2)
@@ -47,7 +49,8 @@ public class GranularBalancesMapperTest {
                                 .toInstant());
 
         given(forwardAvailable3.getType()).willReturn(UkObBalanceType.FORWARD_AVAILABLE);
-        given(forwardAvailable3.getAmount()).willReturn(ExactCurrencyAmount.of(30.00, "GBP"));
+        given(forwardAvailable3.getAmountWithoutCreditLine())
+                .willReturn(ExactCurrencyAmount.of(30.00, "GBP"));
         given(forwardAvailable3.getDateTime())
                 .willReturn(
                         LocalDate.of(2000, 1, 3)

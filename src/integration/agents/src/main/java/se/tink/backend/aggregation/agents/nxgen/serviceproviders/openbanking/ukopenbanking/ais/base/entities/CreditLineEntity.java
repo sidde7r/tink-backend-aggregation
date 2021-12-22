@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalLimitType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -15,4 +16,12 @@ public class CreditLineEntity {
     private AmountEntity amount;
 
     private UkOpenBankingApiDefinitions.ExternalLimitType type;
+
+    public boolean isIncluded() {
+        return included;
+    }
+
+    public boolean isAvailableType() {
+        return ExternalLimitType.AVAILABLE.equals(type);
+    }
 }
