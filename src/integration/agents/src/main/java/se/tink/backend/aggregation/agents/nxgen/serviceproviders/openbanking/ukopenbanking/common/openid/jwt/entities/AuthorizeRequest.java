@@ -44,8 +44,8 @@ public class AuthorizeRequest {
             return this;
         }
 
-        public Builder withAdditionalScopeValue(String scope) {
-            this.scopes.add(scope);
+        public Builder withOfflineAccess() {
+            this.scopes.add(OpenIdConstants.Scopes.OFFLINE_ACCESS);
             return this;
         }
 
