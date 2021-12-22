@@ -35,6 +35,7 @@ java_library(
         "//third_party:io_vavr",
         "//third_party:lombok_libs",
         "//third_party:net_minidev_json_smart",
+        "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",

@@ -152,20 +152,9 @@ public class TransactionalAccountBalanceMapper {
 
     private void logCreditLineTypes(Collection<AccountBalanceEntity> balances) {
         log.info(
-                "[CREDIT LINE] Available types {}",
+                "[CARD CREDIT LINE] Balances with credit line types\n{}",
                 balances.stream()
-                        .flatMap(
-                                balance ->
-                                        CollectionUtils.emptyIfNull(balance.getCreditLine())
-                                                .stream())
-                        .map(
-                                line ->
-                                        StringUtils.join(
-                                                "{",
-                                                line.getType(),
-                                                ", included: ",
-                                                line.getIncluded(),
-                                                "}"))
+                        .map(balance -> StringUtils.join(balance.printTypeWithCreditLines(), "\n"))
                         .collect(Collectors.toList()));
     }
 }
