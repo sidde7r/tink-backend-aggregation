@@ -112,8 +112,8 @@ public abstract class PaymentConverterBase {
     }
 
     public void getEuLocalInstrument(
-            DomesticPaymentInitiationBuilder domesticPaymentInitiation, MarketCode marketCode) {
-
+            DomesticPaymentInitiationBuilder domesticPaymentInitiation, String providerMarketCode) {
+        MarketCode marketCode = MarketCode.valueOf(providerMarketCode.toUpperCase());
         switch (marketCode) {
             case FI:
                 domesticPaymentInitiation.localInstrument(FI_LOCAL_INSTRUMENT_CODE);
@@ -128,10 +128,6 @@ public abstract class PaymentConverterBase {
                 domesticPaymentInitiation.localInstrument(DK_LOCAL_INSTRUMENT_CODE);
                 return;
             default:
-                log.info(
-                        String.format(
-                                "Market code: %s is outside EU or not supported for EU Local Instrument.",
-                                marketCode));
         }
     }
 

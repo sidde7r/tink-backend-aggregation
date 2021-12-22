@@ -93,8 +93,8 @@ Content-Type: application/json; charset=UTF-8
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Risk": {"PaymentContextCode": "PartyToParty"}, "Data": {"ConsentId": "urn:obp:pi:3.1.8:0942b135-80df-4dad-ba63-8a03ca8cee5b", "Initiation": {"RemittanceInformation": {"Unstructured": "Tink Test-2021-12-06--13-46-51"}, "EndToEndIdentification": "258b967552ae47579f183b57514f141", "InstructionIdentification": "258b967552ae47579f183b57514f1413", "DebtorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI9189512712449566"}, "CreditorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI3126598515147343", "Name": "Tink Test"}, "InstructedAmount": {"Amount": "1.00", "Currency": "EUR"} } } }
-#"LocalInstrument": "DK.DanskeBank.FI.TransferFunds"
+{"Risk": {"PaymentContextCode": "PartyToParty"}, "Data": {"ConsentId": "urn:obp:pi:3.1.8:0942b135-80df-4dad-ba63-8a03ca8cee5b", "Initiation": {"RemittanceInformation": {"Unstructured": "Tink Test-2021-12-06--13-46-51"}, "LocalInstrument": "DK.DanskeBank.FI.TransferFunds", "EndToEndIdentification": "258b967552ae47579f183b57514f141", "InstructionIdentification": "258b967552ae47579f183b57514f1413", "DebtorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI9189512712449566"}, "CreditorAccount": {"SchemeName": "UK.OBIE.IBAN", "Identification": "FI3126598515147343", "Name": "Tink Test"}, "InstructedAmount": {"Amount": "1.00", "Currency": "EUR"} } } }
+
 -----------------------------------------------------------------------------------
 RESPONSE 7
 201

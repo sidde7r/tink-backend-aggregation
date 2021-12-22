@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.Risk;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
@@ -44,8 +45,8 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     static final String PAYMENT_CONSENT = "/domestic-payment-consents";
@@ -59,6 +60,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     private final UkOpenBankingRequestBuilder requestBuilder;
     private final DomesticPaymentConverter domesticPaymentConverter;
     private final UkOpenBankingPisConfig pisConfig;
+
     private static final List<Integer> FAILED_STATUSES =
             Arrays.asList(
                     HttpStatus.SC_INTERNAL_SERVER_ERROR,
@@ -71,7 +73,6 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
         final DomesticPaymentConsentRequest consentRequest =
                 createDomesticPaymentConsentRequest(paymentRequest);
         DomesticPaymentConsentResponse response;
-
         URL consentRequestUrl;
         if (pisConfig.getMarketCode() != null) {
             consentRequestUrl =
@@ -272,9 +273,10 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     private DomesticPaymentInitiation createDomesticPaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
+        DebtorAccount debtor = domesticPaymentConverter.getDebtorAccount(payment);
         DomesticPaymentInitiationBuilder domesticPaymentInitiationBuilder =
                 DomesticPaymentInitiation.builder()
-                        .debtorAccount(domesticPaymentConverter.getDebtorAccount(payment))
+                        .debtorAccount(debtor)
                         .creditorAccount(domesticPaymentConverter.getCreditorAccount(payment))
                         .instructedAmount(domesticPaymentConverter.getInstructedAmount(payment))
                         .remittanceInformation(
@@ -282,11 +284,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         .instructionIdentification(instructionIdentification)
                         .endToEndIdentification(endToEndIdentification);
 
-        if (payment.getPaymentScheme() != null && pisConfig.getMarketCode() != null) {
+        if (Optional.ofNullable(debtor).isPresent()) {
             domesticPaymentConverter.getEuLocalInstrument(
-                    domesticPaymentInitiationBuilder, pisConfig.getMarketCode());
+                    domesticPaymentInitiationBuilder,
+                    payment.getIbanMarket(debtor.getIdentification()));
         }
-
         // First step to optionally enable this before making this mandatory
         if (payment.getPaymentScheme() != null
                 && payment.getPaymentScheme() == PaymentScheme.FASTER_PAYMENTS) {
