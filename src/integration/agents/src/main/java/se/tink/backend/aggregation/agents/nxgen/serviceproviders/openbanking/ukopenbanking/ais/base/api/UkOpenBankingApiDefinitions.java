@@ -94,14 +94,8 @@ public class UkOpenBankingApiDefinitions {
         PRE_AGREED,
         TEMPORARY;
 
-        private static final ImmutableList<ExternalLimitType> PREFERRED_LIMIT_TYPE_LIST =
-                ImmutableList.<ExternalLimitType>builder()
-                        .add(AVAILABLE)
-                        .add(CREDIT)
-                        .add(PRE_AGREED)
-                        .add(EMERGENCY)
-                        .add(TEMPORARY)
-                        .build();
+        public static final ImmutableList<ExternalLimitType> CREDIT_LINE_PREFERRED_LIMIT_TYPES =
+                ImmutableList.of(CREDIT, PRE_AGREED, TEMPORARY, EMERGENCY, AVAILABLE);
 
         @JsonCreator
         private static ExternalLimitType fromString(String key) {

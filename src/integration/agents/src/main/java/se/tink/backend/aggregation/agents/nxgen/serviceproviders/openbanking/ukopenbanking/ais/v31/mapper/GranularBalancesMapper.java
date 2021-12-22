@@ -31,7 +31,7 @@ public interface GranularBalancesMapper {
                                                             balance.getType()),
                                             balance ->
                                                     Pair.of(
-                                                            balance.getAmount(),
+                                                            balance.getAmountWithoutCreditLine(),
                                                             balance.getDateTime()),
                                             GranularBalancesMapper
                                                     ::getLatestBalanceWithSnapshotTime));
