@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
-import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.BANK_SIDE_FAILURE;
-import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
-import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.SESSION_TERMINATED;
-
 import com.google.common.base.Strings;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -129,14 +125,14 @@ public class OpenIdAuthenticationController
                         .orElseThrow(
                                 () -> {
                                     log.warn(
-                                            "Failed to retrieve access token from persistent storage.");
+                                            "[OpenIdAuthenticationController] Failed to retrieve access token from persistent storage.");
                                     return SessionError.SESSION_EXPIRED.exception();
                                 });
 
         if (oAuth2Token.hasAccessExpired()) {
             if (!oAuth2Token.canRefresh()) {
                 log.info(
-                        "Access token has expired and refreshing impossible. Expiring the session.");
+                        "[OpenIdAuthenticationController] Access token has expired and refreshing impossible. Expiring the session.");
                 cleanAuthenticationPersistentStorage();
                 throw SessionError.SESSION_EXPIRED.exception();
             } else {
@@ -147,7 +143,7 @@ public class OpenIdAuthenticationController
                 if (getConsentId().equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
                     cleanAuthenticationPersistentStorage();
                     throw SessionError.CONSENT_INVALID.exception(
-                            "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
+                            "[OpenIdAuthenticationController] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
                 }
             }
         }
@@ -163,7 +159,7 @@ public class OpenIdAuthenticationController
 
     private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {
         log.info(
-                "Trying to refresh access token. Issued: [{}] Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
+                "[OpenIdAuthenticationController] Trying to refresh access token. Issued: [{}] Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
                 new Date(oAuth2Token.getIssuedAt() * 1000),
                 new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
                 !oAuth2Token.isRefreshNullOrEmpty(),
@@ -202,7 +198,7 @@ public class OpenIdAuthenticationController
             throw SessionError.SESSION_EXPIRED.exception();
         }
         log.info(
-                "Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
+                "[OpenIdAuthenticationController] Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
                 new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
                 !oAuth2Token.isRefreshNullOrEmpty(),
                 oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
@@ -273,7 +269,8 @@ public class OpenIdAuthenticationController
         if (idToken.isPresent()) {
             authenticationValidator.validateIdToken(idToken.get(), code, state);
         } else {
-            log.warn("ID Token (code and state) validation - no token provided");
+            log.warn(
+                    "[OpenIdAuthenticationController] ID Token (code and state) validation - no token provided");
         }
 
         OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
@@ -328,7 +325,7 @@ public class OpenIdAuthenticationController
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR_DESCRIPTION);
 
         if (!error.isPresent()) {
-            log.info("OpenId callback success.");
+            log.info("[OpenIdAuthenticationController] OpenId callback success.");
             return;
         }
 
@@ -343,7 +340,7 @@ public class OpenIdAuthenticationController
             throws LoginException {
 
         log.info(
-                "OpenId callback data: {} for consentId {}",
+                "[OpenIdAuthenticationController] OpenId callback data: {} for consentId {}",
                 serializedCallbackData,
                 getConsentId());
 
@@ -356,17 +353,19 @@ public class OpenIdAuthenticationController
 
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else if (OpenIdConstants.Errors.SERVER_ERROR.equalsIgnoreCase(errorType)) {
-            throw BANK_SIDE_FAILURE.exception(errorDescription);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(errorDescription);
         } else if (OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE.equalsIgnoreCase(errorType)) {
-            throw NO_BANK_SERVICE.exception(errorDescription);
+            throw BankServiceError.NO_BANK_SERVICE.exception(errorDescription);
         } else if (OpenIdConstants.Errors.UNAUTHORISED.equalsIgnoreCase(errorType)) {
-            throw SESSION_TERMINATED.exception(errorDescription);
+            throw BankServiceError.SESSION_TERMINATED.exception(errorDescription);
         } else if (OpenIdConstants.Errors.INVALID_INTENT_ID.equalsIgnoreCase(errorType)) {
             throw SessionError.CONSENT_INVALID.exception();
         }
 
         throw new IllegalStateException(
-                String.format("Unknown error: %s:%s.", errorType, errorDescription));
+                String.format(
+                        "[OpenIdAuthenticationController] Unknown error with details: {errorType: %s, errorDescription: %s}",
+                        errorType, errorDescription));
     }
 
     private String getConsentId() {
