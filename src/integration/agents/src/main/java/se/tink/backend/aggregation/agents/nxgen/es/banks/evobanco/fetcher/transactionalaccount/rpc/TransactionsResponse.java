@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.error.ErrorsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities.CustomerNotesListEntity;
@@ -57,16 +56,9 @@ public class TransactionsResponse
     public Optional<Boolean> canFetchMore() {
         return Optional.of(
                 getEeOConsultationMovementsPostponedView().getAnswer() != null
-                        && !getEeOConsultationMovementsPostponedView()
+                        && getEeOConsultationMovementsPostponedView()
                                 .getAnswer()
-                                .getListCustomerNotes()
-                                .isEmpty()
-                        && !getEeOConsultationMovementsPostponedView()
-                                .getAnswer()
-                                .getListCustomerNotes()
-                                .get(getNumberOfTransactionsInPage() - 1)
-                                .getSequentialNumber()
-                                .equals(EvoBancoConstants.Constants.FIRST_SEQUENTIAL_NUMBER));
+                                .isMoreDataForPagination());
     }
 
     private int getNumberOfTransactionsInPage() {
