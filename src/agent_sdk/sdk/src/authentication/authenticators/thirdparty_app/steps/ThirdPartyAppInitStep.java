@@ -2,8 +2,8 @@ package se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps;
 
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppInitAuthentication;
-import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppResult;
-import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppStatus;
+import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.result.ThirdPartyAppResult;
+import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.result.ThirdPartyAppStatus;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
@@ -27,7 +27,7 @@ public class ThirdPartyAppInitStep implements NewConsentStep {
                 this.agentInitAuthentication.initThirdPartyAppAuthentication();
         handleStatus(thirdPartyAppResult.getStatus());
 
-        SerializableReference reference = thirdPartyAppResult.getReference();
+        SerializableReference reference = thirdPartyAppResult.getReference().orElse(null);
         request.getAuthenticationStorage()
                 .put(ThirdPartyAppAuthenticator.STATE_KEY_REFERENCE, reference);
 

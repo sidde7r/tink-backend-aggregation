@@ -1,10 +1,9 @@
 package se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps;
 
 import java.time.Duration;
-import java.util.Optional;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppPollStatus;
-import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppResult;
+import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.result.ThirdPartyAppResult;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
 import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
@@ -64,13 +63,10 @@ public class ThirdPartyAppPollStep implements NewConsentStep {
         ThirdPartyAppResult thirdPartyAppResult =
                 this.agentPollStatus.pollThirdPartyAppStatus(reference);
 
-        SerializableReference newReference = thirdPartyAppResult.getReference();
-
         // Rewrite the reference to the state for next iteration. Fall back to previous reference if
         // a new one was not given.
-        authenticationStorage.put(
-                ThirdPartyAppAuthenticator.STATE_KEY_REFERENCE,
-                Optional.ofNullable(newReference).orElse(reference));
+        SerializableReference newReference = thirdPartyAppResult.getReference().orElse(reference);
+        authenticationStorage.put(ThirdPartyAppAuthenticator.STATE_KEY_REFERENCE, newReference);
 
         return handlePollResult(thirdPartyAppResult);
     }
