@@ -53,6 +53,7 @@ public class HandelsbankenConstants {
             BANKID_LOGIN("bankid-login_2_0"),
             CARD_TRANSACTIONS("card-transactions"),
             CARD_MORE_TRANSACTIONS("card-more-transactions"),
+            CARD_DEPOSIT_TRANSACTIONS("card-deposit-transactions"),
             CARDS("cards"),
             CHECK_AGREEMENT("checkAgreement"),
             COMMIT_PROFILE("commitProfile"),

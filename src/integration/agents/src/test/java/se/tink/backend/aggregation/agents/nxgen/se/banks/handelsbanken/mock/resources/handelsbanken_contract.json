@@ -1,13 +1,51 @@
 {
   "accounts" : [ {
+    "accountNumber" : "5432 **** **** 1234",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "exactValue" : 58588.7,
+      "doubleValue" : 58588.7,
+      "unscaledValue" : 585887
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "exactValue" : -16411.3,
+      "doubleValue" : -16411.3,
+      "unscaledValue" : -164113
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "54321234",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Platinum",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 58588.7,
+    "balance" : -16411.3
+  }, {
     "accountNumber" : "1234-332 211 222",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 2,
-      "unscaledValue" : 1340388,
       "exactValue" : 13403.88,
-      "doubleValue" : 13403.88
+      "doubleValue" : 13403.88,
+      "unscaledValue" : 1340388
     },
     "currencyCode" : "SEK",
     "bankId" : "332211222",
@@ -40,9 +78,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 2,
-      "unscaledValue" : 7914456,
       "exactValue" : 79144.56,
-      "doubleValue" : 79144.56
+      "doubleValue" : 79144.56,
+      "unscaledValue" : 7914456
     },
     "currencyCode" : "SEK",
     "bankId" : "123456789",
@@ -75,9 +113,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 2,
-      "unscaledValue" : 306077,
       "exactValue" : 3060.77,
-      "doubleValue" : 3060.77
+      "doubleValue" : 3060.77,
+      "unscaledValue" : 306077
     },
     "currencyCode" : "SEK",
     "bankId" : "223334444",
@@ -106,9 +144,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 3,
-      "unscaledValue" : 91247753,
       "exactValue" : 91247.753,
-      "doubleValue" : 91247.753
+      "doubleValue" : 91247.753,
+      "unscaledValue" : 91247753
     },
     "currencyCode" : "SEK",
     "bankId" : "27771757",
@@ -137,9 +175,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 1,
-      "unscaledValue" : 0,
       "exactValue" : 0.0,
-      "doubleValue" : 0.0
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0
     },
     "currencyCode" : "SEK",
     "bankId" : "444422333",
@@ -168,9 +206,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 2,
-      "unscaledValue" : 521618,
       "exactValue" : 5216.18,
-      "doubleValue" : 5216.18
+      "doubleValue" : 5216.18,
+      "unscaledValue" : 521618
     },
     "currencyCode" : "SEK",
     "bankId" : "12345678",
@@ -200,9 +238,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 3,
-      "unscaledValue" : 41873157,
       "exactValue" : 41873.157,
-      "doubleValue" : 41873.157
+      "doubleValue" : 41873.157,
+      "unscaledValue" : 41873157
     },
     "currencyCode" : "SEK",
     "bankId" : "1111222333",
@@ -231,16 +269,16 @@
     "exactAvailableCredit" : {
       "currencyCode" : "SEK",
       "scale" : 1,
-      "unscaledValue" : 0,
       "exactValue" : 0.0,
-      "doubleValue" : 0.0
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0
     },
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 1,
-      "unscaledValue" : -100000,
       "exactValue" : -10000.0,
-      "doubleValue" : -10000.0
+      "doubleValue" : -10000.0,
+      "unscaledValue" : -100000
     },
     "currencyCode" : "SEK",
     "bankId" : "111224444",
@@ -273,9 +311,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 1,
-      "unscaledValue" : 55500,
       "exactValue" : 5550.0,
-      "doubleValue" : 5550.0
+      "doubleValue" : 5550.0,
+      "unscaledValue" : 55500
     },
     "currencyCode" : "SEK",
     "bankId" : "444414444",
@@ -287,7 +325,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[\"se-internal://444414444\",\"iban://SE5060000000000586318178\",\"se://1234444414444\"]",
+    "identifiers" : "[\"iban://SE5060000000000586318178\",\"se-internal://444414444\",\"se://1234444414444\"]",
     "closed" : false,
     "holderName" : "Firstname Lastname",
     "accountHolder" : {
@@ -308,9 +346,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 1,
-      "unscaledValue" : -25168320,
       "exactValue" : -2516832.0,
-      "doubleValue" : -2516832.0
+      "doubleValue" : -2516832.0,
+      "unscaledValue" : -25168320
     },
     "currencyCode" : "SEK",
     "bankId" : "10280848123456",
@@ -346,7 +384,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 28288.0,
     "date" : 1619172000000,
@@ -359,7 +398,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -280.0,
     "date" : 1619085600000,
@@ -372,7 +412,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : false
   }, {
     "amount" : -78.0,
     "date" : 1619085600000,
@@ -385,7 +426,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : false
   }, {
     "amount" : -1000.0,
     "date" : 1618912800000,
@@ -398,7 +440,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1250.0,
     "date" : 1618912800000,
@@ -411,7 +454,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -383.0,
     "date" : 1618826400000,
@@ -424,7 +468,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -35.0,
     "date" : 1618826400000,
@@ -437,7 +482,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -27.0,
     "date" : 1618740000000,
@@ -450,7 +496,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -519.24,
     "date" : 1618653600000,
@@ -463,7 +510,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -211.2,
     "date" : 1618480800000,
@@ -476,7 +524,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 29146.0,
     "date" : 1579863600000,
@@ -489,7 +538,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 30000.0,
     "date" : 1619172000000,
@@ -502,7 +552,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 20000.0,
     "date" : 1619172000000,
@@ -515,7 +566,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -639.0,
     "date" : 1619172000000,
@@ -528,7 +580,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -776.9,
     "date" : 1619085600000,
@@ -541,7 +594,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -739.0,
     "date" : 1618999200000,
@@ -554,7 +608,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -548.0,
     "date" : 1618999200000,
@@ -567,7 +622,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -487.0,
     "date" : 1618912800000,
@@ -580,7 +636,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -148.0,
     "date" : 1618912800000,
@@ -593,7 +650,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -967.32,
     "date" : 1618826400000,
@@ -606,7 +664,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 20000.0,
     "date" : 1579863600000,
@@ -619,7 +678,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1850.0,
     "date" : 1616756400000,
@@ -632,7 +692,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1850.0,
     "date" : 1614337200000,
@@ -645,7 +706,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1850.0,
     "date" : 1611658800000,
@@ -658,7 +720,488 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -56.0,
+    "date" : 1628503200000,
+    "description" : "7-ELEVEN 421612",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : false
+  }, {
+    "amount" : -216.0,
+    "date" : 1627898400000,
+    "description" : "BANK RESTAURANG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -80.0,
+    "date" : 1627639200000,
+    "description" : "PRESSBYRÅN 4205143",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -145.0,
+    "date" : 1627639200000,
+    "description" : "ICHA ICHA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -38.43,
+    "date" : 1627639200000,
+    "description" : "KRONANS APOTEK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -233.0,
+    "date" : 1627552800000,
+    "description" : "BASTARD BURGERS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -49.9,
+    "date" : 1627552800000,
+    "description" : "CLAS OHLSON",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -630.0,
+    "date" : 1627552800000,
+    "description" : "RICHARD O MATTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -545.0,
+    "date" : 1627380000000,
+    "description" : "SYSTEMBOLAGET STOCKH",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -144.0,
+    "date" : 1627293600000,
+    "description" : "PRESSBYRÅN 4205143",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -115.0,
+    "date" : 1627293600000,
+    "description" : "RESTAURANG RICE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -84.0,
+    "date" : 1626429600000,
+    "description" : "KARINGONS BRYGG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -183.0,
+    "date" : 1626429600000,
+    "description" : "Skafferiet, Karingon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -390.0,
+    "date" : 1626516000000,
+    "description" : "KARINGONS BRYGG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -508.24,
+    "date" : 1626602400000,
+    "description" : "INGO VAREKIL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -93.0,
+    "date" : 1626343200000,
+    "description" : "Skafferiet, Karingon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -102.0,
+    "date" : 1626343200000,
+    "description" : "Skafferiet, Karingon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -480.0,
+    "date" : 1626256800000,
+    "description" : "iZ *Lotshotellet A",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -48.0,
+    "date" : 1625738400000,
+    "description" : "SIMSONS RESTAUR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 11111.22,
+    "date" : 1638270000000,
+    "description" : "BG-INBET. AUTOGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 22222.22,
+    "date" : 1632996000000,
+    "description" : "BG-INBET. AUTOGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 10000.0,
+    "date" : 1632304800000,
+    "description" : "BG-INBETALNING OCR",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1000.0,
+    "date" : 1589796000000,
+    "description" : "Revolut**1234*",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -178.9,
+    "date" : 1589623200000,
+    "description" : "PLANTAGEN BROMM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -156.0,
+    "date" : 1589709600000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -106.71,
+    "date" : 1589450400000,
+    "description" : "UDEMY: ONLINE COURSE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -1000.0,
+    "date" : 1589364000000,
+    "description" : "Revolut**1234*",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -139.0,
+    "date" : 1589191200000,
+    "description" : "C MORE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -210.0,
+    "date" : 1588932000000,
+    "description" : "TAXI STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -540.0,
+    "date" : 1588932000000,
+    "description" : "BAGPIPERS INN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5432 **** **** 1234"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -360.0,
     "date" : 1610708400000,
@@ -673,7 +1216,8 @@
     "type" : "CREDIT_CARD",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -460.0,
     "date" : 1589191200000,
@@ -686,7 +1230,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 460.0,
     "date" : 1589191200000,
@@ -699,7 +1244,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -75.0,
     "date" : 1588759200000,
@@ -712,7 +1258,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -1400.0,
     "date" : 1588586400000,
@@ -725,7 +1272,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 505.0,
     "date" : 1588240800000,
@@ -738,7 +1286,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 1000.0,
     "date" : 1587981600000,
@@ -751,7 +1300,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 42.0,
     "date" : 1587117600000,
@@ -764,7 +1314,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -87.0,
     "date" : 1586944800000,
@@ -777,7 +1328,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -250.0,
     "date" : 1586253600000,
@@ -790,7 +1342,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -50.0,
     "date" : 1586167200000,
@@ -803,7 +1356,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -500.0,
     "date" : 1585735200000,
@@ -816,7 +1370,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -200.0,
     "date" : 1585648800000,
@@ -829,7 +1384,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 505.0,
     "date" : 1585648800000,
@@ -842,7 +1398,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 500.0,
     "date" : 1585562400000,
@@ -855,7 +1412,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 76.0,
     "date" : 1584529200000,
@@ -868,7 +1426,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -82.0,
     "date" : 1584356400000,
@@ -881,7 +1440,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : -500.0,
     "date" : 1582887600000,
@@ -894,7 +1454,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   }, {
     "amount" : 505.0,
     "date" : 1582887600000,
@@ -907,7 +1468,8 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ ],
+    "booked" : true
   } ],
   "identityData" : {
     "nameElements" : [ {
@@ -917,16 +1479,16 @@
     "dateOfBirth" : {
       "year" : 1983,
       "month" : "MARCH",
+      "monthValue" : 3,
+      "dayOfMonth" : 7,
+      "era" : "CE",
       "dayOfWeek" : "MONDAY",
       "leapYear" : false,
       "dayOfYear" : 66,
       "chronology" : {
         "calendarType" : "iso8601",
         "id" : "ISO"
-      },
-      "monthValue" : 3,
-      "dayOfMonth" : 7,
-      "era" : "CE"
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -83,10 +85,29 @@ public abstract class HandelsbankenCreditCardTransactionPaginator<
                         card -> {
                             CreditCardTransactionsResponse response =
                                     client.creditCardTransactions(card);
-                            return new HandelsbankenPaginatorResponse(
-                                    response.tinkTransactions(card, account),
-                                    response.getPaginationKey());
+
+                            HandelsbankenPaginatorResponse paginatorResponse =
+                                    new HandelsbankenPaginatorResponse(
+                                            response.tinkTransactions(card, account),
+                                            response.getPaginationKey());
+
+                            // add deposit trxs for credit card if any
+                            paginatorResponse.addAll(getDepositTransactions(response, account));
+
+                            return paginatorResponse;
                         });
+    }
+
+    private List<CreditCardTransaction> getDepositTransactions(
+            CreditCardTransactionsResponse response, CreditCardAccount account) {
+
+        Optional<URL> depositTransactionUrl = response.getDepositTransactionsUrl();
+        if (depositTransactionUrl.isPresent()) {
+            CreditCardTransactionsResponse<HandelsbankenCreditCard> responseDepositTransactions =
+                    client.creditCardTransactions(depositTransactionUrl.get());
+            return responseDepositTransactions.tinkTransactions(account);
+        }
+        return Collections.emptyList();
     }
 
     private List<Transaction> removeSummaryTransactions(List<Transaction> transactions) {
