@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.DefaultResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -25,9 +24,7 @@ public class RedsysHttpResponseStatusHandler extends DefaultResponseStatusHandle
                             500,
                             "INTERNAL_SERVER_ERROR",
                             BankServiceError.BANK_SIDE_FAILURE.exception(),
-                            false),
-                    new ErrorResponseToExceptionMapping(
-                            401, "TOKEN_EXPIRED", SessionError.SESSION_EXPIRED.exception(), true));
+                            false));
 
     private PersistentStorage persistentStorage;
 

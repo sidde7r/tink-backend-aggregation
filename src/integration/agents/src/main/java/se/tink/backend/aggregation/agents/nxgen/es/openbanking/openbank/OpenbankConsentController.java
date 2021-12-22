@@ -45,7 +45,7 @@ public class OpenbankConsentController implements ConsentController {
     }
 
     @Override
-    public boolean requestConsent() {
+    public void requestConsent() {
         final Pair<String, URL> consentRequest =
                 apiClient.requestConsent(
                         strongAuthenticationState.getState(), consentGenerator.generate());
@@ -59,15 +59,14 @@ public class OpenbankConsentController implements ConsentController {
                     executeWithDelay(() -> apiClient.fetchConsent(consentId));
             if (consentResponse.isConsentValid()) {
                 consentStorage.useConsentId(consentId);
-                return true;
+                break;
             }
         }
-        return false;
     }
 
     @Override
-    public ConsentStatus fetchConsentStatus(String consentId) {
-        return apiClient.fetchConsent(consentId).getConsentStatus();
+    public ConsentStatus fetchConsentStatus() {
+        return apiClient.fetchConsent(getConsentId()).getConsentStatus();
     }
 
     @Override

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.sabadell;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentStorage;
@@ -40,7 +41,7 @@ public class SabadellConsentController implements ConsentController {
     }
 
     @Override
-    public boolean requestConsent() {
+    public void requestConsent() {
         String supplementalKey = strongAuthenticationState.getSupplementalKey();
         String state = strongAuthenticationState.getState();
         Pair<String, URL> consentRequest =
@@ -50,21 +51,15 @@ public class SabadellConsentController implements ConsentController {
 
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(consentUrl));
-        supplementalInformationHelper.waitForSupplementalInformation(
-                supplementalKey, 5, TimeUnit.MINUTES);
-
-        if (apiClient.fetchConsent(consentId).getConsentStatus() == ConsentStatus.VALID) {
-            consentStorage.useConsentId(consentId);
-            return true;
-        } else {
-            // Did not approve, or timeout
-            return false;
-        }
+        supplementalInformationHelper
+                .waitForSupplementalInformation(supplementalKey, 5, TimeUnit.MINUTES)
+                .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
+        consentStorage.useConsentId(consentId);
     }
 
     @Override
-    public ConsentStatus fetchConsentStatus(String consentId) {
-        return apiClient.fetchConsent(consentId).getConsentStatus();
+    public ConsentStatus fetchConsentStatus() {
+        return apiClient.fetchConsent(getConsentId()).getConsentStatus();
     }
 
     @Override

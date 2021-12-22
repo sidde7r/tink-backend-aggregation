@@ -7,10 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -57,25 +55,6 @@ public class RedsysHttpResponseStatusHandlerTest {
             "{\"tppMessages\":[{\"category\":\"ERROR\"\\,\"code\":\"Internal Server Error\"}]}",
             "{\"tppMessages\":[{\"category\":\"ERROR\"\\,\"code\":\"INTERNAL_SERVER_ERROR\"\\,\"text\":\"An unexpected error has occurred\"}]}"
         };
-    }
-
-    @Test
-    public void shouldThrowSessionExpiredAndCleanPersistentStorage() {
-        // given:
-        String body = "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"TOKEN_EXPIRED\"}]}";
-        Mockito.when(httpResponse.getStatus()).thenReturn(401);
-        Mockito.when(httpResponse.getBody(String.class)).thenReturn(body);
-
-        // when
-        Throwable throwable =
-                Assertions.catchThrowable(
-                        () -> objectUnderTest.handleResponse(httpRequest, httpResponse));
-
-        // then
-        Assertions.assertThat(throwable).isInstanceOf(SessionException.class);
-        SessionException sessionException = (SessionException) throwable;
-        Mockito.verify(persistentStorage).clear();
-        Assertions.assertThat(sessionException.getError()).isEqualTo(SessionError.SESSION_EXPIRED);
     }
 
     @Test(expected = HttpResponseException.class)

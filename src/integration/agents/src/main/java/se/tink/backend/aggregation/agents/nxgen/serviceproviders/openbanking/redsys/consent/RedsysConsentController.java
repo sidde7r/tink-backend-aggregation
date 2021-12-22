@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -37,7 +38,7 @@ public class RedsysConsentController implements ConsentController {
     }
 
     @Override
-    public boolean requestConsent() {
+    public void requestConsent() {
         final String supplementalKey = strongAuthenticationState.getSupplementalKey();
         final String state = strongAuthenticationState.getState();
         final Pair<String, URL> consentRequest =
@@ -47,21 +48,15 @@ public class RedsysConsentController implements ConsentController {
 
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(consentUrl));
-        supplementalInformationHelper.waitForSupplementalInformation(
-                supplementalKey, 5, TimeUnit.MINUTES);
-
-        if (apiClient.fetchConsent(consentId).getConsentStatus() == ConsentStatus.VALID) {
-            consentStorage.useConsentId(consentId);
-            return true;
-        } else {
-            // Did not approve, or timeout
-            return false;
-        }
+        supplementalInformationHelper
+                .waitForSupplementalInformation(supplementalKey, 5, TimeUnit.MINUTES)
+                .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
+        consentStorage.useConsentId(consentId);
     }
 
     @Override
-    public ConsentStatus fetchConsentStatus(String consentId) {
-        return apiClient.fetchConsent(consentId).getConsentStatus();
+    public ConsentStatus fetchConsentStatus() {
+        return apiClient.fetchConsent(getConsentId()).getConsentStatus();
     }
 
     @Override

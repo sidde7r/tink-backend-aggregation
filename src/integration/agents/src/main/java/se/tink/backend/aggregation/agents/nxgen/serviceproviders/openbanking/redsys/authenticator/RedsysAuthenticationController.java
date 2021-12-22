@@ -53,16 +53,18 @@ public class RedsysAuthenticationController extends OAuth2AuthenticationControll
         final ThirdPartyAppResponse<String> oauthResponse = super.collect(reference);
 
         // Request consent
-        if (!consentController.requestConsent()) {
-            LOG.info("Did not get consent");
-            removeStoredTokens();
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
-        }
+        consentController.requestConsent();
 
-        // Redsys token is valid only for 500 sec and it's needed even for fetching. So just in case
+        // Redsys token is valid only for 300 sec and it's needed even for fetching. So just in case
         // additional refresh token is requested after authentication to get it valid for entire
         // fetching phase
         refreshToken();
+
+        if (!consentController.fetchConsentStatus().equals(ConsentStatus.VALID)) {
+            LOG.info("Consent not valid");
+            removeStoredTokens();
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+        }
 
         return oauthResponse;
     }
@@ -92,7 +94,7 @@ public class RedsysAuthenticationController extends OAuth2AuthenticationControll
         // Check consent
         final String consentId = consentController.getConsentId();
         if (Strings.isNullOrEmpty(consentId)
-                || !consentController.fetchConsentStatus(consentId).equals(ConsentStatus.VALID)) {
+                || !consentController.fetchConsentStatus().equals(ConsentStatus.VALID)) {
             LOG.info("Consent empty or invalid, expiring session");
             removeStoredTokens();
             throw SessionError.SESSION_EXPIRED.exception();
