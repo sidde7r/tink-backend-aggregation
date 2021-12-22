@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinanciali
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.DemoFinancialInstitutionConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.DemoFinancialInstitutionConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.DemoFinancialInstitutionConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.DemoFinancialInstitutionConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.configuration.DemoFinancialInstitutionConfiguration;
@@ -63,7 +64,12 @@ public class DemoFinancialInstitutionApiClient {
         return createRequestInSession(url).get(FetchTransactionsResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactionsForNextUrl(URL nextUrl) {
-        return createRequestInSession(nextUrl).get(FetchTransactionsResponse.class);
+    public FetchTransactionsResponse fetchTransactions(String accountNumber, String nextPageToken) {
+        final URL url =
+                createBaseUrl()
+                        .concat(Urls.TRANSACTIONS)
+                        .parameter("accountNumber", accountNumber)
+                        .queryParam(QueryParams.PAGE_TOKEN, nextPageToken);
+        return createRequestInSession(url).get(FetchTransactionsResponse.class);
     }
 }

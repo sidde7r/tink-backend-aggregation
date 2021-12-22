@@ -9,12 +9,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DemoFinancialInstitutionTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionKeyPaginator<TransactionalAccount, URL> {
+                TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final DemoFinancialInstitutionApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -35,13 +34,13 @@ public class DemoFinancialInstitutionTransactionalAccountFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
-            TransactionalAccount account, URL nextUrl) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String nextPageToken) {
         final String accountNumber = account.getAccountNumber();
 
-        return Option.of(nextUrl)
+        return Option.of(nextPageToken)
                 .fold(
                         () -> apiClient.fetchTransactions(accountNumber),
-                        s -> apiClient.fetchTransactionsForNextUrl(nextUrl));
+                        s -> apiClient.fetchTransactions(accountNumber, s));
     }
 }
