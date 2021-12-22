@@ -11,6 +11,8 @@ import se.tink.libraries.metrics.types.gauges.IncrementDecrementGauge;
 
 public final class ListenableThreadPoolExecutorBuilder<T extends Runnable> {
     private static final MetricId DEFAULT_METRIC_ID = MetricId.newId("thread_pool_executor");
+    private static final MetricId.MetricLabels FAILED_TO_QUEUE_LABEL =
+            new MetricId.MetricLabels().add("event", "failed_queued");
     private static final MetricId.MetricLabels QUEUED_LABEL =
             new MetricId.MetricLabels().add("event", "queued");
     private static final MetricId.MetricLabels STARTED_LABEL =
@@ -78,6 +80,9 @@ public final class ListenableThreadPoolExecutorBuilder<T extends Runnable> {
                                 .orElseGet(Counter::new),
                         metricRegistry
                                 .map(r -> r.meter(metric.label(FINISHED_LABEL)))
+                                .orElseGet(Counter::new),
+                        metricRegistry
+                                .map(r -> r.meter(metric.label(FAILED_TO_QUEUE_LABEL)))
                                 .orElseGet(Counter::new),
                         metricRegistry
                                 .map(
