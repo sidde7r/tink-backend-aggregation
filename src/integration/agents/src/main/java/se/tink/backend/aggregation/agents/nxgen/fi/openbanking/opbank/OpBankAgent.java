@@ -8,13 +8,17 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 import com.google.inject.Inject;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
@@ -24,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.OpBankPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.OpBankPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.OpBankTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.creditcard.OpBankCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount.OpBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
@@ -45,6 +50,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.UserAvailability;
 
@@ -59,10 +65,12 @@ import se.tink.libraries.credentials.service.UserAvailability;
 public final class OpBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final OpBankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final TransferDestinationRefreshController transferDestinationController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final AgentComponentProvider agentComponentProvider;
 
@@ -82,6 +90,7 @@ public final class OpBankAgent extends NextGenerationAgent
                         userAvailability);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
+        transferDestinationController = constructTransferDestinationController();
     }
 
     @Override
@@ -219,5 +228,15 @@ public final class OpBankAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         strongAuthenticationState,
                         persistentStorage));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new OpBankTransferDestinationFetcher());
     }
 }
