@@ -49,6 +49,12 @@ public class TransactionDates {
             return this;
         }
 
+        public TransactionDates.Builder setTransactionDate(
+                AvailableDateInformation dateInformation) {
+            dates.put(TransactionDateType.TRANSACTION_DATE, dateInformation);
+            return this;
+        }
+
         public TransactionDates build() {
             return new TransactionDates(
                     this.dates.entrySet().stream()

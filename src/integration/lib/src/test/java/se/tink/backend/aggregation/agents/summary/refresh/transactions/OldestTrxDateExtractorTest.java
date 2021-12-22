@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.summary.refresh.transactions;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -23,6 +25,7 @@ public class OldestTrxDateExtractorTest {
         List<TransactionDate> dates1 =
                 Arrays.asList(
                         getExecutionDate20210101(),
+                        getTransactionDate20210102010101(),
                         getValueDate20210102(),
                         getBookingDate20210103());
         Transaction trx1 = new Transaction();
@@ -54,6 +57,7 @@ public class OldestTrxDateExtractorTest {
         List<TransactionDate> dates1 =
                 Arrays.asList(
                         getExecutionDate20210101(),
+                        getTransactionDate20210102010101(),
                         getValueDate20210102(),
                         getBookingDate20210103());
         Transaction trx1 = new Transaction();
@@ -81,6 +85,7 @@ public class OldestTrxDateExtractorTest {
         List<TransactionDate> dates1 =
                 Arrays.asList(
                         getExecutionDate20210101(),
+                        getTransactionDate20210102010101(),
                         getValueDate20210102(),
                         getBookingDate20210103());
         Transaction trx1 = new Transaction();
@@ -124,6 +129,15 @@ public class OldestTrxDateExtractorTest {
         information.setDate(LocalDate.of(2021, 1, 2));
         date1.setValue(information);
         date1.setType(TransactionDateType.VALUE_DATE);
+        return date1;
+    }
+
+    private TransactionDate getTransactionDate20210102010101() {
+        TransactionDate date1 = new TransactionDate();
+        AvailableDateInformation information = new AvailableDateInformation();
+        information.setInstant(LocalDateTime.of(2021, 1, 1, 1, 1, 1).toInstant(ZoneOffset.UTC));
+        date1.setValue(information);
+        date1.setType(TransactionDateType.TRANSACTION_DATE);
         return date1;
     }
 
