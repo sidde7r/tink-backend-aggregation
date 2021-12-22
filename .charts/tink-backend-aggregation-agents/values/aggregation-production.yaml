@@ -37,34 +37,24 @@ grafanaClassLinkAbs12h: https://grafana.global-production.tink.network/d/0000000
 kibanaMarketUKLink: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-4h,to:now))&_a=(columns:!(doc.exception,doc.message,doc.mdc.agentName,doc.mdc.providerName),filters:!(),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:kuery,query:'doc.mdc.agentName%20like%20!'.uk.!''),sort:!(!('@timestamp',desc)))
 grafanaLink: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
 grafanaMarketLink: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-3h&to=now&var-cluster=aggregation&var-environment=production&var-market=<{$labels.market}>&var-agent=All&var-provider=All&var-interval=15m&var-app=tink-backend-aggregation
-
-# Below we are using negation, but in fact e.g. authErrors has outcome cancelled
-temporaryErrorsAuth: outcome!~"failed|failed_due_to_tink_infrastructure_failure"
-authErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout"
-bankErrorsAuth: outcome!~"unavailable"
-agentErrorsAuth: outcome!~"failed|failed_due_to_tink_infrastructure_failure|cancelled|cancelled_due_to_third_party_app_timeout"
-bankAndTemporaryErrorsAuth: outcome!~"failed|failed_due_to_tink_infrastructure_failure|unavailable"
-allErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"
-
-agentErrorsRefresh: outcome!~"failed"
-bankErrorsRefresh: outcome!~"unavailable"
-partiallyCompletedErrorRefresh: outcome!~"partially_completed"
-allErrorsRefresh: outcome!~"failed|unavailable|partially_completed"
-
-# outcomes w/o negation for PIS
-temporaryErrors: outcome=~"failed"
-bankErrors: outcome=~"unavailable"
-cancelled: outcome=~"cancelled"
-allErrors: outcome=~"cancelled|unavailable|failed"
-
-allLoginActions: action=~"login-auto|login-manual|login-cron|is-logged-in|persist-login-session"
-manualLoginActions: action=~"login-manual|is-logged-in"
-loginActionsWithoutManual: action=~"login-auto|login-cron|persist-login-session"
-
-obAgents: provider=~".*-ob|.*-oauth2"
-reAgents: provider!~".*-ob|.*-oauth2"
-
-p4WaitTimeBeforeFiringAlert: 30m
-p3WaitTimeBeforeFiringAlert: 20m
-p2WaitTimeBeforeFiringAlert: 10m
-p1WaitTimeBeforeFiringAlert: 5m
+ 
+# [NZG-409] Jan S:
+# Trying to declutter repetitious form of recording rules expression for DE market,
+# by defining time series filtering right here. Might be refactored further in near future.
+deQueryLoginManualAll: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual"}
+deQueryLoginManualFailed: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed"}
+deQueryLoginManualUnavailable: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="unavailable"}
+deQueryLoginManualTinkInfrFailed: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed_due_to_tink_infrastructure"}
+deQueryLoginManualCancelled: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}
+deQueryLoginAutoAll: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron"}
+deQueryLoginAutoFailed: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="failed"}
+deQueryLoginAutoUnavailable: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="unavailable"}
+deQueryLoginAutoTinkInfrFailed: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="failed_due_to_tink_infrastructure"}
+deQueryLoginAutoCancelled: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}
+deQueryPaymentAll: tink_agent_transfer_total{ provider_type!="test", market="DE"}
+deQueryPaymentFailed: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="failed"}
+deQueryPaymentUnavailable: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="unavailable"}
+deQueryPaymentCancelled: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="cancelled"}
+deQueryRefreshAll: tink_agent_refresh_total{ provider_type!="test", market="DE"}
+deQueryRefreshFailed: tink_agent_refresh_total{ provider_type!="test", market="DE", outcome=~"failed|partially_completed"}
+deQueryRefreshUnavailable: tink_agent_refresh_total{ provider_type!="test", market="DE", outcome="unavailable"}
