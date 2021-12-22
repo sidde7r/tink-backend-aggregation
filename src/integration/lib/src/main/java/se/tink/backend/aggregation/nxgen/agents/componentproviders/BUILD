@@ -5,6 +5,8 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agent_sdk/runtime/src/main/java/operation",
+        "//src/agent_sdk/sdk/src/operation",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
@@ -22,6 +24,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http_metrics",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/raw_data_events",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
+        "//src/integration/user:rpc",
         "//src/libraries/agent-storage",
         "//third_party:com_google_inject_guice",
         "//third_party:com_google_protobuf_protobuf_java",
