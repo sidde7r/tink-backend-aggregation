@@ -236,25 +236,7 @@ public class OpenIdAuthenticationController
                 authenticator.decorateAuthorizeUrl(
                         authorizeUrl, strongAuthenticationState, nonce, callbackUri);
 
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-        ThirdPartyAppAuthenticationPayload.Android androidPayload =
-                new ThirdPartyAppAuthenticationPayload.Android();
-        androidPayload.setIntent(authorizeUrl.get());
-        payload.setAndroid(androidPayload);
-
-        ThirdPartyAppAuthenticationPayload.Ios iOsPayload =
-                new ThirdPartyAppAuthenticationPayload.Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        payload.setIos(iOsPayload);
-
-        ThirdPartyAppAuthenticationPayload.Desktop desktop =
-                new ThirdPartyAppAuthenticationPayload.Desktop();
-        desktop.setUrl(authorizeUrl.get());
-        payload.setDesktop(desktop);
-
-        return payload;
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override
