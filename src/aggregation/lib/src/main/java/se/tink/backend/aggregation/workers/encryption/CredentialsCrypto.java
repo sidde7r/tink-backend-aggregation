@@ -240,27 +240,12 @@ public class CredentialsCrypto {
                             CACHE_EXPIRE_TIME,
                             serializedEncryptedCredentials);
 
-            try {
-                Object result = future.get();
-                if (OperationFuture.class.isAssignableFrom(future.getClass())) {
-                    OperationFuture<Boolean> operationFuture = (OperationFuture<Boolean>) future;
-                    logger.info(
-                            "Cache operation result status: {}, result: {}",
-                            operationFuture.getStatus(),
-                            result);
-                } else {
-                    logger.warn(
-                            "Cache operation result received class: {}, result: {}",
-                            future.getClass(),
-                            result);
-                }
-            } catch (Exception e) {
-                logger.error("Error while getting result", e);
-            }
+            logCheckResult(future);
 
             logger.info(
-                    "cached sensitive data with timestamp: {}",
-                    formatDate(encryptedCredentials.getTimestamp()));
+                    "cached sensitive data with timestamp: {} by {}",
+                    formatDate(encryptedCredentials.getTimestamp()),
+                    cacheClient.getClass());
         } catch (Exception e) {
             logger.error("Could not cache sensitive data", e);
         }
@@ -276,6 +261,26 @@ public class CredentialsCrypto {
         }
 
         return true;
+    }
+
+    private void logCheckResult(Future<?> future) {
+        try {
+            Object result = future.get();
+            if (OperationFuture.class.isAssignableFrom(future.getClass())) {
+                OperationFuture<Boolean> operationFuture = (OperationFuture<Boolean>) future;
+                logger.info(
+                        "Cache operation result status: {}, result: {}",
+                        operationFuture.getStatus(),
+                        result);
+            } else {
+                logger.warn(
+                        "Cache operation result received class: {}, result: {}",
+                        future.getClass(),
+                        result);
+            }
+        } catch (Exception e) {
+            logger.error("Error while getting result", e);
+        }
     }
 
     private void cryptoMetrics(

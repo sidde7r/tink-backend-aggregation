@@ -10,9 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import net.spy.memcached.BinaryConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheInstrumentationDecorator;
@@ -28,9 +27,8 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.other.HeapDumpGauge;
 import se.tink.libraries.service.version.VersionInformation;
 
+@Slf4j
 public class AggregationCommonModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(AggregationCommonModule.class);
-
     @Override
     protected void configure() {
         bind(CacheClient.class).toProvider(CacheProvider.class).in(Scopes.SINGLETON);
@@ -64,6 +62,7 @@ public class AggregationCommonModule extends AbstractModule {
         @Override
         public CacheClient get() {
             if (configuration == null || !configuration.isEnabled()) {
+                log.info("Non caching cache client created");
                 return new NonCachingCacheClient();
             }
 
@@ -71,8 +70,7 @@ public class AggregationCommonModule extends AbstractModule {
             try {
                 client = new MemcacheClient(new TinkConnectionFactory(), configuration.getHosts());
             } catch (IOException e) {
-                log.error("Could not create memcache client", e);
-                client = new NonCachingCacheClient();
+                throw new IllegalStateException("Could not create memcache client: " + e);
             }
 
             client = new CacheInstrumentationDecorator(client, registry, PRIMARY_METRIC_NAME);
