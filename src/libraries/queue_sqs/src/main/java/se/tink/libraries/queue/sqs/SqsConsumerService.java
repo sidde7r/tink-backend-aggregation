@@ -49,9 +49,10 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
         this.regularQueueInterleaveRatio = regularQueueInterleaveRatio;
         this.retryQueueInterleaveRatio = retryQueueInterleaveRatio;
         log.info(
-                "Configured with consumeFromPriorityQueue={}, regularQueueInterleaveRatio={}",
+                "Configured with consumeFromPriorityQueue={}, regularQueueInterleaveRatio={}, retryQueueInterleaveRatio={}",
                 consumeFromPriorityQueue,
-                regularQueueInterleaveRatio);
+                regularQueueInterleaveRatio,
+                retryQueueInterleaveRatio);
         this.service =
                 new AbstractExecutionThreadService() {
 

@@ -89,6 +89,9 @@ data:
     prioritySqsQueueConfiguration:
       {{ .Values.prioritySqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
 
+    priorityRetrySqsQueueConfiguration:
+      {{ .Values.priorityRetrySqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
+
     s3StorageConfiguration:
       {{ .Values.s3StorageConfiguration | default dict | toYaml | indent 6 | trim }}
 
