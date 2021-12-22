@@ -97,7 +97,8 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
                     aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
         }
         log.info("[boi-experimental-transaction-pagination] Toggle is disabled.");
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        return new UkOpenBankingV31Ais(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     private Toggle createToggleForExperimentalTransactionPagination() {

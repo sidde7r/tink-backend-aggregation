@@ -225,7 +225,7 @@ public class Payment {
         return paymentScheme == PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER;
     }
 
-    private String getIbanMarket(String accountNumber) {
+    public String getIbanMarket(String accountNumber) {
         return IbanUtil.getCountryCode(accountNumber);
     }
 

@@ -218,7 +218,8 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                     persistentStorage,
                     localDateTimeSource,
                     creditCardAccountMapper,
-                    transactionalAccountMapper);
+                    transactionalAccountMapper,
+                    transactionPaginationHelper);
         }
     }
 }

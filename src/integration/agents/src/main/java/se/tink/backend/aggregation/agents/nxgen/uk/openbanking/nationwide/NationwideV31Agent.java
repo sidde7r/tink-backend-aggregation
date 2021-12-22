@@ -82,7 +82,8 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
                 persistentStorage,
                 createCreditCardAccountMapper(),
                 localDateTimeSource,
-                apiClient);
+                apiClient,
+                transactionPaginationHelper);
     }
 
     @Override

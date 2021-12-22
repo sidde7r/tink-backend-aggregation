@@ -61,7 +61,10 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, componentProvider.getLocalDateTimeSource());
+                aisConfig,
+                persistentStorage,
+                componentProvider.getLocalDateTimeSource(),
+                transactionPaginationHelper);
     }
 
     @Override

@@ -66,7 +66,11 @@ public final class CapitalOneV31Agent extends UkOpenBankingBaseAgent {
                                 new DefaultCreditCardBalanceMapper(valueExtractor)),
                         new DefaultIdentifierMapper(valueExtractor));
         return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);
+                aisConfig,
+                persistentStorage,
+                creditCardAccountMapper,
+                localDateTimeSource,
+                transactionPaginationHelper);
     }
 
     @Override

@@ -304,7 +304,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
 REQUEST 7
-GET https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts/3451b18a-5640-485e-8a1a-f95f83fbe065/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
+GET https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts/3451b18a-5640-485e-8a1a-f95f83fbe065/transactions?fromBookingDateTime=1992-01-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800000jf7AeAAI
 Authorization: Bearer DUMMY_ACCESS_TOKEN

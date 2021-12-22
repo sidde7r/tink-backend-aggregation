@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
@@ -26,8 +27,9 @@ public class NationwideV31Ais extends UkOpenBankingV31Ais {
             PersistentStorage persistentStorage,
             CreditCardAccountMapper nationwideCreditCardAccountMapper,
             LocalDateTimeSource localDateTimeSource,
-            UkOpenBankingApiClient apiClient) {
-        super(aisConfig, persistentStorage, localDateTimeSource);
+            UkOpenBankingApiClient apiClient,
+            TransactionPaginationHelper transactionPaginationHelper) {
+        super(aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
         this.creditCardAccountMapper = nationwideCreditCardAccountMapper;
         this.nationwidePartyFetcher = new PartyV31Fetcher(apiClient, aisConfig, persistentStorage);
     }

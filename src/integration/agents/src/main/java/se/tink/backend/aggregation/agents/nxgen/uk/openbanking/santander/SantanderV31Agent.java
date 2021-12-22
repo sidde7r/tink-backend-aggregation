@@ -70,7 +70,12 @@ public final class SantanderV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new SantanderV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
+        return new SantanderV31Ais(
+                aisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                apiClient,
+                transactionPaginationHelper);
     }
 
     @Override

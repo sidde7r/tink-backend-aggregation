@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -21,13 +22,15 @@ public class DanskeBankOpenBankingV31Ais extends UkOpenBankingV31Ais {
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
             CreditCardAccountMapper creditCardAccountMapper,
-            TransactionalAccountMapper transactionalAccountMapper) {
+            TransactionalAccountMapper transactionalAccountMapper,
+            TransactionPaginationHelper transactionPaginationHelper) {
         super(
                 ukOpenBankingAisConfig,
                 persistentStorage,
                 localDateTimeSource,
                 creditCardAccountMapper,
-                transactionalAccountMapper);
+                transactionalAccountMapper,
+                transactionPaginationHelper);
     }
 
     @Override

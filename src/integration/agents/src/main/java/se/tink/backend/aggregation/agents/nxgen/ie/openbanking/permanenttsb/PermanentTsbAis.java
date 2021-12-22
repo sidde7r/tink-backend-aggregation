@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -18,8 +19,9 @@ public class PermanentTsbAis extends UkOpenBankingV31Ais {
     protected PermanentTsbAis(
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
-            LocalDateTimeSource localDateTimeSource) {
-        super(aisConfig, persistentStorage, localDateTimeSource);
+            LocalDateTimeSource localDateTimeSource,
+            TransactionPaginationHelper transactionPaginationHelper) {
+        super(aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     @Override

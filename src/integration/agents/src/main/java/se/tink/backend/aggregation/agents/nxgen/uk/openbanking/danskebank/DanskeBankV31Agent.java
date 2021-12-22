@@ -78,7 +78,8 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
                 persistentStorage,
                 localDateTimeSource,
                 creditCardAccountMapper,
-                UkOpenBankingV31Ais.defaultTransactionalAccountMapper());
+                UkOpenBankingV31Ais.defaultTransactionalAccountMapper(),
+                transactionPaginationHelper);
     }
 
     @Override

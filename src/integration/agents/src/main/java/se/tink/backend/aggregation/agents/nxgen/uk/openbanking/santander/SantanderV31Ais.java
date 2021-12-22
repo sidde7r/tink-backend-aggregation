@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.fetcher.SantanderPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
@@ -28,8 +29,9 @@ public class SantanderV31Ais extends UkOpenBankingV31Ais {
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            UkOpenBankingApiClient apiClient) {
-        super(aisConfig, persistentStorage, localDateTimeSource);
+            UkOpenBankingApiClient apiClient,
+            TransactionPaginationHelper transactionPaginationHelper) {
+        super(aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
 
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         this.santanderCreditCardAccountMapper =

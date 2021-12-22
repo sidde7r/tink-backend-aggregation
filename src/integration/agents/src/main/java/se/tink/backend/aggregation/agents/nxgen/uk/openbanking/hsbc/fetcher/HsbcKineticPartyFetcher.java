@@ -1,6 +1,6 @@
 package src.integration.agents.src.main.java.se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.fetcher;
 
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.PARTIES_SCA_LIMIT_MINUTES;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +21,7 @@ public class HsbcKineticPartyFetcher extends PartyV31Fetcher {
             UkOpenBankingApiClient apiClient,
             UkOpenBankingAisConfig config,
             PersistentStorage persistentStorage) {
-        super(apiClient, config, persistentStorage, PARTIES_SCA_LIMIT_MINUTES);
+        super(apiClient, config, persistentStorage, SCA_LIMIT_MINUTES);
     }
 
     @Override

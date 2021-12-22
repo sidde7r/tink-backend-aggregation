@@ -90,7 +90,8 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
                 new RevolutTransactionalAccountMapperDecorator(
                         new RevolutTransactionalAccountMapper(
                                 new TransactionalAccountBalanceMapper(valueExtractor),
-                                identifierMapper)));
+                                identifierMapper)),
+                transactionPaginationHelper);
     }
 
     @Override

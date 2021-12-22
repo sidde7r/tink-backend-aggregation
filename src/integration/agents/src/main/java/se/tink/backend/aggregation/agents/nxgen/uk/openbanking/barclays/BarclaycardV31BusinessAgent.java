@@ -49,7 +49,12 @@ public final class BarclaycardV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new BarclaysV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
+        return new BarclaysV31Ais(
+                aisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                apiClient,
+                transactionPaginationHelper);
     }
 
     @Override

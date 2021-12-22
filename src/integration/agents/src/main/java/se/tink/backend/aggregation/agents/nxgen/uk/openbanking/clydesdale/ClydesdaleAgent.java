@@ -63,7 +63,8 @@ public class ClydesdaleAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        return new UkOpenBankingV31Ais(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     @Override

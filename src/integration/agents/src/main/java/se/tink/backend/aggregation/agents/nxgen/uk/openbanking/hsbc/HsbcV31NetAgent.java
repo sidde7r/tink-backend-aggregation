@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.PARTIES_SCA_LIMIT_MINUTES;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -62,8 +62,8 @@ public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 persistentStorage,
                 localDateTimeSource,
-                new PartyV31Fetcher(
-                        apiClient, aisConfig, persistentStorage, PARTIES_SCA_LIMIT_MINUTES));
+                new PartyV31Fetcher(apiClient, aisConfig, persistentStorage, SCA_LIMIT_MINUTES),
+                transactionPaginationHelper);
     }
 
     @Override

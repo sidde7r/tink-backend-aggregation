@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.Risk;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
@@ -40,12 +42,13 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     static final String PAYMENT_CONSENT = "/domestic-payment-consents";
@@ -59,6 +62,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     private final UkOpenBankingRequestBuilder requestBuilder;
     private final DomesticPaymentConverter domesticPaymentConverter;
     private final UkOpenBankingPisConfig pisConfig;
+
     private static final List<Integer> FAILED_STATUSES =
             Arrays.asList(
                     HttpStatus.SC_INTERNAL_SERVER_ERROR,
@@ -71,7 +75,6 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
         final DomesticPaymentConsentRequest consentRequest =
                 createDomesticPaymentConsentRequest(paymentRequest);
         DomesticPaymentConsentResponse response;
-
         URL consentRequestUrl;
         if (pisConfig.getMarketCode() != null) {
             consentRequestUrl =
@@ -272,9 +275,10 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     private DomesticPaymentInitiation createDomesticPaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
+        DebtorAccount debtor = domesticPaymentConverter.getDebtorAccount(payment);
         DomesticPaymentInitiationBuilder domesticPaymentInitiationBuilder =
                 DomesticPaymentInitiation.builder()
-                        .debtorAccount(domesticPaymentConverter.getDebtorAccount(payment))
+                        .debtorAccount(debtor)
                         .creditorAccount(domesticPaymentConverter.getCreditorAccount(payment))
                         .instructedAmount(domesticPaymentConverter.getInstructedAmount(payment))
                         .remittanceInformation(
@@ -282,11 +286,12 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         .instructionIdentification(instructionIdentification)
                         .endToEndIdentification(endToEndIdentification);
 
-        if (payment.getPaymentScheme() != null && pisConfig.getMarketCode() != null) {
+        if (!isUKMarketCode(pisConfig.getMarketCode())
+                && shouldGetEuLocalInstrument(payment, debtor)) {
+            log.info("EU local instrument");
             domesticPaymentConverter.getEuLocalInstrument(
-                    domesticPaymentInitiationBuilder, pisConfig.getMarketCode());
+                    domesticPaymentInitiationBuilder, getMarket(payment, debtor));
         }
-
         // First step to optionally enable this before making this mandatory
         if (payment.getPaymentScheme() != null
                 && payment.getPaymentScheme() == PaymentScheme.FASTER_PAYMENTS) {
@@ -297,6 +302,33 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
         }
 
         return domesticPaymentInitiationBuilder.build();
+    }
+
+    private boolean isUKMarketCode(MarketCode configurationMarket) {
+        return configurationMarket == null;
+    }
+
+    private boolean shouldGetEuLocalInstrument(Payment payment, DebtorAccount debtor) {
+        return Optional.ofNullable(debtor).isPresent()
+                && doesPaymentConfigurationMarketMatchDebtorAccountMarket(payment, debtor);
+    }
+
+    private boolean doesPaymentConfigurationMarketMatchDebtorAccountMarket(
+            Payment payment, DebtorAccount debtor) {
+        String configurationMarket = pisConfig.getMarketCode().toString();
+        String debtorMarket = getMarket(payment, debtor);
+        boolean marketMatch = StringUtils.equalsIgnoreCase(debtorMarket, configurationMarket);
+        if (!marketMatch) {
+            log.warn(
+                    "Market configuration {} does not match debtor account market {}",
+                    configurationMarket,
+                    debtorMarket);
+        }
+        return marketMatch;
+    }
+
+    private String getMarket(Payment payment, DebtorAccount debtor) {
+        return payment.getIbanMarket(debtor.getIdentification());
     }
 
     private URL createUrl(String path) {
