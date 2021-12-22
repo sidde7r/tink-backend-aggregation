@@ -15,7 +15,6 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -87,20 +86,9 @@ public class VanquisCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
     private void logCreditLineTypes(Collection<AccountBalanceEntity> balances) {
         log.info(
-                "[CARD CREDIT LINE] Available types {}",
+                "[CARD CREDIT LINE] Balances with credit line types {}\n",
                 balances.stream()
-                        .flatMap(
-                                balance ->
-                                        CollectionUtils.emptyIfNull(balance.getCreditLine())
-                                                .stream())
-                        .map(
-                                line ->
-                                        StringUtils.join(
-                                                "{",
-                                                line.getType(),
-                                                ", included: ",
-                                                line.getIncluded(),
-                                                "}"))
+                        .map(balance -> StringUtils.join(balance.printTypeWithCreditLines(), "\n"))
                         .collect(Collectors.toList()));
     }
 }
