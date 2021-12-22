@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
@@ -41,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -284,10 +286,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         .instructionIdentification(instructionIdentification)
                         .endToEndIdentification(endToEndIdentification);
 
-        if (Optional.ofNullable(debtor).isPresent()) {
+        if (!isUKMarketCode(pisConfig.getMarketCode())
+                && shouldGetEuLocalInstrument(payment, debtor)) {
+            log.info("EU local instrument");
             domesticPaymentConverter.getEuLocalInstrument(
-                    domesticPaymentInitiationBuilder,
-                    payment.getIbanMarket(debtor.getIdentification()));
+                    domesticPaymentInitiationBuilder, getMarket(payment, debtor));
         }
         // First step to optionally enable this before making this mandatory
         if (payment.getPaymentScheme() != null
@@ -299,6 +302,33 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
         }
 
         return domesticPaymentInitiationBuilder.build();
+    }
+
+    private boolean isUKMarketCode(MarketCode configurationMarket) {
+        return configurationMarket == null;
+    }
+
+    private boolean shouldGetEuLocalInstrument(Payment payment, DebtorAccount debtor) {
+        return Optional.ofNullable(debtor).isPresent()
+                && doesPaymentConfigurationMarketMatchDebtorAccountMarket(payment, debtor);
+    }
+
+    private boolean doesPaymentConfigurationMarketMatchDebtorAccountMarket(
+            Payment payment, DebtorAccount debtor) {
+        String configurationMarket = pisConfig.getMarketCode().toString();
+        String debtorMarket = getMarket(payment, debtor);
+        boolean marketMatch = StringUtils.equalsIgnoreCase(debtorMarket, configurationMarket);
+        if (!marketMatch) {
+            log.warn(
+                    "Market configuration {} does not match debtor account market {}",
+                    configurationMarket,
+                    debtorMarket);
+        }
+        return marketMatch;
+    }
+
+    private String getMarket(Payment payment, DebtorAccount debtor) {
+        return payment.getIbanMarket(debtor.getIdentification());
     }
 
     private URL createUrl(String path) {
