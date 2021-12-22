@@ -361,6 +361,8 @@ public class OpenIdAuthenticationController
             throw NO_BANK_SERVICE.exception(errorDescription);
         } else if (OpenIdConstants.Errors.UNAUTHORISED.equalsIgnoreCase(errorType)) {
             throw SESSION_TERMINATED.exception(errorDescription);
+        } else if (OpenIdConstants.Errors.INVALID_INTENT_ID.equalsIgnoreCase(errorType)) {
+            throw SessionError.CONSENT_INVALID.exception();
         }
 
         throw new IllegalStateException(
