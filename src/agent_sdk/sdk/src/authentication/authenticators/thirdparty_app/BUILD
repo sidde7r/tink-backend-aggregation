@@ -4,6 +4,7 @@ java_library_with_sources(
     name = "thirdparty_app",
     srcs = glob(["**/*.java"]),
     extdeps = [
+        "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_google_code_findbugs_jsr305",
         "//src/agent_sdk:lombok_libs",
     ],

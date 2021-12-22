@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.authentication.authenticators.thirdparty_app;
+package se.tink.agent.sdk.authentication.authenticators.thirdparty_app.result;
 
 public enum ThirdPartyAppStatus {
     // The user completed the authentication via the third party app.
