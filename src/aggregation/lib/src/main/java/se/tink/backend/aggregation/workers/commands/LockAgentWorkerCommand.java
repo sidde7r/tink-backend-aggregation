@@ -84,15 +84,16 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
 
         Timer.Context acquire = metricRegistry.timer(ACQUIRE_LOCK_TIME).time();
         hasAcquiredLock = lock.acquire(5, TimeUnit.SECONDS);
-        acquire.stop();
+        long acquireLockTimeMs = TimeUnit.NANOSECONDS.toMillis(acquire.stop());
 
         running = metricRegistry.timer(RUNNING_LOCK_TIME).time();
         log.info(
-                "[LOCK] user: {} credentials: {} is {} for operation: {}",
+                "[LOCK] user: {} credentials: {} is {} for operation: {} in {}ms",
                 userId,
                 credentialsId,
                 hasAcquiredLock ? "acquired" : "NOT acquired",
-                operation);
+                operation,
+                acquireLockTimeMs);
 
         Optional<String> market =
                 Optional.of(context)
