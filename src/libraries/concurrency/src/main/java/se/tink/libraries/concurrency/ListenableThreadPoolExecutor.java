@@ -48,6 +48,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
     private final ThreadPoolExecutor threadPool;
     private final Counter queuedItems;
+    private final Counter failedQueuedItems;
     private final Counter startedItems;
     private final IncrementCounterRunnable finishedRunningIncrementor;
     private final DecrementGaugeRunnable decrementGaugeRunnable;
@@ -142,6 +143,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
             Counter queuedItems,
             Counter startedItems,
             Counter finishedItems,
+            Counter failedQueuedItems,
             IncrementDecrementGauge numberOfActiveThreadsGauge) {
 
         this.queue = queue;
@@ -150,6 +152,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
         this.errorLoggingCallback = errorLoggingCallback;
 
         this.queuedItems = queuedItems;
+        this.failedQueuedItems = failedQueuedItems;
         this.startedItems = startedItems;
         this.numberOfActiveThreadsGauge = numberOfActiveThreadsGauge;
 
@@ -253,6 +256,8 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
     private <V> WrappedRunnableListenableFutureTask<T, V> execute(
             WrappedRunnableListenableFutureTask<T, V> future) {
         if (!queue.offer(future)) {
+            this.failedQueuedItems.inc();
+
             log.warn("[ListenableThreadPoolExecutor] Queue couldn't offer");
             try {
                 rejectedHandler.handle(future, queue);
