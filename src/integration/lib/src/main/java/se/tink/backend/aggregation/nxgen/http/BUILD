@@ -33,7 +33,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/constants",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/engine",
