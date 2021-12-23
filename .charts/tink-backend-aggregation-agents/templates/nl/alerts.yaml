@@ -14,7 +14,7 @@ spec:
         # Failed refreshes is 100%
         (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome=~"unavailable|failed", market="NL", provider_type!="test"}[1h])) by (className,provider,type)
             / count(sum_over_time(tink_agent_refresh_total{market="NL", provider_type!="test"}[1h])) by (className,provider,type) > 0.99)
-        and count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome=~"unavailable|failed", market="NL", provider_type!="test"}[1h])) by (className,provider,type) > 5
+        and count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome=~"unavailable|failed", market="NL", provider_type!="test"}[1h])) by (className,provider,type) > 10
       for: 15m
       priority: P1
       labels:
