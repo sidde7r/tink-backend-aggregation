@@ -30,8 +30,7 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
     public CreditCardAccountMapper(
             CreditCardBalanceMapper balanceMapper, IdentifierMapper identifierMapper) {
         this.balanceMapper = balanceMapper;
-        this.granularBalancesMapper =
-                new GranularBalancesMapper(new DefaultBalancePreCalculator());
+        this.granularBalancesMapper = new GranularBalancesMapper(new DefaultBalancePreCalculator());
         this.identifierMapper = identifierMapper;
     }
 

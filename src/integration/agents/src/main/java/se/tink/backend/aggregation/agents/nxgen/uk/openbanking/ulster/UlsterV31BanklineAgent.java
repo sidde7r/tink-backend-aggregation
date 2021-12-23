@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.calculator.NatwestGroupBalancePreCalculator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -18,11 +19,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.GranularBalancesMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
@@ -49,8 +55,16 @@ public class UlsterV31BanklineAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
+                aisConfig,
+                persistentStorage,
+                new CreditCardAccountMapper(
+                        new DefaultCreditCardBalanceMapper(valueExtractor),
+                        new GranularBalancesMapper(new NatwestGroupBalancePreCalculator()),
+                        new DefaultIdentifierMapper(valueExtractor)),
+                localDateTimeSource,
+                transactionPaginationHelper);
     }
 
     @Override

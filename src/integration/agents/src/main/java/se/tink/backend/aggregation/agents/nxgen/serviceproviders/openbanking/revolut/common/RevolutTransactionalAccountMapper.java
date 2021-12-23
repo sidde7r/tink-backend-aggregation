@@ -34,8 +34,7 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
     public RevolutTransactionalAccountMapper(
             TransactionalAccountBalanceMapper balanceMapper, IdentifierMapper identifierMapper) {
         this.balanceMapper = balanceMapper;
-        this.granularBalancesMapper =
-                new GranularBalancesMapper(new DefaultBalancePreCalculator());
+        this.granularBalancesMapper = new GranularBalancesMapper(new DefaultBalancePreCalculator());
         this.identifierMapper = identifierMapper;
     }
 

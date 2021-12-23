@@ -32,8 +32,7 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
     public TransactionalAccountMapper(
             TransactionalAccountBalanceMapper balanceMapper, IdentifierMapper identifierMapper) {
         this.balanceMapper = balanceMapper;
-        this.granularBalancesMapper =
-                new GranularBalancesMapper(new DefaultBalancePreCalculator());
+        this.granularBalancesMapper = new GranularBalancesMapper(new DefaultBalancePreCalculator());
         this.identifierMapper = identifierMapper;
     }
 
