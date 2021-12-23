@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkObInstantDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
@@ -22,6 +21,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Data
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountBalanceEntity {
+
+    @JsonIgnore private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     private String accountId;
 
     private AmountEntity amount;
@@ -44,18 +46,7 @@ public class AccountBalanceEntity {
                 : unsignedAmount.negate();
     }
 
-    public String printTypeWithCreditLines() {
-        return StringUtils.join(
-                "\n\t{",
-                "\n\t\t",
-                "balance type:",
-                Optional.ofNullable(type).map(Enum::name).orElse(StringUtils.EMPTY),
-                "\n\t\t",
-                "credit lines:",
-                CollectionUtils.emptyIfNull(creditLine).stream()
-                        .map(line -> StringUtils.join(line.toString(), "\n\t\t\t"))
-                        .collect(Collectors.toList()),
-                "\n\t",
-                "}");
+    public String prettyPrint() {
+        return GSON.toJson(this);
     }
 }

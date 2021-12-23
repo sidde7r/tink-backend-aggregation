@@ -76,7 +76,7 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
 
         if (!optionalCreditLineAmount.isPresent()) {
             log.info(
-                    "[CREDIT LINE] No credit line amount for balance {}. Subtracting credit line skipped",
+                    "[CREDIT LINE SUBTRACTION] No credit line amount for {} balance. Subtracting credit line skipped",
                     balanceType);
             return balanceAmount;
         }
@@ -85,7 +85,8 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
         ExactCurrencyAmount balanceAmountWithoutCreditLine =
                 balanceAmount.subtract(creditLineAmount);
         log.info(
-                "[CREDIT LINE] Subtracting credit line from balance: {} - {} = {}",
+                "[CREDIT LINE SUBTRACTION] Subtracting credit line from {} balance: {} - {} = {}",
+                balanceType,
                 balanceAmount.getDoubleValue(),
                 creditLineAmount.getDoubleValue(),
                 balanceAmountWithoutCreditLine.getDoubleValue());
@@ -106,7 +107,7 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
 
         if (!optionalCreditLineAmount.isPresent()) {
             log.info(
-                    "[CREDIT LINE] No credit line amount for balance {}. Subtracting credit line skipped",
+                    "[CREDIT LINE SUBTRACTION] No credit line amount for {} balance. Subtracting credit line skipped",
                     balanceType);
             return balanceAmount;
         }
@@ -117,7 +118,8 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
 
         if (!line.isAvailableType()) {
             log.info(
-                    "[CREDIT LINE] Subtracting credit line from available balance: {} - {} = {}",
+                    "[CREDIT LINE SUBTRACTION] Subtracting credit line from {} available balance: {} - {} = {}",
+                    balanceType,
                     balanceAmount.getDoubleValue(),
                     creditLineAmount.getDoubleValue(),
                     balanceAmountWithoutCreditLine.getDoubleValue());
@@ -128,7 +130,7 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
 
         if (balanceAmountWithoutCreditLine.getDoubleValue() < 0) {
             log.warn(
-                    "[CREDIT LINE] Credit line of available type is smaller than available balance. "
+                    "[CREDIT LINE SUBTRACTION] Credit line of available type is smaller than available balance. "
                             + "This should not be possible. Setting available balance as zero");
             // Dry run
             //            return ExactCurrencyAmount.zero(balanceAmount.getCurrencyCode());
@@ -136,7 +138,8 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
         }
 
         log.info(
-                "[CREDIT LINE] Subtracting credit line from available balance: {} - {} = {}",
+                "[CREDIT LINE SUBTRACTION] Subtracting credit line from {} available balance: {} - {} = {}",
+                balanceType,
                 balanceAmount.getDoubleValue(),
                 creditLineAmount.getDoubleValue(),
                 balanceAmountWithoutCreditLine.getDoubleValue());

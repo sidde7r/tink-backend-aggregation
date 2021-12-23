@@ -122,7 +122,7 @@ public class DefaultCreditCardBalanceMapper implements CreditCardBalanceMapper {
         log.info(
                 "[CARD CREDIT LINE] Balances with credit line types {}\n",
                 balances.stream()
-                        .map(balance -> StringUtils.join(balance.printTypeWithCreditLines(), "\n"))
+                        .map(AccountBalanceEntity::prettyPrint)
                         .collect(Collectors.toList()));
     }
 }
