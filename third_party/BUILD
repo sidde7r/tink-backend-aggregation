@@ -1661,7 +1661,7 @@ java_library(
 codeowners(
     name = "owners",
     teams = [
-        "@tink-ab/aggregation-coreagg-maintainer",
+        "@tink-ab/aggregation-agent-platform-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

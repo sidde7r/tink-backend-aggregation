@@ -5,7 +5,7 @@
 /agent_test_server/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /aws_log_fetcher/ @tink-ab/engineering-productivity-maintainer
 /provider_tester/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
-/src/aggregation/ @tink-ab/aggregation-coreagg-maintainer
+/src/aggregation/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/account/src/main/java/se/tink/libraries/account/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agent_data_availability_tracker/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/amount/ @tink-ab/aggregation-agent-platform-maintainer
@@ -13,7 +13,7 @@
 /src/integration/nemid/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/tpp_secrets_service/ @tink-ab/aggregation-tpa-maintainer
 /src/integration/api/src/ @tink-ab/aggregation-agent-platform-maintainer
-/src/integration/credentials/ @tink-ab/aggregation-coreagg-maintainer
+/src/integration/credentials/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/identity_data/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/lib/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/models/ @tink-ab/aggregation-agent-platform-maintainer
@@ -23,7 +23,7 @@
 /src/integration/user/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/webdriver/src/ @tink-ab/aggregation-agent-platform-maintainer
 /src/libraries/ @tink-ab/aggregation-agent-platform-maintainer
-/third_party/ @tink-ab/aggregation-coreagg-maintainer
+/third_party/ @tink-ab/aggregation-agent-platform-maintainer
 /tools/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /aws_log_fetcher/ @tink-ab/aggregation-agent-platform-maintainer
 /.charts @tink-ab/aggregation-agent-platform-maintainer
