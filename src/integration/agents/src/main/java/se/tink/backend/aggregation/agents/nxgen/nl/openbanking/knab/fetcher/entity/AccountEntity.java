@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
@@ -34,17 +33,11 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountsLinksEntity links;
 
-    @JsonIgnore private TransactionalAccountType accountType;
-
-    @JsonIgnore private String accountId;
-
-    @JsonIgnore private AccountIdentifierType accountIdentifierType;
-
     public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> balances) {
-        setUpAccountTypeRelevantProperties();
+        String accountId = getAccountId();
 
         return TransactionalAccount.nxBuilder()
-                .withType(accountType)
+                .withType(getAccountType())
                 .withPaymentAccountFlag()
                 .withBalance(getBalanceModule(balances))
                 .withId(
@@ -54,7 +47,7 @@ public class AccountEntity {
                                 .withAccountName(product)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                accountIdentifierType, accountId, null))
+                                                getAccountIdentifierType(), accountId, null))
                                 .build())
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
@@ -62,16 +55,16 @@ public class AccountEntity {
                 .build();
     }
 
-    private void setUpAccountTypeRelevantProperties() {
-        if (bban != null) {
-            accountType = TransactionalAccountType.SAVINGS;
-            accountId = bban;
-            accountIdentifierType = AccountIdentifierType.BBAN;
-        } else {
-            accountType = TransactionalAccountType.CHECKING;
-            accountId = iban;
-            accountIdentifierType = AccountIdentifierType.IBAN;
-        }
+    private TransactionalAccountType getAccountType() {
+        return bban != null ? TransactionalAccountType.SAVINGS : TransactionalAccountType.CHECKING;
+    }
+
+    private String getAccountId() {
+        return bban != null ? bban : iban;
+    }
+
+    private AccountIdentifierType getAccountIdentifierType() {
+        return bban != null ? AccountIdentifierType.BBAN : AccountIdentifierType.IBAN;
     }
 
     private BalanceModule getBalanceModule(List<BalanceEntity> balances) {

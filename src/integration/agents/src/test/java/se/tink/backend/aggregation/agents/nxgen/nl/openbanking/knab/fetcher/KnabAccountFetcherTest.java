@@ -39,23 +39,6 @@ public class KnabAccountFetcherTest {
         assertThatFetchedCheckingAndSavingsAccountsAreAsExpected(result);
     }
 
-    @Test
-    public void shouldFetchEmptyListOfAccounts() {
-        // given
-        bankRespondsUserHasNoAccounts();
-
-        // when
-        List<TransactionalAccount> result = new ArrayList<>(accountFetcher.fetchAccounts());
-
-        // expect
-        assertThat(result.isEmpty()).isTrue();
-    }
-
-    private void bankRespondsUserHasNoAccounts() {
-        given(apiClient.fetchAccounts())
-                .willReturn(knabFixture.accountsResponse("empty_accounts_response.json"));
-    }
-
     private void bankRespondsUserHasCheckingAndSavingsAccounts() {
         given(apiClient.fetchAccounts())
                 .willReturn(knabFixture.accountsResponse("accounts_response.json"));
