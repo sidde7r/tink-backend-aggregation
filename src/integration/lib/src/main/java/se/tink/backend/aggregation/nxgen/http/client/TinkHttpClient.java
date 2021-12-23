@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.Filterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilderProvidable;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
+import se.tink.backend.aggregation.nxgen.http.proxy.ProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -92,7 +93,9 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void trustRootCaCertificate(byte[] jksData, String password);
 
-    void setDebugProxy(String uri);
+    void setLocalDebugProxy(int port);
+
+    void setProxyProfile(ProxyProfile proxyProfile);
 
     void setProductionProxy(String uri, String username, String password);
 

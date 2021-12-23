@@ -95,6 +95,8 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficL
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.proxy.LocalDebugProxyProfile;
+import se.tink.backend.aggregation.nxgen.http.proxy.ProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
@@ -667,9 +669,31 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.internalHttpClientBuilder = this.internalHttpClientBuilder.setProxy(proxyHost);
     }
 
-    public void setDebugProxy(String uri) {
-        setProxy(uri);
-        disableSslVerification();
+    @Override
+    public void setProxyProfile(ProxyProfile proxyProfile) {
+        if (!proxyProfile.getUri().isPresent()) {
+            return;
+        }
+
+        String proxyUri = proxyProfile.getUri().get();
+        setProxy(proxyUri);
+
+        if (proxyProfile.getUsername().isPresent() && proxyProfile.getPassword().isPresent()) {
+            String username = proxyProfile.getUsername().get();
+            String password = proxyProfile.getPassword().get();
+            requestExecutor.setProxyCredentials(username, password);
+        }
+
+        if (proxyProfile.shouldDisableSslVerification()) {
+            disableSslVerification();
+        }
+
+        log.info("Using proxy {}", proxyUri);
+    }
+
+    @Override
+    public void setLocalDebugProxy(int port) {
+        this.setProxyProfile(new LocalDebugProxyProfile(port));
     }
 
     public void setProductionProxy(String uri, String username, String password) {
