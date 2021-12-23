@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authentication.steps;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -113,6 +114,19 @@ public class GetConsentForAllAccountsStepTest {
         when(consentResponse.getConsentStatus()).thenReturn(ConsentStatus.VALID);
         assertThat(returnedResponse.isAuthenticationFinished()).isFalse();
         assertThat(returnedResponse.getSupplementInformationRequester().isPresent()).isFalse();
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUserNotPresent() {
+        // given
+        final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
+        when(apiClient.isConsentValid()).thenReturn(false);
+        when(userAvailability.isUserAvailableForInteraction()).thenReturn(false);
+
+        // then
+        assertThatThrownBy(() -> getConsentForAllAccountsStep.execute(authenticationRequest))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Can not renew consent since the user is not present");
     }
 
     @Test
