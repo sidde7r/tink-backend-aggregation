@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent;
 
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.pair.Pair;
 
+@Slf4j
 public class RedsysConsentController implements ConsentController {
     private final RedsysApiClient apiClient;
     private final RedsysConsentStorage consentStorage;
@@ -40,11 +42,13 @@ public class RedsysConsentController implements ConsentController {
     public boolean requestConsent() {
         final String supplementalKey = strongAuthenticationState.getSupplementalKey();
         final String state = strongAuthenticationState.getState();
+        log.info(
+                String.format(
+                        "Consent generator class: [%s]", consentGenerator.getClass().getName()));
         final Pair<String, URL> consentRequest =
                 apiClient.requestConsent(state, consentGenerator.generate());
         final String consentId = consentRequest.first;
         final URL consentUrl = consentRequest.second;
-
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(consentUrl));
         supplementalInformationHelper.waitForSupplementalInformation(
