@@ -1,0 +1,24 @@
+{
+    "balances": [
+        {
+            "interimAvailable": {
+                "amount": {
+                    "currency": "EUR",
+                    "content": "+54273.9"
+                }
+            },
+            "authorised": {
+                "amount": {
+                    "currency": "EUR",
+                    "content": "+54273.9"
+                }
+            },
+            "closingBooked": {
+                "amount": {
+                    "currency": "EUR",
+                    "content": "+54273.9"
+                }
+            }
+        }
+    ]
+}

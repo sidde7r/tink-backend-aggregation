@@ -1,0 +1,17 @@
+{
+    "accountList": [
+        {
+            "id": "DUMMY_RESOURCE",
+            "iban": "PT62003506517194674519162",
+            "bban": "DUMMY_BBAN",
+            "currency": "EUR",
+            "accountType": "CASH",
+            "name": "USER_NAME",
+            "bic": "DUMMY_BIC",
+            "_links": {
+                "viewBalances": "/NVB/v1-0-3/accounts/DUMMY_RESOURCE/balances",
+                "viewTransactions": "/NVB/v1-0-3/accounts/DUMMUY_RESOURCE/transactions"
+            }
+        }
+    ]
+}
