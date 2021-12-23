@@ -139,7 +139,8 @@ public class AccountBalanceEntity {
         ExactCurrencyAmount balanceAmountWithoutCreditLine =
                 balanceAmount.subtract(creditLineAmount);
         log.info(
-                "[CREDIT LINE SUBTRACTION] Subtracting credit line from balance: {} - {} = {}",
+                "[CREDIT LINE SUBTRACTION] Subtracting credit line from {} balance: {} - {} = {}",
+                type,
                 balanceAmount.getDoubleValue(),
                 creditLineAmount.getDoubleValue(),
                 balanceAmountWithoutCreditLine.getDoubleValue());
@@ -171,7 +172,8 @@ public class AccountBalanceEntity {
 
         if (!line.isAvailableType()) {
             log.info(
-                    "[CREDIT LINE SUBTRACTION] Subtracting credit line from available balance: {} - {} = {}",
+                    "[CREDIT LINE SUBTRACTION] Subtracting credit line from {} balance: {} - {} = {}",
+                    type,
                     balanceAmount.getDoubleValue(),
                     creditLineAmount.getDoubleValue(),
                     balanceAmountWithoutCreditLine.getDoubleValue());
@@ -182,15 +184,17 @@ public class AccountBalanceEntity {
 
         if (balanceAmountWithoutCreditLine.getDoubleValue() < 0) {
             log.warn(
-                    "[CREDIT LINE SUBTRACTION] Credit line of available type is smaller than available balance. "
-                            + "This should not be possible. Setting available balance as zero");
+                    "[CREDIT LINE SUBTRACTION] Credit line of available type is smaller than {} balance. "
+                            + "This should not be possible. Setting available balance as zero",
+                    type);
             // Dry run
             //             return ExactCurrencyAmount.zero(balanceAmount.getCurrencyCode());
             return balanceAmount;
         }
 
         log.info(
-                "[CREDIT LINE SUBTRACTION] Subtracting credit line from available balance: {} - {} = {}",
+                "[CREDIT LINE SUBTRACTION] Subtracting credit line from {} available balance: {} - {} = {}",
+                type,
                 balanceAmount.getDoubleValue(),
                 creditLineAmount.getDoubleValue(),
                 balanceAmountWithoutCreditLine.getDoubleValue());
