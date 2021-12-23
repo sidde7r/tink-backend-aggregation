@@ -26,7 +26,6 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
     ],
     deps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
