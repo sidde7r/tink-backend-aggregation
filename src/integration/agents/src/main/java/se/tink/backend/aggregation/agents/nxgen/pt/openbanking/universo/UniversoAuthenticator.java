@@ -8,16 +8,24 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class UniversoAuthenticator extends Xs2aDevelopersAuthenticatorHelper {
 
     public UniversoAuthenticator(
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             Xs2aDevelopersProviderConfiguration configuration,
             LocalDateTimeSource localDateTimeSource,
             Credentials credentials) {
-        super(apiClient, persistentStorage, configuration, localDateTimeSource, credentials);
+        super(
+                apiClient,
+                persistentStorage,
+                sessionStorage,
+                configuration,
+                localDateTimeSource,
+                credentials);
     }
 
     @Override

@@ -11,8 +11,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues.SCOPE;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.LINKS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.OAUTH_TOKEN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.SCA_OAUTH_LINK;
 
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
-import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
@@ -51,6 +50,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
@@ -72,9 +72,6 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
     private static final String TOKEN_TYPE = "TOKEN_TYPE";
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private static final long EXPIRES_IN = 1L;
-    private static final LinksEntity CONSENT_LINKS_ENTITY =
-            SerializationUtils.deserializeFromString(
-                    " {\"scaOAuth\" : \"" + SCA_OAUTH + "\"}", LinksEntity.class);
     private static final TokenResponse GET_TOKEN_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"access_token\" : \""
@@ -95,20 +92,24 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
     private Xs2aDevelopersApiClient apiClient;
     private LocalDateTimeSource localDateTimeSource;
     private Xs2aDevelopersAuthenticatorHelper authenticator;
-    private PersistentStorage storage;
+    private PersistentStorage persistentStorage;
+    private SessionStorage sessionStorage;
 
     @Before
     public void init() {
         apiClient = mock(Xs2aDevelopersApiClient.class);
-        storage = mock(PersistentStorage.class);
+        persistentStorage = mock(PersistentStorage.class);
+        sessionStorage = mock(SessionStorage.class);
         localDateTimeSource = mock(LocalDateTimeSource.class);
         when(localDateTimeSource.now()).thenReturn(LocalDateTime.of(1234, 5, 12, 12, 30, 40));
-        when(storage.get(LINKS, LinksEntity.class)).thenReturn(Optional.of(CONSENT_LINKS_ENTITY));
-        when(storage.get(StorageKeys.CONSENT_ID, String.class)).thenReturn(Optional.of(CONSENT_ID));
+        when(sessionStorage.get(SCA_OAUTH_LINK, String.class)).thenReturn(Optional.of(SCA_OAUTH));
+        when(persistentStorage.get(StorageKeys.CONSENT_ID, String.class))
+                .thenReturn(Optional.of(CONSENT_ID));
         authenticator =
                 new Xs2aDevelopersAuthenticatorHelper(
                         apiClient,
-                        storage,
+                        persistentStorage,
+                        sessionStorage,
                         xs2aDevelopersProviderConfiguration,
                         localDateTimeSource,
                         new Credentials());
@@ -139,8 +140,8 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
         authenticator.useAccessToken(token);
 
         // then
-        verify(storage).put(OAUTH_TOKEN, token);
-        verifyNoMoreInteractions(storage);
+        verify(persistentStorage).put(OAUTH_TOKEN, token);
+        verifyNoMoreInteractions(persistentStorage);
     }
 
     @Test
@@ -198,8 +199,8 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
         // given
         final URL expectedAuthorizeUrl =
                 new URL("https://psd2.bank.domain/authorize/dsadfdsfedwsf?someParam1=value1");
-        final String postConsentResponseWithWellKnownUri =
-                "{\"scaOAuth\" : \"" + "http://test.domain/.well-known/121234324234" + "\"} }";
+        final String postConsentResponseWellKnownUri =
+                "http://test.domain/.well-known/121234324234";
 
         final WellKnownResponse postWellKnownUriResponse =
                 SerializationUtils.deserializeFromString(
@@ -211,7 +212,8 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
                         any(), any(), eq(postWellKnownUriResponse.getAuthorizationEndpoint())))
                 .thenReturn(expectedAuthorizeUrl);
         PersistentStorage persistentStorage = new PersistentStorage();
-        persistentStorage.put(StorageKeys.LINKS, postConsentResponseWithWellKnownUri);
+        SessionStorage sessionStorage = new SessionStorage();
+        sessionStorage.put(StorageKeys.SCA_OAUTH_LINK, postConsentResponseWellKnownUri);
         persistentStorage.put(StorageKeys.CONSENT_ID, CONSENT_ID);
         Credentials credentials = new Credentials();
         credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
@@ -219,6 +221,7 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
                 new Xs2aDevelopersAuthenticatorHelper(
                         apiClient,
                         persistentStorage,
+                        sessionStorage,
                         xs2aDevelopersProviderConfiguration,
                         localDateTimeSource,
                         credentials);
@@ -291,6 +294,7 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
         return new Xs2aDevelopersAuthenticatorHelper(
                 xs2aDevelopersApiClient,
                 persistentStorage,
+                sessionStorage,
                 xs2aDevelopersProviderConfiguration,
                 localDateTimeSource,
                 credentials);

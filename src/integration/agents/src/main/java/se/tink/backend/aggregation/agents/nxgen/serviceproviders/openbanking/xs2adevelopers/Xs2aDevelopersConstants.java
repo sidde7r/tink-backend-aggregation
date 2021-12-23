@@ -86,7 +86,7 @@ public final class Xs2aDevelopersConstants {
         public static final String CODE_VERIFIER = "code_verifier";
         public static final String AUTHORISATION_URL = "authorisation_url";
         public static final String SCA_APPROACH = "sca_approach";
-        public static final String LINKS = "links";
+        public static final String SCA_OAUTH_LINK = "scaOAuthLink";
     }
 
     public static class StorageValues {

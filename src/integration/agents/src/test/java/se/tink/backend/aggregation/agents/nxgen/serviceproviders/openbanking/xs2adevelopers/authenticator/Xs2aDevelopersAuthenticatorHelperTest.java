@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
-import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
@@ -35,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Xs2aDevelopersAuthenticatorHelperTest {
@@ -67,17 +67,19 @@ public class Xs2aDevelopersAuthenticatorHelperTest {
         HttpResponse consentResponse = getConsentResponseHttpResponse(headersMap);
 
         PersistentStorage persistentStorage = new PersistentStorage();
+        SessionStorage sessionStorage = new SessionStorage();
         Credentials credentials = mock(Credentials.class);
         Xs2aDevelopersAuthenticatorHelper authenticator =
                 createXs2aDevelopersAuthenticatorHelper(
-                        persistentStorage, credentials, consentResponse);
+                        persistentStorage, sessionStorage, credentials, consentResponse);
         // when
         authenticator.requestForConsent();
 
         // then
         assertThat(persistentStorage.get(StorageKeys.CONSENT_ID)).isEqualTo("1604575204-ba78d90");
-        assertThat(persistentStorage.get(StorageKeys.LINKS, LinksEntity.class).get().getScaOAuth())
-                .isEqualTo(EXPECTED_SCA_URL);
+        assertThat(sessionStorage.get(StorageKeys.SCA_OAUTH_LINK, String.class))
+                .isPresent()
+                .hasValue(EXPECTED_SCA_URL);
         assertThat(persistentStorage.get(StorageKeys.SCA_APPROACH))
                 .isEqualTo(StorageValues.DECOUPLED_APPROACH);
     }
@@ -90,17 +92,19 @@ public class Xs2aDevelopersAuthenticatorHelperTest {
         HttpResponse consentResponse = getConsentResponseHttpResponse(headersMap);
 
         PersistentStorage persistentStorage = new PersistentStorage();
+        SessionStorage sessionStorage = new SessionStorage();
         Credentials credentials = mock(Credentials.class);
         Xs2aDevelopersAuthenticatorHelper authenticator =
                 createXs2aDevelopersAuthenticatorHelper(
-                        persistentStorage, credentials, consentResponse);
+                        persistentStorage, sessionStorage, credentials, consentResponse);
         // when
         authenticator.requestForConsent();
 
         // then
         assertThat(persistentStorage.get(StorageKeys.CONSENT_ID)).isEqualTo("1604575204-ba78d90");
-        assertThat(persistentStorage.get(StorageKeys.LINKS, LinksEntity.class).get().getScaOAuth())
-                .isEqualTo(EXPECTED_SCA_URL);
+        assertThat(sessionStorage.get(StorageKeys.SCA_OAUTH_LINK, String.class))
+                .isPresent()
+                .hasValue(EXPECTED_SCA_URL);
         assertThat(persistentStorage.get(StorageKeys.SCA_APPROACH)).isNull();
     }
 
@@ -108,12 +112,13 @@ public class Xs2aDevelopersAuthenticatorHelperTest {
     public void storeConsentDetails_should_set_expiry_date() {
         // given
         PersistentStorage persistentStorage = mock(PersistentStorage.class);
+        SessionStorage sessionStorage = new SessionStorage();
         when(persistentStorage.get(StorageKeys.CONSENT_ID)).thenReturn("dummyConsentId");
         Credentials credentials = new Credentials();
         credentials.setField(Key.USERNAME, "dummyUsername");
         Xs2aDevelopersAuthenticatorHelper authenticator =
                 createXs2aDevelopersAuthenticatorHelper(
-                        persistentStorage, credentials, mock(HttpResponse.class));
+                        persistentStorage, sessionStorage, credentials, mock(HttpResponse.class));
         Date date = toDate("2030-01-01");
         // when
         authenticator.storeConsentDetails();
@@ -124,6 +129,7 @@ public class Xs2aDevelopersAuthenticatorHelperTest {
 
     private Xs2aDevelopersAuthenticatorHelper createXs2aDevelopersAuthenticatorHelper(
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             Credentials credentials,
             HttpResponse consentResponse) {
         TinkHttpClient httpClient = mockHttpClient(consentResponse);
@@ -139,6 +145,7 @@ public class Xs2aDevelopersAuthenticatorHelperTest {
         return new Xs2aDevelopersAuthenticatorHelper(
                 xs2aDevelopersApiClient,
                 persistentStorage,
+                sessionStorage,
                 xs2aDevelopersProviderConfiguration,
                 localDateTimeSource,
                 credentials);
