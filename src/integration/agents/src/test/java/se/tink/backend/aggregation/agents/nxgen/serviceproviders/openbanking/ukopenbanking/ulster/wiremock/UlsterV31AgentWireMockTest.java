@@ -73,7 +73,10 @@ public class UlsterV31AgentWireMockTest {
     public void shouldRunAutoAuthWithDataRefreshSuccessfully() throws Exception {
         // given
         Set<RefreshableItem> itemsExpectedToBeRefreshed =
-                Sets.newHashSet(RefreshableItem.CHECKING_ACCOUNTS, RefreshableItem.SAVING_ACCOUNTS);
+                Sets.newHashSet(
+                        RefreshableItem.CHECKING_ACCOUNTS,
+                        RefreshableItem.SAVING_ACCOUNTS,
+                        RefreshableItem.CREDITCARD_ACCOUNTS);
 
         final AgentWireMockRefreshTest test =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -86,7 +89,6 @@ public class UlsterV31AgentWireMockTest {
                         .withRefreshableItems(itemsExpectedToBeRefreshed)
                         .addPersistentStorageData(
                                 OPEN_ID_ACCESS_TOKEN_STORAGE_KEY, createOpenIdAccessToken())
-                        .enableHttpDebugTrace()
                         .enableDataDumpForContractFile()
                         .build();
 

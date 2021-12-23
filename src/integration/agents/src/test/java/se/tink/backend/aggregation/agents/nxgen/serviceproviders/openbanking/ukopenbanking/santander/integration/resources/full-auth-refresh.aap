@@ -440,14 +440,14 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
             {
                 "AccountId": "8c201ba9-b066-4ea1-b453-3d05b17b18a9",
                 "Amount": {
-                    "Amount": "1295.87",
+                    "Amount": "95.00",
                     "Currency": "GBP"
                 },
-                "CreditDebitIndicator": "Debit",
+                "CreditDebitIndicator": "Credit",
                 "CreditLine": [
                     {
                         "Amount": {
-                            "Amount": "1300.00",
+                            "Amount": "100.00",
                             "Currency": "GBP"
                         },
                         "Included": false,
@@ -463,10 +463,10 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
                     },
                     {
                         "Amount": {
-                            "Amount": "4.13",
+                            "Amount": "5.00",
                             "Currency": "GBP"
                         },
-                        "Included": false,
+                        "Included": true,
                         "Type": "Available"
                     }
                 ],
@@ -476,11 +476,21 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
             {
                 "AccountId": "8c201ba9-b066-4ea1-b453-3d05b17b18a9",
                 "Amount": {
-                    "Amount": "1295.87",
+                    "Amount": "85.00",
                     "Currency": "GBP"
                 },
-                "CreditDebitIndicator": "Debit",
+                "CreditDebitIndicator": "Credit",
                 "Type": "InterimBooked",
+                "CreditLine": [
+                    {
+                        "Amount": {
+                            "Amount": "10.00",
+                            "Currency": "GBP"
+                        },
+                        "Included": true,
+                        "Type": "Credit"
+                    }
+                ],
                 "DateTime": "2020-11-18T13:07:47.205+0000"
             }
         ]
