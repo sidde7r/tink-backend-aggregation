@@ -63,7 +63,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
-import se.tink.backend.aggregation.agents.utils.jersey.ResponseLoggingFilter;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -95,6 +94,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficL
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.filter.ResponseLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.proxy.LocalDebugProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.proxy.ProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;

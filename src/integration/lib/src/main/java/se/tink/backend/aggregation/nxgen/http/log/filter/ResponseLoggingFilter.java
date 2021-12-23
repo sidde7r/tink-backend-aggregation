@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.jersey;
+package se.tink.backend.aggregation.nxgen.http.log.filter;
 
 import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
