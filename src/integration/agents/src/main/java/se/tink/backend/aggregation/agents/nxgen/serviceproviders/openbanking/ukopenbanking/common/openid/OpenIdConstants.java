@@ -73,6 +73,7 @@ public class OpenIdConstants {
         public static final String TEMPORARILY_UNAVAILABLE = "temporarily_unavailable";
         public static final String INVALID_GRANT = "invalid_grant";
         public static final String UNAUTHORISED = "401 Unauthorised";
+        public static final String INVALID_INTENT_ID = "invalid_openbanking_intent_id";
     }
 
     public static class Ps256 {
