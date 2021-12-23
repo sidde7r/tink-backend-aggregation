@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.TrustStoreConfiguration;
-import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.nxgen.http.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.libraries.net.BasicJerseyClientFactory;
 

@@ -28,8 +28,8 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPUserAgentHandler;
-import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.constants.CommonHeaders;
 
 @AgentCapabilities({CREDIT_CARDS})
 public final class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
