@@ -671,12 +671,12 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     @Override
     public void setProxyProfile(ProxyProfile proxyProfile) {
-        if (!proxyProfile.getHost().isPresent()) {
+        if (!proxyProfile.getUri().isPresent()) {
             return;
         }
 
-        String host = proxyProfile.getHost().get();
-        setProxy(host);
+        String proxyUri = proxyProfile.getUri().get();
+        setProxy(proxyUri);
 
         if (proxyProfile.getUsername().isPresent() && proxyProfile.getPassword().isPresent()) {
             String username = proxyProfile.getUsername().get();
@@ -688,7 +688,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             disableSslVerification();
         }
 
-        log.info("Using proxy {}", host);
+        log.info("Using proxy {}", proxyUri);
     }
 
     @Override
