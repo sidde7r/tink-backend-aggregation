@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.jersey;
+package se.tink.backend.aggregation.nxgen.http.log.filter;
 
 import com.google.common.base.Charsets;
 import com.sun.jersey.api.client.AbstractClientRequestAdapter;
@@ -19,7 +19,6 @@ import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
@@ -107,7 +106,7 @@ public class LoggingFilter extends ClientFilter {
      * Create a logging filter logging the request and response to print stream. Takes a logMasker
      * that masks sensitive values from logs, the loggingMode parameter should only be passed with
      * the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the logMasker handles
-     * the sensitive values in the provider. use {@link LogMasker#shouldLog(Provider)}} if you can.
+     * the sensitive values in the provider. use LogMasker#shouldLog(Provider) if you can.
      *
      * @param rawHttpTrafficLogger logger able the save aap logs in correct place.
      * @param logMasker Masks values from logs.

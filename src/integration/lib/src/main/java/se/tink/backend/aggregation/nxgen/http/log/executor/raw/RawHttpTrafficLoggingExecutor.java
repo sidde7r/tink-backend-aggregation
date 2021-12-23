@@ -13,8 +13,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
  * This is a class responsible to log logs to output stream (s3 file) using masker It's a modified
- * version of {@link se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter} It can be reused
- * by different adapters to preserve requests numeration
+ * version of LoggingFilter It can be reused by different adapters to preserve requests numeration
  */
 @RequiredArgsConstructor
 public class RawHttpTrafficLoggingExecutor implements LoggingExecutor {

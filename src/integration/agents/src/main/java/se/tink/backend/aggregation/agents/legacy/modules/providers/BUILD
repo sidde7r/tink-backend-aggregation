@@ -10,6 +10,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/filter",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
