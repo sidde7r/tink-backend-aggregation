@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.calculator.DefaultBalancePreCalculator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -26,11 +27,13 @@ public class GranularBalancesMapperTest {
     @Mock private AccountBalanceEntity forwardAvailable2;
     @Mock private AccountBalanceEntity forwardAvailable3;
 
+    private final GranularBalancesMapper granularBalancesMapper =
+            new GranularBalancesMapper(new DefaultBalancePreCalculator());
+
     @Test
     public void shouldMapLatestBalanceIfDuplicatedBalanceTypesFound() {
         given(forwardAvailable1.getType()).willReturn(UkObBalanceType.FORWARD_AVAILABLE);
-        given(forwardAvailable1.getAmountWithoutCreditLine())
-                .willReturn(ExactCurrencyAmount.of(10.00, "GBP"));
+        given(forwardAvailable1.getAmount()).willReturn(ExactCurrencyAmount.of(10.00, "GBP"));
         given(forwardAvailable1.getDateTime())
                 .willReturn(
                         LocalDate.of(2000, 1, 1)
@@ -39,8 +42,7 @@ public class GranularBalancesMapperTest {
                                 .toInstant());
 
         given(forwardAvailable2.getType()).willReturn(UkObBalanceType.FORWARD_AVAILABLE);
-        given(forwardAvailable2.getAmountWithoutCreditLine())
-                .willReturn(ExactCurrencyAmount.of(20.00, "GBP"));
+        given(forwardAvailable2.getAmount()).willReturn(ExactCurrencyAmount.of(20.00, "GBP"));
         given(forwardAvailable2.getDateTime())
                 .willReturn(
                         LocalDate.of(2000, 1, 2)
@@ -49,8 +51,7 @@ public class GranularBalancesMapperTest {
                                 .toInstant());
 
         given(forwardAvailable3.getType()).willReturn(UkObBalanceType.FORWARD_AVAILABLE);
-        given(forwardAvailable3.getAmountWithoutCreditLine())
-                .willReturn(ExactCurrencyAmount.of(30.00, "GBP"));
+        given(forwardAvailable3.getAmount()).willReturn(ExactCurrencyAmount.of(30.00, "GBP"));
         given(forwardAvailable3.getDateTime())
                 .willReturn(
                         LocalDate.of(2000, 1, 3)
@@ -62,7 +63,7 @@ public class GranularBalancesMapperTest {
                 Arrays.asList(forwardAvailable1, forwardAvailable3, forwardAvailable2);
 
         Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances =
-                GranularBalancesMapper.toGranularBalances(givenBalances);
+                granularBalancesMapper.toGranularBalances(givenBalances);
 
         assertThat(granularBalances.get(AccountBalanceType.FORWARD_AVAILABLE))
                 .isNotNull()
