@@ -1,12 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofireland;
 
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.*;
 
 import com.google.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
-import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
@@ -25,17 +21,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.libraries.unleash.model.Toggle;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
-@Slf4j
 public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfiguration aisConfig;
-    private final AgentComponentProvider componentProvider;
 
     static {
         aisConfig =
@@ -50,12 +43,12 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
     public BankOfIrelandAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
-        this.componentProvider = componentProvider;
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return makeAisByToggleValue();
+        return new UkOpenBankingV31Ais(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     @Override
@@ -87,23 +80,5 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
                 new ThirdPartyAppAuthenticationController<>(
                         authController, this.supplementalInformationHelper),
                 authController);
-    }
-
-    private UkOpenBankingAis makeAisByToggleValue() {
-        Toggle trxToggle = createToggleForExperimentalTransactionPagination();
-        if (componentProvider.getUnleashClient().isToggleEnabled(trxToggle)) {
-            log.info("[boi-experimental-transaction-pagination] Toggle is enabled.");
-            return new BankOfIrelandAisConfiguration(
-                    aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
-        }
-        log.info("[boi-experimental-transaction-pagination] Toggle is disabled.");
-        return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
-    }
-
-    private Toggle createToggleForExperimentalTransactionPagination() {
-        return Toggle.of("boi-experimental-transaction-pagination")
-                .context(UnleashContext.builder().build())
-                .build();
     }
 }
