@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.summary.refresh.transactions;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -15,7 +17,39 @@ import se.tink.backend.aggregation.agents.models.TransactionDate;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
-public class OldestTrxDateExtractorTest {
+public class OldestTrxDateProviderTest {
+
+    @Test
+    public void shouldReturn20203101() {
+        // given
+        List<TransactionDate> dates1 =
+                Arrays.asList(
+                        getTransactionDate20201231010101(),
+                        getExecutionDate20210101(),
+                        getValueDate20210102(),
+                        getBookingDate20210103());
+        Transaction trx1 = new Transaction();
+        trx1.setTransactionDates(dates1);
+
+        List<TransactionDate> dates2 = Collections.singletonList(getBookingDate20210104());
+        Transaction trx2 = new Transaction();
+        trx2.setTransactionDates(dates2);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2021);
+        calendar.set(Calendar.MONTH, 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 5);
+        Transaction trx3 = new Transaction();
+        trx3.setDate(new Date(calendar.getTimeInMillis()));
+
+        List<Transaction> transactions = Arrays.asList(trx1, trx2, trx3);
+
+        // when
+        Optional<LocalDate> oldestDate = OldestTrxDateProvider.getDate(transactions);
+
+        // then
+        assertThat(oldestDate.get()).isEqualTo(LocalDate.of(2020, 12, 31));
+    }
 
     @Test
     public void shouldReturn20210101() {
@@ -23,6 +57,7 @@ public class OldestTrxDateExtractorTest {
         List<TransactionDate> dates1 =
                 Arrays.asList(
                         getExecutionDate20210101(),
+                        getTransactionDate20210101010101(),
                         getValueDate20210102(),
                         getBookingDate20210103());
         Transaction trx1 = new Transaction();
@@ -54,6 +89,7 @@ public class OldestTrxDateExtractorTest {
         List<TransactionDate> dates1 =
                 Arrays.asList(
                         getExecutionDate20210101(),
+                        getTransactionDate20210102010101(),
                         getValueDate20210102(),
                         getBookingDate20210103());
         Transaction trx1 = new Transaction();
@@ -81,6 +117,7 @@ public class OldestTrxDateExtractorTest {
         List<TransactionDate> dates1 =
                 Arrays.asList(
                         getExecutionDate20210101(),
+                        getTransactionDate20210102010101(),
                         getValueDate20210102(),
                         getBookingDate20210103());
         Transaction trx1 = new Transaction();
@@ -124,6 +161,33 @@ public class OldestTrxDateExtractorTest {
         information.setDate(LocalDate.of(2021, 1, 2));
         date1.setValue(information);
         date1.setType(TransactionDateType.VALUE_DATE);
+        return date1;
+    }
+
+    private TransactionDate getTransactionDate20201231010101() {
+        TransactionDate date1 = new TransactionDate();
+        AvailableDateInformation information = new AvailableDateInformation();
+        information.setInstant(LocalDateTime.of(2020, 12, 31, 1, 1, 1).toInstant(ZoneOffset.UTC));
+        date1.setValue(information);
+        date1.setType(TransactionDateType.TRANSACTION_DATE);
+        return date1;
+    }
+
+    private TransactionDate getTransactionDate20210101010101() {
+        TransactionDate date1 = new TransactionDate();
+        AvailableDateInformation information = new AvailableDateInformation();
+        information.setInstant(LocalDateTime.of(2021, 1, 1, 1, 1, 1).toInstant(ZoneOffset.UTC));
+        date1.setValue(information);
+        date1.setType(TransactionDateType.TRANSACTION_DATE);
+        return date1;
+    }
+
+    private TransactionDate getTransactionDate20210102010101() {
+        TransactionDate date1 = new TransactionDate();
+        AvailableDateInformation information = new AvailableDateInformation();
+        information.setInstant(LocalDateTime.of(2021, 1, 2, 1, 1, 1).toInstant(ZoneOffset.UTC));
+        date1.setValue(information);
+        date1.setType(TransactionDateType.TRANSACTION_DATE);
         return date1;
     }
 

@@ -12,5 +12,6 @@ public enum TransactionDateType {
      * days.
      */
     VALUE_DATE,
-    EXECUTION_DATE
+    EXECUTION_DATE,
+    TRANSACTION_DATE
 }

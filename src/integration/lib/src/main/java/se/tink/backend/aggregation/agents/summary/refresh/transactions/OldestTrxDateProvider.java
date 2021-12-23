@@ -5,24 +5,34 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
+@Slf4j
 public class OldestTrxDateProvider {
 
     private OldestTrxDateProvider() {}
 
     public static Optional<LocalDate> getDate(List<Transaction> accountTransactions) {
-        Set<LocalDate> dates = new HashSet<>();
+        try {
+            Set<LocalDate> dates = new HashSet<>();
 
-        addOldestByTransactionDateProperty(accountTransactions, dates);
-        addOldestByDateProperty(accountTransactions, dates);
-        addOldestByTimestampProperty(accountTransactions, dates);
+            addOldestByTransactionDateProperty(accountTransactions, dates);
+            addOldestByTransactionDateInstantProperty(accountTransactions, dates);
+            addOldestByDateProperty(accountTransactions, dates);
+            addOldestByTimestampProperty(accountTransactions, dates);
 
-        return dates.stream().min(LocalDate::compareTo);
+            return dates.stream().min(LocalDate::compareTo);
+        } catch (RuntimeException e) {
+            log.warn("[OldestTrxDateProvider] Couldn't calculate oldest trx date", e);
+            return Optional.empty();
+        }
     }
 
     private static void addOldestByTimestampProperty(
@@ -65,6 +75,40 @@ public class OldestTrxDateProvider {
                                                                 (TransactionDateType)
                                                                         transactionDateType))
                                         .ifPresent(dates::add));
+    }
+
+    private static void addOldestByTransactionDateInstantProperty(
+            List<Transaction> accountTransactions, Set<LocalDate> dates) {
+        Arrays.asList(TransactionDateType.values())
+                .forEach(
+                        transactionDateType ->
+                                getOldestTrxByCriteria(
+                                                accountTransactions,
+                                                trx ->
+                                                        getLocalDateFromInstant(
+                                                                (TransactionDateType)
+                                                                        transactionDateType,
+                                                                trx))
+                                        .flatMap(
+                                                trx ->
+                                                        getLocalDateFromInstant(
+                                                                (TransactionDateType)
+                                                                        transactionDateType,
+                                                                trx))
+                                        .ifPresent(dates::add));
+    }
+
+    private static Optional<LocalDate> getLocalDateFromInstant(
+            TransactionDateType transactionDateType, Transaction trx) {
+        if (trx.getTransactionDates() != null) {
+            Optional<AvailableDateInformation> dateInformation =
+                    trx.getAvailableDateInformationOf(transactionDateType);
+            return dateInformation
+                    .map(AvailableDateInformation::getInstant)
+                    .filter(Objects::nonNull)
+                    .map(i -> i.atZone(ZoneId.systemDefault()).toLocalDate());
+        }
+        return Optional.empty();
     }
 
     private static <T extends Comparable> Optional<Transaction> getOldestTrxByCriteria(
