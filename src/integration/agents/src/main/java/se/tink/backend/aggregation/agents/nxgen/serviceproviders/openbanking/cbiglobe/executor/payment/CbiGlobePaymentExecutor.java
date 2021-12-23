@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -213,10 +212,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             throws PaymentException {
 
         PaymentMultiStepResponse paymentMultiStepResponse;
-        Map<String, String> supplementalInfo = fetchSupplementalInfo();
-
-        CreatePaymentResponse createPaymentResponse =
-                fetchPaymentStatus(paymentMultiStepRequest, supplementalInfo);
+        CreatePaymentResponse createPaymentResponse = fetchPaymentStatus(paymentMultiStepRequest);
         CbiGlobePaymentStatus cbiGlobePaymentStatus =
                 CbiGlobePaymentStatus.fromString(createPaymentResponse.getTransactionStatus());
         String scaStatus = createPaymentResponse.getScaStatus();
@@ -231,15 +227,13 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             case ACWC:
             case ACWP:
                 paymentMultiStepResponse =
-                        handleSignedPayment(
-                                paymentMultiStepRequest, createPaymentResponse, supplementalInfo);
+                        handleSignedPayment(paymentMultiStepRequest, createPaymentResponse);
                 break;
                 // Before signing PIS
             case RCVD:
             case PDNG:
                 paymentMultiStepResponse =
-                        handleUnsignedPayment(
-                                paymentMultiStepRequest, createPaymentResponse, supplementalInfo);
+                        handleUnsignedPayment(paymentMultiStepRequest, createPaymentResponse);
                 break;
             case RJCT: // cancelled case
                 return handleReject(scaStatus, psuAuthenticationStatus);
@@ -263,35 +257,32 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             // if 5xx received from CBI Globe bank status polling then old redirect link is not
             // removed from session and TL again redirect to bank.
             sessionStorage.put(StorageKeys.LINK, null);
-
             return waitForSupplementalInformation();
+        } else {
+            logger.error("Redirect URL is empty");
+            throw new PaymentAuthorizationException();
         }
-        return null;
     }
 
     private CreatePaymentResponse fetchPaymentStatus(
-            PaymentMultiStepRequest paymentMultiStepRequest, Map<String, String> supplementalInfo)
-            throws PaymentException {
+            PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
         CreatePaymentResponse createPaymentResponse;
-        if (supplementalInfo != null && !supplementalInfo.isEmpty()) {
+        Map<String, String> supplementalInfo = fetchSupplementalInfo();
+        if (supplementalInfo == null || supplementalInfo.isEmpty()) {
+            logger.error("Supplemental info is empty or null, shouldn't happen here");
+            throw new PaymentAuthorizationException();
+        } else {
             if (QueryValues.SUCCESS.equals(supplementalInfo.get(QueryKeys.RESULT))) {
-                createPaymentResponse =
-                        fetchPaymentStatusOrThrowException(
-                                paymentMultiStepRequest,
-                                new PaymentAuthorizationCancelledByUserException());
+                createPaymentResponse = fetchPaymentStatusOrThrowException(paymentMultiStepRequest);
             } else {
                 throw new PaymentAuthorizationException();
             }
-        } else {
-            createPaymentResponse =
-                    fetchPaymentStatusOrThrowException(
-                            paymentMultiStepRequest, new PaymentAuthorizationTimeOutException());
         }
         return createPaymentResponse;
     }
 
     private CreatePaymentResponse fetchPaymentStatusOrThrowException(
-            PaymentMultiStepRequest paymentMultiStepRequest, PaymentException paymentException) {
+            PaymentMultiStepRequest paymentMultiStepRequest) {
         CreatePaymentResponse createPaymentResponse;
         try {
             createPaymentResponse =
@@ -304,7 +295,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                                     "Operation not allowed: authentication required.")
                             || errorResponse.tppMessagesContainsError(
                                     "GENERIC_ERROR", "Unknown Payment Identifier"))) {
-                throw paymentException;
+                throw new PaymentAuthorizationCancelledByUserException();
             } else {
                 throw httpResponseException;
             }
@@ -332,27 +323,23 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private PaymentMultiStepResponse handleUnsignedPayment(
             PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse,
-            Map<String, String> supplementalInfo)
+            CreatePaymentResponse createPaymentResponse)
             throws PaymentException {
 
         return createPaymentResponse.getLinks() == null
-                ? handleEmptyLinksInResponse(
-                        paymentMultiStepRequest, createPaymentResponse, supplementalInfo)
+                ? handleEmptyLinksInResponse(paymentMultiStepRequest, createPaymentResponse)
                 : handleRedirectURLs(paymentMultiStepRequest, createPaymentResponse);
     }
 
     private PaymentMultiStepResponse handleEmptyLinksInResponse(
             PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse,
-            Map<String, String> supplementalInfo)
+            CreatePaymentResponse createPaymentResponse)
             throws PaymentException {
         sessionStorage.put(StorageKeys.LINK, null);
         // As for BPM payment is parked for 30 min at bank in RCVD state we need special handling.
         // Ref: https://tinkab.atlassian.net/browse/PAY2-734
         if (isBPMProvider()) {
-            return handleSignedPayment(
-                    paymentMultiStepRequest, createPaymentResponse, supplementalInfo);
+            return handleSignedPayment(paymentMultiStepRequest, createPaymentResponse);
         } else
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(
@@ -393,8 +380,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private PaymentMultiStepResponse handleSignedPayment(
             PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse,
-            Map<String, String> supplementalInfo)
+            CreatePaymentResponse createPaymentResponse)
             throws PaymentException {
 
         if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATED.equalsIgnoreCase(
@@ -406,8 +392,6 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         } else if (CbiGlobeConstants.PSUAuthenticationStatus.FAILED.equalsIgnoreCase(
                 createPaymentResponse.getScaStatus())) {
             return logAndThrowPaymentCancelledException(createPaymentResponse);
-        } else if (supplementalInfo != null && supplementalInfo.isEmpty()) {
-            return logAndThrowPaymentAuthorizationException(createPaymentResponse);
         } else {
             return handleIntermediatePaymentStates(paymentMultiStepRequest, createPaymentResponse);
         }
@@ -431,16 +415,6 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 createPaymentResponse.getPsuAuthenticationStatus(),
                 createPaymentResponse.getScaStatus());
         throw new PaymentCancelledException();
-    }
-
-    private PaymentMultiStepResponse logAndThrowPaymentAuthorizationException(
-            CreatePaymentResponse createPaymentResponse) throws PaymentAuthorizationException {
-        logger.error(
-                "Payment is not verified and we did not receive a callback from ASPSP: psuAuthenticationStatus={} , scaStatus={} , transactionStatus={}",
-                createPaymentResponse.getPsuAuthenticationStatus(),
-                createPaymentResponse.getScaStatus(),
-                createPaymentResponse.getTransactionStatus());
-        throw new PaymentAuthorizationException();
     }
 
     private PaymentMultiStepResponse handleIntermediatePaymentStates(
@@ -509,7 +483,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return this.supplementalInformationHelper
                 .waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES)
-                .orElse(Collections.emptyMap());
+                .orElseThrow(PaymentAuthorizationTimeOutException::new);
     }
 
     protected PaymentType getPaymentType(PaymentRequest paymentRequest) {

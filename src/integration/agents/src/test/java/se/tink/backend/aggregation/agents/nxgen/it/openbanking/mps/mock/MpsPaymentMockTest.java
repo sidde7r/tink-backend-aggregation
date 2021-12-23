@@ -25,8 +25,10 @@ public class MpsPaymentMockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/mps/mock/resources/";
 
     private static final String CONFIGURATION_FILE = BASE_PATH + "configuration.yml";
+    private static final String SINGLE_PAYMENT_INITIATED_FILE =
+            BASE_PATH + "mps-single-payment_initiated.aap";
     private static final String SINGLE_PAYMENT_UNKNOWN_FILE =
-            BASE_PATH + "mps-single-payment_unknown_payment.aap";
+            BASE_PATH + "mps-single-payment_unknown.aap";
 
     @Test
     public void testSinglePaymentTimeout() throws Exception {
@@ -38,9 +40,10 @@ public class MpsPaymentMockTest {
 
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(
-                                MarketCode.IT, "it-mps-oauth2", SINGLE_PAYMENT_UNKNOWN_FILE)
+                                MarketCode.IT, "it-mps-oauth2", SINGLE_PAYMENT_INITIATED_FILE)
                         .withConfigurationFile(configuration)
                         .withPayment(payment.build())
+                        .withoutCallbackData()
                         .buildWithoutLogin(PaymentCommand.class);
 
         // when
