@@ -42,9 +42,6 @@ public class RedsysConsentController implements ConsentController {
     public boolean requestConsent() {
         final String supplementalKey = strongAuthenticationState.getSupplementalKey();
         final String state = strongAuthenticationState.getState();
-        log.info(
-                String.format(
-                        "Consent generator class: [%s]", consentGenerator.getClass().getName()));
         final Pair<String, URL> consentRequest =
                 apiClient.requestConsent(state, consentGenerator.generate());
         final String consentId = consentRequest.first;

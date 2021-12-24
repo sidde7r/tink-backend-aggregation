@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.consent.generators.serviceprovi
 import static se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope.TRANSACTIONS;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -95,13 +94,8 @@ public class RedsysDetailedConsentGenerator implements ConsentGenerator<ConsentR
             recurringIndicator = true;
         }
 
-        LocalDateTime nowMadrid = localDateTimeSource.now(SPAIN_ZONE_ID);
-        LocalDateTime nowLocal = localDateTimeSource.now();
-        LocalDate validUntil = nowMadrid.toLocalDate().plusDays(daysUntilExpiration);
-        log.info(
-                String.format(
-                        "Consent validUntil debug: NOW (local): %s; NOW (Madrid): %s; validUntil: %s",
-                        nowLocal, nowMadrid, validUntil));
+        LocalDate validUntil =
+                localDateTimeSource.now(SPAIN_ZONE_ID).toLocalDate().plusDays(daysUntilExpiration);
         return ConsentRequestBody.builder()
                 .access(accessEntity)
                 .recurringIndicator(recurringIndicator)
