@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.http.log.filter;
 
-import com.google.common.base.Charsets;
 import com.sun.jersey.api.client.AbstractClientRequestAdapter;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
@@ -13,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -94,9 +94,16 @@ public class LoggingFilter extends ClientFilter {
             log(b);
             out.close();
         }
+
+        private void printEntity(StringBuilder b, byte[] entity) {
+            if (entity.length == 0) {
+                return;
+            }
+            b.append(new String(entity)).append("\n");
+        }
     }
 
-    private long _id = 0;
+    private long logId = 0;
 
     // Max size that we log is 0,5MB
     private static final int MAX_SIZE = 500 * 1024;
@@ -153,7 +160,7 @@ public class LoggingFilter extends ClientFilter {
 
     @Override
     public ClientResponse handle(ClientRequest request) throws ClientHandlerException {
-        long id = ++this._id;
+        long id = ++this.logId;
 
         logRequest(id, request);
 
@@ -237,7 +244,7 @@ public class LoggingFilter extends ClientFilter {
             }
 
             stream.mark(Integer.MAX_VALUE);
-            InputStreamReader in = new InputStreamReader(stream, Charsets.UTF_8);
+            InputStreamReader in = new InputStreamReader(stream, StandardCharsets.UTF_8);
             long charsCopied = IOUtils.copyLarge(in, sw, 0, MAX_SIZE);
             if (charsCopied == MAX_SIZE) {
                 sw.write(" ... more ...");
@@ -279,12 +286,5 @@ public class LoggingFilter extends ClientFilter {
             }
         }
         prefixId(b, id).append(RESPONSE_PREFIX).append("\n");
-    }
-
-    private void printEntity(StringBuilder b, byte[] entity) {
-        if (entity.length == 0) {
-            return;
-        }
-        b.append(new String(entity)).append("\n");
     }
 }
