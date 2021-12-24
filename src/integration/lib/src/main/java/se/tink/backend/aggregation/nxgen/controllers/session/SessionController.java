@@ -5,7 +5,10 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.connectivity.errors.ConnectivityErrorDetails;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 
 public final class SessionController {
 
@@ -37,6 +40,14 @@ public final class SessionController {
         } catch (SessionException e) {
             log.info("SessionException in isLoggedIn: {}", e.getUserMessage().get());
             Preconditions.checkState(Objects.equals(e.getError(), SessionError.SESSION_EXPIRED), e);
+            return false;
+        } catch (ConnectivityException e) {
+            log.info("Session expired error in isLoggedIn: {}", e.getUserMessage().get());
+            Preconditions.checkState(
+                    ConnectivityErrorType.AUTHORIZATION_ERROR.equals(e.getError().getType())
+                            && ConnectivityErrorDetails.AuthorizationErrors.SESSION_EXPIRED.equals(
+                                    e.getError().getDetails().getReason()),
+                    e);
             return false;
         }
     }
