@@ -304,7 +304,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     private void loggedInCheckUnavailable(
-            MetricAction action, Exception e, LocalizableKey userMessage) {
+            MetricAction action, RuntimeException e, LocalizableKey userMessage) {
         log.info("[LOG IN] Failed with error: {}", e.getMessage(), e);
         action.unavailable();
         ConnectivityError error = ConnectivityErrorFactory.fromLegacy(e);

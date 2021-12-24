@@ -606,7 +606,7 @@ public class DataStudioLoginEventPublisherService {
                                     new ConnectivityErrorTypeAndReasonPair(
                                             ConnectivityErrorType.TINK_SIDE_ERROR,
                                             ConnectivityErrorDetails.TinkSideErrors.TIMEOUT.name()),
-                                    LoginResult.THIRD_PARTY_APP_ERROR_TIMED_OUT)
+                                    LoginResult.UNKNOWN_ERROR)
                             .put(
                                     new ConnectivityErrorTypeAndReasonPair(
                                             ConnectivityErrorType.TINK_SIDE_ERROR,
@@ -639,7 +639,7 @@ public class DataStudioLoginEventPublisherService {
                                             ConnectivityErrorDetails.UserLoginErrors
                                                     .THIRD_PARTY_AUTHENTICATION_UNAVAILABLE
                                                     .name()),
-                                    LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                                    LoginResult.THIRD_PARTY_APP_ERROR_UNKNOWN)
                             .put(
                                     new ConnectivityErrorTypeAndReasonPair(
                                             ConnectivityErrorType.USER_LOGIN_ERROR,

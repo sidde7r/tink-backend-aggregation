@@ -42,13 +42,13 @@ public final class SessionController {
             Preconditions.checkState(Objects.equals(e.getError(), SessionError.SESSION_EXPIRED), e);
             return false;
         } catch (ConnectivityException e) {
-            log.info("Session expired error in isLoggedIn: {}", e.getUserMessage().get());
-            Preconditions.checkState(
-                    ConnectivityErrorType.AUTHORIZATION_ERROR.equals(e.getError().getType())
-                            && ConnectivityErrorDetails.AuthorizationErrors.SESSION_EXPIRED.equals(
-                                    e.getError().getDetails().getReason()),
-                    e);
-            return false;
+            if (ConnectivityErrorType.AUTHORIZATION_ERROR.equals(e.getError().getType())
+                    && ConnectivityErrorDetails.AuthorizationErrors.SESSION_EXPIRED.equals(
+                            e.getError().getDetails().getReason())) {
+                log.info("Session expired error in isLoggedIn: {}", e.getUserMessage().get());
+                return false;
+            }
+            throw e;
         }
     }
 
