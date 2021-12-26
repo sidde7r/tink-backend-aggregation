@@ -43,7 +43,7 @@ public class CreatePaymentRequest {
         }
 
         public PaymentRequestBuilder debtorToPayer(Debtor debtor) {
-            this.payer = new PayerEntity(debtor.getAccountNumber());
+            this.payer = new PayerEntity(debtor == null ? null : debtor.getAccountNumber());
             return this;
         }
 
