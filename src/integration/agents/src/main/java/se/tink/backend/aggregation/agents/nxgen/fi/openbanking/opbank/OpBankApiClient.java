@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rp
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetCreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -135,6 +136,7 @@ public class OpBankApiClient {
                                         .build())
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
+                        .header(HeaderKeys.X_FAPI_INTERACTION_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
                         .post(HttpResponse.class);
 
@@ -142,8 +144,9 @@ public class OpBankApiClient {
     }
 
     public CreatePaymentResponse createNewPayment(
-            String bearerToken, CreatePaymentRequest payment, String kid) {
-        HttpResponse response =
+            String accessToken, CreatePaymentRequest payment, String kid) {
+
+        RequestBuilder requestBuilder =
                 client.request(Urls.CREATE_SEPA_PAYMENT)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -151,47 +154,39 @@ public class OpBankApiClient {
                         .header(HeaderKeys.X_IDEMPOTENCY_KEY, UUID.randomUUID().toString())
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
-                        .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
-                        .body(payment)
-                        .post(HttpResponse.class);
+                        .header(HeaderKeys.X_FAPI_INTERACTION_ID, Psd2Headers.getRequestId())
+                        .header(HeaderKeys.AUTHORIZATION, "Bearer " + accessToken)
+                        .body(payment);
 
-        return response.getBody(CreatePaymentResponse.class);
+        if (userAvailability.isUserPresent()) {
+            requestBuilder =
+                    requestBuilder.header(
+                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS,
+                            userAvailability.getOriginatingUserIp());
+        }
+        return requestBuilder.post(CreatePaymentResponse.class);
     }
 
-    public CreatePaymentResponse verifyPayment(OAuth2Token bearerToken, String paymentId) {
-        HttpResponse response =
-                client.request(Urls.VERIFY_SEPA_PAYMENT + paymentId)
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
-                        .header(HeaderKeys.AUTHORIZATION, bearerToken.toAuthorizeHeader())
-                        .get(HttpResponse.class);
+    public CreatePaymentResponse verifyPayment(OAuth2Token accessToken, String paymentId) {
+        RequestBuilder requestBuilder =
+                basePaymentRequest(Urls.VERIFY_SEPA_PAYMENT + paymentId, accessToken);
 
-        return response.getBody(CreatePaymentResponse.class);
+        return requestBuilder.get(CreatePaymentResponse.class);
     }
 
     public SubmittedPayment submitPayment(
-            String paymentUniqueId,
-            String psuIp,
-            OAuth2Token accessToken,
-            String paymentSubmissionId) {
-        HttpResponse response =
-                client.request(
-                                Urls.SUBMIT_SEPA_PAYMENT
-                                        + "/"
-                                        + paymentUniqueId
-                                        + "/submissions/"
-                                        + paymentSubmissionId)
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, psuIp)
-                        .header(HeaderKeys.X_FAPI_INTERACTION_ID, UUID.randomUUID().toString())
-                        .header(HeaderKeys.AUTHORIZATION, accessToken.toAuthorizeHeader())
-                        .put(HttpResponse.class);
+            String paymentUniqueId, OAuth2Token accessToken, String paymentSubmissionId) {
 
-        return response.getBody(SubmittedPayment.class);
+        RequestBuilder requestBuilder =
+                basePaymentRequest(
+                        Urls.SUBMIT_SEPA_PAYMENT
+                                + "/"
+                                + paymentUniqueId
+                                + "/submissions/"
+                                + paymentSubmissionId,
+                        accessToken);
+
+        return requestBuilder.put(SubmittedPayment.class);
     }
 
     private String createJwsHeader(CreatePaymentRequest payload, String kid) {
@@ -280,6 +275,26 @@ public class OpBankApiClient {
                                                         new IllegalStateException(
                                                                 SessionError.SESSION_EXPIRED
                                                                         .exception())));
+        if (userAvailability.isUserPresent()) {
+            requestBuilder =
+                    requestBuilder.header(
+                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS,
+                            userAvailability.getOriginatingUserIp());
+        }
+
+        return requestBuilder;
+    }
+
+    private RequestBuilder basePaymentRequest(String url, OAuth2Token accessToken) {
+        RequestBuilder requestBuilder =
+                client.request(url)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
+                        .header(HeaderKeys.X_FAPI_INTERACTION_ID, Psd2Headers.getRequestId())
+                        .header(HeaderKeys.AUTHORIZATION, accessToken.toAuthorizeHeader());
+
         if (userAvailability.isUserPresent()) {
             requestBuilder =
                     requestBuilder.header(
