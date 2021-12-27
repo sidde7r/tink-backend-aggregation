@@ -35,8 +35,7 @@ public class SqsProducer implements QueueProducer {
             SendMessageResult sendMessageResult =
                     sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
             logger.info(
-                    "[SQSProducer] Requeued message with new id: {}",
-                    sendMessageResult.getMessageId());
+                    "[SQSProducer] Sent message with new id: {}", sendMessageResult.getMessageId());
             sqsQueue.produced();
         } catch (IOException e) {
             logger.error("[SQSProducer] Could not send message", e);

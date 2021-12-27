@@ -147,6 +147,7 @@ public class AgentWorker extends ManagedSafeStop {
     }
 
     public void execute(AgentWorkerOperation operation) throws Exception {
+        log.info("[AgentWorker] Starting executing");
         CredentialsRequest request = operation.getRequest();
         InstrumentedRunnable instrumentedRunnable =
                 new InstrumentedRunnable(
@@ -170,17 +171,28 @@ public class AgentWorker extends ManagedSafeStop {
 
         if (request.getUserAvailability().isUserPresent()) {
             // Don't rate limit manual requests
-            aggregationExecutorService.execute(Tracing.wrapRunnable(namedRunnable));
+            try {
+                aggregationExecutorService.execute(Tracing.wrapRunnable(namedRunnable));
+            } catch (RuntimeException e) {
+                log.error("[AgentWorker] Failed to execute using aggregationExecutorService", e);
+                throw e;
+            }
         } else {
-            rateLimitedExecutorService.execute(namedRunnable, request.getProvider());
+            try {
+                rateLimitedExecutorService.execute(namedRunnable, request.getProvider());
+            } catch (RuntimeException e) {
+                log.error("[AgentWorker] Failed to execute using rateLimitedExecutorService", e);
+                throw e;
+            }
         }
         instrumentedRunnable.submitted();
+        log.info("[AgentWorker] Finished executing");
     }
 
     public void executeAutomaticRefresh(
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerOperationCreatorRunnable)
             throws Exception {
-
+        log.info("[AgentWorker] Starting executing automatic refresh");
         InstrumentedRunnable instrumentedRunnable =
                 new InstrumentedRunnable(
                         metricRegistry,
@@ -204,8 +216,17 @@ public class AgentWorker extends ManagedSafeStop {
                                 MONITOR_THREAD_NAME_FORMAT,
                                 agentWorkerOperationCreatorRunnable.getCredentialsId()));
 
-        automaticRefreshRateLimitedExecutorService.execute(
-                namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
+        try {
+            automaticRefreshRateLimitedExecutorService.execute(
+                    namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
+        } catch (RuntimeException e) {
+            log.error(
+                    "[AgentWorker] Failed to execute using automaticRefreshRateLimitedExecutorService",
+                    e);
+            throw e;
+        }
+
         instrumentedRunnable.submitted();
+        log.info("[AgentWorker] Finished executing automatic refresh");
     }
 }
