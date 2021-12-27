@@ -1,102 +1,81 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator;
 
-import static org.apache.commons.collections4.CollectionUtils.containsAny;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Log.BEC_LOG_TAG;
 
-import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
-import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaOptionsEncryptedPayload;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SupplementalFieldsAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.UserAvailability;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.steps.BecAuthWithCodeAppStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.steps.BecAuthWithKeyCardStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.steps.BecAutoAuthenticationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.steps.BecChoose2FAMethodStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.steps.BecInitializeAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
 
 @Slf4j
-@RequiredArgsConstructor
-public class BecAuthenticator extends StatelessProgressiveAuthenticator {
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+public class BecAuthenticator implements Authenticator {
 
-    private static final Pattern USERNAME_PATTERN = Pattern.compile("\\d{10,11}");
-    private static final Pattern MOBILECODE_PATTERN = Pattern.compile("\\d{4}");
+    private final BecAutoAuthenticationStep autoAuthenticationStep;
 
-    private final BecApiClient apiClient;
-    private final SessionStorage sessionStorage;
-    private final SupplementalInformationController supplementalInformationController;
-    private final PersistentStorage persistentStorage;
-    private final Catalog catalog;
-    private final UserAvailability userAvailability;
+    private final BecInitializeAuthenticationStep initializeAuthenticationStep;
+    private final BecChoose2FAMethodStep choose2FAMethodStep;
+
+    private final BecAuthWithCodeAppStep authWithCodeAppStep;
+    private final BecAuthWithKeyCardStep authWithKeyCardStep;
 
     @Override
-    public List<AuthenticationStep> authenticationSteps() {
-        return ImmutableList.of(
-                new ScaTokenAuthenticationStep(
-                        apiClient, persistentStorage, getDeviceId(), userAvailability),
-                new AutomaticAuthenticationStep(this::syncAppDetails, "syncApp"),
-                new UsernamePasswordAuthenticationStep(this::fetchScaOptions),
-                new DecisionAuthStep(sessionStorage),
-                new CombinedNemIdAuthenticationStep(
-                        apiClient,
-                        supplementalInformationController,
-                        sessionStorage,
-                        persistentStorage,
-                        getDeviceId(),
-                        catalog),
-                new KeyCardAuthenticationStep(sessionStorage, apiClient, getDeviceId()),
-                new SupplementalFieldsAuthenticationStep(
-                        SupplementalFieldsAuthenticationStep.class.getName(),
-                        this::keyCardAuth,
-                        prepareKeyCardFields()),
-                new FinalKeyCardAuthenticationStep(
-                        sessionStorage, persistentStorage, apiClient, getDeviceId()));
-    }
-
-    private AuthenticationStepResponse syncAppDetails() {
-        apiClient.appSync();
-        return AuthenticationStepResponse.executeNextStep();
-    }
-
-    private AuthenticationStepResponse fetchScaOptions(String username, String password)
-            throws LoginException, NemIdException {
-        auditCredentials(username, password);
-        ScaOptionsEncryptedPayload payload =
-                apiClient.getScaOptions(username, password, getDeviceId());
-
-        List<String> secondFactorOptions = payload.getSecondFactorOptions();
-        validateScaOptions(secondFactorOptions);
-
-        if (secondFactorOptions.contains(ScaOptions.CODEAPP_OPTION)) {
-            sessionStorage.put(StorageKeys.SCA_OPTION_KEY, ScaOptions.CODEAPP_OPTION);
-        } else if (secondFactorOptions.contains(ScaOptions.KEYCARD_OPTION)) {
-            sessionStorage.put(StorageKeys.SCA_OPTION_KEY, ScaOptions.KEYCARD_OPTION);
+    public void authenticate(Credentials credentials) {
+        if (autoAuthenticationStep.tryAutoAuthentication()) {
+            return;
         }
-
-        return AuthenticationStepResponse.executeNextStep();
+        log.info("{} Switching to manual authentication", BEC_LOG_TAG);
+        manualAuthentication();
     }
 
-    private void validateScaOptions(List<String> secondFactorOptions) {
+    private void manualAuthentication() {
+        log.info("{} Fetching all 2FA options", BEC_LOG_TAG);
+        List<String> all2FAOptions =
+                initializeAuthenticationStep.initAuthenticationAndFetch2FAOptions();
+
+        List<NemId2FAMethod> allNemId2FAMethods = getSupportedNemId2FAMethods(all2FAOptions);
+        NemId2FAMethod chosen2FAMethod = choose2FAMethodStep.choose2FAMethod(allNemId2FAMethods);
+        log.info("{} Chosen 2FA method: {}", BEC_LOG_TAG, chosen2FAMethod);
+
+        switch (chosen2FAMethod) {
+            case CODE_APP:
+                authWithCodeAppStep.authenticate();
+                break;
+            case CODE_CARD:
+                authWithKeyCardStep.authenticate();
+                break;
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                "%s Unsupported 2FA method: %s", BEC_LOG_TAG, chosen2FAMethod));
+        }
+    }
+
+    private List<NemId2FAMethod> getSupportedNemId2FAMethods(List<String> secondFactorOptions) {
         log.info("[BEC] Starting SCA methods validation");
 
-        boolean nemIdAvailable = containsAny(secondFactorOptions, ScaOptions.NEM_ID_METHODS);
+        List<NemId2FAMethod> nemId2FAMethods =
+                secondFactorOptions.stream()
+                        .filter(
+                                ScaOptions.SCA_OPTION_TO_SUPPORTED_NEM_ID_METHOD_MAPPING
+                                        ::containsKey)
+                        .map(ScaOptions.SCA_OPTION_TO_SUPPORTED_NEM_ID_METHOD_MAPPING::get)
+                        .collect(Collectors.toList());
+
+        boolean nemIdAvailable = !nemId2FAMethods.isEmpty();
         boolean mitIdAvailable = secondFactorOptions.contains(ScaOptions.MIT_ID_OPTION);
         boolean noAvailableMethods = secondFactorOptions.isEmpty();
 
@@ -115,43 +94,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
             log.info("[BEC] Unknown available SCA methods: " + secondFactorOptions);
             throw NemIdError.SECOND_FACTOR_NOT_REGISTERED.exception();
         }
-    }
 
-    private void auditCredentials(String username, String password) {
-        log.info("Username matches pattern: {} ", USERNAME_PATTERN.matcher(username).matches());
-        log.info("Password matches pattern: {} ", MOBILECODE_PATTERN.matcher(password).matches());
-    }
-
-    private AuthenticationStepResponse keyCardAuth(Map<String, String> callbackData) {
-        String challengeResponseValue = callbackData.get(CommonFields.KeyCardCode.FIELD_KEY);
-        sessionStorage.put(StorageKeys.KEY_CARD_CHALLENGE_RESPONSE_KEY, challengeResponseValue);
-
-        return AuthenticationStepResponse.executeStepWithId(FinalKeyCardAuthenticationStep.STEP_ID);
-    }
-
-    private Field[] prepareKeyCardFields() {
-        Field keyCardInfoField =
-                CommonFields.KeyCardInfo.build(
-                        catalog,
-                        sessionStorage.get(StorageKeys.CHALLENGE_STORAGE_KEY),
-                        sessionStorage.get(StorageKeys.KEY_CARD_NUMBER_STORAGE_KEY));
-        Field keyCardCodeField = CommonFields.KeyCardCode.build(catalog, 6);
-
-        return new Field[] {keyCardInfoField, keyCardCodeField};
-    }
-
-    private String getDeviceId() {
-        String deviceId = persistentStorage.get(StorageKeys.DEVICE_ID_STORAGE_KEY);
-        if (deviceId != null) {
-            return deviceId;
-        } else {
-            String generatedDeviceId = generateDeviceId();
-            persistentStorage.put(StorageKeys.DEVICE_ID_STORAGE_KEY, generatedDeviceId);
-            return generatedDeviceId;
-        }
-    }
-
-    private String generateDeviceId() {
-        return UUID.randomUUID().toString();
+        return nemId2FAMethods;
     }
 }

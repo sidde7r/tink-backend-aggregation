@@ -12,11 +12,11 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-class NemIdChoose2FAMethodField {
+public class NemIdChoose2FAMethodField {
 
     public static final String FIELD_KEY = "selectAuthMethodField";
 
-    private static final LocalizableKey DESCRIPTION =
+    public static final LocalizableKey DESCRIPTION =
             new LocalizableKey("Select how you want to confirm the NemID authentication");
 
     public static Field build(Catalog catalog, List<NemId2FAMethod> nemId2FAMethods) {

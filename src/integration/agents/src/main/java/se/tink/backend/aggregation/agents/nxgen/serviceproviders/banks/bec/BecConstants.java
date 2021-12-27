@@ -2,21 +2,27 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public final class BecConstants {
+@UtilityClass
+public class BecConstants {
 
-    public static final class ScaOptions {
+    @UtilityClass
+    public class ScaOptions {
         public static final String CODEAPP_OPTION = "codeapp";
         public static final String KEYCARD_OPTION = "keycard";
-        public static final List<String> NEM_ID_METHODS =
-                Arrays.asList(CODEAPP_OPTION, KEYCARD_OPTION);
+        public static final Map<String, NemId2FAMethod>
+                SCA_OPTION_TO_SUPPORTED_NEM_ID_METHOD_MAPPING =
+                        ImmutableMap.of(
+                                CODEAPP_OPTION, NemId2FAMethod.CODE_APP,
+                                KEYCARD_OPTION, NemId2FAMethod.CODE_CARD);
 
         public static final String MIT_ID_OPTION = "mitid";
 
@@ -24,7 +30,8 @@ public final class BecConstants {
         public static final String DEFAULT_OPTION = "default";
     }
 
-    public static final class Url {
+    @UtilityClass
+    public class Url {
         static final String APP_SYNC = "/appsync";
         static final String PREPARE_SCA = "/logon/SCAprepare";
         static final String SCA = "/logon/SCA";
@@ -45,13 +52,15 @@ public final class BecConstants {
         static final String ACCOUNT_ID_PARAMETER = "accountId";
     }
 
-    public static final class Crypto {
+    @UtilityClass
+    public class Crypto {
         public static final String AES = "AES";
         public static final String PUBLIC_KEY =
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqMJMtCR9EGfj88tptmwS+dTRRzemxCmCwrvdKuSgiwFAobUoTmNUM027rFvDMvGjQMC656UdQMbB6oXcFVCBR3J/ibfPylvrohbi+j8otvH4eQNvpzALG/PEnTC0uX/1hibyPAntuenuNlHWD32gkoWvxLyWEGEXFEMB7kvhojl+8CLheKuRMClaUNfHtIuRwRv2cU+bnWeEAde2tcAenta+9+caNpR6kXrxgTe/orFY5Sb7hkL8WRo4p991ZbOYlVJ2HSykD1c2EGPspgxF7apcepifgJXAr6FSPFcj4/jx5028Rf/wqlSptF20TyluCGjp7LjkkuV95g/Qn3IvnQIDAQAB";
     }
 
-    public static final class Meta {
+    @UtilityClass
+    public class Meta {
 
         public static final String APP_TYPE = "mb1";
         public static final String APP_VERSION = "7.7.1-105";
@@ -65,7 +74,8 @@ public final class BecConstants {
         public static final String CIPHER = "AES-CBC-PKCS5/RSA-OAEP-SHA256-MGP1";
     }
 
-    public static final class Header {
+    @UtilityClass
+    public class Header {
         static final String PRAGMA_KEY = "Pragma";
         static final String PRAGMA_VALUE = "BECJson/1.0";
 
@@ -85,7 +95,8 @@ public final class BecConstants {
         static final String QUERY_PARAM_SEARCH_TO_DATE_KEY = "searchToDate";
     }
 
-    public static final class ErrorMessages {
+    @UtilityClass
+    public class ErrorMessages {
 
         public static final Map<String, String> ERROR_MESSAGES_TO_REASON_MAP;
 
@@ -115,7 +126,8 @@ public final class BecConstants {
                         "The required function is not currently available. Try again later.",
                         "Der er desværre ikke adgang i øjeblikket. Prøv venligst igen senere.");
 
-        public static final class Authentication {
+        @UtilityClass
+        public class Authentication {
 
             public static final List<String> INCORRECT_CREDENTIALS =
                     ImmutableList.of(
@@ -132,17 +144,14 @@ public final class BecConstants {
         }
     }
 
-    public static final class StorageKeys {
-        public static final String KEY_CARD_NUMBER_STORAGE_KEY = "key-card-number";
-        public static final String CHALLENGE_STORAGE_KEY = "challenge-number";
+    @UtilityClass
+    public class StorageKeys {
         public static final String DEVICE_ID_STORAGE_KEY = "device-id";
         public static final String SCA_TOKEN_STORAGE_KEY = "sca-token";
-        public static final String SCA_OPTION_KEY = "sca-option";
-        public static final String KEY_CARD_CHALLENGE_RESPONSE_KEY = "challengeResponseValue";
-        public static final String TOKEN_STORAGE_KEY = "nem-id-token";
     }
 
-    public static final class Log {
+    @UtilityClass
+    public class Log {
         public static final LogTag UNKOWN_ACCOUNT_TYPE =
                 LogTag.from("#dk_bec_unknown_account_type");
         public static final LogTag LOANS = LogTag.from("#dk_bec_loan");
@@ -154,6 +163,7 @@ public final class BecConstants {
         public static final LogTag BEC_LOG_TAG = LogTag.from("[BEC]");
     }
 
+    @UtilityClass
     public static final class CreditCard {
         public static final List<String> STATUS_ACTIVE = ImmutableList.of("active", "aktivt");
     }

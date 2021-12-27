@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.BecAccountTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticatorModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.BecBankUnavailableErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.BecBankUnavailableRetryFilter;
@@ -29,10 +29,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filte
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.BecInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.BecLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.session.BecSessionHandler;
-import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -42,26 +42,28 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
-public final class BecAgent extends SubsequentProgressiveGenerationAgent
-        implements ProgressiveAuthAgent,
-                RefreshInvestmentAccountsExecutor,
+public final class BecAgent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
 
     private final BecApiClient apiClient;
+    private final BecStorage storage;
     private final BecAccountTransactionsFetcher transactionFetcher;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public BecAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
 
         this.apiClient = createBecApiClient();
+        this.storage = new BecStorage(persistentStorage);
 
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
         this.investmentRefreshController = createInvestmentRefreshController();
@@ -70,6 +72,22 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         configureClient();
+
+        this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        BecAuthenticatorModule authenticatorModule =
+                new BecAuthenticatorModule(
+                        apiClient,
+                        credentials,
+                        storage,
+                        request.getUserAvailability(),
+                        catalog,
+                        supplementalInformationController,
+                        randomValueGenerator);
+        return authenticatorModule.createAuthenticator();
     }
 
     private void configureClient() {
@@ -180,16 +198,5 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new BecSessionHandler(this.apiClient);
-    }
-
-    @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
-        return new BecAuthenticator(
-                this.apiClient,
-                sessionStorage,
-                supplementalInformationController,
-                persistentStorage,
-                catalog,
-                request.getUserAvailability());
     }
 }
