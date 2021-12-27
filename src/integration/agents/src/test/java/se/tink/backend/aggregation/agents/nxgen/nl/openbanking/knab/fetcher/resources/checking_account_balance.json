@@ -1,0 +1,21 @@
+{
+  "account": {
+    "iban": "NL36KNAB0257714677"
+  },
+  "balances": [
+    {
+      "balanceType": "interimAvailable",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "100.00"
+      }
+    },
+    {
+      "balanceType": "interimBooked",
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "100.00"
+      }
+    }
+  ]
+}

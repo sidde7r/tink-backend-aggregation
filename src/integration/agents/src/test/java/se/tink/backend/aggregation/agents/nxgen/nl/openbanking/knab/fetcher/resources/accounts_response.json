@@ -1,0 +1,40 @@
+{
+  "accounts": [
+    {
+      "resourceId": "586463",
+      "usage": "PRIV",
+      "iban": "NL36KNAB0257714677",
+      "currency": "EUR",
+      "name": "My personal portfolio",
+      "accountNickName": "My personal nickName",
+      "product": "Current Account",
+      "cashAccountType": "CACC",
+      "_links": {
+        "balances": {
+          "href": "/accounts/586463/balances"
+        },
+        "transactions": {
+          "href": "/accounts/586463/transactions"
+        }
+      }
+    },
+    {
+      "resourceId": "586464",
+      "usage": "ORGA",
+      "bban": "53964486",
+      "currency": "EUR",
+      "name": "My personal portfolio",
+      "accountNickName": "My business nickName",
+      "product": "Knab Flexibel Sparen Zakelijk",
+      "cashAccountType": "SVGS",
+      "_links": {
+        "balances": {
+          "href": "/accounts/586464/balances"
+        },
+        "transactions": {
+          "href": "/accounts/586464/transactions"
+        }
+      }
+    }
+  ]
+}

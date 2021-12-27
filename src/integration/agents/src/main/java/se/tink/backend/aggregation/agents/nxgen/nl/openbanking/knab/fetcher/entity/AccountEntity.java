@@ -22,6 +22,8 @@ public class AccountEntity {
 
     @Getter private String iban;
 
+    @Getter private String bban;
+
     private String currency;
 
     private String name;
@@ -32,23 +34,37 @@ public class AccountEntity {
     private AccountsLinksEntity links;
 
     public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> balances) {
+        String accountId = getAccountId();
+
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
+                .withType(getAccountType())
                 .withPaymentAccountFlag()
                 .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(iban)
+                                .withUniqueIdentifier(accountId)
+                                .withAccountNumber(accountId)
                                 .withAccountName(product)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, iban, null))
+                                                getAccountIdentifierType(), accountId, null))
                                 .build())
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
-                .setBankIdentifier(iban)
+                .setBankIdentifier(accountId)
                 .build();
+    }
+
+    private TransactionalAccountType getAccountType() {
+        return bban != null ? TransactionalAccountType.SAVINGS : TransactionalAccountType.CHECKING;
+    }
+
+    private String getAccountId() {
+        return bban != null ? bban : iban;
+    }
+
+    private AccountIdentifierType getAccountIdentifierType() {
+        return bban != null ? AccountIdentifierType.BBAN : AccountIdentifierType.IBAN;
     }
 
     private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
