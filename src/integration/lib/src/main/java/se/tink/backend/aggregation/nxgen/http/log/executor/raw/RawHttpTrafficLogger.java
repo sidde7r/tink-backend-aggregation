@@ -10,7 +10,6 @@ import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.executor.HttpTrafficLogger;
@@ -19,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.HttpTrafficLogger;
 @RequiredArgsConstructor
 public class RawHttpTrafficLogger implements HttpTrafficLogger {
 
-    private static final LogTag LOG_TAG = LogTag.from("[RawHttpTrafficLogger]");
+    private static final String LOG_TAG = "[RawHttpTrafficLogger]";
 
     @Getter private final OutputStream loggingOutputStream;
     @Getter private final PrintStream loggingPrintStream;

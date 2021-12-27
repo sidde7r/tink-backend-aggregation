@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.constants.CommonHeaders;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public abstract class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExecutor {

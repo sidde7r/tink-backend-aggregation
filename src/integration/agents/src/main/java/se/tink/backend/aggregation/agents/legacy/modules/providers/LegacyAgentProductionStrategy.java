@@ -7,7 +7,7 @@ import java.net.URI;
 import java.util.function.Function;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
-import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
+import se.tink.backend.aggregation.nxgen.http.log.filter.LoggingFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 

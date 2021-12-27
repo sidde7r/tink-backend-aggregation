@@ -5,7 +5,7 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.function.Function;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.nxgen.http.constants.CommonHeaders;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 
 public class SebBaseApiClient {

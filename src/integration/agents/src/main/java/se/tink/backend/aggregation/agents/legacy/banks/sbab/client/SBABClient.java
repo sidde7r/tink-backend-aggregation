@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.nxgen.http.constants.CommonHeaders;
 
 public class SBABClient {
 

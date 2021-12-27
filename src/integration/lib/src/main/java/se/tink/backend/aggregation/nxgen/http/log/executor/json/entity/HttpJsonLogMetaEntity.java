@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.nxgen.http.log.executor.json.entity;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
-import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
-@JsonObject
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class HttpJsonLogMetaEntity {
 
     private final String providerName;

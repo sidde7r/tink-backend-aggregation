@@ -20,6 +20,7 @@ import org.apache.http.util.TextUtils;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
+import se.tink.backend.aggregation.nxgen.http.log.filter.LoggingFilter;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.net.client.factory.AbstractJerseyClientFactory;
 import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;

@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.log.executor.HttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogExchangeEntity;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
@@ -28,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonL
 @Slf4j
 public class JsonHttpTrafficLogger implements HttpTrafficLogger {
 
-    private static final LogTag LOG_TAG = LogTag.from("[JsonHttpTrafficLogger]");
+    private static final String LOG_TAG = "[JsonHttpTrafficLogger]";
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final HttpJsonLogMetaEntity metaEntity;
