@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -37,10 +38,25 @@ public class AccountV31FetcherTest {
     private UkOpenBankingApiClient apiClient;
     private FetcherInstrumentationRegistry instrumentation;
 
+    @Before
+    public void setUp() throws Exception {
+        Account mockedAccount = mock(Account.class);
+        accountMapper = mock(AccountMapper.class);
+        when(accountMapper.map(any(), anyCollection(), anyCollection()))
+                .thenReturn(Optional.of(mockedAccount));
+        when(accountMapper.supportsAccountType(any())).thenReturn(true);
+
+        partyFetcher = mock(PartyV31Fetcher.class);
+        apiClient = mock(UkOpenBankingApiClient.class);
+        instrumentation = new FetcherInstrumentationRegistry();
+
+        accountFetcher =
+                new AccountV31Fetcher(apiClient, partyFetcher, accountMapper, instrumentation);
+    }
+
     @Test
     public void returnOnlyAccountsSupportedByMapper() {
         // when
-        setUpTest();
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
                         ImmutableList.of(
@@ -95,7 +111,6 @@ public class AccountV31FetcherTest {
     @Test
     public void returnOnlyAccountsSupportedByMapperEvenIfBusinessAccountsAreReturned() {
         // when
-        setUpTest();
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
                         ImmutableList.of(
@@ -148,7 +163,6 @@ public class AccountV31FetcherTest {
     @Test
     public void returnPersonalAndBusinessAccountsToTheMapper() {
         // when
-        setUpTest();
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
                         ImmutableList.of(
@@ -201,7 +215,6 @@ public class AccountV31FetcherTest {
     @Test
     public void allFetchedDataIsPassedToMapper() {
         // given
-        setUpTest();
         AccountEntity account = TransactionalAccountFixtures.savingsAccount();
         AccountBalanceEntity balance = BalanceFixtures.balanceCredit();
         List<PartyV31Entity> parties = PartyFixtures.parties();
@@ -220,7 +233,6 @@ public class AccountV31FetcherTest {
     @Test
     public void shouldReturnEmptyAccountList() {
         // given
-        setUpTest();
         AccountEntity account = TransactionalAccountFixtures.currentAccountWithEmptyAccountId();
         when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));
 
@@ -228,21 +240,6 @@ public class AccountV31FetcherTest {
         Collection accounts = accountFetcher.fetchAccounts();
 
         // then
-        assertThat(accounts).hasSize(0);
-    }
-
-    private void setUpTest() {
-        Account mockedAccount = mock(Account.class);
-        accountMapper = mock(AccountMapper.class);
-        when(accountMapper.map(any(), anyCollection(), anyCollection()))
-                .thenReturn(Optional.of(mockedAccount));
-        when(accountMapper.supportsAccountType(any())).thenReturn(true);
-
-        partyFetcher = mock(PartyV31Fetcher.class);
-        apiClient = mock(UkOpenBankingApiClient.class);
-        instrumentation = new FetcherInstrumentationRegistry();
-
-        accountFetcher =
-                new AccountV31Fetcher(apiClient, partyFetcher, accountMapper, instrumentation);
+        assertThat(accounts).isEmpty();
     }
 }
