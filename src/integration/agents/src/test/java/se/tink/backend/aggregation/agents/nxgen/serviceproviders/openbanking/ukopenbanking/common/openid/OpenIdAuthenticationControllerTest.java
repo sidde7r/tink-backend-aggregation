@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -47,27 +51,16 @@ public class OpenIdAuthenticationControllerTest {
     @Mock private OpenIdAuthenticationValidator authenticationValidator;
 
     private OpenIdAuthenticationController openIdAuthenticationController;
-    private OAuth2Token oAuth2Token;
 
     @Before
     public void setup() {
-        openIdAuthenticationController =
-                new OpenIdAuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        apiClient,
-                        authenticator,
-                        credentials,
-                        strongAuthenticationState,
-                        "callbackUri",
-                        randomValueGenerator,
-                        authenticationValidator);
+        openIdAuthenticationController = initOpenIdAuthenticationController();
     }
 
     @Test
     public void shouldCompleteAutoAuthenticationWhenAccessTokenIsStillValid() {
         // given
-        oAuth2Token = createValidOAuth2Token();
+        OAuth2Token oAuth2Token = createValidOAuth2Token();
         when(persistentStorage.get(
                         OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(oAuth2Token));
@@ -150,28 +143,55 @@ public class OpenIdAuthenticationControllerTest {
         assertThat(thrown).isExactlyInstanceOf(BankServiceException.class);
     }
 
-    private OAuth2Token createValidOAuth2Token() {
-        oAuth2Token =
-                OAuth2Token.create(
-                        DUMMY_TOKEN_TYPE,
-                        DUMMY_ACCESS_TOKEN,
-                        DUMMY_REFRESH_TOKEN,
-                        DUMMY_ACCESS_EXPIRES_IN_SECONDS,
-                        200);
+    @Test
+    public void shouldThrowSessionExpiredExceptionWhenCallbackCodeIsMissing() {
+        // given
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn("randomSupplementalKey");
+        openIdAuthenticationController = initOpenIdAuthenticationController();
 
-        return oAuth2Token;
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        anyString(),
+                        eq(ThirdPartyAppConstants.WAIT_FOR_MINUTES),
+                        eq(TimeUnit.MINUTES)))
+                .thenReturn(Optional.of(new HashMap<>()));
+
+        // when
+        Throwable thrown =
+                catchThrowable(() -> openIdAuthenticationController.collect("randomString"));
+
+        // then
+        assertThat(thrown).isInstanceOf(SessionException.class);
+    }
+
+    private OpenIdAuthenticationController initOpenIdAuthenticationController() {
+        return new OpenIdAuthenticationController(
+                persistentStorage,
+                supplementalInformationHelper,
+                apiClient,
+                authenticator,
+                credentials,
+                strongAuthenticationState,
+                "callbackUri",
+                randomValueGenerator,
+                authenticationValidator);
+    }
+
+    private OAuth2Token createValidOAuth2Token() {
+        return OAuth2Token.create(
+                DUMMY_TOKEN_TYPE,
+                DUMMY_ACCESS_TOKEN,
+                DUMMY_REFRESH_TOKEN,
+                DUMMY_ACCESS_EXPIRES_IN_SECONDS,
+                200);
     }
 
     private OAuth2Token createInvalidOAuth2Token() {
-        OAuth2Token invalidOAuth2Token =
-                OAuth2Token.create(
-                        DUMMY_TOKEN_TYPE,
-                        DUMMY_ACCESS_TOKEN,
-                        DUMMY_REFRESH_TOKEN,
-                        DUMMY_ID_TOKEN,
-                        0,
-                        DUMMY_REFRESH_EXPIRES_IN_SECONDS);
-
-        return invalidOAuth2Token;
+        return OAuth2Token.create(
+                DUMMY_TOKEN_TYPE,
+                DUMMY_ACCESS_TOKEN,
+                DUMMY_REFRESH_TOKEN,
+                DUMMY_ID_TOKEN,
+                0,
+                DUMMY_REFRESH_EXPIRES_IN_SECONDS);
     }
 }
