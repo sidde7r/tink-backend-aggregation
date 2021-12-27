@@ -1,0 +1,68 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: recordingrules-login-de-test-second
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+#===================================================
+# Work in progress below!
+#
+# These expressions below should do what increase should be doing on its own, if the metrics were 0-initialized.
+# For now, those recording rules are not used by any alerts!
+# They are here to observe:
+#  * if using variables in this syntax is ok
+#  * how long do they take to evaluate on DE market
+#  * do they even evaluate
+#
+# Additionally, in this file I test if one ugly query is enough and working fine to build all rest
+#===================================================
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Ugly rule to be used by every other recording rule
+  # It combines everything that other rules might look for.
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_login:action_className_outome:TESTING_SECOND
+    expr: sum by (className) (
+        (floor(increase({{ .Values.deQueryLoginAll }}[1h])) and ({{ .Values.deQueryLoginAll }} offset 1h unless {{ .Values.deQueryLoginAll }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginAll }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAll }}[1h]) / 360))
+      )
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Manual logins recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_login:className:manual:all_logins:delta1h:TESTING_SECOND
+    expr: sum by (className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action="login-manual"}})
+
+  - record: DE:agent_login:className:manual:failed:delta1h:TESTING_SECOND
+    expr: sum by (className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action="login-manual", outcome="failed"}})
+
+  - record: DE:agent_login:className:manual:unavailable:delta1h:TESTING_SECOND
+    expr: sum by (className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action="login-manual", outcome="unavailable"}})
+
+  - record: DE:agent_login:className:manual:tink_issues:delta1h:TESTING_SECOND
+    expr: sum by (className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action="login-manual", outcome="failed_due_to_tink_infrastructure"}})
+
+  - record: DE:agent_login:className:manual:cancelled:delta1h:TESTING_SECOND
+    expr: sum by (className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action="login-manual", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}})
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Auto logins recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_login:action_className:auto:all_logins:delta1h:TESTING_SECOND
+    expr: sum by (action, className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action=~"login-auto|login-cron"}})
+
+  - record: DE:agent_login:action_className:auto:failed:delta1h:TESTING_SECOND
+    expr: sum by (action, className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action=~"login-auto|login-cron", outcome="failed"}})
+
+  - record: DE:agent_login:action_className:auto:unavailable:delta1h:TESTING_SECOND
+    expr: sum by (action, className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action=~"login-auto|login-cron", outcome="unavailable"}})
+
+  - record: DE:agent_login:action_className:auto:tink_issues:delta1h:TESTING_SECOND
+    expr: sum by (action, className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action=~"login-auto|login-cron", outcome="failed_due_to_tink_infrastructure"}})
+
+  - record: DE:agent_login:action_className:auto:cancelled:delta1h:TESTING_SECOND
+    expr: sum by (action, className) (DE:agent_login:action_className_outome:TESTING_SECOND{ action=~"login-auto|login-cron", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}})

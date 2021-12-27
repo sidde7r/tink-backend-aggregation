@@ -41,6 +41,7 @@ grafanaMarketLink: https://grafana.global-production.tink.network/d/000000078/in
 # [NZG-409] Jan S:
 # Trying to declutter repetitious form of recording rules expression for DE market,
 # by defining time series filtering right here. Might be refactored further in near future.
+deQueryLoginAll: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-manual|login-auto|login-cron"}
 deQueryLoginManualAll: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual"}
 deQueryLoginManualFailed: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed"}
 deQueryLoginManualUnavailable: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="unavailable"}
