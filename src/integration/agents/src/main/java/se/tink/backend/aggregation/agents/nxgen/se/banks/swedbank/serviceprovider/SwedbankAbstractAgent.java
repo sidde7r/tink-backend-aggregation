@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.SwedbankDefaultTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -53,6 +52,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
 
+    private final AgentComponentProvider componentProvider;
     protected final SwedbankConfiguration swedbankConfiguration;
     protected final SwedbankDefaultApiClient apiClient;
     private TransferDestinationRefreshController transferDestinationRefreshController;
@@ -68,6 +68,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
             SwedbankApiClientProvider apiClientProvider,
             SwedbankDateUtils dateUtils) {
         super(componentProvider);
+        this.componentProvider = componentProvider;
         this.dateUtils = dateUtils;
         swedbankStorage = new SwedbankStorage();
         this.isBankId =
@@ -90,17 +91,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
 
     protected void configureProxy(final AgentsServiceConfiguration agentsServiceConfiguration) {
         if (agentsServiceConfiguration.isFeatureEnabled("swedbankExtProxy")) {
-            final PasswordBasedProxyConfiguration proxyConfiguration =
-                    agentsServiceConfiguration.getCountryProxy(
-                            "se", credentials.getUserId().hashCode());
-            client.setProductionProxy(
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername(),
-                    proxyConfiguration.getPassword());
-            log.info(
-                    "Using proxy {} with username {}",
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername());
+            client.setProxyProfile(componentProvider.getProxyProfiles().getMarketProxyProfile());
         }
     }
 
