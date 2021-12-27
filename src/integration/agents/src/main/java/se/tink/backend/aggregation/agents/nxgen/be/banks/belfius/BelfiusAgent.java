@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.http.ProxyProfiles;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -23,12 +24,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.SslHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
@@ -40,6 +39,7 @@ public final class BelfiusAgent extends AgentPlatformAgent
                 RefreshSavingsAccountsExecutor,
                 AgentPlatformStorageMigration {
 
+    private final ProxyProfiles proxyProfiles;
     private final BelfiusApiClient apiClient;
     private final AgentPlatformBelfiusApiClient agentPlatformApiClient;
     private final BelfiusSessionStorage belfiusSessionStorage;
@@ -51,6 +51,7 @@ public final class BelfiusAgent extends AgentPlatformAgent
     @Inject
     public BelfiusAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
+        this.proxyProfiles = agentComponentProvider.getProxyProfiles();
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
         this.belfiusSignatureCreator = new BelfiusSignatureCreator();
         this.apiClient =
@@ -106,21 +107,9 @@ public final class BelfiusAgent extends AgentPlatformAgent
                         3, BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
 
         if (agentsServiceConfiguration.isFeatureEnabled("beProxy")) {
-            final PasswordBasedProxyConfiguration proxyConfiguration =
-                    agentsServiceConfiguration.getCountryProxy(
-                            "be", credentials.getUserId().hashCode());
-            client.setProductionProxy(
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername(),
-                    proxyConfiguration.getPassword());
-            log.info(
-                    "Using proxy {} with username {}",
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername());
+            client.setProxyProfile(this.proxyProfiles.getMarketProxyProfile());
         } else {
-            final MultiIpGateway gateway =
-                    new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
-            gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
+            client.setProxyProfile(this.proxyProfiles.getAwsProxyProfile());
         }
         client.disableAggregatorHeader();
     }
