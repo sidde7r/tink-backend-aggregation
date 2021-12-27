@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.configuration.agentsservice;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,22 +112,6 @@ public class AgentsServiceConfiguration {
     @JsonIgnore
     public boolean isFeatureEnabled(String featureName) {
         return featureFlags.getOrDefault(featureName, false);
-    }
-
-    @JsonIgnore
-    public PasswordBasedProxyConfiguration getCountryProxy(String country) {
-        return getCountryProxy(country, 0);
-    }
-
-    @JsonIgnore
-    public PasswordBasedProxyConfiguration getCountryProxy(String country, int seed) {
-        final List<String> countryKeys =
-                countryProxies.keySet().stream()
-                        .filter(key -> key.startsWith(country))
-                        .collect(Collectors.toList());
-        Preconditions.checkArgument(
-                countryKeys.size() > 0, "No proxies configured for country '%s'", country);
-        return countryProxies.get(countryKeys.get(Math.abs(seed) % countryKeys.size()));
     }
 
     @JsonIgnore
