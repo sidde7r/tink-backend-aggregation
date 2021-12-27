@@ -1,0 +1,45 @@
+{
+    "EE_O_ConsultaMovimientosVistaAplazada": {
+        "codigoRetorno": "1",
+        "Respuesta": {
+            "codigoMoneda": "978",
+            "codigoInternoCentro": "0806",
+            "ListaApuntesCliente": [
+                {
+                    "carencia": "0000000000000.00",
+                    "codigoOrigenApunte": "AC",
+                    "fechaValor": "2021-11-09",
+                    "importeCuota": "0000000000000.00",
+                    "codigoExtMoneda": "EUR",
+                    "acuerdoDocumento": "0000000000",
+                    "importeApunte": "0000000000020.00",
+                    "importeInteres": "0000000000000.00",
+                    "importeTotal": "000000000000000.00",
+                    "numSecuencialDocumento": "0000000000",
+                    "signo": "D",
+                    "comision": "000000000.00",
+                    "indDisposicion": "0",
+                    "fechaOperacion": "2021-11-09",
+                    "numeroSecuencialApunte": "0000067",
+                    "numSecuencialApunteDoc": "0000000",
+                    "textoRemitente": "TJ-IBERCAJA",
+                    "porcentajeInteres": "000.0000",
+                    "terminal": "A0299997",
+                    "codigoMoneda": "978",
+                    "codigoInternoCentro": "7485",
+                    "codigoOrigen": "470037",
+                    "saldoArrastre": "0000000000803.65",
+                    "identificadorOrigenApunte": "**HASHED:le**    2633679929",
+                    "importeCapital": "0000000000000.00"
+                }
+            ],
+            "numeroRegistros": "1",
+            "masDatos": "1",
+            "DatosTarjeta": {
+                "acuerdoTarjeta": "0000000000"
+            },
+            "codigoExtMoneda": "EUR",
+            "titular": "**HASHED:v0**"
+        }
+    }
+}

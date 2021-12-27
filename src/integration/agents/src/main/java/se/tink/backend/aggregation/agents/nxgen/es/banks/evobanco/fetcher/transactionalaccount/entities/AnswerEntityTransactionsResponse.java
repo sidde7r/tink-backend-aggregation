@@ -40,4 +40,8 @@ public class AnswerEntityTransactionsResponse {
     public List<CustomerNotesListEntity> getListCustomerNotes() {
         return listCustomerNotes;
     }
+
+    public boolean isMoreDataForPagination() {
+        return "1".equals(moreData);
+    }
 }
