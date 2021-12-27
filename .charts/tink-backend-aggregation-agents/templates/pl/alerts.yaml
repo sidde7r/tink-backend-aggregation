@@ -4,84 +4,84 @@ metadata:
   name: alerts-pl
   namespace: agents
 spec:
-  interval: 5m
+  interval: 10m
   rules:
-    - record: sum:failed_refreshes_per_type_pl:delta1h
-      expr: sum by (className, type) (internal:sum:all_refreshes_by_type_outcome_pl:delta1h{outcome=~"partially_completed|failed.*"})
-    - record: sum:not_unavailable_refreshes_per_type_pl:delta1h
-      expr: sum by (className, type) (internal:sum:all_refreshes_by_type_outcome_pl:delta1h{outcome!="unavailable"})
-
-    - alert: RefreshFailureRateAbove20%PL
-      expr: 0.2 <= sum:failed_refreshes_per_type_pl:delta1h / (sum:not_unavailable_refreshes_per_type_pl:delta1h >= 3) < 0.75
-      for: 15m
+    # =========== SHORT-TERM (1h) and MID-TERM (4h) ALERTS ===========
+    - alert: RefreshErrorRateAbove20%PL
+      # Avoid alert duplication caused by the rule below this one
+      expr: 0.2 <= sum:failed_refreshes_per_type_pl:delta1h / (sum:all_refreshes_per_type_pl:delta1h >= 5) <= 0.9
+      priority: P3
+      for: 30m
       labels:
-        priority: P3
         severity: ping
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
-        summary: <{ $value | humanizePercentage }> refresh failure rate of <{ $labels.type }> by <{ $labels.className }> over the last hour.
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
-    - alert: RefreshFailureRateAbove75%PL
-      expr: sum:failed_refreshes_per_type_pl:delta1h / (sum:not_unavailable_refreshes_per_type_pl:delta1h >= 3) >= 0.75
-      for: 15m
+    - alert: RefreshErrorRateAbove90%PL
+      expr: sum:failed_refreshes_per_type_pl:delta1h / (sum:all_refreshes_per_type_pl:delta1h >= 5) > 0.9
+      priority: P1
+      for: 30m
       labels:
-        priority: P1
         severity: urgent
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
-        summary: <{ $value | humanizePercentage }> refresh failure rate of <{ $labels.type }> by <{ $labels.className }> over the last hour.
+        summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
-    - record: sum:failed_on_demand_logins_pl:delta1h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{action=~"login-manual|login-auto", outcome=~"failed.*"})
-    - record: sum:not_cancelled_or_unavailable_on_demand_logins_pl:delta1h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{action=~"login-manual|login-auto", outcome!~"unavailable|cancelled.*"})
-
-    - alert: OnDemandLoginFailureRateAbove20%PL
-      expr: 0.2 <= sum:failed_on_demand_logins_pl:delta1h / (sum:not_cancelled_or_unavailable_on_demand_logins_pl:delta1h >= 3) < 0.75
-      for: 15m
+    - alert: LoginErrorRateAbove20%PL
+      expr: 0.2 <= sum:failed_logins_pl:delta1h / (sum:all_logins_pl:delta1h >= 5) <= 0.9
+      priority: P3
+      for: 30m
       labels:
-        priority: P3
         severity: ping
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
-        summary: <{ $value | humanizePercentage }> on-demand login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
+        summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
-    - alert: OnDemandLoginFailureRateAbove75%PL
-      expr: sum:failed_on_demand_logins_pl:delta1h / (sum:not_cancelled_or_unavailable_on_demand_logins_pl:delta1h >= 3) >= 0.75
-      for: 15m
+    - alert: LoginErrorRateAbove90%PL
+      expr: sum:failed_logins_pl:delta1h / (sum:all_logins_pl:delta1h >= 5) > 0.9
+      for: 30m
+      priority: P1
       labels:
-        priority: P1
         severity: urgent
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
-        summary: <{ $value | humanizePercentage }> on-demand login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
+        summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
-    - record: sum:failed_background_logins:delta1h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{action="login-cron", outcome=~"failed.*"})
-    - record: sum:not_cancelled_or_unavailable_background_logins_pl:delta1h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{action="login-cron", outcome!~"unavailable|cancelled.*"})
-
-    - alert: BackgroundLoginFailureRateAbove50%PL
-      expr: sum:failed_background_logins:delta1h / (sum:not_cancelled_or_unavailable_background_logins_pl:delta1h >= 3) >= 0.5
-      for: 15m
+    - alert: BackgroundLoginErrorRateAbove90%PL
+      expr: sum:unsuccessful_background_logins_pl:delta4h / (sum:all_logins_pl:delta4h >= 5) > 0.9
+      priority: P2
+      for: 30m
       labels:
-        priority: P1
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
-        summary: <{ $value | humanizePercentage }> background login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
+        description: {{ .Values.kibanaClassLinkAbs4h }}
+          {{ .Values.grafanaClassLinkAbs4h }}
+        summary: Background login error rate over the last 4 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
+        tags: <{ $labels.className }>
+
+    - alert: OnDemandLoginErrorRateAbove90%PL
+      expr: sum:unsuccessful_on_demand_logins_pl:delta4h / (sum:all_logins_pl:delta4h >= 5) > 0.9
+      for: 30m
+      priority: P2
+      labels:
+        severity: urgent
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaClassLinkAbs4h }}
+          {{ .Values.grafanaClassLinkAbs4h }}
+        summary: On-demand login error rate over the last 4 hours is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
