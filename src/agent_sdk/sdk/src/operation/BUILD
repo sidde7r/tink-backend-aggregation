@@ -19,10 +19,12 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/utils",
         "//src/agent_sdk/sdk/src/user_interaction",
         "//src/agent_sdk/sdk/src/operation/aggregator_configuration",
+        "//src/agent_sdk/sdk/src/operation/http",
     ],
     visibility = ["//visibility:public"],
     exports = [
         ":eidas_proxy_configuration",
         "//src/agent_sdk/sdk/src/operation/aggregator_configuration",
+        "//src/agent_sdk/sdk/src/operation/http",
     ],
 )
