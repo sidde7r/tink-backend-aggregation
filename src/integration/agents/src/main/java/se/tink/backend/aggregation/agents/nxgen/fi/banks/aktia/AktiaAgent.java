@@ -35,7 +35,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.identitydata.IdentityData;
@@ -58,7 +57,7 @@ public final class AktiaAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration,
             EncapClientProvider encapClientProvider) {
         super(agentComponentProvider);
-        configureHttpClient(client, agentsServiceConfiguration);
+        configureHttpClient(client, agentComponentProvider);
 
         this.apiClient = new AktiaApiClient(client);
         this.instanceStorage = new Storage();
@@ -76,13 +75,12 @@ public final class AktiaAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(
-            TinkHttpClient client, AgentsServiceConfiguration agentsServiceConfiguration) {
+            TinkHttpClient client, AgentComponentProvider agentComponentProvider) {
         client.setUserAgent(AktiaConstants.HttpHeaders.USER_AGENT);
         client.disableAggregatorHeader();
         client.disableSignatureRequestHeader();
-        final MultiIpGateway gateway =
-                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
-        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
+
+        client.setProxyProfile(agentComponentProvider.getProxyProfiles().getAwsProxyProfile());
     }
 
     @Override
