@@ -70,11 +70,10 @@ public class QsealcSignerImpl implements QsealcSigner {
         }
     }
 
-    private byte[] callSecretsService(byte[] signingData) {
-
+    private byte[] callSecretsService(QsealcAlg algorithm, byte[] signingData) {
         try {
             HttpPost post =
-                    new HttpPost(StringUtils.stripEnd(this.host, "/") + alg.getSigningType());
+                    new HttpPost(StringUtils.stripEnd(this.host, "/") + algorithm.getSigningType());
             post.setHeader(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
             if (!Strings.isNullOrEmpty(eidasIdentity.getAppId())) {
                 post.setHeader(TINK_QSEALC_APPID, eidasIdentity.getAppId());
@@ -116,12 +115,12 @@ public class QsealcSignerImpl implements QsealcSigner {
 
     @Override
     public String getSignatureBase64(byte[] signingData) {
-        return new String(callSecretsService(signingData), Charsets.US_ASCII);
+        return new String(callSecretsService(this.alg, signingData), Charsets.US_ASCII);
     }
 
     @Override
     public String getJWSToken(byte[] jwsTokenData) {
-        return new String(Base64.getDecoder().decode(callSecretsService(jwsTokenData)));
+        return new String(Base64.getDecoder().decode(callSecretsService(this.alg, jwsTokenData)));
     }
 
     /**
@@ -145,7 +144,7 @@ public class QsealcSignerImpl implements QsealcSigner {
      */
     @Override
     public byte[] getSignature(byte[] signingData) {
-        return Base64.getDecoder().decode(callSecretsService(signingData));
+        return Base64.getDecoder().decode(callSecretsService(this.alg, signingData));
     }
 
     private void createClientTraceSpan(HttpPost request) {
