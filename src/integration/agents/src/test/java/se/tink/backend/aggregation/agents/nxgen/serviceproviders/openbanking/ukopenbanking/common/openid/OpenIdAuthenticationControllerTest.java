@@ -20,7 +20,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
@@ -55,18 +54,7 @@ public class OpenIdAuthenticationControllerTest {
 
     @Before
     public void setup() {
-        when(strongAuthenticationState.getSupplementalKey()).thenReturn("randomSupplementalKey");
-        openIdAuthenticationController =
-                new OpenIdAuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        apiClient,
-                        authenticator,
-                        credentials,
-                        strongAuthenticationState,
-                        "callbackUri",
-                        randomValueGenerator,
-                        authenticationValidator);
+        openIdAuthenticationController = initOpenIdAuthenticationController();
     }
 
     @Test
@@ -81,15 +69,6 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         verify(apiClient).instantiateAisAuthFilter(oAuth2Token);
-    }
-
-    private OAuth2Token createValidOAuth2Token() {
-        return OAuth2Token.create(
-                DUMMY_TOKEN_TYPE,
-                DUMMY_ACCESS_TOKEN,
-                DUMMY_REFRESH_TOKEN,
-                DUMMY_ACCESS_EXPIRES_IN_SECONDS,
-                200);
     }
 
     @Test
@@ -110,16 +89,6 @@ public class OpenIdAuthenticationControllerTest {
         // then
         verify(apiClient).refreshAccessToken("dummy_refresh_token", ClientMode.ACCOUNTS);
         verify(apiClient).instantiateAisAuthFilter(refreshedOAuth2Token);
-    }
-
-    private OAuth2Token createInvalidOAuth2Token() {
-        return OAuth2Token.create(
-                DUMMY_TOKEN_TYPE,
-                DUMMY_ACCESS_TOKEN,
-                DUMMY_REFRESH_TOKEN,
-                DUMMY_ID_TOKEN,
-                0,
-                DUMMY_REFRESH_EXPIRES_IN_SECONDS);
     }
 
     @Test
@@ -175,8 +144,11 @@ public class OpenIdAuthenticationControllerTest {
     }
 
     @Test
-    public void shouldThrowSessionExpiredExceptionWhenCODECallbackParamMissing() {
+    public void shouldThrowSessionExpiredExceptionWhenCallbackCodeIsMissing() {
         // given
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn("randomSupplementalKey");
+        openIdAuthenticationController = initOpenIdAuthenticationController();
+
         when(supplementalInformationHelper.waitForSupplementalInformation(
                         anyString(),
                         eq(ThirdPartyAppConstants.WAIT_FOR_MINUTES),
@@ -188,6 +160,38 @@ public class OpenIdAuthenticationControllerTest {
                 catchThrowable(() -> openIdAuthenticationController.collect("randomString"));
 
         // then
-        assertThat(thrown).isInstanceOf(SessionError.SESSION_EXPIRED.exception().getClass());
+        assertThat(thrown).isInstanceOf(SessionException.class);
+    }
+
+    private OpenIdAuthenticationController initOpenIdAuthenticationController() {
+        return new OpenIdAuthenticationController(
+                persistentStorage,
+                supplementalInformationHelper,
+                apiClient,
+                authenticator,
+                credentials,
+                strongAuthenticationState,
+                "callbackUri",
+                randomValueGenerator,
+                authenticationValidator);
+    }
+
+    private OAuth2Token createValidOAuth2Token() {
+        return OAuth2Token.create(
+                DUMMY_TOKEN_TYPE,
+                DUMMY_ACCESS_TOKEN,
+                DUMMY_REFRESH_TOKEN,
+                DUMMY_ACCESS_EXPIRES_IN_SECONDS,
+                200);
+    }
+
+    private OAuth2Token createInvalidOAuth2Token() {
+        return OAuth2Token.create(
+                DUMMY_TOKEN_TYPE,
+                DUMMY_ACCESS_TOKEN,
+                DUMMY_REFRESH_TOKEN,
+                DUMMY_ID_TOKEN,
+                0,
+                DUMMY_REFRESH_EXPIRES_IN_SECONDS);
     }
 }
