@@ -46,10 +46,12 @@ public class SqsConsumer {
     public boolean consume() throws IOException {
         List<Message> messages = getMessages();
         if (messages.isEmpty()) {
+            log.info("[SqsConsumer] Messages empty");
             return false;
         }
 
         for (Message message : messages) { // MAX_NUMBER_OF_MESSAGES is 1
+            log.info("[SqsConsumer] Attempting to consume message: {}", message.getMessageId());
             delete(message);
             tryConsumeUntilNotRejected(message);
         }
@@ -58,8 +60,13 @@ public class SqsConsumer {
 
     @VisibleForTesting
     List<Message> getMessages() {
-        ReceiveMessageRequest request = createReceiveMessagesRequest();
-        return sqsQueue.getSqs().receiveMessage(request).getMessages();
+        try {
+            ReceiveMessageRequest request = createReceiveMessagesRequest();
+            return sqsQueue.getSqs().receiveMessage(request).getMessages();
+        } catch (RuntimeException e) {
+            log.error("[SqsConsumer] Couldn't retrieve messages", e);
+            throw e;
+        }
     }
 
     private ReceiveMessageRequest createReceiveMessagesRequest() {

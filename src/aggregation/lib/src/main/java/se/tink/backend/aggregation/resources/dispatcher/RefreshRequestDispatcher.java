@@ -44,15 +44,17 @@ public class RefreshRequestDispatcher {
     public void dispatchRefreshInformation(
             final RefreshInformationRequest request, final ClientInfo clientInfo) throws Exception {
         if (isHighPrioRequest(request)) {
+            log.info("[RefreshRequestDispatcher] High prio request received");
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
         } else {
+            log.info("[RefreshRequestDispatcher] Dispatching request to the queue.");
             QueueProducer queueProducer = getQueueProducer(request, clientInfo);
             if (queueProducer.isAvailable()) {
                 queueProducer.send(new RefreshInformation(request, clientInfo));
             } else {
                 log.info(
-                        "Handling bg refresh request directly due to queue producer being unavailable, credentialId: {}",
+                        "[RefreshRequestDispatcher] Handling bg refresh request directly due to queue producer being unavailable, credentialId: {}",
                         request.getCredentials().getId());
                 agentWorker.executeAutomaticRefresh(
                         AgentWorkerRefreshOperationCreatorWrapper.of(
@@ -65,7 +67,7 @@ public class RefreshRequestDispatcher {
             final RefreshInformationRequest request, final ClientInfo clientInfo) {
         if (HIGH_REFRESH_PRIORITY.equals(request.getRefreshPriority())) {
             log.info(
-                    "Selecting priority queue for refreshId: {}, credentialsId: {}, appId: {}",
+                    "[RefreshRequestDispatcher]Selecting priority queue for refreshId: {}, credentialsId: {}, appId: {}",
                     request.getRefreshId(),
                     request.getCredentials().getId(),
                     clientInfo.getAppId());
