@@ -81,7 +81,6 @@ public class SqsConsumer {
                     sqsMessage.getMessageId(),
                     e);
             producer.requeue(sqsMessage.getBody());
-            sqsQueue.requeued();
         } catch (IOException e) {
             log.error(
                     "[SqsConsumer] Unexpected error happened during consuming of message. SqsMessageId: {}",

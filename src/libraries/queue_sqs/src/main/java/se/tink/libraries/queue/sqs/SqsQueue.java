@@ -20,28 +20,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.queue.sqs.auth.RetryableInstanceProfileCredentialsProvider;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueue {
     private static final int[] BASE_2_ARRAY = {1, 2, 4, 8, 16, 32, 64};
     private static final int MINIMUM_SLEEP_TIME_IN_MILLISECONDS = 500;
+    private static final String EVENT_LABEL = "event";
     private final boolean isAvailable;
     private final String url;
-    private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
+    private final Logger logger = LoggerFactory.getLogger(SqsQueue.class);
     private static final String LOCAL_REGION = "local";
     private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
-    private final Counter produced;
-    private final Counter consumed;
-    private final Counter requeued;
+    private final String name;
+    private final MetricRegistry metricRegistry;
     private AmazonSQS sqs;
 
     @Inject
-    public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
-        this.consumed = metricRegistry.meter(METRIC_ID_BASE.label("event", "consumed"));
-        this.produced = metricRegistry.meter(METRIC_ID_BASE.label("event", "produced"));
-        this.requeued = metricRegistry.meter(METRIC_ID_BASE.label("event", "requeued"));
+    public SqsQueue(
+            SqsQueueConfiguration configuration, MetricRegistry metricRegistry, String name) {
+        this.name = name;
+        this.metricRegistry = metricRegistry;
 
         if (!configuration.isEnabled()
                 || Objects.isNull(configuration.getUrl())
@@ -153,15 +152,21 @@ public class SqsQueue {
     }
 
     public void consumed() {
-        this.consumed.inc();
+        metricRegistry
+                .meter(METRIC_ID_BASE.label(EVENT_LABEL, "consumed").label("name", name))
+                .inc();
     }
 
     public void produced() {
-        this.produced.inc();
+        metricRegistry
+                .meter(METRIC_ID_BASE.label(EVENT_LABEL, "produced").label("name", name))
+                .inc();
     }
 
     public void requeued() {
-        this.requeued.inc();
+        metricRegistry
+                .meter(METRIC_ID_BASE.label(EVENT_LABEL, "requeued").label("name", name))
+                .inc();
     }
 
     public AmazonSQS getSqs() {
