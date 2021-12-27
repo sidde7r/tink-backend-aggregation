@@ -67,7 +67,7 @@ public class SqsQueueModule extends AbstractModule {
     SqsQueue provideRegularSqsQueue(
             @Named("regularSqsQueueConfiguration") SqsQueueConfiguration configuration,
             MetricRegistry metricRegistry) {
-        return new SqsQueue(configuration, metricRegistry);
+        return new SqsQueue(configuration, metricRegistry, "Regular");
     }
 
     @Provides
@@ -77,7 +77,7 @@ public class SqsQueueModule extends AbstractModule {
             @Named("prioritySqsQueueConfiguration") SqsQueueConfiguration configuration,
             MetricRegistry metricRegistry) {
         try {
-            return new SqsQueue(configuration, metricRegistry);
+            return new SqsQueue(configuration, metricRegistry, "Priority");
         } catch (Exception e) {
             throw new IllegalStateException("Could not create Priority Queue", e);
         }
@@ -90,7 +90,7 @@ public class SqsQueueModule extends AbstractModule {
             @Named("priorityRetrySqsQueueConfiguration") SqsQueueConfiguration configuration,
             MetricRegistry metricRegistry) {
         try {
-            return new SqsQueue(configuration, metricRegistry);
+            return new SqsQueue(configuration, metricRegistry, "PriorityRetry");
         } catch (Exception e) {
             throw new IllegalStateException("Could not create Priority Retry Queue", e);
         }
