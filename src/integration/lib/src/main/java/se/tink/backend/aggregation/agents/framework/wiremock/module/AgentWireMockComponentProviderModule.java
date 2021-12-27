@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.Gen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.http_proxy.ProxyProfilesProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.http_proxy.WiremockProxyProfilesProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.MockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.WireMockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.MockSupplementalInformationProvider;
@@ -66,5 +68,6 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
         bind(FakeBankSocket.class).toInstance(fakeBankSocket);
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
         bind(UnleashClientProvider.class).to(FakeUnleashClientWithEnabledTogglesProvider.class);
+        bind(ProxyProfilesProvider.class).to(WiremockProxyProfilesProvider.class);
     }
 }

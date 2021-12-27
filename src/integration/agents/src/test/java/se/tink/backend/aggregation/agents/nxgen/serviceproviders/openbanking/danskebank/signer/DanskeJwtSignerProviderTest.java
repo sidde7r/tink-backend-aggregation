@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.http_proxy.ProxyProfilesProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.MockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
@@ -56,7 +57,8 @@ public class DanskeJwtSignerProviderTest {
                         mock(GeneratedValueProvider.class),
                         mock(UnleashClientProvider.class),
                         mock(AgentTemporaryStorageProvider.class),
-                        mock(MockServerUrlProvider.class));
+                        mock(MockServerUrlProvider.class),
+                        mock(ProxyProfilesProvider.class));
         EidasIdentity eidasIdentity =
                 new EidasIdentity(
                         "cluster_id", APP_ID, "DEFAULT", "", DanskebankEUConfiguration.class);

@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.http_proxy.WiremockProxyProfilesProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.WireMockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
@@ -91,7 +92,8 @@ public abstract class IntegrationTestBase {
                         new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()),
                 new UnleashClientProviderImpl(agentContext),
                 new AgentTemporaryStorageProviderImpl(agentContext.getAgentTemporaryStorage()),
-                new WireMockServerUrlProvider(fakeBankSocket));
+                new WireMockServerUrlProvider(fakeBankSocket),
+                new WiremockProxyProfilesProvider());
     }
 
     CredentialsRequest createCredentialsRequest() {
