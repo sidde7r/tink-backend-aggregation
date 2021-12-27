@@ -13,18 +13,13 @@ Pragma: no-cache
 Cache-Control: no-store
 Content-Type: application/json;charset=utf-8
 Server:
-Content-Length: 134
+Content-Length: 129
 
 {
-
   "access_token":"004980f6-2826-49e8-9fe3-8a5e145f64d7",
-
   "token_type":"Bearer",
-
   "expires_in":3600,
-
   "scope":"production"
-
 }
 
 REQUEST 2
@@ -41,7 +36,21 @@ tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=0
 psu-ip-address: 127.0.0.1
 X-Aggregator: Tink Testing
 
-{"debtorAccount":{"iban":"IT29D0300203280625969137225"},"instructedAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"IT45H0300203280271332616346"},"creditorName":"Creditor Name","transactionType":"remote_transaction","remittanceInformationUnstructured":"remittance information to creditor"}
+{
+  "debtorAccount": {
+    "iban": "IT29D0300203280625969137225"
+  },
+  "instructedAmount": {
+    "currency": "EUR",
+    "amount": "1.0"
+  },
+  "creditorAccount": {
+    "iban": "IT45H0300203280271332616346"
+  },
+  "creditorName": "Creditor Name",
+  "transactionType": "remote_transaction",
+  "remittanceInformationUnstructured": "remittance information to creditor"
+}
 
 
 RESPONSE 2
@@ -61,7 +70,18 @@ Content-Type: application/json
 Server:
 Content-Length: 703
 
-{"transactionStatus":"RCVD","paymentId":"761f03d6-bd32-4c13-84b2-0e48f8c4a288","_links":{"self":{"href":"/payments/sepa-credit-transfers/761f03d6-bd32-4c13-84b2-0e48f8c4a288"},"updatePsuAuthenticationRedirect":{"href":"https://www.intesasanpaolo.com/openbanking/login/#/?paymentId=761f03d6-bd32-4c13-84b2-0e48f8c4a288&tppAuthenticationRedirectUri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D**HASHED:KN**%26code%3Dcode&tppName=POSTEPAY+S.P.A.&aspspCode=03069&aspspProductCode=ALLPRODUCTS&tppRegistrationNumber=PSDIT-BI-06874351007&hash=6WfctRB8UWI%2B7b4KwTeT3DMaGw%2BNCOuRmFbiBwnIlvsgnjsQiAm5%2Fqywz6kv0j5Wqak7lzULkJ3PBTklxvmYdA%3D%3D"}}}
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "761f03d6-bd32-4c13-84b2-0e48f8c4a288",
+  "_links": {
+    "self": {
+      "href": "/payments/sepa-credit-transfers/761f03d6-bd32-4c13-84b2-0e48f8c4a288"
+    },
+    "updatePsuAuthenticationRedirect": {
+      "href": "https://www.intesasanpaolo.com/openbanking/login/#/?paymentId=761f03d6-bd32-4c13-84b2-0e48f8c4a288&tppAuthenticationRedirectUri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D**HASHED:KN**%26code%3Dcode&tppName=POSTEPAY+S.P.A.&aspspCode=03069&aspspProductCode=ALLPRODUCTS&tppRegistrationNumber=PSDIT-BI-06874351007&hash=6WfctRB8UWI%2B7b4KwTeT3DMaGw%2BNCOuRmFbiBwnIlvsgnjsQiAm5%2Fqywz6kv0j5Wqak7lzULkJ3PBTklxvmYdA%3D%3D"
+    }
+  }
+}
 
 REQUEST 3
 GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/761f03d6-bd32-4c13-84b2-0e48f8c4a288/status
@@ -86,6 +106,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Server:
-Content-Length: 95
+Content-Length: 106
 
-{"transactionStatus":"ACCP","psuAuthenticationStatus":"AUTHENTICATED", "scaStatus": "VERIFIED"}
+{
+  "transactionStatus": "ACCP",
+  "psuAuthenticationStatus": "AUTHENTICATED",
+  "scaStatus": "VERIFIED"
+}

@@ -65,38 +65,3 @@ Content-Length: 691
     }
   }
 }
-
------------------------------------------------------------------------------------
-REQUEST 3
-GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/e02671ea-19f9-4311-a856-2e6b0161d6e8/status
-Content-Type: application/json
-Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
-x-request-id: 00000000-0000-4000-0000-000000000000
-aspsp-code: 01030
-date: Fri, 10 Apr 1992 12:00:00 UTC
-
------------------------------------------------------------------------------------
-RESPONSE 3
-403
-Date: Wed, 01 Dec 2021 08:23:16 GMT
-Date: Wed, 01 Dec 2021 08:23:16 GMT
-X-Frame-Options: SAMEORIGIN
-X-Frame-Options: SAMEORIGIN
-x-request-id: 2ff399a8-533b-41aa-b2a3-31841cce6118
-X-Content-Type-Options: nosniff
-Content-Type: application/json
-Content-Length: 222
-
-{
-  "errorManagement": {
-    "errorCode": "PSD2_00.188.A0005",
-    "errorDescription": "ASPSP provided error. Reference to the TPP-messages"
-  },
-  "tppMessages": [
-    {
-      "category": "ERROR",
-      "code": "GENERIC_ERROR",
-      "text": "Unknown Payment Identifier"
-    }
-  ]
-}

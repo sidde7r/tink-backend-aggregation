@@ -1,8 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bnl.mock;
-
-import static org.assertj.core.api.Assertions.assertThatCode;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bper.wiremock.payment;
 
 import java.time.LocalDate;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -22,13 +21,13 @@ import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class BnlAgentPaymentWiremockTest {
+public class BperPaymentMockTest {
 
     private static final String BASE_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/bnl/mock/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/bper/wiremock/payment/resources/";
 
     private static final String CONFIGURATION_FILE = BASE_PATH + "configuration.yml";
-    private static final String WIREMOCK_FILE = BASE_PATH + "bnl_recurring_payment_success.aap";
+    private static final String WIREMOCK_FILE = BASE_PATH + "bper-recurring-payment_acsp.aap";
 
     @Test
     public void testRecurringPayment() throws Exception {
@@ -36,44 +35,45 @@ public class BnlAgentPaymentWiremockTest {
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
 
-        Builder payment = createPayment();
-        Payment recurringPayment = createRecurringPayment(payment);
+        Payment.Builder payment = createAnyPayment();
+        Payment recurringPayment = createAnyRecurringPayment(payment);
 
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
-                AgentWireMockPaymentTest.builder(MarketCode.IT, "it-bnl-oauth2", WIREMOCK_FILE)
+                AgentWireMockPaymentTest.builder(MarketCode.IT, "it-bper-oauth2", WIREMOCK_FILE)
                         .withConfigurationFile(configuration)
                         .withPayment(recurringPayment)
-                        .addCredentialField("username", "username")
-                        .addCredentialField("password", "password")
+                        .addCallbackData("state", "00000000-0000-4000-0000-000000000000")
+                        .addCallbackData("result", "success")
                         .buildWithoutLogin(PaymentCommand.class);
 
         // then
-        assertThatCode(agentWireMockPaymentTest::executePayment).doesNotThrowAnyException();
+        Assertions.assertThatCode(agentWireMockPaymentTest::executePayment)
+                .doesNotThrowAnyException();
     }
 
-    private Payment createRecurringPayment(Builder payment) {
-        LocalDate startDate = LocalDate.of(2021, 8, 30);
+    private Payment createAnyRecurringPayment(Builder payment) {
+        LocalDate startDate = LocalDate.of(2020, 10, 15);
 
         return payment.withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
                 .withPaymentServiceType(PaymentServiceType.PERIODIC)
                 .withFrequency(Frequency.MONTHLY)
-                .withDayOfMonth(30)
+                .withDayOfMonth(20)
                 .withStartDate(startDate)
                 .withEndDate(startDate.plusMonths(2))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
                 .build();
     }
 
-    private Builder createPayment() {
+    private Payment.Builder createAnyPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue("remittance information to creditor");
+        remittanceInformation.setValue("Bper");
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
         Creditor creditor =
-                new Creditor(new IbanIdentifier("IT52X0300203280728575573739"), "Creditor Name");
-        Debtor debtor = new Debtor(new IbanIdentifier("IT53X0300203280882749129712"));
+                new Creditor(new IbanIdentifier("IT45H0300203280271332616346"), "Creditor Name");
+        Debtor debtor = new Debtor(new IbanIdentifier("IT29D0300203280625969137225"));
 
-        return new Builder()
+        return new Payment.Builder()
                 .withCreditor(creditor)
                 .withDebtor(debtor)
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
