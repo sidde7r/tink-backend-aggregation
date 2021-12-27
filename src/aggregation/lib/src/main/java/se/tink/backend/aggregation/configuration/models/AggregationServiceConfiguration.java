@@ -43,6 +43,9 @@ public class AggregationServiceConfiguration extends Configuration {
     private SqsQueueConfiguration prioritySqsQueueConfiguration = new SqsQueueConfiguration();
 
     @JsonProperty
+    private SqsQueueConfiguration priorityRetrySqsQueueConfiguration = new SqsQueueConfiguration();
+
+    @JsonProperty
     private ProviderTierConfiguration providerTierConfiguration = new ProviderTierConfiguration();
 
     @JsonProperty
@@ -128,6 +131,10 @@ public class AggregationServiceConfiguration extends Configuration {
         return prioritySqsQueueConfiguration;
     }
 
+    public SqsQueueConfiguration getPriorityRetrySqsQueueConfiguration() {
+        return priorityRetrySqsQueueConfiguration;
+    }
+
     public S3StorageConfiguration getS3StorageConfiguration() {
         return s3StorageConfiguration;
     }
@@ -140,6 +147,11 @@ public class AggregationServiceConfiguration extends Configuration {
     public void setPrioritySqsQueueConfiguration(
             SqsQueueConfiguration prioritySqsQueueConfiguration) {
         this.prioritySqsQueueConfiguration = prioritySqsQueueConfiguration;
+    }
+
+    public void setPriorityRetrySqsQueueConfiguration(
+            SqsQueueConfiguration priorityRetrySqsQueueConfiguration) {
+        this.priorityRetrySqsQueueConfiguration = priorityRetrySqsQueueConfiguration;
     }
 
     public AggregationDevelopmentConfiguration getDevelopmentConfiguration() {

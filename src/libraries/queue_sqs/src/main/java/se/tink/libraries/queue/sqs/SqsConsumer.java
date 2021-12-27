@@ -19,17 +19,18 @@ public class SqsConsumer {
     private static final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
 
     private final SqsQueue sqsQueue;
+    // Note: producer may queue requests to different sqs queue than this consumer reads from
     private final QueueProducer producer;
     private final QueueMessageAction queueMessageAction;
     private final String name;
 
     public SqsConsumer(
             SqsQueue sqsQueue,
-            QueueProducer producer,
+            QueueProducer requeueProducer,
             QueueMessageAction queueMessageAction,
             String name) {
         this.sqsQueue = sqsQueue;
-        this.producer = producer;
+        this.producer = requeueProducer;
         this.queueMessageAction = queueMessageAction;
         this.name = name;
     }
@@ -75,7 +76,7 @@ public class SqsConsumer {
             sqsQueue.consumed();
         } catch (RejectedExecutionException e) {
             log.warn(
-                    "[SqsConsumer] Failed to consume message of '{}' SQS. Requeuing it. SqsMessageId: {}",
+                    "[SqsConsumer] Failed to consume message from '{}' SQS. Requeuing it. SqsMessageId: {}",
                     name,
                     sqsMessage.getMessageId(),
                     e);

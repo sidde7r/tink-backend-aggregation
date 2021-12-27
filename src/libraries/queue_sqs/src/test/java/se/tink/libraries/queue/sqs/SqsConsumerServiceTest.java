@@ -22,12 +22,14 @@ public class SqsConsumerServiceTest {
 
     private SqsConsumer regularSqsConsumer;
     private SqsConsumer prioritySqsConsumer;
+    private SqsConsumer priorityRetrySqsConsumer;
     private AgentsServiceConfiguration agentsServiceConfiguration;
 
     @Before
     public void setUp() {
         regularSqsConsumer = mock(SqsConsumer.class);
         prioritySqsConsumer = mock(SqsConsumer.class);
+        priorityRetrySqsConsumer = mock(SqsConsumer.class);
         agentsServiceConfiguration = mock(AgentsServiceConfiguration.class);
     }
 
@@ -37,7 +39,12 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
 
         try {
             consumerService.start();
@@ -51,7 +58,12 @@ public class SqsConsumerServiceTest {
     public void whenUnstartedSqsConsumerShouldNotThrowIfStopped() {
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
 
         try {
             consumerService.stop();
@@ -68,7 +80,12 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
 
         // when
         consumerService.start();
@@ -84,7 +101,12 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
 
         // when
         consumerService.start();
@@ -94,16 +116,22 @@ public class SqsConsumerServiceTest {
     }
 
     @Test
-    public void shouldNotStartIfBothQueuesRequiredButOnlyOneAvailable() throws Exception {
+    public void shouldNotStartIfAllQueuesRequiredButOnlyOneAvailable() throws Exception {
         // given
         when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
                 .thenReturn(true);
         when(regularSqsConsumer.isConsumerReady()).thenReturn(true);
         when(prioritySqsConsumer.isConsumerReady()).thenReturn(false);
+        when(priorityRetrySqsConsumer.isConsumerReady()).thenReturn(false);
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
 
         // when
         consumerService.start();
@@ -113,16 +141,47 @@ public class SqsConsumerServiceTest {
     }
 
     @Test
-    public void shouldStartIfBothRequiredQueuesAvailable() throws Exception {
+    public void shouldNotStartIfPriorityRetryQueuesUnavailable() throws Exception {
         // given
         when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
                 .thenReturn(true);
         when(regularSqsConsumer.isConsumerReady()).thenReturn(true);
         when(prioritySqsConsumer.isConsumerReady()).thenReturn(true);
+        when(priorityRetrySqsConsumer.isConsumerReady()).thenReturn(false);
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
+
+        // when
+        consumerService.start();
+
+        // then
+        assertThat(consumerService.isRunning()).isFalse();
+    }
+
+    @Test
+    public void shouldStartIfAllRequiredQueuesAvailable() throws Exception {
+        // given
+        when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
+                .thenReturn(true);
+        when(regularSqsConsumer.isConsumerReady()).thenReturn(true);
+        when(prioritySqsConsumer.isConsumerReady()).thenReturn(true);
+        when(priorityRetrySqsConsumer.isConsumerReady()).thenReturn(true);
+
+        SqsConsumerService consumerService =
+                new SqsConsumerService(
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
 
         // when
         consumerService.start();
@@ -131,48 +190,92 @@ public class SqsConsumerServiceTest {
         assertThat(consumerService.isRunning()).isTrue();
     }
 
+    /*
+     * Scenario:
+     * - priority sqs is not empty
+     * - priority retry queue is to be interleaved at ration 1.0
+     * Expectation: should consume only from priority sqs and priority retry sqs. Regular sqs should not be consumed because priority sqs is not empty
+     */
     @Test
-    public void shouldConsumeFromBothQueuesFollowingProperOrder() throws Exception {
+    public void shouldConsumeFromPriorityQueuesOnly() throws Exception {
         // given
         when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
                 .thenReturn(true);
-        when(regularSqsConsumer.isConsumerReady()).thenReturn(true);
-        when(prioritySqsConsumer.isConsumerReady()).thenReturn(true);
-        when(prioritySqsConsumer.getMessages())
-                .thenReturn(Collections.singletonList(new Message()));
-        when(regularSqsConsumer.getMessages()).thenReturn(Collections.singletonList(new Message()));
-        InOrder inOrder = Mockito.inOrder(prioritySqsConsumer, regularSqsConsumer);
+        when(prioritySqsConsumer.consume()).thenReturn(true);
+        InOrder inOrder =
+                Mockito.inOrder(prioritySqsConsumer, priorityRetrySqsConsumer, regularSqsConsumer);
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        1.0f);
 
         // when
         consumerService.consume();
 
         // then
         inOrder.verify(prioritySqsConsumer, times(1)).consume();
-        inOrder.verify(regularSqsConsumer, times(1)).consume();
+        inOrder.verify(priorityRetrySqsConsumer, times(1)).consume();
+        inOrder.verify(regularSqsConsumer, never()).consume();
     }
 
+    /*
+     * Scenario:
+     * - priority sqs is empty
+     * - priority retry sqs is not empty and it to interleave (at 1.0 ratio) with priority sqs
+     * - regular queue is to interleave (at 1.0 ratio) with priority retry queue
+     * Expectation: should consume from all queues.
+     */
     @Test
-    public void shouldConsumeFromRegularQueueBasedOnMinimumConsumptionPercentage()
-            throws Exception {
-        final int ITERATIONS = 1000;
-        final float REGULAR_QUEUE_MIN_CONSUMPTION = 0.5f;
+    public void shouldConsumeFromAllQueuesOnly() throws Exception {
         // given
         when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
                 .thenReturn(true);
-        when(regularSqsConsumer.isConsumerReady()).thenReturn(true);
-        when(prioritySqsConsumer.isConsumerReady()).thenReturn(true);
-        when(prioritySqsConsumer.consume()).thenReturn(true);
+        when(prioritySqsConsumer.consume()).thenReturn(false);
+        when(priorityRetrySqsConsumer.consume()).thenReturn(true);
+        InOrder inOrder =
+                Mockito.inOrder(prioritySqsConsumer, priorityRetrySqsConsumer, regularSqsConsumer);
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
                         regularSqsConsumer,
                         prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
                         agentsServiceConfiguration,
-                        REGULAR_QUEUE_MIN_CONSUMPTION);
+                        1.0f,
+                        1.0f);
+
+        // when
+        consumerService.consume();
+
+        // then
+        inOrder.verify(prioritySqsConsumer, times(1)).consume();
+        inOrder.verify(priorityRetrySqsConsumer, times(1)).consume();
+        inOrder.verify(regularSqsConsumer, times(1)).consume();
+    }
+
+    @Test
+    public void shouldConsumeFromRetryQueueBasedOnRetryQueueInterleaveRatio() throws Exception {
+        final int ITERATIONS = 1000;
+        final float RETRY_QUEUE_INTERLEAVE_RATIO = 0.6f;
+        // given
+        when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
+                .thenReturn(true);
+        when(prioritySqsConsumer.consume()).thenReturn(true);
+        when(priorityRetrySqsConsumer.consume()).thenReturn(true);
+
+        SqsConsumerService consumerService =
+                new SqsConsumerService(
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        RETRY_QUEUE_INTERLEAVE_RATIO);
 
         // when
         for (int i = 0; i < ITERATIONS; i++) {
@@ -182,8 +285,77 @@ public class SqsConsumerServiceTest {
         // then
         verify(prioritySqsConsumer, times(ITERATIONS)).consume();
 
+        verify(priorityRetrySqsConsumer, atLeast((int) (ITERATIONS * 0.55))).consume();
+        verify(priorityRetrySqsConsumer, atMost((int) (ITERATIONS * 0.65))).consume();
+
+        verify(regularSqsConsumer, never()).consume();
+    }
+
+    /*
+     * Scenario:
+     * - priority sqs is empty
+     * - priority retry sqs is not empty
+     * - regular queue is to interleave (at 1.0 ratio) with priority retry queue
+     * Expectation: should consume from retry queue at given ratio, should consume from priority retry queue each time
+     */
+    @Test
+    public void shouldConsumeFromRegularQueueBasedOnRegularQueueInterleaveRatio() throws Exception {
+        final int ITERATIONS = 1000;
+        final float REGULAR_QUEUE_INTERLEAVE_RATIO = 0.5f;
+        // given
+        when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
+                .thenReturn(true);
+        when(prioritySqsConsumer.consume()).thenReturn(false);
+        when(priorityRetrySqsConsumer.consume()).thenReturn(true);
+
+        SqsConsumerService consumerService =
+                new SqsConsumerService(
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        REGULAR_QUEUE_INTERLEAVE_RATIO,
+                        0.0f);
+
+        // when
+        for (int i = 0; i < ITERATIONS; i++) {
+            consumerService.consume();
+        }
+
+        // then
+        verify(prioritySqsConsumer, times(ITERATIONS)).consume();
+        verify(priorityRetrySqsConsumer, times(ITERATIONS)).consume();
+
         verify(regularSqsConsumer, atLeast((int) (ITERATIONS * 0.45))).consume();
         verify(regularSqsConsumer, atMost((int) (ITERATIONS * 0.55))).consume();
+    }
+
+    @Test
+    public void shouldConsumeFromRegularQueueIfBothPriorityAreEmpty() throws Exception {
+        // given
+        when(agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue"))
+                .thenReturn(true);
+        when(prioritySqsConsumer.consume()).thenReturn(false);
+        when(priorityRetrySqsConsumer.consume()).thenReturn(false);
+
+        SqsConsumerService consumerService =
+                new SqsConsumerService(
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
+
+        // when
+        consumerService.consume();
+
+        // then
+        verify(prioritySqsConsumer, times(1)).consume();
+        verify(priorityRetrySqsConsumer, times(1)).consume();
+
+        verify(regularSqsConsumer, times(1)).consume();
+        verify(regularSqsConsumer, times(1)).consume();
     }
 
     @Test
@@ -197,7 +369,12 @@ public class SqsConsumerServiceTest {
 
         SqsConsumerService consumerService =
                 new SqsConsumerService(
-                        regularSqsConsumer, prioritySqsConsumer, agentsServiceConfiguration, 0.0f);
+                        regularSqsConsumer,
+                        prioritySqsConsumer,
+                        priorityRetrySqsConsumer,
+                        agentsServiceConfiguration,
+                        0.0f,
+                        0.0f);
 
         // when
         consumerService.consume();

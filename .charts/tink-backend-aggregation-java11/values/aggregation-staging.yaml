@@ -15,6 +15,12 @@ prioritySqsQueueConfiguration:
   region: "eu-west-1"
   name: "aggregation-priority-refresh-queue-aggregation-staging"
 
+priorityRetrySqsQueueConfiguration:
+  enabled: False
+  url: "https://sqs.eu-west-1.amazonaws.com/790041524432/aggregation-priority-refresh-retry-queue-aggregation-staging"
+  region: "eu-west-1"
+  name: "aggregation-priority-refresh-retry-queue-aggregation-staging"
+
 s3StorageConfiguration:
   enabled: True
   url: "https://s3.eu-west-1.amazonaws.com"

@@ -35,4 +35,11 @@ public class FakeQueueModule extends AbstractModule {
     QueueProducer providePriorityQueueProducer() {
         return new FakeProducer();
     }
+
+    @Provides
+    @Singleton
+    @Named("priorityRetryQueueProducer")
+    QueueProducer providePriorityRetryQueueProducer() {
+        return new FakeProducer();
+    }
 }

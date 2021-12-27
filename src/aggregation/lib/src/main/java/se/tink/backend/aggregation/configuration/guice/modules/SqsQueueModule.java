@@ -32,7 +32,8 @@ public class SqsQueueModule extends AbstractModule {
         bind(QueueMessageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
         bind(QueueConsumerService.class).to(SqsConsumerService.class).in(Scopes.SINGLETON);
         bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
-        bindConstant().annotatedWith(Names.named("regularQueueMinConsumption")).to(0.05f);
+        bindConstant().annotatedWith(Names.named("regularQueueInterleaveRatio")).to(0.25f);
+        bindConstant().annotatedWith(Names.named("retryQueueInterleaveRatio")).to(0.35f);
         log.info("Configuring SqsQueueModule");
     }
 
@@ -49,6 +50,14 @@ public class SqsQueueModule extends AbstractModule {
     @Named("priorityQueueProducer")
     QueueProducer providePriorityQueueProducer(
             @Named("prioritySqsQueue") SqsQueue sqsQueue, EncodingHandler encodingHandler) {
+        return new SqsProducer(sqsQueue, encodingHandler);
+    }
+
+    @Provides
+    @Singleton
+    @Named("priorityRetryQueueProducer")
+    QueueProducer providePriorityRetryQueueProducer(
+            @Named("priorityRetrySqsQueue") SqsQueue sqsQueue, EncodingHandler encodingHandler) {
         return new SqsProducer(sqsQueue, encodingHandler);
     }
 
@@ -76,6 +85,19 @@ public class SqsQueueModule extends AbstractModule {
 
     @Provides
     @Singleton
+    @Named("priorityRetrySqsQueue")
+    SqsQueue providePriorityRetrySqsQueue(
+            @Named("priorityRetrySqsQueueConfiguration") SqsQueueConfiguration configuration,
+            MetricRegistry metricRegistry) {
+        try {
+            return new SqsQueue(configuration, metricRegistry);
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not create Priority Retry Queue", e);
+        }
+    }
+
+    @Provides
+    @Singleton
     @Named("regularSqsQueueConfiguration")
     SqsQueueConfiguration provideRegularSqsQueueConfiguration(
             AggregationServiceConfiguration configuration) {
@@ -88,6 +110,14 @@ public class SqsQueueModule extends AbstractModule {
     SqsQueueConfiguration providePrioritySqsQueueConfiguration(
             AggregationServiceConfiguration configuration) {
         return configuration.getPrioritySqsQueueConfiguration();
+    }
+
+    @Provides
+    @Singleton
+    @Named("priorityRetrySqsQueueConfiguration")
+    SqsQueueConfiguration providePriorityRetrySqsQueueConfiguration(
+            AggregationServiceConfiguration configuration) {
+        return configuration.getPriorityRetrySqsQueueConfiguration();
     }
 
     @Provides
@@ -106,9 +136,25 @@ public class SqsQueueModule extends AbstractModule {
     @Named("prioritySqsConsumer")
     SqsConsumer providePrioritySqsConsumer(
             @Named("prioritySqsQueue") SqsQueue prioritySqsQueue,
-            @Named("priorityQueueProducer") QueueProducer priorityQueueProducer,
+            @Named("priorityRetryQueueProducer") QueueProducer priorityRetryQueueProducer,
+            QueueMessageAction queueMessageAction) {
+        // PrioritySqsConsumer will read from prioritySqsQueue but will requeue requests
+        // using priorityRetryQueueProducer (so requeue to the priorityRetrySqsQueue)
+        return new SqsConsumer(
+                prioritySqsQueue, priorityRetryQueueProducer, queueMessageAction, "Priority");
+    }
+
+    @Provides
+    @Singleton
+    @Named("priorityRetrySqsConsumer")
+    SqsConsumer providePriorityRetrySqsConsumer(
+            @Named("priorityRetrySqsQueue") SqsQueue priorityRetrySqsQueue,
+            @Named("priorityRetryQueueProducer") QueueProducer priorityRetryQueueProducer,
             QueueMessageAction queueMessageAction) {
         return new SqsConsumer(
-                prioritySqsQueue, priorityQueueProducer, queueMessageAction, "Priority");
+                priorityRetrySqsQueue,
+                priorityRetryQueueProducer,
+                queueMessageAction,
+                "PriorityRetry");
     }
 }
