@@ -1,0 +1,17 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: recordingrules-refresh-de
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+  - record: DE:agent_refresh:className_type:all_refreshes:delta1h
+    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="DE"}[1h]))
+
+  - record: DE:agent_refresh:className_type:failed_or_partially_completed:delta1h
+    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="DE", outcome=~"failed|partially_completed"}[1h]))
+
+  - record: DE:agent_refresh:className_type:unavailable:delta1h
+    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="DE", outcome="unavailable"}[1h]))

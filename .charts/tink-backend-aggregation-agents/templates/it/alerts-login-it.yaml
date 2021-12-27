@@ -1,0 +1,284 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-login-it
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+#=====================================================================================================================
+# Manual login alerts
+#=====================================================================================================================
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Due to internal/unknown errors
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: it_manual_login_failed_rate_over_80%
+    expr: 0.8 <= IT:agent_login:className:manual:failed:delta1h / (IT:agent_login:className:manual:all_logins:delta1h > 5)
+    for: 10m
+    labels:
+      severity: urgent
+      priority: P1
+      who: connectivity-nazguls
+    annotations:
+      description: Manual logins are those that require user interaction. Failed outcome is when internal/unhandled exception occurred.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: it_manual_login_failed_rate_between_50%_and_80%
+    expr: 0.5 <= IT:agent_login:className:manual:failed:delta1h / (IT:agent_login:className:manual:all_logins:delta1h > 5) < 0.8
+    for: 15m
+    labels:
+      severity: urgent
+      priority: P2
+      who: connectivity-nazguls
+    annotations:
+      description: Manual logins are those that require user interaction. Failed outcome is when internal/unhandled exception occurred.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 15 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: it_manual_login_failed_rate_between_30%_and_50%
+    expr: 0.3 <= IT:agent_login:className:manual:failed:delta1h / (IT:agent_login:className:manual:all_logins:delta1h > 5) < 0.5
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Manual logins are those that require user interaction. Failed outcome is when internal/unhandled exception occurred.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Due to bank side issues
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: it_manual_login_unavailable_rate_over_80%
+    expr: 0.8 <= IT:agent_login:className:manual:unavailable:delta1h / (IT:agent_login:className:manual:all_logins:delta1h > 5)
+    for: 10m
+    labels:
+      severity: urgent
+      priority: P1
+      who: connectivity-nazguls
+    annotations:
+      description: Manual logins are those that require user interaction. Unavailable outcome is when agent throws BankServiceException.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: it_manual_login_unavailable_rate_between_50%_and_80%
+    expr: 0.5 <= IT:agent_login:className:manual:unavailable:delta1h / (IT:agent_login:className:manual:all_logins:delta1h > 5) < 0.8
+    for: 15m
+    labels:
+      severity: urgent
+      priority: P2
+      who: connectivity-nazguls
+    annotations:
+      description: Manual logins are those that require user interaction. Unavailable outcome is when agent throws BankServiceException.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 15 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: it_manual_login_unavailable_rate_between_30%_and_50%
+    expr: 0.3 <= IT:agent_login:className:manual:unavailable:delta1h / (IT:agent_login:className:manual:all_logins:delta1h > 5) < 0.5
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Manual logins are those that require user interaction. Unavailable outcome is when agent throws BankServiceException.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Auth failed or abandoned - try to detect errors in integrations that make it impossible to succeed
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: it_manual_login_cancelled_rate_over_90%
+    expr: 0.9 <= IT:agent_login:className:manual:cancelled:delta1h / (IT:agent_login:className:manual:all_logins:delta1h > 20)
+    for: 30m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Manual logins are those that require user interaction. Cancelled outcome can happen when user fails to auth, or our flow makes them fail.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 20 attempts, active for at least 30 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Other services at tink errors
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: it_manual_login_tink_issues_rate_over_50%
+    expr: 0.5 <= IT:agent_login:className:manual:tink_issues:delta1h / (IT:agent_login:className:manual:all_logins:delta1h > 10)
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Manual logins are those that require user interaction. Cancelled due to tink issues outcome can happen when specific errors during communication with other tink services occur.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 10 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+#=====================================================================================================================
+# Auto login alerts
+#=====================================================================================================================
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Due to internal/unknown errors
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: it_auto_login_failed_rate_over_80%
+    expr: 0.8 <= IT:agent_login:action_className:auto:failed:delta1h / (IT:agent_login:action_className:auto:all_logins:delta1h > 10)
+    for: 10m
+    labels:
+      severity: urgent
+      priority: P1
+      who: connectivity-nazguls
+    annotations:
+      description: Auto logins are those without user interaction. Failed outcome is when internal/unhandled exception occurred.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Action: <{ $labels.action }>
+        Checking last hour, with at least 10 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: it_auto_login_failed_rate_between_50%_and_80%
+    expr: 0.5 <= IT:agent_login:action_className:auto:failed:delta1h / (IT:agent_login:action_className:auto:all_logins:delta1h > 10) < 0.8
+    for: 15m
+    labels:
+      severity: urgent
+      priority: P2
+      who: connectivity-nazguls
+    annotations:
+      description: Auto logins are those without user interaction. Failed outcome is when internal/unhandled exception occurred.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Action: <{ $labels.action }>
+        Checking last hour, with at least 10 attempts, active for at least 15 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Due to bank side issues
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: it_auto_login_unavailable_rate_over_80%
+    expr: 0.8 <= IT:agent_login:action_className:auto:unavailable:delta1h / (IT:agent_login:action_className:auto:all_logins:delta1h > 10)
+    for: 10m
+    labels:
+      severity: urgent
+      priority: P1
+      who: connectivity-nazguls
+    annotations:
+      description: Auto logins are those without user interaction. Unavailable outcome is when agent throws BankServiceException.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Action: <{ $labels.action }>
+        Checking last hour, with at least 10 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: it_auto_login_unavailable_rate_between_50%_and_80%
+    expr: 0.5 <= IT:agent_login:action_className:auto:unavailable:delta1h / (IT:agent_login:action_className:auto:all_logins:delta1h > 10) < 0.8
+    for: 15m
+    labels:
+      severity: urgent
+      priority: P2
+      who: connectivity-nazguls
+    annotations:
+      description: Auto logins are those without user interaction. Unavailable outcome is when agent throws BankServiceException.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Action: <{ $labels.action }>
+        Checking last hour, with at least 10 attempts, active for at least 15 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Session no longer valid
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: it_auto_login_cancelled_rate_over_90%
+    expr: 0.9 <= IT:agent_login:action_className:auto:cancelled:delta1h / (IT:agent_login:action_className:auto:all_logins:delta1h > 10)
+    for: 30m
+    labels:
+      severity: urgent
+      priority: P1
+      who: connectivity-nazguls
+    annotations:
+      description: Auto logins are those without user interaction. Cancelled outcome can happen when session is no longer valid.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Action: <{ $labels.action }>
+        Checking last hour, with at least 10 attempts, active for at least 30 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Other services at tink errors
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: it_auto_login_tink_issues_rate_over_50%
+    expr: 0.5 <= IT:agent_login:action_className:auto:tink_issues:delta1h / (IT:agent_login:action_className:auto:all_logins:delta1h > 10)
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Auto logins are those without user interaction. Cancelled due to tink issues outcome can happen when specific errors during communication with other tink services occur.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Action: <{ $labels.action }>
+        Checking last hour, with at least 10 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}

@@ -1,0 +1,95 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: recordingrules-login-de-test
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+#===================================================
+# Work in progress below!
+#
+# These expressions below should do what increase should be doing on its own, if the metrics were 0-initialized.
+# For now, those recording rules are not used by any alerts!
+# They are here to observe:
+#  * if using variables in this syntax is ok
+#  * how long do they take to evaluate on DE market
+#  * do they even evaluate
+#===================================================
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Manual logins recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_login:className:manual:all_logins:delta1h:TESTING
+    expr: sum by (className) (
+        (floor(increase({{ .Values.deQueryLoginManualAll }}[1h])) and ({{ .Values.deQueryLoginManualAll }} offset 1h unless {{ .Values.deQueryLoginManualAll }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginManualAll }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginManualAll }}[1h]) / 360))
+      )
+
+  - record: DE:agent_login:className:manual:failed:delta1h:TESTING
+    expr: sum by (className) (
+        (floor(increase({{ .Values.deQueryLoginManualFailed }}[1h])) and ({{ .Values.deQueryLoginManualFailed }} offset 1h unless {{ .Values.deQueryLoginManualFailed }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginManualFailed }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginManualFailed }}[1h]) / 360))
+      )
+
+  - record: DE:agent_login:className:manual:unavailable:delta1h:TESTING
+    expr: sum by (className) (
+        (floor(increase({{ .Values.deQueryLoginManualUnavailable }}[1h])) and ({{ .Values.deQueryLoginManualUnavailable }} offset 1h unless {{ .Values.deQueryLoginManualUnavailable }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginManualUnavailable }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginManualUnavailable }}[1h]) / 360))
+      )
+
+  - record: DE:agent_login:className:manual:tink_issues:delta1h:TESTING
+    expr: sum by (className) (
+        (floor(increase({{ .Values.deQueryLoginManualTinkInfFailed }}[1h])) and ({{ .Values.deQueryLoginManualTinkInfFailed }} offset 1h unless {{ .Values.deQueryLoginManualTinkInfFailed }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginManualTinkInfFailed }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginManualTinkInfFailed }}[1h]) / 360))
+      )
+
+  - record: DE:agent_login:className:manual:cancelled:delta1h:TESTING
+    expr: sum by (className) (
+        (floor(increase({{ .Values.deQueryLoginManualCancelled }}[1h])) and ({{ .Values.deQueryLoginManualCancelled }} offset 1h unless {{ .Values.deQueryLoginManualCancelled }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginManualCancelled }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginManualCancelled }}[1h]) / 360))
+      )
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Auto logins recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_login:action_className:auto:all_logins:delta1h:TESTING
+    expr: sum by (action, className) (
+        (floor(increase({{ .Values.deQueryLoginAutoAll }}[1h])) and ({{ .Values.deQueryLoginAutoAll }} offset 1h unless {{ .Values.deQueryLoginAutoAll }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginAutoAll }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAutoAll }}[1h]) / 360))
+      )
+
+  - record: DE:agent_login:action_className:auto:failed:delta1h:TESTING
+    expr: sum by (action, className) (
+        (floor(increase({{ .Values.deQueryLoginAutoFailed }}[1h])) and ({{ .Values.deQueryLoginAutoFailed }} offset 1h unless {{ .Values.deQueryLoginAutoFailed }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginAutoFailed }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAutoFailed }}[1h]) / 360))
+      )
+
+  - record: DE:agent_login:action_className:auto:unavailable:delta1h:TESTING
+    expr: sum by (action, className) (
+        (floor(increase({{ .Values.deQueryLoginAutoUnavailable }}[1h])) and ({{ .Values.deQueryLoginAutoUnavailable }} offset 1h unless {{ .Values.deQueryLoginAutoUnavailable }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginAutoUnavailable }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAutoUnavailable }}[1h]) / 360))
+      )
+
+  - record: DE:agent_login:action_className:auto:tink_issues:delta1h:TESTING
+    expr: sum by (action, className) (
+        (floor(increase({{ .Values.deQueryLoginAutoTinkInfFailed }}[1h])) and ({{ .Values.deQueryLoginAutoTinkInfFailed }} offset 1h unless {{ .Values.deQueryLoginAutoTinkInfFailed }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginAutoTinkInfFailed }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAutoTinkInfFailed }}[1h]) / 360))
+      )
+
+  - record: DE:agent_login:action_className:auto:cancelled:delta1h:TESTING
+    expr: sum by (action, className) (
+        (floor(increase({{ .Values.deQueryLoginAutoCancelled }}[1h])) and ({{ .Values.deQueryLoginAutoCancelled }} offset 1h unless {{ .Values.deQueryLoginAutoCancelled }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryLoginAutoCancelled }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAutoCancelled }}[1h]) / 360))
+      )

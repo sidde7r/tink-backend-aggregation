@@ -1,0 +1,44 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: recordingrules-login-de
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Manual logins recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_login:className:manual:all_logins:delta1h
+    expr: sum by (className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual"}[1h]))
+
+  - record: DE:agent_login:className:manual:failed:delta1h
+    expr: sum by (className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed"}[1h]))
+
+  - record: DE:agent_login:className:manual:unavailable:delta1h
+    expr: sum by (className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="unavailable"}[1h]))
+
+  - record: DE:agent_login:className:manual:tink_issues:delta1h
+    expr: sum by (className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed_due_to_tink_infrastructure"}[1h]))
+
+  - record: DE:agent_login:className:manual:cancelled:delta1h
+    expr: sum by (className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}[1h]))
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Auto logins recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_login:action_className:auto:all_logins:delta1h
+    expr: sum by (action, className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron"}[1h]))
+
+  - record: DE:agent_login:action_className:auto:failed:delta1h
+    expr: sum by (action, className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="failed"}[1h]))
+
+  - record: DE:agent_login:action_className:auto:unavailable:delta1h
+    expr: sum by (action, className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="unavailable"}[1h]))
+
+  - record: DE:agent_login:action_className:auto:tink_issues:delta1h
+    expr: sum by (action, className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="failed_due_to_tink_infrastructure"}[1h]))
+
+  - record: DE:agent_login:action_className:auto:cancelled:delta1h
+    expr: sum by (action, className) (increase(tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}[1h]))

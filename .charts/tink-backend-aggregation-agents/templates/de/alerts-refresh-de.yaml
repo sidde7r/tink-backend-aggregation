@@ -1,0 +1,122 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-refresh-de
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Internal/unhandled errors alerts
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: de_refresh_failed_rate_over_80%
+    expr: 0.8 <= DE:agent_refresh:className_type:failed_or_partially_completed:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20)
+    for: 10m
+    labels:
+      severity: urgent
+      priority: P1
+      who: connectivity-nazguls
+    annotations:
+      description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: de_refresh_failed_rate_between_60%_and_80%
+    expr: 0.6 <= DE:agent_refresh:className_type:failed_or_partially_completed:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20) < 0.8
+    for: 15m
+    labels:
+      severity: urgent
+      priority: P2
+      who: connectivity-nazguls
+    annotations:
+      description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 15 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: de_refresh_failed_rate_between_40%_and_60%
+    expr: 0.4 <= DE:agent_refresh:className_type:failed_or_partially_completed:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20) < 0.6
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Bank side errors alerts
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: de_refresh_unavailable_rate_over_80%
+    expr: 0.8 <= DE:agent_refresh:className_type:unavailable:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20)
+    for: 10m
+    labels:
+      severity: urgent
+      priority: P1
+      who: connectivity-nazguls
+    annotations:
+      description: Unavailable outcome is when agent throws BankServiceException
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: de_refresh_unavailable_rate_between_60%_and_80%
+    expr: 0.6 <= DE:agent_refresh:className_type:unavailable:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20) < 0.8
+    for: 15m
+    labels:
+      severity: urgent
+      priority: P2
+      who: connectivity-nazguls
+    annotations:
+      description: Unavailable outcome is when agent throws BankServiceException
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 15 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}
+
+  - alert: de_refresh_unavailable_rate_between_40%_and_60%
+    expr: 0.4 <= DE:agent_refresh:className_type:unavailable:delta1h / (DE:agent_refresh:className_type:all_refreshes:delta1h > 20) < 0.6
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-nazguls
+    annotations:
+      description: Unavailable outcome is when agent throws BankServiceException
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Product: <{ $labels.type }>
+        Checking last hour, with at least 20 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: {{ .Values.tags }}

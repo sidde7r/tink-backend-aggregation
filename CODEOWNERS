@@ -27,7 +27,7 @@
 /tools/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /aws_log_fetcher/ @tink-ab/aggregation-agent-platform-maintainer
 /.charts @tink-ab/aggregation-agent-platform-maintainer
-/.charts/tink-backend-aggregation-agents/templates/precomputations.yaml @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-thundercats-maintainer
+/.charts/tink-backend-aggregation-agents/templates/precomputations.yaml @tink-ab/aggregation-thundercats-maintainer
 /.buildkite/ @tink-ab/engineering-productivity-maintainer
 /.charts/tink-backend-aggregation-agents/templates/at @tink-ab/aggregation-penguins-maintainer
 /.charts/tink-backend-aggregation-agents/templates/be @tink-ab/aggregation-minion-maintainer
