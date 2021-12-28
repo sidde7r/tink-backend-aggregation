@@ -126,7 +126,15 @@ public class RuralviaTransactionalAccountFetcher
                             html, fromDate, toDate, hasMoreTransactions, lastTransactionRefNumber);
 
             html = apiClient.navigateAccountTransactionsBetweenDates(url, bodyForm);
+
+            if (authenticationScreenPoppedUp(html)) {
+                log.info(
+                        "User is forced to do additional authentication - transactions not fetched");
+                break;
+            }
+
             hasMoreTransactions = hasMoretransaction(html);
+
             lastTransactionRefNumber = extractLastTransactionRefNumber(html);
 
             responses.addAll(
@@ -138,6 +146,10 @@ public class RuralviaTransactionalAccountFetcher
         paginatorResponse.setTransactions(responses);
 
         return paginatorResponse;
+    }
+
+    private boolean authenticationScreenPoppedUp(String html) {
+        return !Jsoup.parse(html).select("div:containsOwn(requiere doble firma)").isEmpty();
     }
 
     private String extractLastTransactionRefNumber(String html) {
