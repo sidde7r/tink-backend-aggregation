@@ -1,7 +1,7 @@
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
-  name: alerts-payments-it
+  name: alerts-payment-it
   namespace: agents
 spec:
   interval: 2m30s

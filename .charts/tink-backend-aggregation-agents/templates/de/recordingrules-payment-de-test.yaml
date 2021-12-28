@@ -1,7 +1,7 @@
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
-  name: recordingrules-payments-de-test
+  name: recordingrules-payment-de-test
   namespace: agents
 spec:
   interval: 2m30s
