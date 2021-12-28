@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RunWith(Parameterized.class)
 public class BPostAuthenticatorHelperTest {
@@ -33,6 +34,7 @@ public class BPostAuthenticatorHelperTest {
             new BPostAuthenticatorHelper(
                     mock(Xs2aDevelopersApiClient.class),
                     mock(PersistentStorage.class),
+                    mock(SessionStorage.class),
                     mock(Xs2aDevelopersProviderConfiguration.class),
                     mock(LocalDateTimeSource.class),
                     mock(Credentials.class));

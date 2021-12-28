@@ -68,6 +68,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
         return new UniversoAuthenticator(
                 apiClient,
                 persistentStorage,
+                sessionStorage,
                 configuration,
                 componentProvider.getLocalDateTimeSource(),
                 credentials);

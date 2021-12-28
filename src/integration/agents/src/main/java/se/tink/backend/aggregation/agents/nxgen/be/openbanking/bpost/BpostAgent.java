@@ -29,6 +29,7 @@ public final class BpostAgent extends Xs2aDevelopersTransactionalAgent {
         return new BPostAuthenticatorHelper(
                 apiClient,
                 persistentStorage,
+                sessionStorage,
                 configuration,
                 componentProvider.getLocalDateTimeSource(),
                 credentials);

@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccountReferenceEntity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class VdkAuthenticatorHelper extends Xs2aDevelopersAuthenticatorHelper {
     private final Credentials credentials;
@@ -18,10 +19,17 @@ public class VdkAuthenticatorHelper extends Xs2aDevelopersAuthenticatorHelper {
     public VdkAuthenticatorHelper(
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             Xs2aDevelopersProviderConfiguration configuration,
             LocalDateTimeSource localDateTimeSource,
             Credentials credentials) {
-        super(apiClient, persistentStorage, configuration, localDateTimeSource, credentials);
+        super(
+                apiClient,
+                persistentStorage,
+                sessionStorage,
+                configuration,
+                localDateTimeSource,
+                credentials);
         this.credentials = credentials;
     }
 

@@ -13,16 +13,24 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BPostAuthenticatorHelper extends Xs2aDevelopersAuthenticatorHelper {
 
     public BPostAuthenticatorHelper(
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             Xs2aDevelopersProviderConfiguration configuration,
             LocalDateTimeSource localDateTimeSource,
             Credentials credentials) {
-        super(apiClient, persistentStorage, configuration, localDateTimeSource, credentials);
+        super(
+                apiClient,
+                persistentStorage,
+                sessionStorage,
+                configuration,
+                localDateTimeSource,
+                credentials);
     }
 
     @Override

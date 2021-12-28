@@ -4,10 +4,8 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CH
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.axa.authenticator.AxaAuthenticatorHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.axa.fetcher.AxaTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersTransactionalAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
@@ -21,17 +19,6 @@ public final class AxaAgent extends Xs2aDevelopersTransactionalAgent {
     @Inject
     public AxaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, "https://api-dailybanking.axabank.be");
-    }
-
-    @Override
-    protected Xs2aDevelopersAuthenticatorHelper constructXs2aAuthenticator(
-            AgentComponentProvider componentProvider) {
-        return new AxaAuthenticatorHelper(
-                apiClient,
-                persistentStorage,
-                configuration,
-                componentProvider.getLocalDateTimeSource(),
-                credentials);
     }
 
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(

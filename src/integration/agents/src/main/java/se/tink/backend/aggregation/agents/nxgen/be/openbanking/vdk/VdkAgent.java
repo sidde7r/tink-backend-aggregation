@@ -28,6 +28,7 @@ public final class VdkAgent extends Xs2aDevelopersTransactionalAgent {
         return new VdkAuthenticatorHelper(
                 apiClient,
                 persistentStorage,
+                sessionStorage,
                 configuration,
                 componentProvider.getLocalDateTimeSource(),
                 request.getCredentials());

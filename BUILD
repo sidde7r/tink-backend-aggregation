@@ -114,6 +114,7 @@ generate_codeowners(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank:owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit:owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers:owners",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers:owners",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ro/banks/raiffeisen:owners",
         "//src/integration/agents:austrian_providers_owners",
         "//src/integration/agents:belgian_providers_owners",

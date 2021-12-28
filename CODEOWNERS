@@ -164,7 +164,8 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/samlink/ @tink-ab/aggregation-llamas-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit/ @tink-ab/aggregation-nazguls-maintainer
-/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/ @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/ @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ro/banks/raiffeisen/ @tink-ab/aggregation-fluffy-maintainer @tink-ab/aggregation-thundercats-maintainer @tink-ab/aggregation-minion-maintainer @tink-ab/aggregation-nazguls-maintainer @tink-ab/aggregation-teletubbies-maintainer @tink-ab/aggregation-llamas-maintainer @tink-ab/aggregation-penguins-maintainer @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer

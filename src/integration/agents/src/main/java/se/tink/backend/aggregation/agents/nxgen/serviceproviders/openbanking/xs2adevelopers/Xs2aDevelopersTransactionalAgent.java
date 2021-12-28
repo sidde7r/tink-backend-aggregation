@@ -87,6 +87,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         return new Xs2aDevelopersAuthenticatorHelper(
                 apiClient,
                 persistentStorage,
+                sessionStorage,
                 configuration,
                 componentProvider.getLocalDateTimeSource(),
                 credentials);

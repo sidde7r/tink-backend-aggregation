@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
-import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenAccessor
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -36,6 +36,7 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
 
     protected final Xs2aDevelopersApiClient apiClient;
     protected final PersistentStorage persistentStorage;
+    protected final SessionStorage sessionStorage;
     private final Xs2aDevelopersProviderConfiguration configuration;
     protected final LocalDateTimeSource localDateTimeSource;
     private final Credentials credentials;
@@ -65,11 +66,11 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
             log.info("SCA approach - " + scaApproach);
         }
         persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
-        persistentStorage.put(StorageKeys.LINKS, consentResponse.getLinks());
+        sessionStorage.put(StorageKeys.SCA_OAUTH_LINK, consentResponse.getLinks().getScaOAuth());
     }
 
     private String retrieveScaUrl() {
-        String scaOAuthSourceUrl = getLinksFromStorage().getScaOAuth();
+        String scaOAuthSourceUrl = getScaOAuthLinkFromStorage();
         if (isWellKnownURI(scaOAuthSourceUrl)) {
             return apiClient.getAuthorizationEndpointFromWellKnownURI(scaOAuthSourceUrl);
         }
@@ -82,9 +83,9 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
-    private LinksEntity getLinksFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.LINKS, LinksEntity.class)
+    private String getScaOAuthLinkFromStorage() {
+        return sessionStorage
+                .get(StorageKeys.SCA_OAUTH_LINK, String.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
