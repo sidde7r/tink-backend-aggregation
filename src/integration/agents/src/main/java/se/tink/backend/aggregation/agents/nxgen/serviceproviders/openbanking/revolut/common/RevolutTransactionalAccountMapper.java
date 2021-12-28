@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.calculator.DefaultBalancePreCalculator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.GranularBalancesMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
@@ -25,11 +25,18 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-@RequiredArgsConstructor
 @Slf4j
 public class RevolutTransactionalAccountMapper implements AccountMapper<TransactionalAccount> {
     private final TransactionalAccountBalanceMapper balanceMapper;
-    private final DefaultIdentifierMapper identifierMapper;
+    private final GranularBalancesMapper granularBalancesMapper;
+    private final IdentifierMapper identifierMapper;
+
+    public RevolutTransactionalAccountMapper(
+            TransactionalAccountBalanceMapper balanceMapper, IdentifierMapper identifierMapper) {
+        this.balanceMapper = balanceMapper;
+        this.granularBalancesMapper = new GranularBalancesMapper(new DefaultBalancePreCalculator());
+        this.identifierMapper = identifierMapper;
+    }
 
     @Override
     public boolean supportsAccountType(AccountTypes type) {
@@ -104,7 +111,7 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
                 BalanceModule.builder()
                         .withBalanceAndGranularBalances(
                                 balanceMapper.getAccountBalance(balances),
-                                GranularBalancesMapper.toGranularBalances(balances));
+                                granularBalancesMapper.toGranularBalances(balances));
 
         balanceMapper.calculateAvailableCredit(balances).ifPresent(builder::setAvailableCredit);
         balanceMapper.calculateCreditLimit(balances).ifPresent(builder::setCreditLimit);

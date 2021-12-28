@@ -47,6 +47,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
+        "@com_google_code_gson_gson",
         "@maven//:no_finn_unleash_unleash_client_java",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/unleash",

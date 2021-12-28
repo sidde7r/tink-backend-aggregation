@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalLimitType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.UkObBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -154,7 +153,7 @@ public class TransactionalAccountBalanceMapper {
         log.info(
                 "[CARD CREDIT LINE] Balances with credit line types\n{}",
                 balances.stream()
-                        .map(balance -> StringUtils.join(balance.printTypeWithCreditLines(), "\n"))
+                        .map(AccountBalanceEntity::prettyPrint)
                         .collect(Collectors.toList()));
     }
 }

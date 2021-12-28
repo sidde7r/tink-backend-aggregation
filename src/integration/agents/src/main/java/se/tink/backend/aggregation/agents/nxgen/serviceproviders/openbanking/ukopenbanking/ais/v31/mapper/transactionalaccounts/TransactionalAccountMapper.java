@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.calculator.DefaultBalancePreCalculator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
@@ -23,11 +23,18 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.buil
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-@RequiredArgsConstructor
 @Slf4j
 public class TransactionalAccountMapper implements AccountMapper<TransactionalAccount> {
     private final TransactionalAccountBalanceMapper balanceMapper;
+    private final GranularBalancesMapper granularBalancesMapper;
     private final IdentifierMapper identifierMapper;
+
+    public TransactionalAccountMapper(
+            TransactionalAccountBalanceMapper balanceMapper, IdentifierMapper identifierMapper) {
+        this.balanceMapper = balanceMapper;
+        this.granularBalancesMapper = new GranularBalancesMapper(new DefaultBalancePreCalculator());
+        this.identifierMapper = identifierMapper;
+    }
 
     @Override
     public boolean supportsAccountType(AccountTypes type) {
@@ -93,7 +100,7 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
                 BalanceModule.builder()
                         .withBalanceAndGranularBalances(
                                 balanceMapper.getAccountBalance(balances),
-                                GranularBalancesMapper.toGranularBalances(balances));
+                                granularBalancesMapper.toGranularBalances(balances));
 
         balanceMapper.calculateAvailableCredit(balances).ifPresent(builder::setAvailableCredit);
         balanceMapper.calculateCreditLimit(balances).ifPresent(builder::setCreditLimit);

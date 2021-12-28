@@ -5,18 +5,21 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountBalanceType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.calculator.BalancePreCalculator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public interface GranularBalancesMapper {
+@Slf4j
+@RequiredArgsConstructor
+public class GranularBalancesMapper {
 
-    Logger log = LoggerFactory.getLogger(GranularBalancesMapper.class);
+    private final BalancePreCalculator balancePreCalculator;
 
-    static Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> toGranularBalances(
+    public Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> toGranularBalances(
             Collection<AccountBalanceEntity> balances) {
 
         Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances =
@@ -31,7 +34,12 @@ public interface GranularBalancesMapper {
                                                             balance.getType()),
                                             balance ->
                                                     Pair.of(
-                                                            balance.getAmountWithoutCreditLine(),
+                                                            balancePreCalculator
+                                                                    .calculateBalanceAmountConsideringCreditLines(
+                                                                            balance.getType(),
+                                                                            balance.getAmount(),
+                                                                            balance
+                                                                                    .getCreditLine()),
                                                             balance.getDateTime()),
                                             GranularBalancesMapper
                                                     ::getLatestBalanceWithSnapshotTime));
