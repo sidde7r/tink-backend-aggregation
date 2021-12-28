@@ -1,0 +1,33 @@
+{
+    "transactions": {
+        "booked": [
+            {
+                "transactionId": "DUMMY_ID_1",
+                "bookingDate": "2020-07-30",
+                "valueDate": "2020-07-30",
+                "amount": {
+                    "currency": "EUR",
+                    "content": "-5495.16"
+                },
+                "creditorAccount": {},
+                "remittanceInformationUnstructured": "REMITTANCE_INFORMATION_1"
+            },
+            {
+                "transactionId": "DUMMY_ID_2",
+                "bookingDate": "2020-07-31",
+                "valueDate": "2020-07-31",
+                "amount": {
+                    "currency": "EUR",
+                    "content": "-989.8"
+                },
+                "creditorAccount": {},
+                "remittanceInformationUnstructured": "REMITTANCE_INFORMATION_2"
+            }
+        ],
+        "_links": {
+            "viewAccount": "viewAcc",
+            "first": "first",
+            "next": "next"
+        }
+    }
+}
