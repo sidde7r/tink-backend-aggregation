@@ -1,0 +1,30 @@
+REQUEST 1
+POST https://api.psd.dnb.no/v1/payments/instant-norwegian-domestic-credit-transfers-straks
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000
+
+{"creditorName":"John Smith","creditorAccount":{"iban":"NO1060310977686"},"debtorAccount":{"iban":"NO8112255428177"},"instructedAmount":{"amount":"0.01","currency":"NOK"}}
+
+
+RESPONSE 1
+201
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{"transactionStatus":"ACCP","paymentId":"SSL_DOM-2845251204","_links":{"self":{"href":"/v1/payments/instant-norwegian-domestic-credit-transfers-straks/SSL_DOM-2845251204"},"scaRedirect":{"href":"https://www.dnb.no/segp/appo/logon/psd2Start?blob=ZGrVj7yqzF28d9HVybMgwvjIMZwT042cepQkFLXdRBmUtjRFDEBl2vvyRYWpAa8lhAWDy5mlf"}},"psuMessage":"Strong customer authentication is required"}
+
+REQUEST 2
+GET https://api.psd.dnb.no/v1/payments/instant-norwegian-domestic-credit-transfers-straks/SSL_DOM-2845251204
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{"debtorAccount":{"iban":"NO8112255428177","bban":"12255428177"},"instructedAmount":{"currency":"NOK","amount":"0.01"},"creditorAccount":{"iban":"NO1060310977686","bban":"60310977686"},"creditorName":"John Smith","transactionStatus":"ACSC"}

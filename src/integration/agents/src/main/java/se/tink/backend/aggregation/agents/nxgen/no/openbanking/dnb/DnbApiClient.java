@@ -137,20 +137,28 @@ public class DnbApiClient {
     // Payment related methods
 
     public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest, DnbPaymentType dnbPaymentType) {
+            CreatePaymentRequest createPaymentRequest,
+            DnbPaymentType dnbPaymentType,
+            String state) {
         return createRequest(
                         new URL(Urls.PAYMENTS)
-                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString()))
-                .header(HeaderKeys.TPP_REDIRECT_URI, headerValues.getRedirectUrl())
+                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.getTypePath())
+                                .parameter(IdTags.PAYMENT_SUBTYPE, dnbPaymentType.getSubtypePath()))
+                .header(HeaderKeys.TPP_REDIRECT_URI, getPaymentRedirectUrl(state))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(DnbPaymentType dnbPaymentType, String paymentId) {
         return createRequest(
                         new URL(Urls.GET_PAYMENT)
-                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString())
+                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.getTypePath())
+                                .parameter(IdTags.PAYMENT_SUBTYPE, dnbPaymentType.getSubtypePath())
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);
+    }
+
+    private URL getPaymentRedirectUrl(String state) {
+        return new URL(headerValues.getRedirectUrl()).queryParam("state", state);
     }
 
     // Common methods

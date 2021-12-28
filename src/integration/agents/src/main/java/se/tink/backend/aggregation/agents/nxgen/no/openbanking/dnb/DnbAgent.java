@@ -2,18 +2,24 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb;
 
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.PAYMENTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DnbPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DnbPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.card.DnbCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.card.DnbCardTransactionFetcher;
@@ -22,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mappe
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mapper.DnbTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.transactional.DnbAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.transactional.DnbTransactionFetcher;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -36,13 +43,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.UserAvailability;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, TRANSFERS, PAYMENTS})
+@AgentPisCapability
 public final class DnbAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final DnbStorage storage;
     private final DnbApiClient apiClient;
@@ -178,13 +189,26 @@ public final class DnbAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        DnbPaymentExecutor dnbPaymentExecutor = new DnbPaymentExecutor(apiClient, sessionStorage);
+        DnbPaymentExecutor dnbPaymentExecutor =
+                new DnbPaymentExecutor(
+                        apiClient,
+                        sessionStorage,
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
 
-        return Optional.of(
-                new DnbPaymentController(
-                        dnbPaymentExecutor,
-                        supplementalInformationHelper,
-                        persistentStorage,
-                        strongAuthenticationState));
+        return Optional.of(new PaymentController(dnbPaymentExecutor));
+    }
+
+    protected Optional<TransferController> constructTransferController() {
+        return Optional.empty();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts,
+                AccountIdentifierType.IBAN,
+                AccountIdentifierType.NO,
+                AccountIdentifierType.BBAN);
     }
 }
