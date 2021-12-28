@@ -4,6 +4,7 @@ import static se.tink.libraries.enums.MarketCode.FI;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -71,6 +72,7 @@ public class NordeaFiPaymentWireMockTest {
                 .build();
     }
 
+    @Ignore
     @Test
     public void testRecurringPayment() throws Exception {
 
