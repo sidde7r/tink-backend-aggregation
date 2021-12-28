@@ -34,7 +34,7 @@ public class DemobankConstants {
         public static final URL OAUTH_AUTHORIZE = new URL(BASE_URL + "/oauth/authorize");
         public static final URL ACCOUNTS = new URL(BASE_URL + "/api/accounts");
         public static final URL TRANSACTIONS =
-                new URL(BASE_URL + "/api/account/{accountId}/transactions/paging");
+                new URL(BASE_URL + "/api/account/{accountId}/transactions");
         public static final URL HOLDERS = new URL(BASE_URL + "/api/account/{accountId}/holders");
         public static final URL USER = new URL(BASE_URL + "/api/user");
 
