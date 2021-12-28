@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 public class GetConsentForAllAccountsStep implements AuthenticationStep {
@@ -22,6 +23,7 @@ public class GetConsentForAllAccountsStep implements AuthenticationStep {
     private final SwedbankBalticsApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final StepDataStorage stepDataStorage;
+    private final CredentialsRequest credentialsRequest;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -34,6 +36,10 @@ public class GetConsentForAllAccountsStep implements AuthenticationStep {
 
         } catch (HttpResponseException e) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(e.getMessage());
+        }
+
+        if (!credentialsRequest.getUserAvailability().isUserAvailableForInteraction()) {
+            throw new IllegalStateException("Can not renew consent since the user is not present");
         }
 
         ConsentResponse consentResponse = apiClient.getConsentAllAccounts();

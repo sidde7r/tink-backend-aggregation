@@ -7,9 +7,13 @@ java_library_with_sources(
         "@aggregation//:com_google_guava_guava",
     ],
     intdeps = [
+        "//src/agent_sdk/runtime/src/main/java/operation/http",
         "//src/agent_sdk/sdk/src/operation",
         "//src/agent_sdk/sdk/src/user_interaction",
         "//src/agent_sdk/sdk/src/models/field",
     ],
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/agent_sdk/runtime/src/main/java/operation/http",
+    ],
 )

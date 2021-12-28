@@ -10,6 +10,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations/abnamro",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/proxy",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
         "//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/dropwizard",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

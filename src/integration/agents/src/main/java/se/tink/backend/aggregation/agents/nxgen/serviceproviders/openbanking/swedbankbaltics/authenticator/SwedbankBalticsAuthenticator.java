@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthenticator {
@@ -38,7 +39,8 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             SupplementalInformationController supplementalInformationController,
-            Catalog catalog) {
+            Catalog catalog,
+            CredentialsRequest credentialsRequest) {
 
         final StepDataStorage stepDataStorage = new StepDataStorage(sessionStorage);
         final SCAAuthenticationHelper scaAuthenticationHelper =
@@ -52,7 +54,7 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
                         new CollectStatusStep(this, apiClient, stepDataStorage),
                         new ExchangeCodeForTokenStep(apiClient, persistentStorage, stepDataStorage),
                         new GetConsentForAllAccountsStep(
-                                apiClient, persistentStorage, stepDataStorage),
+                                apiClient, persistentStorage, stepDataStorage, credentialsRequest),
                         // the step below is relevant for LT only, for other countries it will be
                         // skipped automatically during GetConsentForAllAccountsStep
                         new AllAccountsConsentSCAAuthenticationStep(

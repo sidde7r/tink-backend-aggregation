@@ -1,10 +1,10 @@
 load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
 java_library_with_sources(
-    name = "proxy",
+    name = "http",
     srcs = glob(["*.java"]),
-    extdeps = [
-        "@aggregation//:com_google_code_findbugs_jsr305",
+    intdeps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/proxy",
     ],
     visibility = ["//visibility:public"],
 )

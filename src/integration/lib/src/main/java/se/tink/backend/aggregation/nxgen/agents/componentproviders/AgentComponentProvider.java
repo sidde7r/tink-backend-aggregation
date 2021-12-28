@@ -9,6 +9,7 @@ import se.tink.agent.runtime.operation.UserImpl;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.agent.sdk.operation.User;
+import se.tink.agent.sdk.operation.http.ProxyProfiles;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.http_proxy.ProxyProfilesProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.MockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
@@ -39,7 +41,8 @@ public class AgentComponentProvider
                 GeneratedValueProvider,
                 UnleashClientProvider,
                 AgentTemporaryStorageProvider,
-                MockServerUrlProvider {
+                MockServerUrlProvider,
+                ProxyProfilesProvider {
 
     private final TinkHttpClientProvider tinkHttpClientProvider;
     private final SupplementalInformationProvider supplementalInformationProvider;
@@ -51,6 +54,7 @@ public class AgentComponentProvider
     private final User user;
     private final StaticBankCredentials staticBankCredentials;
     private final Provider provider;
+    private final ProxyProfilesProvider proxyProfilesProvider;
 
     @Inject
     public AgentComponentProvider(
@@ -60,7 +64,8 @@ public class AgentComponentProvider
             GeneratedValueProvider generatedValueProvider,
             UnleashClientProvider unleashClientProvider,
             AgentTemporaryStorageProvider agentTemporaryStorageProvider,
-            MockServerUrlProvider mockServerUrlProvider) {
+            MockServerUrlProvider mockServerUrlProvider,
+            ProxyProfilesProvider proxyProfilesProvider) {
         this.tinkHttpClientProvider = tinkHttpClientProvider;
         this.supplementalInformationProvider = supplementalInformationProvider;
         this.agentContextProvider = agentContextProvider;
@@ -68,6 +73,7 @@ public class AgentComponentProvider
         this.unleashClientProvider = unleashClientProvider;
         this.agentTemporaryStorageProvider = agentTemporaryStorageProvider;
         this.mockServerUrlProvider = mockServerUrlProvider;
+        this.proxyProfilesProvider = proxyProfilesProvider;
 
         CredentialsRequest credentialsRequest = agentContextProvider.getCredentialsRequest();
         this.user = mapToSdkUser(credentialsRequest);
@@ -206,5 +212,10 @@ public class AgentComponentProvider
 
     public Provider getProvider() {
         return provider;
+    }
+
+    @Override
+    public ProxyProfiles getProxyProfiles() {
+        return proxyProfilesProvider.getProxyProfiles();
     }
 }

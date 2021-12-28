@@ -10,7 +10,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 public class CredentialsAuthenticationStep implements AuthenticationStep {
 
     public interface CallbackProcessor {
-        void process(final Credentials credentials) throws AuthenticationException;
+        AuthenticationStepResponse process(final Credentials credentials)
+                throws AuthenticationException;
     }
 
     private final CallbackProcessor processor;
