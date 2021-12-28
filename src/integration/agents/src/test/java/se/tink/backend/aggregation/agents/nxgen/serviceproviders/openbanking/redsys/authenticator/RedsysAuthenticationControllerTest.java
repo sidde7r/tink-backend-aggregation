@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -64,10 +65,10 @@ public class RedsysAuthenticationControllerTest {
                         eq(STATE), anyLong(), any(TimeUnit.class)))
                 .thenReturn(Optional.of(ImmutableMap.of("code", VALUE)));
         when(oAuth2Authenticator.exchangeAuthorizationCode(VALUE)).thenReturn(token);
-        when(consentController.requestConsent()).thenReturn(true);
         when(persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(token));
         when(oAuth2Authenticator.refreshAccessToken(REFRESH_TOKEN)).thenReturn(token);
+        when(consentController.fetchConsentStatus()).thenReturn(ConsentStatus.VALID);
 
         // when
         redsysAuthenticationController.collect("dummyValue");

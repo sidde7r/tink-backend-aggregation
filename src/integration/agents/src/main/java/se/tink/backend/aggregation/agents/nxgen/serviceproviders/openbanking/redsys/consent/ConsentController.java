@@ -6,9 +6,9 @@ public interface ConsentController {
 
     String getConsentId();
 
-    boolean requestConsent();
+    void requestConsent();
 
-    ConsentStatus fetchConsentStatus(String consentId);
+    ConsentStatus fetchConsentStatus();
 
     void clearConsentStorage();
 }
