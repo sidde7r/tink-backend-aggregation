@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticato
 import com.google.common.collect.Lists;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.CajasurLoginProcessor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
@@ -19,11 +20,10 @@ public class CajasutAuthenticator extends StatelessProgressiveAuthenticator {
     public List<AuthenticationStep> authenticationSteps() {
         return Lists.newArrayList(
                 new CredentialsAuthenticationStep(
-                        new CajasurAuthenticationRequestBodyPreparerProcessor(
-                                cajasurApiClient, sessionStorage)),
+                        new CajasurLoginProcessor(cajasurApiClient, sessionStorage)),
                 new AutomaticAuthenticationStep(
-                        new CajasurDoLoginProcessor(cajasurApiClient, sessionStorage),
-                        "doLoginStep"),
+                        new CajasurPostLoginProcessor(cajasurApiClient, sessionStorage),
+                        "doPostLoginStep"),
                 new AutomaticAuthenticationStep(
                         new CajasurRedirectToMainPageProcessor(cajasurApiClient, sessionStorage),
                         "redirectToMainPageStep"));

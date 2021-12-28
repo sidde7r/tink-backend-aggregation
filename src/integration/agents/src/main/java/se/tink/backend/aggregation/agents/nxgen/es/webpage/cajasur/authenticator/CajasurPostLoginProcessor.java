@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.Callbac
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @AllArgsConstructor
-public class CajasurDoLoginProcessor implements CallbackProcessorEmpty {
+public class CajasurPostLoginProcessor implements CallbackProcessorEmpty {
 
     private final CajasurAuthenticationApiClient cajasurApiClient;
     private final SessionStorage sessionStorage;
