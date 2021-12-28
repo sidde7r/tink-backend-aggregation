@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.eidassigner;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import io.opentracing.Scope;
 import io.opentracing.Span;
@@ -9,6 +8,7 @@ import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 import io.opentracing.tag.Tags;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
+@SuppressWarnings("java:S2129")
 public class QsealcSignerImpl implements QsealcSigner {
 
     private static final Logger log = LoggerFactory.getLogger(QsealcSignerImpl.class);
@@ -115,7 +116,7 @@ public class QsealcSignerImpl implements QsealcSigner {
 
     @Override
     public String getSignatureBase64(byte[] signingData) {
-        return new String(callSecretsService(this.alg, signingData), Charsets.US_ASCII);
+        return new String(callSecretsService(this.alg, signingData), StandardCharsets.US_ASCII);
     }
 
     @Override
@@ -149,7 +150,7 @@ public class QsealcSignerImpl implements QsealcSigner {
 
     @Override
     public String getSignatureBase64(QsealcAlg algorithm, byte[] dataToSign) {
-        return new String(callSecretsService(algorithm, dataToSign), Charsets.US_ASCII);
+        return new String(callSecretsService(algorithm, dataToSign), StandardCharsets.US_ASCII);
     }
 
     @Override
