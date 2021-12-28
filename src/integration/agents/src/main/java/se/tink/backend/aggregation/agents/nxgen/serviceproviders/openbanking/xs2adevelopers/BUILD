@@ -48,6 +48,7 @@ codeowners(
     name = "owners",
     teams = [
         "@tink-ab/aggregation-minion-maintainer",
+        "@tink-ab/aggregation-nazguls-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

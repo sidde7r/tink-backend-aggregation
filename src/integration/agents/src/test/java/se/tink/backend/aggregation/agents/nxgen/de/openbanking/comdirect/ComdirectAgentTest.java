@@ -29,7 +29,7 @@ public class ComdirectAgentTest {
                                 Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .saveCredentialsAfter(true)
                         .setFinancialInstitutionId("comdirect")
                         .setAppId("tink");
     }
