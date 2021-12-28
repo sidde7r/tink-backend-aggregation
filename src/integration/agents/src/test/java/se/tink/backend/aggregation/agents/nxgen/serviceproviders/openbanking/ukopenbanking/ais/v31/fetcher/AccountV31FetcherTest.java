@@ -226,7 +226,7 @@ public class AccountV31FetcherTest {
     }
 
     @Test
-    public void allFetchedDataShouldBePassedToMapper() {
+    public void shouldAllFetchedDataPassToMapper() {
         // given
         AccountEntity account = TransactionalAccountFixtures.savingsAccount();
 

@@ -39,11 +39,6 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
             AccountEntity account,
             Collection<AccountBalanceEntity> balances,
             Collection<PartyV31Entity> parties) {
-        if (balances.isEmpty()) {
-            log.warn(
-                    "[TransactionalAccountMapper]: Something went wrong during balance fetching and balance list is empty so it could not be mapped to a transactional account - skipping account.");
-            return Optional.empty();
-        }
 
         List<AccountIdentifierEntity> accountIdentifiers = account.getIdentifiers();
         AccountIdentifierEntity primaryIdentifier =

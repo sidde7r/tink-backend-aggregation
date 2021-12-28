@@ -189,22 +189,6 @@ public class TransactionalAccountMapperTest {
     }
 
     @Test
-    public void shouldReturnEmptyOptionalWhenBalancesAreEmpty() {
-        // given
-        AccountEntity account = TransactionalAccountFixtures.currentAccount();
-        AccountIdentifierEntity primaryId = IdentifierFixtures.ibanIdentifier();
-        List<PartyV31Entity> parties = PartyFixtures.parties();
-
-        // when
-        when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
-        final Optional<TransactionalAccount> transactionalAccounts =
-                mapper.map(account, Collections.emptyList(), parties);
-
-        // then
-        assertThat(transactionalAccounts).isEmpty();
-    }
-
-    @Test
     public void shouldNotReturnEmptyOptionalWhenBalancesAreNotEmpty() {
         // given
         AccountEntity account = TransactionalAccountFixtures.currentAccount();

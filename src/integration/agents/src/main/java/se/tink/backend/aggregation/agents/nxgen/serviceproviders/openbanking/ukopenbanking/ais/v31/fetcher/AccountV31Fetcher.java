@@ -108,13 +108,12 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
             List<AccountBalanceEntity> balances,
             List<PartyV31Entity> parties) {
         if (balances.isEmpty()) {
-            Optional<T> empty = Optional.empty();
             log.warn(
                     "[AccountV31Fetcher]: Something went wrong during balance "
                             + "fetching and balance list is empty so it could not "
                             + "be mapped to a transactional account "
                             + "- skipping account.");
-            return empty;
+            return Optional.empty();
         }
         return accountMapper.map(account, balances, parties);
     }
