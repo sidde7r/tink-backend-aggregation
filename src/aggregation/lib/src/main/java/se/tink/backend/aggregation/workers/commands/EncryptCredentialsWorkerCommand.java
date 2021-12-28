@@ -35,7 +35,7 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
     protected AgentWorkerCommandResult doExecute() throws Exception {
         CredentialsRequest request = context.getRequest();
 
-        if (!credentialsCrypto.encrypt(request, doUpdateCredential, charset)) {
+        if (!credentialsCrypto.encrypt(request, doUpdateCredential, true, charset)) {
             throw new IllegalStateException("Could not encrypt credential");
         }
 

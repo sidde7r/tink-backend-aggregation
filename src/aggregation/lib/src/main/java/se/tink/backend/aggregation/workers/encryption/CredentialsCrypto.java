@@ -174,7 +174,10 @@ public class CredentialsCrypto {
     }
 
     public boolean encrypt(
-            CredentialsRequest request, boolean doUpdateCredential, Charset charset) {
+            CredentialsRequest request,
+            boolean doUpdateCredential,
+            boolean shouldCacheSensitiveData,
+            Charset charset) {
         Optional<CryptoConfiguration> cryptoConfiguration =
                 cryptoWrapper.getLatestCryptoConfiguration();
         if (!cryptoConfiguration.isPresent()) {
@@ -219,19 +222,38 @@ public class CredentialsCrypto {
         // in createCredential() and updateCredential().
         originalCredentials.setSensitiveDataSerialized(serializedEncryptedCredentials);
 
-        // Put the encrypted credentials into a temporary cache that is used by the
-        // DecryptCredentialsWorkerCommand.
-        // It is possible that several refresh requests for the same credential to exists on the
-        // queue at the same time,
-        // if the credentials are updated (such as usage of refresh token) the next request will
-        // have stale data.
-        // Caching the credentials with a high enough CACHE_EXPIRE_TIME allows subsequent request to
-        // exchange its stale
-        // data for the updated data in the cache.
-        // This is not a permanent fix and should be resolved by overhauling the credential
-        // read/write logic such that
-        // a request will never have stale data in the first place.
-        // This cache is read in class `CredentialsCrypto`
+        if (shouldCacheSensitiveData) {
+            // Put the encrypted credentials into a temporary cache that is used by the
+            // DecryptCredentialsWorkerCommand.
+            // It is possible that several refresh requests for the same credential to exists on the
+            // queue at the same time,
+            // if the credentials are updated (such as usage of refresh token) the next request will
+            // have stale data.
+            // Caching the credentials with a high enough CACHE_EXPIRE_TIME allows subsequent
+            // request to exchange its stale data for the updated data in the cache.
+            // This is not a permanent fix and should be resolved by overhauling the credential
+            // read/write logic such that a request will never have stale data in the first place.
+            // This cache is read in class `CredentialsCrypto`
+            cacheSensitiveData(request, encryptedCredentials, serializedEncryptedCredentials);
+        }
+
+        cryptoMetrics(CREDENTIALS_ENCRYPT, encryptedCredentials, true);
+
+        if (doUpdateCredential) {
+            controllerWrapper.updateCredentialSensitive(
+                    request.getCredentials(),
+                    serializedEncryptedCredentials,
+                    request.getOperationId());
+            logger.info("sensitive data saved in database");
+        }
+
+        return true;
+    }
+
+    private void cacheSensitiveData(
+            CredentialsRequest request,
+            EncryptedPayloadHead encryptedCredentials,
+            String serializedEncryptedCredentials) {
         try {
             Future<?> future =
                     cacheClient.set(
@@ -249,18 +271,6 @@ public class CredentialsCrypto {
         } catch (Exception e) {
             logger.error("Could not cache sensitive data", e);
         }
-
-        cryptoMetrics(CREDENTIALS_ENCRYPT, encryptedCredentials, true);
-
-        if (doUpdateCredential) {
-            controllerWrapper.updateCredentialSensitive(
-                    request.getCredentials(),
-                    serializedEncryptedCredentials,
-                    request.getOperationId());
-            logger.info("sensitive data saved in database");
-        }
-
-        return true;
     }
 
     private void logCheckResult(Future<?> future) {

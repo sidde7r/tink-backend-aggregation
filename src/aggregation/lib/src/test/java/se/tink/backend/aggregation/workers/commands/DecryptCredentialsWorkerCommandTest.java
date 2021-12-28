@@ -17,6 +17,8 @@ import org.mockito.Answers;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class DecryptCredentialsWorkerCommandTest {
@@ -83,6 +85,26 @@ public class DecryptCredentialsWorkerCommandTest {
 
         // then
         verify(credentialsCrypto)
-                .encrypt(any(CredentialsRequest.class), eq(true), any(Charset.class));
+                .encrypt(any(CredentialsRequest.class), eq(true), eq(true), any(Charset.class));
+    }
+
+    @Test
+    public void doPostProcessShouldEncryptWithoutCachingSensitiveIfRequestIsManualAndHasFailed()
+            throws Exception {
+        // given
+        given(context.getRequest().getType())
+                .willReturn(CredentialsRequestType.MANUAL_AUTHENTICATION);
+        given(context.getRequest().getCredentials().getStatus())
+                .willReturn(CredentialsStatus.AUTHENTICATION_ERROR);
+        given(credentialsCrypto.decrypt(context.getRequest(), StandardCharsets.UTF_8))
+                .willReturn(true);
+        command.doExecute();
+
+        // when
+        command.doPostProcess();
+
+        // then
+        verify(credentialsCrypto)
+                .encrypt(any(CredentialsRequest.class), eq(true), eq(false), any(Charset.class));
     }
 }

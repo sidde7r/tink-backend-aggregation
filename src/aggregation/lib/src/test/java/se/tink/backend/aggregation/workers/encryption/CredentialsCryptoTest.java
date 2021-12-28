@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
@@ -46,14 +48,16 @@ public class CredentialsCryptoTest {
     private CredentialsCrypto crypto;
     private Credentials credentials;
     private Provider provider;
+    private FakeCacheClient cacheClient;
 
     @Before
     public void setUp() throws Exception {
         CryptoWrapper fakeCryptoWrapper = mock(CryptoWrapper.class);
 
+        cacheClient = spy(new FakeCacheClient());
         crypto =
                 new CredentialsCrypto(
-                        new FakeCacheClient(),
+                        cacheClient,
                         mock(ControllerWrapper.class),
                         fakeCryptoWrapper,
                         new MetricRegistry());
@@ -90,7 +94,7 @@ public class CredentialsCryptoTest {
         user.setFlags(ImmutableList.of());
 
         CredentialsRequest request = requestFrom(credentials, user, provider);
-        assertTrue(crypto.encrypt(request, true, StandardCharsets.UTF_8));
+        assertTrue(crypto.encrypt(request, true, true, StandardCharsets.UTF_8));
 
         final Credentials clone = credentials.clone();
         clone.clearSensitiveInformation(provider);
@@ -122,7 +126,7 @@ public class CredentialsCryptoTest {
         final User user = new User();
 
         CredentialsRequest request = requestFrom(credentials, user, provider);
-        assertTrue(crypto.encrypt(request, true, StandardCharsets.UTF_8));
+        assertTrue(crypto.encrypt(request, true, true, StandardCharsets.UTF_8));
 
         final Credentials clone = credentials.clone();
         clone.clearSensitiveInformation(provider);
@@ -179,7 +183,7 @@ public class CredentialsCryptoTest {
                 SerializationUtils.deserializeFromString(
                         credentials.getSensitiveDataSerialized(), EncryptedPayloadV2.class);
         assertNotNull(v2);
-        assertTrue(crypto.encrypt(request, true, StandardCharsets.UTF_8));
+        assertTrue(crypto.encrypt(request, true, true, StandardCharsets.UTF_8));
 
         final Credentials clone = credentials.clone();
         clone.clearSensitiveInformation(provider);
@@ -195,6 +199,19 @@ public class CredentialsCryptoTest {
         assertEquals("ab2b348c7218bafe3", decryptedPayload.get("sessionID"));
         assertEquals(PASSWORD_VALUE, clone.getField(PASSWORD));
         assertEquals(USERNAME_VALUE, clone.getField(USERNAME));
+    }
+
+    @Test
+    public void encryptWithoutCachingSensitiveData() {
+        // given
+        final User user = new User();
+        CredentialsRequest request = requestFrom(credentials, user, provider);
+
+        // when
+        assertTrue(crypto.encrypt(request, true, false, StandardCharsets.UTF_8));
+
+        // then
+        verifyNoInteractions(cacheClient);
     }
 
     private static CredentialsRequest requestFrom(
