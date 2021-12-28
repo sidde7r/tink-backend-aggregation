@@ -29,7 +29,7 @@ public class EncryptCredentialsWorkerCommandTest {
     @Test
     public void doExecuteShouldThrowExceptionWhenEncryptWasUnsuccessfull() {
         // given
-        given(credentialsCrypto.encrypt(context.getRequest(), true, StandardCharsets.UTF_8))
+        given(credentialsCrypto.encrypt(context.getRequest(), true, true, StandardCharsets.UTF_8))
                 .willReturn(false);
 
         // when
@@ -44,7 +44,7 @@ public class EncryptCredentialsWorkerCommandTest {
     @Test
     public void doExecuteShouldContinueIfCredentialsWereEncrypted() throws Exception {
         // given
-        given(credentialsCrypto.encrypt(context.getRequest(), true, StandardCharsets.UTF_8))
+        given(credentialsCrypto.encrypt(context.getRequest(), true, true, StandardCharsets.UTF_8))
                 .willReturn(true);
 
         // when
