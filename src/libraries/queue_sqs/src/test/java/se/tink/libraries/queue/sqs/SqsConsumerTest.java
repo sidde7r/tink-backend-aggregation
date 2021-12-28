@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.concurrent.RejectedExecutionException;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.metrics.types.histograms.Histogram;
 import se.tink.libraries.queue.QueueProducer;
 
 public class SqsConsumerTest {
@@ -30,6 +32,7 @@ public class SqsConsumerTest {
     private ReceiveMessageResult receiveMessageResult;
     private QueueProducer queueProducer;
     private QueueMessageAction queueMessageAction;
+    private MetricRegistry metricRegistry;
 
     @Before
     public void init() {
@@ -39,6 +42,8 @@ public class SqsConsumerTest {
         receiveMessageResult = mock(ReceiveMessageResult.class);
         queueProducer = mock(QueueProducer.class);
         queueMessageAction = mock(QueueMessageAction.class);
+        metricRegistry = mock(MetricRegistry.class);
+        when(metricRegistry.histogram(any(), any())).thenReturn(mock(Histogram.class));
     }
 
     @Test
@@ -48,7 +53,13 @@ public class SqsConsumerTest {
                 .thenReturn(receiveMessageResult);
 
         SqsConsumer sqsConsumer =
-                spy(new SqsConsumer(sqsQueue, queueProducer, queueMessageAction, "Regular"));
+                spy(
+                        new SqsConsumer(
+                                sqsQueue,
+                                queueProducer,
+                                queueMessageAction,
+                                metricRegistry,
+                                "Regular"));
 
         // when
         sqsConsumer.consume();
@@ -65,7 +76,13 @@ public class SqsConsumerTest {
         when(amazonSQS.receiveMessage(any(ReceiveMessageRequest.class)))
                 .thenReturn(receiveMessageResult);
         SqsConsumer sqsConsumer =
-                spy(new SqsConsumer(sqsQueue, queueProducer, queueMessageAction, "Regular"));
+                spy(
+                        new SqsConsumer(
+                                sqsQueue,
+                                queueProducer,
+                                queueMessageAction,
+                                metricRegistry,
+                                "Regular"));
 
         // when
         sqsConsumer.consume();
@@ -82,7 +99,13 @@ public class SqsConsumerTest {
                 .thenReturn(receiveMessageResult);
         doThrow(new RejectedExecutionException()).when(queueMessageAction).handle(anyString());
         SqsConsumer sqsConsumer =
-                spy(new SqsConsumer(sqsQueue, queueProducer, queueMessageAction, "Regular"));
+                spy(
+                        new SqsConsumer(
+                                sqsQueue,
+                                queueProducer,
+                                queueMessageAction,
+                                metricRegistry,
+                                "Regular"));
 
         // when
         sqsConsumer.consume();
@@ -96,7 +119,13 @@ public class SqsConsumerTest {
         when(sqsQueue.isAvailable()).thenReturn(false);
 
         SqsConsumer sqsConsumer =
-                spy(new SqsConsumer(sqsQueue, queueProducer, queueMessageAction, "Regular"));
+                spy(
+                        new SqsConsumer(
+                                sqsQueue,
+                                queueProducer,
+                                queueMessageAction,
+                                metricRegistry,
+                                "Regular"));
 
         // when
         boolean ready = sqsConsumer.isConsumerReady();
@@ -110,7 +139,13 @@ public class SqsConsumerTest {
         when(sqsQueue.isAvailable()).thenReturn(true);
 
         SqsConsumer sqsConsumer =
-                spy(new SqsConsumer(sqsQueue, queueProducer, queueMessageAction, "Regular"));
+                spy(
+                        new SqsConsumer(
+                                sqsQueue,
+                                queueProducer,
+                                queueMessageAction,
+                                metricRegistry,
+                                "Regular"));
 
         // when
         boolean ready = sqsConsumer.isConsumerReady();

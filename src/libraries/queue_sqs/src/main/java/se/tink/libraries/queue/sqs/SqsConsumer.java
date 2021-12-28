@@ -4,11 +4,17 @@ import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.QueueProducer;
 
 public class SqsConsumer {
@@ -18,20 +24,28 @@ public class SqsConsumer {
     private static final int MAX_NUMBER_OF_MESSAGES = 1;
     private static final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
 
+    public static final ImmutableList<Double> BUCKETS =
+            ImmutableList.of(0., .025, .1, .25, .5, 0.75, 1., 1.5, 2., 2.5, 5.);
+    private static final MetricId SQS_CONSUMER_DURATION_HISTOGRAM =
+            MetricId.newId("sqs_consumption");
+
     private final SqsQueue sqsQueue;
     // Note: producer may queue requests to different sqs queue than this consumer reads from
     private final QueueProducer producer;
     private final QueueMessageAction queueMessageAction;
     private final String name;
+    private final MetricRegistry metricRegistry;
 
     public SqsConsumer(
             SqsQueue sqsQueue,
             QueueProducer requeueProducer,
             QueueMessageAction queueMessageAction,
+            MetricRegistry metricRegistry,
             String name) {
         this.sqsQueue = sqsQueue;
         this.producer = requeueProducer;
         this.queueMessageAction = queueMessageAction;
+        this.metricRegistry = metricRegistry;
         this.name = name;
     }
 
@@ -43,7 +57,7 @@ public class SqsConsumer {
      *     https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html#sqs-long-polling
      *     for further information on why and when we may get no messages
      */
-    public boolean consume() throws IOException {
+    public boolean consume() {
         List<Message> messages = getMessages();
         if (messages.isEmpty()) {
             log.info("[SqsConsumer] Messages empty");
@@ -60,13 +74,17 @@ public class SqsConsumer {
 
     @VisibleForTesting
     List<Message> getMessages() {
-        try {
-            ReceiveMessageRequest request = createReceiveMessagesRequest();
-            return sqsQueue.getSqs().receiveMessage(request).getMessages();
-        } catch (RuntimeException e) {
-            log.error("[SqsConsumer] Couldn't retrieve messages", e);
-            throw e;
-        }
+        return timedMethod(
+                "getMessages",
+                () -> {
+                    try {
+                        ReceiveMessageRequest request = createReceiveMessagesRequest();
+                        return sqsQueue.getSqs().receiveMessage(request).getMessages();
+                    } catch (RuntimeException e) {
+                        log.error("[SqsConsumer] Couldn't retrieve messages", e);
+                        throw e;
+                    }
+                });
     }
 
     private ReceiveMessageRequest createReceiveMessagesRequest() {
@@ -77,23 +95,28 @@ public class SqsConsumer {
     }
 
     @VisibleForTesting
-    void tryConsumeUntilNotRejected(Message sqsMessage) throws IOException {
-        try {
-            consume(sqsMessage.getBody());
-            sqsQueue.consumed();
-        } catch (RejectedExecutionException e) {
-            log.warn(
-                    "[SqsConsumer] Failed to consume message from '{}' SQS. Requeuing it. SqsMessageId: {}",
-                    name,
-                    sqsMessage.getMessageId(),
-                    e);
-            producer.requeue(sqsMessage.getBody());
-        } catch (IOException e) {
-            log.error(
-                    "[SqsConsumer] Unexpected error happened during consuming of message. SqsMessageId: {}",
-                    sqsMessage.getMessageId(),
-                    e);
-        }
+    void tryConsumeUntilNotRejected(Message sqsMessage) {
+        timedMethod(
+                "tryConsumeUntilNotRejected",
+                () -> {
+                    try {
+                        consume(sqsMessage.getBody());
+                        sqsQueue.consumed();
+                    } catch (RejectedExecutionException e) {
+                        log.warn(
+                                "[SqsConsumer] Failed to consume message from '{}' SQS. Requeuing it. SqsMessageId: {}",
+                                name,
+                                sqsMessage.getMessageId(),
+                                e);
+                        producer.requeue(sqsMessage.getBody());
+                    } catch (IOException e) {
+                        log.error(
+                                "[SqsConsumer] Unexpected error happened during consuming of message. SqsMessageId: {}",
+                                sqsMessage.getMessageId(),
+                                e);
+                    }
+                    return null;
+                });
     }
 
     @VisibleForTesting
@@ -103,18 +126,52 @@ public class SqsConsumer {
 
     @VisibleForTesting
     void delete(Message message) {
-        log.info("[SqsConsumer] Deleting message: {}", message.getMessageId());
-        try {
-            sqsQueue.getSqs()
-                    .deleteMessage(
-                            new DeleteMessageRequest(
-                                    sqsQueue.getUrl(), message.getReceiptHandle()));
-        } catch (RuntimeException e) {
-            log.error("[SqsConsumer Failed to delete: {}", message.getMessageId(), e);
-        }
+        timedMethod(
+                "delete",
+                () -> {
+                    log.info("[SqsConsumer] Deleting message: {}", message.getMessageId());
+                    try {
+                        sqsQueue.getSqs()
+                                .deleteMessage(
+                                        new DeleteMessageRequest(
+                                                sqsQueue.getUrl(), message.getReceiptHandle()));
+                    } catch (RuntimeException e) {
+                        log.error("[SqsConsumer Failed to delete: {}", message.getMessageId(), e);
+                    }
+                    return null;
+                });
     }
 
     boolean isConsumerReady() {
         return sqsQueue.isAvailable();
+    }
+
+    public <T> T timedMethod(String methodName, Callable<T> method) {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        try {
+            T result = method.call();
+            registerDuration(methodName, "OK", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            return result;
+        } catch (Exception e) {
+            registerDuration(
+                    methodName,
+                    "UNKNOWN_EXCEPTION",
+                    stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+            throw new IllegalStateException(
+                    String.format(
+                            "Error encountered when calling method %s in SqsConsumer", methodName),
+                    e);
+        }
+    }
+
+    private void registerDuration(String methodName, String status, long durationMs) {
+        metricRegistry
+                .histogram(
+                        SQS_CONSUMER_DURATION_HISTOGRAM
+                                .label("consumer", name)
+                                .label("methodName", methodName)
+                                .label("status", status),
+                        BUCKETS)
+                .update(durationMs / 1000.0);
     }
 }
