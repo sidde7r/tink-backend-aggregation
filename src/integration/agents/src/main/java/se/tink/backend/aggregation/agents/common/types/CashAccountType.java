@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.common.types;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public enum CashAccountType {
     CACC("CACC"),
     CARD("CARD");
@@ -20,6 +22,8 @@ public enum CashAccountType {
                 return b;
             }
         }
+
+        log.warn("Unknown account type: {}", text);
         return null;
     }
 

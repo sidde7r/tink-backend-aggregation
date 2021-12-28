@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -15,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionExceptionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -26,10 +27,10 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrosskeyBaseApiClientTest {
@@ -37,11 +38,15 @@ public class CrosskeyBaseApiClientTest {
     @Mock private TinkHttpClient httpClientMock;
     @Mock private SessionStorage sessionStorage;
     @Mock private RequestBuilder requestBuilder;
+    @Mock private CredentialsRequest request;
+    private UserAvailability userAvailability;
+    private CredentialsRequest spyRequest;
 
     private CrosskeyBaseApiClient crosskeyApiClient;
 
     @Before
     public void setUp() {
+        spyRequest = spy(request);
         QsealcSigner qsealcSigner = mock(QsealcSignerImpl.class);
         AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration =
                 mock(AgentConfiguration.class);
@@ -52,16 +57,20 @@ public class CrosskeyBaseApiClientTest {
         when(agentConfiguration.getProviderSpecificConfiguration())
                 .thenReturn(crosskeyBaseConfiguration);
         when(agentConfiguration.getQsealc()).thenReturn(EIdasTinkCert.QSEALC);
+        userAvailability = new UserAvailability();
+        userAvailability.setOriginatingUserIp("userIp");
+        userAvailability.setUserPresent(true);
+        doReturn(userAvailability).when(spyRequest).getUserAvailability();
 
         crosskeyApiClient =
                 new CrosskeyBaseApiClient(
                         httpClientMock,
                         sessionStorage,
                         CrossKeyTestUtils.getCrossKeyMarketConfiguration(),
+                        spyRequest,
                         agentConfiguration,
                         qsealcSigner,
-                        "FI",
-                        "127.0.0.1");
+                        "FI");
 
         when(requestBuilder.header(anyString(), anyString())).thenReturn(requestBuilder);
     }
@@ -91,29 +100,17 @@ public class CrosskeyBaseApiClientTest {
     }
 
     @Test
-    public void shouldFailAndFixDuringRetryOfFetchCreditCardTransactions() {
+    public void shouldNotFetchMoreIfUserNotPresent() {
         setUpSuccessfulSessionStorage();
         CreditCardAccount creditCardAccount = mock(CreditCardAccount.class);
         when(creditCardAccount.getApiIdentifier()).thenReturn("apiIdentifier");
         when(httpClientMock.request(any(URL.class))).thenReturn(requestBuilder);
-
-        HttpResponseException httpResponseException = mock(HttpResponseException.class);
-        HttpResponse httpResponse = mock(HttpResponse.class);
-        when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getStatus()).thenReturn(403);
-        when(httpResponse.getBody(TransactionExceptionEntity.class))
-                .thenReturn(
-                        CrossKeyTestUtils.loadResourceFileContent(
-                                "transactionFetchingException.json",
-                                TransactionExceptionEntity.class));
-
         when(requestBuilder.get(CrosskeyTransactionsResponse.class))
-                .thenThrow(httpResponseException)
                 .thenReturn(
                         CrossKeyTestUtils.loadResourceFileContent(
                                 "checkingTransactions.json", CrosskeyTransactionsResponse.class));
+        doReturn(false).when(spyRequest).isUserPresent();
 
-        // when
         CrosskeyTransactionsResponse crosskeyTransactionsResponse =
                 crosskeyApiClient.fetchCreditCardTransactions(
                         creditCardAccount,
@@ -121,9 +118,33 @@ public class CrosskeyBaseApiClientTest {
                         CrossKeyTestUtils.PAGING_TO);
         List<Transaction> tinkTransactions =
                 new ArrayList(crosskeyTransactionsResponse.getTinkTransactions());
-        // then
-        assertEquals(false, crosskeyTransactionsResponse.canFetchMore().get());
+
         assertEquals(2, tinkTransactions.size());
+        assertEquals(false, crosskeyTransactionsResponse.canFetchMore().get());
+    }
+
+    @Test
+    public void shouldFetchMoreIfUserIsPresent() {
+        setUpSuccessfulSessionStorage();
+        CreditCardAccount creditCardAccount = mock(CreditCardAccount.class);
+        when(creditCardAccount.getApiIdentifier()).thenReturn("apiIdentifier");
+        when(httpClientMock.request(any(URL.class))).thenReturn(requestBuilder);
+        when(requestBuilder.get(CrosskeyTransactionsResponse.class))
+                .thenReturn(
+                        CrossKeyTestUtils.loadResourceFileContent(
+                                "checkingTransactions.json", CrosskeyTransactionsResponse.class));
+        doReturn(true).when(spyRequest).isUserPresent();
+
+        CrosskeyTransactionsResponse crosskeyTransactionsResponse =
+                crosskeyApiClient.fetchCreditCardTransactions(
+                        creditCardAccount,
+                        CrossKeyTestUtils.PAGING_FROM,
+                        CrossKeyTestUtils.PAGING_TO);
+        List<Transaction> tinkTransactions =
+                new ArrayList(crosskeyTransactionsResponse.getTinkTransactions());
+
+        assertEquals(2, tinkTransactions.size());
+        assertEquals(true, crosskeyTransactionsResponse.canFetchMore().get());
     }
 
     private void setUpSuccessfulSessionStorage() {

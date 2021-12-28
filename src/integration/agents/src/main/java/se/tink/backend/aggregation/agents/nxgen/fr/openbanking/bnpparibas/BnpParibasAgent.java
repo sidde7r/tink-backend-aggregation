@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CH
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LIST_BENEFICIARIES;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
@@ -19,14 +18,7 @@ import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA25
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({
-    CHECKING_ACCOUNTS,
-    SAVINGS_ACCOUNTS,
-    IDENTITY_DATA,
-    TRANSFERS,
-    CREDIT_CARDS,
-    LIST_BENEFICIARIES
-})
+@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, TRANSFERS, CREDIT_CARDS, LIST_BENEFICIARIES})
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,

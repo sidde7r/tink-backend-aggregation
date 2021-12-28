@@ -2,7 +2,7 @@
   "Data": {
     "Balance": [
       {
-        "AccountId": "AccountId1",
+        "AccountId": "SE4550000000058398257466",
         "CreditDebitIndicator": "Credit",
         "Type": "InterimBooked",
         "DateTime": "2020-11-12T08:50:22.866Z",
@@ -12,7 +12,7 @@
         }
       },
       {
-        "AccountId": "AccountId1",
+        "AccountId": "SE4550000000058398257466",
         "CreditDebitIndicator": "Credit",
         "Type": "InterimAvailable",
         "DateTime": "2020-11-12T08:50:22.866Z",
@@ -24,7 +24,7 @@
     ]
   },
   "Links": {
-    "Self": "**HASHED:Rr**/open-banking/v3.1/aisp/accounts/AccountId1/balances"
+    "Self": "**HASHED:Rr**/open-banking/v3.1/aisp/accounts/SE4550000000058398257466/balances"
   },
   "Meta": {}
 }

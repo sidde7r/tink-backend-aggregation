@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionH
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.RetryAfterRetryFilter;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
@@ -59,8 +60,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 createApiClient(
                         qsealcSigner,
                         marketConfiguration,
-                        componentProvider.getCredentialsRequest().getProvider().getMarket(),
-                        getUserIp());
+                        componentProvider.getCredentialsRequest(),
+                        componentProvider.getCredentialsRequest().getProvider().getMarket());
         final LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(localDateTimeSource);
@@ -72,12 +73,6 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 new RetryAfterRetryFilter(
                         CrosskeyBaseConstants.HttpClient.MAX_RETRIES_FOR_429_RETRY_AFTER_RESPONSE));
         client.addFilter(new TerminatedHandshakeRetryFilter());
-    }
-
-    private String getUserIp() {
-        return request.getUserAvailability().isUserPresent()
-                ? request.getUserAvailability().getOriginatingUserIp()
-                : null;
     }
 
     @Override
@@ -164,16 +159,16 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     private CrosskeyBaseApiClient createApiClient(
             QsealcSigner qsealcSigner,
             CrosskeyMarketConfiguration marketConfiguration,
-            String providerMarket,
-            String userIp) {
+            CredentialsRequest credentialsRequest,
+            String providerMarket) {
         return new CrosskeyBaseApiClient(
                 client,
                 sessionStorage,
                 marketConfiguration,
+                credentialsRequest,
                 agentConfiguration,
                 qsealcSigner,
-                providerMarket,
-                userIp);
+                providerMarket);
     }
 
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController(

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrossKeyTestUtils.loadResourceFileContent;
 
@@ -16,12 +17,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrossKeyTransactionalAccountFetcherTest {
-
     @Mock private CrosskeyBaseApiClient apiClient;
-
     private CrossKeyTransactionalAccountFetcher accountFetcher;
 
     @Before
@@ -37,7 +39,7 @@ public class CrossKeyTransactionalAccountFetcherTest {
                         loadResourceFileContent(
                                 "checkingAccountResponse.json", CrosskeyAccountsResponse.class));
 
-        when(apiClient.fetchAccountBalances("AccountId1"))
+        when(apiClient.fetchAccountBalances("SE4550000000058398257466"))
                 .thenReturn(
                         loadResourceFileContent(
                                 "accountTransactionResponse.json",
@@ -50,8 +52,18 @@ public class CrossKeyTransactionalAccountFetcherTest {
 
         TransactionalAccount transactionalAccount = accounts.get(0);
         assertEquals(AccountTypes.CHECKING, transactionalAccount.getType());
-        assertEquals("AccountId1", transactionalAccount.getApiIdentifier());
+        assertEquals("SE4550000000058398257466", transactionalAccount.getApiIdentifier());
         assertEquals("EUR", transactionalAccount.getExactBalance().getCurrencyCode());
+        assertTrue(
+                transactionalAccount
+                        .getIdentifiersAsList()
+                        .contains(new IbanIdentifier("SE4550000000058398257466")));
+        assertTrue(
+                transactionalAccount
+                        .getIdentifiersAsList()
+                        .contains(new BbanIdentifier("50000000058398257466")));
         assertEquals(50.0, transactionalAccount.getExactBalance().getDoubleValue(), 0.001);
+        assertEquals(
+                AccountFlag.PSD2_PAYMENT_ACCOUNT, transactionalAccount.getAccountFlags().get(0));
     }
 }

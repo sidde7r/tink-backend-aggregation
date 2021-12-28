@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
-
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.time.Instant;
@@ -12,11 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
@@ -40,7 +34,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.rpc.CrosskeyPaymentDetails;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionExceptionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountsResponse;
@@ -62,6 +55,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -69,6 +63,7 @@ public class CrosskeyBaseApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final CredentialsRequest credentialsRequest;
     private final QsealcSigner qsealcSigner;
     private final CrosskeyBaseConfiguration configuration;
     private final String redirectUrl;
@@ -83,12 +78,13 @@ public class CrosskeyBaseApiClient {
             TinkHttpClient client,
             SessionStorage sessionStorage,
             CrosskeyMarketConfiguration marketConfiguration,
+            CredentialsRequest credentialsRequest,
             AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
-            String providerMarket,
-            String userIp) {
+            String providerMarket) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.credentialsRequest = credentialsRequest;
         this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
         this.baseApiUrl = marketConfiguration.getBaseApiURL();
         this.xFapiFinancialId = marketConfiguration.getFinancialId();
@@ -97,7 +93,13 @@ public class CrosskeyBaseApiClient {
         redirectUrl = agentConfiguration.getRedirectUrl();
         this.certificateSerialNumber = getCertificateSerialNumber(agentConfiguration);
         this.providerMarket = providerMarket;
-        this.userIp = userIp;
+        this.userIp = getUserIp(credentialsRequest);
+    }
+
+    private String getUserIp(CredentialsRequest credentialsRequest) {
+        return credentialsRequest.getUserAvailability().isUserPresent()
+                ? credentialsRequest.getUserAvailability().getOriginatingUserIp()
+                : null;
     }
 
     private String getCertificateSerialNumber(
@@ -305,27 +307,15 @@ public class CrosskeyBaseApiClient {
                                     prepareTransactionUrl(
                                             fromBookingDateTime, toBookingDateTime, apiIdentifier))
                             .get(CrosskeyTransactionsResponse.class);
+            if (!credentialsRequest.isUserPresent()) {
+                response.setCanFetchMoreFalse();
+            }
+            return response.setProviderMarket(providerMarket);
         } catch (HttpResponseException exception) {
             HttpResponse exceptionResponse = exception.getResponse();
-            if (exceptionResponse.getStatus() == 403) {
-                TransactionExceptionEntity responseBody =
-                        exceptionResponse.getBody(TransactionExceptionEntity.class);
-                LocalDateTime fromDateTime =
-                        extractMinimalTransactionDateFromException(responseBody);
-                LocalDateTime toDateTime = adjustToDateToSuitGivenInterval(fromDateTime);
-                response =
-                        createRequestInSession(
-                                        prepareTransactionUrl(
-                                                formatDateForTransactionFetch(fromDateTime),
-                                                formatDateForTransactionFetch(toDateTime),
-                                                apiIdentifier))
-                                .get(CrosskeyTransactionsResponse.class);
-                response.setCanFetchMoreFalse();
-            } else {
-                throw exception;
-            }
+            log.error("Error status from bank: " + exceptionResponse.getStatus());
+            throw exception;
         }
-        return response.setProviderMarket(providerMarket);
     }
 
     private OAuth2Token getTokenFromSession() {
@@ -442,28 +432,6 @@ public class CrosskeyBaseApiClient {
                 .parameter(UrlParameters.ACCOUNT_ID, apiIdentifier)
                 .queryParam(UrlParameters.TO_BOOKING_DATE, toBookingDateTime)
                 .queryParam(UrlParameters.FROM_BOOKING_DATE, fromBookingDateTime);
-    }
-
-    private LocalDateTime extractMinimalTransactionDateFromException(
-            TransactionExceptionEntity exception) {
-        Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}");
-        String exceptionMessage = exception.getMessage();
-        Matcher matcher = pattern.matcher(exceptionMessage);
-        List<String> allGroups = new LinkedList<>();
-        while (matcher.find()) {
-            allGroups.add(matcher.group());
-        }
-        if (allGroups.size() < 2) {
-            throw new IllegalStateException(
-                    String.format("Unknown exception message: %s", exceptionMessage));
-        }
-        return LocalDateTime.parse(allGroups.get(0)).plusMinutes(Transactions.MINUTES_MARGIN);
-    }
-
-    private LocalDateTime adjustToDateToSuitGivenInterval(LocalDateTime fromDateTime) {
-        return fromDateTime
-                .plusDays(Transactions.DAYS_WINDOW)
-                .minusMinutes(Transactions.MINUTES_MARGIN);
     }
 
     private String formatDateForTransactionFetch(LocalDateTime dateTime) {

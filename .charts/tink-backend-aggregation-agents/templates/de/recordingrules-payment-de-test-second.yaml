@@ -1,0 +1,47 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: recordingrules-payment-de-test-second
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+#===================================================
+# Work in progress below!
+#
+# These expressions below should do what increase should be doing on its own, if the metrics were 0-initialized.
+# For now, those recording rules are not used by any alerts!
+# They are here to observe:
+#  * if using variables in this syntax is ok
+#  * how long do they take to evaluate on DE market
+#  * do they even evaluate
+#
+# Additionally, in this file I test if one ugly query is enough and working fine to build all rest
+#===================================================
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Ugly rule to be used by every other recording rule
+  # It combines everything that other rules might look for.
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_transfer:className_outcome:delta1h:TESTING_SECOND
+    expr: sum by(className, outcome) (
+        (floor(increase({{ .Values.deQueryPaymentAll }}[1h])) and ({{ .Values.deQueryPaymentAll }} offset 1h unless {{ .Values.deQueryPaymentAll }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryPaymentAll }}[1h])) - floor(count_over_time({{ .Values.deQueryPaymentAll }}[1h]) / 360))
+      )
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Payment recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_transfer:className:all_payments:delta1h:TESTING_SECOND
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h:TESTING_SECOND)
+
+  - record: DE:agent_transfer:className:failed:delta1h:TESTING_SECOND
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h:TESTING_SECOND{ outcome="failed"})
+
+  - record: DE:agent_transfer:className:unavailable:delta1h:TESTING_SECOND
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h:TESTING_SECOND{ outcome="unavailable"})
+
+  - record: DE:agent_transfer:className:cancelled:delta1h:TESTING_SECOND
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h:TESTING_SECOND{ outcome="cancelled"})

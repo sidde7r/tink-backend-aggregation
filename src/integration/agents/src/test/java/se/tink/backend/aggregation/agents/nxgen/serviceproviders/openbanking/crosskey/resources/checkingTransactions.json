@@ -2,7 +2,7 @@
   "Data": {
     "Transaction": [
       {
-        "AccountId": "AccountId",
+        "AccountId": "SE4550000000058398257466",
         "TransactionId": "20201116392992358787",
         "CreditDebitIndicator": "Debit",
         "Status": "Booked",
@@ -23,7 +23,7 @@
         }
       },
       {
-        "AccountId": "AccountId",
+        "AccountId": "SE4550000000058398257466",
         "TransactionId": "20201116392901416504",
         "CreditDebitIndicator": "Credit",
         "Status": "Booked",

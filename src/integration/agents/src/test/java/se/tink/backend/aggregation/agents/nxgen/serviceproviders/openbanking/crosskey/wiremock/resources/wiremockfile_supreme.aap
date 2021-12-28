@@ -122,44 +122,6 @@ x-fapi-financial-id: resursbank
 
 -----------------------------------------------------------------------------------
 RESPONSE 5
-403
-Date: Thu, 04 Nov 2021 08:47:14 GMT
-Date: Thu, 04 Nov 2021 08:47:14 GMT
-Content-Type: application/json
-RateLimit-Limit: 600
-RateLimit-Remaining: 593
-RateLimit-Reset: 1
-X-RateLimit-Remaining-Minute: 5984
-X-RateLimit-Remaining-Second: 593
-X-RateLimit-Limit-Second: 600
-X-RateLimit-Limit-Minute: 6000
-Expires: 0
-X-Content-Type-Options: nosniff
-x-fapi-interaction-id: af693195-acca-43b0-99f8-2c35e888f8ef
-X-Frame-Options: DENY
-Content-Length: 560
-
-{
-  "Code": "403 Forbidden",
-  "Id": "1b090361-f128-47bc-8542-9d8b8ecc931d",
-  "Message": "The request transaction interval [2021-08-06T00:00Z to 2021-11-04T00:00Z] is not inside the interval limits [2021-08-06T08:47:14.877Z to 2021-11-04T08:47:14.877Z] for this level of authentication [SCA: false]",
-  "Errors": [
-    {
-      "ErrorCode": "UK.OBIE.Reauthenticate",
-      "Message": "The request transaction interval [2021-08-06T00:00Z to 2021-11-04T00:00Z] is not inside the interval limits [2021-08-06T08:47:14.877Z to 2021-11-04T08:47:14.877Z] for this level of authentication [SCA: false]"
-    }
-  ]
-}
-
------------------------------------------------------------------------------------
-REQUEST 6
-GET https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions?toBookingDateTime=2021-11-04T08%3A47%3A14&fromBookingDateTime=2021-08-06T08%3A57%3A14
-Accept: application/json
-Content-Type: application/json
-x-fapi-financial-id: resursbank
-
------------------------------------------------------------------------------------
-RESPONSE 6
 200
 Date: Thu, 04 Nov 2021 08:47:14 GMT
 Date: Thu, 04 Nov 2021 08:47:15 GMT
@@ -336,7 +298,94 @@ Transfer-Encoding: chunked
         ]
     },
     "Links": {
-        "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions"
+            "Self": "https://open-banking.resurs.com/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions"
     },
+    "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://localhost:53191/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions?toBookingDateTime=1992-01-11T00%3A00%3A00&fromBookingDateTime=1991-10-14T00%3A00%3A00
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: resursbank
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Thu, 04 Nov 2021 08:47:14 GMT
+Date: Thu, 04 Nov 2021 08:47:15 GMT
+Content-Type: application/json;charset=utf-8
+RateLimit-Limit: 600
+RateLimit-Remaining: 590
+RateLimit-Reset: 1
+X-RateLimit-Remaining-Minute: 5981
+X-RateLimit-Remaining-Second: 590
+X-RateLimit-Limit-Second: 600
+X-RateLimit-Limit-Minute: 6000
+Expires: 0
+X-Content-Type-Options: nosniff
+x-fapi-interaction-id: b58c0be1-698c-4765-8f64-30717bb358c3
+X-Frame-Options: DENY
+Transfer-Encoding: chunked
+
+{
+    "Data": {
+        "Transaction": []
+    },
+    "Links": {},
+    "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://localhost:53198/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions?toBookingDateTime=1991-10-13T00%3A00%3A00&fromBookingDateTime=1991-07-16T00%3A00%3A00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "Data": {
+        "Transaction": []
+    },
+    "Links": {},
+    "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://localhost:53226/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions?toBookingDateTime=1991-07-15T00%3A00%3A00&fromBookingDateTime=1991-04-17T00%3A00%3A00
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "Data": {
+        "Transaction": []
+    },
+    "Links": {},
+    "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://localhost:53235/open-banking/v3.1/aisp/accounts/ba04b986-8d64-11ea-8379-123456789012/transactions?toBookingDateTime=1991-04-16T00%3A00%3A00&fromBookingDateTime=1991-01-17T00%3A00%3A00
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "Data": {
+        "Transaction": []
+    },
+    "Links": {},
     "Meta": {}
 }

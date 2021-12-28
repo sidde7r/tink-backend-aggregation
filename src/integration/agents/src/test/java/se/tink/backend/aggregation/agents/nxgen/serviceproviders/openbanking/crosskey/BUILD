@@ -9,6 +9,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/crosskey",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
@@ -28,6 +29,7 @@ junit_test(
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
 
