@@ -275,11 +275,19 @@ public class UkOpenBankingApiDefinitions {
         @JsonCreator
         public static ConsentStatus fromString(String key) {
             return Optional.ofNullable(key)
-                    .map(k -> valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)))
+                    .map(ConsentStatus::mapStringToEnum)
                     .orElseThrow(
                             () ->
                                     SessionError.CONSENT_INVALID.exception(
                                             "Unknown consent status: " + key));
+        }
+
+        private static ConsentStatus mapStringToEnum(String key) {
+            try {
+                return valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key));
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
         }
     }
 
