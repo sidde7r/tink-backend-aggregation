@@ -23,15 +23,6 @@ public class ScaMethodFilter {
     }
 
     private List<ScaMethodEntity> getOnlySupported(List<ScaMethodEntity> allScaMethods) {
-        boolean opticalAvailable =
-                allScaMethods.stream()
-                        .anyMatch(
-                                scaMethodEntity ->
-                                        "OPTICAL"
-                                                .equals(
-                                                        scaMethodEntity
-                                                                .getAuthenticationMethodId()));
-        log.info("OPTICAL available={}", opticalAvailable);
         return allScaMethods.stream()
                 .filter(
                         scaMethod ->
