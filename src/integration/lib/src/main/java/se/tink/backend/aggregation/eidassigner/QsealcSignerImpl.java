@@ -147,6 +147,21 @@ public class QsealcSignerImpl implements QsealcSigner {
         return Base64.getDecoder().decode(callSecretsService(this.alg, signingData));
     }
 
+    @Override
+    public String getSignatureBase64(QsealcAlg algorithm, byte[] dataToSign) {
+        return new String(callSecretsService(algorithm, dataToSign), Charsets.US_ASCII);
+    }
+
+    @Override
+    public String getJWSToken(QsealcAlg algorithm, byte[] jwsTokenData) {
+        return new String(Base64.getDecoder().decode(callSecretsService(algorithm, jwsTokenData)));
+    }
+
+    @Override
+    public byte[] getSignature(QsealcAlg algorithm, byte[] dataToSign) {
+        return Base64.getDecoder().decode(callSecretsService(algorithm, dataToSign));
+    }
+
     private void createClientTraceSpan(HttpPost request) {
         try {
             Tracer tracer = Tracing.getTracer();
