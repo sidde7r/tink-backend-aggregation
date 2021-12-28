@@ -1,0 +1,13 @@
+{
+  "errorManagement": {
+    "errorCode": "PSD2_00.189.A0005",
+    "errorDescription": "ASPSP provided error. Reference to the TPP-messages"
+  },
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "RESOURCE_UNKNOWN",
+      "text": "The addressed resource is unknown relative to the TPP."
+    }
+  ]
+}
