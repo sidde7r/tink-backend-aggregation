@@ -181,11 +181,11 @@ public class TransactionalAccountMapperTest {
                 mapper.map(account, accountBalancesCollection, parties).get();
 
         // then
-        List<String> allPosibleHolders =
+        List<String> allPossibleHolders =
                 parties.stream().map(PartyV31Entity::getName).collect(Collectors.toList());
-        allPosibleHolders.add(primaryId.getOwnerName());
+        allPossibleHolders.add(primaryId.getOwnerName());
 
-        assertThat(mappingResult.getHolderName().toString()).isIn(allPosibleHolders);
+        assertThat(mappingResult.getHolderName().toString()).isIn(allPossibleHolders);
     }
 
     @Test
