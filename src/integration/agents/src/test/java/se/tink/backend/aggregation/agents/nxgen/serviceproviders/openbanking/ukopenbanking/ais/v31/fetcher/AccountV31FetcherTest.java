@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
@@ -37,6 +38,8 @@ public class AccountV31FetcherTest {
     private PartyV31Fetcher partyFetcher;
     private UkOpenBankingApiClient apiClient;
     private FetcherInstrumentationRegistry instrumentation;
+    private AccountBalanceEntity balance;
+    private List<PartyV31Entity> parties;
 
     @Before
     public void setUp() throws Exception {
@@ -50,12 +53,15 @@ public class AccountV31FetcherTest {
         apiClient = mock(UkOpenBankingApiClient.class);
         instrumentation = new FetcherInstrumentationRegistry();
 
+        balance = BalanceFixtures.balanceCredit();
+        parties = PartyFixtures.parties();
+
         accountFetcher =
                 new AccountV31Fetcher(apiClient, partyFetcher, accountMapper, instrumentation);
     }
 
     @Test
-    public void returnOnlyAccountsSupportedByMapper() {
+    public void shouldReturnOnlyAccountsSupportedByMapper() {
         // when
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
@@ -68,6 +74,8 @@ public class AccountV31FetcherTest {
         when(accountMapper.supportsAccountType(AccountTypes.SAVINGS)).thenReturn(true);
         when(accountMapper.supportsAccountType(AccountTypes.CHECKING)).thenReturn(false);
         when(accountMapper.supportsAccountType(AccountTypes.CREDIT_CARD)).thenReturn(true);
+        when(apiClient.fetchV31AccountBalances(any())).thenReturn(ImmutableList.of(balance));
+        when(partyFetcher.fetchAccountParties(any())).thenReturn(parties);
         Collection<Account> result = accountFetcher.fetchAccounts();
 
         // then
@@ -109,7 +117,7 @@ public class AccountV31FetcherTest {
     }
 
     @Test
-    public void returnOnlyAccountsSupportedByMapperEvenIfBusinessAccountsAreReturned() {
+    public void shouldReturnOnlyAccountsSupportedByMapperEvenIfBusinessAccountsAreReturned() {
         // when
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
@@ -121,6 +129,9 @@ public class AccountV31FetcherTest {
         when(accountMapper.supportsAccountType(AccountTypes.SAVINGS)).thenReturn(true);
         when(accountMapper.supportsAccountType(AccountTypes.CHECKING)).thenReturn(false);
         when(accountMapper.supportsAccountType(AccountTypes.CREDIT_CARD)).thenReturn(true);
+        when(apiClient.fetchV31AccountBalances(any())).thenReturn(ImmutableList.of(balance));
+        when(partyFetcher.fetchAccountParties(any())).thenReturn(parties);
+
         Collection<Account> result = accountFetcher.fetchAccounts();
 
         // then
@@ -161,7 +172,7 @@ public class AccountV31FetcherTest {
     }
 
     @Test
-    public void returnPersonalAndBusinessAccountsToTheMapper() {
+    public void shouldReturnPersonalAndBusinessAccountsToTheMapper() {
         // when
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
@@ -170,6 +181,8 @@ public class AccountV31FetcherTest {
                                 TransactionalAccountFixtures.currentAccountBusiness()));
 
         when(accountMapper.supportsAccountType(AccountTypes.CHECKING)).thenReturn(true);
+        when(apiClient.fetchV31AccountBalances(any())).thenReturn(ImmutableList.of(balance));
+        when(partyFetcher.fetchAccountParties(any())).thenReturn(parties);
         Collection<Account> result = accountFetcher.fetchAccounts();
 
         // then
@@ -213,11 +226,9 @@ public class AccountV31FetcherTest {
     }
 
     @Test
-    public void allFetchedDataIsPassedToMapper() {
+    public void allFetchedDataShouldBePassedToMapper() {
         // given
         AccountEntity account = TransactionalAccountFixtures.savingsAccount();
-        AccountBalanceEntity balance = BalanceFixtures.balanceCredit();
-        List<PartyV31Entity> parties = PartyFixtures.parties();
 
         // when
         when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));
@@ -226,6 +237,7 @@ public class AccountV31FetcherTest {
         when(partyFetcher.fetchAccountParties(account)).thenReturn(parties);
 
         accountFetcher.fetchAccounts();
+
         // then
         verify(accountMapper).map(account, ImmutableList.of(balance), parties);
     }
@@ -237,9 +249,45 @@ public class AccountV31FetcherTest {
         when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));
 
         // when
-        Collection accounts = accountFetcher.fetchAccounts();
+        Collection<AccountEntity> accounts = accountFetcher.fetchAccounts();
 
         // then
         assertThat(accounts).isEmpty();
+    }
+
+    @Test
+    public void shouldReturnEmptyAccountListWhenFetchedBalanceListIsEmpty() {
+        // given
+        AccountEntity account = TransactionalAccountFixtures.savingsAccount();
+
+        // when
+        when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));
+        when(apiClient.fetchV31AccountBalances(any())).thenReturn(Collections.emptyList());
+        when(partyFetcher.fetchAccountParties(any())).thenReturn(parties);
+
+        Collection<AccountEntity> accounts = accountFetcher.fetchAccounts();
+
+        // then
+        assertThat(accounts).isEmpty();
+    }
+
+    @Test
+    public void shouldReturn3Accounts() {
+        // given
+        List<AccountEntity> accounts =
+                ImmutableList.of(
+                        TransactionalAccountFixtures.savingsAccount(),
+                        TransactionalAccountFixtures.currentAccount(),
+                        TransactionalAccountFixtures.currentAccountBusiness());
+
+        // when
+        when(apiClient.fetchV31Accounts()).thenReturn(accounts);
+        when(partyFetcher.fetchAccountParties(any())).thenReturn(parties);
+        when(apiClient.fetchV31AccountBalances(any())).thenReturn(ImmutableList.of(balance));
+
+        Collection<AccountEntity> accountEntities = accountFetcher.fetchAccounts();
+
+        // then
+        assertThat(accountEntities).hasSize(3);
     }
 }
