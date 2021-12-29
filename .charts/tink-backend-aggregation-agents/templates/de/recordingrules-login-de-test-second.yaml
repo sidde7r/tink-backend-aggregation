@@ -25,7 +25,7 @@ spec:
   # It combines everything that other rules might look for.
   #-------------------------------------------------------------------------------------------------------------------
   - record: DE:agent_login:action_className_outome:TESTING_SECOND
-    expr: sum by (className) (
+    expr: sum by (action, className, outcome) (
         (floor(increase({{ .Values.deQueryLoginAll }}[1h])) and ({{ .Values.deQueryLoginAll }} offset 1h unless {{ .Values.deQueryLoginAll }}))
         or 
         (1 + floor(increase({{ .Values.deQueryLoginAll }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAll }}[1h]) / 360))
