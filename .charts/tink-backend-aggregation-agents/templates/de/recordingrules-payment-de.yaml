@@ -7,14 +7,29 @@ spec:
   interval: 2m30s
   rules:
 
+  #-------------------------------------------------------------------------------------------------------------------
+  # Ugly rule to be used by every other recording rule. It combines everything that other rules below look for.
+  # The calculations here are based on research and work described here: https://tinkab.atlassian.net/wiki/spaces/INT/pages/6036291705/
+  # This does what sum+increase should be doing on its own.
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: DE:agent_transfer:className_outcome:delta1h
+    expr: sum by(className, outcome) (
+        (floor(increase({{ .Values.deQueryPaymentAll }}[1h])) and ({{ .Values.deQueryPaymentAll }} offset 1h unless {{ .Values.deQueryPaymentAll }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryPaymentAll }}[1h])) - floor(count_over_time({{ .Values.deQueryPaymentAll }}[1h]) / 360))
+      )
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Payment recording rules
+  #-------------------------------------------------------------------------------------------------------------------
   - record: DE:agent_transfer:className:all_payments:delta1h
-    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="DE"}[1h]))
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h)
 
   - record: DE:agent_transfer:className:failed:delta1h
-    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="failed"}[1h]))
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h{ outcome="failed"})
 
   - record: DE:agent_transfer:className:unavailable:delta1h
-    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="unavailable"}[1h]))
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h{ outcome="unavailable"})
 
   - record: DE:agent_transfer:className:cancelled:delta1h
-    expr: sum by(className) (increase(tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="cancelled"}[1h]))
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h{ outcome="cancelled"})

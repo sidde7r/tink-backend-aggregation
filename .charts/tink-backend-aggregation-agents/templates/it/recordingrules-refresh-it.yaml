@@ -7,11 +7,26 @@ spec:
   interval: 2m30s
   rules:
 
+  #-------------------------------------------------------------------------------------------------------------------
+  # Ugly rule to be used by every other recording rule. It combines everything that other rules below look for.
+  # The calculations here are based on research and work described here: https://tinkab.atlassian.net/wiki/spaces/INT/pages/6036291705/
+  # This does what sum+increase should be doing on its own.
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: IT:agent_refresh:className_outcome_type:delta1h
+    expr: sum by(className, outcome, type) (
+        (floor(increase({{ .Values.itQueryRefreshAll }}[1h])) and ({{ .Values.itQueryRefreshAll }} offset 1h unless {{ .Values.itQueryRefreshAll }}))
+        or 
+        (1 + floor(increase({{ .Values.itQueryRefreshAll }}[1h])) - floor(count_over_time({{ .Values.itQueryRefreshAll }}[1h]) / 360))
+      )
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Refresh recording rules
+  #-------------------------------------------------------------------------------------------------------------------
   - record: IT:agent_refresh:className_type:all_refreshes:delta1h
-    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT"}[1h]))
+    expr: sum by(className, type) (IT:agent_refresh:className_outcome_type:delta1h)
 
   - record: IT:agent_refresh:className_type:failed_or_partially_completed:delta1h
-    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT", outcome=~"failed|partially_completed"}[1h]))
+    expr: sum by(className, type) (IT:agent_refresh:className_outcome_type:delta1h{ outcome=~"failed|partially_completed"})
 
   - record: IT:agent_refresh:className_type:unavailable:delta1h
-    expr: sum by(className, type) (increase(tink_agent_refresh_total{ provider_type!="test", market="IT", outcome="unavailable"}[1h]))
+    expr: sum by(className, type) (IT:agent_refresh:className_outcome_type:delta1h{ outcome="unavailable"})
