@@ -1,5 +1,47 @@
 {
     "accounts" : [ {
+        "accountNumber" : "33333333333333",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "GBP",
+            "exactValue" : 2.0,
+            "scale" : 2,
+            "unscaledValue" : 200,
+            "doubleValue" : 2.0
+        },
+        "exactBalance" : {
+            "currencyCode" : "GBP",
+            "exactValue" : 5.0,
+            "scale" : 2,
+            "unscaledValue" : 500,
+            "doubleValue" : 5.0
+        },
+        "currencyCode" : "GBP",
+        "bankId" : "33333333333333",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "JANUSZ TRACZ",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"sort-code://33333333333333\"]",
+        "closed" : false,
+        "holderName" : "Janusz Tracz",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Janusz Tracz",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 2.0,
+        "balance" : 5.0
+    }, {
         "accountNumber" : "22222222222222",
         "accountExclusion" : "NONE",
         "exactAvailableCredit" : {

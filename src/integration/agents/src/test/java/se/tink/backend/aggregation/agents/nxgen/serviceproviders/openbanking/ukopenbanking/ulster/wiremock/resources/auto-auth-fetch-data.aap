@@ -193,6 +193,20 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
                         "Name": "JANUSZ TRACZ"
                     }
                 ]
+            },
+            {
+                "AccountId": "33333333333333333333333333333333",
+                "Currency": "GBP",
+                "AccountType": "Personal",
+                "AccountSubType": "CreditCard",
+                "Description": "MASTERCARD",
+                "Account": [
+                    {
+                        "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+                        "Identification": "33333333333333",
+                        "Name": "JANUSZ TRACZ"
+                    }
+                ]
             }
         ]
     },
@@ -325,13 +339,74 @@ x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
 }
 
 REQUEST 7
+GET https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/33333333333333333333333333333333/balances
+Accept: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 7
+200
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Balance": [
+            {
+                "AccountId": "33333333333333333333333333333333",
+                "Amount": {
+                    "Amount": "10.00",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Debit",
+                "Type": "Expected",
+                "CreditLine": [
+                    {
+                        "Included": true,
+                        "Amount": {
+                            "Amount": "5.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Pre-Agreed"
+                    },
+                    {
+                        "Included": true,
+                        "Amount": {
+                            "Amount": "2.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Available"
+                    }
+                ],
+                "DateTime": "2021-02-08T14:43:32.971Z"
+            },
+            {
+                "AccountId": "33333333333333333333333333333333",
+                "Amount": {
+                    "Amount": "3134.79",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Debit",
+                "Type": "ForwardAvailable",
+                "DateTime": "2021-02-08T14:43:32.971Z"
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/balances"
+    },
+    "Meta": {}
+}
+
+REQUEST 8
 GET https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/transactions?fromBookingDateTime=1990-04-10T00:00:00Z
 Accept: application/json
 x-fapi-financial-id: 0015800000jfxrpAAA
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 7
+RESPONSE 8
 200
 Content-Type: application/json;charset=utf-8
 x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000

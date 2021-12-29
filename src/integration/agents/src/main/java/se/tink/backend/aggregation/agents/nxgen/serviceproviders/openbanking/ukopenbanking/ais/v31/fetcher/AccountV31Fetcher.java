@@ -41,12 +41,10 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
                 allAccountEntities.stream()
                         .map(
                                 accountEntity ->
-                                        new StringBuilder()
-                                                .append("type: ")
-                                                .append(accountEntity.getRawAccountType())
-                                                .append(" and subtype: ")
-                                                .append(accountEntity.getRawAccountSubType())
-                                                .toString())
+                                        "type: "
+                                                + accountEntity.getRawAccountType()
+                                                + " and subtype: "
+                                                + accountEntity.getRawAccountSubType())
                         .collect(Collectors.toList()));
         return Observable.fromIterable(allAccountEntities)
                 .filter(AccountEntity::hasAccountId)
@@ -59,8 +57,7 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
                                 Single.zip(
                                         fetchParties(account),
                                         fetchBalance(account),
-                                        (parties, balances) ->
-                                                accountMapper.map(account, balances, parties)))
+                                        (parties, balances) -> zipper(account, balances, parties)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList()
@@ -104,5 +101,20 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
     private Single<List<AccountBalanceEntity>> fetchBalance(AccountEntity account) {
         return Single.fromCallable(() -> apiClient.fetchV31AccountBalances(account.getAccountId()))
                 .subscribeOn(Schedulers.io());
+    }
+
+    private Optional<T> zipper(
+            AccountEntity account,
+            List<AccountBalanceEntity> balances,
+            List<PartyV31Entity> parties) {
+        if (balances.isEmpty()) {
+            log.warn(
+                    "[AccountV31Fetcher]: Something went wrong during balance "
+                            + "fetching and balance list is empty so it could not "
+                            + "be mapped to a transactional account "
+                            + "- skipping account.");
+            return Optional.empty();
+        }
+        return accountMapper.map(account, balances, parties);
     }
 }

@@ -53,11 +53,7 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
             AccountEntity account,
             Collection<AccountBalanceEntity> balances,
             Collection<PartyV31Entity> parties) {
-        if (balances.isEmpty()) {
-            log.warn(
-                    "[CreditCardAccountMapper]: Something went wrong during balance fetching and balance list is empty so it could not be mapped to a transactional account - skipping account.");
-            return Optional.empty();
-        }
+
         AccountIdentifierEntity cardIdentifier =
                 identifierMapper.getCreditCardIdentifier(account.getIdentifiers());
         String displayName = pickDisplayName(account, cardIdentifier);

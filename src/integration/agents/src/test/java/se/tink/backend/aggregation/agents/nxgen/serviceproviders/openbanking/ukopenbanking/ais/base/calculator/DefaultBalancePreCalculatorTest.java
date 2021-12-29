@@ -44,10 +44,7 @@ public class DefaultBalancePreCalculatorTest {
                 balancePreCalculator.calculateBalanceAmountConsideringCreditLines(
                         balance.getType(), balance.getAmount(), balance.getCreditLine());
 
-        // Dry run
-        // assertThat(balanceAmountWithoutCreditLine).isEqualTo(ExactCurrencyAmount.of("5.00",
-        // "GBP"));
-        assertThat(balanceAmountWithoutCreditLine).isEqualTo(balance.getAmount());
+        assertThat(balanceAmountWithoutCreditLine).isEqualTo(ExactCurrencyAmount.of("5.00", "GBP"));
     }
 
     @Test
@@ -57,9 +54,7 @@ public class DefaultBalancePreCalculatorTest {
                 balancePreCalculator.calculateBalanceAmountConsideringCreditLines(
                         balance.getType(), balance.getAmount(), balance.getCreditLine());
 
-        // Dry run
-        // assertThat(balanceAmountWithoutCreditLine).isEqualTo(ExactCurrencyAmount.zero("GBP"));
-        assertThat(balanceAmountWithoutCreditLine).isEqualTo(balance.getAmount());
+        assertThat(balanceAmountWithoutCreditLine).isEqualTo(ExactCurrencyAmount.zero("GBP"));
     }
 
     @Test

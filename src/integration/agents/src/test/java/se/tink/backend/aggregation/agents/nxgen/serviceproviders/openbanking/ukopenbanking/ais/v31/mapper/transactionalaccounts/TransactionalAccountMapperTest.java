@@ -181,27 +181,11 @@ public class TransactionalAccountMapperTest {
                 mapper.map(account, accountBalancesCollection, parties).get();
 
         // then
-        List<String> allPosibleHolders =
+        List<String> allPossibleHolders =
                 parties.stream().map(PartyV31Entity::getName).collect(Collectors.toList());
-        allPosibleHolders.add(primaryId.getOwnerName());
+        allPossibleHolders.add(primaryId.getOwnerName());
 
-        assertThat(mappingResult.getHolderName().toString()).isIn(allPosibleHolders);
-    }
-
-    @Test
-    public void shouldReturnEmptyOptionalWhenBalancesAreEmpty() {
-        // given
-        AccountEntity account = TransactionalAccountFixtures.currentAccount();
-        AccountIdentifierEntity primaryId = IdentifierFixtures.ibanIdentifier();
-        List<PartyV31Entity> parties = PartyFixtures.parties();
-
-        // when
-        when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
-        final Optional<TransactionalAccount> transactionalAccounts =
-                mapper.map(account, Collections.emptyList(), parties);
-
-        // then
-        assertThat(transactionalAccounts).isEmpty();
+        assertThat(mappingResult.getHolderName().toString()).isIn(allPossibleHolders);
     }
 
     @Test

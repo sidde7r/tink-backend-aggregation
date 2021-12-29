@@ -90,9 +90,7 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
                 balanceAmount.getDoubleValue(),
                 creditLineAmount.getDoubleValue(),
                 balanceAmountWithoutCreditLine.getDoubleValue());
-        // Dry run
-        //        return balanceAmountWithoutCreditLine;
-        return balanceAmount;
+        return balanceAmountWithoutCreditLine;
     }
 
     private ExactCurrencyAmount subtractCreditLineFromAvailableBalance(
@@ -123,18 +121,14 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
                     balanceAmount.getDoubleValue(),
                     creditLineAmount.getDoubleValue(),
                     balanceAmountWithoutCreditLine.getDoubleValue());
-            // Dry run
-            //            return balanceAmountWithoutCreditLine;
-            return balanceAmount;
+            return balanceAmountWithoutCreditLine;
         }
 
         if (balanceAmountWithoutCreditLine.getDoubleValue() < 0) {
             log.warn(
                     "[CREDIT LINE SUBTRACTION] Credit line of available type is smaller than available balance. "
                             + "This should not be possible. Setting available balance as zero");
-            // Dry run
-            //            return ExactCurrencyAmount.zero(balanceAmount.getCurrencyCode());
-            return balanceAmount;
+            return ExactCurrencyAmount.zero(balanceAmount.getCurrencyCode());
         }
 
         log.info(
@@ -143,10 +137,7 @@ public class DefaultBalancePreCalculator implements BalancePreCalculator {
                 balanceAmount.getDoubleValue(),
                 creditLineAmount.getDoubleValue(),
                 balanceAmountWithoutCreditLine.getDoubleValue());
-
-        // Dry run
-        //        return balanceAmountWithoutCreditLine;
-        return balanceAmount;
+        return balanceAmountWithoutCreditLine;
     }
 
     private List<CreditLineEntity> getIncludedCreditLines(List<CreditLineEntity> creditLines) {

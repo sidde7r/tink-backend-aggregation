@@ -50,32 +50,32 @@
             "accountExclusion": "NONE",
             "exactAvailableCredit": {
                 "currencyCode": "GBP",
-                "exactValue": 4.13,
-                "doubleValue": 4.13,
+                "exactValue": 5.0,
+                "doubleValue": 5.0,
                 "scale": 2,
-                "unscaledValue": 413
+                "unscaledValue": 500
             },
             "exactBalance": {
                 "currencyCode": "GBP",
-                "exactValue": -1295.87,
-                "doubleValue": -1295.87,
+                "exactValue": 75.0,
+                "doubleValue": 75.0,
                 "scale": 2,
-                "unscaledValue": -129587
+                "unscaledValue": 7500
             },
             "currencyCode": "GBP",
             "availableBalance": {
                 "currencyCode": "GBP",
-                "exactValue": -1295.87,
-                "doubleValue": -1295.87,
+                "exactValue": 90.0,
+                "doubleValue": 90.0,
                 "scale": 2,
-                "unscaledValue": -129587
+                "unscaledValue": 9000
             },
             "creditLimit": {
                 "currencyCode": "GBP",
-                "exactValue": 1300.0,
-                "doubleValue": 1300.0,
+                "exactValue": 10.0,
+                "doubleValue": 10.0,
                 "scale": 2,
-                "unscaledValue": 130000
+                "unscaledValue": 1000
             },
             "bankId": "09090912345678",
             "excluded": false,
@@ -101,8 +101,8 @@
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
-            "availableCredit": 4.13,
-            "balance": -1295.87
+            "availableCredit": 5.0,
+            "balance": 75.0
         },
         {
             "accountNumber": "SAVINGR12345678",
