@@ -302,9 +302,14 @@ public class AggregationServiceResource implements AggregationService {
                         itemsToRefresh);
                 HttpResponseHelper.error(Response.Status.BAD_REQUEST);
             }
-            agentWorker.execute(
-                    agentWorkerCommandFactory.createOperationConfigureWhitelist(
-                            request, clientInfo));
+            try {
+                agentWorker.execute(
+                        agentWorkerCommandFactory.createOperationConfigureWhitelist(
+                                request, clientInfo));
+            } catch (Exception e) {
+                logger.error("Error while calling createOperationConfigureWhitelist", e);
+            }
+
         } finally {
             trackLatency(CONFIGURE_WHITELIST, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
@@ -323,6 +328,7 @@ public class AggregationServiceResource implements AggregationService {
 
             // If the caller don't set any accounts to refresh, we won't do a refresh.
             if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
+                logger.info("RefreshWhitelistInformation - accounts empty");
                 HttpResponseHelper.error(Response.Status.BAD_REQUEST);
             }
 
@@ -330,15 +336,22 @@ public class AggregationServiceResource implements AggregationService {
 
             // If the caller don't sets any refreshable items, we won't do a refresh
             if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
+                logger.info("RefreshWhitelistInformation - no items to refresh");
                 HttpResponseHelper.error(Response.Status.BAD_REQUEST);
             }
 
             // If the caller don't sets any account type refreshable item, we don't do a refresh
             if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
+                logger.info("RefreshWhitelistInformation - no accounts in item to refresh");
                 HttpResponseHelper.error(Response.Status.BAD_REQUEST);
             }
-            agentWorker.execute(
-                    agentWorkerCommandFactory.createOperationWhitelistRefresh(request, clientInfo));
+            try {
+                agentWorker.execute(
+                        agentWorkerCommandFactory.createOperationWhitelistRefresh(
+                                request, clientInfo));
+            } catch (Exception e) {
+                logger.error("Error while calling createOperationWhitelistRefresh", e);
+            }
         } finally {
             trackLatency(REFRESH_WHITELIST, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
@@ -354,8 +367,11 @@ public class AggregationServiceResource implements AggregationService {
             trackUserPresentFlagPresence(REFRESH, request);
             trackRefreshScopePresence(REFRESH, request);
             trackRefreshPriority(REFRESH, request.getRefreshPriority());
-
-            refreshRequestDispatcher.dispatchRefreshInformation(request, clientInfo);
+            try {
+                refreshRequestDispatcher.dispatchRefreshInformation(request, clientInfo);
+            } catch (Exception e) {
+                logger.error("Error while calling dispatchRefreshInformation", e);
+            }
         } finally {
             trackLatency(REFRESH, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }

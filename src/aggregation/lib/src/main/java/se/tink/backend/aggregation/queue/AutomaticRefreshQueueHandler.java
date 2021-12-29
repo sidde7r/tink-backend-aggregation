@@ -48,6 +48,7 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
         try {
             RefreshInformation refreshInformation = encodingHandler.decode(message);
             MDC.setContextMap(refreshInformation.getMDCContext());
+            logger.info("[AutomaticRefreshQueueHandler] Started handling automatic refresh.");
             String providerName = refreshInformation.getRequest().getProvider().getName();
             if (RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName)) {
                 throw new RejectedExecutionException(
@@ -96,6 +97,8 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                             agentWorkerCommandFactory, refreshInformation.getRequest(), clientInfo);
 
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
+            logger.info(
+                    "[AutomaticRefreshQueueHandler] Finished handling automatic refresh handler.");
         } catch (RejectedExecutionException rejectedExecution) {
             throw rejectedExecution;
         } catch (Exception e) {
