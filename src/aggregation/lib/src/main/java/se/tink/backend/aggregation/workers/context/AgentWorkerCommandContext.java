@@ -105,6 +105,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 unleashClient,
                 requestStatusManager,
                 rawBankDataEventAccumulator);
+        log.info("Starting constructing AgentWorkerCommandContext");
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
 
@@ -132,6 +133,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 "AgentWorkerCommandContext constructed. Request of type: {} has operationId set: {}",
                 request.getType().toString(),
                 String.valueOf(request.getOperationId() != null));
+        log.info("Finished constructing AgentWorkerCommandContext");
     }
 
     // TODO: We should do this some other way. This is a hack we can use for now.
