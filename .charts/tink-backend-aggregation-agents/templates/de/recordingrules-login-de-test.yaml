@@ -44,9 +44,9 @@ spec:
 
   - record: DE:agent_login:className:manual:tink_issues:delta1h:TESTING
     expr: sum by (className) (
-        (floor(increase({{ .Values.deQueryLoginManualTinkInfFailed }}[1h])) and ({{ .Values.deQueryLoginManualTinkInfFailed }} offset 1h unless {{ .Values.deQueryLoginManualTinkInfFailed }}))
+        (floor(increase({{ .Values.deQueryLoginManualTinkInfrFailed }}[1h])) and ({{ .Values.deQueryLoginManualTinkInfrFailed }} offset 1h unless {{ .Values.deQueryLoginManualTinkInfrFailed }}))
         or 
-        (1 + floor(increase({{ .Values.deQueryLoginManualTinkInfFailed }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginManualTinkInfFailed }}[1h]) / 360))
+        (1 + floor(increase({{ .Values.deQueryLoginManualTinkInfrFailed }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginManualTinkInfrFailed }}[1h]) / 360))
       )
 
   - record: DE:agent_login:className:manual:cancelled:delta1h:TESTING
@@ -82,9 +82,9 @@ spec:
 
   - record: DE:agent_login:action_className:auto:tink_issues:delta1h:TESTING
     expr: sum by (action, className) (
-        (floor(increase({{ .Values.deQueryLoginAutoTinkInfFailed }}[1h])) and ({{ .Values.deQueryLoginAutoTinkInfFailed }} offset 1h unless {{ .Values.deQueryLoginAutoTinkInfFailed }}))
+        (floor(increase({{ .Values.deQueryLoginAutoTinkInfrFailed }}[1h])) and ({{ .Values.deQueryLoginAutoTinkInfrFailed }} offset 1h unless {{ .Values.deQueryLoginAutoTinkInfrFailed }}))
         or 
-        (1 + floor(increase({{ .Values.deQueryLoginAutoTinkInfFailed }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAutoTinkInfFailed }}[1h]) / 360))
+        (1 + floor(increase({{ .Values.deQueryLoginAutoTinkInfrFailed }}[1h])) - floor(count_over_time({{ .Values.deQueryLoginAutoTinkInfrFailed }}[1h]) / 360))
       )
 
   - record: DE:agent_login:action_className:auto:cancelled:delta1h:TESTING
