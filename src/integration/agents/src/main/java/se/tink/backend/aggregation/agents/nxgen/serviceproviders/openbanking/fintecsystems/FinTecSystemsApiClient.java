@@ -39,28 +39,23 @@ public class FinTecSystemsApiClient {
     public FinTechSystemsPaymentResponse createPayment(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
         FinTechSystemsPaymentRequest finTechSystemsPaymentRequest =
-                getCreatePaymentRequest(payment);
+                buildCreatePaymentRequest(payment);
 
         return createRequest(Urls.PAYMENT_INITIATION)
                 .post(FinTechSystemsPaymentResponse.class, finTechSystemsPaymentRequest);
     }
 
-    private FinTechSystemsPaymentRequest getCreatePaymentRequest(Payment payment) {
-        FinTechSystemsPaymentRequest finTechSystemsPaymentRequest =
-                new FinTechSystemsPaymentRequest();
-        finTechSystemsPaymentRequest.setAmount(
-                payment.getExactCurrencyAmount().getExactValue().toString());
-        finTechSystemsPaymentRequest.setCurrencyId(
-                payment.getExactCurrencyAmount().getCurrencyCode());
-        finTechSystemsPaymentRequest.setRecipientHolder(payment.getCreditor().getName());
-        if (payment.getCreditor().getAccountIdentifier() instanceof IbanIdentifier) {
-            finTechSystemsPaymentRequest.setRecipientIban(
-                    ((IbanIdentifier) payment.getCreditor().getAccountIdentifier()).getIban());
-        }
-        finTechSystemsPaymentRequest.setPurpose(payment.getRemittanceInformation().getValue());
-        finTechSystemsPaymentRequest.setSenderCountryId(market);
-        finTechSystemsPaymentRequest.setSenderBankCode(blz);
-        return finTechSystemsPaymentRequest;
+    private FinTechSystemsPaymentRequest buildCreatePaymentRequest(Payment payment) {
+        FinTechSystemsPaymentRequest request = new FinTechSystemsPaymentRequest();
+        request.setAmount(payment.getExactCurrencyAmount().getExactValue().toString());
+        request.setCurrencyId(payment.getExactCurrencyAmount().getCurrencyCode());
+        request.setRecipientHolder(payment.getCreditor().getName());
+        request.setRecipientIban(
+                payment.getCreditor().getAccountIdentifier(IbanIdentifier.class).getIban());
+        request.setPurpose(payment.getRemittanceInformation().getValue());
+        request.setSenderCountryId(market);
+        request.setSenderBankCode(blz);
+        return request;
     }
 
     public FinTechSystemsPayment fetchPaymentStatus(PaymentRequest paymentRequest) {
@@ -70,7 +65,7 @@ public class FinTecSystemsApiClient {
                 .get(FinTechSystemsPayment.class);
     }
 
-    public FinTechSystemsSession getSessionStatus(String transationId) {
+    public FinTechSystemsSession fetchSessionStatus(String transationId) {
         return createRequest(Urls.GET_SESSION_STATUS.parameter(TRANSACTION_ID, transationId))
                 .get(FinTechSystemsSession.class);
     }

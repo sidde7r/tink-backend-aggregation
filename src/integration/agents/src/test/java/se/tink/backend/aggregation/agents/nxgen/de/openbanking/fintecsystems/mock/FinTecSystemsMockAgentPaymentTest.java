@@ -2,13 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fintecsystems.mo
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.LastError.CLIENT_ABORTED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.LastError.PINNED_IBAN_NOT_FOUND;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationFailedByUserException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -66,9 +65,9 @@ public class FinTecSystemsMockAgentPaymentTest {
                         .withPayment(payment)
                         .buildWithoutLogin(PaymentCommand.class);
         // when //then
-        assertThatExceptionOfType(PaymentAuthorizationTimeOutException.class)
+        assertThatExceptionOfType(PaymentAuthorizationCancelledByUserException.class)
                 .isThrownBy(agentWireMockPaymentTest::executePayment)
-                .withMessage(CLIENT_ABORTED.getCode());
+                .withMessage(PaymentAuthorizationCancelledByUserException.MESSAGE);
     }
 
     @Test

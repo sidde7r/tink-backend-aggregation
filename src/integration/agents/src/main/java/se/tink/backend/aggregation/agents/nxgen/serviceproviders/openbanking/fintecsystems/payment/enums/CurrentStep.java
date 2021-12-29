@@ -23,7 +23,7 @@ public enum CurrentStep {
     WIZARD_PRE_LOGIN_STEP("WizardPreLoginStep"),
     UNKNOWN("Unknown");
 
-    private String step;
+    private final String step;
 
     public static CurrentStep fromString(String text) {
         return Arrays.stream(CurrentStep.values())

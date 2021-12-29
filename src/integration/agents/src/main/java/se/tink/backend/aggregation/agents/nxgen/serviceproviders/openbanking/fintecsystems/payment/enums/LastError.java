@@ -54,7 +54,7 @@ public enum LastError {
     WRONG_TAN("wrong_tan"),
     UNKNOWN("Unknown");
 
-    String code;
+    private final String code;
 
     public static LastError fromString(String text) {
         return Arrays.stream(LastError.values())

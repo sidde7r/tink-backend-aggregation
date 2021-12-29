@@ -20,12 +20,7 @@ public class FinTechSystemsPaymentResponse {
     String transaction;
 
     @JsonIgnore
-    public PaymentResponse toTinkPayment(
-            FinTechSystemsPaymentResponse finTechSystemsPaymentResponse) {
-        Payment.Builder tinkPayment = new Payment.Builder();
-        tinkPayment.withUniqueId(
-                finTechSystemsPaymentResponse.getTransaction()); // FTS Unique transaction Id
-
-        return new PaymentResponse(tinkPayment.build());
+    public PaymentResponse toTinkPaymentResponse() {
+        return new PaymentResponse(new Payment.Builder().withUniqueId(transaction).build());
     }
 }

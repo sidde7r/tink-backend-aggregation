@@ -12,7 +12,7 @@ public enum PaymentStatus {
     LOSS("LOSS"),
     UNKNOWN("Unknown");
 
-    private String status;
+    private final String status;
 
     public static PaymentStatus fromString(String text) {
         return Arrays.stream(PaymentStatus.values())

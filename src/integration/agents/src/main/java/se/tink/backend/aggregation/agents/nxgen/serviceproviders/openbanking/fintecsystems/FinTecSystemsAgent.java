@@ -29,8 +29,8 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
     protected AgentComponentProvider componentProvider;
     protected RandomValueGenerator randomValueGenerator;
     protected LocalDateTimeSource localDateTimeSource;
-    private FinTecSystemsConfiguration providerConfiguration;
-    private FinTecSystemsApiClient apiClient;
+    private final FinTecSystemsConfiguration providerConfiguration;
+    private final FinTecSystemsApiClient apiClient;
 
     @Inject
     FinTecSystemsAgent(AgentComponentProvider agentComponentProvider) {
@@ -93,17 +93,12 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-
         FinTechSystemsPaymentExecutor paymentExecutor =
                 new FinTechSystemsPaymentExecutor(
                         apiClient,
                         supplementalInformationHelper,
                         strongAuthenticationState,
-                        providerConfiguration,
-                        REDIRECT_URL); // after decision over FTS provider should have accessType OB
-        // or some thing else. Later Update code accordingly. Currently redirect URL is auto
-        // populated only  when provider is OB for  access type like OTHER auto population of
-        // redirect URL dont not work.
+                        REDIRECT_URL);
 
         return Optional.of(
                 new PaymentController(
