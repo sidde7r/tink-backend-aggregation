@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.CARD_STAMP_DATE_KEY;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
@@ -106,6 +108,7 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
                                                 accountName))
                                 .build())
                 .setApiIdentifier(getId())
+                .putInTemporaryStorage(CARD_STAMP_DATE_KEY, stampDate)
                 .build();
     }
 

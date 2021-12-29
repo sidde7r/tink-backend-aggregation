@@ -9,16 +9,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionsRequest {
     private UserEntity customer;
-    private String searchType;
+    private String searchText;
     private List<AccountContractsEntity> accountContracts;
-    private Boolean error;
+    private String orderField;
+    private String orderType;
     private FilterEntity filter;
 
     private TransactionsRequest(TransactionsRequestBuilder builder) {
         this.customer = builder.customer;
-        this.searchType = builder.searchType;
+        this.searchText = builder.searchText;
         this.accountContracts = builder.accountContracts;
-        this.error = builder.error;
+        this.orderField = builder.orderField;
+        this.orderType = builder.orderType;
         this.filter = builder.filter;
     }
 
@@ -28,9 +30,10 @@ public class TransactionsRequest {
 
     public static class TransactionsRequestBuilder {
         private UserEntity customer;
-        private String searchType;
+        private String searchText;
         private List<AccountContractsEntity> accountContracts;
-        private Boolean error;
+        private String orderField;
+        private String orderType;
         private FilterEntity filter;
 
         public TransactionsRequestBuilder withCustomer(UserEntity customer) {
@@ -38,8 +41,8 @@ public class TransactionsRequest {
             return this;
         }
 
-        public TransactionsRequestBuilder withSearchType(String searchType) {
-            this.searchType = searchType;
+        public TransactionsRequestBuilder withSearchText(String searchText) {
+            this.searchText = searchText;
             return this;
         }
 
@@ -49,8 +52,13 @@ public class TransactionsRequest {
             return this;
         }
 
-        public TransactionsRequestBuilder withError(Boolean error) {
-            this.error = error;
+        public TransactionsRequestBuilder withOrderField(String orderField) {
+            this.orderField = orderField;
+            return this;
+        }
+
+        public TransactionsRequestBuilder withOrderType(String orderType) {
+            this.orderType = orderType;
             return this;
         }
 

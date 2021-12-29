@@ -23,6 +23,11 @@ public class AmountEntity {
                         .getOrElse(jsonNode.asText(Defaults.CURRENCY));
     }
 
+    public AmountEntity() {
+        amount = BigDecimal.valueOf(0.0);
+        currency = Defaults.CURRENCY;
+    }
+
     @JsonIgnore
     public ExactCurrencyAmount toTinkAmount() {
         return ExactCurrencyAmount.of(amount, currency);

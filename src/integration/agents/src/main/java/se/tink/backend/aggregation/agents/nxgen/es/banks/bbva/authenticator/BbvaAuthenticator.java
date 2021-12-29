@@ -1,5 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ExtendedPeriod.NINETY_DAYS;
+
+import io.vavr.control.Option;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
@@ -12,11 +23,18 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -26,14 +44,19 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private final BbvaApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CredentialsRequest request;
+    private final TransactionPaginationHelper transactionPaginationHelper;
+
+    private List<TransactionalAccount> accounts = Collections.emptyList();
 
     public BbvaAuthenticator(
             BbvaApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            CredentialsRequest request) {
+            CredentialsRequest request,
+            TransactionPaginationHelper transactionPaginationHelper) {
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.request = request;
+        this.transactionPaginationHelper = transactionPaginationHelper;
     }
 
     @Override
@@ -49,6 +72,8 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
                 if (isTwoFactorAuthNeeded(authenticationState)) {
                     abortIfUserNotAvailableForInteraction();
                     loginWithOtp(loginResponse.getMultistepProcessId(), userCredentials);
+                } else if (isInExtendedPeriod()) {
+                    forcedOtpForExtendedPeriod();
                 }
             } catch (HttpResponseException ex) {
                 mapHttpErrors(ex);
@@ -75,7 +100,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     }
 
     private boolean isTwoFactorAuthNeeded(String authenticationState) {
-        return authenticationState.equalsIgnoreCase(AuthenticationStates.GO_ON);
+        return AuthenticationStates.GO_ON.equalsIgnoreCase(authenticationState);
     }
 
     private void abortIfUserNotAvailableForInteraction() {
@@ -114,5 +139,59 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
             }
         }
         throw e;
+    }
+
+    public boolean isInExtendedPeriod() {
+        AtomicBoolean inExtendedPeriod = new AtomicBoolean(false);
+        accounts = getAccounts();
+        apiClient.fetchUpdateTransactions(accounts);
+        List<TransactionalAccount> extendedPeriodAccounts =
+                accounts.stream()
+                        .filter(
+                                theAccount -> {
+                                    Optional<Date> dateLimit =
+                                            transactionPaginationHelper.getTransactionDateLimit(
+                                                    theAccount);
+                                    return !dateLimit.isPresent()
+                                            || isMoreThan90DaysOld(dateLimit.get());
+                                })
+                        .collect(Collectors.toList());
+        // one account is enough to set
+        extendedPeriodAccounts.stream().findFirst().ifPresent(it -> inExtendedPeriod.set(true));
+        return inExtendedPeriod.get();
+    }
+
+    public boolean isMoreThan90DaysOld(Date date) {
+        LocalDate nowMinus90days =
+                LocalDate.now(ZoneId.of(Defaults.TIMEZONE_CET)).minusDays(NINETY_DAYS);
+        LocalDate fromDate =
+                date.toInstant().atZone(ZoneId.of(Defaults.TIMEZONE_CET)).toLocalDate();
+        return fromDate.isAfter(nowMinus90days);
+    }
+
+    public List<TransactionalAccount> getAccounts() {
+        FinancialDashboardResponse dashboardResponse = apiClient.fetchFinancialDashboard();
+        return dashboardResponse
+                .getPositions()
+                .map(PositionEntity::getContract)
+                .map(ContractEntity::getAccount)
+                .filter(Option::isDefined)
+                .map(Option::get)
+                .filter(AccountEntity::isTransactionalAccount)
+                .filter(AccountEntity::hasBalance)
+                .map(
+                        accountEntity ->
+                                accountEntity.toTinkTransactionalAccount(Collections.emptyList()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    public void forcedOtpForExtendedPeriod() {
+        accounts.stream()
+                .findFirst()
+                .ifPresent(
+                        firstAccount ->
+                                apiClient.fetchAccountTransactionsToForceOtp(firstAccount, ""));
     }
 }

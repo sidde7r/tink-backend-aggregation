@@ -1,40 +1,7 @@
 REQUEST 1
-POST https://servicios.bbva.es/ASO/grantingTicketActions/V01/refreshGrantingTicket
-Accept: application/json,*/*
-Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
-
-RESPONSE 1
-403
-Content-Type: application/json; charset=UTF-8
-Expires: -1
-X-Frame-Options: sameorigin
-tsec: dummyTsec
-consumerrequestid: ***
-X-Content-Type-Options: nosniff
-ECS-Entry-Point-Zone: ***
-X-EdgeConnect-MidMile-RTT: ***
-X-EdgeConnect-Origin-MEX-Latency: ***
-Date: Mon, 27 Sep 2021 12:56:07 GMT
-Connection: close
-Vary: Accept-Encoding
-
-{
-  "version": 1,
-  "severity": "FATAL",
-  "http-status": 403,
-  "error-code": "50",
-  "error-message": "No se ha encontrado tsec en la petición",
-  "consumer-request-id": "c1b80c67-5bb7-4c2c-ac9f-ea299a271b77",
-  "system-error-code": "forbidden",
-  "system-error-description": "No se ha encontrado tsec en la petición",
-  "system-error-cause": "com.grupobbva.sl.soa.core.exception.ServiceArchitectureException"
-}
-
-REQUEST 2
 POST https://servicios.bbva.es/ASO/TechArchitecture/grantingTickets/V02
-Accept: application/json
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 Content-Type: application/json
 ConsumerID: 00000013
 BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
@@ -55,7 +22,7 @@ BBVA-User-Agent: 000000000000000000000000000000000000000000000000000000000000000
   }
 }
 
-RESPONSE 2 SET Checking
+RESPONSE 1 SET Checking
 200
 Content-Type: application/json; charset=UTF-8
 Expires: -1
@@ -91,15 +58,13 @@ Vary: Accept-Encoding
   }
 }
 
-REQUEST 3 MATCH Checking
+REQUEST 2 MATCH Checking
 GET https://servicios.bbva.es/ASO/financialDashBoard/V03?%2524customer.id=dummyUserId&%2524filter=%28showPending%3D%3Dtrue%29%3B%28hasSicav%3D%3Dfalse%29
-Accept: application/json
-Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 tsec: dummyTsec
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
 
-RESPONSE 3
+RESPONSE 2
 200
 Content-Type: application/json; charset=UTF-8
 tsec: dummyTsec
@@ -254,15 +219,13 @@ tsec: dummyTsec
   "hasMoreData": false
 }
 
-REQUEST 4
+REQUEST 3
 GET https://servicios.bbva.es/ASO/contracts/V01/ES01820020dummyIUCXXXXXXXXX/participants/
-Accept: application/json
-Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 tsec: dummyTsec
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
 
-RESPONSE 4 SET Credit
+RESPONSE 3 SET Credit
 200
 Content-Type: application/json; charset=UTF-8
 tsec: dummyTsec
@@ -310,13 +273,11 @@ tsec: dummyTsec
   "hasMoreData": "N"
 }
 
-REQUEST 5 MATCH Credit
+REQUEST 4 MATCH Credit
 GET https://servicios.bbva.es/ASO/financialDashBoard/V03?%2524customer.id=dummyUserId&%2524filter=%28showPending%3D%3Dtrue%29%3B%28hasSicav%3D%3Dfalse%29
-Accept: application/json
-Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 tsec: dummyTsec
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
 
 RESPONSE 5 SET Loans
 200
@@ -488,15 +449,13 @@ Set-Cookie: ***
   "hasMoreData": false
 }
 
-REQUEST 6 MATCH Loans
+REQUEST 5  MATCH Loans
 GET https://servicios.bbva.es/ASO/financialDashBoard/V03?%2524customer.id=dummyUserId&%2524filter=%28showPending%3D%3Dtrue%29%3B%28hasSicav%3D%3Dfalse%29
-Accept: application/json
-Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 tsec: dummyTsec
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
 
-RESPONSE 6 SET Investments
+RESPONSE 5 SET Investments
 200
 Content-Type: application/json; charset=UTF-8
 Expires: -1
@@ -666,13 +625,11 @@ Set-Cookie: ***
   "hasMoreData": false
 }
 
-REQUEST 7 MATCH Investments
+REQUEST 6 MATCH Investments
 GET https://servicios.bbva.es/ASO/financialDashBoard/V03?%2524customer.id=dummyUserId&%2524filter=%28showPending%3D%3Dtrue%29%3B%28hasSicav%3D%3Dfalse%29
-Accept: application/json
-Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 tsec: dummyTsec
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
 
 RESPONSE 7
 200
@@ -844,15 +801,13 @@ Set-Cookie: ***
   "hasMoreData": false
 }
 
-REQUEST 8
+REQUEST 7
 GET https://servicios.bbva.es/ASO/contracts/V01/ES01820020dummyIUCXXXXXXXXX/inForceConditions
-Accept: application/json
-Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 tsec: dummyTsec
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
 
-RESPONSE 8
+RESPONSE 7
 200
 Content-Type: application/json; charset=UTF-8
 Expires: -1
@@ -1109,13 +1064,12 @@ Set-Cookie: ***
   }
 }
 
-REQUEST 9
-POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=0&pageSize=40
-Accept: application/json
+REQUEST 8
+POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=0&pageSize=500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
 tsec: dummyTsec
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
 authenticationtype: 05
 
 {
@@ -1147,7 +1101,7 @@ authenticationtype: 05
   }
 }
 
-RESPONSE 9 SET Exception
+RESPONSE 8 SET Exception
 401
 Content-Type: application/json; charset=UTF-8
 Expires: -1
@@ -1181,13 +1135,12 @@ Set-Cookie: ***
   "system-error-description": "Acceso denegado, cambio de estado progresando."
 }
 
-REQUEST 10 MATCH Exception
+REQUEST 9 MATCH Exception
 POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=0&pageSize=40
-Accept: application/json
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+Accept: */*
 Content-Type: application/json
-Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
 tsec: dummyTsec
-BBVA-User-Agent: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi
 authenticationtype: 05
 authenticationstate: dummyAuthState
 authenticationdata: dummyAuthData=13371337
@@ -1356,7 +1309,7 @@ Set-Cookie: ***
 
 REQUEST 11 MATCH Page1
 POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=%257B%2522search_after%2522%253A%255B20200817%252C200817%252C151836%252C%2522200817151836872692%2522%255D%252C%2522currentBalancesPerIuc%2522%253A%257B%2522dummyIUC%2522%253A%257B%2522currentBalance%2522%253A%257B%2522currency%2522%253A%2522EUR%2522%252C%2522amount%2522%253A104.45%252C%2522type%2522%253A%2522NMC%2522%257D%252C%2522type%2522%253A%2522NMC%2522%257D%257D%252C%2522returnedRecords%2522%253A40%257D&pageSize=40
-Accept: application/json
+Accept: */*
 Content-Type: application/json
 Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
 tsec: dummyTsec
@@ -2543,7 +2496,7 @@ Set-Cookie: ***
 
 REQUEST 12 MATCH Page2
 POST https://servicios.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=%257B%2522search_after%2522%253A%255B20190417%252C190416%252C190135%252C%2522190416190135233285%2522%255D%252C%2522currentBalancesPerIuc%2522%253A%257B%2522dummyIUC%2522%253A%257B%2522currentBalance%2522%253A%257B%2522currency%2522%253A%2522EUR%2522%252C%2522amount%2522%253A22.45%252C%2522type%2522%253A%2522NMC%2522%257D%252C%2522type%2522%253A%2522NMC%2522%257D%257D%252C%2522returnedRecords%2522%253A80%257D&pageSize=40
-Accept: application/json
+Accept: */*
 Content-Type: application/json
 Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
 tsec: dummyTsec
@@ -3791,7 +3744,7 @@ Set-Cookie: ***
 
 REQUEST 13
 GET https://servicios.bbva.es/ASO/contextualData/V02/dummyUserId
-Accept: application/json
+Accept: */*
 Content-Type: application/json
 Referer: https://movil.bbva.es/versions/woody/9.0.7/index.html
 tsec: dummyTsec

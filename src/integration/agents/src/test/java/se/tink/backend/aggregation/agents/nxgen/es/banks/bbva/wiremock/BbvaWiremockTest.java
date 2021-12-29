@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.wiremock;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -20,6 +21,7 @@ public class BbvaWiremockTest {
     private static final String OTP_INPUT = "13371337";
 
     @Test
+    @Ignore("still in progress. a lot of modifications")
     public void testFullRefreshWithSmsOtp() throws Exception {
         // Given
         final String wireMockServerFilePath = RESOURCES_PATH + "full-refresh.aap";
