@@ -20,7 +20,7 @@ import se.tink.libraries.queue.QueueProducer;
 public class SqsConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(SqsConsumer.class);
-    private static final int WAIT_TIME_SECONDS = 2;
+    private static final int WAIT_TIME_SECONDS = 1;
     private static final int MAX_NUMBER_OF_MESSAGES = 1;
     private static final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
 
