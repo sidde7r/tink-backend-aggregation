@@ -126,9 +126,14 @@ public class SqsQueueModule extends AbstractModule {
     SqsConsumer provideRegularSqsConsumer(
             @Named("regularSqsQueue") SqsQueue regularSqsQueue,
             @Named("regularQueueProducer") QueueProducer regularQueueProducer,
-            QueueMessageAction queueMessageAction) {
+            QueueMessageAction queueMessageAction,
+            MetricRegistry metricRegistry) {
         return new SqsConsumer(
-                regularSqsQueue, regularQueueProducer, queueMessageAction, "Regular");
+                regularSqsQueue,
+                regularQueueProducer,
+                queueMessageAction,
+                metricRegistry,
+                "Regular");
     }
 
     @Provides
@@ -137,11 +142,16 @@ public class SqsQueueModule extends AbstractModule {
     SqsConsumer providePrioritySqsConsumer(
             @Named("prioritySqsQueue") SqsQueue prioritySqsQueue,
             @Named("priorityRetryQueueProducer") QueueProducer priorityRetryQueueProducer,
-            QueueMessageAction queueMessageAction) {
+            QueueMessageAction queueMessageAction,
+            MetricRegistry metricRegistry) {
         // PrioritySqsConsumer will read from prioritySqsQueue but will requeue requests
         // using priorityRetryQueueProducer (so requeue to the priorityRetrySqsQueue)
         return new SqsConsumer(
-                prioritySqsQueue, priorityRetryQueueProducer, queueMessageAction, "Priority");
+                prioritySqsQueue,
+                priorityRetryQueueProducer,
+                queueMessageAction,
+                metricRegistry,
+                "Priority");
     }
 
     @Provides
@@ -150,11 +160,13 @@ public class SqsQueueModule extends AbstractModule {
     SqsConsumer providePriorityRetrySqsConsumer(
             @Named("priorityRetrySqsQueue") SqsQueue priorityRetrySqsQueue,
             @Named("priorityRetryQueueProducer") QueueProducer priorityRetryQueueProducer,
-            QueueMessageAction queueMessageAction) {
+            QueueMessageAction queueMessageAction,
+            MetricRegistry metricRegistry) {
         return new SqsConsumer(
                 priorityRetrySqsQueue,
                 priorityRetryQueueProducer,
                 queueMessageAction,
+                metricRegistry,
                 "PriorityRetry");
     }
 }

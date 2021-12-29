@@ -6,6 +6,9 @@ junit_test(
     visibility = ["//src/libraries/queue_sqs:__subpackages__"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/libraries/metrics:core",
+        "//src/libraries/metrics:histograms",
+        "//src/libraries/metrics:registry",
         "//src/libraries/queue_lib",
         "//src/libraries/queue_sqs",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
