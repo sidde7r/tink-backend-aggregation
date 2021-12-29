@@ -36,26 +36,21 @@ grafanaMarketLink: https://grafana.global-production.tink.network/d/000000078/in
 # [NZG-409] Jan S:
 # Trying to declutter repetitious form of recording rules expression for DE market,
 # by defining time series filtering right here. Might be refactored further in near future.
-de:
-  query:
-    loginManual:
-      all: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual"}
-      failed: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed"}
-      unavailable: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="unavailable"}
-      tinkInfrFailed: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed_due_to_tink_infrastructure"}
-      cancelled: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}
-    loginAuto:
-      all: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron"}
-      failed: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="failed"}
-      unavailable: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="unavailable"}
-      tinkInfrFailed: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="failed_due_to_tink_infrastructure"}
-      cancelled: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}
-    payment:
-      all: tink_agent_transfer_total{ provider_type!="test", market="DE"}
-      failed: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="failed"}
-      unavailable: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="unavailable"}
-      cancelled: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="cancelled"}
-    refresh:
-      all: tink_agent_refresh_total{ provider_type!="test", market="DE"}
-      failed: tink_agent_refresh_total{ provider_type!="test", market="DE", outcome=~"failed|partially_completed"}
-      unavailable: tink_agent_refresh_total{ provider_type!="test", market="DE", outcome="unavailable"}
+deQueryLoginAll: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-manual|login-auto|login-cron"}
+deQueryLoginManualAll: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual"}
+deQueryLoginManualFailed: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed"}
+deQueryLoginManualUnavailable: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="unavailable"}
+deQueryLoginManualTinkInfrFailed: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome="failed_due_to_tink_infrastructure"}
+deQueryLoginManualCancelled: tink_agent_login_total{ provider_type!="test", market="DE", action="login-manual", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}
+deQueryLoginAutoAll: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron"}
+deQueryLoginAutoFailed: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="failed"}
+deQueryLoginAutoUnavailable: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="unavailable"}
+deQueryLoginAutoTinkInfrFailed: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome="failed_due_to_tink_infrastructure"}
+deQueryLoginAutoCancelled: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-auto|login-cron", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"}
+deQueryPaymentAll: tink_agent_transfer_total{ provider_type!="test", market="DE"}
+deQueryPaymentFailed: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="failed"}
+deQueryPaymentUnavailable: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="unavailable"}
+deQueryPaymentCancelled: tink_agent_transfer_total{ provider_type!="test", market="DE", outcome="cancelled"}
+deQueryRefreshAll: tink_agent_refresh_total{ provider_type!="test", market="DE"}
+deQueryRefreshFailed: tink_agent_refresh_total{ provider_type!="test", market="DE", outcome=~"failed|partially_completed"}
+deQueryRefreshUnavailable: tink_agent_refresh_total{ provider_type!="test", market="DE", outcome="unavailable"}
