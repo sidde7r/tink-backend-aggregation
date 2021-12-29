@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeBperRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeUnknownResourceRetryFilter;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -38,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ForbiddenRetryFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payloadparser.PayloadParser;
@@ -95,7 +95,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
     private void applyFilters(TinkHttpClient client) {
         client.addFilter(
-                new ForbiddenRetryFilter(
+                new CbiGlobeUnknownResourceRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new AccessExceededFilter());
         client.addFilter(new BadGatewayFilter());
