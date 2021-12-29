@@ -536,6 +536,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
         updateCredentialsStatusRequest.setRequestType(request.getType());
         updateCredentialsStatusRequest.setOperationId(request.getOperationId());
+        updateCredentialsStatusRequest.setConsentId(request.getConsentId());
+
         logger.info(
                 "refreshId: {} - Incoming RequestType is {}, outgoing {}",
                 refreshId.orElse("null"),
@@ -633,6 +635,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
         updateCredentialsStatusRequest.setRequestType(request.getType());
         updateCredentialsStatusRequest.setOperationId(request.getOperationId());
+        updateCredentialsStatusRequest.setConsentId(request.getConsentId());
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
         updateCredentialsStatusRequest.setDetailedError(error);
 

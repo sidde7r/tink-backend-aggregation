@@ -84,6 +84,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         updateCredentialsStatusRequest.setRequestType(context.getRequest().getType());
         updateCredentialsStatusRequest.setOperationId(context.getRequest().getOperationId());
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
+        updateCredentialsStatusRequest.setConsentId(context.getRequest().getConsentId());
 
         ConnectivityError error =
                 ConnectivityErrorFactory.providerError(ProviderErrors.PROVIDER_UNAVAILABLE);

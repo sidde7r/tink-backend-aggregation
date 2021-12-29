@@ -88,9 +88,9 @@ public class ControllerWrapper {
     }
 
     public Response updateCredentialSensitive(
-            Credentials credentials, String sensitiveData, String operationId) {
+            Credentials credentials, String sensitiveData, String operationId, String consentId) {
         return client.updateCredentialSensitive(
-                configuration, credentials, sensitiveData, operationId);
+                configuration, credentials, sensitiveData, operationId, consentId);
     }
 
     public Response updateSupplementalInformation(

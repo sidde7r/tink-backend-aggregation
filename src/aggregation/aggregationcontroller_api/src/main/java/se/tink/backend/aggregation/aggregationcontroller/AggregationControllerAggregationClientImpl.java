@@ -240,13 +240,15 @@ public class AggregationControllerAggregationClientImpl
             HostConfiguration hostConfiguration,
             Credentials credentials,
             String sensitiveData,
-            String operationId) {
+            String operationId,
+            String consentId) {
         UpdateCredentialsSensitiveRequest request =
                 new UpdateCredentialsSensitiveRequest()
                         .setUserId(credentials.getUserId())
                         .setCredentialsId(credentials.getId())
                         .setSensitiveData(sensitiveData)
-                        .setOperationId(operationId);
+                        .setOperationId(operationId)
+                        .setConsentId(consentId);
 
         return requestExecuter(
                 () -> getCredentialsService(hostConfiguration).updateSensitive(request),

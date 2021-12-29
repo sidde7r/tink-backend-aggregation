@@ -22,6 +22,7 @@ public class UpdateCredentialsStatusRequest implements SafelyLoggable {
     private CredentialsRequestType requestType;
     private String operationId;
     private ConnectivityError detailedError;
+    private String consentId;
 
     public boolean isManual() {
         return isManual;
@@ -113,6 +114,14 @@ public class UpdateCredentialsStatusRequest implements SafelyLoggable {
         ConnectivityError.Builder builder = ConnectivityError.newBuilder();
         JsonFormat.parser().ignoringUnknownFields().merge(json, builder);
         detailedError = builder.build();
+    }
+
+    public void setConsentId(String consentId) {
+        this.consentId = consentId;
+    }
+
+    public String getConsentId() {
+        return consentId;
     }
 
     @Override

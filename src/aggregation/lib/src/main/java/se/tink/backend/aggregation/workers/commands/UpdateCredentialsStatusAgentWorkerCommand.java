@@ -89,6 +89,7 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
         updateCredentialsStatusRequest.setRequestType(context.getRequest().getType());
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
         updateCredentialsStatusRequest.setOperationId(context.getRequest().getOperationId());
+        updateCredentialsStatusRequest.setConsentId(context.getRequest().getConsentId());
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
