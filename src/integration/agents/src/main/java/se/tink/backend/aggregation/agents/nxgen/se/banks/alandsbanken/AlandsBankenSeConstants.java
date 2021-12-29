@@ -7,5 +7,5 @@ public class AlandsBankenSeConstants {
                 "https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/";
     }
 
-    public static final String APP_VERSION = "1.9.0-iOS";
+    public static final String APP_VERSION = "2.12.0-iOS";
 }
