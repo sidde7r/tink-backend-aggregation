@@ -26,3 +26,4 @@ ignoredAgentsForInitialisationTest:
   - nxgen.se.openbanking.swedbank.SwedbankAgent
   - nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent
   - nxgen.ie.openbanking.ulster.UlsterRepublicOfIrelandCorporateAgent
+  - nxgen.se.openbanking.norwegian.NorwegianSEAgent

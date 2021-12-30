@@ -83,6 +83,7 @@ public class SupplementalInformationDemander implements SupplementalInformationR
         suppInfoRequest.setUserId(credentials.getUserId());
         suppInfoRequest.setRequestType(request.getType());
         suppInfoRequest.setOperationId(request.getOperationId());
+        suppInfoRequest.setConsentId(request.getConsentId());
         suppInfoRequest.setManual(request.isManual());
         suppInfoRequest.setRefreshId(refreshId);
 

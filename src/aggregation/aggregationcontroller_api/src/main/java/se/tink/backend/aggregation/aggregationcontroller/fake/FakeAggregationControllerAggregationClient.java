@@ -154,7 +154,8 @@ public class FakeAggregationControllerAggregationClient
             HostConfiguration hostConfiguration,
             Credentials credentials,
             String sensitiveData,
-            String operationId) {
+            String operationId,
+            String consentId) {
         callFakeAggregationControllerForSendingData("updateCredentialSensitive", credentials);
         callFakeAggregationControllerForSendingData(
                 "updateCredentialSensitiveString", sensitiveData);

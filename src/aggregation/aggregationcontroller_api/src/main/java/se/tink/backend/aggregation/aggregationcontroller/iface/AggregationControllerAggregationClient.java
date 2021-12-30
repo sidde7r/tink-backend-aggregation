@@ -51,7 +51,8 @@ public interface AggregationControllerAggregationClient {
             HostConfiguration hostConfiguration,
             Credentials credentials,
             String sensitiveData,
-            String operationId);
+            String operationId,
+            String consentId);
 
     Response updateCredentialSupplementalInformation(
             HostConfiguration hostConfiguration,

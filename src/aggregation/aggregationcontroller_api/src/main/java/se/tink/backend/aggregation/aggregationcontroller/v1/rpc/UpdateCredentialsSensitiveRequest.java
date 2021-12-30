@@ -11,6 +11,7 @@ public class UpdateCredentialsSensitiveRequest implements SafelyLoggable {
     private String credentialsId;
     private String sensitiveData;
     private String operationId;
+    private String consentId;
 
     public String getUserId() {
         return userId;
@@ -57,5 +58,14 @@ public class UpdateCredentialsSensitiveRequest implements SafelyLoggable {
                 .add("sensitiveData", sensitiveData)
                 .add("operationId", operationId)
                 .toString();
+    }
+
+    public UpdateCredentialsSensitiveRequest setConsentId(String consentId) {
+        this.consentId = consentId;
+        return this;
+    }
+
+    public String getConsentId() {
+        return consentId;
     }
 }

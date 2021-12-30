@@ -243,7 +243,8 @@ public class CredentialsCrypto {
             controllerWrapper.updateCredentialSensitive(
                     request.getCredentials(),
                     serializedEncryptedCredentials,
-                    request.getOperationId());
+                    request.getOperationId(),
+                    request.getConsentId());
             logger.info("sensitive data saved in database");
         }
 
