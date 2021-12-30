@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledExc
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.LastError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.PaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPayment;
@@ -30,10 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -45,22 +43,32 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @RequiredArgsConstructor
 @Slf4j
-public class FinTechSystemsPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
     private final FinTecSystemsApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private final String redirectUrl;
+    private final FinTecSystemsStorage storage;
     SessionStatusRetryer sessionStatusRetryer = new SessionStatusRetryer();
 
     private static final long WAIT_FOR_MINUTES = 3L;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        validateThatCredentialDidNotSucceedWithPaymentAlready();
+
         FinTechSystemsPaymentResponse finTechSystemsPaymentResponse =
                 apiClient.createPayment(paymentRequest);
         URL wizardUrl = buildWizardUrl(finTechSystemsPaymentResponse.getWizardSessionKey());
         handleRedirect(wizardUrl);
         return finTechSystemsPaymentResponse.toTinkPaymentResponse();
+    }
+
+    private void validateThatCredentialDidNotSucceedWithPaymentAlready() {
+        if (storage.retrieveTransactionId().isPresent()) {
+            throw new IllegalStateException(
+                    "There was a successful payment on this credential already! FTS agent does not support multiple payments on the same credential due to account-check part.");
+        }
     }
 
     private void handleRedirect(URL wizardUrl) {
@@ -100,13 +108,19 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
         switch (PaymentStatus.fromString(paymentResponse.getPaymentStatus())) {
             case NONE:
             case RECEIVED:
-                return updatePaymentStatus(paymentMultiStepRequest, SIGNED);
+                paymentMultiStepRequest.getPayment().setStatus(SIGNED);
+                break;
             default:
                 log.error(
                         "Unknow status received from Fintech Systems={}",
                         paymentResponse.getPaymentStatus());
                 throw new PaymentCancelledException();
         }
+
+        storage.storeTransactionId(paymentResponse.getTransaction());
+
+        return new PaymentMultiStepResponse(
+                paymentMultiStepRequest.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private PaymentException getPaymentExceptionFromFtsErrorMessage(String lastError) {
@@ -158,15 +172,6 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
         }
     }
 
-    private PaymentMultiStepResponse updatePaymentStatus(
-            PaymentMultiStepRequest paymentMultiStepRequest,
-            se.tink.libraries.payment.enums.PaymentStatus signed) {
-        // If no error update payment status as signed
-        paymentMultiStepRequest.getPayment().setStatus(signed);
-        return new PaymentMultiStepResponse(
-                paymentMultiStepRequest.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
-    }
-
     private FinTechSystemsSession pollSessionUntilSessionIsFinished(
             PaymentMultiStepRequest paymentMultiStepRequest) {
         FinTechSystemsSession sessionsResponse;
@@ -184,13 +189,6 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        return apiClient
-                .fetchPaymentStatus(paymentRequest)
-                .toTinkPayment(paymentRequest.getPayment());
-    }
-
-    @Override
     public CreateBeneficiaryMultiStepResponse createBeneficiary(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
         throw new NotImplementedException(
@@ -201,11 +199,5 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
         throw new NotImplementedException(
                 "Cancel not implemented for " + this.getClass().getName());
-    }
-
-    @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        throw new NotImplementedException(
-                "fetchMultiple not implemented for " + this.getClass().getName());
     }
 }

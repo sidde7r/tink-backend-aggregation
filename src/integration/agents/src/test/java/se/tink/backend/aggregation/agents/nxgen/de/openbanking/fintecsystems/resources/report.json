@@ -1,0 +1,13 @@
+{
+    "base_data": {
+        "holder": "MUSTERMANN, HARTMUT",
+        "iban": "DE62888888880012345678",
+        "bic": "TESTDE88XXX",
+        "bank_code": "88888888",
+        "bank_name": "Testbank",
+        "country_id": "DE",
+        "date": "2021-12-30",
+        "joint_account": "0",
+        "account_type": "giro"
+    }
+}

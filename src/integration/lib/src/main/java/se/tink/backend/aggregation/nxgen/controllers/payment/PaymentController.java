@@ -12,7 +12,13 @@ public class PaymentController {
     private final PaymentControllerAgentExceptionMapper exceptionHandler;
 
     public PaymentController(PaymentExecutor paymentExecutor) {
-        this(paymentExecutor, null);
+        this(paymentExecutor, null, new PaymentControllerOldExceptionMapper());
+    }
+
+    public PaymentController(
+            PaymentExecutor paymentExecutor,
+            PaymentControllerAgentExceptionMapper exceptionHandler) {
+        this(paymentExecutor, null, exceptionHandler);
     }
 
     public PaymentController(
