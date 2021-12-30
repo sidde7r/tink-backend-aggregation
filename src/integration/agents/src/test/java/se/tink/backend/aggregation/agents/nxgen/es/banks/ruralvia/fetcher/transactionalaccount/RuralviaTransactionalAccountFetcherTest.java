@@ -147,4 +147,38 @@ public class RuralviaTransactionalAccountFetcherTest {
                 .balance("100,00")
                 .build();
     }
+
+    @Test
+    public void getTransactionsForShouldNotPaginateIfAdditionalAuthenticationNeeded()
+            throws IOException, ParseException {
+        // given
+
+        given(apiClient.getGlobalPositionHtml()).willReturn(htmlGlobalPosition);
+        given(apiClient.navigateAccountTransactionFirstRequest(any(), any()))
+                .willReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(
+                                                TEST_DATA_PATH, "accountsLastTransactions.html"))));
+        given(apiClient.navigateAccountTransactionsBetweenDates(any(), any()))
+                .willReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(
+                                                TEST_DATA_PATH,
+                                                "transactionsPaginationScaNeeded.html"))));
+        given(apiClient.createBodyFormRequest(any(), any())).willReturn(mock(RequestBuilder.class));
+
+        accountFetcher.fetchAccounts();
+
+        // when
+        TransactionKeyPaginatorResponse<String> paginatorResponse =
+                accountFetcher.getTransactionsFor(
+                        mockedAccount().toTinkAccount().get(),
+                        formatter.parse("29-04-2021"),
+                        formatter.parse("28-01-2021"));
+
+        // then
+        assertTrue(paginatorResponse.getTinkTransactions().size() == 0);
+    }
 }
