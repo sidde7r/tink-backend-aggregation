@@ -10,6 +10,7 @@ public enum CacheScope {
     PROVIDER_SESSION_BY_APPID_AND_FINANCIALINSTITUTIONID(
             "provider-session-by-appId-and-financialInstitutionId:"),
     ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID("encryptedCredentials:"),
+    CONSENTID_BY_CREDENTIALSID("consent-id-by-credentials-id:"),
     FRAUD_DETAILS_BY_USERID("fraud-details-content-by-userId:"),
     CREDENTIALS_KEEP_ALIVE_BY_CREDENTIALSID("keepAliveCredentials:"),
     ACTIVITIES_TIMESTAMP_BY_USERID("/userState/activitiesTimestamp/"),
