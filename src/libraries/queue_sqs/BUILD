@@ -26,6 +26,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

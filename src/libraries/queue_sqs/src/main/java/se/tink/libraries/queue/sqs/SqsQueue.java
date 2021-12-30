@@ -16,20 +16,19 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.sqs.auth.RetryableInstanceProfileCredentialsProvider;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
+@Slf4j
 public class SqsQueue {
     private static final int[] BASE_2_ARRAY = {1, 2, 4, 8, 16, 32, 64};
     private static final int MINIMUM_SLEEP_TIME_IN_MILLISECONDS = 500;
     private static final String EVENT_LABEL = "event";
     private final boolean isAvailable;
     private final String url;
-    private final Logger logger = LoggerFactory.getLogger(SqsQueue.class);
     private static final String LOCAL_REGION = "local";
     private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
     private final String name;
@@ -48,7 +47,7 @@ public class SqsQueue {
             this.isAvailable = false;
             this.url = "";
             this.sqs = null;
-            logger.info(
+            log.info(
                     "Improper sqs configuration - name: {}, enabled: {}, url: {}, region: {}",
                     configuration.getQueueName(),
                     configuration.isEnabled(),
@@ -68,7 +67,7 @@ public class SqsQueue {
                                         configuration.getUrl(), configuration.getRegion()));
 
         if (validLocalConfiguration(configuration)) {
-            logger.info("We have a valid local configuration for fetching AWS credentials");
+            log.info("We have a valid local configuration for fetching AWS credentials");
             createRequest.withQueueName(configuration.getQueueName());
 
             final AWSCredentialsProvider staticCredentialsProvider =
@@ -82,7 +81,7 @@ public class SqsQueue {
                             createRequest, amazonSQSClientBuilder, staticCredentialsProvider);
             this.url = getQueueUrl(configuration.getQueueName());
         } else {
-            logger.info("We don't have a valid local configuration for fetching AWS credentials");
+            log.info("We don't have a valid local configuration for fetching AWS credentials");
             final AWSCredentialsProvider instanceCredentialsProvider =
                     RetryableInstanceProfileCredentialsProvider.createAsyncRefreshingProvider(true);
 
@@ -91,7 +90,7 @@ public class SqsQueue {
                     isQueueCreated(
                             createRequest, amazonSQSClientBuilder, instanceCredentialsProvider);
         }
-        logger.info("Queue is available: {}", this.isAvailable);
+        log.info("Queue is available: {}", this.isAvailable);
     }
 
     private String getQueueUrl(String name) {
@@ -100,7 +99,7 @@ public class SqsQueue {
             GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
             return getQueueUrlResult.getQueueUrl();
         } catch (AmazonSQSException e) {
-            logger.warn("Queue configurations invalid", e);
+            log.warn("Queue configurations invalid", e);
             return "";
         }
     }
@@ -122,13 +121,13 @@ public class SqsQueue {
                 return true;
             } catch (AmazonSQSException e) {
                 if (!e.getErrorCode().equals("QueueAlreadyExists")) {
-                    logger.warn("Queue already exists.", e);
+                    log.warn("Queue already exists.", e);
                 }
                 return true;
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
                 long backoffTime = calculateBackoffTime();
-                logger.warn(
+                log.warn(
                         "No SQS with the current configurations is available, sleeping {} ms and then retrying.",
                         backoffTime,
                         e);

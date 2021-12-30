@@ -1,0 +1,14 @@
+regularSqsConsumerConfiguration:
+  waitTimeSecond: 1 # use long polling
+  maxNumberOfMessages: 1
+  visibilityTimeoutSeconds: 300
+
+prioritySqsConsumerConfiguration:
+  waitTimeSecond: 0 # use short polling
+  maxNumberOfMessages: 1
+  visibilityTimeoutSeconds: 300
+
+priorityRetrySqsConsumerConfiguration:
+  waitTimeSecond: 0 # use short polling
+  maxNumberOfMessages: 1
+  visibilityTimeoutSeconds: 300

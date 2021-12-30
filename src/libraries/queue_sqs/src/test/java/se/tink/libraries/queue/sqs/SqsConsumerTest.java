@@ -23,6 +23,7 @@ import org.junit.Test;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.histograms.Histogram;
 import se.tink.libraries.queue.QueueProducer;
+import se.tink.libraries.queue.sqs.configuration.SqsConsumerConfiguration;
 
 public class SqsConsumerTest {
     private static final Message MESSAGE = getMessage();
@@ -47,7 +48,7 @@ public class SqsConsumerTest {
     }
 
     @Test
-    public void shouldConsumeIfMessagesAreAvailable() throws IOException {
+    public void shouldConsumeIfMessagesAreAvailable() {
         when(receiveMessageResult.getMessages()).thenReturn(Collections.singletonList(MESSAGE));
         when(amazonSQS.receiveMessage(any(ReceiveMessageRequest.class)))
                 .thenReturn(receiveMessageResult);
@@ -59,6 +60,7 @@ public class SqsConsumerTest {
                                 queueProducer,
                                 queueMessageAction,
                                 metricRegistry,
+                                new SqsConsumerConfiguration(),
                                 "Regular"));
 
         // when
@@ -71,7 +73,7 @@ public class SqsConsumerTest {
     }
 
     @Test
-    public void shouldNotConsumeIfNoMessages() throws IOException {
+    public void shouldNotConsumeIfNoMessages() {
         when(receiveMessageResult.getMessages()).thenReturn(Collections.emptyList());
         when(amazonSQS.receiveMessage(any(ReceiveMessageRequest.class)))
                 .thenReturn(receiveMessageResult);
@@ -82,6 +84,7 @@ public class SqsConsumerTest {
                                 queueProducer,
                                 queueMessageAction,
                                 metricRegistry,
+                                new SqsConsumerConfiguration(),
                                 "Regular"));
 
         // when
@@ -105,6 +108,7 @@ public class SqsConsumerTest {
                                 queueProducer,
                                 queueMessageAction,
                                 metricRegistry,
+                                new SqsConsumerConfiguration(),
                                 "Regular"));
 
         // when
@@ -115,7 +119,7 @@ public class SqsConsumerTest {
     }
 
     @Test
-    public void shouldNotBeReadyIfSqsQueueIsNotReady() throws IOException {
+    public void shouldNotBeReadyIfSqsQueueIsNotReady() {
         when(sqsQueue.isAvailable()).thenReturn(false);
 
         SqsConsumer sqsConsumer =
@@ -125,6 +129,7 @@ public class SqsConsumerTest {
                                 queueProducer,
                                 queueMessageAction,
                                 metricRegistry,
+                                new SqsConsumerConfiguration(),
                                 "Regular"));
 
         // when
@@ -135,7 +140,7 @@ public class SqsConsumerTest {
     }
 
     @Test
-    public void shouldBeReadyIfSqsQueueIsReady() throws IOException {
+    public void shouldBeReadyIfSqsQueueIsReady() {
         when(sqsQueue.isAvailable()).thenReturn(true);
 
         SqsConsumer sqsConsumer =
@@ -145,6 +150,7 @@ public class SqsConsumerTest {
                                 queueProducer,
                                 queueMessageAction,
                                 metricRegistry,
+                                new SqsConsumerConfiguration(),
                                 "Regular"));
 
         // when
