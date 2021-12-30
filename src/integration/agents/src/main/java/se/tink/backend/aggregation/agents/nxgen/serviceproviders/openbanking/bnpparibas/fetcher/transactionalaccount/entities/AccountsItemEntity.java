@@ -199,6 +199,12 @@ public class AccountsItemEntity {
     }
 
     public boolean isCheckingAccount() {
-        return CashAccountType.CACC == cashAccountType;
+        final boolean isChecking = CashAccountType.CACC == cashAccountType;
+        if (!isChecking) {
+            log.info(
+                    "CashAccountType other than CACC. Current value: {}",
+                    cashAccountType.toString());
+        }
+        return isChecking;
     }
 }
