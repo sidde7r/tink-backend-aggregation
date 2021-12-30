@@ -33,12 +33,7 @@ public class CreditCardAccountBuilder extends AccountBuilder<CreditCardAccount, 
 
     @Override
     public CreditCardAccount build() {
-        return new CreditCardAccount(
-                this, cardModule.getBalance(), cardModule.getAvailableCredit());
-    }
-
-    CreditCardModule getCardModule() {
-        return cardModule;
+        return new CreditCardAccount(this, cardModule);
     }
 
     @Override

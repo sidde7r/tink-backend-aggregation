@@ -17,15 +17,10 @@ public class CreditCardAccount extends Account {
         super(builder);
     }
 
-    CreditCardAccount(
-            CreditCardAccountBuilder builder,
-            ExactCurrencyAmount balance,
-            ExactCurrencyAmount availableCredit) {
-        super(builder, balance, availableCredit);
-        this.cardModule = builder.getCardModule();
-        if (Objects.nonNull(builder.getCardModule())) {
-            this.granularAccountBalances = builder.getCardModule().getGranularAccountBalances();
-        }
+    CreditCardAccount(CreditCardAccountBuilder builder, CreditCardModule cardModule) {
+        super(builder, cardModule.getBalance(), cardModule.getAvailableCredit());
+        this.cardModule = cardModule;
+        this.granularAccountBalances = cardModule.getGranularAccountBalances();
     }
 
     public static CreditCardDetailsStep<CreditCardBuildStep> nxBuilder() {
