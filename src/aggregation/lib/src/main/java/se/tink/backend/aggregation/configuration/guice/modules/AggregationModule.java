@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentA
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationTimeOutExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentCancelledExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentPendingExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentRejectedExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
@@ -153,6 +154,7 @@ public class AggregationModule extends AbstractModule {
         actionBinder.addBinding().to(PaymentAuthorizationTimeOutExceptionHandler.class);
         actionBinder.addBinding().to(PaymentCancelledExceptionHandler.class);
         actionBinder.addBinding().to(PaymentExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentPendingExceptionHandler.class);
         actionBinder.addBinding().to(PaymentRejectedExceptionHandler.class);
         actionBinder.addBinding().to(PaymentValidationExceptionHandler.class);
         actionBinder.addBinding().to(ReferenceValidationExceptionHandler.class);
