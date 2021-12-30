@@ -728,25 +728,6 @@ java_library(
 )
 
 java_library(
-    name = "io_grpc_grpc_protobuf",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_code_gson_gson//jar",
-        "@com_google_guava_guava//jar",
-        "@com_google_protobuf_protobuf_java//jar",
-        "@com_google_protobuf_protobuf_java_util//jar",
-        "@io_grpc_grpc_api//jar",
-        "@io_grpc_grpc_core//jar",
-        "@io_grpc_grpc_protobuf//jar",
-        "@io_grpc_grpc_protobuf_lite//jar",
-        "@io_grpc_grpc_protobuf_nano//jar",
-        "@maven//:io_opencensus_opencensus_api",
-        "@maven//:io_opencensus_opencensus_contrib_grpc_metrics",
-    ],
-)
-
-java_library(
     # is it necessary ?
     name = "io_grpc_grpc_protobuf_lite",
     visibility = ["//visibility:public"],
