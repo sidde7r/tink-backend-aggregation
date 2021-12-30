@@ -56,6 +56,7 @@ public class CreditCardAccountBuilder extends AccountBuilder<CreditCardAccount, 
 
     @Override
     public WithIdStep<CreditCardBuildStep> withFlags(AccountFlag... flags) {
+        Preconditions.checkNotNull(flags, "Flags array must not be null.");
         accountFlags.addAll(Arrays.asList(flags));
         return this;
     }
