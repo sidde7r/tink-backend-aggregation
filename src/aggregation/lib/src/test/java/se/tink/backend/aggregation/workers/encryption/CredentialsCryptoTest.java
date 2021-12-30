@@ -44,6 +44,18 @@ public class CredentialsCryptoTest {
     public static final String PASSWORD = "password";
     public static final String USERNAME_VALUE = "britta";
     public static final String PASSWORD_VALUE = "banan456";
+    public static final String CONSENT_ID = "to-be-restored";
+    public static final String SENSITIVE_DATA =
+            "{\"version\":2,\"timestamp\":1599042304623,\"keyId\":1,\"fields\":"
+                    + "\"{\\\"version\\\":2,\\\"timestamp\\\":\\\"2020-09-02T10:25:04.623Z\\\","
+                    + "\\\"keyId\\\":1,\\\"payload\\\":\\\"{\\\\\\\"iv\\\\\\\":\\\\\\\"ibJjOEQpWfK1jWj3"
+                    + "\\\\\\\",\\\\\\\"data\\\\\\\":\\\\\\\"15CoJNNmmmD5A1t5iCJujiOgsr+7k6C"
+                    + "+N+iOnDoRET9RUAyz6D9S\\\\\\\"}\\\"}\",\"payload\":\"{\\n  \\\"version\\\""
+                    + ": 2,\\n  \\\"timestamp\\\": \\\"2020-09-02T10:25:04.623Z\\\",\\n  "
+                    + "\\\"keyId\\\": 1,\\n  \\\"payload\\\": \\\"{\\\\\\\"iv\\\\\\\":\\\\"
+                    + "\\\"dim2Ijea+z8eJjFu\\\\\\\",\\\\\\\"data\\\\\\\":\\\\\\\"MzyOo6P4t"
+                    + "byGEyxwYXyKMmhsZPJ0ofLawhE5z+5H5A3txrZYKHvwFPEw5rQYW/qRfBV+kaKX"
+                    + "cJoTB4jqni/ceXbk9ZFFrWLgUSVSOMpJIxE=\\\\\\\"}\\\"\\n}\"}";
 
     private CredentialsCrypto crypto;
     private Credentials credentials;
@@ -161,18 +173,7 @@ public class CredentialsCryptoTest {
         user.setFlags(ImmutableList.of());
 
         CredentialsRequest request = requestFrom(credentials, user, provider);
-        request.getCredentials()
-                .setSensitiveDataSerialized(
-                        "{\"version\":2,\"timestamp\":1599042304623,\"keyId\":1,\"fields\":"
-                                + "\"{\\\"version\\\":2,\\\"timestamp\\\":\\\"2020-09-02T10:25:04.623Z\\\","
-                                + "\\\"keyId\\\":1,\\\"payload\\\":\\\"{\\\\\\\"iv\\\\\\\":\\\\\\\"ibJjOEQpWfK1jWj3"
-                                + "\\\\\\\",\\\\\\\"data\\\\\\\":\\\\\\\"15CoJNNmmmD5A1t5iCJujiOgsr+7k6C"
-                                + "+N+iOnDoRET9RUAyz6D9S\\\\\\\"}\\\"}\",\"payload\":\"{\\n  \\\"version\\\""
-                                + ": 2,\\n  \\\"timestamp\\\": \\\"2020-09-02T10:25:04.623Z\\\",\\n  "
-                                + "\\\"keyId\\\": 1,\\n  \\\"payload\\\": \\\"{\\\\\\\"iv\\\\\\\":\\\\"
-                                + "\\\"dim2Ijea+z8eJjFu\\\\\\\",\\\\\\\"data\\\\\\\":\\\\\\\"MzyOo6P4t"
-                                + "byGEyxwYXyKMmhsZPJ0ofLawhE5z+5H5A3txrZYKHvwFPEw5rQYW/qRfBV+kaKX"
-                                + "cJoTB4jqni/ceXbk9ZFFrWLgUSVSOMpJIxE=\\\\\\\"}\\\"\\n}\"}");
+        request.getCredentials().setSensitiveDataSerialized(SENSITIVE_DATA);
 
         EncryptedPayloadHead head =
                 SerializationUtils.deserializeFromString(
@@ -199,6 +200,45 @@ public class CredentialsCryptoTest {
         assertEquals("ab2b348c7218bafe3", decryptedPayload.get("sessionID"));
         assertEquals(PASSWORD_VALUE, clone.getField(PASSWORD));
         assertEquals(USERNAME_VALUE, clone.getField(USERNAME));
+    }
+
+    @Test
+    public void shouldRestoreCachedData() {
+        final User user = new User();
+        user.setFlags(ImmutableList.of());
+
+        CredentialsRequest request = requestFrom(credentials, user, provider);
+        request.setConsentId(CONSENT_ID);
+        request.getCredentials().setSensitiveDataSerialized(SENSITIVE_DATA);
+
+        EncryptedPayloadHead head =
+                SerializationUtils.deserializeFromString(
+                        credentials.getSensitiveDataSerialized(), EncryptedPayloadHead.class);
+        assertEquals(2, head.getVersion());
+
+        EncryptedPayloadV2 v2 =
+                SerializationUtils.deserializeFromString(
+                        credentials.getSensitiveDataSerialized(), EncryptedPayloadV2.class);
+        assertNotNull(v2);
+        assertTrue(crypto.encrypt(request, true, true, StandardCharsets.UTF_8));
+
+        final Credentials clone = credentials.clone();
+        clone.clearSensitiveInformation(provider);
+        clone.setSensitivePayloadAsMap(Maps.newHashMap());
+        clone.setSensitiveDataSerialized(null);
+
+        CredentialsRequest decryptRequest = requestFrom(clone, user, provider);
+        decryptRequest.setConsentId(null);
+
+        assertEquals(1, v2.getKeyId());
+        assertTrue(crypto.decrypt(decryptRequest, StandardCharsets.UTF_8));
+
+        final Map<String, String> decryptedPayload = clone.getSensitivePayloadAsMap();
+        assertEquals("secret payload", decryptedPayload.get("superSecret"));
+        assertEquals("ab2b348c7218bafe3", decryptedPayload.get("sessionID"));
+        assertEquals(PASSWORD_VALUE, clone.getField(PASSWORD));
+        assertEquals(USERNAME_VALUE, clone.getField(USERNAME));
+        assertEquals(CONSENT_ID, decryptRequest.getConsentId());
     }
 
     @Test
