@@ -21,6 +21,7 @@ public class UpdateTransactionsRequest implements SafelyLoggable {
     private String aggregationId;
     private String operationId;
     private String market;
+    private String consentId;
 
     public String getCredentials() {
         return credentials;
@@ -112,5 +113,13 @@ public class UpdateTransactionsRequest implements SafelyLoggable {
 
     public void setMarket(String market) {
         this.market = market;
+    }
+
+    public void setConsentId(String consentId) {
+        this.consentId = consentId;
+    }
+
+    public String getConsentId() {
+        return consentId;
     }
 }
