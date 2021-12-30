@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
 import se.tink.libraries.endpoints.dropwizard.EndpointsConfiguration;
+import se.tink.libraries.queue.sqs.configuration.SqsConsumerConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.repository.config.DatabaseConfiguration;
 import se.tink.libraries.tracing.jaeger.models.JaegerConfig;
@@ -44,6 +45,18 @@ public class AggregationServiceConfiguration extends Configuration {
 
     @JsonProperty
     private SqsQueueConfiguration priorityRetrySqsQueueConfiguration = new SqsQueueConfiguration();
+
+    @JsonProperty
+    private SqsConsumerConfiguration regularSqsConsumerConfiguration =
+            new SqsConsumerConfiguration();
+
+    @JsonProperty
+    private SqsConsumerConfiguration prioritySqsConsumerConfiguration =
+            new SqsConsumerConfiguration();
+
+    @JsonProperty
+    private SqsConsumerConfiguration priorityRetrySqsConsumerConfiguration =
+            new SqsConsumerConfiguration();
 
     @JsonProperty
     private ProviderTierConfiguration providerTierConfiguration = new ProviderTierConfiguration();
@@ -135,6 +148,18 @@ public class AggregationServiceConfiguration extends Configuration {
         return priorityRetrySqsQueueConfiguration;
     }
 
+    public SqsConsumerConfiguration getRegularSqsConsumerConfiguration() {
+        return regularSqsConsumerConfiguration;
+    }
+
+    public SqsConsumerConfiguration getPrioritySqsConsumerConfiguration() {
+        return prioritySqsConsumerConfiguration;
+    }
+
+    public SqsConsumerConfiguration getPriorityRetrySqsConsumerConfiguration() {
+        return priorityRetrySqsConsumerConfiguration;
+    }
+
     public S3StorageConfiguration getS3StorageConfiguration() {
         return s3StorageConfiguration;
     }
@@ -152,6 +177,21 @@ public class AggregationServiceConfiguration extends Configuration {
     public void setPriorityRetrySqsQueueConfiguration(
             SqsQueueConfiguration priorityRetrySqsQueueConfiguration) {
         this.priorityRetrySqsQueueConfiguration = priorityRetrySqsQueueConfiguration;
+    }
+
+    public void setRegularSqsConsumerConfiguration(
+            SqsConsumerConfiguration regularSqsConsumerConfiguration) {
+        this.regularSqsConsumerConfiguration = regularSqsConsumerConfiguration;
+    }
+
+    public void setPrioritySqsConsumerConfiguration(
+            SqsConsumerConfiguration prioritySqsConsumerConfiguration) {
+        this.prioritySqsConsumerConfiguration = prioritySqsConsumerConfiguration;
+    }
+
+    public void setPriorityRetrySqsConsumerConfiguration(
+            SqsConsumerConfiguration priorityRetrySqsConsumerConfiguration) {
+        this.priorityRetrySqsConsumerConfiguration = priorityRetrySqsConsumerConfiguration;
     }
 
     public AggregationDevelopmentConfiguration getDevelopmentConfiguration() {

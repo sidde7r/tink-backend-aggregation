@@ -11,19 +11,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.QueueProducer;
+import se.tink.libraries.queue.sqs.configuration.SqsConsumerConfiguration;
 
+@Slf4j
 public class SqsConsumer {
-
-    private static final Logger log = LoggerFactory.getLogger(SqsConsumer.class);
-    private static final int WAIT_TIME_SECONDS = 1;
-    private static final int MAX_NUMBER_OF_MESSAGES = 1;
-    private static final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
-
     public static final ImmutableList<Double> BUCKETS =
             ImmutableList.of(0., .025, .1, .25, .5, 0.75, 1., 1.5, 2., 2.5, 5.);
     private static final MetricId SQS_CONSUMER_DURATION_HISTOGRAM =
@@ -35,18 +30,22 @@ public class SqsConsumer {
     private final QueueMessageAction queueMessageAction;
     private final String name;
     private final MetricRegistry metricRegistry;
+    private final SqsConsumerConfiguration consumerConfig;
 
     public SqsConsumer(
             SqsQueue sqsQueue,
             QueueProducer requeueProducer,
             QueueMessageAction queueMessageAction,
             MetricRegistry metricRegistry,
+            SqsConsumerConfiguration consumerConfig,
             String name) {
         this.sqsQueue = sqsQueue;
         this.producer = requeueProducer;
         this.queueMessageAction = queueMessageAction;
         this.metricRegistry = metricRegistry;
+        this.consumerConfig = consumerConfig;
         this.name = name;
+        log.info("Creating {} consumer with {}", name, consumerConfig);
     }
 
     /**
@@ -89,9 +88,9 @@ public class SqsConsumer {
 
     private ReceiveMessageRequest createReceiveMessagesRequest() {
         return new ReceiveMessageRequest(sqsQueue.getUrl())
-                .withWaitTimeSeconds(WAIT_TIME_SECONDS)
-                .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES)
-                .withVisibilityTimeout(VISIBILITY_TIMEOUT_SECONDS);
+                .withWaitTimeSeconds(consumerConfig.getWaitTimeSecond())
+                .withMaxNumberOfMessages(consumerConfig.getMaxNumberOfMessages())
+                .withVisibilityTimeout(consumerConfig.getVisibilityTimeoutSeconds());
     }
 
     @VisibleForTesting

@@ -19,6 +19,7 @@ import se.tink.libraries.queue.sqs.SqsConsumer;
 import se.tink.libraries.queue.sqs.SqsConsumerService;
 import se.tink.libraries.queue.sqs.SqsProducer;
 import se.tink.libraries.queue.sqs.SqsQueue;
+import se.tink.libraries.queue.sqs.configuration.SqsConsumerConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 @Slf4j
@@ -127,12 +128,15 @@ public class SqsQueueModule extends AbstractModule {
             @Named("regularSqsQueue") SqsQueue regularSqsQueue,
             @Named("regularQueueProducer") QueueProducer regularQueueProducer,
             QueueMessageAction queueMessageAction,
+            @Named("regularSqsConsumerConfiguration")
+                    SqsConsumerConfiguration regularSqsConsumerConfiguration,
             MetricRegistry metricRegistry) {
         return new SqsConsumer(
                 regularSqsQueue,
                 regularQueueProducer,
                 queueMessageAction,
                 metricRegistry,
+                regularSqsConsumerConfiguration,
                 "Regular");
     }
 
@@ -143,6 +147,8 @@ public class SqsQueueModule extends AbstractModule {
             @Named("prioritySqsQueue") SqsQueue prioritySqsQueue,
             @Named("priorityRetryQueueProducer") QueueProducer priorityRetryQueueProducer,
             QueueMessageAction queueMessageAction,
+            @Named("prioritySqsConsumerConfiguration")
+                    SqsConsumerConfiguration prioritySqsConsumerConfiguration,
             MetricRegistry metricRegistry) {
         // PrioritySqsConsumer will read from prioritySqsQueue but will requeue requests
         // using priorityRetryQueueProducer (so requeue to the priorityRetrySqsQueue)
@@ -151,6 +157,7 @@ public class SqsQueueModule extends AbstractModule {
                 priorityRetryQueueProducer,
                 queueMessageAction,
                 metricRegistry,
+                prioritySqsConsumerConfiguration,
                 "Priority");
     }
 
@@ -161,12 +168,39 @@ public class SqsQueueModule extends AbstractModule {
             @Named("priorityRetrySqsQueue") SqsQueue priorityRetrySqsQueue,
             @Named("priorityRetryQueueProducer") QueueProducer priorityRetryQueueProducer,
             QueueMessageAction queueMessageAction,
+            @Named("priorityRetrySqsConsumerConfiguration")
+                    SqsConsumerConfiguration priorityRetrySqsConsumerConfiguration,
             MetricRegistry metricRegistry) {
         return new SqsConsumer(
                 priorityRetrySqsQueue,
                 priorityRetryQueueProducer,
                 queueMessageAction,
                 metricRegistry,
+                priorityRetrySqsConsumerConfiguration,
                 "PriorityRetry");
+    }
+
+    @Provides
+    @Singleton
+    @Named("regularSqsConsumerConfiguration")
+    SqsConsumerConfiguration provideRegularSqsConsumerConfig(
+            AggregationServiceConfiguration configuration) {
+        return configuration.getRegularSqsConsumerConfiguration();
+    }
+
+    @Provides
+    @Singleton
+    @Named("prioritySqsConsumerConfiguration")
+    SqsConsumerConfiguration providePrioritySqsConsumerConfig(
+            AggregationServiceConfiguration configuration) {
+        return configuration.getPrioritySqsConsumerConfiguration();
+    }
+
+    @Provides
+    @Singleton
+    @Named("priorityRetrySqsConsumerConfiguration")
+    SqsConsumerConfiguration providePriorityRetrySqsConsumerConfig(
+            AggregationServiceConfiguration configuration) {
+        return configuration.getPriorityRetrySqsConsumerConfiguration();
     }
 }

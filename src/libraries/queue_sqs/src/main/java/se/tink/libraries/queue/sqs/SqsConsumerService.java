@@ -5,19 +5,17 @@ import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.RateLimiter;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.queue.QueueConsumerService;
 
+@Slf4j
 public class SqsConsumerService extends ManagedSafeStop implements QueueConsumerService {
 
-    private static final Logger log = LoggerFactory.getLogger(SqsConsumerService.class);
     // this is the ratio at which regular sqs queue will be interleaved with consumption from
     // priority retry queue
     private final float regularQueueInterleaveRatio;
@@ -81,7 +79,7 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
     }
 
     @VisibleForTesting
-    void consume() throws IOException {
+    void consume() {
         boolean consumeFromRegularQueue = true;
         if (consumeFromPriorityQueue) {
             boolean priorityQueueEmpty = !prioritySqsConsumer.consume();
