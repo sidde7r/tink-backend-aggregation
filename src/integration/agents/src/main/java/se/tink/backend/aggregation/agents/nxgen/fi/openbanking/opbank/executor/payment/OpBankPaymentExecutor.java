@@ -119,7 +119,6 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         OAuth2Token oAuth2Token = apiClient.exchangeToken(code).toOauth2Token();
         this.apiClient.submitPayment(
                 paymentMultiStepRequest.getPayment().getUniqueId(),
-                paymentMultiStepRequest.getOriginatingUserIp(),
                 oAuth2Token,
                 paymentMultiStepRequest.getPayment().getId().toString());
 
