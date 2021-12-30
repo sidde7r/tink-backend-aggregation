@@ -1,5 +1,4 @@
-load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
-load("@rules_java//java:defs.bzl", "java_library", "java_proto_library")
+load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "aggregation_agent_api_client",
@@ -34,40 +33,5 @@ java_library(
         "//third_party:lombok_plugin",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:org_projectlombok_lombok",
-    ],
-)
-
-java_library(
-    name = "secrets_service_client",
-    srcs = ["@tink_backend//src/tink-integration-eidas-secrets-service/client:client_srcjar"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "ss_java_grpc",
-        "ss_java_proto",
-        "//third_party:com_google_guava_guava",
-        "//third_party:io_grpc_grpc_protobuf",
-        "//third_party/failsafe",
-        "//third_party/log4j",
-        "@com_google_protobuf//:protobuf_java",
-        "@io_grpc_grpc_java//core",
-        "@maven//:io_prometheus_simpleclient",
-        "@maven//:net_jodah_failsafe",
-        "@tink_backend//src/tink-integration-eidas-secrets-service/client/configuration",
-        "@tink_backend//src/tink-integration-eidas-secrets-service/client/lib",
-    ],
-)
-
-java_grpc_library(
-    name = "ss_java_grpc",
-    srcs = [
-        "@tink_backend//src/tink-integration-eidas-secrets-service/proto",
-    ],
-    deps = [":ss_java_proto"],
-)
-
-java_proto_library(
-    name = "ss_java_proto",
-    deps = [
-        "@tink_backend//src/tink-integration-eidas-secrets-service/proto",
     ],
 )
