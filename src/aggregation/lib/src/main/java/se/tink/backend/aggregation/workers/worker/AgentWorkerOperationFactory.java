@@ -68,7 +68,7 @@ import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccount
 import se.tink.backend.aggregation.workers.commands.Psd2PaymentAccountRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshCommandChainEventTriggerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.RefreshPostProcessingAgentWorkedCommand;
+import se.tink.backend.aggregation.workers.commands.RefreshPostProcessingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
@@ -319,7 +319,7 @@ public class AgentWorkerOperationFactory {
         }
 
         commands.add(
-                new RefreshPostProcessingAgentWorkedCommand(
+                new RefreshPostProcessingAgentWorkerCommand(
                         context, createCommandMetricState(request, clientInfo)));
 
         if (accountItems.size() > 0) {
@@ -1846,7 +1846,7 @@ public class AgentWorkerOperationFactory {
                                         refreshEventProducer)));
 
         commands.add(
-                new RefreshPostProcessingAgentWorkedCommand(
+                new RefreshPostProcessingAgentWorkerCommand(
                         context, createCommandMetricState(request, clientInfo)));
 
         commands.add(
