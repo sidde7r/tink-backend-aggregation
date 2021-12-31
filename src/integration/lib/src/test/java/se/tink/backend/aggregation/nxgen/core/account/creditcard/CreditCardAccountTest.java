@@ -113,10 +113,24 @@ public class CreditCardAccountTest {
         assertThat(account.getExactAvailableCredit()).isNotNull();
         assertThat(account.getExactAvailableCredit().getDoubleValue()).isEqualTo(420.7);
 
-        assertThat(storage.isPresent()).isTrue();
+        assertThat(storage).isPresent();
         assertThat(storage.get().x).isEqualTo("TestString");
         assertThat(storage.get().y).isEqualTo(15);
         assertThat(account.getHolderName().toString()).isEqualTo("Jürgen Flughaubtkopf");
         assertThat(account.getApiIdentifier()).isEqualTo("2a3ffe-38320c");
+    }
+
+    @Test
+    public void shouldReturnProperAccountType() {
+        CreditCardAccount creditCardAccount = getTestCreditCardAccount();
+        assertThat(creditCardAccount.getType()).isEqualTo(AccountTypes.CREDIT_CARD);
+    }
+
+    private CreditCardAccount getTestCreditCardAccount() {
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(CARD_MODULE)
+                .withoutFlags()
+                .withId(ID_MODULE)
+                .build();
     }
 }
