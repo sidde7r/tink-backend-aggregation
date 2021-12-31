@@ -41,13 +41,14 @@ public class RabobankConstants {
                 ImmutableList.copyOf(
                         Iterables.concat(ERROR_RESPONSES, singletonList(SC_TOO_MANY_REQUESTS)));
         public static final String NOT_SUBSCRIBED = "Not registered to plan";
-        public static final String ERROR_MESSAGE = "Error message: ";
+        public static final String ERROR_CONSENT_MESSAGE =
+                "At least one consent status is not valid: ";
         public static final String TOKEN_URL_NOT_FOUND =
                 "/openapi/live/oauth2/token was not found on this server";
     }
 
     public static class Consents {
-        public static final List<String> STATUS =
+        public static final List<String> INVALID_STATUSES =
                 ImmutableList.of("expired", "invalid", "revoked", "revokedByPsu");
     }
 

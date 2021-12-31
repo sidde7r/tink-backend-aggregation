@@ -1,0 +1,33 @@
+{
+  "consentId": "fffff",
+  "access": {
+    "ais.transactions.read-90days": [
+      {
+        "iban": "NL49RABO0136957838",
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
+      },
+      {
+        "iban": "NL71RABO0346234166",
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
+      }
+    ],
+    "ais.transactions.read-history": [
+      {
+        "iban": "NL49RABO0136957838",
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
+      },
+      {
+        "iban": "NL71RABO0346234166",
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
+      }
+    ]
+  }
+}

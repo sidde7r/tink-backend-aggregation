@@ -1,6 +1,6 @@
 
 REQUEST 1
-GET https://somehost/openapi/oauth2/consents/fffff
+GET https://somehost/openapi/oauth2/v1/consents/fffff
 Accept: application/json
 
 RESPONSE 1
@@ -9,37 +9,47 @@ Content-Type: application/json
 
 {
   "consentId": "fffff",
-  "status": "valid",
-  "validUntil": "2021-04-12",
   "access": {
     "ais.balances.read": [
       {
         "iban": "NL49RABO0136957838",
-        "currency": "EUR"
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
       },
       {
         "iban": "NL71RABO0346234166",
-        "currency": "EUR"
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
       }
     ],
     "ais.transactions.read-90days": [
       {
         "iban": "NL49RABO0136957838",
-        "currency": "EUR"
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
       },
       {
         "iban": "NL71RABO0346234166",
-        "currency": "EUR"
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
       }
     ],
     "ais.transactions.read-history": [
       {
         "iban": "NL49RABO0136957838",
-        "currency": "EUR"
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
       },
       {
         "iban": "NL71RABO0346234166",
-        "currency": "EUR"
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
       }
     ]
   }

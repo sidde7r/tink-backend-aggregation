@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 @Getter
-public final class RabobankConfiguration implements ClientConfiguration {
+public class RabobankConfiguration implements ClientConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration @UUIDConfiguration private String clientId;
 
     @JsonProperty

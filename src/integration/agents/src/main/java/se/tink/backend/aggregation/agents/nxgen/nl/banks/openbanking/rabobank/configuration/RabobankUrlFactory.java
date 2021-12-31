@@ -7,7 +7,7 @@ public final class RabobankUrlFactory {
     private final URL baseUrl;
     private boolean consumeLatest = true;
 
-    RabobankUrlFactory(final URL authUrl, final URL baseUrl) {
+    public RabobankUrlFactory(final URL authUrl, final URL baseUrl) {
         this.authUrl = authUrl;
         this.baseUrl = baseUrl;
     }
@@ -44,7 +44,10 @@ public final class RabobankUrlFactory {
     }
 
     public URL buildConsentUrl(final String consentId) {
-        return getConsentUrl().concatWithSeparator("consents").concatWithSeparator(consentId);
+        return getConsentUrl()
+                .concatWithSeparator("v1")
+                .concatWithSeparator("consents")
+                .concatWithSeparator(consentId);
     }
 
     public URL getAisAccountsUrl() {

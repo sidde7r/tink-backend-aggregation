@@ -95,8 +95,7 @@ public final class RabobankAgent
                         client,
                         persistentStorage,
                         rabobankConfiguration,
-                        qsealPem,
-                        qsealcSigner,
+                        new RabobankSignatureHeaderBuilder(qsealPem, qsealcSigner),
                         getUserIpInformation());
 
         transactionalAccountRefreshController =
