@@ -71,19 +71,18 @@ public class TransactionEntity {
                         .setDescription(reference)
                         .setPending(isPending())
                         .setProprietaryFinancialInstitutionType(source)
-                        .setProviderMarket(String.valueOf(MarketCode.UK));
+                        .setProviderMarket(String.valueOf(MarketCode.UK))
+                        .setTransactionDates(getTransactionDates());
+
+        if (hasSettlementTime()) {
+            builder.setDate(getDateOfTransaction(settlementTime));
+        } else {
+            builder.setDate(getDateOfTransaction(transactionTime));
+        }
 
         if (hasFeedItemUid()) {
             builder.addExternalSystemIds(
                     TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, feedItemUid);
-        }
-
-        if (hasSettlementTime()) {
-            builder.setDate(getDateOfTransaction(settlementTime));
-            builder.setTransactionDates(getTransactionDates(settlementTime));
-        } else {
-            builder.setDate(getDateOfTransaction(transactionTime));
-            builder.setTransactionDates(getTransactionDates(transactionTime));
         }
 
         if (isMerchantCounterPartyType()) {
@@ -103,10 +102,18 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    private TransactionDates getTransactionDates(Instant date) {
-        return TransactionDates.builder()
-                .setBookingDate(TransactionDateMapper.prepareTransactionDate(date))
-                .build();
+    private TransactionDates getTransactionDates() {
+        TransactionDates.Builder transactionDates =
+                TransactionDates.builder()
+                        .setTransactionDate(
+                                TransactionDateMapper.prepareTransactionDate(transactionTime));
+
+        if (hasSettlementTime()) {
+            transactionDates.setBookingDate(
+                    TransactionDateMapper.prepareTransactionDate(settlementTime));
+        }
+
+        return transactionDates.build();
     }
 
     public String getStatus() {
