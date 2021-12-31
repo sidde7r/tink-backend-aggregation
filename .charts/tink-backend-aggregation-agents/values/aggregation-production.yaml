@@ -42,9 +42,9 @@ grafanaMarketLink: https://grafana.global-production.tink.network/d/000000078/in
 # Baseline queries used in DE
 deQueryLoginAll: tink_agent_login_total{ provider_type!="test", market="DE", action=~"login-manual|login-auto|login-cron"}
 deQueryPaymentAll: tink_agent_transfer_total{ provider_type!="test", market="DE"}
-deQueryRefreshAll: tink_agent_refresh_total{ provider_type!="test", market="DE"}
+deQueryRefreshAll: tink_agent_refresh_total{ provider_type!="test", market="DE", action="refresh"}
 
 # Baseline queries used in IT
 itQueryLoginAll: tink_agent_login_total{ provider_type!="test", market="IT", action=~"login-manual|login-auto|login-cron"}
 itQueryPaymentAll: tink_agent_transfer_total{ provider_type!="test", market="IT"}
-itQueryRefreshAll: tink_agent_refresh_total{ provider_type!="test", market="IT"}
+itQueryRefreshAll: tink_agent_refresh_total{ provider_type!="test", market="IT", action="refresh"}
