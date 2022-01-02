@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.danskebank.fetcher.DanskeBankFITransferDestinationFetcher;
@@ -94,13 +95,16 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
         try {
             return super.fetchCheckingAccounts();
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 500) {
+            int errorCode = e.getResponse().getStatus();
+            if (errorCode == 500) {
                 ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
                 if (!errorResponse.getErrors().isEmpty()
                         && ErrorCode.UNEXPETED_ERROR.equals(
                                 errorResponse.getErrors().get(0).getErrorCode())) {
                     throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 }
+            } else if (errorCode == 403) {
+                throw SessionError.CONSENT_INVALID.exception();
             }
             throw e;
         }
