@@ -116,99 +116,6 @@ public class OpenIdAuthenticationController
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
-        if (getConsentId().equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
-            cleanAuthenticationPersistentStorage();
-            throw SessionError.CONSENT_INVALID.exception(
-                    "[OpenIdAuthenticationController] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
-        }
-
-        OAuth2Token oAuth2Token =
-                persistentStorage
-                        .get(
-                                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
-                                OAuth2Token.class)
-                        .orElseThrow(
-                                () -> {
-                                    log.warn(
-                                            "[OpenIdAuthenticationController] Failed to retrieve access token from persistent storage.");
-                                    return SessionError.SESSION_EXPIRED.exception();
-                                });
-
-        if (oAuth2Token.isAccessTokenNotExpired()) {
-            apiClient.instantiateAisAuthFilter(oAuth2Token);
-            return;
-        }
-
-        if (oAuth2Token.canNotRefreshAccessToken()) {
-            log.info("[OpenIdAuthenticationController] Access token has expired and refreshing impossible. Expiring the session.");
-            cleanAuthenticationPersistentStorage();
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
-        saveAccessToken(refreshedToken);
-        oAuth2Token = refreshedToken;
-
-        apiClient.instantiateAisAuthFilter(oAuth2Token);
-    }
-
-    private void cleanAuthenticationPersistentStorage() {
-        persistentStorage.remove(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
-        persistentStorage.remove(PersistentStorageKeys.AIS_ACCESS_TOKEN);
-    }
-
-    private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {
-        log.info(
-                "[OpenIdAuthenticationController] Trying to refresh access token. Issued: [{}] Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
-                new Date(oAuth2Token.getIssuedAt() * 1000),
-                new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
-                !oAuth2Token.isRefreshNullOrEmpty(),
-                oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
-                        ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
-                        : "N/A");
-
-        String refreshToken = oAuth2Token.getRefreshToken().get();
-        try {
-            OAuth2Token refreshedOAuth2Token =
-                    apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS);
-
-            if (!refreshedOAuth2Token.isValid()) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-
-            if (refreshedOAuth2Token.isRefreshTokenExpirationPeriodSpecified()) {
-                credentials.setSessionExpiryDate(
-                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                                refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
-            }
-
-            oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
-
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() >= 500) {
-                log.warn(
-                        "[OpenIdAuthenticationController] Bank side error (status code {}) during refreshing token",
-                        e.getResponse().getStatus());
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
-            }
-            log.error(
-                    "[OpenIdAuthenticationController] Access token refresh failed: {}",
-                    e.getResponse().getBody(String.class));
-
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-        log.info(
-                "[OpenIdAuthenticationController] Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
-                new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
-                !oAuth2Token.isRefreshNullOrEmpty(),
-                oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
-                        ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
-                        : "N/A");
-        return oAuth2Token;
-    }
-
-    @Override
     public ThirdPartyAppResponse<String> init() {
         OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
 
@@ -289,6 +196,104 @@ public class OpenIdAuthenticationController
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
+    @Override
+    public void autoAuthenticate() throws SessionException, BankServiceException {
+        if (getConsentId().equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
+            cleanAuthenticationPersistentStorage();
+            throw SessionError.CONSENT_INVALID.exception(
+                    "[OpenIdAuthenticationController] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
+        }
+
+        OAuth2Token oAuth2Token =
+                persistentStorage
+                        .get(
+                                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
+                                OAuth2Token.class)
+                        .orElseThrow(
+                                () -> {
+                                    log.warn(
+                                            "[OpenIdAuthenticationController] Failed to retrieve access token from persistent storage.");
+                                    return SessionError.SESSION_EXPIRED.exception();
+                                });
+
+        if (oAuth2Token.isAccessTokenNotExpired()) {
+            apiClient.instantiateAisAuthFilter(oAuth2Token);
+            return;
+        }
+
+        if (oAuth2Token.canNotRefreshAccessToken()) {
+            log.info("[OpenIdAuthenticationController] Access token has expired and refreshing impossible. Expiring the session.");
+            cleanAuthenticationPersistentStorage();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
+        saveAccessToken(refreshedToken);
+        oAuth2Token = refreshedToken;
+
+        apiClient.instantiateAisAuthFilter(oAuth2Token);
+    }
+
+    @Override
+    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
+        return Optional.empty();
+    }
+
+    private void cleanAuthenticationPersistentStorage() {
+        persistentStorage.remove(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
+        persistentStorage.remove(PersistentStorageKeys.AIS_ACCESS_TOKEN);
+    }
+
+    private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {
+        log.info(
+                "[OpenIdAuthenticationController] Trying to refresh access token. Issued: [{}] Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
+                new Date(oAuth2Token.getIssuedAt() * 1000),
+                new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
+                !oAuth2Token.isRefreshNullOrEmpty(),
+                oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
+                        ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
+                        : "N/A");
+
+        String refreshToken = oAuth2Token.getRefreshToken().get();
+        try {
+            OAuth2Token refreshedOAuth2Token =
+                    apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS);
+
+            if (!refreshedOAuth2Token.isValid()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            if (refreshedOAuth2Token.isRefreshTokenExpirationPeriodSpecified()) {
+                credentials.setSessionExpiryDate(
+                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                                refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
+            }
+
+            oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
+
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() >= 500) {
+                log.warn(
+                        "[OpenIdAuthenticationController] Bank side error (status code {}) during refreshing token",
+                        e.getResponse().getStatus());
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+            }
+            log.error(
+                    "[OpenIdAuthenticationController] Access token refresh failed: {}",
+                    e.getResponse().getBody(String.class));
+
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+        log.info(
+                "[OpenIdAuthenticationController] Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
+                new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
+                !oAuth2Token.isRefreshNullOrEmpty(),
+                oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
+                        ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
+                        : "N/A");
+        return oAuth2Token;
+    }
+
     private void saveStrongAuthenticationTime() {
         persistentStorage.put(
                 OpenIdConstants.PersistentStorageKeys.LAST_SCA_TIME,
@@ -302,11 +307,6 @@ public class OpenIdAuthenticationController
 
     private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
         apiClient.instantiateAisAuthFilter(oAuth2Token);
-    }
-
-    @Override
-    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-        return Optional.empty();
     }
 
     private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {
