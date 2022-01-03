@@ -23,7 +23,7 @@ spec:
         Error rate: <{ $value | humanizePercentage }>
         Class: <{ $labels.className }>
         Checking last hour, with at least 5 attempts, active for at least 10 min.
-        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.kibanaClassPaymentLinkAbs90m }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
       tags: <{ $labels.className }>
 
@@ -43,7 +43,7 @@ spec:
         Error rate: <{ $value | humanizePercentage }>
         Class: <{ $labels.className }>
         Checking last hour, with at least 5 attempts, active for at least 20 min.
-        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.kibanaClassPaymentLinkAbs90m }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
       tags: <{ $labels.className }>
 
@@ -63,6 +63,6 @@ spec:
         Error rate: <{ $value | humanizePercentage }>
         Class: <{ $labels.className }>
         Checking last hour, with at least 10 attempts, active for at least 20 min.
-        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.kibanaClassPaymentLinkAbs90m }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
       tags: <{ $labels.className }>
