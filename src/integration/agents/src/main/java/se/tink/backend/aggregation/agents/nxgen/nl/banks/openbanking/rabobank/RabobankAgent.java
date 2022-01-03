@@ -90,13 +90,22 @@ public final class RabobankAgent
 
         client.setSslClientCertificate(p12, password);
 
+        RabobankSignatureHeaderBuilder signatureHeaderBuilder =
+                new RabobankSignatureHeaderBuilder(qsealPem, qsealcSigner);
         apiClient =
                 new RabobankApiClient(
                         client,
                         persistentStorage,
                         rabobankConfiguration,
-                        new RabobankSignatureHeaderBuilder(qsealPem, qsealcSigner),
+                        signatureHeaderBuilder,
                         getUserIpInformation());
+
+        RabobankConsentStatusValidator rabobankConsentStatusValidator =
+                new RabobankConsentStatusValidator(
+                        apiClient,
+                        persistentStorage,
+                        signatureHeaderBuilder,
+                        rabobankConfiguration);
 
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
@@ -109,7 +118,8 @@ public final class RabobankAgent
                                 apiClient,
                                 persistentStorage,
                                 agentConfiguration,
-                                componentProvider),
+                                componentProvider,
+                                rabobankConsentStatusValidator),
                         credentials,
                         strongAuthenticationState);
 

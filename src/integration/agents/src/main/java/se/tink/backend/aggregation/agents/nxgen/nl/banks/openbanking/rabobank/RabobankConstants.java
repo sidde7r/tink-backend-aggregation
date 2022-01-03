@@ -47,11 +47,6 @@ public class RabobankConstants {
                 "/openapi/live/oauth2/token was not found on this server";
     }
 
-    public static class Consents {
-        public static final List<String> INVALID_STATUSES =
-                ImmutableList.of("expired", "invalid", "revoked", "revokedByPsu");
-    }
-
     public static class StorageKey {
 
         public static final String OAUTH_TOKEN =

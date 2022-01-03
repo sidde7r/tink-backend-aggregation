@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
@@ -37,17 +38,20 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     private final RabobankConfiguration configuration;
     private final String redirectUrl;
     private final AgentComponentProvider provider;
+    private final RabobankConsentStatusValidator rabobankConsentStatusValidator;
 
     public RabobankAuthenticator(
             final RabobankApiClient apiClient,
             final PersistentStorage persistentStorage,
             final AgentConfiguration<RabobankConfiguration> agentConfiguration,
-            AgentComponentProvider provider) {
+            AgentComponentProvider provider,
+            RabobankConsentStatusValidator rabobankConsentStatusValidator) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.provider = provider;
+        this.rabobankConsentStatusValidator = rabobankConsentStatusValidator;
     }
 
     private RabobankConfiguration getConfiguration() {
@@ -104,7 +108,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(final String refreshToken)
             throws SessionException, BankServiceException {
 
-        apiClient.checkConsentStatus();
+        rabobankConsentStatusValidator.validateConsentStatus();
 
         final Form request =
                 Form.builder()
@@ -139,7 +143,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     public void useAccessToken(final OAuth2Token accessToken) {}
 
     void checkConsentStatus() {
-        apiClient.checkConsentStatus();
+        rabobankConsentStatusValidator.validateConsentStatus();
     }
 
     void throwSessionErrorIfInvalidToken(HttpResponseException e) {

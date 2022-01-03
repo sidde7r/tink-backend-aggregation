@@ -1,7 +1,7 @@
-
 REQUEST 1
 GET https://somehost/openapi/oauth2/v1/consents/fffff
 Accept: application/json
+Signature: keyId="166567569494533183850273947050494744748",algorithm="rsa-sha256",headers="date digest x-request-id",signature="UmtGTFJWOVRTVWRPUVZSVlVrVUs="
 
 RESPONSE 1
 200

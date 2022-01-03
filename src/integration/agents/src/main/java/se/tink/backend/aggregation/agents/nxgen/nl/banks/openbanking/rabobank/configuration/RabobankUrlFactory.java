@@ -7,7 +7,7 @@ public final class RabobankUrlFactory {
     private final URL baseUrl;
     private boolean consumeLatest = true;
 
-    public RabobankUrlFactory(final URL authUrl, final URL baseUrl) {
+    RabobankUrlFactory(final URL authUrl, final URL baseUrl) {
         this.authUrl = authUrl;
         this.baseUrl = baseUrl;
     }
