@@ -29,7 +29,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 10 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   - alert: de_manual_login_failed_rate_between_50%_and_80%
     expr: 0.5 <= DE:agent_login:className:manual:failed:delta1h / (DE:agent_login:className:manual:all_logins:delta1h > 5) < 0.8
@@ -46,7 +46,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 15 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   - alert: de_manual_login_failed_rate_between_30%_and_50%
     expr: 0.3 <= DE:agent_login:className:manual:failed:delta1h / (DE:agent_login:className:manual:all_logins:delta1h > 5) < 0.5
@@ -63,7 +63,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   #-------------------------------------------------------------------------------------------------------------------
   # Due to bank side issues
@@ -83,7 +83,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 10 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   - alert: de_manual_login_unavailable_rate_between_50%_and_80%
     expr: 0.5 <= DE:agent_login:className:manual:unavailable:delta1h / (DE:agent_login:className:manual:all_logins:delta1h > 5) < 0.8
@@ -100,7 +100,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 15 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   - alert: de_manual_login_unavailable_rate_between_30%_and_50%
     expr: 0.3 <= DE:agent_login:className:manual:unavailable:delta1h / (DE:agent_login:className:manual:all_logins:delta1h > 5) < 0.5
@@ -117,7 +117,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   #-------------------------------------------------------------------------------------------------------------------
   # Auth failed or abandoned - try to detect errors in integrations that make it impossible to succeed
@@ -137,7 +137,7 @@ spec:
         Checking last hour, with at least 20 attempts, active for at least 30 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   #-------------------------------------------------------------------------------------------------------------------
   # Other services at tink errors
@@ -157,7 +157,7 @@ spec:
         Checking last hour, with at least 10 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
 #=====================================================================================================================
 # Auto login alerts
@@ -182,7 +182,7 @@ spec:
         Checking last hour, with at least 10 attempts, active for at least 10 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   - alert: de_auto_login_failed_rate_between_50%_and_80%
     expr: 0.5 <= DE:agent_login:action_className:auto:failed:delta1h / (DE:agent_login:action_className:auto:all_logins:delta1h > 10) < 0.8
@@ -200,7 +200,7 @@ spec:
         Checking last hour, with at least 10 attempts, active for at least 15 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   #-------------------------------------------------------------------------------------------------------------------
   # Due to bank side issues
@@ -221,7 +221,7 @@ spec:
         Checking last hour, with at least 10 attempts, active for at least 10 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   - alert: de_auto_login_unavailable_rate_between_50%_and_80%
     expr: 0.5 <= DE:agent_login:action_className:auto:unavailable:delta1h / (DE:agent_login:action_className:auto:all_logins:delta1h > 10) < 0.8
@@ -239,7 +239,7 @@ spec:
         Checking last hour, with at least 10 attempts, active for at least 15 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   #-------------------------------------------------------------------------------------------------------------------
   # Session no longer valid
@@ -260,7 +260,7 @@ spec:
         Checking last hour, with at least 10 attempts, active for at least 30 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   #-------------------------------------------------------------------------------------------------------------------
   # Other services at tink errors
@@ -281,4 +281,4 @@ spec:
         Checking last hour, with at least 10 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>

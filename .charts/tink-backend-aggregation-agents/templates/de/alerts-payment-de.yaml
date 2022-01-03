@@ -25,7 +25,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 10 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
   
   - alert: de_payment_failed_rate_between_60%_and_80%
     expr: 0.6 <= DE:agent_transfer:className:failed:delta1h / (DE:agent_transfer:className:all_payments:delta1h > 5) < 0.8
@@ -42,7 +42,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 15 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   - alert: de_payment_failed_rate_between_40%_and_60%
     expr: 0.4 <= DE:agent_transfer:className:failed:delta1h / (DE:agent_transfer:className:all_payments:delta1h > 5) < 0.6
@@ -59,7 +59,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   #-------------------------------------------------------------------------------------------------------------------
   # Bank side errors alerts
@@ -79,7 +79,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   - alert: de_payment_unavailable_rate_between_40%_and_80%
     expr: 0.4 < DE:agent_transfer:className:unavailable:delta1h / (DE:agent_transfer:className:all_payments:delta1h > 5) < 0.8
@@ -96,7 +96,7 @@ spec:
         Checking last hour, with at least 5 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
 
   #-------------------------------------------------------------------------------------------------------------------
   # Authentication errors and cancelled payments alerts
@@ -116,4 +116,4 @@ spec:
         Checking last hour, with at least 10 attempts, active for at least 20 min.
         <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-      tags: {{ .Values.tags }}
+      tags: <{ $labels.className }>
