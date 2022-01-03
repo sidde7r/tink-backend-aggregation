@@ -25,6 +25,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
+        "//src/libraries/retrypolicy",
         "//src/libraries/serialization",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_http_client_google_http_client",

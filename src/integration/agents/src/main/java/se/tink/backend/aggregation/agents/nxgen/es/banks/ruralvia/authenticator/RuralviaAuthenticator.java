@@ -19,16 +19,17 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.authenticator.exception.GlobalPositionNotFoundException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
-import se.tink.integration.webdriver.ChromeDriverConfig;
-import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.integration.webdriver.logger.HtmlLogger;
+import se.tink.libraries.retrypolicy.RetryCallback;
+import se.tink.libraries.retrypolicy.RetryExecutor;
+import se.tink.libraries.retrypolicy.RetryPolicy;
 
 @Slf4j
 public class RuralviaAuthenticator implements Authenticator {
@@ -37,15 +38,19 @@ public class RuralviaAuthenticator implements Authenticator {
     private final WebDriverWrapper driver;
     private final AgentTemporaryStorage agentTemporaryStorage;
     private final HtmlLogger htmlLogger;
+    private final RetryExecutor retryExecutor = new RetryExecutor();
 
     public RuralviaAuthenticator(
             RuralviaApiClient apiClient,
             AgentTemporaryStorage agentTemporaryStorage,
-            RawHttpTrafficLogger rawHttpTrafficLogger) {
+            RawHttpTrafficLogger rawHttpTrafficLogger,
+            WebDriverWrapper driver) {
         this.apiClient = apiClient;
         this.agentTemporaryStorage = agentTemporaryStorage;
-        this.driver = createDriver(agentTemporaryStorage);
+        this.driver = driver;
         this.htmlLogger = new HtmlLogger(driver, rawHttpTrafficLogger);
+        this.retryExecutor.setRetryPolicy(
+                new RetryPolicy(3, GlobalPositionNotFoundException.class));
     }
 
     @Override
@@ -54,7 +59,15 @@ public class RuralviaAuthenticator implements Authenticator {
 
         checkCredentials(credentials);
 
-        doLogin(credentials);
+        // There are a lot of errors during authentication caused by not finding Global Posicion
+        // element. It looks that result is non deterministic, that's why retry used to increase
+        // chances of getting through.
+        retryExecutor.execute(
+                (RetryCallback<Void, GlobalPositionNotFoundException>)
+                        () -> {
+                            doLogin(credentials);
+                            return null;
+                        });
         apiClient.storeLoginCookies(driver.manage().getCookies());
         apiClient.setGlobalPositionHtml(driver.getPageSource());
         apiClient.setLogged(true);
@@ -107,18 +120,9 @@ public class RuralviaAuthenticator implements Authenticator {
             }
         } catch (NoSuchElementException e) {
             if (!driver.getPageSource().contains("<div id=\"HEADER\">Posición Global</div>")) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw new GlobalPositionNotFoundException("Global Position not Found");
             }
         }
-    }
-
-    private WebDriverWrapper createDriver(AgentTemporaryStorage agentTemporaryStorage) {
-        return ChromeDriverInitializer.constructChromeDriver(
-                ChromeDriverConfig.builder()
-                        .userAgent(HeaderValues.USER_AGENT)
-                        .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
-                        .build(),
-                agentTemporaryStorage);
     }
 
     private void waitForLoad(int secondsToWait) {

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.authenticator.RuralviaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.creditcard.RuralviaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.identitydata.RuralviaIdentityDataFetcher;
@@ -36,6 +37,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.ChromeDriverConfig;
+import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, IDENTITY_DATA})
 public class RuralviaAgent extends NextGenerationAgent
@@ -69,8 +73,16 @@ public class RuralviaAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(HeaderValues.USER_AGENT)
+                                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                                .build(),
+                        agentTemporaryStorage);
+
         return new RuralviaAuthenticator(
-                apiClient, agentTemporaryStorage, context.getRawHttpTrafficLogger());
+                apiClient, agentTemporaryStorage, context.getRawHttpTrafficLogger(), driver);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
