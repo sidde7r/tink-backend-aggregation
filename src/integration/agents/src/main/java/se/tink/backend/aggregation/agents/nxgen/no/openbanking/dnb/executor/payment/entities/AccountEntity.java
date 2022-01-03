@@ -59,4 +59,10 @@ public class AccountEntity {
     public AccountIdentifierType getAccountType() {
         return Strings.isNullOrEmpty(bban) ? AccountIdentifierType.IBAN : AccountIdentifierType.NO;
     }
+
+    public AccountEntity toBban() {
+        return Strings.isNullOrEmpty(bban)
+                ? new AccountEntity(AccountIdentifierType.NO, iban.substring(4))
+                : new AccountEntity(AccountIdentifierType.NO, bban);
+    }
 }

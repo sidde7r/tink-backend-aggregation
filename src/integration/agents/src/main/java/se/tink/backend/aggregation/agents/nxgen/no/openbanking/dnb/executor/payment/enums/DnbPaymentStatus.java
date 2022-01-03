@@ -4,12 +4,12 @@ import java.util.Arrays;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum DnbPaymentStatus {
-    ACCEPTED("ACCP", PaymentStatus.PENDING),
+    ACCEPTED("ACCP", PaymentStatus.PAID),
     ACTIVE("ACTV", PaymentStatus.PENDING),
     STOPPED("PRSY", PaymentStatus.CANCELLED),
     PROCESSING("NEXT", PaymentStatus.PENDING),
     PENDING("PDNG", PaymentStatus.PENDING),
-    DECLINED("RJCT", PaymentStatus.REJECTED),
+    REJECTED("RJCT", PaymentStatus.REJECTED),
     EXECUTED("ACSC", PaymentStatus.PAID),
     NAUT("NAUT", PaymentStatus.PENDING),
     UNDEFINED("Undefined", PaymentStatus.UNDEFINED);

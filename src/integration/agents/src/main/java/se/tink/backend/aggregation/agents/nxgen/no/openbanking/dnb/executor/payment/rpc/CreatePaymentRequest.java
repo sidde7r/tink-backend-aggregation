@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums.DnbPaymentType;
@@ -10,7 +15,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonInclude(Include.NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Builder
 public class CreatePaymentRequest {
+
+    @JsonIgnore private DnbPaymentType dnbPaymentType;
 
     @JsonProperty("creditorAccount")
     private AccountEntity creditor;
@@ -29,64 +40,13 @@ public class CreatePaymentRequest {
 
     private String regulatoryReportingCode;
 
-    private CreatePaymentRequest(Builder builder) {
-        this.creditor = builder.creditor;
-        this.creditorName = builder.creditorName;
-        this.creditorAgent = builder.creditorAgent;
-        this.debtor = builder.debtor;
-        this.amount = builder.amount;
-        this.regulatoryReportingInformation = builder.regulatoryReportingInformation;
-        this.regulatoryReportingCode = builder.regulatoryReportingCode;
-    }
+    private RemittanceInformationStructured remittanceInformationStructured;
 
-    public static class Builder {
-        private DnbPaymentType dnbPaymentType;
-        private AccountEntity creditor;
-        private String creditorName;
-        private String creditorAgent;
-        private AccountEntity debtor;
-        private AmountEntity amount;
-        private String regulatoryReportingInformation;
-        private String regulatoryReportingCode;
+    private String remittanceInformationUnstructured;
 
-        public Builder withPaymentType(DnbPaymentType dnbPaymentType) {
-            this.dnbPaymentType = dnbPaymentType;
-            return this;
-        }
+    private String frequency;
 
-        public Builder withCreditor(AccountEntity creditor) {
-            this.creditor = creditor;
-            return this;
-        }
+    private String startDate;
 
-        public Builder withCreditorName(String creditorName) {
-            this.creditorName = creditorName;
-            return this;
-        }
-
-        public Builder withDebtor(AccountEntity debtor) {
-            this.debtor = debtor;
-            return this;
-        }
-
-        public Builder withAmount(AmountEntity amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public Builder withAdditionalInformation(
-                String creditorAgent,
-                String regulatoryReportingCode,
-                String regulatoryReportingInformation) {
-            this.creditorAgent = creditorAgent;
-            this.regulatoryReportingCode = regulatoryReportingCode;
-            this.regulatoryReportingInformation = regulatoryReportingInformation;
-
-            return this;
-        }
-
-        public CreatePaymentRequest build() {
-            return new CreatePaymentRequest(this);
-        }
-    }
+    private String endDate;
 }

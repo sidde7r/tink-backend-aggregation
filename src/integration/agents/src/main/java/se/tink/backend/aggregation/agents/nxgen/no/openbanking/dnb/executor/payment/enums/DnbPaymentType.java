@@ -1,59 +1,55 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums;
 
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.TypePair;
+import static se.tink.libraries.payments.common.model.PaymentScheme.INSTANT_NORWEGIAN_DOMESTIC_CREDIT_TRANSFER_STRAKS;
+import static se.tink.libraries.payments.common.model.PaymentScheme.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER;
+import static se.tink.libraries.transfer.rpc.PaymentServiceType.PERIODIC;
+import static se.tink.libraries.transfer.rpc.PaymentServiceType.SINGLE;
+
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 public enum DnbPaymentType {
-    SEPA_CREDIT_TRANSFERS("sepa-credit-transfers", PaymentType.SEPA),
     NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS(
-            "norwegian-domestic-credit-transfers", PaymentType.DOMESTIC),
-    NORWEGIAN_CROSS_BORDER_CREDIT_TRANSFERS(
-            "norwegian-cross-border-credit-transfers", PaymentType.INTERNATIONAL),
-    UNDEFINED("Undefined", PaymentType.UNDEFINED);
+            "payments", "norwegian-domestic-credit-transfers", PaymentType.DOMESTIC),
+    NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS_PERIODIC(
+            "periodic-payments", "norwegian-domestic-credit-transfers", PaymentType.DOMESTIC),
+    NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS_INSTANT(
+            "payments", "instant-norwegian-domestic-credit-transfers-straks", PaymentType.DOMESTIC);
 
-    // We map the payee and recipment account type identifier
-    // The transfer cannot be made between different types (ex. IBAN, NO)
-    private static final GenericTypeMapper<DnbPaymentType, TypePair>
-            accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper.<DnbPaymentType, TypePair>genericBuilder()
-                            .put(
-                                    NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS,
-                                    new TypePair(
-                                            AccountIdentifierType.NO, AccountIdentifierType.NO))
-                            .put(
-                                    SEPA_CREDIT_TRANSFERS,
-                                    new TypePair(
-                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
-                            .build();
-    private String text;
-    private PaymentType paymentType;
+    private final String typePath;
+    private final String subtypePath;
+    private final PaymentType paymentType;
 
-    DnbPaymentType(String text, PaymentType paymentType) {
-        this.text = text;
+    DnbPaymentType(String typePath, String subtypePath, PaymentType paymentType) {
+        this.typePath = typePath;
+        this.subtypePath = subtypePath;
         this.paymentType = paymentType;
     }
 
     public static DnbPaymentType getDnbPaymentType(PaymentRequest paymentRequest) {
-        Pair<AccountIdentifierType, AccountIdentifierType> accountIdentifiersKey =
-                paymentRequest.getPayment().getCreditorAndDebtorAccountType();
+        PaymentScheme paymentScheme = paymentRequest.getPayment().getPaymentScheme();
+        PaymentServiceType paymentServiceType = paymentRequest.getPayment().getPaymentServiceType();
 
-        return accountIdentifiersToPaymentTypeMapper
-                .translate(new TypePair(accountIdentifiersKey))
-                .orElseThrow(
-                        () ->
-                                new NotImplementedException(
-                                        "No DnbPaymentType found for your AccountIdentifiers pair "
-                                                + accountIdentifiersKey));
+        if (paymentScheme == NORWEGIAN_DOMESTIC_CREDIT_TRANSFER && paymentServiceType == PERIODIC) {
+            return NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS_PERIODIC;
+        } else if (paymentScheme == NORWEGIAN_DOMESTIC_CREDIT_TRANSFER
+                && paymentServiceType == SINGLE) {
+            return NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS;
+        } else if (paymentScheme == INSTANT_NORWEGIAN_DOMESTIC_CREDIT_TRANSFER_STRAKS) {
+            return NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS_INSTANT;
+        } else {
+            throw new UnsupportedOperationException("Unsupported payment type");
+        }
     }
 
-    @Override
-    public String toString() {
-        return text;
+    public String getTypePath() {
+        return typePath;
+    }
+
+    public String getSubtypePath() {
+        return subtypePath;
     }
 
     public PaymentType getTinkPaymentType() {

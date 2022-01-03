@@ -1,0 +1,30 @@
+REQUEST 1
+POST https://api.psd.dnb.no/v1/periodic-payments/norwegian-domestic-credit-transfers
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000
+
+{"creditorName":"John Smith","remittanceInformationUnstructured":"610550873500157","frequency":"Monthly","startDate":"2030-01-15","endDate":"2030-06-15","creditorAccount":{"bban":"60310977686"},"debtorAccount":{"bban":"12255428177"},"instructedAmount":{"amount":"0.01","currency":"NOK"}}
+
+
+RESPONSE 1
+201
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{"transactionStatus":"ACCP","paymentId":"STD-ODR-145647731","_links":{"self":{"href":"/v1/periodic-payments/norwegian-domestic-credit-transfers/STD-ODR-145647731"},"scaRedirect":{"href":"https://www.dnb.no/segp/appo/logon/psd2Start?blob=YG4k0HH1ouXyLAVekfN64Z3EopFJG5vKmKErKysLGC1RagDJB9SEUKvDKqZ9dMzWbR07BqVJWO7DvPkxOX_xl2UTR"}},"psuMessage":"Strong customer authentication is required"}
+
+REQUEST 2
+GET https://api.psd.dnb.no/v1/periodic-payments/norwegian-domestic-credit-transfers/STD-ODR-145647731
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{"startDate":"2030-01-15","endDate":"2030-06-15","frequency":"Monthly","debtorAccount":{"bban":"12255428177"},"instructedAmount":{"currency":"NOK","amount":"0.01"},"creditorAccount":{"bban":"60310977686"},"creditorName":"John Smith","remittanceInformationUnstructured":"610550873500157","transactionStatus":"ACCP"}
