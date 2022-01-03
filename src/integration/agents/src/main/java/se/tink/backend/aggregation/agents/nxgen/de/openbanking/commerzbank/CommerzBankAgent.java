@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
@@ -41,6 +42,7 @@ public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
     @Inject
     public CommerzBankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, "https://psd2.api.commerzbank.com");
+        client.addFilter(new TimeoutFilter());
     }
 
     @Override
