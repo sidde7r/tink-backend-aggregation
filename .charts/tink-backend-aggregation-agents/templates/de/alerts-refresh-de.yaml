@@ -16,7 +16,7 @@ spec:
     labels:
       severity: urgent
       priority: P1
-      who: connectivity-nazguls
+      who: integration-nazguls
     annotations:
       description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
       summary: |
@@ -34,7 +34,7 @@ spec:
     labels:
       severity: urgent
       priority: P2
-      who: connectivity-nazguls
+      who: integration-nazguls
     annotations:
       description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
       summary: |
@@ -52,7 +52,7 @@ spec:
     labels:
       severity: ping
       priority: P3
-      who: connectivity-nazguls
+      who: integration-nazguls
     annotations:
       description: Failed or partially completed outcome is when agent throws anything that doesn't end with unavailable
       summary: |
@@ -73,7 +73,7 @@ spec:
     labels:
       severity: urgent
       priority: P1
-      who: connectivity-nazguls
+      who: integration-nazguls
     annotations:
       description: Unavailable outcome is when agent throws BankServiceException
       summary: |
@@ -91,7 +91,7 @@ spec:
     labels:
       severity: urgent
       priority: P2
-      who: connectivity-nazguls
+      who: integration-nazguls
     annotations:
       description: Unavailable outcome is when agent throws BankServiceException
       summary: |
@@ -109,7 +109,7 @@ spec:
     labels:
       severity: ping
       priority: P3
-      who: connectivity-nazguls
+      who: integration-nazguls
     annotations:
       description: Unavailable outcome is when agent throws BankServiceException
       summary: |
