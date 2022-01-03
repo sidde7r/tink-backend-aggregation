@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.base.Strings;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -222,7 +222,8 @@ public class OpenIdAuthenticationController
         }
 
         if (oAuth2Token.canNotRefreshAccessToken()) {
-            log.info("[OpenIdAuthenticationController] Access token has expired and refreshing impossible. Expiring the session.");
+            log.info(
+                    "[OpenIdAuthenticationController] Access token has expired and refreshing impossible. Expiring the session.");
             cleanAuthenticationPersistentStorage();
             throw SessionError.SESSION_EXPIRED.exception();
         }
@@ -246,12 +247,15 @@ public class OpenIdAuthenticationController
 
     private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {
         log.info(
-                "[OpenIdAuthenticationController] Trying to refresh access token. Issued: [{}] Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
-                new Date(oAuth2Token.getIssuedAt() * 1000),
-                new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
+                "[OpenIdAuthenticationController] Trying to refresh access token. "
+                        + "Issued: [{}] Access Expires: [{}] "
+                        + "Has Refresh Token: [{}] Refresh Token Expires: [{}]",
+                LocalDateTime.ofEpochSecond(oAuth2Token.getIssuedAt(), 0, ZoneOffset.UTC),
+                LocalDateTime.ofEpochSecond(oAuth2Token.getAccessExpireEpoch(), 0, ZoneOffset.UTC),
                 !oAuth2Token.isRefreshNullOrEmpty(),
                 oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
-                        ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
+                        ? LocalDateTime.ofEpochSecond(
+                                oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
                         : "N/A");
 
         String refreshToken = oAuth2Token.getRefreshToken().get();
@@ -285,11 +289,12 @@ public class OpenIdAuthenticationController
             throw SessionError.SESSION_EXPIRED.exception();
         }
         log.info(
-                "[OpenIdAuthenticationController] Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
-                new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
+                "[OpenIdAuthenticationController] Token refreshed successfully. New token - Access Expires: [{}] Has Refresh Token: [{}] Refresh Expires: [{}]",
+                LocalDateTime.ofEpochSecond(oAuth2Token.getAccessExpireEpoch(), 0, ZoneOffset.UTC),
                 !oAuth2Token.isRefreshNullOrEmpty(),
                 oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
-                        ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
+                        ? LocalDateTime.ofEpochSecond(
+                                oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
                         : "N/A");
         return oAuth2Token;
     }
