@@ -61,7 +61,7 @@ public class CredentialsCrypto {
         // See if there is any sensitive data on the credential
         String credentialsSensitiveData = credentials.getSensitiveDataSerialized();
         String dataToDecrypt = credentialsSensitiveData;
-
+        String consentId = request.getConsentId();
         // if force authenticate flag is true, we never consider cached data
         if (!request.isForceAuthenticate()) {
             // See if there is any sensitive data in the cache
@@ -71,9 +71,16 @@ public class CredentialsCrypto {
                                     CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
                                     credentials.getId());
 
-            dataToDecrypt =
-                    pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
+            if (shouldPickCachedSensitiveData(cachedSensitiveData, credentialsSensitiveData)) {
+                dataToDecrypt = cachedSensitiveData;
+                consentId =
+                        (String)
+                                cacheClient.get(
+                                        CacheScope.CONSENTID_BY_CREDENTIALSID, credentials.getId());
+            }
         }
+
+        request.setConsentId(consentId);
 
         if (Strings.isNullOrEmpty(dataToDecrypt)) {
             // There's nothing to decrypt. Both cache and credential were empty.
@@ -235,6 +242,12 @@ public class CredentialsCrypto {
             // read/write logic such that a request will never have stale data in the first place.
             // This cache is read in class `CredentialsCrypto`
             cacheSensitiveData(request, encryptedCredentials, serializedEncryptedCredentials);
+            // consent id is propagated back to customer cluster and used to store the sensitive
+            // data on the corresponding consent
+            // similarly, during bg refresh for example, we might end up using sensitive data from a
+            // consent other that the one specified in the request. This means the consent has to be
+            // cached along with its sensitive data
+            cacheConsentId(request);
         }
 
         cryptoMetrics(CREDENTIALS_ENCRYPT, encryptedCredentials, true);
@@ -249,6 +262,24 @@ public class CredentialsCrypto {
         }
 
         return true;
+    }
+
+    private void cacheConsentId(CredentialsRequest request) {
+        try {
+            Future<?> future =
+                    cacheClient.set(
+                            CacheScope.CONSENTID_BY_CREDENTIALSID,
+                            request.getCredentials().getId(),
+                            CACHE_EXPIRE_TIME,
+                            request.getConsentId());
+
+            logCheckResult(future);
+
+            logger.info(
+                    "cached consentId: {} by {}", request.getConsentId(), cacheClient.getClass());
+        } catch (Exception e) {
+            logger.error("Could not cache consent id", e);
+        }
     }
 
     private void cacheSensitiveData(
@@ -303,20 +334,20 @@ public class CredentialsCrypto {
                 .inc();
     }
 
-    private String pickMostRecentSensitiveData(String cached, String incoming) {
+    private boolean shouldPickCachedSensitiveData(String cached, String incoming) {
         if (Strings.isNullOrEmpty(cached) && Strings.isNullOrEmpty(incoming)) {
-            return null;
+            return false;
         }
         // Return the other one if one is null.
         if (Strings.isNullOrEmpty(cached)) {
             logger.info(
                     "using incoming sensitive data with timestamp: {}",
                     formatDate(getDate(incoming)));
-            return incoming;
+            return false;
         } else if (Strings.isNullOrEmpty(incoming)) {
             logger.info(
                     "using cached sensitive data with timestamp: {}", formatDate(getDate(cached)));
-            return cached;
+            return true;
         }
 
         // Return the latest one if both are set.
@@ -332,14 +363,14 @@ public class CredentialsCrypto {
                     "using cached sensitive data, incoming timestamp:{}, cached timestamp:{}",
                     formatDate(incomingDeserialized.getTimestamp()),
                     formatDate(cachedDeserialized.getTimestamp()));
-            return cached;
+            return true;
         } else {
             logger.info(
                     "using incoming sensitive data, incoming timestamp:{}, cached timestamp:{}",
                     formatDate(incomingDeserialized.getTimestamp()),
                     formatDate(cachedDeserialized.getTimestamp()));
 
-            return incoming;
+            return false;
         }
     }
 
