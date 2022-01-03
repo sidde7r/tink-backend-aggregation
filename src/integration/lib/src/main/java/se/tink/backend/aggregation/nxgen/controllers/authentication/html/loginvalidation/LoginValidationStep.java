@@ -1,13 +1,13 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.webscraping.loginvalidation;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation;
 
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation.validators.LoginValidator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation.validators.LoginValidatorFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.webscraping.loginvalidation.validators.LoginValidator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.webscraping.loginvalidation.validators.LoginValidatorFactory;
 
 public class LoginValidationStep<INPUT> extends AbstractAuthenticationStep {
 

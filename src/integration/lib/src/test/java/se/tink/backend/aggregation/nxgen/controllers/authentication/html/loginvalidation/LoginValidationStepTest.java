@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.webscraping.loginvalidation;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -13,9 +13,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation.validators.LoginValidator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation.validators.LoginValidatorFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.webscraping.loginvalidation.validators.LoginValidator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.webscraping.loginvalidation.validators.LoginValidatorFactory;
 
 public class LoginValidationStepTest {
     LoginValidatorFactory loginValidatorsFactory;

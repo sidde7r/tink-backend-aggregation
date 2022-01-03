@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.webscraping.loginvalidation.validators;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation.validators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

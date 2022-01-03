@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.webscraping.loginvalidation;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.CallbackProcessorEmpty;
 
