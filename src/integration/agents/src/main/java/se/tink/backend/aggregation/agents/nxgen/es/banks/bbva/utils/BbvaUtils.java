@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ExtendedPeriod.NINETY_DAYS;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.UTILS_SPLIT_GET_PAGINATION_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LoginParameter.USER_VALUE_PREFIX;
 
@@ -7,8 +8,12 @@ import io.vavr.collection.List;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 import se.tink.libraries.identitydata.countries.EsIdentityDocumentType;
 
@@ -272,5 +277,19 @@ public class BbvaUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Verify is the date is more than 90 days old
+     *
+     * @param date
+     * @return
+     */
+    public static boolean isMoreThan90DaysOld(Date date) {
+        LocalDate nowMinus90days =
+                LocalDate.now(ZoneId.of(Defaults.TIMEZONE_CET)).minusDays(NINETY_DAYS);
+        LocalDate fromDate =
+                date.toInstant().atZone(ZoneId.of(Defaults.TIMEZONE_CET)).toLocalDate();
+        return fromDate.isBefore(nowMinus90days);
     }
 }

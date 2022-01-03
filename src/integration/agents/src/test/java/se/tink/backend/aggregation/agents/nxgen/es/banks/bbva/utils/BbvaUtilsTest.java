@@ -5,6 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import io.vavr.control.Option;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import junitparams.JUnitParamsRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -162,5 +165,27 @@ public class BbvaUtilsTest {
 
         // then
         assertThat(result).isNull();
+    }
+
+    @Test
+    public void shouldReturnTrueIfDateIsMoreThan90DaysOld() {
+        // when
+        LocalDateTime localDate = LocalDateTime.now().minusDays(365);
+        Date dateOneYear = Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
+        boolean result = BbvaUtils.isMoreThan90DaysOld(dateOneYear);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void shouldReturnFalseIfDateIsLessThan90DaysOld() {
+        // when
+        LocalDateTime localDate = LocalDateTime.now().minusDays(30);
+        Date dateOneMonth = Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
+        boolean result = BbvaUtils.isMoreThan90DaysOld(dateOneMonth);
+
+        // then
+        assertThat(result).isFalse();
     }
 }
