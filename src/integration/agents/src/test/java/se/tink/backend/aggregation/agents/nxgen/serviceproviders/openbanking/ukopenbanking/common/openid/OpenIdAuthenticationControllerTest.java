@@ -58,7 +58,7 @@ public class OpenIdAuthenticationControllerTest {
     }
 
     @Test
-    public void shouldCompleteAutoAuthenticationWhenAccessTokenIsStillValid() {
+    public void shouldAutoAuthenticateSuccessfullyWhenAccessTokenIsNotExpired() {
         // given
         OAuth2Token oAuth2Token = createValidOAuth2Token();
         when(persistentStorage.get(
@@ -72,7 +72,7 @@ public class OpenIdAuthenticationControllerTest {
     }
 
     @Test
-    public void shouldSuccessfullyRefreshedAccessToken() {
+    public void shouldAutoAuthenticateSuccessfullyByRefreshingAccessToken() {
         // given
         OAuth2Token invalidOAuth2Token = createInvalidOAuth2Token();
         OAuth2Token refreshedOAuth2Token = createValidOAuth2Token();
