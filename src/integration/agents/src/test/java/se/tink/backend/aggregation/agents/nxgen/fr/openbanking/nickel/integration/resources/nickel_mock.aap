@@ -1,0 +1,294 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.nickel.eu/customer-authentication-api-v2/v1/minimum-viable-authentications
+referer: https://api.nickel.eu/
+Content-Type: application/json
+
+{
+  "barcode": "username",
+  "password": "password",
+  "client": {
+    "app": {
+      "type": "WEB",
+      "version": "1.00.0"
+    },
+    "device": {
+      "name": "Tink",
+      "type": "CHROME"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Mon, 13 Dec 2021 16:45:45 GMT
+Date: Mon, 13 Dec 2021 16:45:45 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+x-correlation-id: 93189d31-7cb5-41c6-b8d5-11aaf6050d9a
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+Expires: 07
+x-frame-options: DENY
+x-envoy-upstream-service-time: ***
+x-envoy-decorator-operation: ***
+Content-Length: 698
+
+{
+  "customerId": 426723,
+  "accessToken": "DummyAccessToken",
+  "culture": "fr-FR",
+  "registrationCountry": "FR",
+  "customerType": "NOB"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://api.nickel.eu/personal-space-api/api/v3/authentications
+Accept: application/json, text/plain, */*
+content-type: application/json
+
+{
+  "barcode": "username",
+  "minimumViableToken": "DummyAccessToken",
+  "deviceType": "CHROME",
+  "version": "1.00.0"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Mon, 13 Dec 2021 16:45:46 GMT
+Date: Mon, 13 Dec 2021 16:45:46 GMT
+Content-Type: application/json
+Expires: 0
+Content-Length: 892
+
+{
+  "accessToken": "DummyToken",
+  "id_token": "DummyToken"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api.nickel.eu/customer-banking-api/accounts?customer_id=426723
+Accept: application/json, text/plain, */*
+referer: https://api.nickel.eu/
+content-type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Mon, 13 Dec 2021 16:45:47 GMT
+Date: Mon, 13 Dec 2021 16:45:47 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+Content-Length: 731
+
+{
+  "accounts": [
+    {
+      "number": "12345678901",
+      "firstName": "JANE",
+      "lastName": "DOE",
+      "accessToken": "DummyAccountToken",
+      "primaryAccount": true
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.nickel.eu/customer-banking-api/accounts/12345678901/overview
+referer: https://api.nickel.eu/
+content-type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Mon, 13 Dec 2021 16:45:48 GMT
+Date: Mon, 13 Dec 2021 16:45:48 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+Content-Length: 61
+
+{
+  "balance": 533,
+  "creationDate": "2016-11-06T18:30:00"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.nickel.eu/customer-banking-api/customers/426723/accounts/primary/details
+referer: https://api.nickel.eu/
+content-type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Mon, 13 Dec 2021 16:45:49 GMT
+Date: Mon, 13 Dec 2021 16:45:49 GMT
+Content-Type: application/json
+Content-Length: 570
+
+{
+  "holder": {
+    "title": "MS",
+    "lastName": "DOE",
+    "firstName": "JANE",
+    "address": {
+      "address": "15 Champ Elysee ",
+      "city": "PARIS",
+      "zipCode": "15 Champ Elysee",
+      "country": "FR"
+    }
+  },
+  "agency": {
+    "name": "FPE CHARENTON",
+    "address": {
+      "address": "1 PLACE DES MARSEILLAIS",
+      "city": "CHARENTON LE PONT",
+      "zipCode": "94220",
+      "country": "FR"
+    }
+  },
+  "bankCode": "16598",
+  "branchCode": "00001",
+  "accountNumber": "12345678901",
+  "key": "81",
+  "bic": "FPELFR21XXX",
+  "iban": "FR7616598000011234567890181"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.nickel.eu/customer-banking-api/accounts/12345678901/operations
+referer: https://api.nickel.eu/
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json
+Vary: Accept-Encoding
+Content-Length: 3433
+
+{
+  "operations": [
+    {
+      "id": "494e8440-4ca5-11ec-9490-3d06c2a7650a",
+      "date": "2021-11-23T21:35:32.484Z",
+      "amount": -1908,
+      "currency": "EUR",
+      "category": {
+        "id": "TRA",
+        "label": "Transport",
+        "i18nKey": "transportation"
+      },
+      "type": "Achat",
+      "typeI18n": "purchase",
+      "status": "EXECUTED",
+      "label": "TAXI FARE",
+      "merchantAddress": {
+        "address": "Long Street",
+        "city": "Dublin",
+        "zipCode": "VA 24084",
+        "country": "US"
+      },
+      "newBalance": 533,
+      "authorizationNumber": "687376",
+      "provisionDate": "2021-11-23T21:35:32.484Z",
+      "accountingDate": "2021-11-25T18:03:44.327Z",
+      "bucket": "2021-11-01T00:00:00Z",
+      "readMode": "04",
+      "pinMode": "00",
+      "merchantName": "TAXI CORPORATION",
+      "mccCode": "4121"
+    },
+    {
+      "id": "842e6070-4607-11ec-bb13-3d2ca13268bd",
+      "date": "2021-11-15T11:31:03.799Z",
+      "amount": -750,
+      "currency": "EUR",
+      "type": "Achat",
+      "typeI18n": "purchase",
+      "status": "EXECUTED",
+      "label": "BOOKS",
+      "merchantAddress": {
+        "address": "89 Rue Saint-Antonine",
+        "city": "PARIS 11",
+        "zipCode": "75004",
+        "country": "FR"
+      },
+      "newBalance": 2441,
+      "authorizationNumber": "863895",
+      "provisionDate": "2021-11-15T11:31:03.799Z",
+      "accountingDate": "2021-11-17T16:49:58.029Z",
+      "bucket": "2021-11-01T00:00:00Z",
+      "readMode": "81",
+      "pinMode": "02",
+      "merchantName": "Librairie du Marais",
+      "mccCode": "6012"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api.nickel.eu/personal-space-api/api/v2/users/username
+Accept: application/json, text/plain, */*
+content-type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json
+Content-Length: 1022
+
+{
+  "customerID": "0430288",
+  "title": "MS",
+  "lastName": "DOE",
+  "firstName": "JANE",
+  "address": {
+    "address": "15 Champ Elysee ",
+    "city": "PARIS",
+    "zipCode": "12345",
+    "country": "FRA",
+    "linearized": "15 Champ Elysee  12345 PARIS FRA"
+  },
+  "email": "....e@gmail.com",
+  "emailEditable": true,
+  "phoneNumber": "+3378614****",
+  "phoneNumberEditable": true,
+  "maritalStatus": "CE",
+  "professionalStatus": "012",
+  "housingStatus": "LO",
+  "accountUsage": "SECON",
+  "personalDataApproval": {
+    "advertising": false,
+    "communication": true,
+    "survey": false
+  },
+  "birthDay": "1979-10-21T00:00:00Z",
+  "birthPlace": "PARIS",
+  "profession": "Chef de projet digital ",
+  "professionDetail": "COM",
+  "sex": "F",
+  "usageDetails": [
+    "AU"
+  ],
+  "taxResidence": "FR",
+  "taxResidences": [
+    {
+      "iso2": "FR"
+    }
+  ],
+  "wealth": "TRA2",
+  "earnings": "TRA4",
+  "nationalityIso2": "FR",
+  "lastConnectionDate": "2021-12-13T16:45:45.450Z",
+  "locale": "fr-FR",
+  "usResidentOrBorn": false
+}
