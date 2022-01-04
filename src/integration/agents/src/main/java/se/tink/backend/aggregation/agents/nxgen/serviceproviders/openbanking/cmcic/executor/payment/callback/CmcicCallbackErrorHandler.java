@@ -82,14 +82,14 @@ public class CmcicCallbackErrorHandler implements CmcicCallbackHandlingStrategy 
     public void handleCallback(CmcicCallbackData cmcicCallbackData) {
         Map<String, String> expectedCallbackData = cmcicCallbackData.getExpectedCallbackData();
         String error = expectedCallbackData.get(ERROR);
-        String error_description = expectedCallbackData.get(DESCRIPTION);
+        String errorDescription = expectedCallbackData.get(DESCRIPTION);
         String state = expectedCallbackData.get(STATE);
         log.info(
                 "Received error callback. State: {}, error: {}, error description: {}",
                 state,
                 error,
-                error_description);
-        ImmutablePair<String, String> errorPair = ImmutablePair.of(error, error_description);
+                errorDescription);
+        ImmutablePair<String, String> errorPair = ImmutablePair.of(error, errorDescription);
         throw errorHandlingMapping
                 .getOrDefault(errorPair, this::getExceptionForUnmappedError)
                 .get();
