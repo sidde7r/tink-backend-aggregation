@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,8 +34,8 @@ public class AccountsBalancesUpdater {
             BookedBalanceCalculator bookedBalanceCalculator,
             AvailableBalanceCalculator availableBalanceCalculator,
             boolean dryRun) {
-        this.bookedBalanceCalculator = bookedBalanceCalculator;
-        this.availableBalanceCalculator = availableBalanceCalculator;
+        this.bookedBalanceCalculator = Objects.requireNonNull(bookedBalanceCalculator);
+        this.availableBalanceCalculator = Objects.requireNonNull(availableBalanceCalculator);
         this.dryRun = dryRun;
     }
 
@@ -78,7 +79,8 @@ public class AccountsBalancesUpdater {
 
         if (ACCOUNT_TYPES_SUPPORTING_BOOKED_CALCULATIONS.contains(account.getType())) {
             log.info(
-                    "[BALANCE CALCULATOR] Found account type {}. Trying to run booked balance calculation",
+                    "[BALANCE CALCULATOR] Found account type {}. Trying to run "
+                            + "booked balance calculation",
                     account.getType());
 
             ExactCurrencyAmount buggyBookedBalance = account.getExactBalance();
@@ -87,7 +89,8 @@ public class AccountsBalancesUpdater {
 
             if (dryRun) {
                 log.info(
-                        "[BALANCE CALCULATOR] Dry run. Buggy booked balance would be replaced by calculated: {} -> {}",
+                        "[BALANCE CALCULATOR] Dry run. Buggy booked balance would be "
+                                + "replaced by calculated: {} -> {}",
                         buggyBookedBalance,
                         calculatedBookedBalance);
             }
@@ -99,7 +102,8 @@ public class AccountsBalancesUpdater {
                     });
 
             log.info(
-                    "[BALANCE CALCULATOR] Buggy booked balance was replaced by calculated: {} -> {}",
+                    "[BALANCE CALCULATOR] Buggy booked balance was replaced "
+                            + "by calculated: {} -> {}",
                     buggyBookedBalance,
                     calculatedBookedBalance);
         }
@@ -112,7 +116,8 @@ public class AccountsBalancesUpdater {
 
         if (ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS.contains(account.getType())) {
             log.info(
-                    "[BALANCE CALCULATOR] Found account type {}. Trying to run available balance calculation",
+                    "[BALANCE CALCULATOR] Found account type {}. Trying to "
+                            + "run available balance calculation",
                     account.getType());
 
             ExactCurrencyAmount buggyAvailableBalance = account.getAvailableBalance();
@@ -122,7 +127,8 @@ public class AccountsBalancesUpdater {
 
             if (dryRun) {
                 log.info(
-                        "[BALANCE CALCULATOR] Dry run. Buggy available balance would be replaced by calculated: {} -> {}",
+                        "[BALANCE CALCULATOR] Dry run. Buggy available balance would be "
+                                + "replaced by calculated: {} -> {}",
                         buggyAvailableBalance,
                         calculatedAvailableBalance);
                 return;
@@ -131,7 +137,8 @@ public class AccountsBalancesUpdater {
             calculatedAvailableBalance.ifPresent(account::setAvailableBalance);
 
             log.info(
-                    "[BALANCE CALCULATOR] Buggy available balance was replaced by calculated: {} -> {}",
+                    "[BALANCE CALCULATOR] Buggy available balance was replaced "
+                            + "by calculated: {} -> {}",
                     buggyAvailableBalance,
                     calculatedAvailableBalance);
         }
