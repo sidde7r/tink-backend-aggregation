@@ -76,6 +76,10 @@ public class OpenIdConstants {
         public static final String INVALID_INTENT_ID = "invalid_openbanking_intent_id";
     }
 
+    public static class ErrorDescriptions {
+        public static final String SERVER_ERROR_PROCESSING = "server_error_processing";
+    }
+
     public static class Ps256 {
 
         public static class PayloadClaims {

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -12,7 +13,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
@@ -22,7 +25,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.CallbackParams;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorDescriptions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -210,6 +218,58 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         assertThat(thrown).isInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void
+            shouldThrowThirdPartyAppErrorWhenServerErrorOccursAndErrorDescriptionIsServerErrorProcessing() {
+        // given
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn("randomSupplementalKey");
+        openIdAuthenticationController = initOpenIdAuthenticationController();
+        Map<String, String> callbackData =
+                ImmutableMap.of(
+                        CallbackParams.ERROR,
+                        Errors.SERVER_ERROR,
+                        CallbackParams.ERROR_DESCRIPTION,
+                        ErrorDescriptions.SERVER_ERROR_PROCESSING);
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        anyString(), anyLong(), any()))
+                .thenReturn(Optional.of(callbackData));
+
+        // when
+        Throwable throwable =
+                catchThrowable(() -> openIdAuthenticationController.collect("randomString"));
+
+        // then
+        assertThat(throwable)
+                .isExactlyInstanceOf(ThirdPartyAppError.CANCELLED.exception().getClass())
+                .hasMessage(ErrorDescriptions.SERVER_ERROR_PROCESSING);
+    }
+
+    @Test
+    public void
+            shouldThrowBankServiceErrorWhenServerErrorOccursAndErrorDescriptionIsNotServerErrorProcessing() {
+        // given
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn("randomSupplementalKey");
+        openIdAuthenticationController = initOpenIdAuthenticationController();
+        Map<String, String> callbackData =
+                ImmutableMap.of(
+                        CallbackParams.ERROR,
+                        Errors.SERVER_ERROR,
+                        CallbackParams.ERROR_DESCRIPTION,
+                        "Description of some other server error");
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        anyString(), anyLong(), any()))
+                .thenReturn(Optional.of(callbackData));
+
+        // when
+        Throwable throwable =
+                catchThrowable(() -> openIdAuthenticationController.collect("randomString"));
+
+        // then
+        assertThat(throwable)
+                .isExactlyInstanceOf(BankServiceError.BANK_SIDE_FAILURE.exception().getClass())
+                .hasMessage("Description of some other server error");
     }
 
     private OpenIdAuthenticationController initOpenIdAuthenticationController() {
