@@ -1,3 +1,5 @@
+# Description on how events are counted in this approach is available on the Confluence page:
+# https://tinkab.atlassian.net/wiki/spaces/INT/pages/6036291705/
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
@@ -6,99 +8,23 @@ metadata:
 spec:
   interval: 2m30s
   rules:
-    - record: increase:all_logins_pl:delta1h
-      expr: floor(increase(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h]))
-    - record: sum:all_logins_pl:delta1h
+    - record: internal:sum:all_logins_by_outcome_action_pl:delta1h
       expr: |
-        sum by (className) (
-          (increase:all_logins_pl:delta1h
+        sum by (className, action, outcome) (
+          (floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h]))
            and
-           (tink_agent_login_total{action="login", market="PL", provider_type!="test"} offset 1h
-            unless tink_agent_login_total{action="login", market="PL", provider_type!="test"}))
-          or
-          (1 + increase:all_logins_pl:delta1h - floor(count_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[1h]) / 360))
-        )
+           (tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"} offset 1h
+            unless tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}))
+          or (1 + floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h]) / 360))
+        ) > 0
 
-    # ALL LOGIN ATTEMPTS (4h)
-    - record: increase:all_logins_pl:delta4h
-      expr: floor(increase(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[4h]))
-    - record: sum:all_logins_pl:delta4h
+    - record: internal:sum:all_refreshes_by_type_outcome_pl:delta1h
       expr: |
-        sum by (className) (
-          (increase:all_logins_pl:delta4h
-           and
-           (tink_agent_login_total{action="login", market="PL", provider_type!="test"} offset 4h
-            unless tink_agent_login_total{action="login", market="PL", provider_type!="test"}))
-          or
-          (1 + increase:all_logins_pl:delta4h - floor(count_over_time(tink_agent_login_total{action="login", market="PL", provider_type!="test"}[4h]) / 1440))
-        )
-
-    # FAILED LOGIN ATTEMPTS (1h)
-    - record: increase:failed_logins_pl:delta1h
-      expr: floor(increase(tink_agent_login_total{action="login", outcome=~"failed.*", market="PL", provider_type!="test"}[1h]))
-    - record: sum:failed_logins_pl:delta1h
-      expr: |
-        sum by (className) (
-          (increase:failed_logins_pl:delta1h
-           and
-           (tink_agent_login_total{action="login", outcome=~"failed.*", market="PL", provider_type!="test"} offset 1h
-            unless tink_agent_login_total{action="login", outcome=~"failed.*", market="PL", provider_type!="test"}))
-          or
-          (1 + increase:failed_logins_pl:delta1h - floor(count_over_time(tink_agent_login_total{action="login", outcome=~"failed.*", market="PL", provider_type!="test"}[1h]) / 360))
-        )
-
-    # UNSUCCESSFUL BACKGROUND LOGINS (4h)
-    - record: increase:unsuccessful_background_logins_pl:delta4h
-      expr: floor(increase(tink_agent_login_total{action="login-cron", outcome!="completed", market="PL", provider_type!="test"}[4h]))
-    - record: sum:unsuccessful_background_logins_pl:delta4h
-      expr: |
-        sum by (className) (
-          (increase:unsuccessful_background_logins_pl:delta4h
-           and
-           (tink_agent_login_total{action="login-cron", outcome!="completed", market="PL", provider_type!="test"} offset 4h
-            unless tink_agent_login_total{action="login-cron", outcome!="completed", market="PL", provider_type!="test"}))
-          or
-          (1 + increase:unsuccessful_background_logins_pl:delta4h - floor(count_over_time(tink_agent_login_total{action="login-cron", outcome!="completed", market="PL", provider_type!="test"}[4h]) / 1440))
-        )
-
-    # UNSUCCESSFUL ON-DEMAND LOGINS (4h)
-    - record: increase:unsuccessful_on_demand_logins_pl:delta4h
-      expr: floor(increase(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="PL", provider_type!="test"}[4h]))
-    - record: sum:unsuccessful_on_demand_logins_pl:delta4h
-      expr: |
-        sum by (className) (
-          (increase:unsuccessful_on_demand_logins_pl:delta4h
-           and
-           (tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="PL", provider_type!="test"} offset 4h
-            unless tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="PL", provider_type!="test"}))
-          or
-          (1 + increase:unsuccessful_on_demand_logins_pl:delta4h - floor(count_over_time(tink_agent_login_total{action=~"login-manual|login-auto", outcome!="completed", market="PL", provider_type!="test"}[4h]) / 1440))
-        )
-
-    # ALL REFRESH ATTEMPTS PER TYPE (1h)
-    - record: increase:all_refreshes_per_type_pl:delta1h
-      expr: floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[1h]))
-    - record: sum:all_refreshes_per_type_pl:delta1h
-      expr: |
-        sum by (className, type) (
-          (increase:all_refreshes_per_type_pl:delta1h
+        sum by (className, type, outcome) (
+          (floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[1h]))
            and
            (tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"} offset 1h
             unless tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}))
           or
-          (1 + increase:all_refreshes_per_type_pl:delta1h - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[1h]) / 360))
-        )
-
-    # FAILED REFRESH ATTEMPTS PER TYPE (1h)
-    - record: increase:failed_refreshes_per_type_pl:delta1h
-      expr: floor(increase(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="PL", provider_type!="test"}[1h]))
-    - record: sum:failed_refreshes_per_type_pl:delta1h
-      expr: |
-        sum by (className, type) (
-          (increase:failed_refreshes_per_type_pl:delta1h
-           and
-           (tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="PL", provider_type!="test"} offset 1h
-            unless tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="PL", provider_type!="test"}))
-          or
-          (1 + increase:failed_refreshes_per_type_pl:delta1h - floor(count_over_time(tink_agent_refresh_total{action="refresh", outcome=~"failed.*|partially_completed", market="PL", provider_type!="test"}[1h]) / 360))
-        )
+          (1 + floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[1h]) / 360))
+        ) > 0

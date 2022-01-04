@@ -27,9 +27,6 @@ spec:
             unless tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}))
           or (1 + floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h]) / 360))
         ) > 0
-      labels:
-        recording_rule_type: agent_logins_by_action_outcome_delta1h
-        recording_rule_market: DK
 
     - record: internal:sum:all_refreshes_by_type_outcome_dk:delta1h
       expr: |
@@ -41,6 +38,3 @@ spec:
           or
           (1 + floor(increase(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="DK", provider_type!="test"}[1h]) / 360))
         ) > 0
-      labels:
-        recording_rule_type: agent_refreshes_by_type_outcome_delta1h
-        recording_rule_market: DK

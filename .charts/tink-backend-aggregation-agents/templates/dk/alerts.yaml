@@ -4,7 +4,7 @@ metadata:
   name: alerts-dk
   namespace: agents
 spec:
-  interval: 10m
+  interval: 5m
   rules:
     - record: sum:failed_refreshes_per_type_dk:delta1h
       expr: sum by (className, type) (internal:sum:all_refreshes_by_type_outcome_dk:delta1h{outcome=~"partially_completed|failed.*"})
@@ -13,7 +13,7 @@ spec:
 
     - alert: RefreshFailureRateAbove20%DK
       expr: 0.2 <= sum:failed_refreshes_per_type_dk:delta1h / (sum:not_unavailable_refreshes_per_type_dk:delta1h >= 3) < 0.75
-      for: 20m
+      for: 10m
       labels:
         priority: P3
         severity: ping
@@ -26,7 +26,7 @@ spec:
 
     - alert: RefreshFailureRateAbove75%DK
       expr: sum:failed_refreshes_per_type_dk:delta1h / (sum:not_unavailable_refreshes_per_type_dk:delta1h >= 3) >= 0.75
-      for: 20m
+      for: 10m
       labels:
         priority: P1
         severity: urgent
@@ -44,7 +44,7 @@ spec:
 
     - alert: OnDemandLoginFailureRateAbove20%DK
       expr: 0.2 <= sum:failed_on_demand_logins_dk:delta1h / (sum:not_cancelled_or_unavailable_on_demand_logins_dk:delta1h >= 3) < 0.75
-      for: 20m
+      for: 10m
       labels:
         priority: P3
         severity: ping
@@ -57,7 +57,7 @@ spec:
 
     - alert: OnDemandLoginFailureRateAbove75%DK
       expr: sum:failed_on_demand_logins_dk:delta1h / (sum:not_cancelled_or_unavailable_on_demand_logins_dk:delta1h >= 3) >= 0.75
-      for: 20m
+      for: 10m
       labels:
         priority: P1
         severity: urgent
@@ -75,7 +75,7 @@ spec:
 
     - alert: BackgroundLoginFailureRateAbove50%DK
       expr: sum:failed_background_logins:delta1h / (sum:not_cancelled_or_unavailable_background_logins_dk:delta1h >= 3) >= 0.5
-      for: 20m
+      for: 10m
       labels:
         priority: P1
         severity: urgent
