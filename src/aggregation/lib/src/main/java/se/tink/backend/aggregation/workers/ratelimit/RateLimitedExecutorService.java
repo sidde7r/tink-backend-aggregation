@@ -209,6 +209,7 @@ public class RateLimitedExecutorService implements Managed {
             throws Exception {
         final RateLimitedExecutorProxy executorProxy =
                 rateLimitedRefreshInformationRequestExecutorByProvider.get(provider);
+        logger.info("Executing runnable for provider {}", provider.getName());
         executorProxy.execute(Tracing.wrapRunnable(namedRunnable));
     }
 

@@ -246,6 +246,7 @@ public class AgentWorker extends ManagedSafeStop {
             log.warn("Shutdown was interrupted while awaiting termination.", e);
             Thread.currentThread().interrupt();
         }
+        log.info("[AgentWorker] shutdownExecutor - successful shutdown");
     }
 
     private void shutdownAutomaticRefreshExecutorService() {
