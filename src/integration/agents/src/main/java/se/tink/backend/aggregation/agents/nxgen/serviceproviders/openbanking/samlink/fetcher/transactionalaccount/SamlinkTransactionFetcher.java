@@ -35,6 +35,7 @@ public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
 
     private TransactionKeyPaginatorResponse<String> getPendingAndBookedTransactions(
             TransactionalAccount account, String key) {
+
         return new TransactionsResponse()
                 .merge(
                         getPendingTransactions(account).getTransactions().getPending(),
