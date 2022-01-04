@@ -6,6 +6,8 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
@@ -136,13 +138,8 @@ public class AgentWorker extends ManagedSafeStop {
         Thread.sleep(NEW_AGGREGATION_SLACK.toMillis());
         log.info("Initiated shutdown of thread pools");
         rateLimitedExecutorService.stop();
-
-        ExecutorServiceUtils.shutdownExecutor(
-                "AggregationWorker#aggregationExecutorService",
-                aggregationExecutorService,
-                SHUTDOWN_TIMEOUT_SECONDS,
-                TimeUnit.SECONDS);
-        aggregationExecutorService = null;
+        automaticRefreshRateLimitedExecutorService.stop();
+        shutdownExecutorsInParallel();
         log.info("Shutdown took {} seconds", stopwatch.elapsed(TimeUnit.SECONDS));
     }
 
@@ -186,7 +183,7 @@ public class AgentWorker extends ManagedSafeStop {
             }
         }
         instrumentedRunnable.submitted();
-        log.info("[AgentWorker] Finished executing");
+        log.info("[AgentWorker] Finished scheduling");
     }
 
     public void executeAutomaticRefresh(
@@ -227,6 +224,50 @@ public class AgentWorker extends ManagedSafeStop {
         }
 
         instrumentedRunnable.submitted();
-        log.info("[AgentWorker] Finished executing automatic refresh");
+        log.info("[AgentWorker] Finished scheduling automatic refresh");
+    }
+
+    private void shutdownExecutorsInParallel() {
+        ExecutorService shutdownExecutor = Executors.newFixedThreadPool(2);
+        shutdownExecutor.execute(this::shutdownAutomaticRefreshExecutorService);
+        shutdownExecutor.execute(this::shutdownAggregationExecutorService);
+        shutdown(shutdownExecutor);
+        log.info("[AgentWorker] shutdownExecutor - successful shutdown");
+    }
+
+    private void shutdown(ExecutorService shutdownExecutor) {
+        shutdownExecutor.shutdown();
+        try {
+            if (!shutdownExecutor.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                shutdownExecutor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            shutdownExecutor.shutdownNow();
+            log.warn("Shutdown was interrupted while awaiting termination.", e);
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void shutdownAutomaticRefreshExecutorService() {
+        shutdownExecutor(
+                "AggregationWorker#automaticRefreshExecutorService",
+                automaticRefreshExecutorService);
+        automaticRefreshExecutorService = null;
+    }
+
+    private void shutdownAggregationExecutorService() {
+        shutdownExecutor(
+                "AggregationWorker#aggregationExecutorService", aggregationExecutorService);
+        aggregationExecutorService = null;
+    }
+
+    private void shutdownExecutor(
+            String executorName,
+            ListenableThreadPoolExecutor<Runnable> automaticRefreshExecutorService) {
+        ExecutorServiceUtils.shutdownExecutor(
+                executorName,
+                automaticRefreshExecutorService,
+                SHUTDOWN_TIMEOUT_SECONDS,
+                TimeUnit.SECONDS);
     }
 }
