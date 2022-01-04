@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -75,11 +74,13 @@ public class SingletonRepositoryConfiguration {
             // default value for
             // dataSource.
 
-            dataSource.setPreferredTestQuery("SELECT 1");
+            dataSource.setPreferredTestQuery(configuration.getPreferredTestQuery());
 
-            dataSource.setIdleConnectionTestPeriod((int) TimeUnit.MINUTES.toSeconds(5));
-            dataSource.setMaxIdleTime((int) TimeUnit.HOURS.toSeconds(2));
-
+            dataSource.setIdleConnectionTestPeriod(configuration.getIdleConnectionTestPeriod());
+            dataSource.setMaxIdleTime(configuration.getMaxIdleTime());
+            dataSource.setMinPoolSize(configuration.getMinPoolSize());
+            dataSource.setMaxIdleTimeExcessConnections(
+                    configuration.getMaxIdleTimeExcessConnections());
             // More gracefully handle AWS RDS instance failovers. Apart from this, we also want to
             // make sure that
             // `connectTimeout` and `socketTimeout` is set on the JDBC
@@ -87,7 +88,6 @@ public class SingletonRepositoryConfiguration {
             //
             // [1]
             // https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-reference-configuration-properties.html
-            dataSource.setTestConnectionOnCheckout(true);
             if (configuration.getAcquireRetryAttemptsSeconds() >= 0) {
                 dataSource.setAcquireRetryAttempts(configuration.getAcquireRetryAttemptsSeconds());
             }

@@ -67,6 +67,11 @@ data:
       showSql: false
       persistenceUnitName: tink-aggregation-api
       maxPoolSize: 30
+      minPoolSize: 1
+      idleConnectionTestPeriod: 300
+      maxIdleTime: 7200
+      maxIdleTimeExcessConnections: 120
+      preferredTestQuery: "SELECT 1"
 
     cache:
       hosts: {{ default "cache:11211" .Values.cacheHosts }}

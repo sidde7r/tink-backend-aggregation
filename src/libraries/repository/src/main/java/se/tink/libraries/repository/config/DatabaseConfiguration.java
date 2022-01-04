@@ -7,9 +7,14 @@ public class DatabaseConfiguration {
     @JsonProperty private boolean showSql;
     @NotEmpty @JsonProperty private String driverClass;
     @JsonProperty private String password;
+    @JsonProperty private Integer minPoolSize = 3;
     @JsonProperty private Integer maxPoolSize = 300;
+    @JsonProperty private Integer idleConnectionTestPeriod = 300;
+    @JsonProperty private Integer maxIdleTime = 7200;
+    @JsonProperty private Integer maxIdleTimeExcessConnections = 120;
     @NotEmpty @JsonProperty private String url;
     @NotEmpty @JsonProperty private String persistenceUnitName;
+    @NotEmpty @JsonProperty private String preferredTestQuery;
     @JsonProperty private boolean enabled = true;
     @JsonProperty private int acquireRetryAttemptsSeconds = -1;
     @JsonProperty private int acquireRetryDelaySeconds = -1;
@@ -22,6 +27,10 @@ public class DatabaseConfiguration {
     @NotEmpty @JsonProperty private String username;
 
     @JsonProperty private boolean generateDdl = false;
+
+    public String getPreferredTestQuery() {
+        return preferredTestQuery;
+    }
 
     public String getDriverClass() {
         return driverClass;
@@ -47,6 +56,10 @@ public class DatabaseConfiguration {
         return maxPoolSize;
     }
 
+    public Integer getMinPoolSize() {
+        return minPoolSize;
+    }
+
     public boolean generateDdl() {
         return generateDdl;
     }
@@ -65,5 +78,17 @@ public class DatabaseConfiguration {
 
     public boolean getTestConnectionOnCheckout() {
         return testConnectionOnCheckout;
+    }
+
+    public Integer getIdleConnectionTestPeriod() {
+        return idleConnectionTestPeriod;
+    }
+
+    public Integer getMaxIdleTime() {
+        return maxIdleTime;
+    }
+
+    public Integer getMaxIdleTimeExcessConnections() {
+        return maxIdleTimeExcessConnections;
     }
 }
