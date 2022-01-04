@@ -3,6 +3,14 @@ name: tink-backend-aggregation
 version: 1.0.0
 
 tink:
+  end_to_end_tests:
+    tests:
+      - TinkLinkDemoProviderSe 
+      - TinkLinkDemoProviderGb 
+    environments:
+      - cluster: aggregation 
+        environment: staging
+
   deployment:
     strategy: custom
     custom_strategy:

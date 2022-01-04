@@ -15,4 +15,6 @@ public interface LoginResultVisitor {
     void visit(final LoginUnknownErrorResult unknownErrorResult);
 
     void visit(final AgentPlatformLoginErrorResult loginErrorResult);
+
+    void visit(final ConnectivityExceptionErrorResult connectivityExceptionErrorResult);
 }

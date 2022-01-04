@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -41,8 +42,10 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.histograms.Histogram;
@@ -263,22 +266,17 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 log.info("[LOG IN] Not logged in. Clearing session and trying to log in again");
                 persistentAgent.clearLoginSession();
             }
+        } catch (ConnectivityException ex) {
+            if (ConnectivityErrorType.PROVIDER_ERROR.equals(ex.getError().getType())) {
+                loggedInCheckUnavailable(action, ex, ex.getUserMessage());
+                return Optional.empty();
+            }
+            loggedInCheckFailed(action, ex);
         } catch (BankServiceException e) {
-            log.info("[LOG IN] Failed with error: {}", e.getMessage(), e);
-            action.unavailable();
-            ConnectivityError error = ConnectivityErrorFactory.fromLegacy(e);
-            statusUpdater.updateStatusWithError(
-                    CredentialsStatus.TEMPORARY_ERROR,
-                    context.getCatalog().getString(e.getUserMessage()),
-                    error);
-            // couldn't determine isLoggedIn or not, return ABORT
-            emitLoginResultEvent(
-                    LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_BANK_SERVICE_ERROR);
+            loggedInCheckUnavailable(action, e, e.getUserMessage());
             return Optional.empty();
         } catch (Exception e) {
-            action.failed();
-            emitLoginResultEvent(LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_ERROR);
-            throw e;
+            loggedInCheckFailed(action, e);
         } finally {
             stopCommandContexts(loadPersistentSessionTimerContexts);
         }
@@ -297,6 +295,26 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 result,
                 credentials.getId());
         return Optional.ofNullable(result);
+    }
+
+    private void loggedInCheckFailed(MetricAction action, Exception e) throws Exception {
+        action.failed();
+        emitLoginResultEvent(LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_ERROR);
+        throw e;
+    }
+
+    private void loggedInCheckUnavailable(
+            MetricAction action, RuntimeException e, LocalizableKey userMessage) {
+        log.info("[LOG IN] Failed with error: {}", e.getMessage(), e);
+        action.unavailable();
+        ConnectivityError error = ConnectivityErrorFactory.fromLegacy(e);
+        statusUpdater.updateStatusWithError(
+                CredentialsStatus.TEMPORARY_ERROR,
+                context.getCatalog().getString(userMessage),
+                error);
+        // couldn't determine isLoggedIn or not, return ABORT
+        emitLoginResultEvent(
+                LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_BANK_SERVICE_ERROR);
     }
 
     private boolean acquireLock() throws Exception {

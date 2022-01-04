@@ -39,6 +39,7 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
         "@tink_backend//src/libraries/strings",
         "@tink_backend//src/libraries/uuid",
     ],

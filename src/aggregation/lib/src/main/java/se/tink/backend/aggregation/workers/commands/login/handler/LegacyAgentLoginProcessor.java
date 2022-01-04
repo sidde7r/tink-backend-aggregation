@@ -4,6 +4,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.ConnectivityExceptionErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthorizationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBankIdErrorResult;
@@ -24,6 +26,8 @@ public class LegacyAgentLoginProcessor {
             return new LoginAuthorizationErrorResult(authorizationException);
         } catch (BankServiceException bankServiceException) {
             return new LoginBankServiceEroroResult(bankServiceException);
+        } catch (ConnectivityException ex) {
+            return new ConnectivityExceptionErrorResult(ex);
         } catch (Exception ex) {
             return new LoginUnknownErrorResult(ex);
         }

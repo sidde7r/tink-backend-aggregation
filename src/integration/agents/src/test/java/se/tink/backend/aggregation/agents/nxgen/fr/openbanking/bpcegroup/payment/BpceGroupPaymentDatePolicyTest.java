@@ -39,18 +39,46 @@ public class BpceGroupPaymentDatePolicyTest {
     }
 
     @Test
-    public void shouldReturnExecutionDate1MinAfterStartOfDayForNonInstantPayment() {
+    public void
+            shouldReturnExecutionDate1MinAfterCreationDateForNonInstantPaymentWhenAppliedDateEqualsCreationDate() {
         // given
         Payment payment = mock(Payment.class);
         given(payment.isSepaInstant()).willReturn(false);
 
-        LocalDate executionDate = LocalDate.of(2021, 1, 1);
-        given(payment.getExecutionDate()).willReturn(executionDate);
+        LocalDateTime now = LocalDateTime.of(2021, 1, 1, 1, 1, 1);
+        BpceGroupPaymentDatePolicy spyDatePolicy = Mockito.spy(datePolicy);
+        given(spyDatePolicy.getCreationDate()).willReturn(now);
+
+        LocalDate appliedDate = LocalDate.of(2021, 1, 1);
+        given(payment.getExecutionDate()).willReturn(appliedDate);
 
         // when
-        String executionDateWithBankTimeZone = datePolicy.getExecutionDateWithBankTimeZone(payment);
+        String executionDateWithBankTimeZone =
+                spyDatePolicy.getExecutionDateWithBankTimeZone(payment);
 
         // then
-        assertThat(executionDateWithBankTimeZone).isEqualTo("2021-01-01T00:01:00.000+01:00");
+        assertThat(executionDateWithBankTimeZone).isEqualTo("2021-01-01T01:02:01.000+01:00");
+    }
+
+    @Test
+    public void
+            shouldReturnExecutionDate1MinAfterStartOfDayForNonInstantPaymentWhenAppliedDateIsNotEqualToCreationDate() {
+        // given
+        Payment payment = mock(Payment.class);
+        given(payment.isSepaInstant()).willReturn(false);
+
+        LocalDateTime now = LocalDateTime.of(2022, 1, 1, 1, 1, 1);
+        BpceGroupPaymentDatePolicy spyDatePolicy = Mockito.spy(datePolicy);
+        given(spyDatePolicy.getCreationDate()).willReturn(now);
+
+        LocalDate appliedDate = LocalDate.of(2022, 1, 3);
+        given(payment.getExecutionDate()).willReturn(appliedDate);
+
+        // when
+        String executionDateWithBankTimeZone =
+                spyDatePolicy.getExecutionDateWithBankTimeZone(payment);
+
+        // then
+        assertThat(executionDateWithBankTimeZone).isEqualTo("2022-01-03T00:01:00.000+01:00");
     }
 }

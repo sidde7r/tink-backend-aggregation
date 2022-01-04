@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
@@ -42,6 +43,7 @@ import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import src.libraries.interaction_counter.InteractionCounter;
 
@@ -580,6 +582,189 @@ public class LoginExecutorTest {
                         eq(CredentialsStatus.TEMPORARY_ERROR),
                         eq(null),
                         any(ConnectivityError.class));
+    }
+
+    // </editor-fold>
+
+    // <editor-fold desc="ConnectivityException tests">
+
+    @Test
+    public void connectivityUserLoginErrorTest() throws Exception {
+        // given
+        Mockito.when(agentWorkerCommandContext.getAgent())
+                .thenReturn(subsequentProgressiveGenerationAgent);
+        ConnectivityException connectivityException =
+                new ConnectivityException(
+                                ConnectivityErrorDetails.UserLoginErrors
+                                        .DYNAMIC_CREDENTIALS_INCORRECT)
+                        .withUserMessage(new LocalizableKey(DUMMY_LOCALIZED_ERROR_MESSAGE));
+        Mockito.when(
+                        subsequentProgressiveGenerationAgent.login(
+                                SteppableAuthenticationRequest.initialRequest(credentials)))
+                .thenThrow(connectivityException);
+        Mockito.when(catalog.getString(connectivityException.getUserMessage()))
+                .thenReturn(DUMMY_LOCALIZED_ERROR_MESSAGE);
+
+        // when
+        AgentWorkerCommandResult result =
+                objectUnderTest.execute(
+                        agentWorkerCommandContext,
+                        supplementalInformationController,
+                        dataStudioLoginEventPublisherService);
+
+        // then
+        Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.ABORT);
+        Mockito.verify(loginMetricAction).cancelled();
+        Mockito.verify(dataStudioLoginEventPublisherService)
+                .publishEventForConnectivityException(connectivityException);
+        Mockito.verify(statusUpdater)
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        eq(connectivityException.getError()));
+    }
+
+    @Test
+    public void connectivityUserLoginErrorDynamicCredentialTimeoutTest() throws Exception {
+        // given
+        Mockito.when(agentWorkerCommandContext.getAgent())
+                .thenReturn(subsequentProgressiveGenerationAgent);
+        ConnectivityException connectivityException =
+                new ConnectivityException(
+                                ConnectivityErrorDetails.UserLoginErrors
+                                        .DYNAMIC_CREDENTIALS_FLOW_TIMEOUT)
+                        .withUserMessage(new LocalizableKey(DUMMY_LOCALIZED_ERROR_MESSAGE));
+        Mockito.when(
+                        subsequentProgressiveGenerationAgent.login(
+                                SteppableAuthenticationRequest.initialRequest(credentials)))
+                .thenThrow(connectivityException);
+        Mockito.when(catalog.getString(connectivityException.getUserMessage()))
+                .thenReturn(DUMMY_LOCALIZED_ERROR_MESSAGE);
+        Mockito.when(credentials.getStatus())
+                .thenReturn(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
+
+        // when
+        AgentWorkerCommandResult result =
+                objectUnderTest.execute(
+                        agentWorkerCommandContext,
+                        supplementalInformationController,
+                        dataStudioLoginEventPublisherService);
+
+        // then
+        Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.ABORT);
+        Mockito.verify(loginMetricAction).cancelledDueToThirdPartyAppTimeout();
+        Mockito.verify(dataStudioLoginEventPublisherService)
+                .publishEventForConnectivityException(connectivityException);
+        Mockito.verify(statusUpdater)
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        eq(connectivityException.getError()));
+    }
+
+    @Test
+    public void connectivityTinkSideErrorTest() throws Exception {
+        // given
+        Mockito.when(agentWorkerCommandContext.getAgent())
+                .thenReturn(subsequentProgressiveGenerationAgent);
+        ConnectivityException connectivityException =
+                new ConnectivityException(
+                                ConnectivityErrorDetails.TinkSideErrors.TINK_INTERNAL_SERVER_ERROR)
+                        .withUserMessage(new LocalizableKey(DUMMY_LOCALIZED_ERROR_MESSAGE));
+        Mockito.when(
+                        subsequentProgressiveGenerationAgent.login(
+                                SteppableAuthenticationRequest.initialRequest(credentials)))
+                .thenThrow(connectivityException);
+        Mockito.when(catalog.getString(connectivityException.getUserMessage()))
+                .thenReturn(DUMMY_LOCALIZED_ERROR_MESSAGE);
+
+        // when
+        AgentWorkerCommandResult result =
+                objectUnderTest.execute(
+                        agentWorkerCommandContext,
+                        supplementalInformationController,
+                        dataStudioLoginEventPublisherService);
+
+        // then
+        Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.ABORT);
+        Mockito.verify(loginMetricAction).failed();
+        Mockito.verify(dataStudioLoginEventPublisherService)
+                .publishEventForConnectivityException(connectivityException);
+        Mockito.verify(statusUpdater)
+                .updateStatusWithError(
+                        eq(CredentialsStatus.TEMPORARY_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        eq(connectivityException.getError()));
+    }
+
+    @Test
+    public void connectivityProviderErrorTest() throws Exception {
+        // given
+        Mockito.when(agentWorkerCommandContext.getAgent())
+                .thenReturn(subsequentProgressiveGenerationAgent);
+        ConnectivityException connectivityException =
+                new ConnectivityException(
+                                ConnectivityErrorDetails.ProviderErrors.PROVIDER_UNAVAILABLE)
+                        .withUserMessage(new LocalizableKey(DUMMY_LOCALIZED_ERROR_MESSAGE));
+        Mockito.when(
+                        subsequentProgressiveGenerationAgent.login(
+                                SteppableAuthenticationRequest.initialRequest(credentials)))
+                .thenThrow(connectivityException);
+        Mockito.when(catalog.getString(connectivityException.getUserMessage()))
+                .thenReturn(DUMMY_LOCALIZED_ERROR_MESSAGE);
+
+        // when
+        AgentWorkerCommandResult result =
+                objectUnderTest.execute(
+                        agentWorkerCommandContext,
+                        supplementalInformationController,
+                        dataStudioLoginEventPublisherService);
+
+        // then
+        Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.ABORT);
+        Mockito.verify(loginMetricAction).unavailable();
+        Mockito.verify(dataStudioLoginEventPublisherService)
+                .publishEventForConnectivityException(connectivityException);
+        Mockito.verify(statusUpdater)
+                .updateStatusWithError(
+                        eq(CredentialsStatus.TEMPORARY_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        eq(connectivityException.getError()));
+    }
+
+    @Test
+    public void connectivityAuthorizationErrorTest() throws Exception {
+        // given
+        Mockito.when(agentWorkerCommandContext.getAgent())
+                .thenReturn(subsequentProgressiveGenerationAgent);
+        ConnectivityException connectivityException =
+                new ConnectivityException(
+                                ConnectivityErrorDetails.AuthorizationErrors.SESSION_EXPIRED)
+                        .withUserMessage(new LocalizableKey(DUMMY_LOCALIZED_ERROR_MESSAGE));
+        Mockito.when(
+                        subsequentProgressiveGenerationAgent.login(
+                                SteppableAuthenticationRequest.initialRequest(credentials)))
+                .thenThrow(connectivityException);
+        Mockito.when(catalog.getString(connectivityException.getUserMessage()))
+                .thenReturn(DUMMY_LOCALIZED_ERROR_MESSAGE);
+
+        // when
+        AgentWorkerCommandResult result =
+                objectUnderTest.execute(
+                        agentWorkerCommandContext,
+                        supplementalInformationController,
+                        dataStudioLoginEventPublisherService);
+
+        // then
+        Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.ABORT);
+        Mockito.verify(loginMetricAction).cancelled();
+        Mockito.verify(dataStudioLoginEventPublisherService)
+                .publishEventForConnectivityException(connectivityException);
+        Mockito.verify(statusUpdater)
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        eq(connectivityException.getError()));
     }
 
     // </editor-fold>

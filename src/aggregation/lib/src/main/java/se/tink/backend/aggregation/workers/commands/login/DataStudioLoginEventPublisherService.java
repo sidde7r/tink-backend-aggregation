@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -25,12 +26,171 @@ import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
 import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
+import se.tink.connectivity.errors.ConnectivityErrorDetails;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 
 @AllArgsConstructor
 @Slf4j
 public class DataStudioLoginEventPublisherService {
+
+    private final LoginAgentEventProducer eventPublisher;
+    private final long authenticationStartTime;
+    private final AgentWorkerCommandContext context;
+
+    void publishLoginSuccessEvent() {
+        boolean wasAnyUserInteraction =
+                MetricsFactory.wasAnyUserInteraction(
+                        context.getRequest(), context.getSupplementalInteractionCounter());
+        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult result =
+                wasAnyUserInteraction
+                        ? AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                .SUCCESSFUL_LOGIN
+                        : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                .ALREADY_LOGGED_IN;
+        publishLoginResultEvent(result);
+    }
+
+    void publishLoginBankIdErrorEvent(final BankIdException bankIdException) {
+        BankIdError error = bankIdException.getError();
+        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                BANKID_ERROR_MAPPER.get(error);
+        publishLoginResultEvent(
+                reason != null
+                        ? reason
+                        : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                .BANKID_ERROR_UNKNOWN);
+    }
+
+    void publishLoginBankServiceErrorEvent(final BankServiceException bankServiceException) {
+        BankServiceError error = bankServiceException.getError();
+        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                BANK_SERVICE_ERROR_MAPPER.get(error);
+        publishLoginResultEvent(
+                reason != null
+                        ? reason
+                        : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                .BANK_SERVICE_ERROR_UNKNOWN);
+    }
+
+    void publishLoginAuthenticationErrorEvent(
+            final AuthenticationException authenticationException) {
+        if (authenticationException instanceof LoginException) {
+            LoginError error = ((LoginException) authenticationException).getError();
+            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                    LOGIN_ERROR_MAPPER.get(error);
+            publishLoginResultEvent(
+                    reason != null
+                            ? reason
+                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                    .LOGIN_ERROR_UNKNOWN);
+        } else if (authenticationException instanceof ThirdPartyAppException) {
+            ThirdPartyAppError error =
+                    ((ThirdPartyAppException) authenticationException).getError();
+            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                    THIRD_PARTY_APP_ERROR_MAPPER.get(error);
+            publishLoginResultEvent(
+                    reason != null
+                            ? reason
+                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                    .THIRD_PARTY_APP_ERROR_UNKNOWN);
+        } else if (authenticationException instanceof SessionException) {
+            SessionError error = ((SessionException) authenticationException).getError();
+            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                    SESSION_ERROR_MAPPER.get(error);
+            publishLoginResultEvent(
+                    reason != null
+                            ? reason
+                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                    .SESSION_ERROR_UNKNOWN);
+        } else if (authenticationException instanceof SupplementalInfoException) {
+            SupplementalInfoError error =
+                    ((SupplementalInfoException) authenticationException).getError();
+            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                    SUPPLEMENTAL_INFORMATION_ERROR_MAPPER.get(error);
+            publishLoginResultEvent(
+                    reason != null
+                            ? reason
+                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                    .SUPPLEMENTAL_INFO_ERROR_UNKNOWN);
+        } else if (authenticationException instanceof NemIdException) {
+            NemIdError error = ((NemIdException) authenticationException).getError();
+            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                    NEM_ID_ERROR_MAPPER.get(error);
+            publishLoginResultEvent(
+                    reason != null
+                            ? reason
+                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                    .NEMID_ERROR_UNKNOWN);
+        } else if (authenticationException instanceof BankIdNOException) {
+            BankIdNOError error = ((BankIdNOException) authenticationException).getError();
+            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                    BANKID_NO_ERROR_MAPPER.get(error);
+            publishLoginResultEvent(
+                    reason != null
+                            ? reason
+                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                    .BANKID_ERROR_UNKNOWN);
+        } else {
+            publishLoginResultEvent(
+                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                            .UNKNOWN_ERROR);
+        }
+    }
+
+    void publishLoginAuthorizationErrorEvent(final AuthorizationException authorizationException) {
+        AuthorizationError error = authorizationException.getError();
+        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                AUTHORIZATION_ERROR_MAPPER.get(error);
+        publishLoginResultEvent(
+                reason != null
+                        ? reason
+                        : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                .AUTHORIZATION_ERROR_UNKNOWN);
+    }
+
+    void publishLoginErrorUnknown() {
+        publishLoginResultEvent(
+                AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult.UNKNOWN_ERROR);
+    }
+
+    void publishEventForConnectivityException(final ConnectivityException connectivityException) {
+        publishLoginResultEvent(
+                CONNECTIVITY_ERROR_MAPPER.getOrDefault(
+                        new ConnectivityErrorTypeAndReasonPair(connectivityException),
+                        LoginResult.UNKNOWN_ERROR));
+    }
+
+    void publishLoginResultEvent(
+            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason) {
+        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.UserInteractionInformation
+                userInteractionInformation =
+                        AgentLoginCompletedEventUserInteractionInformationProvider
+                                .userInteractionInformation(
+                                        context.getSupplementalInteractionCounter(),
+                                        context.getRequest());
+        log.info(
+                String.format(
+                        "Authentication finished with %s and %s",
+                        reason, userInteractionInformation));
+        eventPublisher.sendLoginCompletedEvent(
+                IntegrationParameters.builder()
+                        .providerName(context.getRequest().getCredentials().getProviderName())
+                        .correlationId(context.getCorrelationId())
+                        .appId(context.getAppId())
+                        .clusterId(context.getClusterId())
+                        .userId(context.getRequest().getCredentials().getUserId())
+                        .build(),
+                reason,
+                countAuthenticationElapsedTime(),
+                userInteractionInformation);
+    }
+
+    private long countAuthenticationElapsedTime() {
+        long finishTime = System.nanoTime();
+        return finishTime - authenticationStartTime;
+    }
 
     private static final ImmutableMap<
                     LoginError, AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult>
@@ -406,153 +566,168 @@ public class DataStudioLoginEventPublisherService {
                                             .LoginResult.LOGIN_ERROR_INCORRECT_CHALLENGE_RESPONSE)
                             .build();
 
-    private final LoginAgentEventProducer eventPublisher;
-    private final long authenticationStartTime;
-    private final AgentWorkerCommandContext context;
-
-    void publishLoginSuccessEvent() {
-        boolean wasAnyUserInteraction =
-                MetricsFactory.wasAnyUserInteraction(
-                        context.getRequest(), context.getSupplementalInteractionCounter());
-        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult result =
-                wasAnyUserInteraction
-                        ? AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .SUCCESSFUL_LOGIN
-                        : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .ALREADY_LOGGED_IN;
-        publishLoginResultEvent(result);
-    }
-
-    void publishLoginBankIdErrorEvent(final BankIdException bankIdException) {
-        BankIdError error = bankIdException.getError();
-        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                BANKID_ERROR_MAPPER.get(error);
-        publishLoginResultEvent(
-                reason != null
-                        ? reason
-                        : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .BANKID_ERROR_UNKNOWN);
-    }
-
-    void publishLoginBankServiceErrorEvent(final BankServiceException bankServiceException) {
-        BankServiceError error = bankServiceException.getError();
-        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                BANK_SERVICE_ERROR_MAPPER.get(error);
-        publishLoginResultEvent(
-                reason != null
-                        ? reason
-                        : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .BANK_SERVICE_ERROR_UNKNOWN);
-    }
-
-    void publishLoginAuthenticationErrorEvent(
-            final AuthenticationException authenticationException) {
-        if (authenticationException instanceof LoginException) {
-            LoginError error = ((LoginException) authenticationException).getError();
-            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                    LOGIN_ERROR_MAPPER.get(error);
-            publishLoginResultEvent(
-                    reason != null
-                            ? reason
-                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                    .LOGIN_ERROR_UNKNOWN);
-        } else if (authenticationException instanceof ThirdPartyAppException) {
-            ThirdPartyAppError error =
-                    ((ThirdPartyAppException) authenticationException).getError();
-            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                    THIRD_PARTY_APP_ERROR_MAPPER.get(error);
-            publishLoginResultEvent(
-                    reason != null
-                            ? reason
-                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                    .THIRD_PARTY_APP_ERROR_UNKNOWN);
-        } else if (authenticationException instanceof SessionException) {
-            SessionError error = ((SessionException) authenticationException).getError();
-            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                    SESSION_ERROR_MAPPER.get(error);
-            publishLoginResultEvent(
-                    reason != null
-                            ? reason
-                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                    .SESSION_ERROR_UNKNOWN);
-        } else if (authenticationException instanceof SupplementalInfoException) {
-            SupplementalInfoError error =
-                    ((SupplementalInfoException) authenticationException).getError();
-            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                    SUPPLEMENTAL_INFORMATION_ERROR_MAPPER.get(error);
-            publishLoginResultEvent(
-                    reason != null
-                            ? reason
-                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                    .SUPPLEMENTAL_INFO_ERROR_UNKNOWN);
-        } else if (authenticationException instanceof NemIdException) {
-            NemIdError error = ((NemIdException) authenticationException).getError();
-            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                    NEM_ID_ERROR_MAPPER.get(error);
-            publishLoginResultEvent(
-                    reason != null
-                            ? reason
-                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                    .NEMID_ERROR_UNKNOWN);
-        } else if (authenticationException instanceof BankIdNOException) {
-            BankIdNOError error = ((BankIdNOException) authenticationException).getError();
-            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                    BANKID_NO_ERROR_MAPPER.get(error);
-            publishLoginResultEvent(
-                    reason != null
-                            ? reason
-                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                    .BANKID_ERROR_UNKNOWN);
-        } else {
-            publishLoginResultEvent(
-                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                            .UNKNOWN_ERROR);
-        }
-    }
-
-    void publishLoginAuthorizationErrorEvent(final AuthorizationException authorizationException) {
-        AuthorizationError error = authorizationException.getError();
-        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
-                AUTHORIZATION_ERROR_MAPPER.get(error);
-        publishLoginResultEvent(
-                reason != null
-                        ? reason
-                        : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .AUTHORIZATION_ERROR_UNKNOWN);
-    }
-
-    void publishLoginErrorUnknown() {
-        publishLoginResultEvent(
-                AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult.UNKNOWN_ERROR);
-    }
-
-    void publishLoginResultEvent(
-            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason) {
-        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.UserInteractionInformation
-                userInteractionInformation =
-                        AgentLoginCompletedEventUserInteractionInformationProvider
-                                .userInteractionInformation(
-                                        context.getSupplementalInteractionCounter(),
-                                        context.getRequest());
-        log.info(
-                String.format(
-                        "Authentication finished with %s and %s",
-                        reason, userInteractionInformation));
-        eventPublisher.sendLoginCompletedEvent(
-                IntegrationParameters.builder()
-                        .providerName(context.getRequest().getCredentials().getProviderName())
-                        .correlationId(context.getCorrelationId())
-                        .appId(context.getAppId())
-                        .clusterId(context.getClusterId())
-                        .userId(context.getRequest().getCredentials().getUserId())
-                        .build(),
-                reason,
-                countAuthenticationElapsedTime(),
-                userInteractionInformation);
-    }
-
-    private long countAuthenticationElapsedTime() {
-        long finishTime = System.nanoTime();
-        return finishTime - authenticationStartTime;
-    }
+    private static final ImmutableMap<
+                    ConnectivityErrorTypeAndReasonPair,
+                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult>
+            CONNECTIVITY_ERROR_MAPPER =
+                    ImmutableMap
+                            .<ConnectivityErrorTypeAndReasonPair,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult>
+                                    builder()
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.TINK_SIDE_ERROR,
+                                            ConnectivityErrorDetails.TinkSideErrors.UNKNOWN_ERROR
+                                                    .name()),
+                                    LoginResult.UNKNOWN_ERROR)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.TINK_SIDE_ERROR,
+                                            ConnectivityErrorDetails.TinkSideErrors
+                                                    .TINK_INTERNAL_SERVER_ERROR
+                                                    .name()),
+                                    LoginResult.UNKNOWN_ERROR)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.TINK_SIDE_ERROR,
+                                            ConnectivityErrorDetails.TinkSideErrors
+                                                    .OPERATION_NOT_SUPPORTED
+                                                    .name()),
+                                    LoginResult.LOGIN_ERROR_NOT_SUPPORTED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.TINK_SIDE_ERROR,
+                                            ConnectivityErrorDetails.TinkSideErrors
+                                                    .AUTHENTICATION_METHOD_NOT_SUPPORTED
+                                                    .name()),
+                                    LoginResult.LOGIN_ERROR_NOT_SUPPORTED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.TINK_SIDE_ERROR,
+                                            ConnectivityErrorDetails.TinkSideErrors.TIMEOUT.name()),
+                                    LoginResult.UNKNOWN_ERROR)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.TINK_SIDE_ERROR,
+                                            ConnectivityErrorDetails.TinkSideErrors.UNRECOGNIZED
+                                                    .name()),
+                                    LoginResult.UNRECOGNIZED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.PROVIDER_ERROR,
+                                            ConnectivityErrorDetails.ProviderErrors
+                                                    .PROVIDER_UNAVAILABLE
+                                                    .name()),
+                                    LoginResult.BANK_SERVICE_ERROR_NO_BANK_SERVICE)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.PROVIDER_ERROR,
+                                            ConnectivityErrorDetails.ProviderErrors
+                                                    .LICENSED_PARTY_REJECTED
+                                                    .name()),
+                                    LoginResult.BANK_SERVICE_ERROR_UNKNOWN)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.PROVIDER_ERROR,
+                                            ConnectivityErrorDetails.ProviderErrors.UNRECOGNIZED
+                                                    .name()),
+                                    LoginResult.UNRECOGNIZED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors
+                                                    .THIRD_PARTY_AUTHENTICATION_UNAVAILABLE
+                                                    .name()),
+                                    LoginResult.THIRD_PARTY_APP_ERROR_UNKNOWN)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors
+                                                    .STATIC_CREDENTIALS_INCORRECT
+                                                    .name()),
+                                    LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors
+                                                    .DYNAMIC_CREDENTIALS_INCORRECT
+                                                    .name()),
+                                    LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors
+                                                    .DYNAMIC_CREDENTIALS_FLOW_CANCELLED
+                                                    .name()),
+                                    LoginResult.SUPPLEMENTAL_INFO_CANCELLED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors
+                                                    .DYNAMIC_CREDENTIALS_FLOW_TIMEOUT
+                                                    .name()),
+                                    LoginResult.SUPPLEMENTAL_INFO_CANCELLED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors
+                                                    .USER_NOT_A_CUSTOMER
+                                                    .name()),
+                                    LoginResult.LOGIN_ERROR_NOT_CUSTOMER)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors
+                                                    .USER_CONCURRENT_LOGINS
+                                                    .name()),
+                                    LoginResult.BANK_SERVICE_ERROR_MULTIPLE_LOGIN)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED
+                                                    .name()),
+                                    LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.USER_LOGIN_ERROR,
+                                            ConnectivityErrorDetails.UserLoginErrors.UNRECOGNIZED
+                                                    .name()),
+                                    LoginResult.UNRECOGNIZED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.AUTHORIZATION_ERROR,
+                                            ConnectivityErrorDetails.AuthorizationErrors
+                                                    .ACTION_NOT_PERMITTED
+                                                    .name()),
+                                    LoginResult.BANKID_ERROR_BANK_ID_UNAUTHORIZED_ISSUER)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.AUTHORIZATION_ERROR,
+                                            ConnectivityErrorDetails.AuthorizationErrors
+                                                    .SESSION_EXPIRED
+                                                    .name()),
+                                    LoginResult.SESSION_ERROR_SESSION_EXPIRED)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.AUTHORIZATION_ERROR,
+                                            ConnectivityErrorDetails.AuthorizationErrors
+                                                    .USER_ACTION_REQUIRED_UNSIGNED_AGREEMENT
+                                                    .name()),
+                                    LoginResult.LOGIN_ERROR_NO_ACCESS_TO_MOBILE_BANKING)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.AUTHORIZATION_ERROR,
+                                            ConnectivityErrorDetails.AuthorizationErrors
+                                                    .USER_ACTION_REQUIRED
+                                                    .name()),
+                                    LoginResult.AUTHORIZATION_ERROR_UNKNOWN)
+                            .put(
+                                    new ConnectivityErrorTypeAndReasonPair(
+                                            ConnectivityErrorType.AUTHORIZATION_ERROR,
+                                            ConnectivityErrorDetails.AuthorizationErrors
+                                                    .UNRECOGNIZED
+                                                    .name()),
+                                    LoginResult.UNRECOGNIZED)
+                            .build();
 }

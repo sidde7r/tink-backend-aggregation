@@ -8,12 +8,6 @@ import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.libraries.i18n.LocalizableKey;
 
-/**
- * @deprecated temporary marketed as deprecated to not use it Not implemented to the end yet. Please
- *     do not use it yet. There is no handling for this exception in the AggregationService, it will
- *     translate to unknown/runtime exception and put credentials into TEMPORARY_ERROR state.
- */
-@Deprecated
 public final class ConnectivityException extends RuntimeException {
 
     private static final AccountInformationErrorDefaultMessageMapper
@@ -29,7 +23,7 @@ public final class ConnectivityException extends RuntimeException {
     private static final UserLoginErrorDefaultMessageMapper
             USER_LOGIN_ERROR_DEFAULT_MESSAGE_PROVIDER = new UserLoginErrorDefaultMessageMapper();
 
-    private final ConnectivityError error;
+    @Getter private final ConnectivityError error;
     @Getter private final LocalizableKey userMessage;
     @With private final Throwable cause;
     @With private final String internalMessage;

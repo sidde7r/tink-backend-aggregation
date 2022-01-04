@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
@@ -37,7 +38,25 @@ public class BpceGroupPaymentDatePolicy extends FrOpenBankingPaymentDatePolicy {
                     .plusMinutes(1)
                     .format(DATE_TIME_FORMATTER);
         } else {
-            return super.getExecutionDateWithBankTimeZone(payment);
+            final LocalDateTime creationDate = getCreationDate();
+            final LocalDate appliedDate = apply(payment);
+
+            return appliedDate.equals(creationDate.toLocalDate())
+                    ? getExecutionDayWhenAppliedDateEqualsCreationDate(appliedDate, creationDate)
+                    : getExecutionDayWhenAppliedDateIsNotEqualToCreationDate(appliedDate);
         }
+    }
+
+    private String getExecutionDayWhenAppliedDateEqualsCreationDate(
+            LocalDate appliedDate, LocalDateTime creationDate) {
+        return appliedDate
+                .atTime(creationDate.toLocalTime())
+                .atZone(DEFAULT_ZONE_ID)
+                .plusMinutes(1)
+                .format(DATE_TIME_FORMATTER);
+    }
+
+    private String getExecutionDayWhenAppliedDateIsNotEqualToCreationDate(LocalDate appliedDate) {
+        return appliedDate.atStartOfDay(DEFAULT_ZONE_ID).plusMinutes(1).format(DATE_TIME_FORMATTER);
     }
 }
