@@ -90,6 +90,13 @@ public class CmcicCallbackErrorHandler implements CmcicCallbackHandlingStrategy 
                 error,
                 error_description);
         ImmutablePair<String, String> errorPair = ImmutablePair.of(error, error_description);
-        throw errorHandlingMapping.getOrDefault(errorPair, PaymentRejectedException::new).get();
+        throw errorHandlingMapping
+                .getOrDefault(errorPair, this::getExceptionForUnmappedError)
+                .get();
+    }
+
+    private PaymentRejectedException getExceptionForUnmappedError() {
+        log.warn("Unmapped error from callback detected!");
+        return new PaymentRejectedException();
     }
 }
