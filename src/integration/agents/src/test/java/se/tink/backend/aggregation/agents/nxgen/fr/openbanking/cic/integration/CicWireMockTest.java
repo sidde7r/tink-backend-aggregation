@@ -193,6 +193,7 @@ public class CicWireMockTest {
                 AgentWireMockPaymentTest.builder(MarketCode.FR, "fr-cic-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addCallbackData("state", "DUMMY_STATE")
                         .withHttpDebugTrace()
                         .withPayment(
                                 createMockedDomesticPayment(
@@ -218,6 +219,7 @@ public class CicWireMockTest {
                 AgentWireMockPaymentTest.builder(MarketCode.FR, "fr-cic-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addCallbackData("state", "DUMMY_STATE")
                         .withHttpDebugTrace()
                         .withPayment(
                                 createMockedDomesticPayment(
