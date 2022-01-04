@@ -25,7 +25,6 @@ public final class CmcicConstants {
         public static final String PAYMENT_REQUESTS = BASE_API_PATH + "/payment-requests";
         public static final String SUCCESS_REPORT_PATH = "?code=123&state=";
         public static final String BENEFICIARIES_PATH = "/trusted-beneficiaries";
-        public static final String PIS_CONFIRMATION_OF_CANCELLATION_PATH = "confirmation";
         public static final String PIS_CONFIRMATION_PATH = "o-confirmation";
     }
 
@@ -51,6 +50,14 @@ public final class CmcicConstants {
         public static final String CODE_CHALLENGE = "code_challenge";
         public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
         public static final String AUTHORIZATION_CODE = "code";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class CallbackFields {
+        public static final String CODE = "code";
+        public static final String STATE = "state";
+        public static final String ERROR = "error";
+        public static final String DESCRIPTION = "error_description";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
