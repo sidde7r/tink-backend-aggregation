@@ -162,7 +162,8 @@ public class OpenIdAuthenticationController
                         .orElseGet(
                                 () -> {
                                     log.error(
-                                            "callbackData did not contain code. CallbackUri: {}, Data received: {}",
+                                            "callbackData did not contain code. CallbackUri: {}, "
+                                                    + "Data received: {}",
                                             callbackUri,
                                             SerializationUtils.serializeToString(callbackData));
                                     throw SessionError.SESSION_EXPIRED.exception();
@@ -177,7 +178,8 @@ public class OpenIdAuthenticationController
             authenticationValidator.validateIdToken(idToken.get(), code, state);
         } else {
             log.warn(
-                    "[OpenIdAuthenticationController] ID Token (code and state) validation - no token provided");
+                    "[OpenIdAuthenticationController] ID Token (code and state) "
+                            + "validation - no token provided");
         }
 
         OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
@@ -371,7 +373,8 @@ public class OpenIdAuthenticationController
 
         throw new IllegalStateException(
                 String.format(
-                        "[OpenIdAuthenticationController] Unknown error with details: {errorType: %s, errorDescription: %s}",
+                        "[OpenIdAuthenticationController] Unknown error with details: "
+                                + "{errorType: %s, errorDescription: %s}",
                         errorType, errorDescription));
     }
 
