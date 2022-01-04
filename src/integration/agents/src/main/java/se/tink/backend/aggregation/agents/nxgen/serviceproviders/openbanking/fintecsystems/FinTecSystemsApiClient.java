@@ -1,12 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants.API_USER_NAME;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.DEFAULT_REPORT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.PathVariables.REPORT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.PathVariables.TRANSACTION_ID;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.fetcher.data.FinTecSystemsReport;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPayment;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPaymentResponse;
@@ -18,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 public class FinTecSystemsApiClient {
@@ -39,28 +45,23 @@ public class FinTecSystemsApiClient {
     public FinTechSystemsPaymentResponse createPayment(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
         FinTechSystemsPaymentRequest finTechSystemsPaymentRequest =
-                getCreatePaymentRequest(payment);
+                buildCreatePaymentRequest(payment);
 
         return createRequest(Urls.PAYMENT_INITIATION)
                 .post(FinTechSystemsPaymentResponse.class, finTechSystemsPaymentRequest);
     }
 
-    private FinTechSystemsPaymentRequest getCreatePaymentRequest(Payment payment) {
-        FinTechSystemsPaymentRequest finTechSystemsPaymentRequest =
-                new FinTechSystemsPaymentRequest();
-        finTechSystemsPaymentRequest.setAmount(
-                payment.getExactCurrencyAmount().getExactValue().toString());
-        finTechSystemsPaymentRequest.setCurrencyId(
-                payment.getExactCurrencyAmount().getCurrencyCode());
-        finTechSystemsPaymentRequest.setRecipientHolder(payment.getCreditor().getName());
-        if (payment.getCreditor().getAccountIdentifier() instanceof IbanIdentifier) {
-            finTechSystemsPaymentRequest.setRecipientIban(
-                    ((IbanIdentifier) payment.getCreditor().getAccountIdentifier()).getIban());
-        }
-        finTechSystemsPaymentRequest.setPurpose(payment.getRemittanceInformation().getValue());
-        finTechSystemsPaymentRequest.setSenderCountryId(market);
-        finTechSystemsPaymentRequest.setSenderBankCode(blz);
-        return finTechSystemsPaymentRequest;
+    private FinTechSystemsPaymentRequest buildCreatePaymentRequest(Payment payment) {
+        FinTechSystemsPaymentRequest request = new FinTechSystemsPaymentRequest();
+        request.setAmount(payment.getExactCurrencyAmount().getExactValue().toString());
+        request.setCurrencyId(payment.getExactCurrencyAmount().getCurrencyCode());
+        request.setRecipientHolder(payment.getCreditor().getName());
+        request.setRecipientIban(
+                payment.getCreditor().getAccountIdentifier(IbanIdentifier.class).getIban());
+        request.setPurpose(payment.getRemittanceInformation().getValue());
+        request.setSenderCountryId(market);
+        request.setSenderBankCode(blz);
+        return request;
     }
 
     public FinTechSystemsPayment fetchPaymentStatus(PaymentRequest paymentRequest) {
@@ -70,8 +71,24 @@ public class FinTecSystemsApiClient {
                 .get(FinTechSystemsPayment.class);
     }
 
-    public FinTechSystemsSession getSessionStatus(String transationId) {
+    public FinTechSystemsSession fetchSessionStatus(String transationId) {
         return createRequest(Urls.GET_SESSION_STATUS.parameter(TRANSACTION_ID, transationId))
                 .get(FinTechSystemsSession.class);
+    }
+
+    public FinTecSystemsReport fetchReport(String transactionId) {
+        String rawReport =
+                createRequest(
+                                Urls.GET_TRANSACTION_REPORT
+                                        .parameter(TRANSACTION_ID, transactionId)
+                                        .parameter(REPORT_ID, DEFAULT_REPORT_ID)
+                                        .queryParam("format", "json"))
+                        .get(String.class);
+
+        List<List<FinTecSystemsReport>> lists =
+                SerializationUtils.deserializeFromString(
+                        rawReport, new TypeReference<List<List<FinTecSystemsReport>>>() {});
+
+        return lists.get(0).get(0);
     }
 }

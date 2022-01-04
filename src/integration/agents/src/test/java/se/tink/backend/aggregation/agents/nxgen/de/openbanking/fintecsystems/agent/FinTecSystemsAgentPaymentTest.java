@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fintecsystems;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fintecsystems.agent;
 
 import java.time.LocalDate;
 import org.junit.AfterClass;
@@ -29,14 +29,12 @@ public class FinTecSystemsAgentPaymentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("de", "de-test-fintecsystems")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("fintecsystems")
                         // This field is sometimes needed for testing sparda-west provider
                         // .addCredentialField("blz-select", "36060591")
-                        .setClusterId("oxford-preprod")
-                        .setFinancialInstitutionId("fintecsystems")
-                        .setAppId("tink");
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
     }
 
     private enum Arg implements ArgumentManagerEnum {

@@ -9,10 +9,12 @@ public class FinTecSystemsConstants {
 
     public static final String INTEGRATION_NAME = "fintecsystems";
 
+    // Report is defined in the management console of FTS account
+    public static final String DEFAULT_REPORT_ID = "urp_ECve9L9UY67qhVlt";
+
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class HeaderKeys {
         static final String X_REQUEST_ID = "X-Request-ID";
-        static final String AUTHORIZATION = "Authorization";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -23,6 +25,8 @@ public class FinTecSystemsConstants {
         public static final URL FETCH_PAYMENT_STATUS =
                 new URL(BASE_URL + "payments/{transactionId}");
         public static final URL GET_SESSION_STATUS = new URL(BASE_URL + "sessions/{transactionId}");
+        public static final URL GET_TRANSACTION_REPORT =
+                new URL(BASE_URL + "payments/{transactionId}/report/{reportId}");
 
         public static final String FTS_WIDGET_CDN = "https://cdn.tink.se/fts/widget.html";
     }
@@ -30,8 +34,8 @@ public class FinTecSystemsConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class PathVariables {
         public static final String TRANSACTION_ID = "transactionId";
+        public static final String REPORT_ID = "reportId";
         public static final String WIZARD_SESSION_KEY = "wizard_session_key";
-        public static final String MFA_ID = "mfa_id";
         public static final String REDIRECT_URI = "redirect_uri";
     }
 

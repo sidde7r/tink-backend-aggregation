@@ -10,17 +10,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationFailedByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.LastError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.PaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPayment;
@@ -31,10 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -46,36 +43,53 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @RequiredArgsConstructor
 @Slf4j
-public class FinTechSystemsPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
     private final FinTecSystemsApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final FinTecSystemsConfiguration providerConfiguration;
     private final String redirectUrl;
+    private final FinTecSystemsStorage storage;
     SessionStatusRetryer sessionStatusRetryer = new SessionStatusRetryer();
 
     private static final long WAIT_FOR_MINUTES = 3L;
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
+        validateThatCredentialDidNotSucceedWithPaymentAlready();
+
         FinTechSystemsPaymentResponse finTechSystemsPaymentResponse =
                 apiClient.createPayment(paymentRequest);
-        URL wizardUrl = getWizardUrl(finTechSystemsPaymentResponse.getWizardSessionKey());
+        URL wizardUrl = buildWizardUrl(finTechSystemsPaymentResponse.getWizardSessionKey());
         handleRedirect(wizardUrl);
-        return finTechSystemsPaymentResponse.toTinkPayment(finTechSystemsPaymentResponse);
+        return finTechSystemsPaymentResponse.toTinkPaymentResponse();
+    }
+
+    private void validateThatCredentialDidNotSucceedWithPaymentAlready() {
+        if (storage.retrieveTransactionId().isPresent()) {
+            throw new IllegalStateException(
+                    "There was a successful payment on this credential already! FTS agent does not support multiple payments on the same credential due to account-check part.");
+        }
     }
 
     private void handleRedirect(URL wizardUrl) {
-        log.info("callBackURL: " + getCallBackUrl());
-        openThirdPartyApp(wizardUrl);
+        supplementalInformationHelper.openThirdPartyApp(
+                ThirdPartyAppAuthenticationPayload.of(wizardUrl));
         supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 
-    @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException, AuthenticationException {
+    private URL buildWizardUrl(String wizardSessionKey) {
+        return new URL(FTS_WIDGET_CDN)
+                .queryParam(WIZARD_SESSION_KEY, wizardSessionKey)
+                .queryParam(REDIRECT_URI, buildCallBackUrl());
+    }
 
+    private String buildCallBackUrl() {
+        return redirectUrl + "?state=" + strongAuthenticationState.getState();
+    }
+
+    @Override
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         FinTechSystemsSession sessionsResponse =
                 pollSessionUntilSessionIsFinished(paymentMultiStepRequest);
 
@@ -87,28 +101,35 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     }
 
     private PaymentMultiStepResponse handleSuccessfulPayment(
-            PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentCancelledException {
+            PaymentMultiStepRequest paymentMultiStepRequest) {
         FinTechSystemsPayment paymentResponse =
                 apiClient.fetchPaymentStatus(paymentMultiStepRequest);
 
         switch (PaymentStatus.fromString(paymentResponse.getPaymentStatus())) {
             case NONE:
             case RECEIVED:
-                return updatePaymentStatus(paymentMultiStepRequest, SIGNED);
+                paymentMultiStepRequest.getPayment().setStatus(SIGNED);
+                break;
             default:
                 log.error(
                         "Unknow status received from Fintech Systems={}",
                         paymentResponse.getPaymentStatus());
                 throw new PaymentCancelledException();
         }
+
+        storage.storeTransactionId(paymentResponse.getTransaction());
+
+        return new PaymentMultiStepResponse(
+                paymentMultiStepRequest.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private PaymentException getPaymentExceptionFromFtsErrorMessage(String lastError) {
         log.info("FTS lastError:{}", lastError);
         switch (LastError.fromString(lastError)) {
             case CLIENT_ABORTED:
-                return new PaymentAuthorizationTimeOutException(
-                        lastError, InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT);
+                return new PaymentAuthorizationCancelledByUserException(
+                        ErrorEntity.create(lastError, lastError),
+                        InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED);
             case TOKEN_MISMATCH:
             case LOGIN_FAILED:
             case LOGIN_NEXT_FAILED:
@@ -117,10 +138,6 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
             case CONSENT_INVALID:
             case MAX_LOGIN_TRIES:
             case MAX_TAN_TRIES:
-                return new PaymentAuthorizationFailedByUserException(
-                        ErrorEntity.create(lastError, lastError),
-                        InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
-
             case WRONG_TAN:
                 return new PaymentAuthorizationFailedByUserException(
                         ErrorEntity.create(lastError, lastError),
@@ -155,23 +172,14 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
         }
     }
 
-    private PaymentMultiStepResponse updatePaymentStatus(
-            PaymentMultiStepRequest paymentMultiStepRequest,
-            se.tink.libraries.payment.enums.PaymentStatus signed) {
-        // If no error update payment status as signed
-        paymentMultiStepRequest.getPayment().setStatus(signed);
-        return new PaymentMultiStepResponse(
-                paymentMultiStepRequest.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
-    }
-
     private FinTechSystemsSession pollSessionUntilSessionIsFinished(
-            PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
+            PaymentMultiStepRequest paymentMultiStepRequest) {
         FinTechSystemsSession sessionsResponse;
         try {
             sessionsResponse =
                     sessionStatusRetryer.callUntilSessionStatusIsNotFinished(
                             () ->
-                                    apiClient.getSessionStatus(
+                                    apiClient.fetchSessionStatus(
                                             paymentMultiStepRequest.getPayment().getUniqueId()));
         } catch (ExecutionException | RetryException e) {
             log.error("Unable to get Session Status from FTS", e);
@@ -191,34 +199,5 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
         throw new NotImplementedException(
                 "Cancel not implemented for " + this.getClass().getName());
-    }
-
-    @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
-        return apiClient
-                .fetchPaymentStatus(paymentRequest)
-                .toTinkPayment(paymentRequest.getPayment());
-    }
-
-    @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        throw new NotImplementedException(
-                "fetchMultiple not implemented for " + this.getClass().getName());
-    }
-
-    private void openThirdPartyApp(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload =
-                ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
-        this.supplementalInformationHelper.openThirdPartyApp(payload);
-    }
-
-    private URL getWizardUrl(String wizardSessionKey) {
-        return new URL(FTS_WIDGET_CDN)
-                .queryParam(WIZARD_SESSION_KEY, wizardSessionKey)
-                .queryParam(REDIRECT_URI, getCallBackUrl());
-    }
-
-    private String getCallBackUrl() {
-        return redirectUrl + "?state=" + strongAuthenticationState.getState();
     }
 }

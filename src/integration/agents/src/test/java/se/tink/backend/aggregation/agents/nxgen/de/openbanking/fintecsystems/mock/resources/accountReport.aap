@@ -1,0 +1,36 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.xs2a.com/v1/payments/1234567890/report/urp_ECve9L9UY67qhVlt?format=json
+Authorization: Basic YXBpOlNvbWVEdW1teUtleQ==
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Thu, 30 Dec 2021 11:44:29 GMT
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Type: application/json
+
+[
+    [
+        {
+            "base_data": {
+                "holder": "MUSTERMANN, HARTMUT",
+                "iban": "DE62888888880012345678",
+                "bic": "TESTDE88XXX",
+                "bank_code": "88888888",
+                "bank_name": "Testbank",
+                "country_id": "DE",
+                "date": "2021-12-30",
+                "joint_account": "0",
+                "account_type": "giro"
+            }
+        }
+    ]
+]
