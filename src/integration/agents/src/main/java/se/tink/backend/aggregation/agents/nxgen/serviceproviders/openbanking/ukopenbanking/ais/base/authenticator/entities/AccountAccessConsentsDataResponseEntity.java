@@ -11,8 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class AccountPermissionsDataResponseEntity extends AccountPermissionDataEntity {
-    private String accountRequestId;
+public class AccountAccessConsentsDataResponseEntity extends AccountAccessConsentsDataEntity {
 
     @JsonDeserialize(using = UkObInstantDeserializer.class)
     private Instant creationDateTime;

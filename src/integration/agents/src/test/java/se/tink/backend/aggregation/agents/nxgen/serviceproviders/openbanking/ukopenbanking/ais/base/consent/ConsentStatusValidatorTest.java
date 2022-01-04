@@ -15,8 +15,8 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.AccountPermissionsDataResponseEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.AccountAccessConsentsDataResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountAccessConsentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -26,15 +26,15 @@ public class ConsentStatusValidatorTest {
 
     private UkOpenBankingApiClient mockedApiClient;
     private PersistentStorage storage;
-    private AccountPermissionsDataResponseEntity mockedConsent;
-    private AccountPermissionResponse mockedConsentResponse;
+    private AccountAccessConsentsDataResponseEntity mockedConsent;
+    private AccountAccessConsentsResponse mockedConsentResponse;
     private static final String DUMMY_CONSENT_ID = "DUMMY_CONSENT_ID";
     private static final String DUMMY_ACCESS_TOKEN = "DUMMY_ACCESS_TOKEN";
 
     @Before
     public void setUp() throws Exception {
-        this.mockedConsent = mock(AccountPermissionsDataResponseEntity.class);
-        this.mockedConsentResponse = mock(AccountPermissionResponse.class);
+        this.mockedConsent = mock(AccountAccessConsentsDataResponseEntity.class);
+        this.mockedConsentResponse = mock(AccountAccessConsentsResponse.class);
         this.mockedApiClient = mock(UkOpenBankingApiClient.class);
         this.storage = new PersistentStorage();
 
