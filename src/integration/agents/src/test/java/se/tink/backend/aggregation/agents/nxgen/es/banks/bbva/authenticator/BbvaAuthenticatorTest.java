@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -132,6 +133,21 @@ public class BbvaAuthenticatorTest {
         assertThat(thrown)
                 .isExactlyInstanceOf(LoginException.class)
                 .hasMessage("Unknown error: httpStatus 404, code 1, message Test message");
+    }
+
+    @Test
+    public void shouldThrowIncorrectChallengeErrorWhenReceiveUnauthorizedOtpResponse() {
+        // given
+        HttpResponseException exception = mockResponse(401);
+        doThrow(exception).when(apiClient).requestMoreThan90DaysTransactionsForFirstAccount(any());
+
+        // when
+        Throwable thrown = catchThrowable(authenticator::forcedOtpForExtendedPeriod);
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CHALLENGE_RESPONSE");
     }
 
     private HttpResponseException mockResponse(int status) {

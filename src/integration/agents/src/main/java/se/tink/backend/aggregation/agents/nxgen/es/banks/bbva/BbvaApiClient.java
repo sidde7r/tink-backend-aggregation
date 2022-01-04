@@ -287,14 +287,14 @@ public class BbvaApiClient {
             HttpResponse exceptionResponse, TransactionsRequest request) {
         Retryer<AccountTransactionsResponse> fetchAccountTransactionsWithOtpRetryer =
                 getFetchAccountTransactionsWithOtpRetryer();
+        RequestBuilder otpBuilder =
+                createAccountTransactionsHistoryRequestWithOtp(exceptionResponse);
         return fetchAccountTransactionsWithOtpRetryer.call(
-                () -> retrieveAccountTransactionsWithOtp(exceptionResponse, request));
+                () -> retrieveAccountTransactionsWithOtp(request, otpBuilder));
     }
 
     private AccountTransactionsResponse retrieveAccountTransactionsWithOtp(
-            HttpResponse exceptionResponse, TransactionsRequest request) {
-        RequestBuilder otpBuilder =
-                createAccountTransactionsHistoryRequestWithOtp(exceptionResponse);
+            TransactionsRequest request, RequestBuilder otpBuilder) {
         HttpResponse httpResponse = otpBuilder.post(HttpResponse.class, request);
         setTsec(httpResponse.getHeaders().getFirst(HeaderKeys.TSEC_KEY));
         return httpResponse.getBody(AccountTransactionsResponse.class);
@@ -464,5 +464,12 @@ public class BbvaApiClient {
 
     private void setUserId(String userId) {
         sessionStorage.put(BbvaConstants.StorageKeys.USER_ID, userId);
+    }
+
+    public void requestMoreThan90DaysTransactionsForFirstAccount(
+            List<TransactionalAccount> accounts) {
+        accounts.stream()
+                .findFirst()
+                .ifPresent(firstAccount -> fetchAccountTransactionsToForceOtp(firstAccount, ""));
     }
 }
