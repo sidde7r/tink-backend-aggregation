@@ -8,4 +8,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class ErrorResponse {
     private List<TppMessageEntity> tppMessages;
+
+    public boolean checkErrorServiceInvalid() {
+        return tppMessages.stream().anyMatch(TppMessageEntity::isServiceInvalid);
+    }
 }

@@ -95,6 +95,8 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
         this.organizationIdentifier = getOrganizationIdentifier();
         this.systemUpdater = systemUpdater;
         this.credentials = credentials;
+
+        client.addFilter(new SamlinkSessionErrorFilter());
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -130,7 +132,6 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
         } catch (HttpResponseException e) {
             final HttpResponse httpResponse = e.getResponse();
             handleApiKeyError(httpResponse);
-            new SamlinkSessionErrorFilter().throwIfConsentError(httpResponse);
             throw e;
         }
     }
