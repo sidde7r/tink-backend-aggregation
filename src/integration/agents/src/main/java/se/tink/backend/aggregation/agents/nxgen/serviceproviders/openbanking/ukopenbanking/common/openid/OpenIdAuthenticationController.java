@@ -264,6 +264,8 @@ public class OpenIdAuthenticationController
                     apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS);
 
             if (!refreshedOAuth2Token.isValid()) {
+                log.warn(
+                        "[OpenIdAuthenticationController] Access token refreshed, but it is invalid. Expiring the session.");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
