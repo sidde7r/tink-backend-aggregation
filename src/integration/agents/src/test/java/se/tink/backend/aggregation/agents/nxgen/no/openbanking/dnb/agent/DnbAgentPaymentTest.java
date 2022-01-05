@@ -29,7 +29,8 @@ public class DnbAgentPaymentTest {
     enum Arg implements ArgumentManager.ArgumentManagerEnum {
         DEBTOR_ACCOUNT, // IBAN account number
         CREDITOR_ACCOUNT, // IBAN account number
-        PSU_ID; // User SSN
+        PSU_ID, // User SSN
+        PAYMENT_ID; // Payment unique id
 
         @Override
         public boolean isOptional() {
@@ -61,7 +62,15 @@ public class DnbAgentPaymentTest {
     @Test
     public void testPayment() throws Exception {
         builder.build()
-                .testTinkLinkPayment(createPayment().withExecutionDate(LocalDate.now()).build());
+                .testTinkLinkPayment(
+                        createPayment().withExecutionDate(LocalDate.now().plusDays(7)).build());
+    }
+
+    @Test
+    public void testCancelPayment() throws Exception {
+        builder.build()
+                .testCancelPayment(
+                        createPayment(creditorDebtorManager.get(Arg.PAYMENT_ID)).build());
     }
 
     @Test
@@ -77,15 +86,23 @@ public class DnbAgentPaymentTest {
     }
 
     private Payment.Builder createPayment() {
-        String paymentId = preparePaymentId("Tink");
-        System.out.println("Running payment: " + paymentId);
+        String remittanceInformationValue = prepareRemittanceInfo("Tink");
+        System.out.println("Running payment: " + remittanceInformationValue);
 
-        return createRealPayment(paymentId)
+        return createRealPayment(remittanceInformationValue)
+                .withPaymentScheme(PaymentScheme.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER);
+    }
+
+    private Payment.Builder createPayment(String uniqueId) {
+        String remittanceInformationValue = prepareRemittanceInfo("Tink");
+        System.out.println("Running payment: " + remittanceInformationValue);
+
+        return createRealPayment(remittanceInformationValue, uniqueId)
                 .withPaymentScheme(PaymentScheme.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER);
     }
 
     private Payment.Builder createRecurringPayment() {
-        String paymentId = preparePaymentId("TinkRecurring");
+        String paymentId = prepareRemittanceInfo("TinkRecurring");
         System.out.println("Running payment: " + paymentId);
 
         return createRealPayment(paymentId)
@@ -98,16 +115,20 @@ public class DnbAgentPaymentTest {
     }
 
     private Payment.Builder createInstantPayment() {
-        String paymentId = preparePaymentId("TinkInstant");
+        String paymentId = prepareRemittanceInfo("TinkInstant");
         System.out.println("Running payment: " + paymentId);
 
         return createRealPayment(paymentId)
                 .withPaymentScheme(PaymentScheme.INSTANT_NORWEGIAN_DOMESTIC_CREDIT_TRANSFER_STRAKS);
     }
 
-    private Payment.Builder createRealPayment(String paymentId) {
+    private Payment.Builder createRealPayment(String remittanceInformationValue) {
+        return createRealPayment(remittanceInformationValue, UUID.randomUUID().toString());
+    }
+
+    private Payment.Builder createRealPayment(String remittanceInformationValue, String uniqueId) {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue(paymentId);
+        remittanceInformation.setValue(remittanceInformationValue);
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
         AccountIdentifier creditorAccountIdentifier =
@@ -126,11 +147,11 @@ public class DnbAgentPaymentTest {
                 .withDebtor(debtor)
                 .withExactCurrencyAmount(amount)
                 .withCurrency("NOK")
-                .withUniqueId(UUID.randomUUID().toString())
+                .withUniqueId(uniqueId)
                 .withRemittanceInformation(remittanceInformation);
     }
 
-    private String preparePaymentId(String prefix) {
+    private String prepareRemittanceInfo(String prefix) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd--HH-mm-ss");
         String dateNow = LocalDateTime.now().format(formatter);
         return prefix + "-" + dateNow;

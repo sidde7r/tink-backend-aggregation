@@ -132,6 +132,7 @@ public class DnbAgentPaymentWiremockTest {
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
+                .withExecutionDate(LocalDate.of(2030, Month.JANUARY, 15))
                 .withFrequency(Frequency.MONTHLY)
                 .withStartDate(LocalDate.of(2030, Month.JANUARY, 15))
                 .withEndDate(LocalDate.of(2030, Month.JUNE, 15))

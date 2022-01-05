@@ -5,13 +5,14 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum DnbPaymentStatus {
     ACCEPTED("ACCP", PaymentStatus.PAID),
-    ACTIVE("ACTV", PaymentStatus.PENDING),
+    ACTIVE("ACTV", PaymentStatus.SIGNED),
     STOPPED("PRSY", PaymentStatus.CANCELLED),
     PROCESSING("NEXT", PaymentStatus.PENDING),
     PENDING("PDNG", PaymentStatus.PENDING),
     REJECTED("RJCT", PaymentStatus.REJECTED),
     EXECUTED("ACSC", PaymentStatus.PAID),
     NAUT("NAUT", PaymentStatus.PENDING),
+    CANCELLED("CANC", PaymentStatus.CANCELLED),
     UNDEFINED("Undefined", PaymentStatus.UNDEFINED);
 
     private String text;

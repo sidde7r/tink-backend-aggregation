@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -32,7 +36,13 @@ public class DnbPaymentSigner implements Signer<PaymentRequest> {
 
         openThirdPartyApp(authorizeUrl);
 
-        poll(toSign);
+        pollForCreatePayment(toSign);
+    }
+
+    public PaymentResponse signCancelPayment(PaymentRequest toSign, URL authorizeUrl)
+            throws AuthenticationException {
+        openThirdPartyApp(authorizeUrl);
+        return pollForCancelPayment(toSign);
     }
 
     private void openThirdPartyApp(URL authorizeUrl) {
@@ -50,26 +60,43 @@ public class DnbPaymentSigner implements Signer<PaymentRequest> {
         return Optional.ofNullable(authorizeUrl).map(ThirdPartyAppAuthenticationPayload::of);
     }
 
-    private void poll(PaymentRequest toSign) throws AuthenticationException {
+    private void pollForCreatePayment(PaymentRequest toSign) throws AuthenticationException {
+        poll(
+                toSign,
+                Arrays.asList(PaymentStatus.PAID, PaymentStatus.SIGNED),
+                Collections.singletonList(PaymentStatus.PENDING));
+    }
+
+    private PaymentResponse pollForCancelPayment(PaymentRequest toSign)
+            throws AuthenticationException {
+        return poll(
+                toSign,
+                Collections.singletonList(PaymentStatus.CANCELLED),
+                Arrays.asList(PaymentStatus.PENDING, PaymentStatus.PAID, PaymentStatus.SIGNED));
+    }
+
+    private PaymentResponse poll(
+            PaymentRequest toSign,
+            List<PaymentStatus> successStatuses,
+            List<PaymentStatus> pendingStatuses)
+            throws AuthenticationException {
         PaymentStatus status = null;
 
         for (int i = 0; i < MAX_ATTEMPTS; ++i) {
-            status = collect(toSign);
+            PaymentResponse paymentResponse = collect(toSign);
+            status = paymentResponse.getPayment().getStatus();
 
-            switch (status) {
-                case PAID:
-                case SIGNED:
-                    return;
-                case PENDING:
-                    log.info("Waiting for signing");
-                    break;
-                case REJECTED:
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-                case USER_APPROVAL_FAILED:
-                    throw ThirdPartyAppError.TIMED_OUT.exception();
-                default:
-                    log.warn(String.format("Unknown payment sign response status: (%s)", status));
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+            if (successStatuses.contains(status)) {
+                return paymentResponse;
+            } else if (pendingStatuses.contains(status)) {
+                log.info("Waiting for signing");
+            } else if (status == PaymentStatus.REJECTED) {
+                throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+            } else if (status == PaymentStatus.USER_APPROVAL_FAILED) {
+                throw ThirdPartyAppError.TIMED_OUT.exception();
+            } else {
+                log.warn(String.format("Unknown payment sign response status: (%s)", status));
+                throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
@@ -79,9 +106,9 @@ public class DnbPaymentSigner implements Signer<PaymentRequest> {
         throw ThirdPartyAppError.TIMED_OUT.exception();
     }
 
-    private PaymentStatus collect(PaymentRequest toCollect) throws AuthenticationException {
+    private PaymentResponse collect(PaymentRequest toCollect) throws AuthenticationException {
         try {
-            return paymentExecutor.fetch(toCollect).getPayment().getStatus();
+            return paymentExecutor.fetch(toCollect);
         } catch (PaymentException e) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
         }

@@ -44,6 +44,8 @@ public class CreatePaymentRequest {
 
     private String remittanceInformationUnstructured;
 
+    private String requestedExecutionDate;
+
     private String frequency;
 
     private String startDate;

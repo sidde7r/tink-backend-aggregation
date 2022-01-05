@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums.DnbPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CancelPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.RemittanceInformationStructured;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
@@ -80,6 +82,8 @@ public class DnbPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .creditor(creditor)
                         .debtor(debtor)
                         .amount(AmountEntity.amountOf(paymentRequest))
+                        .requestedExecutionDate(
+                                paymentRequest.getPayment().getExecutionDate().toString())
                         .creditorName(paymentRequest.getPayment().getCreditor().getName());
 
         if (dnbPaymentType == NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS_PERIODIC) {
@@ -135,8 +139,16 @@ public class DnbPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+        DnbPaymentType dnbPaymentType = DnbPaymentType.getDnbPaymentType(paymentRequest);
+
+        CancelPaymentResponse paymentResponse =
+                apiClient.cancelPayment(
+                        dnbPaymentType,
+                        paymentRequest.getPayment().getUniqueId(),
+                        strongAuthenticationState.getState());
+        URL authorizationUrl = new URL(paymentResponse.getLinks().getScaRedirect().getHref());
+
+        return dnbPaymentSigner.signCancelPayment(paymentRequest, authorizationUrl);
     }
 
     @Override
