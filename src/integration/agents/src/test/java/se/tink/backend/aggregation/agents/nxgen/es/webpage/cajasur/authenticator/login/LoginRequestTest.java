@@ -51,7 +51,9 @@ public class LoginRequestTest extends WireMockIntegrationTest {
                         StandardCharsets.UTF_8);
         String responseBody =
                 FileUtils.readFileToString(
-                        Paths.get(CajasurTestConstants.TEST_DATA_PATH, "login_response.html")
+                        Paths.get(
+                                        CajasurTestConstants.TEST_DATA_PATH,
+                                        "login_success_response.html")
                                 .toFile(),
                         StandardCharsets.UTF_8);
         WireMock.stubFor(

@@ -17,6 +17,8 @@ public class CajasurSessionState {
 
     private String globalPosition;
 
+    private boolean scaPerformed;
+
     private CajasurSessionState() {}
 
     private CajasurSessionState(SessionStorage sessionStorage) {
@@ -37,6 +39,10 @@ public class CajasurSessionState {
     public void saveLoginResponse(String loginResponse) {
         this.loginResponse = loginResponse;
         save();
+    }
+
+    public void scaPerformed() {
+        scaPerformed = true;
     }
 
     public void saveGlobalPosition(String globalPosition) {
