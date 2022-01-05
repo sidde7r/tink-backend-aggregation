@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 
 public class OpenIdAuthenticationValidatorTest {
 
@@ -55,7 +56,7 @@ public class OpenIdAuthenticationValidatorTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .isExactlyInstanceOf(SessionException.class)
                 .hasNoCause()
                 .hasMessage("Invalid access token.");
     }
@@ -79,7 +80,7 @@ public class OpenIdAuthenticationValidatorTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .isExactlyInstanceOf(SessionException.class)
                 .hasNoCause()
                 .hasMessage("Client access token is not valid.");
     }
