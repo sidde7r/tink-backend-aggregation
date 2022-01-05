@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AccountEntity;
@@ -33,27 +35,19 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
+@RequiredArgsConstructor
 public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private final BbvaApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CredentialsRequest request;
     private final TransactionPaginationHelper transactionPaginationHelper;
+    private final SessionStorage sessionStorage;
 
     private List<TransactionalAccount> accounts = Collections.emptyList();
-
-    public BbvaAuthenticator(
-            BbvaApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            CredentialsRequest request,
-            TransactionPaginationHelper transactionPaginationHelper) {
-        this.apiClient = apiClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.request = request;
-        this.transactionPaginationHelper = transactionPaginationHelper;
-    }
 
     @Override
     public void authenticate(Credentials credentials)
@@ -72,6 +66,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
                 if (request.getUserAvailability().isUserAvailableForInteraction()
                         && isInExtendedPeriod()) {
                     forcedOtpForExtendedPeriod();
+                    sessionStorage.put(StorageKeys.IS_IN_EXTENDED_MODE, true);
                 }
             } catch (HttpResponseException ex) {
                 mapHttpErrors(ex);

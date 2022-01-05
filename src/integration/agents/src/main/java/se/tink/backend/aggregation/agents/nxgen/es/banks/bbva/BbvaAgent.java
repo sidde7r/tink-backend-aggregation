@@ -72,8 +72,7 @@ public final class BbvaAgent extends NextGenerationAgent
                         client,
                         sessionStorage,
                         supplementalInformationHelper,
-                        transactionPaginationHelper,
-                        componentProvider.getCredentialsRequest().getUserAvailability());
+                        transactionPaginationHelper);
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
@@ -151,7 +150,8 @@ public final class BbvaAgent extends NextGenerationAgent
                         apiClient,
                         supplementalInformationHelper,
                         request,
-                        transactionPaginationHelper);
+                        transactionPaginationHelper,
+                        sessionStorage);
         log.info(
                 "Credentials status after authenticating is equal {}",
                 this.credentials.getStatus());
