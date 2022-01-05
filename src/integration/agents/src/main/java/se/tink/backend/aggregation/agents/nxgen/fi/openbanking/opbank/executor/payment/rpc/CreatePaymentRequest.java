@@ -46,7 +46,7 @@ public class CreatePaymentRequest {
         }
 
         public PaymentRequestBuilder amount(ExactCurrencyAmount exactCurrencyAmount) {
-            this.amountEUR = String.valueOf(exactCurrencyAmount.getDoubleValue());
+            this.amountEUR = String.format("%.2f", exactCurrencyAmount.getDoubleValue());
             return this;
         }
 
