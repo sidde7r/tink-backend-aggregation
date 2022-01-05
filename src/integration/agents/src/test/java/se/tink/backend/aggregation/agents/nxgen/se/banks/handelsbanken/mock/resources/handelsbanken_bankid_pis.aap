@@ -3,7 +3,7 @@ REQUEST 1
 POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/init/3.0
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -29,7 +29,7 @@ REQUEST 2 MATCH POLLED_1
 POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -53,7 +53,7 @@ REQUEST 3 MATCH POLLED_2
 POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -77,7 +77,7 @@ REQUEST 4 MATCH POLLED_3
 POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -101,7 +101,7 @@ REQUEST 5 MATCH POLLED_4
 POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -125,7 +125,7 @@ REQUEST 6 MATCH POLLED_5
 POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -149,7 +149,7 @@ REQUEST 7 MATCH POLLED_6
 POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -173,7 +173,7 @@ REQUEST 8 MATCH POLLED_7
 POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authorize/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -197,7 +197,7 @@ REQUEST 9
 GET https://m2.handelsbanken.se/priv/session
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -220,7 +220,7 @@ REQUEST 10
 GET https://m2.handelsbanken.se/app/priv/accounts?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -242,7 +242,7 @@ REQUEST 11 MATCH TRANSACTIONS_1
 GET https://m2.handelsbanken.se/app/priv/accounts/000000000/transactions?isCard=false&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -265,7 +265,7 @@ REQUEST 12 MATCH TRANSACTIONS_2
 GET https://m2.handelsbanken.se/app/priv/accounts/000000000/account-info?hasBalance=true&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -287,7 +287,7 @@ REQUEST 13 MATCH TRANSACTIONS_3
 GET https://m2.handelsbanken.se/app/priv/accounts/111111111/transactions?isCard=false&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -309,7 +309,7 @@ REQUEST 14 MATCH TRANSACTIONS_4
 GET https://m2.handelsbanken.se/app/priv/accounts/111111111/account-info?hasBalance=false&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -331,7 +331,7 @@ REQUEST 15 MATCH TRANSACTIONS_5
 GET https://m2.handelsbanken.se/app/priv/accounts/222222222/transactions?isCard=false&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -353,7 +353,7 @@ REQUEST 16 MATCH TRANSACTIONS_6
 GET https://m2.handelsbanken.se/app/priv/accounts/222222222/account-info?hasBalance=true&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -375,7 +375,7 @@ REQUEST 17 MATCH TRANSACTIONS_7
 GET https://m2.handelsbanken.se/app/priv/accounts?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -397,7 +397,7 @@ REQUEST 18
 GET https://m2.handelsbanken.se/app/priv/cards/v3?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -419,7 +419,7 @@ REQUEST 19
 GET https://m2.handelsbanken.se/app/priv/loan?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -441,7 +441,7 @@ REQUEST 20
 GET https://m2.handelsbanken.se/app/priv/pension?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -463,7 +463,7 @@ REQUEST 21
 GET https://m2.handelsbanken.se/app/priv/pension/4fzqFjqGFjl9FdVljQ4o_A/mcvBJGj9dOSvxUAr_GTmAc_0mhiLj4XZZQ9GTC_t0uu9KavS5KO5i3N6Y7zdXxhG/1016/XXA-ey3aFNGeEg8PRW63mw/F7n_SX1OjdteeWj2nRXUZg/detail?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -485,7 +485,7 @@ REQUEST 22
 GET https://m2.handelsbanken.se/app/priv/fund/fundHoldings/SE0011308048/0.0000/1593.863?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -507,7 +507,7 @@ REQUEST 23
 GET https://m2.handelsbanken.se/app/priv/securities/holdingsSummary/V3?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -529,7 +529,7 @@ REQUEST 24
 GET https://m2.handelsbanken.se/app/priv/pending-transactions?user=&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -550,7 +550,7 @@ REQUEST 25
 GET https://m2.handelsbanken.se/app/priv/payment/v2/00037437258000099A01?status=PENDING&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -572,7 +572,7 @@ REQUEST 26
 GET https://m2.handelsbanken.se/app/priv/payment/v2/00058764119000966A01?status=PENDING&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -594,7 +594,7 @@ REQUEST 27
 GET https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -616,7 +616,7 @@ REQUEST 28
 GET https://m2.handelsbanken.se/app/priv/transfer/v2/context?showPuff=true&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -638,7 +638,7 @@ REQUEST 29
 GET https://m2.handelsbanken.se/app/priv/payment/context?includeRecipients=true&authToken=ad37b1423d54
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -660,7 +660,7 @@ REQUEST 30
 GET abc***MASKED***
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -683,7 +683,7 @@ REQUEST 31
 GET ***MASKED***
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -706,7 +706,7 @@ REQUEST 32
 GET https://m2.handelsbanken.se/app/priv/payment/recipient/5458-8934?authToken=ad37b1423d55
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -729,7 +729,7 @@ REQUEST 33
 POST https://m2.handelsbanken.se/app/priv/payment/sign/create?authToken=ad37b1423d55
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -752,7 +752,7 @@ REQUEST 34
 GET https://m2.handelsbanken.se/bb/glss/bu/confirmation/getCfrmInfo/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
@@ -775,7 +775,7 @@ REQUEST 35
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/init/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -799,7 +799,7 @@ REQUEST 36
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/verify/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -823,7 +823,7 @@ REQUEST 37 MATCH POLLED_36
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/verify/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -847,7 +847,7 @@ REQUEST 38 MATCH POLLED_37
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/verify/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -871,7 +871,7 @@ REQUEST 39 MATCH POLLED_38
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/verify/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -895,7 +895,7 @@ REQUEST 40 MATCH POLLED_39
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/verify/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -919,7 +919,7 @@ REQUEST 41 MATCH POLLED_40
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/verify/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -943,7 +943,7 @@ REQUEST 42 MATCH POLLED_41
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/verify/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -967,7 +967,7 @@ REQUEST 43 MATCH POLLED_42
 POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/mbid/verify/1.0?SignatureId=7a7d677fd0dc
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 Content-Type: application/json
@@ -991,7 +991,7 @@ REQUEST 44
 POST https://m2.handelsbanken.se/app/priv/payment/sign/approve-create?signToken=MDAxMjEyMTU0MjAyMDIwLTA3LTA3LTE1LjI4LjMzLjIzNjYzOQ&signature=7a7d677fd0dc&authToken=ad37b1423d55
 Accept: application/json,application/xml
 X-SHB-DEVICE-NAME: iOS;Tink;Tink
-X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-MODEL: IOS-14.7.1,11.3.1,iPhone9.3,SEPRIV
 X-SHB-DEVICE-CLASS: APP
 X-SHB-APP-VERSION: 3.6:11.5
 X-Aggregator: Tink Testing
