@@ -85,6 +85,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @Slf4j
 public class BbvaApiClient {
@@ -93,17 +94,20 @@ public class BbvaApiClient {
     private final SessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final TransactionPaginationHelper transactionPaginationHelper;
+    private final UserAvailability userAvailability;
 
     public BbvaApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            TransactionPaginationHelper transactionPaginationHelper) {
+            TransactionPaginationHelper transactionPaginationHelper,
+            UserAvailability userAvailability) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         client.addFilter(new BbvaInvestmentAccountBlockedFilter());
         this.transactionPaginationHelper = transactionPaginationHelper;
+        this.userAvailability = userAvailability;
     }
 
     public HttpResponse isAlive() {
@@ -395,16 +399,28 @@ public class BbvaApiClient {
 
     private LocalDateTime getDateForFetchHistoryTransactions(
             Account account, boolean isCreditCard) {
+        LocalDateTime currentDate = LocalDateTime.now(ZoneId.of(Defaults.TIMEZONE_CET));
         Optional<Date> limitDateOptional =
                 transactionPaginationHelper.getTransactionDateLimit(account);
         if (limitDateOptional.isPresent()) {
-            return limitDateOptional
-                    .get()
-                    .toInstant()
-                    .atZone(ZoneId.of(Defaults.TIMEZONE_CET))
-                    .toLocalDateTime();
+            LocalDateTime date =
+                    limitDateOptional
+                            .get()
+                            .toInstant()
+                            .atZone(ZoneId.of(Defaults.TIMEZONE_CET))
+                            .toLocalDateTime();
+
+            if (!userAvailability.isUserAvailableForInteraction()
+                    && date.isBefore(currentDate.minusDays(89))) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            return date;
         }
-        LocalDateTime currentDate = LocalDateTime.now(ZoneId.of(Defaults.TIMEZONE_CET));
+
+        if (!userAvailability.isUserAvailableForInteraction()) {
+            return currentDate.minusDays(89);
+        }
+
         String accountId = account.getApiIdentifier();
         String openingAccountDateStr;
         LocalDateTime openingAccountDate;

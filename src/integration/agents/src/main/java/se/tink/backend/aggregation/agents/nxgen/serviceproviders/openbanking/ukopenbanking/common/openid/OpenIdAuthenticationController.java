@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorDescriptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -162,7 +163,9 @@ public class OpenIdAuthenticationController
                         .orElseGet(
                                 () -> {
                                     log.error(
-                                            "callbackData did not contain code. CallbackUri: {}, Data received: {}",
+                                            "[OpenIdAuthenticationController] callbackData did not "
+                                                    + "contain code. CallbackUri: {}, "
+                                                    + "Data received: {}",
                                             callbackUri,
                                             SerializationUtils.serializeToString(callbackData));
                                     throw SessionError.SESSION_EXPIRED.exception();
@@ -177,7 +180,8 @@ public class OpenIdAuthenticationController
             authenticationValidator.validateIdToken(idToken.get(), code, state);
         } else {
             log.warn(
-                    "[OpenIdAuthenticationController] ID Token (code and state) validation - no token provided");
+                    "[OpenIdAuthenticationController] ID Token (code and state) "
+                            + "validation - no token provided");
         }
 
         OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
@@ -353,25 +357,31 @@ public class OpenIdAuthenticationController
 
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
-
             // Store error information to make it possible for agent to determine cause and
             // give end user a proper error message.
             apiClient.storeOpenIdError(ErrorEntity.create(errorType, errorDescription));
-
             throw LoginError.INCORRECT_CREDENTIALS.exception();
+
         } else if (OpenIdConstants.Errors.SERVER_ERROR.equalsIgnoreCase(errorType)) {
+            if (ErrorDescriptions.SERVER_ERROR_PROCESSING.equalsIgnoreCase(errorDescription)) {
+                throw ThirdPartyAppError.CANCELLED.exception(errorDescription);
+            }
             throw BankServiceError.BANK_SIDE_FAILURE.exception(errorDescription);
+
         } else if (OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE.equalsIgnoreCase(errorType)) {
             throw BankServiceError.NO_BANK_SERVICE.exception(errorDescription);
+
         } else if (OpenIdConstants.Errors.UNAUTHORISED.equalsIgnoreCase(errorType)) {
             throw BankServiceError.SESSION_TERMINATED.exception(errorDescription);
+
         } else if (OpenIdConstants.Errors.INVALID_INTENT_ID.equalsIgnoreCase(errorType)) {
             throw SessionError.CONSENT_INVALID.exception();
         }
 
         throw new IllegalStateException(
                 String.format(
-                        "[OpenIdAuthenticationController] Unknown error with details: {errorType: %s, errorDescription: %s}",
+                        "[OpenIdAuthenticationController] Unknown error with details: "
+                                + "{errorType: %s, errorDescription: %s}",
                         errorType, errorDescription));
     }
 
