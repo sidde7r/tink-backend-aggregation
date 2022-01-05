@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.uk
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountAccessConsentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
@@ -201,19 +201,19 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 UkObConsentGenerator.of(componentProvider, aisConfig.getAvailablePermissions())
                         .generate();
 
-        AccountPermissionResponse accountPermissionResponse =
-                createConsentRequest(permissionRequest).post(AccountPermissionResponse.class);
+        AccountAccessConsentsResponse accountAccessConsentResponse =
+                createConsentRequest(permissionRequest).post(AccountAccessConsentsResponse.class);
 
-        String consentId = accountPermissionResponse.getConsentId();
+        String consentId = accountAccessConsentResponse.getConsentId();
         saveIntentId(consentId);
-        saveConsentCreationDate(accountPermissionResponse.getCreationDate());
+        saveConsentCreationDate(accountAccessConsentResponse.getCreationDate());
         return consentId;
     }
 
-    public AccountPermissionResponse fetchConsent(String consentId) {
+    public AccountAccessConsentsResponse fetchConsent(String consentId) {
         return createAisRequest(aisConfig.getConsentDetailsRequestURL(consentId))
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .get(AccountPermissionResponse.class);
+                .get(AccountAccessConsentsResponse.class);
     }
 
     protected RequestBuilder createAisRequest(URL url) {
