@@ -38,6 +38,6 @@ junit_test(
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
-        "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
+        "@tink_backend//src/libraries/connectivity_errors/proto:java_proto"
     ],
 )
