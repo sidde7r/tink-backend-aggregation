@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -42,7 +43,8 @@ public class BbvaAuthenticatorTest {
                         apiClient,
                         mock(SupplementalInformationHelper.class),
                         mock(CredentialsRequest.class),
-                        mock(TransactionPaginationHelper.class));
+                        mock(TransactionPaginationHelper.class),
+                        mock(SessionStorage.class));
     }
 
     @Test
@@ -187,7 +189,8 @@ public class BbvaAuthenticatorTest {
                         apiClient,
                         mock(SupplementalInformationHelper.class),
                         mock(CredentialsRequest.class),
-                        mock(TransactionPaginationHelper.class));
+                        mock(TransactionPaginationHelper.class),
+                        mock(SessionStorage.class));
 
         // when
         Throwable thrown = catchThrowable(() -> authenticator.authenticate(credentials));

@@ -44,6 +44,7 @@ public final class BbvaConstants {
 
     public static final class StorageKeys {
         public static final String USER_ID = "userId";
+        public static final String IS_IN_EXTENDED_MODE = "isInExtendedMode";
     }
 
     public static final class Defaults {

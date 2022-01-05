@@ -44,6 +44,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Head
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.PostParameter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
@@ -85,7 +86,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @Slf4j
 public class BbvaApiClient {
@@ -94,20 +94,17 @@ public class BbvaApiClient {
     private final SessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final TransactionPaginationHelper transactionPaginationHelper;
-    private final UserAvailability userAvailability;
 
     public BbvaApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            TransactionPaginationHelper transactionPaginationHelper,
-            UserAvailability userAvailability) {
+            TransactionPaginationHelper transactionPaginationHelper) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         client.addFilter(new BbvaInvestmentAccountBlockedFilter());
         this.transactionPaginationHelper = transactionPaginationHelper;
-        this.userAvailability = userAvailability;
     }
 
     public HttpResponse isAlive() {
@@ -410,14 +407,13 @@ public class BbvaApiClient {
                             .atZone(ZoneId.of(Defaults.TIMEZONE_CET))
                             .toLocalDateTime();
 
-            if (!userAvailability.isUserAvailableForInteraction()
-                    && date.isBefore(currentDate.minusDays(89))) {
+            if (date.isBefore(currentDate.minusDays(89))) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             return date;
         }
 
-        if (!userAvailability.isUserAvailableForInteraction()) {
+        if (!sessionStorage.get(StorageKeys.IS_IN_EXTENDED_MODE, Boolean.class).orElse(false)) {
             return currentDate.minusDays(89);
         }
 
