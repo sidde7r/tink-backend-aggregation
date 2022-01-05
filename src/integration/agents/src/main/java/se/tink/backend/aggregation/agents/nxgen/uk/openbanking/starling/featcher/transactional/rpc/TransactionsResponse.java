@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -20,7 +21,7 @@ public class TransactionsResponse implements PaginatorResponse {
     public Collection<? extends Transaction> getTinkTransactions() {
         return getTransactionList().stream()
                 .filter(TransactionEntity::isRelevant)
-                .map(TransactionEntity::toTinkTransaction)
+                .map(StarlingTransactionMapper::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 

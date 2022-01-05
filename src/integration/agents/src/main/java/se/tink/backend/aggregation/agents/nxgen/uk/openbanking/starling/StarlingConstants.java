@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -79,6 +81,15 @@ public class StarlingConstants {
         public static final URL PUT_PAYMENT = new URL(API_STARLING + ApiEndpoint.PUT_PAYMENT);
         public static final URL GET_PAYMENT_STATUS =
                 new URL(API_STARLING + ApiEndpoint.GET_PAYMENT_STATUS);
+    }
+
+    public static class TransactionMapping {
+        public static final List<String> RELEVANT_STATUS_LIST =
+                ImmutableList.of("settled", "pending", "retrying");
+        public static final List<String> PENDING_STATUS_LIST =
+                ImmutableList.of("pending", "retrying");
+        public static final String MERCHANT_COUNTER_PARTY_TYPE = "MERCHANT";
+        public static final String OUT_DIRECTION = "OUT";
     }
 
     public class RequestKey {
