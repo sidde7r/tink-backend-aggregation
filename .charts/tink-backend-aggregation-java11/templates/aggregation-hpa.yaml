@@ -18,4 +18,4 @@ spec:
   - type: Pods
     pods:
       metricName: tink_api_http_requests_per_second
-      targetAverageValue: "1.5"
+      targetAverageValue: "3"
