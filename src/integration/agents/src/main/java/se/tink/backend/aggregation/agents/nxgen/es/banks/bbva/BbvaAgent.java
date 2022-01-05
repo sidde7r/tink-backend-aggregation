@@ -72,7 +72,8 @@ public final class BbvaAgent extends NextGenerationAgent
                         client,
                         sessionStorage,
                         supplementalInformationHelper,
-                        transactionPaginationHelper);
+                        transactionPaginationHelper,
+                        componentProvider.getCredentialsRequest().getUserAvailability());
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,

@@ -68,7 +68,9 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
                 if (isTwoFactorAuthNeeded(authenticationState)) {
                     abortIfUserNotAvailableForInteraction();
                     loginWithOtp(loginResponse.getMultistepProcessId(), userCredentials);
-                } else if (isInExtendedPeriod()) {
+                }
+                if (request.getUserAvailability().isUserAvailableForInteraction()
+                        && isInExtendedPeriod()) {
                     forcedOtpForExtendedPeriod();
                 }
             } catch (HttpResponseException ex) {
