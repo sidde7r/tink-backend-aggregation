@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums.DnbPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CancelPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.GetPaymentResponse;
@@ -155,6 +156,17 @@ public class DnbApiClient {
                                 .parameter(IdTags.PAYMENT_SUBTYPE, dnbPaymentType.getSubtypePath())
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);
+    }
+
+    public CancelPaymentResponse cancelPayment(
+            DnbPaymentType dnbPaymentType, String paymentId, String state) {
+        return createRequest(
+                        new URL(Urls.GET_PAYMENT)
+                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.getTypePath())
+                                .parameter(IdTags.PAYMENT_SUBTYPE, dnbPaymentType.getSubtypePath())
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.TPP_REDIRECT_URI, getPaymentRedirectUrl(state))
+                .delete(CancelPaymentResponse.class);
     }
 
     private URL getPaymentRedirectUrl(String state) {

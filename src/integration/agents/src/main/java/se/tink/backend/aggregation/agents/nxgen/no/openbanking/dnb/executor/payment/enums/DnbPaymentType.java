@@ -40,7 +40,10 @@ public enum DnbPaymentType {
         } else if (paymentScheme == INSTANT_NORWEGIAN_DOMESTIC_CREDIT_TRANSFER_STRAKS) {
             return NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS_INSTANT;
         } else {
-            throw new UnsupportedOperationException("Unsupported payment type");
+            throw new UnsupportedOperationException(
+                    String.format(
+                            "Unsupported payment type, paymentScheme: %s, paymentServiceType: %s",
+                            paymentScheme, paymentServiceType));
         }
     }
 
