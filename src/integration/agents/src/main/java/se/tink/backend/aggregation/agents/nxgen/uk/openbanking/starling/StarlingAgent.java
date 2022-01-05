@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionPaginationController;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.filter.StarlingTerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.secrets.StarlingSecrets;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
@@ -71,11 +72,12 @@ public final class StarlingAgent extends AgentPlatformAgent
         this.componentProvider = componentProvider;
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(StarlingSecrets.class);
-        client.addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
         this.apiClient = new StarlingApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
                         componentProvider.getLocalDateTimeSource());
+        client.addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
+        client.addFilter(new StarlingTerminatedHandshakeRetryFilter(3, 1500));
     }
 
     @Override
