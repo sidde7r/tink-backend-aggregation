@@ -28,6 +28,10 @@ public abstract class OAuth2TokenBase {
         return Optional.ofNullable(refreshToken);
     }
 
+    public boolean isAccessTokenNotExpired() {
+        return !hasAccessExpired();
+    }
+
     public boolean hasAccessExpired() {
         final long validFor = getValidForSecondsTimeLeft();
         if (validFor > 0) {
@@ -61,6 +65,10 @@ public abstract class OAuth2TokenBase {
 
     public boolean isValid() {
         return !hasAccessExpired() && StringUtils.isNotEmpty(accessToken);
+    }
+
+    public boolean canNotRefreshAccessToken() {
+        return !canRefresh();
     }
 
     public boolean canRefresh() {

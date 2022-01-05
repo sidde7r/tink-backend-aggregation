@@ -6,7 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -20,6 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
@@ -58,7 +62,41 @@ public class OpenIdAuthenticationControllerTest {
     }
 
     @Test
-    public void shouldCompleteAutoAuthenticationWhenAccessTokenIsStillValid() {
+    public void shouldBreakAutoAuthenticationWhenCredentialsMarkedWithErrorFlag() {
+        // given
+        when(persistentStorage.get(
+                        OpenIdConstants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class))
+                .thenReturn(Optional.of(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED));
+
+        // when
+        Throwable thrown = catchThrowable(() -> openIdAuthenticationController.autoAuthenticate());
+
+        // then
+        verify(persistentStorage, times(1))
+                .get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class);
+        verify(persistentStorage, times(1)).remove(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
+        verify(persistentStorage, times(1)).remove(PersistentStorageKeys.AIS_ACCESS_TOKEN);
+        verifyNoMoreInteractions(persistentStorage);
+        verifyNoInteractions(apiClient);
+        assertThat(thrown).isExactlyInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void shouldBreakAutoAuthenticationWhenAccessTokenMissing() {
+        // given
+        when(persistentStorage.get(
+                        OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
+                .thenReturn(Optional.empty());
+
+        // when
+        Throwable thrown = catchThrowable(() -> openIdAuthenticationController.autoAuthenticate());
+
+        // then
+        assertThat(thrown).isExactlyInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void shouldAutoAuthenticateSuccessfullyWhenAccessTokenIsNotExpired() {
         // given
         OAuth2Token oAuth2Token = createValidOAuth2Token();
         when(persistentStorage.get(
@@ -72,7 +110,22 @@ public class OpenIdAuthenticationControllerTest {
     }
 
     @Test
-    public void shouldSuccessfullyRefreshedAccessToken() {
+    public void shouldBreakAutoAuthenticateWhenCanNotRefreshAccessToken() {
+        // given
+        OAuth2Token oAuth2Token = createNotRefreshableOAuth2Token();
+        when(persistentStorage.get(
+                        OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
+                .thenReturn(Optional.of(oAuth2Token));
+
+        // when
+        Throwable thrown = catchThrowable(() -> openIdAuthenticationController.autoAuthenticate());
+
+        // then
+        assertThat(thrown).isExactlyInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void shouldAutoAuthenticateSuccessfullyByRefreshingAccessToken() {
         // given
         OAuth2Token invalidOAuth2Token = createInvalidOAuth2Token();
         OAuth2Token refreshedOAuth2Token = createValidOAuth2Token();
@@ -102,8 +155,6 @@ public class OpenIdAuthenticationControllerTest {
         when(persistentStorage.get(
                         OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(oAuth2Token));
-        when(oAuth2Token.hasAccessExpired()).thenReturn(true);
-        when(oAuth2Token.canRefresh()).thenReturn(true);
         when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("refreshToken"));
         when(apiClient.refreshAccessToken("refreshToken", ClientMode.ACCOUNTS))
                 .thenThrow(httpResponseException);
@@ -129,8 +180,6 @@ public class OpenIdAuthenticationControllerTest {
         when(persistentStorage.get(
                         OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(oAuth2Token));
-        when(oAuth2Token.hasAccessExpired()).thenReturn(true);
-        when(oAuth2Token.canRefresh()).thenReturn(true);
         when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("refreshToken"));
         when(apiClient.refreshAccessToken("refreshToken", ClientMode.ACCOUNTS))
                 .thenThrow(httpResponseException);
@@ -193,5 +242,9 @@ public class OpenIdAuthenticationControllerTest {
                 DUMMY_ID_TOKEN,
                 0,
                 DUMMY_REFRESH_EXPIRES_IN_SECONDS);
+    }
+
+    private OAuth2Token createNotRefreshableOAuth2Token() {
+        return OAuth2Token.create(DUMMY_TOKEN_TYPE, DUMMY_ACCESS_TOKEN, null, DUMMY_ID_TOKEN, 0, 0);
     }
 }

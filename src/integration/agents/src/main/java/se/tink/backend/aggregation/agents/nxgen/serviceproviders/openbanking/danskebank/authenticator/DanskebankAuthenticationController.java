@@ -18,7 +18,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DanskebankAuthenticationController extends OpenIdAuthenticationController {
 
-    private UkOpenBankingApiClient apiClient;
+    private final UkOpenBankingApiClient apiClient;
+    private final PersistentStorage persistentStorage;
 
     public DanskebankAuthenticationController(
             PersistentStorage persistentStorage,
@@ -42,6 +43,7 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
                 openIdAuthenticationValidator);
 
         this.apiClient = apiClient;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
