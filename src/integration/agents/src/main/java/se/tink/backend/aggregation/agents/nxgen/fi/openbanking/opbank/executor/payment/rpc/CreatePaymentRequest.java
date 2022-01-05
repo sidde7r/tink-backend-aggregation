@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.p
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
-import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 
@@ -19,7 +18,6 @@ import se.tink.libraries.payments.common.model.PaymentScheme;
 @Getter
 public class CreatePaymentRequest {
     private PayeeEntity payee;
-    private PayerEntity payer;
     private String message;
     private String amountEUR;
     private String paymentOrder;
@@ -39,11 +37,6 @@ public class CreatePaymentRequest {
 
         public PaymentRequestBuilder creditorToPayee(Creditor creditor) {
             this.payee = new PayeeEntity(creditor.getAccountNumber(), creditor.getName());
-            return this;
-        }
-
-        public PaymentRequestBuilder debtorToPayer(Debtor debtor) {
-            this.payer = new PayerEntity(debtor == null ? null : debtor.getAccountNumber());
             return this;
         }
 
@@ -88,7 +81,7 @@ public class CreatePaymentRequest {
         }
 
         public CreatePaymentRequest build() {
-            return new CreatePaymentRequest(payee, payer, message, amountEUR, paymentOrder, count);
+            return new CreatePaymentRequest(payee, message, amountEUR, paymentOrder, count);
         }
     }
 }
