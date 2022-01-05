@@ -84,7 +84,6 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         CreatePaymentRequest request =
                 CreatePaymentRequest.builder()
                         .creditorToPayee(payment.getCreditor())
-                        .debtorToPayer(payment.getDebtor())
                         .amount(payment.getExactCurrencyAmount())
                         .message(message)
                         .paymentOrder(payment.getPaymentScheme())

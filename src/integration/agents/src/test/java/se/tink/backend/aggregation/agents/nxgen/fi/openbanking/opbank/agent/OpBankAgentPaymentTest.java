@@ -111,7 +111,6 @@ public class OpBankAgentPaymentTest {
 
         return new Payment.Builder()
                 .withCreditor(creditor)
-                .withDebtor(debtor)
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
