@@ -46,7 +46,7 @@ public class GranularBalancesMapper {
                                                     ::getLatestBalanceWithSnapshotTime));
 
         } catch (Exception e) {
-            log.warn("[GRANULAR BALANCES] Balance type mapping failed", e);
+            log.warn("[GranularBalancesMapper] Balance type mapping failed", e);
         }
 
         return granularBalances;

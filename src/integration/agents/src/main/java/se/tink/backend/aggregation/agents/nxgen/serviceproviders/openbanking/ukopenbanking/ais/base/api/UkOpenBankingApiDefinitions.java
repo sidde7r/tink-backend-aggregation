@@ -6,6 +6,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Enums;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -181,15 +182,24 @@ public class UkOpenBankingApiDefinitions {
 
         @JsonCreator
         public static ConsentStatus fromString(String key) {
-            return Enums.getIfPresent(
-                            ConsentStatus.class,
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    .toJavaUtil()
+            return mapStringToEnum(key)
                     .orElseThrow(
                             () ->
                                     SessionError.CONSENT_INVALID.exception(
                                             "[UkOpenBankingApiDefinitions] Unknown consent status: "
                                                     + key));
+        }
+
+        private static Optional<ConsentStatus> mapStringToEnum(String key) {
+            try {
+                return Enums.getIfPresent(
+                                ConsentStatus.class,
+                                CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                        .toJavaUtil();
+            } catch (Exception e) {
+                log.warn("Incorrect mapping key {} to ConsentStatus enum", key);
+                return Optional.empty();
+            }
         }
     }
 
@@ -228,9 +238,7 @@ public class UkOpenBankingApiDefinitions {
                     .orElseThrow(
                             () ->
                                     new IllegalStateException(
-                                            "[TRANSACTIONAL ACCOUNT BALANCE MAPPER] Unknown "
-                                                    + "balance type: "
-                                                    + type));
+                                            "[BalanceTypeMapper] Unknown balance type: " + type));
         }
     }
 }
