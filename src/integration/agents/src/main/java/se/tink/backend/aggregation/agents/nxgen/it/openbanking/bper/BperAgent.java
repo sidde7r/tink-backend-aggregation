@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.PisCapability.PIS_SEPA_RECURRING_PAYMENTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.PisCapability.SEPA_CREDIT_TRANSFER;
-import static se.tink.backend.aggregation.agents.agentcapabilities.PisCapability.SEPA_INSTANT_CREDIT_TRANSFER;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -14,12 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
-@AgentPisCapability(
-        capabilities = {
-            SEPA_CREDIT_TRANSFER,
-            SEPA_INSTANT_CREDIT_TRANSFER,
-            PIS_SEPA_RECURRING_PAYMENTS
-        })
+@AgentPisCapability(capabilities = {SEPA_CREDIT_TRANSFER, PIS_SEPA_RECURRING_PAYMENTS})
 public final class BperAgent extends CbiGlobeAgent {
 
     @Inject
