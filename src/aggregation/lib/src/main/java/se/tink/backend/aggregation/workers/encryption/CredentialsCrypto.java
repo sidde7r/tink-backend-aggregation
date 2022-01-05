@@ -73,14 +73,13 @@ public class CredentialsCrypto {
 
             if (shouldPickCachedSensitiveData(cachedSensitiveData, credentialsSensitiveData)) {
                 dataToDecrypt = cachedSensitiveData;
-                consentId =
-                        (String)
-                                cacheClient.get(
-                                        CacheScope.CONSENTID_BY_CREDENTIALSID, credentials.getId());
+                consentId = getCachedConsentId(credentials.getId());
             }
         }
 
-        request.setConsentId(consentId);
+        if (!Strings.isNullOrEmpty(consentId)) {
+            request.setConsentId(consentId);
+        }
 
         if (Strings.isNullOrEmpty(dataToDecrypt)) {
             // There's nothing to decrypt. Both cache and credential were empty.
@@ -266,19 +265,34 @@ public class CredentialsCrypto {
 
     private void cacheConsentId(CredentialsRequest request) {
         try {
+            String consentId = request.getConsentId();
+            if (Strings.isNullOrEmpty(consentId)) {
+                return;
+            }
             Future<?> future =
                     cacheClient.set(
                             CacheScope.CONSENTID_BY_CREDENTIALSID,
                             request.getCredentials().getId(),
                             CACHE_EXPIRE_TIME,
-                            request.getConsentId());
+                            consentId);
 
             logCheckResult(future);
 
-            logger.info(
-                    "cached consentId: {} by {}", request.getConsentId(), cacheClient.getClass());
+            logger.info("cached consentId: {} by {}", consentId, cacheClient.getClass());
         } catch (Exception e) {
             logger.error("Could not cache consent id", e);
+        }
+    }
+
+    private String getCachedConsentId(String credentialsId) {
+        try {
+            String consentId =
+                    (String) cacheClient.get(CacheScope.CONSENTID_BY_CREDENTIALSID, credentialsId);
+            logger.info("using cached consentId {}", consentId);
+            return consentId;
+        } catch (Exception e) {
+            logger.error("Could not get cached consent id", e);
+            return null;
         }
     }
 
