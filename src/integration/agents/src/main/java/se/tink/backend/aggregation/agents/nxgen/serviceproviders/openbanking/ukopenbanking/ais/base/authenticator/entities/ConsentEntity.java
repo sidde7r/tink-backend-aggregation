@@ -7,7 +7,7 @@ import java.util.Set;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountAccessConsentsDataEntity {
+public class ConsentEntity {
     @JsonProperty("Permissions")
     private Set<String> permissions;
 
@@ -15,25 +15,24 @@ public class AccountAccessConsentsDataEntity {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String expirationDateTime;
 
-    protected AccountAccessConsentsDataEntity() {}
+    protected ConsentEntity() {}
 
     @JsonIgnore
-    protected AccountAccessConsentsDataEntity(Set<String> permissions, String expirationDateTime) {
+    protected ConsentEntity(Set<String> permissions, String expirationDateTime) {
         this.permissions = permissions;
         this.expirationDateTime = expirationDateTime;
     }
 
     @JsonIgnore
-    protected AccountAccessConsentsDataEntity(Set<String> permissions) {
+    protected ConsentEntity(Set<String> permissions) {
         this.permissions = permissions;
     }
 
-    public static AccountAccessConsentsDataEntity of(Set<String> permissions) {
-        return new AccountAccessConsentsDataEntity(permissions);
+    public static ConsentEntity of(Set<String> permissions) {
+        return new ConsentEntity(permissions);
     }
 
-    public static AccountAccessConsentsDataEntity of(
-            Set<String> permissions, String expirationDateTime) {
-        return new AccountAccessConsentsDataEntity(permissions, expirationDateTime);
+    public static ConsentEntity of(Set<String> permissions, String expirationDateTime) {
+        return new ConsentEntity(permissions, expirationDateTime);
     }
 }

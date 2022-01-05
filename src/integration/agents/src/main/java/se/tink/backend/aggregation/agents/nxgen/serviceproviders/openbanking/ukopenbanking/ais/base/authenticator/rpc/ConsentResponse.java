@@ -2,16 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.AccountAccessConsentsDataResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.ConsentResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.BaseV31Response;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountAccessConsentsResponse
-        extends BaseV31Response<AccountAccessConsentsDataResponseEntity> {
+public class ConsentResponse extends BaseV31Response<ConsentResponseEntity> {
 
     @JsonProperty("Data")
-    public void setData(AccountAccessConsentsDataResponseEntity data) {
+    public void setData(ConsentResponseEntity data) {
         this.data = data;
     }
 
