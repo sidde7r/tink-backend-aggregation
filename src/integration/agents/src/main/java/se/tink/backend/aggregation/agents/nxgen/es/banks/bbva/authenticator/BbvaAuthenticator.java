@@ -111,30 +111,55 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     }
 
     private void mapHttpErrors(HttpResponseException e) throws LoginException {
+        mapHttpErrors(e, false);
+    }
+
+    private void mapHttpErrors(HttpResponseException e, boolean otpMode) throws LoginException {
         HttpResponse response = e.getResponse();
         if (response.getStatus() >= 400) {
             BbvaErrorResponse errorResponse = e.getResponse().getBody(BbvaErrorResponse.class);
             if (HttpStatus.SC_INTERNAL_SERVER_ERROR <= errorResponse.getHttpStatus()) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
-            switch (errorResponse.getHttpStatus()) {
-                case HttpStatus.SC_UNAUTHORIZED:
-                    throw AuthorizationError.UNAUTHORIZED.exception();
-                case HttpStatus.SC_CONFLICT:
-                    throw LoginError.NOT_CUSTOMER.exception();
-                case HttpStatus.SC_FORBIDDEN:
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                default:
-                    String message =
-                            String.format(
-                                    "Unknown error: httpStatus %s, code %s, message %s",
-                                    errorResponse.getHttpStatus(),
-                                    errorResponse.getErrorCode(),
-                                    errorResponse.getErrorMessage());
-                    throw LoginError.DEFAULT_MESSAGE.exception(message);
+            if (otpMode) {
+                processOtpError(errorResponse);
+            } else {
+                processFirstLoginError(errorResponse);
             }
         }
         throw e;
+    }
+
+    private void processOtpError(BbvaErrorResponse errorResponse) {
+        if (errorResponse.getHttpStatus() == HttpStatus.SC_UNAUTHORIZED) {
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+        }
+        String message =
+                String.format(
+                        "Unknown error: httpStatus %s, code %s, message %s",
+                        errorResponse.getHttpStatus(),
+                        errorResponse.getErrorCode(),
+                        errorResponse.getErrorMessage());
+        throw LoginError.DEFAULT_MESSAGE.exception(message);
+    }
+
+    private void processFirstLoginError(BbvaErrorResponse errorResponse) {
+        switch (errorResponse.getHttpStatus()) {
+            case HttpStatus.SC_UNAUTHORIZED:
+                throw AuthorizationError.UNAUTHORIZED.exception();
+            case HttpStatus.SC_CONFLICT:
+                throw LoginError.NOT_CUSTOMER.exception();
+            case HttpStatus.SC_FORBIDDEN:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            default:
+                String message =
+                        String.format(
+                                "Unknown error: httpStatus %s, code %s, message %s",
+                                errorResponse.getHttpStatus(),
+                                errorResponse.getErrorCode(),
+                                errorResponse.getErrorMessage());
+                throw LoginError.DEFAULT_MESSAGE.exception(message);
+        }
     }
 
     public boolean isInExtendedPeriod() {
@@ -176,10 +201,10 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     }
 
     public void forcedOtpForExtendedPeriod() {
-        accounts.stream()
-                .findFirst()
-                .ifPresent(
-                        firstAccount ->
-                                apiClient.fetchAccountTransactionsToForceOtp(firstAccount, ""));
+        try {
+            apiClient.requestMoreThan90DaysTransactionsForFirstAccount(accounts);
+        } catch (HttpResponseException e) {
+            mapHttpErrors(e, true);
+        }
     }
 }
