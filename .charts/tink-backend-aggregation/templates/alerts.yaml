@@ -87,5 +87,15 @@ spec:
     annotations:
       summary: 'Agent <{$labels.agent}> has experienced more than 10 unexpected failures for the <{$labels.provider}> provider within the last minute.'
       description: 'The provider <{$labels.provider_display_name}> in the <{$labels.market}> market has exceeded the allowed failure rate for an open banking provider. Please report this to the SFSA.'
+
+  - alert: EvictedMemcachedItems
+    expr: sum(aws_elasticache_evictions_average{cache_cluster_id="main-mirrored",environment="production", cluster="aggregation"}) by (instance) > 0
+    for: 1m
+    labels:
+      severity: urgent
+      priority: P2
+      who: aggregation-agent-platform
+    annotations:
+      description: At least 1 item evicted
   {{- end }}
 {{ end }}
