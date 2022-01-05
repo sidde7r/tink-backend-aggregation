@@ -4,6 +4,7 @@ import java.security.PublicKey;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.TokenValidationResult;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.validator.IdTokenValidator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -32,13 +33,13 @@ public class OpenIdAuthenticationValidator {
 
     public void validateClientToken(OAuth2Token clientOAuth2Token) {
         if (!clientOAuth2Token.isValid()) {
-            throw new IllegalArgumentException("Client access token is not valid.");
+            throw SessionError.SESSION_EXPIRED.exception("Client access token is not valid.");
         }
     }
 
     public void validateAccessToken(OAuth2Token oAuth2Token) {
         if (!oAuth2Token.isValid()) {
-            throw new IllegalArgumentException("Invalid access token.");
+            throw SessionError.SESSION_EXPIRED.exception("Invalid access token.");
         }
 
         if (!oAuth2Token.isBearer()) {
