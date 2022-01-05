@@ -12,7 +12,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
-import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -100,12 +99,7 @@ public class OpBankAgentPaymentTest {
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         remittanceInformation.setValue("Tink Test");
 
-        AccountIdentifier debtorAccountIdentifier =
-                new IbanIdentifier(
-                        creditorDebtorManager.get(OpBankAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
-        Debtor debtor = new Debtor(debtorAccountIdentifier);
-
-        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(2.15);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1.1);
         LocalDate executionDate = LocalDate.now();
         String currency = "EUR";
 
