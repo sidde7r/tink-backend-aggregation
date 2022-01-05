@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
