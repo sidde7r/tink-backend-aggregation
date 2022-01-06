@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 public abstract class CmcicAgent extends NextGenerationAgent
@@ -79,6 +80,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
 
         this.client.setResponseStatusHandler(new CmicResponseStatusHandler());
         this.client.addFilter(new TimeoutFilter());
+        this.client.addFilter(new TerminatedHandshakeRetryFilter());
         this.cmcicRepository = new CmcicRepository(this.persistentStorage, this.sessionStorage);
 
         this.apiClient =
