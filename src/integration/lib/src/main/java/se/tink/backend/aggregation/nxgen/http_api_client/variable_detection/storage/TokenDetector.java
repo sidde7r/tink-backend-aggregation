@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.sto
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
+import se.tink.backend.aggregation.utils.json.JsonUtils;
 import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableKey;
 import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableStore;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -23,6 +24,11 @@ public class TokenDetector implements VariableDetector {
     @Override
     public boolean detectVariableFromStorage(
             VariableStore variableStore, String storageKey, String storageValue) {
+        if (!JsonUtils.isValidJson(storageValue)) {
+            // avoid SerializationUtils error when storageValue is not an object
+            return false;
+        }
+
         Oauth2TokenBaseImpl oauthToken =
                 SerializationUtils.deserializeFromString(storageValue, Oauth2TokenBaseImpl.class);
 
