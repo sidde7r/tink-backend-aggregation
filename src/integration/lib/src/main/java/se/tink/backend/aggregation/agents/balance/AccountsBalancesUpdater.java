@@ -30,7 +30,7 @@ public class AccountsBalancesUpdater {
 
     public final boolean dryRun;
 
-    public AccountsBalancesUpdater(
+    private AccountsBalancesUpdater(
             BookedBalanceCalculator bookedBalanceCalculator,
             AvailableBalanceCalculator availableBalanceCalculator,
             boolean dryRun) {
