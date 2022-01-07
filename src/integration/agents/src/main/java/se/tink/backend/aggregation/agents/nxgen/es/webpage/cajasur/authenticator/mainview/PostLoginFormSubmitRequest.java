@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+<<<<<<< HEAD
+=======
+import org.jsoup.select.Elements;
+>>>>>>> 312a369153 (feat(cajasur): redirect to the main page auth step)
 import org.springframework.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.common.ConnectivityRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurRequestHeaderFactory;
