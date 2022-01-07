@@ -93,6 +93,7 @@ public class AccountsBalancesUpdater {
                                 + "replaced by calculated: {} -> {}",
                         buggyBookedBalance,
                         calculatedBookedBalance);
+                return;
             }
 
             calculatedBookedBalance.ifPresent(

@@ -125,6 +125,21 @@ public class AccountsBalancesUpdaterTest {
         verifyIfAvailableBalanceIsUpdated();
     }
 
+    @Test
+    public void shouldNotUpdateAnyBalancesByRunningCalculationIfDryRunEnabled() {
+        // given
+        accountsBalancesUpdater =
+                AccountsBalancesUpdater.createDryRunBalanceUpdater(
+                        bookedBalanceCalculator, availableBalanceCalculator);
+        when(account.getType()).thenReturn(AccountTypes.CHECKING);
+
+        // when
+        accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(listOfAccountData);
+
+        // then
+        verifyNoImpactOnAccount();
+    }
+
     private List<AccountData> getTestListOfAccountData() {
         AccountData accountData = new AccountData(account);
         return Lists.newArrayList(accountData);
