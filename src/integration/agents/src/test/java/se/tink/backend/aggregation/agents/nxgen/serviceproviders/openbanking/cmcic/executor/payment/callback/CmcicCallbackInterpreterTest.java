@@ -29,7 +29,7 @@ public class CmcicCallbackInterpreterTest {
         given(mapping.getOrDefault(status, defaultStrategy)).willReturn(handlingStrategy);
 
         // when:
-        cmcicCallbackInterpreter.handleCallbackData(callbackData);
+        cmcicCallbackInterpreter.interpretCallbackData(callbackData);
 
         // then:
         then(factory).should().fromCallbackData(callbackData);

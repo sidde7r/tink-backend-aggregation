@@ -55,7 +55,7 @@ public class CmcicCallbackInterpreter {
         return cmcicCallbackStatusObjectEnumMap;
     }
 
-    public void handleCallbackData(Map<String, String> callbackData) throws PaymentException {
+    public void interpretCallbackData(Map<String, String> callbackData) throws PaymentException {
         CmcicCallbackData cmcicCallbackData =
                 cmcicCallbackDataFactory.fromCallbackData(callbackData);
         statusToStrategyMapping

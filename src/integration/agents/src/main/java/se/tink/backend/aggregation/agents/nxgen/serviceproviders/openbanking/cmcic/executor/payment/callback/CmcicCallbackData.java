@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.callback;
 
 import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public class CmcicCallbackData {
 
     private final CmcicCallbackStatus status;
@@ -17,15 +19,4 @@ public class CmcicCallbackData {
         this.unexpectedCallbackData = unexpectedCallbackData;
     }
 
-    public Map<String, String> getExpectedCallbackData() {
-        return expectedCallbackData;
-    }
-
-    public Map<String, String> getUnexpectedCallbackData() {
-        return unexpectedCallbackData;
-    }
-
-    public CmcicCallbackStatus getStatus() {
-        return status;
-    }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.callback;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 
 import com.google.common.collect.ImmutableMap;
@@ -116,15 +117,11 @@ public class CmcicCallbackErrorHandlerTest {
         given(cmcicCallbackData.getExpectedCallbackData()).willReturn(callbackData);
 
         // when:
-        PaymentException exception = null;
-        try {
-            cmcicCallbackErrorHandler.handleCallback(cmcicCallbackData);
-        } catch (PaymentException e) {
-            exception = e;
-        }
+        Throwable throwable =
+                catchThrowable(() -> cmcicCallbackErrorHandler.handleCallback(cmcicCallbackData));
 
         // then:
-        assertThat(exception).isNotNull();
-        assertThat(exception).isOfAnyClassIn(expectedExceptionType);
+        assertThat(throwable).isNotNull();
+        assertThat(throwable).isInstanceOf(expectedExceptionType);
     }
 }

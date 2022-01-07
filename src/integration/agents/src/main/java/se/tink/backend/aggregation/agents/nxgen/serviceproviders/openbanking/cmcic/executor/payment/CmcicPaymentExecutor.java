@@ -335,6 +335,6 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                                 InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT,
                                                 ThirdPartyAppError.TIMED_OUT.exception()));
 
-        callbackHandler.handleCallbackData(callbackData);
+        callbackHandler.interpretCallbackData(callbackData);
     }
 }
