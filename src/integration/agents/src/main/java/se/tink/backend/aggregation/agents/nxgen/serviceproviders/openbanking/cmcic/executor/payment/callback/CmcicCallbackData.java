@@ -18,5 +18,4 @@ public class CmcicCallbackData {
         this.expectedCallbackData = expectedCallbackData;
         this.unexpectedCallbackData = unexpectedCallbackData;
     }
-
 }

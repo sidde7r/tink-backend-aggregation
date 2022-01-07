@@ -15,7 +15,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 
