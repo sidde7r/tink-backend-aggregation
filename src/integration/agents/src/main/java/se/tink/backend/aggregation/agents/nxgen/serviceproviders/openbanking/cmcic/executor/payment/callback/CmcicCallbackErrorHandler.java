@@ -61,8 +61,8 @@ public class CmcicCallbackErrorHandler implements CmcicCallbackHandlingStrategy 
 
     private static void mapPaymentCancelled(
             Map<ImmutablePair<String, String>, Supplier<PaymentException>> errorHandlingMapping,
-            String s) {
-        errorHandlingMapping.put(getAccessDeniedKey(s), PaymentCancelledException::new);
+            String description) {
+        errorHandlingMapping.put(getAccessDeniedKey(description), PaymentCancelledException::new);
     }
 
     private static ImmutablePair<String, String> getInvalidRequestKey(String description) {
