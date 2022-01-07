@@ -18,16 +18,15 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.agents.balance.Calculation;
 import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculator;
+import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculatorSummary;
 import se.tink.backend.aggregation.agents.balance.calculators.BookedBalanceCalculator;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-@Slf4j
 public class UkObBookedBalanceCalculator implements BookedBalanceCalculator {
 
     private final BalanceCalculator calculator;
@@ -67,10 +66,9 @@ public class UkObBookedBalanceCalculator implements BookedBalanceCalculator {
                                     addBookedTransactionsWithBookingDateAfterBalanceSnapshot))
                     .build();
 
-    public Optional<ExactCurrencyAmount> calculateBookedBalance(
+    public Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary> calculateBookedBalance(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
-        log.info("[BALANCE CALCULATOR] Trying to calculate Booked Balance");
         return calculator.findFirstPossibleCalculationAndEvaluateIt(
                 granularBalances, transactions, prioritizedCalculations);
     }

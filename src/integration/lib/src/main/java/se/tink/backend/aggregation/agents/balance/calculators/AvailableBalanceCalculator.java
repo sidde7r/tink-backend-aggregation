@@ -11,7 +11,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface AvailableBalanceCalculator {
 
-    Optional<ExactCurrencyAmount> calculateAvailableBalance(
+    Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary> calculateAvailableBalance(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions);
 }

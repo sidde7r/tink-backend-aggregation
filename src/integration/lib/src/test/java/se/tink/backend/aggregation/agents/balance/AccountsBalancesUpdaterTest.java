@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.groups.Tuple;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.balance.calculators.AvailableBalanceCalculator;
+import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculatorSummary;
 import se.tink.backend.aggregation.agents.balance.calculators.BookedBalanceCalculator;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -82,7 +84,7 @@ public class AccountsBalancesUpdaterTest {
         verifyNoImpactOnAccount();
         assertThat(listAppender.list)
                 .extracting(ILoggingEvent::getFormattedMessage, ILoggingEvent::getLevel)
-                .contains(Tuple.tuple("[BALANCE CALCULATOR] Something went wrong", Level.WARN));
+                .contains(Tuple.tuple("[BALANCE UPDATER] Something went wrong", Level.WARN));
     }
 
     @Test
@@ -145,9 +147,11 @@ public class AccountsBalancesUpdaterTest {
         return Lists.newArrayList(accountData);
     }
 
-    private Optional<ExactCurrencyAmount> getTestExactCurrencyAmount() {
+    private Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
+            getTestExactCurrencyAmount() {
         ExactCurrencyAmount exactCurrencyAmount = ExactCurrencyAmount.inEUR(100);
-        return Optional.of(exactCurrencyAmount);
+        return Pair.of(
+                Optional.of(exactCurrencyAmount), BalanceCalculatorSummary.builder().build());
     }
 
     private void verifyNoImpactOnAccount() {

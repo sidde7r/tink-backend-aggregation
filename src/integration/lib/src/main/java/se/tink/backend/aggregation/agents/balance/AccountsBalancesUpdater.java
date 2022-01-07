@@ -11,7 +11,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.BalanceType;
+import se.tink.backend.aggregation.agents.balance.AccountsBalanceUpdaterSummary.AccountsBalanceUpdaterSummaryBuilder;
 import se.tink.backend.aggregation.agents.balance.calculators.AvailableBalanceCalculator;
+import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculatorSummary;
 import se.tink.backend.aggregation.agents.balance.calculators.BookedBalanceCalculator;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.account_data_cache.AccountData;
@@ -28,7 +31,7 @@ public class AccountsBalancesUpdater {
     private final BookedBalanceCalculator bookedBalanceCalculator;
     private final AvailableBalanceCalculator availableBalanceCalculator;
 
-    public final boolean dryRun;
+    private final boolean dryRun;
 
     private AccountsBalancesUpdater(
             BookedBalanceCalculator bookedBalanceCalculator,
@@ -68,7 +71,7 @@ public class AccountsBalancesUpdater {
                     });
 
         } catch (Exception e) {
-            log.warn("[BALANCE CALCULATOR] Something went wrong", e);
+            log.warn("[BALANCE UPDATER] Something went wrong", e);
         }
     }
 
@@ -78,21 +81,26 @@ public class AccountsBalancesUpdater {
             List<Transaction> transactions) {
 
         if (ACCOUNT_TYPES_SUPPORTING_BOOKED_CALCULATIONS.contains(account.getType())) {
-            log.info(
-                    "[BALANCE CALCULATOR] Found account type {}. Trying to run "
-                            + "booked balance calculation",
-                    account.getType());
 
-            ExactCurrencyAmount buggyBookedBalance = account.getExactBalance();
+            AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
+                    AccountsBalanceUpdaterSummary.builder()
+                            .dryRun(dryRun)
+                            .inputAccountType(account.getType())
+                            .balanceTypeToCalculate(BalanceType.BOOKED_BALANCE)
+                            .buggyBalance(account.getExactBalance().getExactValue())
+                            .granularBalances(granularBalances);
+
+            Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
+                    calculatedBookedBalanceWithSummary =
+                            bookedBalanceCalculator.calculateBookedBalance(
+                                    granularBalances, transactions);
+            summaryBuilder.balanceCalculatorSummary(calculatedBookedBalanceWithSummary.getRight());
+
             Optional<ExactCurrencyAmount> calculatedBookedBalance =
-                    bookedBalanceCalculator.calculateBookedBalance(granularBalances, transactions);
+                    calculatedBookedBalanceWithSummary.getLeft();
 
             if (dryRun) {
-                log.info(
-                        "[BALANCE CALCULATOR] Dry run. Buggy booked balance would be "
-                                + "replaced by calculated: {} -> {}",
-                        buggyBookedBalance,
-                        calculatedBookedBalance);
+                log.info(summaryBuilder.build().prettyPrint());
                 return;
             }
 
@@ -100,13 +108,10 @@ public class AccountsBalancesUpdater {
                     balance -> {
                         account.setExactBalance(balance);
                         account.setBalance(balance.getDoubleValue());
+                        summaryBuilder.calculatedBalance(balance.getExactValue());
                     });
 
-            log.info(
-                    "[BALANCE CALCULATOR] Buggy booked balance was replaced "
-                            + "by calculated: {} -> {}",
-                    buggyBookedBalance,
-                    calculatedBookedBalance);
+            log.info(summaryBuilder.build().prettyPrint());
         }
     }
 
@@ -116,32 +121,37 @@ public class AccountsBalancesUpdater {
             List<Transaction> transactions) {
 
         if (ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS.contains(account.getType())) {
-            log.info(
-                    "[BALANCE CALCULATOR] Found account type {}. Trying to "
-                            + "run available balance calculation",
-                    account.getType());
+            AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
+                    AccountsBalanceUpdaterSummary.builder()
+                            .dryRun(dryRun)
+                            .inputAccountType(account.getType())
+                            .balanceTypeToCalculate(BalanceType.AVAILABLE_BALANCE)
+                            .buggyBalance(account.getAvailableBalance().getExactValue())
+                            .granularBalances(granularBalances);
 
-            ExactCurrencyAmount buggyAvailableBalance = account.getAvailableBalance();
+            Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
+                    calculatedAvailableBalanceWithSummary =
+                            availableBalanceCalculator.calculateAvailableBalance(
+                                    granularBalances, transactions);
+
             Optional<ExactCurrencyAmount> calculatedAvailableBalance =
-                    availableBalanceCalculator.calculateAvailableBalance(
-                            granularBalances, transactions);
+                    calculatedAvailableBalanceWithSummary.getLeft();
+
+            summaryBuilder.balanceCalculatorSummary(
+                    calculatedAvailableBalanceWithSummary.getRight());
 
             if (dryRun) {
-                log.info(
-                        "[BALANCE CALCULATOR] Dry run. Buggy available balance would be "
-                                + "replaced by calculated: {} -> {}",
-                        buggyAvailableBalance,
-                        calculatedAvailableBalance);
+                log.info(summaryBuilder.build().prettyPrint());
                 return;
             }
 
-            calculatedAvailableBalance.ifPresent(account::setAvailableBalance);
+            calculatedAvailableBalance.ifPresent(
+                    balance -> {
+                        account.setAvailableBalance(balance);
+                        summaryBuilder.calculatedBalance(balance.getExactValue());
+                    });
 
-            log.info(
-                    "[BALANCE CALCULATOR] Buggy available balance was replaced "
-                            + "by calculated: {} -> {}",
-                    buggyAvailableBalance,
-                    calculatedAvailableBalance);
+            log.info(summaryBuilder.build().prettyPrint());
         }
     }
 }

@@ -10,7 +10,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @FunctionalInterface
 public interface Calculation {
 
-    Optional<ExactCurrencyAmount> evaluate(
+    Pair<Optional<ExactCurrencyAmount>, CalculationSummary> evaluate(
             Pair<ExactCurrencyAmount, Instant> balanceWithSnapshotTime,
             List<Transaction> transactions);
 }
