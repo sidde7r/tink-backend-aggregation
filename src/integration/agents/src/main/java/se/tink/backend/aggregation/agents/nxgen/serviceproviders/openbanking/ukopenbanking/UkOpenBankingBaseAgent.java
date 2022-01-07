@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import java.util.List;
 import java.util.Objects;
@@ -207,6 +208,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
         addFilter(new ConsentErrorFilter(persistentStorage));
         addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
+
+        whitelistValuesToKeepThemUnmasked();
     }
 
     @Override
@@ -578,5 +581,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         }
 
         return balanceCalculationEnabled;
+    }
+
+    private void whitelistValuesToKeepThemUnmasked() {
+        Optional.ofNullable(providerConfiguration.getClientId())
+                .ifPresent(
+                        clientId ->
+                                context.getLogMasker()
+                                        .addAgentWhitelistedValues(ImmutableSet.of(clientId)));
     }
 }
