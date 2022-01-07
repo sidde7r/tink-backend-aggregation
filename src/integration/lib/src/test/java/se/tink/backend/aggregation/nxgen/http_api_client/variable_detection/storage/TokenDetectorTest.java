@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.aggregation_agent_api_client.src.variable.InMemoryVariableStore;
 import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableKey;
@@ -10,10 +15,22 @@ import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableKey;
 public class TokenDetectorTest {
     private InMemoryVariableStore variableStore;
     private final TokenDetector tokenDetector = new TokenDetector();
+    private Logger logger;
+    private ListAppender<ILoggingEvent> logAppender;
 
     @Before
     public void setup() {
         this.variableStore = new InMemoryVariableStore();
+        logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        logAppender = new ListAppender<>();
+        logger.addAppender(logAppender);
+        logAppender.start();
+    }
+
+    @After
+    public void tearDown() {
+        logAppender.stop();
+        logger.detachAppender(logAppender);
     }
 
     @Test
@@ -104,6 +121,19 @@ public class TokenDetectorTest {
                 tokenDetector.detectVariableFromStorage(
                         variableStore, "storageKey", getSerializedObject());
 
+        Assert.assertFalse(detected);
+        Assert.assertNull(variableStore.getVariable(VariableKey.AUTHORIZATION).orElse(null));
+        Assert.assertNull(variableStore.getVariable(VariableKey.ACCESS_TOKEN).orElse(null));
+        Assert.assertNull(variableStore.getVariable(VariableKey.REFRESH_TOKEN).orElse(null));
+    }
+
+    @Test
+    public void testNonDeserializableStorageDoesNotLogError() {
+        boolean detected =
+                tokenDetector.detectVariableFromStorage(
+                        variableStore, "storageKey", "dummyConsentId");
+
+        Assert.assertTrue(logAppender.list.isEmpty());
         Assert.assertFalse(detected);
         Assert.assertNull(variableStore.getVariable(VariableKey.AUTHORIZATION).orElse(null));
         Assert.assertNull(variableStore.getVariable(VariableKey.ACCESS_TOKEN).orElse(null));

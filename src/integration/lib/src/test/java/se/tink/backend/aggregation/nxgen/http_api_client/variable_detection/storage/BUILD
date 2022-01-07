@@ -8,6 +8,9 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http_api_client/variable_detection/storage",
         "//src/tink_backend_libs:aggregation_agent_api_client",
+        "//third_party:ch_qos_logback_logback_classic",
         "//third_party:junit_junit",
+        "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:ch_qos_logback_logback_core",
     ],
 )
