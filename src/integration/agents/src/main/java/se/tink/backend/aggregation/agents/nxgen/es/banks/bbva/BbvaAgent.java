@@ -67,12 +67,7 @@ public final class BbvaAgent extends NextGenerationAgent
     @Inject
     public BbvaAgent(TinkHttpClient client, AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.apiClient =
-                new BbvaApiClient(
-                        client,
-                        sessionStorage,
-                        supplementalInformationHelper,
-                        transactionPaginationHelper);
+        this.apiClient = new BbvaApiClient(client, sessionStorage, supplementalInformationHelper);
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,

@@ -24,7 +24,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -75,7 +74,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.filter.BbvaInvestmentAccountBlockedFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -93,18 +91,15 @@ public class BbvaApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final TransactionPaginationHelper transactionPaginationHelper;
 
     public BbvaApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            TransactionPaginationHelper transactionPaginationHelper) {
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         client.addFilter(new BbvaInvestmentAccountBlockedFilter());
-        this.transactionPaginationHelper = transactionPaginationHelper;
     }
 
     public HttpResponse isAlive() {
@@ -397,21 +392,6 @@ public class BbvaApiClient {
     private LocalDateTime getDateForFetchHistoryTransactions(
             Account account, boolean isCreditCard) {
         LocalDateTime currentDate = LocalDateTime.now(ZoneId.of(Defaults.TIMEZONE_CET));
-        Optional<Date> limitDateOptional =
-                transactionPaginationHelper.getTransactionDateLimit(account);
-        if (limitDateOptional.isPresent()) {
-            LocalDateTime date =
-                    limitDateOptional
-                            .get()
-                            .toInstant()
-                            .atZone(ZoneId.of(Defaults.TIMEZONE_CET))
-                            .toLocalDateTime();
-
-            if (date.isBefore(currentDate.minusDays(89))) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-            return date;
-        }
 
         if (!sessionStorage.get(StorageKeys.IS_IN_EXTENDED_MODE, Boolean.class).orElse(false)) {
             return currentDate.minusDays(89);
