@@ -6,7 +6,6 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -23,11 +21,11 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentSteps;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicRepository;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.callback.CmcicCallbackInterpreter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestCreation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentInformationStatusEntity;
@@ -74,6 +72,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     private final CmcicPaymentRequestFactory paymentRequestFactory;
     private final CmcicPaymentResponseMapper responseMapper;
     private final Retryer<HalPaymentRequestEntity> retryer;
+    private final CmcicCallbackInterpreter callbackHandler;
 
     public CmcicPaymentExecutor(
             CmcicApiClient apiClient,
@@ -91,6 +90,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         this.paymentRequestFactory = paymentRequestFactory;
         this.responseMapper = responseMapper;
         this.retryer = createRetryer();
+        this.callbackHandler = new CmcicCallbackInterpreter(cmcicRepository);
     }
 
     @Override
@@ -335,19 +335,6 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                                 InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT,
                                                 ThirdPartyAppError.TIMED_OUT.exception()));
 
-        // Query parameters can be case insesitive returned by bank,this is to take care of that
-        // situation and we avoid failing the payment.
-        Map<String, String> caseInsensitiveCallbackData = new CaseInsensitiveMap<>(callbackData);
-
-        String authorizationCode = caseInsensitiveCallbackData.get(QueryKeys.AUTHORIZATION_CODE);
-        if (Strings.isNullOrEmpty(authorizationCode)) {
-            handleAuthFactorError();
-        }
-        cmcicRepository.storeAuthorizationCode(authorizationCode);
-    }
-
-    private void handleAuthFactorError() throws PaymentRejectedException {
-        log.error("Payment authorization failed. There is no authorization code!");
-        throw new PaymentRejectedException();
+        callbackHandler.interpretCallbackData(callbackData);
     }
 }
