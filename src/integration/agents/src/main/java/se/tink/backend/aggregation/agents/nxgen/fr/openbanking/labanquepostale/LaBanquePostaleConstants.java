@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LaBanquePostaleConstants {
 
     public static final String DEVICE_NAME = "Tink";
     public static final String CHANGE_BEARER = "SLEV";
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
         public static final String BASE_URL = "https://api.labanquepostale.com/v1";
         public static final String OAUTH_BASE_URL = "https://oauth2.labanquepostale.com";
@@ -25,10 +29,12 @@ public final class LaBanquePostaleConstants {
         static final String CONFIRM_PAYMENT = "/payment-requests/{paymentId}/confirmation";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String AUTHORIZATION = "Authorization";
         public static final String SIGNATURE = "Signature";
@@ -36,16 +42,18 @@ public final class LaBanquePostaleConstants {
         public static final String PSU_DATE = "PSU-Date";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
-
         public static final String CONTENT_TYPE = "application/json";
         public static final String BASIC = "Basic ";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Payload {
         public static final String EMPTY = "";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentTypeInformation {
         public static final String CATEGORY_PURPOSE = "CASH";
         public static final String SEPA_INSTANT_CREDIT_TRANSFER = "INST";
@@ -53,11 +61,13 @@ public final class LaBanquePostaleConstants {
         public static final String SERVICE_LEVEL = "SEPA";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public class IdTags {
         public static final String BANK = "bank";
         public static final String PAYMENT_ID = "paymentId";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
@@ -71,29 +81,38 @@ public final class LaBanquePostaleConstants {
         public static final String CERTICODE_INACTIVE = "SCA_PSU_METHOD_ERROR";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         static final String SCORE = "aisp";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CreditDebitIndicators {
         public static final String CREDIT = "CRDT";
         public static final String DEBIT = "DBIT";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CreditorAgentConstants {
         public static final String BICFI = "BNKAFRPPXXX";
         public static final String NAME = "CreditorAgentName";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class MinimumValues {
         public static final String MINIMUM_AMOUNT_FOR_SEPA = "1.5";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class AppToAppRedirect {
-
-        // [PENG-401] temporarily changing PIS flow to web
-        // public static final String APP_TO_APP_HEADER_VALUE = "REDIRECT-APP2APP-PPH";
-        public static final String APP_TO_APP_HEADER_VALUE = "REDIRECT-WEB";
+        // [PENG-401] temporarily changing PIS flow to app-to-app
+        public static final String APP_TO_APP_HEADER_VALUE = "REDIRECT-APP2APP-PPH";
         public static final String APP_TO_APP_HEADER_NAME = "PSU-Workspace";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class WebRedirect {
+        public static final String WEB_REDIRECT_HEADER_VALUE = "REDIRECT-WEB";
+        public static final String WEB_REDIRECT_HEADER_NAME = "PSU-Workspace";
     }
 }
