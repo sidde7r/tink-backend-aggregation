@@ -163,8 +163,6 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     public boolean isInExtendedPeriod() {
         accounts = getAccounts();
         apiClient.fetchUpdateTransactions(accounts);
-        LocalDate nowMinus89Days =
-                LocalDate.now(ZoneId.of(BbvaConstants.Defaults.TIMEZONE_CET)).minusDays(89);
         Optional<LocalDate> maybeCertainDate =
                 accounts.stream()
                         .map(
@@ -184,7 +182,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
                                                                         .TIMEZONE_CET))
                                                 .toLocalDate());
         maybeCertainDate.ifPresent(date -> log.info("Certain date: " + date));
-        return maybeCertainDate.map(date -> date.isBefore(nowMinus89Days)).orElse(true);
+        return !maybeCertainDate.isPresent();
     }
 
     public List<TransactionalAccount> getAccounts() {
