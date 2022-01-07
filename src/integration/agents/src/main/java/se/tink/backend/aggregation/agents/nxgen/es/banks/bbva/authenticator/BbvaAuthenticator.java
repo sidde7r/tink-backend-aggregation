@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 
 import io.vavr.control.Option;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
@@ -28,7 +30,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractE
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -63,10 +64,10 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
                     abortIfUserNotAvailableForInteraction();
                     loginWithOtp(loginResponse.getMultistepProcessId(), userCredentials);
                 }
-                if (request.getUserAvailability().isUserAvailableForInteraction()
-                        && isInExtendedPeriod()) {
-                    forcedOtpForExtendedPeriod();
+                if (isInExtendedPeriod()) {
+                    abortIfUserNotAvailableForInteraction();
                     sessionStorage.put(StorageKeys.IS_IN_EXTENDED_MODE, true);
+                    forcedOtpForExtendedPeriod();
                 }
             } catch (HttpResponseException ex) {
                 mapHttpErrors(ex);
@@ -160,23 +161,30 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     }
 
     public boolean isInExtendedPeriod() {
-        AtomicBoolean inExtendedPeriod = new AtomicBoolean(false);
         accounts = getAccounts();
         apiClient.fetchUpdateTransactions(accounts);
-        List<TransactionalAccount> extendedPeriodAccounts =
+        LocalDate nowMinus89Days =
+                LocalDate.now(ZoneId.of(BbvaConstants.Defaults.TIMEZONE_CET)).minusDays(89);
+        Optional<LocalDate> maybeCertainDate =
                 accounts.stream()
-                        .filter(
-                                theAccount -> {
-                                    Optional<Date> dateLimit =
-                                            transactionPaginationHelper.getTransactionDateLimit(
-                                                    theAccount);
-                                    return !dateLimit.isPresent()
-                                            || BbvaUtils.isMoreThan90DaysOld(dateLimit.get());
-                                })
-                        .collect(Collectors.toList());
-        // one account is enough to set
-        extendedPeriodAccounts.stream().findFirst().ifPresent(it -> inExtendedPeriod.set(true));
-        return inExtendedPeriod.get();
+                        .map(
+                                account ->
+                                        transactionPaginationHelper.getTransactionDateLimit(
+                                                account))
+                        .filter(o -> o.isPresent())
+                        .map(o -> o.get())
+                        .sorted(Comparator.reverseOrder())
+                        .findFirst()
+                        .map(
+                                o ->
+                                        o.toInstant()
+                                                .atZone(
+                                                        ZoneId.of(
+                                                                BbvaConstants.Defaults
+                                                                        .TIMEZONE_CET))
+                                                .toLocalDate());
+        maybeCertainDate.ifPresent(date -> log.info("Certain date: " + date));
+        return maybeCertainDate.map(date -> date.isBefore(nowMinus89Days)).orElse(true);
     }
 
     public List<TransactionalAccount> getAccounts() {
