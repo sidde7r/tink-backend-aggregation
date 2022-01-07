@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment;
 
-import static se.tink.libraries.payment.enums.PaymentStatus.CREATED;
 import static se.tink.libraries.payment.enums.PaymentStatus.PENDING;
 import static se.tink.libraries.transfer.enums.RemittanceInformationType.UNSTRUCTURED;
 
@@ -15,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentPendingException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditApiClientRetryer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
@@ -217,9 +217,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                 return new PaymentMultiStepResponse(
                         paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
             case PENDING:
-                paymentResponse.getPayment().setStatus(CREATED);
-                return new PaymentMultiStepResponse(
-                        paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
+                throw new PaymentPendingException();
             case CREATED:
                 throw new PaymentAuthorizationTimeOutException();
             case REJECTED:

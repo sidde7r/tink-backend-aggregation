@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit.paymen
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentPendingException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditApiClientRetryer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
@@ -24,7 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -56,7 +57,7 @@ public class UnicreditPaymentExecutorTest {
     }
 
     @Test
-    public void shouldRetryRequestForPaymentStatusWhenStatusIsPending() throws Exception {
+    public void shouldRetryRequestForPaymentStatusWhenStatusIsPending() {
         // given
         when(unicreditBaseApiClient.fetchPaymentStatus(paymentMultiStepRequest))
                 .thenReturn(paymentStatusResponse(PENDING_PAYMENT_STATUS_RESPONSE_FILE))
@@ -88,7 +89,7 @@ public class UnicreditPaymentExecutorTest {
     }
 
     @Test
-    public void shouldNotRetryPaymentStatusCheckIfStatusIsAccepted() throws Exception {
+    public void shouldNotRetryPaymentStatusCheckIfStatusIsAccepted() {
         // given
         when(unicreditBaseApiClient.fetchPaymentStatus(paymentMultiStepRequest))
                 .thenReturn(paymentStatusResponse(ACCEPTED_PAYMENT_STATUS_RESPONSE_FILE));
@@ -102,8 +103,7 @@ public class UnicreditPaymentExecutorTest {
     }
 
     @Test
-    public void shouldSetPaymentStatusToCreatedIfErrorDuringCheckingPaymentStatus()
-            throws Exception {
+    public void shouldThrownPendingExceptionIfErrorDuringCheckingPaymentStatus() throws Exception {
         // given
         UnicreditApiClientRetryer unicreditApiClientRetryerMock =
                 mock(UnicreditApiClientRetryer.class);
@@ -114,15 +114,15 @@ public class UnicreditPaymentExecutorTest {
                 .thenThrow(ExecutionException.class);
 
         // when
-        PaymentMultiStepResponse response = unicreditPaymentExecutor.sign(paymentMultiStepRequest);
+        Throwable throwable =
+                catchThrowable(() -> unicreditPaymentExecutor.sign(paymentMultiStepRequest));
 
         // then
-        assertThat(response.isStatus(PaymentStatus.CREATED)).isTrue();
-        assertThat(response.getStep()).isEqualTo(STEP_FINALIZE);
+        assertThat(throwable).isInstanceOf(PaymentPendingException.class);
     }
 
     @Test
-    public void shouldSetPaymentStatusToCreatedAfterReachingRetriesLimit() throws Exception {
+    public void shouldThrownPendingExceptionAfterReachingRetriesLimit() throws Exception {
         // given
         UnicreditApiClientRetryer unicreditApiClientRetryerMock =
                 mock(UnicreditApiClientRetryer.class);
@@ -133,11 +133,11 @@ public class UnicreditPaymentExecutorTest {
                 .thenThrow(RetryException.class);
 
         // when
-        PaymentMultiStepResponse response = unicreditPaymentExecutor.sign(paymentMultiStepRequest);
+        Throwable throwable =
+                catchThrowable(() -> unicreditPaymentExecutor.sign(paymentMultiStepRequest));
 
         // then
-        assertThat(response.isStatus(PaymentStatus.CREATED)).isTrue();
-        assertThat(response.getStep()).isEqualTo(STEP_FINALIZE);
+        assertThat(throwable).isInstanceOf(PaymentPendingException.class);
     }
 
     private FetchPaymentStatusResponse paymentStatusResponse(
