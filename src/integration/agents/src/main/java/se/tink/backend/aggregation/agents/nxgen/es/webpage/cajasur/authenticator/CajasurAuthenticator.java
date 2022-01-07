@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurSessionState;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.CajasurLoginProcessor;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.CajasurLoginValidatorFactory;
+import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.mainview.MainViewProcessor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginvalidation.LoginValidationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -27,11 +28,8 @@ public class CajasurAuthenticator extends StatelessProgressiveAuthenticator {
                 new LoginValidationStep<String>(
                         new CajasurLoginValidatorFactory(sessionStorage), this::loginResponse),
                 new AutomaticAuthenticationStep(
-                        new CajasurPostLoginProcessor(cajasurApiClient, sessionStorage),
-                        "doPostLoginStep"),
-                new AutomaticAuthenticationStep(
-                        new CajasurRedirectToMainPageProcessor(cajasurApiClient, sessionStorage),
-                        "redirectToMainPageStep"));
+                        new MainViewProcessor(cajasurApiClient, sessionStorage),
+                        "doPostLoginStep"));
     }
 
     private String loginResponse() {
