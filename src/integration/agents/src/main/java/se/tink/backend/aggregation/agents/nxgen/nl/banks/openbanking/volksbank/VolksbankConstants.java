@@ -27,7 +27,7 @@ public class VolksbankConstants {
     public static class Paths {
         public static final String AUTHORIZE = "/v1/authorize";
         public static final String TOKEN = "/v1/token";
-        public static final String ACCOUNTS = "/v1/accounts";
+        public static final String ACCOUNTS = "/v1.1/accounts";
         public static final String BALANCES = "/balances";
         public static final String TRANSACTIONS = "/transactions";
         public static final String CONSENT = "/v1/consents";
