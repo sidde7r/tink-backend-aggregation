@@ -66,7 +66,7 @@ public abstract class FabricAgent extends NextGenerationAgent
                 new FabricRequestBuilder(
                         client,
                         componentProvider.getRandomValueGenerator(),
-                        request.getUserAvailability().getOriginatingUserIpOrDefault());
+                        componentProvider.getUser().getIpAddress());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
