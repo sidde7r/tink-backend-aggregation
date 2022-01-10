@@ -15,6 +15,7 @@ import java.time.Month;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.entity.TransactionEntity;
@@ -24,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DnbTransactionFetcherTest {
@@ -41,7 +41,7 @@ public class DnbTransactionFetcherTest {
     private DnbStorage mockStorage;
     private DnbApiClient mockApiClient;
     private DnbTransactionMapper mockTransactionMapper;
-    private UserAvailability mockUserAvailability;
+    private User mockUser;
     private LocalDateTimeSource mockLocalDateTimeSource;
 
     private DnbTransactionFetcher transactionFetcher;
@@ -54,7 +54,7 @@ public class DnbTransactionFetcherTest {
         mockStorage = mock(DnbStorage.class);
         mockApiClient = mock(DnbApiClient.class);
         mockTransactionMapper = mock(DnbTransactionMapper.class);
-        mockUserAvailability = mock(UserAvailability.class);
+        mockUser = mock(User.class);
         mockLocalDateTimeSource = mock(LocalDateTimeSource.class);
 
         transactionFetcher =
@@ -62,7 +62,7 @@ public class DnbTransactionFetcherTest {
                         mockStorage,
                         mockApiClient,
                         mockTransactionMapper,
-                        mockUserAvailability,
+                        mockUser,
                         mockLocalDateTimeSource);
 
         testAccount = mock(TransactionalAccount.class);
@@ -88,7 +88,7 @@ public class DnbTransactionFetcherTest {
                         mockApiClient.fetchTransactions(
                                 fromDate.toString(), TEST_CONSENT_ID, TEST_ACCOUNT_ID))
                 .willReturn(getTransactionsResponse());
-        given(mockUserAvailability.isUserPresent()).willReturn(true);
+        given(mockUser.isPresent()).willReturn(true);
 
         // when
         TransactionKeyPaginatorResponse<String> pageOfTransactions =
@@ -112,7 +112,7 @@ public class DnbTransactionFetcherTest {
         LocalDateTime startDate = LocalDateTime.of(2021, Month.APRIL, 19, 12, 0);
         given(mockLocalDateTimeSource.now()).willReturn(startDate);
 
-        given(mockUserAvailability.isUserPresent()).willReturn(true);
+        given(mockUser.isPresent()).willReturn(true);
         given(mockApiClient.fetchNextTransactions(TEST_CONSENT_ID, TEST_NEXT_URL_PART))
                 .willReturn(getTransactionsLastPageResponse());
 
@@ -142,10 +142,9 @@ public class DnbTransactionFetcherTest {
                                 fromDate.toString(), TEST_CONSENT_ID, TEST_ACCOUNT_ID))
                 .willReturn(getTransactionsResponse());
 
-        given(mockUserAvailability.isUserPresent()).willReturn(true);
+        given(mockUser.isPresent()).willReturn(true);
         given(mockLocalDateTimeSource.now()).willReturn(startDate);
         given(testAccount.getApiIdentifier()).willReturn(TEST_ACCOUNT_ID);
-        given(mockUserAvailability.isUserPresent()).willReturn(true);
 
         // when
         TransactionKeyPaginatorResponse<String> pageOfTransactions =
@@ -163,7 +162,7 @@ public class DnbTransactionFetcherTest {
         LocalDateTime startDate = LocalDateTime.of(2021, Month.APRIL, 19, 12, 0);
         LocalDate fromDate = startDate.minusDays(89).toLocalDate();
 
-        given(mockUserAvailability.isUserPresent()).willReturn(false);
+        given(mockUser.isPresent()).willReturn(false);
         given(mockLocalDateTimeSource.now()).willReturn(startDate);
         given(testAccount.getApiIdentifier()).willReturn(TEST_ACCOUNT_ID);
         given(

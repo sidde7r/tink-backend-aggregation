@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.entity.TransactionEntity;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mappe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DnbCardTransactionFetcherTest {
@@ -37,7 +37,7 @@ public class DnbCardTransactionFetcherTest {
     private DnbStorage mockStorage;
     private DnbApiClient mockApiClient;
     private DnbTransactionMapper mockTransactionMapper;
-    private UserAvailability mockUserAvailability;
+    private User mockUser;
 
     private DnbCardTransactionFetcher cardTransactionFetcher;
 
@@ -49,7 +49,7 @@ public class DnbCardTransactionFetcherTest {
         mockStorage = mock(DnbStorage.class);
         mockApiClient = mock(DnbApiClient.class);
         mockTransactionMapper = mock(DnbTransactionMapper.class);
-        mockUserAvailability = mock(UserAvailability.class);
+        mockUser = mock(User.class);
 
         testCardAccount = mock(CreditCardAccount.class);
 
@@ -70,10 +70,10 @@ public class DnbCardTransactionFetcherTest {
     public void
             shouldAlwaysReturnPageWithCanFetchMoreAndExpectedNumberOfTransactionsWhenManualRefresh() {
         // given
-        given(mockUserAvailability.isUserPresent()).willReturn(true);
+        given(mockUser.isPresent()).willReturn(true);
         cardTransactionFetcher =
                 new DnbCardTransactionFetcher(
-                        mockStorage, mockApiClient, mockTransactionMapper, mockUserAvailability);
+                        mockStorage, mockApiClient, mockTransactionMapper, mockUser);
 
         // when
         PaginatorResponse pageOfTransactions =
@@ -95,10 +95,10 @@ public class DnbCardTransactionFetcherTest {
     @Test
     public void shouldNeverAllowForMorePagesWhenAutoRefresh() {
         // given
-        given(mockUserAvailability.isUserPresent()).willReturn(false);
+        given(mockUser.isPresent()).willReturn(false);
         cardTransactionFetcher =
                 new DnbCardTransactionFetcher(
-                        mockStorage, mockApiClient, mockTransactionMapper, mockUserAvailability);
+                        mockStorage, mockApiClient, mockTransactionMapper, mockUser);
 
         // when
         PaginatorResponse pageOfTransactions =

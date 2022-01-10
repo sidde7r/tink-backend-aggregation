@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -45,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, TRANSFERS, PAYMENTS})
 @AgentPisCapability
@@ -64,34 +64,31 @@ public final class DnbAgent extends NextGenerationAgent
     public DnbAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         storage = new DnbStorage(persistentStorage);
-        UserAvailability userAvailability =
-                componentProvider.getCredentialsRequest().getUserAvailability();
+        User user = componentProvider.getUser();
         apiClient =
                 new DnbApiClient(
                         client,
-                        setupHeaderValues(userAvailability),
+                        setupHeaderValues(user),
                         componentProvider.getRandomValueGenerator(),
                         componentProvider.getLocalDateTimeSource());
-        transactionalRefreshController = constructTransactionalRefreshController(componentProvider);
-        cardRefreshController =
-                constructCardAccountRefreshController(componentProvider, userAvailability);
+        transactionalRefreshController =
+                constructTransactionalRefreshController(componentProvider, user);
+        cardRefreshController = constructCardAccountRefreshController(componentProvider, user);
     }
 
-    private DnbHeaderValues setupHeaderValues(UserAvailability userAvailability) {
+    private DnbHeaderValues setupHeaderValues(User user) {
         String psuId = credentials.getField(DnbConstants.CredentialsKeys.PSU_ID);
         String redirectUrl =
                 getAgentConfigurationController()
                         .getAgentConfiguration(DnbConfiguration.class)
                         .getRedirectUrl();
-        String userIpHeaderValue =
-                userAvailability.isUserPresent() ? userAvailability.getOriginatingUserIp() : null;
-        return new DnbHeaderValues(psuId, redirectUrl, userIpHeaderValue);
+
+        return new DnbHeaderValues(psuId, redirectUrl, user.getIpAddress());
     }
 
     private TransactionalAccountRefreshController constructTransactionalRefreshController(
-            AgentComponentProvider componentProvider) {
-        UserAvailability userAvailability =
-                componentProvider.getCredentialsRequest().getUserAvailability();
+            AgentComponentProvider componentProvider, User user) {
+
         LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -104,15 +101,14 @@ public final class DnbAgent extends NextGenerationAgent
                                         storage,
                                         apiClient,
                                         new DnbTransactionMapper(),
-                                        userAvailability,
+                                        user,
                                         localDateTimeSource))));
     }
 
     private CreditCardRefreshController constructCardAccountRefreshController(
-            AgentComponentProvider componentProvider, UserAvailability userAvailability) {
+            AgentComponentProvider componentProvider, User user) {
         DnbCardTransactionFetcher cardTransactionFetcher =
-                new DnbCardTransactionFetcher(
-                        storage, apiClient, new DnbTransactionMapper(), userAvailability);
+                new DnbCardTransactionFetcher(storage, apiClient, new DnbTransactionMapper(), user);
 
         return new CreditCardRefreshController(
                 metricRefreshController,

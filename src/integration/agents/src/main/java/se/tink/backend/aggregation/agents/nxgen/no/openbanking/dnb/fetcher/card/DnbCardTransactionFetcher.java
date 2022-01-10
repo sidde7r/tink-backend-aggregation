@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.rpc.CardTransactionResponse;
@@ -13,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @Slf4j
 @AllArgsConstructor
@@ -22,7 +22,7 @@ public class DnbCardTransactionFetcher implements TransactionDatePaginator<Credi
     private final DnbStorage storage;
     private final DnbApiClient apiClient;
     private final DnbTransactionMapper transactionMapper;
-    private final UserAvailability userAvailability;
+    private final User user;
 
     @Override
     public PaginatorResponse getTransactionsFor(
@@ -37,6 +37,6 @@ public class DnbCardTransactionFetcher implements TransactionDatePaginator<Credi
 
         // Allow to fetch more only in case of manual refresh (user present), to not exhaust 4-a-day
         // limit with just card transactions
-        return PaginatorResponseImpl.create(tinkTransactions, userAvailability.isUserPresent());
+        return PaginatorResponseImpl.create(tinkTransactions, user.isPresent());
     }
 }
