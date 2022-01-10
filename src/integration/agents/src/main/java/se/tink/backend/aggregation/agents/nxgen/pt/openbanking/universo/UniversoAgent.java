@@ -80,7 +80,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                 componentProvider.getTinkHttpClient(),
                 persistentStorage,
                 configuration,
-                request.getUserAvailability().isUserPresent(),
+                componentProvider.getUser().isPresent(),
                 userIp,
                 componentProvider.getRandomValueGenerator(),
                 componentProvider.getContext().getLogMasker());
@@ -98,7 +98,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                         new UniversoTransactionDateFromFetcher(
                                 apiClient,
                                 agentComponentProvider.getLocalDateTimeSource(),
-                                request.getUserAvailability().isUserPresent(),
+                                agentComponentProvider.getUser().isPresent(),
                                 BASE_URL));
 
         return new TransactionalAccountRefreshController(
