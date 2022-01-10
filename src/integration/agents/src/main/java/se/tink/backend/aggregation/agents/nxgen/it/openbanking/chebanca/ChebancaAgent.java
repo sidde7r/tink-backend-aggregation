@@ -42,6 +42,7 @@ public final class ChebancaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final ChebancaApiClient apiClient;
+    private final boolean isUserAvailableForInteraction;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AgentConfiguration<ChebancaConfiguration> agentConfiguration;
 
@@ -53,10 +54,11 @@ public final class ChebancaAgent extends NextGenerationAgent
                 getAgentConfigurationController()
                         .getAgentConfiguration(ChebancaConfiguration.class);
 
-        boolean isUserAvailable = request.getUserAvailability().isUserAvailableForInteraction();
+        this.isUserAvailableForInteraction =
+                agentComponentProvider.getUser().isAvailableForInteraction();
         ChebancaRequestBuilder chebancaRequestBuilder =
                 createChebancaRequestBuilder(
-                        isUserAvailable,
+                        isUserAvailableForInteraction,
                         qSealcSigner,
                         agentComponentProvider.getRandomValueGenerator());
         apiClient =
@@ -64,7 +66,7 @@ public final class ChebancaAgent extends NextGenerationAgent
                         persistentStorage,
                         strongAuthenticationState,
                         agentConfiguration.getRedirectUrl(),
-                        isUserAvailable,
+                        isUserAvailableForInteraction,
                         chebancaRequestBuilder);
 
         client.setFollowRedirects(false);
@@ -115,7 +117,7 @@ public final class ChebancaAgent extends NextGenerationAgent
                         consentManager,
                         supplementalInformationHelper,
                         constructBgRefreshAuthenticator(),
-                        request.getUserAvailability().isUserAvailableForInteraction());
+                        isUserAvailableForInteraction);
 
         return new AutoAuthenticationController(
                 request, systemUpdater, authenticationController, authenticationController);
