@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -58,17 +59,15 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
         log.info("Nordea Partner: Start of the agent");
         isOnStaging =
                 "neston-staging".equalsIgnoreCase(componentProvider.getContext().getClusterId());
+        User user = componentProvider.getUser();
         apiClient =
                 new NordeaPartnerApiClient(
                         client,
                         sessionStorage,
                         provider,
                         credentials,
-                        getApiLocale(request.getUser().getLocale()),
-                        componentProvider
-                                .getCredentialsRequest()
-                                .getUserAvailability()
-                                .isUserPresent());
+                        getApiLocale(user.getLocale()),
+                        user.isPresent());
 
         // Don't add signature/aggregator headers; this is not a RE agent
         client.disableAggregatorHeader();
