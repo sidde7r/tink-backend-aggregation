@@ -68,11 +68,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         super(agentComponentProvider);
         new IngBaseTinkClientConfigurator()
                 .configureClient(client, MAX_ATTEMPTS, RETRY_SLEEP_MILLISECONDS);
-        String psuIpAddress =
-                agentComponentProvider
-                        .getCredentialsRequest()
-                        .getUserAvailability()
-                        .getOriginatingUserIpOrDefault();
+        String psuIpAddress = agentComponentProvider.getUser().getIpAddress();
 
         apiClient =
                 new IngBaseApiClient(
