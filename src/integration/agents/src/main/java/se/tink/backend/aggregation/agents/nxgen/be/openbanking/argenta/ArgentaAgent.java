@@ -51,7 +51,7 @@ public final class ArgentaAgent extends NextGenerationAgent
                         client,
                         agentConfiguration,
                         argentaStorage,
-                        request.getUserAvailability().getOriginatingUserIp(),
+                        componentProvider.getUser().getIpAddress(),
                         componentProvider,
                         qsealcSigner);
 
