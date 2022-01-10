@@ -7186,6 +7186,13 @@ agentsServiceConfiguration:
         eidasQwac: Tink
         environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    nickel:
+      tink:
+        clientId: 1234567890
+        clientSecret: 010101
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        scopes:
+          - AIS
     nordea:
       tink:
         clientId: dummyId
