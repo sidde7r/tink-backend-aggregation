@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.mediolanum;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -38,21 +39,20 @@ public final class MediolanumAgent extends NextGenerationAgent
     public MediolanumAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.mediolanumStorage = new MediolanumStorage(persistentStorage);
-        this.mediolanumConfiguration = constructConfiguration();
+        this.mediolanumConfiguration = constructConfiguration(componentProvider.getUser());
         this.apiClient = constructApiClient(componentProvider);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(componentProvider);
     }
 
-    private MediolanumConfiguration constructConfiguration() {
+    private MediolanumConfiguration constructConfiguration(User user) {
         AgentConfiguration<MediolanumConfiguration> agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(MediolanumConfiguration.class);
         MediolanumConfiguration providerSpecificConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
         providerSpecificConfiguration.setRedirectUrl(agentConfiguration.getRedirectUrl());
-        providerSpecificConfiguration.setUserIp(
-                request.getUserAvailability().getOriginatingUserIpOrDefault());
+        providerSpecificConfiguration.setUserIp(user.getIpAddress());
         return providerSpecificConfiguration;
     }
 
@@ -108,7 +108,7 @@ public final class MediolanumAgent extends NextGenerationAgent
                         apiClient,
                         new TransactionMapper(),
                         componentProvider.getLocalDateTimeSource(),
-                        request.getUserAvailability().isUserPresent());
+                        componentProvider.getUser().isPresent());
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
