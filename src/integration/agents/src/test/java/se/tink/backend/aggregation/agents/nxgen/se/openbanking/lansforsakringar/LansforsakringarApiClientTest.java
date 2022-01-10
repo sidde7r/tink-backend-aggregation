@@ -13,6 +13,7 @@ import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -30,13 +31,10 @@ public class LansforsakringarApiClientTest {
     @Before
     public void setup() {
         storageHelper = mock(LansforsakringarStorageHelper.class);
-        LansforsakringarUserIpInformation userIpInformation =
-                mock(LansforsakringarUserIpInformation.class);
+        User user = mock(User.class);
         TinkHttpClient client = mock(TinkHttpClient.class);
         Credentials credentials = mock(Credentials.class);
-        apiClient =
-                new LansforsakringarApiClient(
-                        client, credentials, storageHelper, userIpInformation);
+        apiClient = new LansforsakringarApiClient(client, credentials, storageHelper, user);
     }
 
     @Test
