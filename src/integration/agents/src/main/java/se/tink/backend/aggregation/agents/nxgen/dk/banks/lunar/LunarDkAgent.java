@@ -80,7 +80,8 @@ public final class LunarDkAgent extends AgentPlatformAgent
         configureHttpClient(client);
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         accessorFactory = new LunarDataAccessorFactory(new ObjectMapperFactory().getInstance());
-        String languageCode = HeaderValues.getLanguageCode(request.getUser().getLocale());
+        String languageCode =
+                HeaderValues.getLanguageCode(agentComponentProvider.getUser().getLocale());
 
         this.apiClient =
                 new FetcherApiClient(
