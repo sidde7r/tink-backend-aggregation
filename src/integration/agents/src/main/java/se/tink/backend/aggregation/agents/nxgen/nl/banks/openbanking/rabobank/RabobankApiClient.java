@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+import java.util.NoSuchElementException;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
@@ -23,9 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -38,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.cryptography.Certificate;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.date.DateFormat.Zone;
@@ -50,22 +45,70 @@ public final class RabobankApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final RabobankConfiguration rabobankConfiguration;
-    private final String qsealcPem;
-    private final QsealcSigner qsealcSigner;
+    private final RabobankSignatureHeaderBuilder signatureHeaderBuilder;
     private final RabobankUserIpInformation userIpInformation;
-    private String consentStatus;
 
-    public TokenResponse exchangeAuthorizationCode(final Form request) {
+    public TokenResponse exchangeAuthorizationCode(Form request) {
         return post(request);
     }
 
-    public TokenResponse refreshAccessToken(final Form request) {
+    public TokenResponse refreshAccessToken(Form request) {
         return post(request);
     }
 
-    private TokenResponse post(final Form request) {
-        final String clientId = rabobankConfiguration.getClientId();
-        final String clientSecret = rabobankConfiguration.getClientSecret();
+    public TransactionalAccountsResponse fetchAccounts() {
+        try {
+            return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            checkErrorBodyType(response);
+
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+            if (errorResponse.isNotSubscribedError(response.getStatus())) {
+                rabobankConfiguration.getUrls().setConsumeLatest(false);
+                return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
+            }
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
+        }
+    }
+
+    public BalanceResponse getBalance(String accountId) {
+        String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
+        String uuid = Psd2Headers.getRequestId();
+        String date = DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
+        String signatureHeader = signatureHeaderBuilder.buildSignatureHeader(digest, uuid, date);
+        URL url = rabobankConfiguration.getUrls().buildBalanceUrl(accountId);
+
+        return buildRequest(url, uuid, digest, signatureHeader, date).get(BalanceResponse.class);
+    }
+
+    public PaginatorResponse getTransactions(
+            TransactionalAccount account, Date fromDate, Date toDate, boolean isSandbox) {
+
+        URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(account.getApiIdentifier());
+        try {
+            return getTransactionsPages(url, fromDate, toDate, QueryValues.BOOKED, isSandbox);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            checkErrorBodyType(response);
+
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+            if (errorResponse.isPeriodInvalidError()) {
+                return PaginatorResponseImpl.createEmptyFinal();
+            }
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
+        }
+    }
+
+    ConsentDetailsResponse getConsentStatus(
+            URL consentUrl, String uuid, String digest, String signatureHeader, String date) {
+        return buildRequest(consentUrl, uuid, digest, signatureHeader, date)
+                .get(ConsentDetailsResponse.class);
+    }
+
+    private TokenResponse post(Form request) {
+        String clientId = rabobankConfiguration.getClientId();
+        String clientSecret = rabobankConfiguration.getClientSecret();
 
         return client.request(rabobankConfiguration.getUrls().getOauth2TokenUrl())
                 .body(request.serialize())
@@ -76,23 +119,21 @@ public final class RabobankApiClient {
     }
 
     private RequestBuilder buildRequest(
-            final URL url,
-            final String requestId,
-            final String digest,
-            final String signatureHeader,
-            final String date) {
-        final String clientId = rabobankConfiguration.getClientId();
-        final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
+            URL url, String requestId, String digest, String signatureHeader, String date) {
+        String clientId = rabobankConfiguration.getClientId();
+        String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
-        final RequestBuilder builder;
+        RequestBuilder builder;
 
-        final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
+        OAuth2Token oAuth2Token = getOauthToken();
 
         builder =
                 client.request(url)
                         .addBearerToken(oAuth2Token)
                         .header(QueryParams.IBM_CLIENT_ID, clientId)
-                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, qsealcPem)
+                        .header(
+                                QueryParams.TPP_SIGNATURE_CERTIFICATE,
+                                signatureHeaderBuilder.getQsealcPem())
                         .header(QueryParams.REQUEST_ID, requestId)
                         .header(QueryParams.DIGEST, digestHeader)
                         .header(QueryParams.SIGNATURE, signatureHeader)
@@ -110,50 +151,11 @@ public final class RabobankApiClient {
         return builder;
     }
 
-    public void setConsentStatus() {
-        final String consentId = persistentStorage.get(StorageKey.CONSENT_ID);
-
-        throwSessionErrorIfConsentIsNull(consentId);
-
-        final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = Psd2Headers.getRequestId();
-        final String date =
-                DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
-        final String signatureHeader = buildSignatureHeader(digest, uuid, date);
-        final URL url = rabobankConfiguration.getUrls().buildConsentUrl(consentId);
-
-        ConsentDetailsResponse response;
-        try {
-            response =
-                    buildRequest(url, uuid, digest, signatureHeader, date)
-                            .get(ConsentDetailsResponse.class);
-        } catch (HttpResponseException e) {
-            // Invalid/Revoked Consent response received code 200. Other than that we throw TE
-            throw BankServiceError.BANK_SIDE_FAILURE.exception(String.valueOf(e.getResponse()));
-        }
-        consentStatus = response.getStatus();
-    }
-
-    public void checkConsentStatus() {
-        fetchNewConsentIfEmpty();
-
-        if (RabobankConstants.Consents.STATUS.stream()
-                .anyMatch(s -> s.equalsIgnoreCase(consentStatus))) {
-            RabobankUtils.removeOauthToken(persistentStorage);
-            RabobankUtils.removeConsent(persistentStorage);
-            throw SessionError.CONSENT_EXPIRED.exception(
-                    ErrorMessages.ERROR_MESSAGE + consentStatus);
-        } else {
-            log.debug("Consent status is " + consentStatus);
-        }
-    }
-
     private RequestBuilder buildFetchAccountsRequest() {
-        final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = Psd2Headers.getRequestId();
-        final String date =
-                DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
-        final String signatureHeader = buildSignatureHeader(digest, uuid, date);
+        String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
+        String uuid = Psd2Headers.getRequestId();
+        String date = DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
+        String signatureHeader = signatureHeaderBuilder.buildSignatureHeader(digest, uuid, date);
 
         return buildRequest(
                 rabobankConfiguration.getUrls().getAisAccountsUrl(),
@@ -163,71 +165,16 @@ public final class RabobankApiClient {
                 date);
     }
 
-    public TransactionalAccountsResponse fetchAccounts() {
-        try {
-            return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
-        } catch (HttpResponseException e) {
-            final HttpResponse response = e.getResponse();
-            checkErrorBodyType(response);
-
-            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-            if (errorResponse.isNotSubscribedError(response.getStatus())) {
-                rabobankConfiguration.getUrls().setConsumeLatest(false);
-                return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
-            }
-            throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
-        }
-    }
-
-    public BalanceResponse getBalance(final String accountId) {
-        final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = Psd2Headers.getRequestId();
-        final String date =
-                DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
-        final String signatureHeader = buildSignatureHeader(digest, uuid, date);
-        final URL url = rabobankConfiguration.getUrls().buildBalanceUrl(accountId);
-
-        return buildRequest(url, uuid, digest, signatureHeader, date).get(BalanceResponse.class);
-    }
-
-    public PaginatorResponse getTransactions(
-            final TransactionalAccount account,
-            final Date fromDate,
-            final Date toDate,
-            final boolean isSandbox) {
-
-        final URL url =
-                rabobankConfiguration.getUrls().buildTransactionsUrl(account.getApiIdentifier());
-        try {
-            return getTransactionsPages(url, fromDate, toDate, QueryValues.BOOKED, isSandbox);
-        } catch (HttpResponseException e) {
-            final HttpResponse response = e.getResponse();
-            checkErrorBodyType(response);
-
-            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-            if (errorResponse.isPeriodInvalidError()) {
-                return PaginatorResponseImpl.createEmptyFinal();
-            }
-            throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
-        }
-    }
-
     private PaginatorResponse getTransactionsPages(
-            final URL url,
-            final Date fromDate,
-            final Date toDate,
-            final String bookingStatus,
-            final boolean isSandbox) {
+            URL url, Date fromDate, Date toDate, String bookingStatus, boolean isSandbox) {
 
-        final SimpleDateFormat sdf =
-                new SimpleDateFormat(RabobankConstants.TRANSACTION_DATE_FORMAT);
-        final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = Psd2Headers.getRequestId();
-        final String date =
-                DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
-        final String signatureHeader = buildSignatureHeader(digest, uuid, date);
+        SimpleDateFormat sdf = new SimpleDateFormat(RabobankConstants.TRANSACTION_DATE_FORMAT);
+        String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
+        String uuid = Psd2Headers.getRequestId();
+        String date = DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
+        String signatureHeader = signatureHeaderBuilder.buildSignatureHeader(digest, uuid, date);
 
-        final Collection<PaginatorResponse> pages = new ArrayList<>();
+        Collection<PaginatorResponse> pages = new ArrayList<>();
         TransactionalTransactionsResponse page =
                 buildRequest(url, uuid, digest, signatureHeader, date)
                         .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
@@ -265,39 +212,16 @@ public final class RabobankApiClient {
                 && userIpInformation.isUserPresent();
     }
 
-    private String buildSignatureHeader(
-            final String digest, final String requestId, final String date) {
-        final String signingString = RabobankUtils.createSignatureString(date, digest, requestId);
-        final byte[] signatureBytes = qsealcSigner.getSignature(signingString.getBytes());
-
-        final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
-        final String clientCertSerial = extractQsealcSerial(qsealcPem);
-
-        return RabobankUtils.createSignatureHeader(
-                clientCertSerial, Signature.RSA_SHA_256, b64Signature, Signature.HEADERS_VALUE);
-    }
-
-    private static String extractQsealcSerial(final String qsealc) {
-        return Certificate.getX509SerialNumber(qsealc);
-    }
-
-    private void throwSessionErrorIfConsentIsNull(String consentId) {
-        if (Strings.isNullOrEmpty(consentId)) {
-            RabobankUtils.removeOauthToken(persistentStorage);
-            throw SessionError.CONSENT_INVALID.exception("Missing consent id.");
-        }
-    }
-
-    private void fetchNewConsentIfEmpty() {
-        if (consentStatus == null) {
-            setConsentStatus();
-        }
-    }
-
     private void checkErrorBodyType(HttpResponse httpResponse) {
         if (!MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
             log.info("Invalid response body: {}", httpResponse.getBody(String.class));
             throw BankServiceError.BANK_SIDE_FAILURE.exception("Incorrect error body response.");
         }
+    }
+
+    private OAuth2Token getOauthToken() {
+        return persistentStorage
+                .get(StorageKey.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new NoSuchElementException("Missing Oauth token!"));
     }
 }

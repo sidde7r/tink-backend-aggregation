@@ -1,0 +1,29 @@
+{
+  "consentId": "fffff",
+  "access": {
+    "ais.balances.read": [
+      {
+        "iban": "NL71RABO0346234166",
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
+      }
+    ],
+    "ais.transactions.read-90days": [
+      {
+        "iban": "NL71RABO0346234166",
+        "currency": "EUR",
+        "status": "rejected",
+        "validUntil": "2021-04-12"
+      }
+    ],
+    "ais.transactions.read-history": [
+      {
+        "iban": "NL71RABO0346234166",
+        "currency": "EUR",
+        "status": "valid",
+        "validUntil": "2021-04-12"
+      }
+    ]
+  }
+}

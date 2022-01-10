@@ -2,9 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.a
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
+import java.time.ZoneId;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -33,45 +34,39 @@ public class TokenResponse {
     @JsonProperty("refresh_token_expires_in")
     private String refreshTokenExpiresIn;
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public long getExpiresIn() {
-        return Long.parseLong(expiresIn);
-    }
-
     @JsonIgnore
     public String getConsentId() {
         return metadata.replace("a:consentId", "").trim();
-    }
-
-    public String getTokenType() {
-        return tokenType;
     }
 
     public String getScope() {
         return scope;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public long getRefreshTokenExpiresIn() {
-        return Long.parseLong(refreshTokenExpiresIn);
-    }
-
     public OAuth2Token toOauthToken(final PersistentStorage persistentStorage) {
-        final String refreshTokenExpiryDate =
-                RabobankUtils.getRefreshTokenExpireDate(getRefreshTokenExpiresIn());
+        final String refreshTokenExpiryDate = getRefreshTokenExpireDate(getRefreshTokenExpiresIn());
         log.info(
                 "New Refresh Token: {}, Expires on: {}",
-                Hash.sha256AsHex(getRefreshToken()),
+                Hash.sha256AsHex(refreshToken),
                 refreshTokenExpiryDate);
         persistentStorage.put(StorageKey.TOKEN_EXPIRY_DATE, refreshTokenExpiryDate);
         // Not using refreshTokenExpiresIn: the bank response for 30 days of token expiry
-        return OAuth2Token.create(
-                getTokenType(), getAccessToken(), getRefreshToken(), getExpiresIn());
+        return OAuth2Token.create(tokenType, accessToken, refreshToken, getExpiresIn());
+    }
+
+    private long getExpiresIn() {
+        return Long.parseLong(expiresIn);
+    }
+
+    private long getRefreshTokenExpiresIn() {
+        return Long.parseLong(refreshTokenExpiresIn);
+    }
+
+    private String getRefreshTokenExpireDate(final Long refreshTokenExpiresInSeconds) {
+        return Instant.ofEpochMilli(System.currentTimeMillis())
+                .atZone(ZoneId.systemDefault())
+                .plusSeconds(refreshTokenExpiresInSeconds)
+                .toLocalDate()
+                .toString();
     }
 }

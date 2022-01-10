@@ -44,7 +44,10 @@ public final class RabobankUrlFactory {
     }
 
     public URL buildConsentUrl(final String consentId) {
-        return getConsentUrl().concatWithSeparator("consents").concatWithSeparator(consentId);
+        return getConsentUrl()
+                .concatWithSeparator("v1")
+                .concatWithSeparator("consents")
+                .concatWithSeparator(consentId);
     }
 
     public URL getAisAccountsUrl() {
