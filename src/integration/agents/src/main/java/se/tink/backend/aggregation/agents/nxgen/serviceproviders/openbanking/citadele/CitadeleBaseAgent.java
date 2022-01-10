@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -39,13 +40,15 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
         configureHttpClient(client);
         AgentConfiguration<CitadeleBaseConfiguration> agentConfiguration = getAgentConfiguration();
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+
+        User user = componentProvider.getUser();
         apiClient =
                 new CitadeleBaseApiClient(
                         client,
                         persistentStorage,
                         agentConfiguration,
                         componentProvider.getRandomValueGenerator(),
-                        getUserIpInformation(),
+                        user,
                         componentProvider.getLocalDateTimeSource().now().toLocalDate());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.clientName = request.getProvider().getPayload();
@@ -53,7 +56,7 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
                 new CitadeleBaseAuthenticator(
                         apiClient,
                         persistentStorage,
-                        getApiLocale(request.getUser().getLocale()),
+                        getApiLocale(user.getLocale()),
                         componentProvider.getCredentialsRequest().getProvider().getMarket(),
                         strongAuthenticationState,
                         credentials);
@@ -68,12 +71,6 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
     public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
         super.setConfiguration(agentsServiceConfiguration);
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-    }
-
-    private CitadeleUserIpInformation getUserIpInformation() {
-        return new CitadeleUserIpInformation(
-                request.getUserAvailability().isUserPresent(),
-                request.getUserAvailability().getOriginatingUserIp());
     }
 
     private void configureHttpClient(TinkHttpClient client) {
