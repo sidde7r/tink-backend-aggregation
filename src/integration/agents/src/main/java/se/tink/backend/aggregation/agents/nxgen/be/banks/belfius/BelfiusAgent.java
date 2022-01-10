@@ -58,11 +58,11 @@ public final class BelfiusAgent extends AgentPlatformAgent
                 new BelfiusApiClient(
                         this.client,
                         belfiusSessionStorage,
-                        getBelfiusLocale(request.getUser().getLocale()));
+                        getBelfiusLocale(agentComponentProvider.getUser().getLocale()));
         this.agentPlatformApiClient =
                 new AgentPlatformBelfiusApiClient(
                         new AgentPlatformHttpClient(this.client),
-                        getBelfiusLocale(request.getUser().getLocale()));
+                        getBelfiusLocale(agentComponentProvider.getUser().getLocale()));
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         this.objectMapperFactory = new ObjectMapperFactory();
