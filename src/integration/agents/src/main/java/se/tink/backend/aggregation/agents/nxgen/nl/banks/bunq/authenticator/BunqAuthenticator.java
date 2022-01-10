@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator;
 
 import com.google.common.base.Preconditions;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -15,15 +16,18 @@ import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BunqAuthenticator implements Authenticator {
+    private final User user;
     private final CredentialsRequest request;
     private final BunqRegistrationAuthenticator registrationAuthenticator;
     private final BunqAutoAuthenticator autoAuthenticator;
 
     public BunqAuthenticator(
+            User user,
             CredentialsRequest request,
             BunqRegistrationAuthenticator registrationAuthenticator,
             BunqAutoAuthenticator authenticationAuthenticator) {
         this.request = Preconditions.checkNotNull(request);
+        this.user = user;
         this.registrationAuthenticator = Preconditions.checkNotNull(registrationAuthenticator);
         this.autoAuthenticator = Preconditions.checkNotNull(authenticationAuthenticator);
     }
@@ -58,7 +62,7 @@ public class BunqAuthenticator implements Authenticator {
 
     private void registration(Credentials credentials, SessionException autoException)
             throws AuthenticationException, AuthorizationException {
-        if (!request.getUserAvailability().isUserAvailableForInteraction()) {
+        if (!user.isAvailableForInteraction()) {
             throw SessionError.SESSION_EXPIRED.exception(autoException);
         }
 
@@ -70,7 +74,7 @@ public class BunqAuthenticator implements Authenticator {
         try {
             autoAuthenticator.autoAuthenticate();
         } catch (SessionException autoException) {
-            if (!request.getUserAvailability().isUserAvailableForInteraction()) {
+            if (!user.isAvailableForInteraction()) {
                 throw autoException;
             }
 

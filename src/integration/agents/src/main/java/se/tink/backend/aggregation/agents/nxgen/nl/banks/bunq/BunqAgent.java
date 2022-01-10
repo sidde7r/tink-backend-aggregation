@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CH
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqAuthenticator;
@@ -20,11 +21,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public final class BunqAgent extends BunqBaseAgent {
 
     private final BunqApiClient apiClient;
+    private final User user;
 
     @Inject
     public BunqAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.apiClient = new BunqApiClient(client, getBackendHost());
+        this.user = componentProvider.getUser();
+
         persistentStorage.put(
                 BunqBaseConstants.StorageKeys.USER_API_KEY,
                 credentials.getField(Field.Key.PASSWORD));
@@ -49,7 +53,8 @@ public final class BunqAgent extends BunqBaseAgent {
                 new BunqAutoAuthenticator(
                         persistentStorage, sessionStorage, temporaryStorage, apiClient);
 
-        return new BunqAuthenticator(request, bunqRegistrationAuthenticator, bunqAutoAuthenticator);
+        return new BunqAuthenticator(
+                user, request, bunqRegistrationAuthenticator, bunqAutoAuthenticator);
     }
 
     @Override
