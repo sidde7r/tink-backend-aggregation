@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.HeaderKeys;
@@ -55,7 +56,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -63,7 +63,7 @@ public class CrosskeyBaseApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final CredentialsRequest credentialsRequest;
+    private final User user;
     private final QsealcSigner qsealcSigner;
     private final CrosskeyBaseConfiguration configuration;
     private final String redirectUrl;
@@ -78,13 +78,13 @@ public class CrosskeyBaseApiClient {
             TinkHttpClient client,
             SessionStorage sessionStorage,
             CrosskeyMarketConfiguration marketConfiguration,
-            CredentialsRequest credentialsRequest,
+            User user,
             AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
             String providerMarket) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.credentialsRequest = credentialsRequest;
+        this.user = user;
         this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
         this.baseApiUrl = marketConfiguration.getBaseApiURL();
         this.xFapiFinancialId = marketConfiguration.getFinancialId();
@@ -93,13 +93,7 @@ public class CrosskeyBaseApiClient {
         redirectUrl = agentConfiguration.getRedirectUrl();
         this.certificateSerialNumber = getCertificateSerialNumber(agentConfiguration);
         this.providerMarket = providerMarket;
-        this.userIp = getUserIp(credentialsRequest);
-    }
-
-    private String getUserIp(CredentialsRequest credentialsRequest) {
-        return credentialsRequest.getUserAvailability().isUserPresent()
-                ? credentialsRequest.getUserAvailability().getOriginatingUserIp()
-                : null;
+        this.userIp = user.getIpAddress();
     }
 
     private String getCertificateSerialNumber(
@@ -307,7 +301,7 @@ public class CrosskeyBaseApiClient {
                                     prepareTransactionUrl(
                                             fromBookingDateTime, toBookingDateTime, apiIdentifier))
                             .get(CrosskeyTransactionsResponse.class);
-            if (!credentialsRequest.isUserPresent()) {
+            if (!user.isPresent()) {
                 response.setCanFetchMoreFalse();
             }
             return response.setProviderMarket(providerMarket);
