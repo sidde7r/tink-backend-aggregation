@@ -3618,6 +3618,13 @@ agentsServiceConfiguration:
       tink:
         baseUrl: https://dummybaseurl.com
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    94b3a4f4f6cf4f26b8051921b3a8c0f3:
+      tink:
+        clientId: 1234567890
+        clientSecret: 010101
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        scopes:
+          - AIS
     94c6c15b98be4769bd6a26fb80f484f7:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
