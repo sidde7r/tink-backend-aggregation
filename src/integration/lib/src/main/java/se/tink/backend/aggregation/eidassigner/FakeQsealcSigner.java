@@ -18,4 +18,19 @@ public final class FakeQsealcSigner implements QsealcSigner {
     public byte[] getSignature(byte[] signingData) {
         return SIGNATURE.getBytes();
     }
+
+    @Override
+    public String getSignatureBase64(QsealcAlg algorithm, byte[] dataToSign) {
+        return SIGNATURE;
+    }
+
+    @Override
+    public String getJWSToken(QsealcAlg algorithm, byte[] jwsTokenData) {
+        return SIGNATURE;
+    }
+
+    @Override
+    public byte[] getSignature(QsealcAlg algorithm, byte[] dataToSign) {
+        return SIGNATURE.getBytes();
+    }
 }

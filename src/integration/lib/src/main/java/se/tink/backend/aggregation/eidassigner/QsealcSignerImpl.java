@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.eidassigner;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import io.opentracing.Scope;
 import io.opentracing.Span;
@@ -9,6 +8,7 @@ import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 import io.opentracing.tag.Tags;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
+@SuppressWarnings("java:S2129")
 public class QsealcSignerImpl implements QsealcSigner {
 
     private static final Logger log = LoggerFactory.getLogger(QsealcSignerImpl.class);
@@ -70,11 +71,10 @@ public class QsealcSignerImpl implements QsealcSigner {
         }
     }
 
-    private byte[] callSecretsService(byte[] signingData) {
-
+    private byte[] callSecretsService(QsealcAlg algorithm, byte[] signingData) {
         try {
             HttpPost post =
-                    new HttpPost(StringUtils.stripEnd(this.host, "/") + alg.getSigningType());
+                    new HttpPost(StringUtils.stripEnd(this.host, "/") + algorithm.getSigningType());
             post.setHeader(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
             if (!Strings.isNullOrEmpty(eidasIdentity.getAppId())) {
                 post.setHeader(TINK_QSEALC_APPID, eidasIdentity.getAppId());
@@ -116,12 +116,12 @@ public class QsealcSignerImpl implements QsealcSigner {
 
     @Override
     public String getSignatureBase64(byte[] signingData) {
-        return new String(callSecretsService(signingData), Charsets.US_ASCII);
+        return new String(callSecretsService(this.alg, signingData), StandardCharsets.US_ASCII);
     }
 
     @Override
     public String getJWSToken(byte[] jwsTokenData) {
-        return new String(Base64.getDecoder().decode(callSecretsService(jwsTokenData)));
+        return new String(Base64.getDecoder().decode(callSecretsService(this.alg, jwsTokenData)));
     }
 
     /**
@@ -145,7 +145,22 @@ public class QsealcSignerImpl implements QsealcSigner {
      */
     @Override
     public byte[] getSignature(byte[] signingData) {
-        return Base64.getDecoder().decode(callSecretsService(signingData));
+        return Base64.getDecoder().decode(callSecretsService(this.alg, signingData));
+    }
+
+    @Override
+    public String getSignatureBase64(QsealcAlg algorithm, byte[] dataToSign) {
+        return new String(callSecretsService(algorithm, dataToSign), StandardCharsets.US_ASCII);
+    }
+
+    @Override
+    public String getJWSToken(QsealcAlg algorithm, byte[] jwsTokenData) {
+        return new String(Base64.getDecoder().decode(callSecretsService(algorithm, jwsTokenData)));
+    }
+
+    @Override
+    public byte[] getSignature(QsealcAlg algorithm, byte[] dataToSign) {
+        return Base64.getDecoder().decode(callSecretsService(algorithm, dataToSign));
     }
 
     private void createClientTraceSpan(HttpPost request) {
