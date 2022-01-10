@@ -1,16 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.steps;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import agents_platform_agents_framework.org.springframework.test.util.ReflectionTestUtils;
+import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -51,6 +59,28 @@ public class RefreshAccessTokenStepTest {
                 refreshAccessTokenStep
                         .refreshToken(getValidOAuth2Token())
                         .isAuthenticationFinished());
+    }
+
+    @Test
+    public void shouldThrowSessionExceptionWhenErrorResponseFromBank() {
+        // given
+        HttpRequest request = mock(HttpRequest.class);
+        HttpResponse response = mock(HttpResponse.class);
+
+        // when
+        when(response.getStatus()).thenReturn(HttpStatus.SC_BAD_REQUEST);
+        when(response.getBody(ErrorResponse.class)).thenReturn(getInvalidTokenErrorResponse());
+        when(apiClient.getDecoupledToken(Mockito.any()))
+                .thenThrow(new HttpResponseException(request, response));
+
+        // then
+        assertThatThrownBy(
+                        () ->
+                                ReflectionTestUtils.invokeMethod(
+                                        refreshAccessTokenStep,
+                                        "refreshToken",
+                                        getValidOAuth2Token()))
+                .isInstanceOf(SessionError.SESSION_EXPIRED.exception().getClass());
     }
 
     @Test
@@ -126,5 +156,11 @@ public class RefreshAccessTokenStepTest {
         return SerializationUtils.deserializeFromString(
                 "{\"access_token\":\"accessToken2\",\"token_type\":\"Bearer\",\"refresh_token\":\"refreshToke2\",\"refresh_token_expires_in\":7775999,\"expires_in\":3599,\"scope\":\"account.lists accounts consents\"}",
                 TokenResponse.class);
+    }
+
+    private ErrorResponse getInvalidTokenErrorResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\"type\":\"https://berlingroup.com/error-codes/TOKEN_INVALID\",\"code\":\"TOKEN_INVALID\",\"title\":\"Invalid refresh token\",\"detail\":\"https://developer.baltics.sebgroup.com/ob/docs/errors\"}",
+                ErrorResponse.class);
     }
 }
