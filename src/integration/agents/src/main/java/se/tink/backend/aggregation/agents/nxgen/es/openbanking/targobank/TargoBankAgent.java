@@ -43,7 +43,7 @@ public final class TargoBankAgent extends CmcicAgent {
     private static String getLocalizedAuthUrl(AgentComponentProvider componentProvider) {
         String preferredLanguage =
                 CmcicAgent.getPreferredLanguage(
-                        componentProvider.getCredentialsRequest().getUser().getLocale(),
+                        componentProvider.getUser().getLocale(),
                         SUPPORTED_LANGUAGES.keySet(),
                         PRIMARY_LANGUAGE);
         return String.format(AUTH_URL_FORMAT, SUPPORTED_LANGUAGES.get(preferredLanguage));
