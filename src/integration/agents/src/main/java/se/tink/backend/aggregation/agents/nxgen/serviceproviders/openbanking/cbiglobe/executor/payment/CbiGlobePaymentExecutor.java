@@ -249,29 +249,19 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return paymentMultiStepResponse;
     }
 
-    protected Map<String, String> fetchSupplementalInfo() {
-        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
-        if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
-            openThirdPartyApp(new URL(redirectUrl));
-            // after redirect is done remove old redirect link from session, because
-            // if 5xx received from CBI Globe bank status polling then old redirect link is not
-            // removed from session and TL again redirect to bank.
-            sessionStorage.put(StorageKeys.LINK, null);
-            return waitForSupplementalInformation();
-        } else {
-            logger.error("Redirect URL is empty");
-            throw new PaymentAuthorizationException();
-        }
-    }
-
     private CreatePaymentResponse fetchPaymentStatus(
             PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
         CreatePaymentResponse createPaymentResponse;
-        Map<String, String> supplementalInfo = fetchSupplementalInfo();
-        if (supplementalInfo == null || supplementalInfo.isEmpty()) {
-            logger.error("Supplemental info is empty or null, shouldn't happen here");
-            throw new PaymentAuthorizationException();
+        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
+        // We observed that in case of sepa payments fetching payment status for the 1st time
+        // doesn't give us redirectUrl, so we need to repeat this operation. There is no clear
+        // explanation from CBI. It usually doesn't happen for instant payments
+        if (redirectUrl == null) {
+            logger.info("No redirect, fetching payment status to get redirect link");
+            createPaymentResponse = fetchPaymentStatusOrThrowException(paymentMultiStepRequest);
         } else {
+            logger.info("Redirect present, fetching payment status depending on supplementalInfo");
+            Map<String, String> supplementalInfo = fetchSupplementalInfo(redirectUrl);
             if (QueryValues.SUCCESS.equals(supplementalInfo.get(QueryKeys.RESULT))) {
                 createPaymentResponse = fetchPaymentStatusOrThrowException(paymentMultiStepRequest);
             } else {
@@ -279,6 +269,19 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             }
         }
         return createPaymentResponse;
+    }
+
+    protected Map<String, String> fetchSupplementalInfo(String redirectUrl) {
+        if (redirectUrl != null) {
+            openThirdPartyApp(new URL(redirectUrl));
+            // after redirect is done remove old redirect link from session, because
+            // if 5xx received from CBI Globe bank status polling then old redirect link is not
+            // removed from session and TL again redirect to bank.
+            sessionStorage.put(StorageKeys.LINK, null);
+            return waitForSupplementalInformation();
+        } else {
+            throw new PaymentAuthorizationException();
+        }
     }
 
     private CreatePaymentResponse fetchPaymentStatusOrThrowException(

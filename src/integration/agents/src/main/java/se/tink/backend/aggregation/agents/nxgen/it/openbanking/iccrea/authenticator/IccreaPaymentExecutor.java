@@ -64,7 +64,7 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
     }
 
     @Override
-    protected Map<String, String> fetchSupplementalInfo() {
+    protected Map<String, String> fetchSupplementalInfo(String redirectUrl) {
         return null;
     }
 }
