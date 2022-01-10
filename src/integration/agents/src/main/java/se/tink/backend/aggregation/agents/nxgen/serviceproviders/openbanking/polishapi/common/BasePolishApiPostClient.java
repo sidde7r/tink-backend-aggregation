@@ -127,14 +127,11 @@ public class BasePolishApiPostClient {
     }
 
     protected String getOriginatingUserIp() {
-        return agentComponentProvider
-                .getCredentialsRequest()
-                .getUserAvailability()
-                .getOriginatingUserIp();
+        return agentComponentProvider.getUser().getIpAddress();
     }
 
     protected boolean isUserPresent() {
-        return agentComponentProvider.getCredentialsRequest().getUserAvailability().isUserPresent();
+        return agentComponentProvider.getUser().isPresent();
     }
 
     protected String getAccessTokenFromStorage() {
@@ -151,7 +148,7 @@ public class BasePolishApiPostClient {
 
     private String getLanguageCode() {
         return PolishApiConstants.Localization.getLanguageCode(
-                agentComponentProvider.getCredentialsRequest().getUser().getLocale(),
+                agentComponentProvider.getUser().getLocale(),
                 polishApiAgentCreator.getLogicFlowConfigurator().doesSupportEnglishLanguage());
     }
 }
