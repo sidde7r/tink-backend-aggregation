@@ -4,6 +4,9 @@ java_library(
     name = "componentproviders",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/agent_sdk/sdk/src/operation",
+    ],
     deps = [
         "//src/agent_sdk/runtime/src/main/java/operation",
         "//src/agent_sdk/sdk/src/operation",
