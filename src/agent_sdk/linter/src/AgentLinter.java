@@ -6,9 +6,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ExpressionTree; // NOSONAR
+import com.sun.source.tree.MethodInvocationTree; // NOSONAR
+import com.sun.source.tree.NewClassTree; // NOSONAR
 
 @AutoService(BugChecker.class)
 @BugPattern(

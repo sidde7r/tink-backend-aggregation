@@ -2,7 +2,7 @@ package se.tink.agent.linter;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ExpressionTree; // NOSONAR
 import lombok.Builder;
 
 @Builder

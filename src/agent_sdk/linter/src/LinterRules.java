@@ -14,9 +14,8 @@ import java.util.Random;
 import java.util.UUID;
 
 public final class LinterRules {
-
-    private LinterRules() {}
-
+    private static final String TBD_READ_MORE_LINK =
+            "https://tinkab.atlassian.net/wiki/spaces/AES/TBD";
     public static final List<LinterRule> RULES =
             ImmutableList.<LinterRule>builder()
                     .add(
@@ -29,8 +28,7 @@ public final class LinterRules {
                                                             .onClass(Date.class.getName())
                                                             .withAnyName()))
                                     .changeTo("TimeGenerator.localDateTimeNow()")
-                                    .readMoreLink(
-                                            "https://tinkab.atlassian.net/wiki/spaces/AES/TBD")
+                                    .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
                             LinterRule.builder()
                                     .matcher(
@@ -38,8 +36,7 @@ public final class LinterRules {
                                                     .onClass(LocalDate.class.getName())
                                                     .withAnyName())
                                     .changeTo("TimeGenerator.localDateNow()")
-                                    .readMoreLink(
-                                            "https://tinkab.atlassian.net/wiki/spaces/AES/TBD")
+                                    .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
                             LinterRule.builder()
                                     .matcher(
@@ -47,8 +44,7 @@ public final class LinterRules {
                                                     .onClass(LocalDateTime.class.getName())
                                                     .withAnyName())
                                     .changeTo("TimeGenerator.localDateTimeNow()")
-                                    .readMoreLink(
-                                            "https://tinkab.atlassian.net/wiki/spaces/AES/TBD")
+                                    .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
                             LinterRule.builder()
                                     .matcher(
@@ -56,8 +52,7 @@ public final class LinterRules {
                                                     .onClass(Instant.class.getName())
                                                     .withAnyName())
                                     .changeTo("TimeGenerator.instantNow()")
-                                    .readMoreLink(
-                                            "https://tinkab.atlassian.net/wiki/spaces/AES/TBD")
+                                    .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
                             LinterRule.builder()
                                     .matcher(
@@ -70,8 +65,7 @@ public final class LinterRules {
                                                             .onClass(SecureRandom.class.getName())
                                                             .withAnyName()))
                                     .changeTo("RandomGenerator.random*()")
-                                    .readMoreLink(
-                                            "https://tinkab.atlassian.net/wiki/spaces/AES/TBD")
+                                    .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
                             LinterRule.builder()
                                     .matcher(
@@ -82,8 +76,7 @@ public final class LinterRules {
                                                             .onClass(UUID.class.getName())
                                                             .withAnyName()))
                                     .changeTo("RandomGenerator.randomUUID*()")
-                                    .readMoreLink(
-                                            "https://tinkab.atlassian.net/wiki/spaces/AES/TBD")
+                                    .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
                             LinterRule.builder()
                                     .matcher(
@@ -97,8 +90,9 @@ public final class LinterRules {
                                                                             .getName())
                                                             .withAnyName()))
                                     .changeTo("Sleeper.sleep()")
-                                    .readMoreLink(
-                                            "https://tinkab.atlassian.net/wiki/spaces/AES/TBD")
+                                    .readMoreLink(TBD_READ_MORE_LINK)
                                     .build())
                     .build();
+
+    private LinterRules() {}
 }
