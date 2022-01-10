@@ -83,7 +83,7 @@ public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
                 client,
                 persistentStorage,
                 configuration,
-                request.getUserAvailability().isUserPresent(),
+                componentProvider.getUser().isPresent(),
                 userIp,
                 componentProvider.getRandomValueGenerator(),
                 componentProvider.getContext().getLogMasker());
