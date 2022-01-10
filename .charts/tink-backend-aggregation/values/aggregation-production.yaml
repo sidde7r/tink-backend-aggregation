@@ -507,6 +507,7 @@ tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
   enabledRetryPolicy: true
+  useSecretsServiceInternalClient: false
 
 debugLogFrequencyPercent: 100
 longTermStorageDisputeBasePrefix: "long-term-payments-dispute"

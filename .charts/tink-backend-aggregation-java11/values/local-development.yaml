@@ -34,6 +34,7 @@ tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
   enabledRetryPolicy: true
+  useSecretsServiceInternalClient: true
 
 providerConfigurationServiceConfiguration:
   enabled: false
