@@ -7,7 +7,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 import com.google.inject.Inject;
 import java.util.Optional;
 import lombok.SneakyThrows;
-import se.tink.backend.agents.rpc.Provider;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -81,9 +81,8 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 agentConfiguration.getProviderSpecificConfiguration();
         bpceGroupConfiguration.setClientId(
                 CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc()));
-        provider = componentProvider.getCredentialsRequest().getProvider();
-        bpceGroupConfiguration.setServerUrl(
-                componentProvider.getCredentialsRequest().getProvider().getPayload());
+        provider = componentProvider.getProvider();
+        bpceGroupConfiguration.setServerUrl(provider.getPayload());
         final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
                 createSignatureHeaderGenerator(qsealcSigner, bpceGroupConfiguration);
         final String redirectUrl = agentConfiguration.getRedirectUrl();
