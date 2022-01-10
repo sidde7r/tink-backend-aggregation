@@ -32,7 +32,7 @@ public final class AxaAgent extends Xs2aDevelopersTransactionalAgent {
                         new AxaTransactionsFetcher(
                                 apiClient,
                                 agentComponentProvider.getLocalDateTimeSource(),
-                                request.getUserAvailability().isUserPresent()));
+                                agentComponentProvider.getUser().isPresent()));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
