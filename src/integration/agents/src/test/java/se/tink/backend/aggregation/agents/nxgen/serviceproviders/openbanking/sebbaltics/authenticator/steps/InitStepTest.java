@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsConstants.AuthStatus;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.rpc.DecoupledAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.configuration.SebBalticsConfiguration;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RunWith(JUnitParamsRunner.class)
 public class InitStepTest {
@@ -34,17 +34,12 @@ public class InitStepTest {
                 mock(SebBalticsDecoupledAuthenticator.class);
         SessionStorage sessionStorage = mock(SessionStorage.class);
         SebBalticsConfiguration configuration = mock(SebBalticsConfiguration.class);
-        CredentialsRequest credentialsRequest = mock(CredentialsRequest.class);
+        User user = mock(User.class);
         String bankBIC = "abc";
         apiClient = mock(SebBalticsApiClient.class);
         initStep =
                 new InitStep(
-                        authenticator,
-                        apiClient,
-                        sessionStorage,
-                        configuration,
-                        credentialsRequest,
-                        bankBIC);
+                        authenticator, apiClient, sessionStorage, configuration, user, bankBIC);
         decoupledAuthResponse = mock(DecoupledAuthResponse.class);
     }
 

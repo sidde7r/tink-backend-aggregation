@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -29,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -38,14 +38,14 @@ public class CreateNewConsentStep implements AuthenticationStep {
     private final SebBalticsDecoupledAuthenticator authenticator;
     private final SebBalticsApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final CredentialsRequest credentialsRequest;
+    private final User user;
     private final LocalDate localDate;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        if (!credentialsRequest.getUserAvailability().isUserAvailableForInteraction()) {
+        if (!user.isAvailableForInteraction()) {
             throw new IllegalStateException("User is not present");
         }
 

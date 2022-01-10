@@ -12,6 +12,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agent_sdk/sdk/src/operation",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbaltics",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",

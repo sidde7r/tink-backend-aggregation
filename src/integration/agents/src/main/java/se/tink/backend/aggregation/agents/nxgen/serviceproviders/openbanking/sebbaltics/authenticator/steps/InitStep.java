@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -27,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -37,7 +37,7 @@ public class InitStep implements AuthenticationStep {
     private final SebBalticsApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final SebBalticsConfiguration configuration;
-    private final CredentialsRequest credentialsRequest;
+    private final User user;
     private final String bankBIC;
     private String authRequestId;
 
@@ -52,7 +52,7 @@ public class InitStep implements AuthenticationStep {
         final String psuCorporateId =
                 verifyCredentialsNotNullOrEmpty(credentials.getField(Key.CORPORATE_ID));
 
-        if (!credentialsRequest.getUserAvailability().isUserAvailableForInteraction()) {
+        if (!user.isAvailableForInteraction()) {
             throw new IllegalStateException("User is not present");
         }
 
