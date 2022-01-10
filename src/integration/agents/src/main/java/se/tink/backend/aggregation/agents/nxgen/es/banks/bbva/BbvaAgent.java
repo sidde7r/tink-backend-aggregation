@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardTransactionFetcher;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.session.BbvaSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.proxy.ProxyModule;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
@@ -39,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -49,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
     IDENTITY_DATA,
     LOANS
 })
-@AgentDependencyModules(modules = ProxyModule.class)
 @Slf4j
 public final class BbvaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
@@ -65,9 +61,12 @@ public final class BbvaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
-    public BbvaAgent(TinkHttpClient client, AgentComponentProvider componentProvider) {
+    public BbvaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+
+        client.setProxyProfile(componentProvider.getProxyProfiles().getMarketProxyProfile());
         this.apiClient = new BbvaApiClient(client, sessionStorage, supplementalInformationHelper);
+
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
