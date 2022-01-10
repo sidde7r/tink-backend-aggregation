@@ -44,8 +44,7 @@ public final class IngAtAgent extends NextGenerationAgent
         super(componentProvider);
         configureHttpClient(client);
         this.ingAtSessionStorage = new IngAtSessionStorage(sessionStorage);
-        this.apiClient =
-                new IngAtApiClient(this.client, request.getProvider(), this.ingAtSessionStorage);
+        this.apiClient = new IngAtApiClient(this.client, this.ingAtSessionStorage);
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
