@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher;
 import java.time.LocalDate;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -19,7 +19,7 @@ public class AbnAmroTransactionFetcher
     private static final int MAX_DAYS_TO_FETCH_FOR_BG_REFRESH = 89;
 
     private final AbnAmroApiClient apiClient;
-    private final AbnAmroUserIpInformation userIpInformation;
+    private final User user;
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
@@ -33,7 +33,7 @@ public class AbnAmroTransactionFetcher
     }
 
     private boolean isBackgroundRefresh() {
-        return !userIpInformation.isUserPresent();
+        return !user.isPresent();
     }
 
     private TransactionKeyPaginatorResponse<String> fetchBackgroundRefreshTransactions(
