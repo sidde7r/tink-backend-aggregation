@@ -1212,6 +1212,11 @@ cryptography_lib_pin()
 # another artifact, B. This means that there is no guarantee that artifact A will be functioning
 # correctly in production. It is possible that certain pieces of code in A will crash with
 # NoSuchMethodError or the like.
+
+ERROR_PRONE_VERSION = "2.3.3"
+
+AUTO_SERVICE_VERSION = "1.0-rc7"
+
 maven_install(
     name = "aggregation",
     artifacts = [
@@ -1268,7 +1273,58 @@ maven_install(
         "com.google.api.grpc:proto-google-common-protos:0.1.9",
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.code.gson:gson:2.8.6",
-        "com.google.errorprone:error_prone_annotations:2.3.3",
+        maven.artifact(
+            group = "com.google.errorprone",
+            artifact = "error_prone_core",
+            version = ERROR_PRONE_VERSION,
+            exclusions = [
+                "com.google.guava:guava",
+                "org.checkerframework:checker-qual",
+            ],
+        ),
+        maven.artifact(
+            group = "com.google.errorprone",
+            artifact = "error_prone_check_api",
+            version = ERROR_PRONE_VERSION,
+            exclusions = [
+                "com.google.guava:guava",
+                "org.checkerframework:checker-qual",
+            ],
+        ),
+        maven.artifact(
+            group = "com.google.errorprone",
+            artifact = "error_prone_annotations",
+            version = ERROR_PRONE_VERSION,
+            exclusions = [
+                "com.google.guava:guava",
+            ],
+        ),
+        maven.artifact(
+            group = "com.google.errorprone",
+            artifact = "error_prone_test_helpers",
+            version = ERROR_PRONE_VERSION,
+            exclusions = [
+                "com.google.guava:guava",
+                "org.checkerframework:checker-qual",
+            ],
+        ),
+        maven.artifact(
+            group = "com.google.errorprone",
+            artifact = "javac",
+            version = "9+181-r4173-1",
+            exclusions = [
+                "com.google.guava:guava",
+            ],
+        ),
+        maven.artifact(
+            group = "com.google.auto.service",
+            artifact = "auto-service",
+            version = AUTO_SERVICE_VERSION,
+            exclusions = [
+                "com.google.guava:guava",
+            ],
+        ),
+        "com.google.auto.service:auto-service-annotations:%s" % AUTO_SERVICE_VERSION,
         "com.google.guava:guava:25.1-jre",
         "com.google.http-client:google-http-client:1.17.0-rc",
         "com.google.inject.extensions:guice-assistedinject:4.2.2",
