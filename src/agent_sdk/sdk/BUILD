@@ -4,6 +4,7 @@ java_library_with_sources(
     name = "sdk",
     srcs = glob(["src/**/*.java"]),
     exported_plugins = [
+        "//src/agent_sdk/linter",
         "//src/agent_sdk:lombok_plugin",
     ],
     extdeps = [
