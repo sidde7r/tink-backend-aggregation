@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -109,12 +110,13 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent
 
     @Override
     protected Xs2aDevelopersApiClient constructApiClient(AgentComponentProvider componentProvider) {
+        User user = componentProvider.getUser();
         return new CommerzBankApiClient(
                 client,
                 persistentStorage,
                 configuration,
-                request.getUserAvailability().isUserPresent(),
-                userIp,
+                user.isPresent(),
+                user.getIpAddress(),
                 componentProvider.getRandomValueGenerator(),
                 componentProvider.getContext().getLogMasker());
     }
