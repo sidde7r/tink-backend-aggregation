@@ -34,7 +34,7 @@ public abstract class Xs2aDevelopersAgent extends Xs2aDevelopersTransactionalAge
                         new Xs2aDevelopersTransactionDateFromFetcher<CreditCardAccount>(
                                 apiClient,
                                 agentComponentProvider.getLocalDateTimeSource(),
-                                request.getUserAvailability().isUserPresent()));
+                                agentComponentProvider.getUser().isPresent()));
 
         return new CreditCardRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);

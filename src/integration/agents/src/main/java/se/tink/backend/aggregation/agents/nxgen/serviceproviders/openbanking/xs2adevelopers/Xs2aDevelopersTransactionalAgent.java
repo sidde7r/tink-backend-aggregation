@@ -76,7 +76,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 componentProvider.getTinkHttpClient(),
                 persistentStorage,
                 configuration,
-                request.getUserAvailability().isUserPresent(),
+                componentProvider.getUser().isPresent(),
                 userIp,
                 componentProvider.getRandomValueGenerator(),
                 logMasker);
@@ -104,7 +104,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                         new Xs2aDevelopersTransactionDateFromFetcher<TransactionalAccount>(
                                 apiClient,
                                 agentComponentProvider.getLocalDateTimeSource(),
-                                request.getUserAvailability().isUserPresent()));
+                                agentComponentProvider.getUser().isPresent()));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
