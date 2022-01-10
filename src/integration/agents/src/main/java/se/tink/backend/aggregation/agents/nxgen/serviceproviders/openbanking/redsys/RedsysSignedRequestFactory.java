@@ -44,11 +44,7 @@ class RedsysSignedRequestFactory {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.eidasIdentity = eidasIdentity;
-        this.psuIpAddress =
-                componentProvider
-                        .getCredentialsRequest()
-                        .getUserAvailability()
-                        .getOriginatingUserIp();
+        this.psuIpAddress = componentProvider.getUser().getIpAddress();
     }
 
     RequestBuilder createSignedRequest(

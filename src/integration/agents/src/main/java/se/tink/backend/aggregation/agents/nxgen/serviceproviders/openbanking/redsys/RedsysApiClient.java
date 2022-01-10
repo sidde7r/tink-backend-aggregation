@@ -315,7 +315,7 @@ public class RedsysApiClient {
     }
 
     private boolean isAutoRefresh() {
-        return !componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent();
+        return !componentProvider.getUser().isPresent();
     }
 
     private boolean hasDoneInitialFetch(String accountId) {
