@@ -3,11 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.rpc.DecoupledTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -15,8 +21,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 @RequiredArgsConstructor
 public class RefreshAccessTokenStep implements AuthenticationStep {
     private final SebBalticsApiClient apiClient;
@@ -37,7 +46,8 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
         }
     }
 
-    public AuthenticationStepResponse refreshToken(OAuth2Token oAuth2Token) {
+    public AuthenticationStepResponse refreshToken(OAuth2Token oAuth2Token)
+            throws SessionException {
         if (!oAuth2Token.canRefresh()) {
             return AuthenticationStepResponse.executeNextStep();
         }
@@ -80,13 +90,32 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
-    private Optional<TokenResponse> refreshAccessTokenResponse(String refreshToken) {
+    private Optional<TokenResponse> refreshAccessTokenResponse(String refreshToken)
+            throws SessionException {
+        try {
+            return refreshAccessToken(refreshToken);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST
+                    && isInvalidRefreshTokenError(response)) {
+                log.warn("User has multiple refresh tokens, invalidating this one.");
+                throw SessionError.SESSION_EXPIRED.exception(e.getMessage());
+            }
+            log.warn("Error message: " + e.getMessage());
+            throw e;
+        }
+    }
 
+    private Optional<TokenResponse> refreshAccessToken(String refreshToken) {
         return Optional.ofNullable(
                 apiClient.getDecoupledToken(
                         DecoupledTokenRequest.builder()
                                 .grantType("refresh_token")
                                 .refreshToken(refreshToken)
                                 .build()));
+    }
+
+    private boolean isInvalidRefreshTokenError(HttpResponse response) {
+        return response.getBody(ErrorResponse.class).getCode().equals(ErrorMessages.TOKEN_INVALID);
     }
 }
