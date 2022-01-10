@@ -177,7 +177,7 @@ public class AccountEntity implements GeneralAccountEntity {
                 break;
             default:
                 logger.info("unknown_account_type {}", SerializationUtils.serializeToString(this));
-                account.setType(AccountTypes.OTHER);
+                account.setType(AccountTypes.CHECKING);
                 break;
         }
 
@@ -216,10 +216,14 @@ public class AccountEntity implements GeneralAccountEntity {
         // only balance to buy stocks/funds with. Therefore map it as a savings account.
         if (StringUtils.containsIgnoreCase(accountName, "aktielikvid")) {
             account.setType(AccountTypes.SAVINGS);
+        } else if (accountName.toLowerCase().matches("aktie.*")) {
+            account.setType(AccountTypes.INVESTMENT);
+        } else if (StringUtils.containsIgnoreCase(accountName, "sparkonto")) {
+            account.setType(AccountTypes.SAVINGS);
         } else {
             logger.info(
-                    "Account with type UNKNOWN and accountName {} mapped as OTHER", accountName);
-            account.setType(AccountTypes.OTHER);
+                    "Account with type UNKNOWN and accountName {} mapped as CHECKING", accountName);
+            account.setType(AccountTypes.CHECKING);
         }
     }
 
