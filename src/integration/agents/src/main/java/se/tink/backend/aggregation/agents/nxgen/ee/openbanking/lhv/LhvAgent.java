@@ -43,7 +43,11 @@ public final class LhvAgent extends SubsequentProgressiveGenerationAgent
         this.todaysDate = componentProvider.getLocalDateTimeSource().now().toLocalDate();
         this.apiClient =
                 new LhvApiClient(
-                        client, agentConfiguration, request, persistentStorage, todaysDate);
+                        client,
+                        agentConfiguration,
+                        componentProvider.getUser(),
+                        persistentStorage,
+                        todaysDate);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
