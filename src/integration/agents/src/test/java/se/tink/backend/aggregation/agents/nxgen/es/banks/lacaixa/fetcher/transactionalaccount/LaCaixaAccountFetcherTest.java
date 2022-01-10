@@ -3,14 +3,20 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transa
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.*;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.AUTHORIZED_USER;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.DateEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -25,6 +31,9 @@ public class LaCaixaAccountFetcherTest {
     private static final String SECOND_ACCOUNT_REFERENCE = "Qlf2";
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa/resources";
+    private static final String ACC_REF = "4599851319407040";
+
+    private TransactionEntity transactionEntity;
 
     @Before
     public void setup() {
@@ -103,5 +112,68 @@ public class LaCaixaAccountFetcherTest {
         assertThat(account.getIdModule().getAccountName()).isEqualTo("imagin");
         assertThat(account.getParties().get(0).getName()).isEqualTo("Alice Doe Noe");
         assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);
+    }
+
+    @Test
+    public void shouldFetchAndMapTransactionsToTinkTransactions() {
+        // given
+        when(laCaixaApiClient.fetchNextAccountTransactions(ACC_REF, true))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "accounts_transactions_response.json")
+                                        .toFile(),
+                                AccountTransactionResponse.class));
+
+        // when
+        AccountTransactionResponse transactions =
+                laCaixaApiClient.fetchNextAccountTransactions(ACC_REF, true);
+
+        // then
+        assertThat(
+                        transactions
+                                .getTransactions()
+                                .get(0)
+                                .toTinkTransaction()
+                                .getTransactionDates()
+                                .getDates()
+                                .get(1)
+                                .getValue()
+                                .getDate())
+                .isNotNull();
+        assertThat(
+                        transactions
+                                .getTransactions()
+                                .get(1)
+                                .toTinkTransaction()
+                                .getTransactionDates()
+                                .getDates()
+                                .size())
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void shouldReturnNullIfDateIsFarFromFuture() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        DateEntity result =
+                objectMapper.readValue(
+                        "{\n"
+                                + "\"valor\":\"29/05/29978\",\n"
+                                + "\"formato\":\"dd/MM/yyyy\"\n"
+                                + "}",
+                        DateEntity.class);
+        assertThat(result.toTinkDate()).isNull();
+    }
+
+    @Test
+    public void shouldReturnNotNullLocalDateIfDateIsCorrect() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        DateEntity result =
+                objectMapper.readValue(
+                        "{\n"
+                                + "\"valor\":\"01/08/2021\",\n"
+                                + "\"formato\":\"dd/MM/yyyy\"\n"
+                                + "}",
+                        DateEntity.class);
+        assertThat(result.toTinkDate()).isNotNull().isEqualTo("2021-08-01");
     }
 }

@@ -48,8 +48,8 @@ public class TransactionEntity {
                                 .setAmount(amount.toExactCurrencyAmount())
                                 .setDescription(description)
                                 .setTransactionDates(getTransactionDates())
-                                .setPending(pending)
-                                .setMutable(pending)
+                                .setPending(isWrongDate() || pending)
+                                .setMutable(isWrongDate() || pending)
                                 .setProviderMarket(MarketCode.ES.toString())
                                 .setRawDetails(this);
 
@@ -76,10 +76,14 @@ public class TransactionEntity {
             builder.setValueDate(new AvailableDateInformation(valueDate.toTinkDate()));
         }
 
-        if (Objects.nonNull(bookingDate)) {
+        if (Objects.nonNull(bookingDate) && bookingDate.toTinkDate() != null) {
             builder.setBookingDate(new AvailableDateInformation(bookingDate.toTinkDate()));
         }
 
         return builder.build();
+    }
+
+    private boolean isWrongDate() {
+        return bookingDate.toTinkDate() == null;
     }
 }

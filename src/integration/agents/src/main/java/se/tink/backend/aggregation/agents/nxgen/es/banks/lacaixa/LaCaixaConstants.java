@@ -15,6 +15,9 @@ public final class LaCaixaConstants {
     private LaCaixaConstants() {}
 
     public static final String CURRENCY = "EUR";
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    public static final String DATE_REGEX_DDMMYYYY =
+            "^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]$";
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAPPER =
             TypeMapper.<Instrument.Type>builder()
                     .put(Instrument.Type.STOCK, "10160", "15888", "15890")
