@@ -84,7 +84,7 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
                         componentProvider.getRandomValueGenerator(),
                         sessionStorage,
                         persistentStorage,
-                        componentProvider.getCredentialsRequest(),
+                        componentProvider.getUser(),
                         componentProvider.getSupplementalInformationHelper());
         this.investmentRefreshController =
                 new InvestmentRefreshController(
