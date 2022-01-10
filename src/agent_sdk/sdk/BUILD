@@ -3,10 +3,14 @@ load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 java_library_with_sources(
     name = "sdk",
     srcs = glob(["src/**/*.java"]),
+    exported_plugins = [
+        "//src/agent_sdk:lombok_plugin",
+    ],
     extdeps = [
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_apache_commons_commons_lang3",
+        "@aggregation//:org_projectlombok_lombok",
         "@aggregation//:org_slf4j_slf4j_api",
         "//src/agent_sdk/sdk/src/capabilities",
         "//src/agent_sdk/sdk/src/payments",
@@ -17,7 +21,6 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/models/payments:payment_enums",
         "//src/agent_sdk/sdk/src/models/payments:transfer_enums",
         "//src/agent_sdk/sdk/src/models/payments:transfer_rpc",
-        "//src/agent_sdk:lombok_libs",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/models/account",
@@ -35,7 +38,6 @@ java_library_with_sources(
     ],
     visibility = ["//visibility:public"],
     exports = [
-        "//src/agent_sdk:lombok_libs",
         "//src/agent_sdk/sdk/src/authentication",
         "//src/agent_sdk/sdk/src/capabilities",
         "//src/agent_sdk/sdk/src/environment",
@@ -61,6 +63,7 @@ java_library_with_sources(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:javax_inject_javax_inject",
         "@aggregation//:org_apache_commons_commons_lang3",
+        "@aggregation//:org_projectlombok_lombok",
         "@aggregation//:org_slf4j_slf4j_api",
     ],
 )
