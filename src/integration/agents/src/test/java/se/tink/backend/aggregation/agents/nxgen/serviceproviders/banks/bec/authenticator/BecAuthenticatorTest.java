@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -53,7 +54,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -67,7 +67,7 @@ public class BecAuthenticatorTest {
     private Credentials credentials;
     private BecStorage storage;
     private Catalog catalog;
-    private UserAvailability userAvailability;
+    private User user;
     private RandomValueGenerator randomValueGenerator;
     private InOrder mocksToVerifyInOrder;
 
@@ -111,7 +111,7 @@ public class BecAuthenticatorTest {
         when(catalog.getString(any(LocalizableKey.class)))
                 .thenReturn("some_irrelevant_translation");
 
-        userAvailability = new UserAvailability();
+        user = mock(User.class);
 
         randomValueGenerator = mock(RandomValueGenerator.class);
         when(randomValueGenerator.getUUID()).thenReturn(UUID.fromString(NEW_DEVICE_ID));
@@ -130,7 +130,7 @@ public class BecAuthenticatorTest {
                         apiClient,
                         credentials,
                         storage,
-                        userAvailability,
+                        user,
                         catalog,
                         supplementalInformationController,
                         randomValueGenerator)
@@ -169,7 +169,7 @@ public class BecAuthenticatorTest {
                     BecStorage storage) {
         // given
         replaceStorage(storage);
-        userAvailability.setUserAvailableForInteraction(false);
+        when(user.isAvailableForInteraction()).thenReturn(false);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -201,7 +201,7 @@ public class BecAuthenticatorTest {
                     BecStorage storage) {
         // given
         replaceStorage(storage);
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockScaOptionsResponseOk(ALL_KNOWN_SCA_OPTIONS);
         supplementalInfoMock.mockUserChoosesNemId2FAMethod(
@@ -231,7 +231,7 @@ public class BecAuthenticatorTest {
         apiClientMock.mockAuthScaTokenResponseThrowsException(nonLoginException);
 
         for (boolean userAvailableForInteraction : asList(true, false)) {
-            userAvailability.setUserAvailableForInteraction(userAvailableForInteraction);
+            when(user.isAvailableForInteraction()).thenReturn(userAvailableForInteraction);
 
             // when
             Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -256,7 +256,7 @@ public class BecAuthenticatorTest {
         storage.saveScaToken(PREVIOUSLY_SAVED_SCA_TOKEN);
 
         apiClientMock.mockAuthScaTokenResponseThrowsException(loginException);
-        userAvailability.setUserAvailableForInteraction(false);
+        when(user.isAvailableForInteraction()).thenReturn(false);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -280,7 +280,7 @@ public class BecAuthenticatorTest {
         // given
         storage.saveDeviceId(PREVIOUSLY_SAVED_DEVICE_ID);
         storage.saveScaToken(PREVIOUSLY_SAVED_SCA_TOKEN);
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockAuthScaTokenResponseThrowsException(loginException);
 
@@ -309,7 +309,7 @@ public class BecAuthenticatorTest {
     public void should_throw_no_available_sca_methods_when_sca_options_is_empty() {
         // given
         storage.clearSessionData();
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockScaOptionsResponseOk(emptyList());
 
@@ -332,7 +332,7 @@ public class BecAuthenticatorTest {
             List<String> onlyUnknownScaOptions) {
         // given
         storage.clearSessionData();
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockScaOptionsResponseOk(onlyUnknownScaOptions);
 
@@ -360,7 +360,7 @@ public class BecAuthenticatorTest {
     public void should_throw_mit_id_unsupported_when_mit_id_is_the_only_available_sca_option() {
         // given
         storage.clearSessionData();
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockScaOptionsResponseOk(ScaOptions.MIT_ID_OPTION);
 
@@ -383,7 +383,7 @@ public class BecAuthenticatorTest {
             String scaOption) {
         // given
         storage.clearSessionData();
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockScaOptionsResponseOk(scaOption);
 
@@ -424,7 +424,7 @@ public class BecAuthenticatorTest {
     public void should_ask_user_to_choose_2fa_method_and_authenticate_with_it(String scaOption) {
         // given
         storage.clearSessionData();
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockScaOptionsResponseOk(ALL_KNOWN_SCA_OPTIONS);
         switch (scaOption) {
@@ -464,7 +464,7 @@ public class BecAuthenticatorTest {
             should_throw_supplemental_info_exception_when_user_does_not_provide_key_card_code() {
         // given
         storage.clearSessionData();
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockScaOptionsResponseOk(ALL_KNOWN_SCA_OPTIONS);
         supplementalInfoMock.mockUserChoosesNemId2FAMethod(
@@ -494,7 +494,7 @@ public class BecAuthenticatorTest {
     public void should_ignore_when_user_doesnt_click_code_app_prompt_and_continue_authentication() {
         // given
         storage.clearSessionData();
-        userAvailability.setUserAvailableForInteraction(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
 
         apiClientMock.mockScaOptionsResponseOk(ALL_KNOWN_SCA_OPTIONS);
         supplementalInfoMock.mockUserChoosesNemId2FAMethod(
