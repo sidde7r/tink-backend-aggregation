@@ -72,7 +72,7 @@ public final class SpankkiAgent extends NextGenerationAgent
     @Inject
     public SpankkiAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        String lang = SpankkiConstants.getLanguageCode(request.getUser().getLocale());
+        String lang = SpankkiConstants.getLanguageCode(componentProvider.getUser().getLocale());
         apiClient = new SpankkiApiClient(client, persistentStorage, sessionStorage, lang);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
