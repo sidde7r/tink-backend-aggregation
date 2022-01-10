@@ -24,6 +24,89 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh failures is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
         tags: {{ .Values.tags }}
+    # Refresh success rates
+    - alert: RefreshSuccessRateBelow90WithAttemptLimitFI
+      expr: |
+        # Successful attempts < 90% and >= 80%
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
+            / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) < 0.90)
+        and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
+                / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) >= 0.80)
+        # At least this many attempts.
+          and sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) > 20
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes for <{ $labels.type }>.
+        tags: {{ .Values.tags }}
+
+    - alert: RefreshSuccessRateBelow80WithAttemptLimitFI
+      expr: |
+        # Successful attempts < 80% and >= 70%
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
+            / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) < 0.80)
+        and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
+                / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) >= 0.70)
+        # At least this many attempts.
+          and sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) > 20
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes for <{ $labels.type }>.
+        tags: {{ .Values.tags }}
+
+    - alert: RefreshSuccessRateBelow70WithAttemptLimitFI
+      expr: |
+        # Successful attempts < 70% and >= 60%
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
+            / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) < 0.70)
+        and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
+                / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) >= 0.60)
+        # At least this many attempts.
+          and sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) > 20
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh success rate is below 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes for <{ $labels.type }>.
+        tags: {{ .Values.tags }}
+
+    - alert: RefreshSuccessRateBelow60WithAttemptLimitFI
+      expr: |
+        # Successful attempts below 60%
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
+            / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) < 0.60)
+        # At least this many attempts.
+          and sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) > 20
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes for <{ $labels.type }>.
+        tags: {{ .Values.tags }}
+
 
     #-------------------------------------------------------------------------------------------------------------------
     # Unknown errors (due to RuntimeException) alerts
@@ -100,7 +183,23 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
         tags: {{ .Values.tags }}
-
+    - alert: AuthErrorFI
+      expr: |
+        # Auth error above 90%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|failed|failed_due_to_tink_infrastructure_failure|unavailable", market="FI", provider_type!="test"}[30m])) by (action,className,provider)
+                  / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[30m])) by (action,className,provider) > 0.90)
+         and sum(increase(tink_agent_login_total{market="FI", provider_type!="test"}[30m])) by (action,className,provider) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Auth error rate is above 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes.
+        tags: {{ .Values.tags }}
     # Refresh ping alerts
     - alert: RefreshUnknownErrorRateOver10%FI
       expr: |
@@ -116,4 +215,126 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
+        tags: {{ .Values.tags }}
+    #-------------------------------------------------------------------------------------------------------------------
+    # Login SR alerts
+    #-------------------------------------------------------------------------------------------------------------------
+    - alert: LoginSuccessRateBelow90WithAttemptLimitFI
+      expr: |
+        # Successful/Cancelled attempts < 90% and >= 80%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) < 0.90)
+        and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
+                / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) >= 0.80)
+        # At least this many attempts.
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last hour.
+        tags: {{ .Values.tags }}
+    - alert: LoginSuccessRateBelow80WithAttemptLimitFI
+      expr: |
+         # Successful/Cancelled attempts < 80% and >= 70%
+         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
+             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) < 0.80)
+         and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
+                 / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) >= 0.70)
+         # At least this many attempts.
+         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+           the last hour.
+        tags: {{ .Values.tags }}
+    - alert: LoginSuccessRateBelow70WithAttemptLimitFI
+      expr: |
+        # Successful/Cancelled attempts < 70% and >= 60%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) < 0.70)
+        and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
+                / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) >= 0.60)
+        # At least this many attempts.
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate is below 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last hour.
+        tags: {{ .Values.tags }}
+
+    - alert: LoginSuccessRateBelow60WithAttemptLimitFI
+      expr: |
+        # Successful/Cancelled attempts below 60%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) < 0.60)
+        # At least this many attempts.
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last hour.
+        tags: {{ .Values.tags }}
+      #-------------------------------------------------------------------------------------------------------------------
+      # Bank side failures
+      #-------------------------------------------------------------------------------------------------------------------
+    - alert: BankServerUnavailableForLoginFI
+      expr: |
+        # Unavailable outcome above 50%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable", market="FI", provider_type!="test"}[30m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className,provider) > 0.50)
+        # At least this many attempts.
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className,provider) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes.
+        tags: {{ .Values.tags }}
+
+    - alert: BankServerUnavailableForRefreshFI
+      expr: |
+        # Unavailable outcome above 50%
+        (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="FI", provider_type!="test"}[30m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total[30m])) by (className,provider) > 0.50)
+        # At least this many attempts.
+        and sum(increase(tink_agent_refresh_total[30m])) by (className,provider) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-llamas
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes.
         tags: {{ .Values.tags }}
