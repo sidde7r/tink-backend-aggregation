@@ -84,7 +84,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
         apiClient =
                 new LansforsakringarApiClient(
-                        client, credentials, storageHelper, getUserIpInformation());
+                        client, credentials, storageHelper, componentProvider.getUser());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
@@ -104,11 +104,6 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                         LansforsakringarConstants.RETRY_SLEEP_MILLIS_SECONDS));
         client.addFilter(new ServerFaultFilter());
         client.setTimeout(LansforsakringarConstants.TIME_OUT_MILLIS);
-    }
-
-    private LansforsakringarUserIpInformation getUserIpInformation() {
-        return new LansforsakringarUserIpInformation(
-                request.getUserAvailability().isUserPresent(), userIp);
     }
 
     private void setAgentConfiguration() {

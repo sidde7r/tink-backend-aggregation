@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -64,7 +65,7 @@ public class LansforsakringarApiClient {
     private final TinkHttpClient client;
     private final Credentials credentials;
     private final LansforsakringarStorageHelper storageHelper;
-    private final LansforsakringarUserIpInformation userIpInformation;
+    private final User user;
 
     private LansforsakringarConfiguration configuration;
     private String redirectUrl;
@@ -73,11 +74,11 @@ public class LansforsakringarApiClient {
             TinkHttpClient client,
             Credentials credentials,
             LansforsakringarStorageHelper storageHelper,
-            LansforsakringarUserIpInformation userIpInformation) {
+            User user) {
         this.client = client;
         this.credentials = credentials;
         this.storageHelper = storageHelper;
-        this.userIpInformation = userIpInformation;
+        this.user = user;
     }
 
     public Credentials getCredentials() {
@@ -116,8 +117,8 @@ public class LansforsakringarApiClient {
 
     private void setPsuIp(RequestBuilder builder) {
         // LF API does not want to receive PSU_IP_ADDRESS for BG Refreshes
-        if (userIpInformation.isUserPresent()) {
-            builder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp());
+        if (user.isPresent()) {
+            builder.header(HeaderKeys.PSU_IP_ADDRESS, user.getIpAddress());
         }
     }
 
@@ -289,7 +290,7 @@ public class LansforsakringarApiClient {
 
     private String getDateFromForTransactions(LocalDateTimeSource localDateTimeSource) {
         LocalDateTime now = localDateTimeSource.now();
-        if (userIpInformation.isUserPresent()) {
+        if (user.isPresent()) {
             now = now.minusMonths(LansforsakringarConstants.MONTHS_TO_FETCH);
         } else {
             now = now.minusDays(LansforsakringarConstants.DAYS_TO_FETCH_BG);
@@ -384,7 +385,7 @@ public class LansforsakringarApiClient {
     public Optional<AccountNumbersResponse> getAccountNumbers() {
         // Return stored account numbers if user isn't present. Can't call endpoint due to PSU IP
         // address being required.
-        if (!userIpInformation.isUserPresent()) {
+        if (!user.isPresent()) {
             return storageHelper.getStoredAccountNumbers();
         }
 
