@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.balance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -46,26 +45,14 @@ public class AccountsBalancesUpdaterTest {
     public void setUp() throws Exception {
         listOfAccountData = getTestListOfAccountData();
         accountsBalancesUpdater =
-                new AccountsBalancesUpdater(
-                        bookedBalanceCalculator, availableBalanceCalculator, false);
+                AccountsBalancesUpdater.createBalanceUpdater(
+                        bookedBalanceCalculator, availableBalanceCalculator);
 
         when(account.getGranularAccountBalances()).thenReturn(Maps.newHashMap());
         when(bookedBalanceCalculator.calculateBookedBalance(anyMap(), anyList()))
                 .thenReturn(getTestExactCurrencyAmount());
         when(availableBalanceCalculator.calculateAvailableBalance(anyMap(), anyList()))
                 .thenReturn(getTestExactCurrencyAmount());
-    }
-
-    @Test
-    public void shouldThrowNullPointerExceptionWhenCreatingAnObject() {
-        assertThatThrownBy(() -> new AccountsBalancesUpdater(null, null, false))
-                .isInstanceOf(NullPointerException.class);
-
-        assertThatThrownBy(() -> AccountsBalancesUpdater.createBalanceUpdater(null, null))
-                .isInstanceOf(NullPointerException.class);
-
-        assertThatThrownBy(() -> AccountsBalancesUpdater.createDryRunBalanceUpdater(null, null))
-                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -136,6 +123,21 @@ public class AccountsBalancesUpdaterTest {
         // then
         verifyIfBookedBalanceIsUpdated();
         verifyIfAvailableBalanceIsUpdated();
+    }
+
+    @Test
+    public void shouldNotUpdateAnyBalancesByRunningCalculationIfDryRunEnabled() {
+        // given
+        accountsBalancesUpdater =
+                AccountsBalancesUpdater.createDryRunBalanceUpdater(
+                        bookedBalanceCalculator, availableBalanceCalculator);
+        when(account.getType()).thenReturn(AccountTypes.CHECKING);
+
+        // when
+        accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(listOfAccountData);
+
+        // then
+        verifyNoImpactOnAccount();
     }
 
     private List<AccountData> getTestListOfAccountData() {
