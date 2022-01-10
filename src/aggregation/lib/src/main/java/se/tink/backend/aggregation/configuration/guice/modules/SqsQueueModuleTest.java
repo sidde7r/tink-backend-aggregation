@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.libraries.queue.QueueProducer;
+import se.tink.libraries.unleash.FakeUnleashClient;
+import se.tink.libraries.unleash.UnleashClient;
 
 public class SqsQueueModuleTest {
 
@@ -77,6 +79,7 @@ public class SqsQueueModuleTest {
                                                 .isEnabled());
                         bind(AgentWorkerOperationFactory.class)
                                 .toInstance(mock(AgentWorkerOperationFactory.class));
+                        bind(UnleashClient.class).toInstance(new FakeUnleashClient(true));
                         bind(ClientConfigurationProvider.class)
                                 .toInstance(mock(ClientConfigurationProvider.class));
                     }

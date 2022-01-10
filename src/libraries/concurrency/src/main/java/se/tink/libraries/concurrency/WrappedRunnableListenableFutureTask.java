@@ -8,6 +8,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.Nullable;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 public class WrappedRunnableListenableFutureTask<T extends Runnable, V>
         implements Runnable, ListenableFuture<V> {
@@ -30,8 +31,12 @@ public class WrappedRunnableListenableFutureTask<T extends Runnable, V>
     }
 
     WrappedRunnableListenableFutureTask(T delegate, V value) {
+        // Wrap delegate Runnable to preserve this thread's logging MDC parameters on calling
+        // executor thread(s)
+        Runnable wrappedDelegate = Tracing.wrapRunnable(delegate);
+
         this.delegate = delegate;
-        this.delegateListenableFuture = ListenableFutureTask.create(delegate, value);
+        this.delegateListenableFuture = ListenableFutureTask.create(wrappedDelegate, value);
     }
 
     @Override

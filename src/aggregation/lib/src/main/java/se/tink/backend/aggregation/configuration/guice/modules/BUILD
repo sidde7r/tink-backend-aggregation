@@ -117,5 +117,6 @@ junit_test(
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

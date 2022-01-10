@@ -6,6 +6,8 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
@@ -25,6 +27,8 @@ import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.tracing.lib.api.Tracing;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
 
 public class AgentWorker extends ManagedSafeStop {
     private static final Logger log = LoggerFactory.getLogger(AgentWorker.class);
@@ -32,9 +36,6 @@ public class AgentWorker extends ManagedSafeStop {
     private static final MetricId AGGREGATION_OPERATION_TASKS_METRIC_NAME =
             MetricId.newId("aggregation_operation_tasks");
     private static final String MONITOR_THREAD_NAME_FORMAT = "agent-worker-operation-thread-%s";
-    private final MetricRegistry metricRegistry;
-    private final boolean queueAvailable;
-
     // On Leeds (running 3g heap size), we started GC:ing aggressively when above 180k elements in
     // the queue here. At
     // 300k elements we ran out of memory entirely and all aggregation deadlocked (note that they
@@ -70,16 +71,24 @@ public class AgentWorker extends ManagedSafeStop {
      */
     private static final long SHUTDOWN_TIMEOUT_SECONDS = LONGEST_SUPPLEMENTAL_INFORMATION_SECONDS;
 
+    private static final ThreadFactory threadFactory =
+            new ThreadFactoryBuilder().setNameFormat("aggregation-worker-agent-thread-%d").build();
+
+    private final UnleashClient unleashClient;
+    private final MetricRegistry metricRegistry;
+    private final boolean queueAvailable;
+
     private RateLimitedExecutorService rateLimitedExecutorService;
     private RateLimitedExecutorService automaticRefreshRateLimitedExecutorService;
     private ListenableThreadPoolExecutor<Runnable> aggregationExecutorService;
     private ListenableThreadPoolExecutor<Runnable> automaticRefreshExecutorService;
-    private static final ThreadFactory threadFactory =
-            new ThreadFactoryBuilder().setNameFormat("aggregation-worker-agent-thread-%d").build();
 
     @Inject
     public AgentWorker(
-            MetricRegistry metricRegistry, @Named("queueAvailable") boolean queueAvailable) {
+            UnleashClient unleashClient,
+            MetricRegistry metricRegistry,
+            @Named("queueAvailable") boolean queueAvailable) {
+        this.unleashClient = unleashClient;
         this.metricRegistry = metricRegistry;
         this.queueAvailable = queueAvailable;
     }
@@ -136,13 +145,15 @@ public class AgentWorker extends ManagedSafeStop {
         Thread.sleep(NEW_AGGREGATION_SLACK.toMillis());
         log.info("Initiated shutdown of thread pools");
         rateLimitedExecutorService.stop();
+        if (unleashClient.isToggleEnabled(Toggle.of("closing-bgr-refresh-executor").build())) {
+            log.info("Parallel shutdown of executors");
+            automaticRefreshRateLimitedExecutorService.stop();
+            shutdownExecutorsInParallel();
+        } else {
+            log.info("Shutdown of aggregation executor service");
+            shutdownAggregationExecutorService();
+        }
 
-        ExecutorServiceUtils.shutdownExecutor(
-                "AggregationWorker#aggregationExecutorService",
-                aggregationExecutorService,
-                SHUTDOWN_TIMEOUT_SECONDS,
-                TimeUnit.SECONDS);
-        aggregationExecutorService = null;
         log.info("Shutdown took {} seconds", stopwatch.elapsed(TimeUnit.SECONDS));
     }
 
@@ -186,7 +197,7 @@ public class AgentWorker extends ManagedSafeStop {
             }
         }
         instrumentedRunnable.submitted();
-        log.info("[AgentWorker] Finished executing");
+        log.info("[AgentWorker] Finished scheduling");
     }
 
     public void executeAutomaticRefresh(
@@ -227,6 +238,51 @@ public class AgentWorker extends ManagedSafeStop {
         }
 
         instrumentedRunnable.submitted();
-        log.info("[AgentWorker] Finished executing automatic refresh");
+        log.info("[AgentWorker] Finished scheduling automatic refresh");
+    }
+
+    private void shutdownExecutorsInParallel() {
+        ExecutorService shutdownExecutor = Executors.newFixedThreadPool(2);
+        shutdownExecutor.execute(this::shutdownAutomaticRefreshExecutorService);
+        shutdownExecutor.execute(this::shutdownAggregationExecutorService);
+        shutdown(shutdownExecutor);
+        log.info("[AgentWorker] shutdownExecutor - successful shutdown");
+    }
+
+    private void shutdown(ExecutorService shutdownExecutor) {
+        shutdownExecutor.shutdown();
+        try {
+            if (!shutdownExecutor.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                shutdownExecutor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            shutdownExecutor.shutdownNow();
+            log.warn("Shutdown was interrupted while awaiting termination.", e);
+            Thread.currentThread().interrupt();
+        }
+        log.info("[AgentWorker] shutdownExecutor - successful shutdown");
+    }
+
+    private void shutdownAutomaticRefreshExecutorService() {
+        shutdownExecutor(
+                "AggregationWorker#automaticRefreshExecutorService",
+                automaticRefreshExecutorService);
+        automaticRefreshExecutorService = null;
+    }
+
+    private void shutdownAggregationExecutorService() {
+        shutdownExecutor(
+                "AggregationWorker#aggregationExecutorService", aggregationExecutorService);
+        aggregationExecutorService = null;
+    }
+
+    private void shutdownExecutor(
+            String executorName,
+            ListenableThreadPoolExecutor<Runnable> automaticRefreshExecutorService) {
+        ExecutorServiceUtils.shutdownExecutor(
+                executorName,
+                automaticRefreshExecutorService,
+                SHUTDOWN_TIMEOUT_SECONDS,
+                TimeUnit.SECONDS);
     }
 }

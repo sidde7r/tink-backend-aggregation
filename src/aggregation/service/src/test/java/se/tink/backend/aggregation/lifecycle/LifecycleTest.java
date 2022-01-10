@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.queue.QueueConsumerService;
+import se.tink.libraries.unleash.FakeUnleashClient;
 import se.tink.libraries.unleash.UnleashClient;
 
 public class LifecycleTest {
@@ -97,7 +98,9 @@ public class LifecycleTest {
         agentWorker =
                 spy(
                         new AgentWorker(
-                                new se.tink.libraries.metrics.registry.MetricRegistry(), false));
+                                new FakeUnleashClient(true),
+                                new se.tink.libraries.metrics.registry.MetricRegistry(),
+                                false));
         makeStartStopNoOp(agentWorker);
         when(injector.getInstance(AgentWorker.class)).thenReturn(agentWorker);
 

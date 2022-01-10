@@ -73,11 +73,13 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
 
             while (isRunning()) {
                 item = pollAndDelegateQueueItem(item);
+                log.info("queue size: {} for hash: {}", queue.size(), queue.hashCode());
             }
 
             // Drain:
 
             while (queue.size() > 0 || item != null) {
+                log.info("Draining queue");
                 item = pollAndDelegateQueueItem(item);
             }
         }
@@ -86,14 +88,17 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                 WrappedRunnableListenableFutureTask<T, ?> item) {
             if (item == null) {
                 try {
+                    log.info("Item null - attempting to take from queue");
                     item = queue.take();
                 } catch (InterruptedException e) {
+                    log.warn("Failed to take item from queue", e);
                     Thread.currentThread().interrupt();
                     // Deliberately left empty.
                 }
             }
             if (item != null) {
                 try {
+                    log.info("Item not null - attempting to execute");
                     threadPool.execute(item);
 
                     // Since there is no queue capacity for the threadPool, we know the item is
@@ -110,14 +115,20 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                         log.error(
                                 "Unexpected error in when trying to delegate a Runnable to thread pool.",
                                 e);
+                    } else {
+                        log.info("RejectedExecutionException thrown", e);
                     }
                 }
+            }
+            if (item != null) {
+                log.warn("Potentially lost item, should be executed");
             }
             return item;
         }
 
         @Override
         protected void triggerShutdown() {
+            log.info("Triggering shutdown, queue size: {}", queue.size());
             // Interrupt run() thread to signal it should shutdown.
             thread.interrupt();
         }
@@ -126,6 +137,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
             try {
                 started.await();
             } catch (InterruptedException e) {
+                log.warn("InterruptedException in awaitedStarted", e);
                 Thread.currentThread().interrupt();
             }
         }
@@ -177,6 +189,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
 
     @Override
     protected void finalize() {
+        log.info("Finalizing ListenableThreadPoolExecutor");
         // Make sure that the background QueuePopper service can be garbage collected. Notice that,
         // a ThreadPoolExecutor
         // only will be garbage collected if `corePoolSize` is zero. See
@@ -186,8 +199,9 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
 
     @Override
     public void shutdown() {
+        log.info("Shutting down thread pool executor");
         if (!shutdown.compareAndSet(false, true)) {
-            // Already shutdown.
+            log.info("Already shutdown");
             return;
         }
 
@@ -196,11 +210,13 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                 new Service.Listener() {
                     @Override
                     public void terminated(Service.State from) {
+                        log.info("QueuePopper terminated");
                         tp.shutdown();
                     }
 
                     @Override
                     public void failed(Service.State from, Throwable failure) {
+                        log.info("QueuePopper failed");
                         tp.shutdown();
                     }
                 },
@@ -219,6 +235,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                         queuePopper.failureCause());
             }
         } catch (TimeoutException e) {
+            log.warn("QueuePopper timeout on termination");
             return false;
         }
 
@@ -255,6 +272,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
 
     private <V> WrappedRunnableListenableFutureTask<T, V> execute(
             WrappedRunnableListenableFutureTask<T, V> future) {
+        log.info("Executing task");
         if (!queue.offer(future)) {
             this.failedQueuedItems.inc();
 

@@ -122,6 +122,8 @@ public class SqsQueue {
             } catch (AmazonSQSException e) {
                 if (!e.getErrorCode().equals("QueueAlreadyExists")) {
                     log.warn("Queue already exists.", e);
+                } else {
+                    log.warn("Exception thrown when trying to create a queue", e);
                 }
                 return true;
                 // Reach this if the configurations are invalid
