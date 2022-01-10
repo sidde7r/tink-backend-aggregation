@@ -77,7 +77,7 @@ public class SwedbankBalticsApiClient extends SwedbankApiClient {
             String accountId, LocalDate fromDate, LocalDate toDate) {
 
         // Swedbank doesn't allow offline statement without PSU involvement
-        if (componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent()) {
+        if (componentProvider.getUser().isPresent()) {
             RequestBuilder requestBuilder =
                     createRequestInSession(
                                     Urls.ACCOUNT_TRANSACTIONS.parameter(

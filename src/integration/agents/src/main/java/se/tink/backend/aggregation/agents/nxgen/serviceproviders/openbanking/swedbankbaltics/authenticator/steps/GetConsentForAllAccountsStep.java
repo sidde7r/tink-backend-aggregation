@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps;
 
 import lombok.RequiredArgsConstructor;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 public class GetConsentForAllAccountsStep implements AuthenticationStep {
@@ -23,7 +23,7 @@ public class GetConsentForAllAccountsStep implements AuthenticationStep {
     private final SwedbankBalticsApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final StepDataStorage stepDataStorage;
-    private final CredentialsRequest credentialsRequest;
+    private final User user;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -38,7 +38,7 @@ public class GetConsentForAllAccountsStep implements AuthenticationStep {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(e.getMessage());
         }
 
-        if (!credentialsRequest.getUserAvailability().isUserAvailableForInteraction()) {
+        if (!user.isAvailableForInteraction()) {
             throw new IllegalStateException("Can not renew consent since the user is not present");
         }
 
