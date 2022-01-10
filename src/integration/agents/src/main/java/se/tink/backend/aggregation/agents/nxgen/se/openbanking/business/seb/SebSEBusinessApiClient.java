@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb;
 
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.fetcher.transactionalaccount.entities.TransactionDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -27,13 +28,16 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SebSEBusinessApiClient extends SebBaseApiClient {
     private final Credentials credentials;
+    private final User user;
 
     public SebSEBusinessApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            CredentialsRequest credentialsRequest) {
-        super(client, persistentStorage, credentialsRequest);
+            CredentialsRequest credentialsRequest,
+            User user) {
+        super(client, persistentStorage, user);
         this.credentials = credentialsRequest.getCredentials();
+        this.user = user;
     }
 
     @Override
@@ -125,10 +129,9 @@ public class SebSEBusinessApiClient extends SebBaseApiClient {
                                 credentials.getField("psu-corporate-id"))
                         .addBearerToken(getTokenFromStorage());
 
-        if (credentialsRequest.getUserAvailability().isUserPresent()) {
+        if (user.isPresent()) {
             requestBuilder.header(
-                    SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
-                    credentialsRequest.getUserAvailability().getOriginatingUserIpOrDefault());
+                    SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS, user.getIpAddress());
         }
 
         return requestBuilder;

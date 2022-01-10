@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
@@ -26,19 +27,15 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SebBaseApiClient {
 
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
-    protected final CredentialsRequest credentialsRequest;
+    protected final User user;
     protected SebConfiguration configuration;
 
-    public SebBaseApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            CredentialsRequest credentialsRequest) {
+    public SebBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage, User user) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         client.addFilter(new SebBankFailureFilter());
@@ -46,7 +43,7 @@ public abstract class SebBaseApiClient {
                 new TimeoutRetryFilter(
                         HttpClient.NO_RESPONSE_MAX_RETRIES,
                         HttpClient.NO_RESPONSE_SLEEP_MILLISECONDS));
-        this.credentialsRequest = credentialsRequest;
+        this.user = user;
     }
 
     public void setConfiguration(SebConfiguration configuration) {
@@ -121,10 +118,9 @@ public abstract class SebBaseApiClient {
                                 Psd2Headers.getRequestId())
                         .addBearerToken(getTokenFromStorage());
 
-        if (credentialsRequest.getUserAvailability().isUserPresent()) {
+        if (user.isPresent()) {
             requestBuilder.header(
-                    SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
-                    credentialsRequest.getUserAvailability().getOriginatingUserIpOrDefault());
+                    SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS, user.getIpAddress());
         }
 
         return requestBuilder;

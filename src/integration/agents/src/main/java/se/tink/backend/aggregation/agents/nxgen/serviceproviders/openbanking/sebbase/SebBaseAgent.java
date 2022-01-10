@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase;
 
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.SebDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
@@ -17,6 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
 
+    private final User user;
+
     protected C apiClient;
     protected CreditCardRefreshController creditCardRefreshController;
     protected AgentConfiguration<SebConfiguration> agentConfiguration;
@@ -24,6 +27,7 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
 
     protected SebBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        this.user = componentProvider.getUser();
         this.apiClient = getApiClient();
     }
 
@@ -46,7 +50,7 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
                 new BankIdAuthenticationController<>(
                         supplementalInformationController,
                         new SebDecoupledAuthenticator(
-                                apiClient, agentConfiguration, request.getUser().getLocale()),
+                                apiClient, agentConfiguration, user.getLocale()),
                         persistentStorage,
                         request);
         return new AutoAuthenticationController(

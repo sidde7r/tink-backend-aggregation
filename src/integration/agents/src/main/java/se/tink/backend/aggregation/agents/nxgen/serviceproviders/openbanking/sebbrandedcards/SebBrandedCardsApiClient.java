@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HeaderKeys;
@@ -17,18 +18,14 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SebBrandedCardsApiClient extends SebBaseApiClient {
 
-    private String brandId;
+    private final String brandId;
 
     public SebBrandedCardsApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            String brandId,
-            CredentialsRequest credentialsRequest) {
-        super(client, persistentStorage, credentialsRequest);
+            TinkHttpClient client, PersistentStorage persistentStorage, String brandId, User user) {
+        super(client, persistentStorage, user);
         this.brandId = brandId;
     }
 
