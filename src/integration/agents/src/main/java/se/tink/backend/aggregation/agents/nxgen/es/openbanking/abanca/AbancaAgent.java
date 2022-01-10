@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -35,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentPisCapability(
         capabilities = {
@@ -53,7 +53,7 @@ public final class AbancaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AgentConfiguration<AbancaConfiguration> agentConfiguration;
     private final AbancaConfiguration abancaConfiguration;
-    private final UserAvailability userAvailability;
+    private final User user;
 
     @Inject
     public AbancaAgent(final AgentComponentProvider agentComponentProvider) {
@@ -62,8 +62,7 @@ public final class AbancaAgent extends NextGenerationAgent
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(AbancaConfiguration.class);
         this.abancaConfiguration = agentConfiguration.getProviderSpecificConfiguration();
-        this.userAvailability =
-                agentComponentProvider.getCredentialsRequest().getUserAvailability();
+        this.user = agentComponentProvider.getUser();
         this.apiClient =
                 new AbancaApiClient(
                         client,
@@ -71,14 +70,14 @@ public final class AbancaAgent extends NextGenerationAgent
                         sessionStorage,
                         supplementalInformationHelper,
                         provider.getSupplementalFields(),
-                        userAvailability);
+                        user);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         final AbancaAuthenticator abancaAuthenticator =
-                new AbancaAuthenticator(apiClient, abancaConfiguration, userAvailability);
+                new AbancaAuthenticator(apiClient, abancaConfiguration, user);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
