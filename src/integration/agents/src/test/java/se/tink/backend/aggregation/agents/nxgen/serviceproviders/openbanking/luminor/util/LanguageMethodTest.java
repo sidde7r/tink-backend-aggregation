@@ -5,8 +5,8 @@ import static org.mockito.Mockito.mock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.configuration.LuminorConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -22,7 +22,7 @@ public class LanguageMethodTest {
         PersistentStorage persistantStorageMock = mock(PersistentStorage.class);
         String localeMock = "locale";
         String providerMarket = "market";
-        LuminorUserIpInformation userIpInformationMock = mock(LuminorUserIpInformation.class);
+        User userMock = mock(User.class);
         AgentConfiguration<LuminorConfiguration> configurationMock = mock(AgentConfiguration.class);
 
         mockClient =
@@ -31,7 +31,7 @@ public class LanguageMethodTest {
                         persistantStorageMock,
                         localeMock,
                         providerMarket,
-                        userIpInformationMock,
+                        userMock,
                         configurationMock);
     }
 

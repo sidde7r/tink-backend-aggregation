@@ -35,7 +35,7 @@ public class LuminorBaseAgent extends NextGenerationAgent
     public LuminorBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        this.locale = componentProvider.getCredentialsRequest().getUser().getLocale();
+        this.locale = componentProvider.getUser().getLocale();
         this.providerMarket = componentProvider.getCredentialsRequest().getProvider().getMarket();
 
         AgentConfiguration<LuminorConfiguration> configuration = getAgentConfiguration();
@@ -45,7 +45,7 @@ public class LuminorBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         locale,
                         providerMarket,
-                        getUserIpInformation(),
+                        componentProvider.getUser(),
                         configuration);
 
         transactionalAccountRefreshController =
@@ -118,12 +118,6 @@ public class LuminorBaseAgent extends NextGenerationAgent
                                 .setLocalDateTimeSource(componentProvider.getLocalDateTimeSource())
                                 .setAmountAndUnitToFetch(AMOUNT_TO_FETCH, ChronoUnit.DAYS)
                                 .build()));
-    }
-
-    private LuminorUserIpInformation getUserIpInformation() {
-        return new LuminorUserIpInformation(
-                request.getUserAvailability().isUserPresent(),
-                request.getUserAvailability().getOriginatingUserIp());
     }
 
     @Override

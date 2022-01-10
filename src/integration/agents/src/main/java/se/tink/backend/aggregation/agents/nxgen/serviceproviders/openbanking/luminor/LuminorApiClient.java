@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.FormValues;
@@ -43,14 +44,14 @@ public class LuminorApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final LuminorConfiguration configuration;
-    private final LuminorUserIpInformation userIpInformation;
+    private final User user;
 
     public LuminorApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String locale,
             String providerMarket,
-            LuminorUserIpInformation userIpInformation,
+            User user,
             AgentConfiguration<LuminorConfiguration> configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
@@ -58,7 +59,7 @@ public class LuminorApiClient {
         this.redirectUrl = configuration.getRedirectUrl();
         this.locale = locale;
         this.providerMarket = providerMarket;
-        this.userIpInformation = userIpInformation;
+        this.user = user;
     }
 
     public URL getAuthorizeUrl(String state) {
@@ -114,7 +115,7 @@ public class LuminorApiClient {
 
         return createRequest(Urls.CONSENT)
                 .body(consentRequest, MediaType.APPLICATION_JSON_TYPE)
-                .header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
+                .header(HeaderKeys.PSU_IP_ADDRESS, user.getIpAddress())
                 .header(Psd2Headers.Keys.AUTHORIZATION, getBearerToken())
                 .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.TPP_REDIRECT, HeaderValues.TRUE)
@@ -135,7 +136,7 @@ public class LuminorApiClient {
 
     protected RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
-                .header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
+                .header(HeaderKeys.PSU_IP_ADDRESS, user.getIpAddress())
                 .header(Psd2Headers.Keys.AUTHORIZATION, getBearerToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId());
