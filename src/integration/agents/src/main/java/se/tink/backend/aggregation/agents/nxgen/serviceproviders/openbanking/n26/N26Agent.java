@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -145,12 +146,14 @@ public final class N26Agent extends AgentPlatformAgent
 
     private Xs2aDevelopersForAgentPlatformApiClient constructXs2aApiClient(
             AgentComponentProvider componentProvider) {
+        User user = componentProvider.getUser();
+
         return new N26Xs2aApiClient(
                 client,
                 persistentStorage,
                 getN26AgentConfiguration(),
-                request.getUserAvailability().isUserPresent(),
-                request.getUserAvailability().getOriginatingUserIp(),
+                user.isPresent(),
+                user.getIpAddress(),
                 componentProvider.getRandomValueGenerator(),
                 xs2aAuthenticationDataAccessor,
                 logMasker);
@@ -168,7 +171,7 @@ public final class N26Agent extends AgentPlatformAgent
                         new N26DevelopersTransactionDateFromFetcher<TransactionalAccount>(
                                 xs2aApiClient,
                                 componentProvider.getLocalDateTimeSource(),
-                                request.getUserAvailability().isUserPresent()));
+                                componentProvider.getUser().isPresent()));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
