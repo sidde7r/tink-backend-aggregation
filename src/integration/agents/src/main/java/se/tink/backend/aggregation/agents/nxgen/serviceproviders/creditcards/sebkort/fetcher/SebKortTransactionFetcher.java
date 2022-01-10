@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity.TransactionEntity;
@@ -21,8 +19,6 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
 
     private final SebKortApiClient apiClient;
     private boolean pendingFetched = false;
-
-    private final Logger log = LoggerFactory.getLogger(SebKortTransactionFetcher.class);
 
     public SebKortTransactionFetcher(SebKortApiClient apiClient) {
         this.apiClient = apiClient;
@@ -83,7 +79,7 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
     private List<CreditCardTransaction> fetchPaymentsAndFeesIfAccountOwner(
             CreditCardAccount account, Date fromDate, Date toDate) {
 
-        Boolean isAccountOwner =
+        boolean isAccountOwner =
                 account.getFromTemporaryStorage(
                                 SebKortConstants.StorageKey.IS_ACCOUNT_OWNER, Boolean.class)
                         .orElse(false);
