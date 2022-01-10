@@ -9,7 +9,7 @@ java_library_with_sources(
         "//src/agent_sdk:lombok_libs",
     ],
     intdeps = [
-        "@tink_backend//src/libraries/serialization_utils",
+        "//src/libraries/serialization",
         "//src/agent_sdk/sdk/src/authentication/new_consent",
         "//src/agent_sdk/sdk/src/authentication/existing_consent",
         "//src/agent_sdk/sdk/src/authentication/common_steps",

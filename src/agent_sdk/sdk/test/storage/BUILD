@@ -7,9 +7,9 @@ junit_test(
     resources = [],
     deps = [
         "//src/agent_sdk/sdk/src/storage",
+        "//src/libraries/serialization",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@tink_backend//src/libraries/serialization_utils",
     ],
 )
