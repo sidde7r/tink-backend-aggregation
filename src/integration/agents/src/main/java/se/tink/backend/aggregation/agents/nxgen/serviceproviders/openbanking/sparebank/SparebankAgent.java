@@ -9,6 +9,7 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -41,7 +42,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
@@ -62,7 +62,12 @@ public final class SparebankAgent extends NextGenerationAgent
 
         client.addFilter(new TerminatedHandshakeRetryFilter());
         storage = new SparebankStorage(persistentStorage);
-        apiClient = new SparebankApiClient(client, qsealcSigner, getApiConfiguration(), storage);
+        apiClient =
+                new SparebankApiClient(
+                        client,
+                        qsealcSigner,
+                        getApiConfiguration(agentComponentProvider.getUser()),
+                        storage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
@@ -73,14 +78,13 @@ public final class SparebankAgent extends NextGenerationAgent
                 .getAgentConfiguration(SparebankConfiguration.class);
     }
 
-    private SparebankApiConfiguration getApiConfiguration() {
+    private SparebankApiConfiguration getApiConfiguration(User user) {
         try {
             AgentConfiguration<SparebankConfiguration> agentConfiguration = getAgentConfiguration();
             String qsealcBase64 =
                     CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
                             agentConfiguration.getQsealc());
 
-            UserAvailability userAvailability = request.getUserAvailability();
             return SparebankApiConfiguration.builder()
                     .baseUrl(splitPayload(request.getProvider().getPayload()).get(1))
                     .redirectUrl(agentConfiguration.getRedirectUrl())
@@ -88,8 +92,8 @@ public final class SparebankAgent extends NextGenerationAgent
                     .certificateIssuerDN(CertificateUtils.getCertificateIssuerDN(qsealcBase64))
                     .certificateSerialNumberInHex(
                             CertificateUtils.getSerialNumber(qsealcBase64, 16))
-                    .userIp(userAvailability.getOriginatingUserIp())
-                    .isUserPresent(userAvailability.isUserPresent())
+                    .userIp(user.getIpAddress())
+                    .isUserPresent(user.isPresent())
                     .build();
         } catch (CertificateException e) {
             throw new IllegalStateException(
