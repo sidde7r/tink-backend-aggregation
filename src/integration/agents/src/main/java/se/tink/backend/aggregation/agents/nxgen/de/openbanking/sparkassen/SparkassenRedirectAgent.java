@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CH
 import com.google.inject.Inject;
 import java.security.cert.CertificateException;
 import java.util.EnumSet;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenScope;
@@ -23,11 +24,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class SparkassenRedirectAgent extends SparkassenAgent {
 
     private final LogMasker logMasker;
+    private final User user;
 
     @Inject
     public SparkassenRedirectAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.logMasker = componentProvider.getContext().getLogMasker();
+        this.user = componentProvider.getUser();
     }
 
     @Override
@@ -36,10 +39,7 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
         AgentConfiguration<SparkassenConfiguration> agentConfiguration = getAgentConfiguration();
         String redirectUrl = agentConfiguration.getRedirectUrl();
         SparkassenHeaderValues headerValues =
-                SparkassenHeaderValues.forRedirect(
-                        bankCode,
-                        redirectUrl,
-                        request.getUserAvailability().getOriginatingUserIpOrDefault());
+                SparkassenHeaderValues.forRedirect(bankCode, redirectUrl, user.getIpAddress());
         return new SparkassenApiClient(
                 client,
                 headerValues,

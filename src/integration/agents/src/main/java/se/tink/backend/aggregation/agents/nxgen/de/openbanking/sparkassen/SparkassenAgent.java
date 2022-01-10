@@ -95,8 +95,7 @@ public class SparkassenAgent extends NextGenerationAgent
     protected SparkassenApiClient constructApiClient() {
         String bankCode = provider.getPayload();
         SparkassenHeaderValues headerValues =
-                new SparkassenHeaderValues(
-                        bankCode, request.getUserAvailability().getOriginatingUserIpOrDefault());
+                new SparkassenHeaderValues(bankCode, componentProvider.getUser().getIpAddress());
         return new SparkassenApiClient(
                 client,
                 headerValues,
