@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configuration.SkandiaConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
@@ -18,7 +19,7 @@ public class SkandiaApiClientTest {
 
     TinkHttpClient tinkHttpClient;
     PersistentStorage persistentStorage;
-    SkandiaUserIpInformation skandiaUserIpInformation;
+    User user;
 
     SkandiaApiClient skandiaApiClient;
 
@@ -26,10 +27,9 @@ public class SkandiaApiClientTest {
     public void setup() {
         tinkHttpClient = mock(TinkHttpClient.class);
         persistentStorage = mock(PersistentStorage.class);
-        skandiaUserIpInformation = mock(SkandiaUserIpInformation.class);
+        user = mock(User.class);
 
-        skandiaApiClient =
-                new SkandiaApiClient(tinkHttpClient, persistentStorage, skandiaUserIpInformation);
+        skandiaApiClient = new SkandiaApiClient(tinkHttpClient, persistentStorage, user);
     }
 
     @Test

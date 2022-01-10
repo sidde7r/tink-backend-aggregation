@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.BodyValues;
@@ -47,15 +48,12 @@ public class SkandiaApiClient {
     private final PersistentStorage persistentStorage;
     private SkandiaConfiguration configuration;
     private String redirectUrl;
-    private final SkandiaUserIpInformation userIpInformation;
+    private final User user;
 
-    public SkandiaApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            SkandiaUserIpInformation userIpInformation) {
+    public SkandiaApiClient(TinkHttpClient client, PersistentStorage persistentStorage, User user) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.userIpInformation = userIpInformation;
+        this.user = user;
     }
 
     private SkandiaConfiguration getConfiguration() {
@@ -94,8 +92,8 @@ public class SkandiaApiClient {
                 .addBearerToken(authToken)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(HeaderKeys.CLIENT_ID, clientId);
-        if (userIpInformation.isManualRequest()) {
-            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp());
+        if (user.isPresent()) {
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, user.getIpAddress());
         }
         return requestBuilder;
     }
