@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableSet;
 import java.time.LocalDate;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -42,7 +43,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
         client.addFilter(new TerminatedHandshakeRetryFilter());
-        apiClient = constructApiClient();
+        apiClient = constructApiClient(componentProvider.getUser());
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
@@ -52,9 +53,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
 
     protected abstract String getMarket();
 
-    public HandelsbankenBaseApiClient constructApiClient() {
-        return new HandelsbankenBaseApiClient(
-                client, persistentStorage, getMarket(), getUserIpInformation());
+    public HandelsbankenBaseApiClient constructApiClient(User user) {
+        return new HandelsbankenBaseApiClient(client, persistentStorage, getMarket(), user);
     }
 
     @Override
@@ -127,12 +127,6 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
                         new TransactionDatePaginationController.Builder<>(creditCardFetcher)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
-    }
-
-    protected HandelsbankenUserIpInformation getUserIpInformation() {
-        return new HandelsbankenUserIpInformation(
-                request.getUserAvailability().isUserPresent(),
-                request.getUserAvailability().getOriginatingUserIp());
     }
 
     @Override
