@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.NoHttpResponseErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 public abstract class DeutscheBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -50,10 +49,8 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
                 getAgentConfigurationController()
                         .getAgentConfiguration(DeutscheBankConfiguration.class)
                         .getRedirectUrl();
-        UserAvailability userAvailability =
-                componentProvider.getCredentialsRequest().getUserAvailability();
-        return new DeutscheHeaderValues(
-                redirectUrl, userAvailability.getOriginatingUserIpOrDefault());
+
+        return new DeutscheHeaderValues(redirectUrl, componentProvider.getUser().getIpAddress());
     }
 
     @Override

@@ -46,7 +46,7 @@ public class ConsorsbankAgent extends NextGenerationAgent
                 new ConsorsbankRequestBuilder(
                         client,
                         componentProvider.getRandomValueGenerator(),
-                        request.getUserAvailability().getOriginatingUserIpOrDefault());
+                        componentProvider.getUser().getIpAddress());
         this.storage = new ConsorsbankStorage(persistentStorage);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();

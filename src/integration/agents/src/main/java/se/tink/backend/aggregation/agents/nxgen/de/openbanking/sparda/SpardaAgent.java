@@ -64,6 +64,7 @@ public class SpardaAgent extends NextGenerationAgent
     private final SpardaFetcherApiClient fetcherApiClient;
     private final LocalDateTimeSource localDateTimeSource;
     private final RandomValueGenerator randomValueGenerator;
+    private final String userIpAddress;
     private final SpardaStorage storage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -73,14 +74,11 @@ public class SpardaAgent extends NextGenerationAgent
 
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
         randomValueGenerator = componentProvider.getRandomValueGenerator();
+        userIpAddress = componentProvider.getUser().getIpAddress();
 
         storage = new SpardaStorage(persistentStorage, sessionStorage);
         SpardaRequestBuilder requestBuilder =
-                new SpardaRequestBuilder(
-                        client,
-                        randomValueGenerator,
-                        request.getUserAvailability().getOriginatingUserIpOrDefault(),
-                        storage);
+                new SpardaRequestBuilder(client, randomValueGenerator, userIpAddress, storage);
 
         String bicCode = getBicCode();
         this.authApiClient = new SpardaAuthApiClient(requestBuilder, bicCode);
@@ -196,11 +194,7 @@ public class SpardaAgent extends NextGenerationAgent
                 new RedirectPaymentAuthenticator(
                         supplementalInformationController, strongAuthenticationState);
         SpardaRequestBuilder requestBuilder =
-                new SpardaRequestBuilder(
-                        client,
-                        randomValueGenerator,
-                        request.getUserAvailability().getOriginatingUserIpOrDefault(),
-                        storage);
+                new SpardaRequestBuilder(client, randomValueGenerator, userIpAddress, storage);
 
         SpardaErrorHandler errorHandler =
                 new SpardaErrorHandler(tokenApiClient, storage, clientId());

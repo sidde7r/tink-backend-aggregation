@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -64,8 +65,11 @@ public final class DkbAgent extends NextGenerationAgent
         super(componentProvider);
         randomValueGenerator = componentProvider.getRandomValueGenerator();
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        dependencyRegistry = initializeAgentDependencies(new DkbModuleDependenciesRegistration());
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        User user = componentProvider.getUser();
+        dependencyRegistry =
+                initializeAgentDependencies(new DkbModuleDependenciesRegistration(), user);
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController(user);
     }
 
     private AgentConfiguration<DkbConfiguration> getAgentConfiguration() {
@@ -73,7 +77,7 @@ public final class DkbAgent extends NextGenerationAgent
     }
 
     private ModuleDependenciesRegistry initializeAgentDependencies(
-            DkbModuleDependenciesRegistration moduleDependenciesRegistration) {
+            DkbModuleDependenciesRegistration moduleDependenciesRegistration, User user) {
         final DkbConfiguration dkbConfiguration =
                 getAgentConfiguration().getProviderSpecificConfiguration();
 
@@ -81,9 +85,7 @@ public final class DkbAgent extends NextGenerationAgent
         beans.put(DkbConfiguration.class, dkbConfiguration);
         beans.put(
                 DkbUserIpInformation.class,
-                new DkbUserIpInformation(
-                        request.getUserAvailability().isUserPresent(),
-                        request.getUserAvailability().getOriginatingUserIpOrDefault()));
+                new DkbUserIpInformation(user.isPresent(), user.getIpAddress()));
         beans.put(Catalog.class, catalog);
         beans.put(Credentials.class, credentials);
         beans.put(SupplementalInformationHelper.class, supplementalInformationHelper);
@@ -137,14 +139,15 @@ public final class DkbAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            User user) {
         final DkbTransactionalAccountFetcher accountFetcher =
                 new DkbTransactionalAccountFetcher(getApiClient());
         final DkbTransactionsFetcher transactionsFetcher =
                 new DkbTransactionsFetcher(
                         getApiClient(),
                         getDkbStorage(),
-                        request.getUserAvailability().isUserAvailableForInteraction(),
+                        user.isAvailableForInteraction(),
                         localDateTimeSource);
 
         return new TransactionalAccountRefreshController(

@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -69,7 +70,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
 
         this.apiClient = constructApiClient(componentProvider);
         this.accountRefreshController = constructAccountRefreshController();
-        this.cardRefreshController = constructCardRefreshController();
+        this.cardRefreshController = constructCardRefreshController(componentProvider.getUser());
     }
 
     @Override
@@ -101,7 +102,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         getAgentConfigurationController()
                                 .getAgentConfiguration(FinecoBankConfiguration.class)
                                 .getRedirectUrl(),
-                        request.getUserAvailability().getOriginatingUserIpOrDefault());
+                        componentProvider.getUser().getIpAddress());
 
         return new FinecoBankApiClient(
                 new FinecoUrlProvider(),
@@ -126,10 +127,9 @@ public final class FinecoBankAgent extends NextGenerationAgent
                                 .build()));
     }
 
-    private CreditCardRefreshController constructCardRefreshController() {
+    private CreditCardRefreshController constructCardRefreshController(User user) {
         final FinecoBankCreditCardAccountFetcher accountFetcher =
-                new FinecoBankCreditCardAccountFetcher(
-                        apiClient, finecoStorage, request.getUserAvailability().isUserPresent());
+                new FinecoBankCreditCardAccountFetcher(apiClient, finecoStorage, user.isPresent());
 
         return new CreditCardRefreshController(
                 metricRefreshController,

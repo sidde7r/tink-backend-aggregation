@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentCo
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 public abstract class UnicreditBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -62,10 +61,8 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                         .getAgentConfiguration(UnicreditBaseConfiguration.class)
                         .getRedirectUrl();
 
-        UserAvailability userAvailability =
-                componentProvider.getCredentialsRequest().getUserAvailability();
         return new UnicreditBaseHeaderValues(
-                redirectUrl, userAvailability.getOriginatingUserIpOrDefault());
+                redirectUrl, componentProvider.getUser().getIpAddress());
     }
 
     protected UnicreditBaseApiClient getApiClient(
