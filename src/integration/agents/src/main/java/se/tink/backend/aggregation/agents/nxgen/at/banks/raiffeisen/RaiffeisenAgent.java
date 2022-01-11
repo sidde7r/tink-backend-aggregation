@@ -34,7 +34,7 @@ public final class RaiffeisenAgent extends NextGenerationAgent
     public RaiffeisenAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        this.apiClient = new RaiffeisenWebApiClient(this.client, request.getProvider());
+        this.apiClient = new RaiffeisenWebApiClient(this.client, componentProvider.getProvider());
         this.raiffeisenSessionStorage = new RaiffeisenSessionStorage(sessionStorage);
 
         this.transactionalAccountRefreshController =

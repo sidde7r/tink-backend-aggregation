@@ -10,6 +10,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
@@ -25,8 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 public class GetConsentForAllAccountsStepTest {
 
@@ -34,8 +33,7 @@ public class GetConsentForAllAccountsStepTest {
     private PersistentStorage persistentStorage;
     private StepDataStorage stepDataStorage;
     private ConsentResponse consentResponse;
-    private CredentialsRequest credentialsRequest;
-    private UserAvailability userAvailability;
+    private User user;
 
     private GetConsentForAllAccountsStep getConsentForAllAccountsStep;
 
@@ -45,14 +43,11 @@ public class GetConsentForAllAccountsStepTest {
         apiClient = mock(SwedbankBalticsApiClient.class);
         persistentStorage = mock(PersistentStorage.class);
         stepDataStorage = mock(StepDataStorage.class);
-        credentialsRequest = mock(CredentialsRequest.class);
-        userAvailability = mock(UserAvailability.class);
+        user = mock(User.class);
         getConsentForAllAccountsStep =
                 new GetConsentForAllAccountsStep(
-                        apiClient, persistentStorage, stepDataStorage, credentialsRequest);
+                        apiClient, persistentStorage, stepDataStorage, user);
         consentResponse = mock(ConsentResponse.class);
-
-        when(credentialsRequest.getUserAvailability()).thenReturn(userAvailability);
     }
 
     @Test
@@ -98,7 +93,7 @@ public class GetConsentForAllAccountsStepTest {
         // given
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
         when(apiClient.isConsentValid()).thenReturn(false);
-        when(userAvailability.isUserAvailableForInteraction()).thenReturn(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
         when(consentResponse.getConsentStatus()).thenReturn(ConsentStatus.VALID);
         when(apiClient.getConsentAllAccounts()).thenReturn(consentResponse);
 
@@ -121,7 +116,7 @@ public class GetConsentForAllAccountsStepTest {
         // given
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
         when(apiClient.isConsentValid()).thenReturn(false);
-        when(userAvailability.isUserAvailableForInteraction()).thenReturn(false);
+        when(user.isAvailableForInteraction()).thenReturn(false);
 
         // then
         assertThatThrownBy(() -> getConsentForAllAccountsStep.execute(authenticationRequest))
@@ -136,7 +131,7 @@ public class GetConsentForAllAccountsStepTest {
         // given
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
         when(apiClient.isConsentValid()).thenReturn(false);
-        when(userAvailability.isUserAvailableForInteraction()).thenReturn(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
         when(apiClient.getConsentAllAccounts()).thenReturn(consentResponse);
         when(consentResponse.getConsentStatus()).thenReturn(ConsentStatus.SIGNED);
 

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthenticator {
@@ -40,7 +40,7 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
             SessionStorage sessionStorage,
             SupplementalInformationController supplementalInformationController,
             Catalog catalog,
-            CredentialsRequest credentialsRequest) {
+            User user) {
 
         final StepDataStorage stepDataStorage = new StepDataStorage(sessionStorage);
         final SCAAuthenticationHelper scaAuthenticationHelper =
@@ -54,7 +54,7 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
                         new CollectStatusStep(this, apiClient, stepDataStorage),
                         new ExchangeCodeForTokenStep(apiClient, persistentStorage, stepDataStorage),
                         new GetConsentForAllAccountsStep(
-                                apiClient, persistentStorage, stepDataStorage, credentialsRequest),
+                                apiClient, persistentStorage, stepDataStorage, user),
                         // the step below is relevant for LT only, for other countries it will be
                         // skipped automatically during GetConsentForAllAccountsStep
                         new AllAccountsConsentSCAAuthenticationStep(

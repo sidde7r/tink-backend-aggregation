@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.PathParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.QueryKeys;
@@ -35,7 +36,7 @@ public class CitadeleBaseApiClient {
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
     private final String redirectUrl;
-    private final CitadeleUserIpInformation citadeleUserIpInformation;
+    private final User user;
     private final LocalDate date;
 
     public CitadeleBaseApiClient(
@@ -43,13 +44,13 @@ public class CitadeleBaseApiClient {
             PersistentStorage persistentStorage,
             AgentConfiguration<CitadeleBaseConfiguration> baseConfiguration,
             RandomValueGenerator randomValueGenerator,
-            CitadeleUserIpInformation citadeleUserIpInformation,
+            User user,
             LocalDate date) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.redirectUrl = baseConfiguration.getRedirectUrl();
         this.randomValueGenerator = randomValueGenerator;
-        this.citadeleUserIpInformation = citadeleUserIpInformation;
+        this.user = user;
         this.date = date;
     }
 
@@ -69,7 +70,7 @@ public class CitadeleBaseApiClient {
                 .header(Psd2Headers.Keys.TPP_REDIRECT_URI, createReturnUrl(state, true))
                 .header(Psd2Headers.Keys.TPP_NOK_REDIRECT_URI, createReturnUrl(state, false))
                 .header(Psd2Headers.Keys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .header(Psd2Headers.Keys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp())
+                .header(Psd2Headers.Keys.PSU_IP_ADDRESS, user.getIpAddress())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
     }
@@ -126,9 +127,8 @@ public class CitadeleBaseApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(Psd2Headers.Keys.CONSENT_ID, consentId)
                 .header(Psd2Headers.Keys.X_REQUEST_ID, uuid);
-        if (citadeleUserIpInformation.isUserPresent()) {
-            requestBuilder.header(
-                    Psd2Headers.Keys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp());
+        if (user.isPresent()) {
+            requestBuilder.header(Psd2Headers.Keys.PSU_IP_ADDRESS, user.isPresent());
         }
         return requestBuilder;
     }

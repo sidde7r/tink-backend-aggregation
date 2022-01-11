@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleBaseConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -33,7 +34,7 @@ public class CitadeleBaseApiClientTest {
                         persistentStorage,
                         agentConfiguration,
                         mock(RandomValueGenerator.class),
-                        mock(CitadeleUserIpInformation.class),
+                        mock(User.class),
                         LocalDate.now());
     }
 

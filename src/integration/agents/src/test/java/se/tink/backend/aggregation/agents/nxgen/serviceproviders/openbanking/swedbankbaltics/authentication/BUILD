@@ -6,6 +6,7 @@ junit_test(
     srcs = glob(["*/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agent_sdk/sdk/src/operation",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbankbaltics",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",

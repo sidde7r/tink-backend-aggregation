@@ -71,7 +71,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                 sessionStorage,
                 supplementalInformationController,
                 catalog,
-                request);
+                componentProvider.getUser());
     }
 
     @Override

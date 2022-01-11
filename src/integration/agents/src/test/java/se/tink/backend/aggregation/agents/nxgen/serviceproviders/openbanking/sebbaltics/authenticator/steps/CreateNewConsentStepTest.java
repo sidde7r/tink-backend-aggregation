@@ -13,13 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.SebBalticsDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RunWith(JUnitParamsRunner.class)
 public class CreateNewConsentStepTest {
@@ -33,12 +33,12 @@ public class CreateNewConsentStepTest {
         SebBalticsDecoupledAuthenticator authenticator =
                 mock(SebBalticsDecoupledAuthenticator.class);
         PersistentStorage persistentStorage = mock(PersistentStorage.class);
-        CredentialsRequest credentialsRequest = mock(CredentialsRequest.class);
+        User user = mock(User.class);
         LocalDate localDate = LocalDate.now();
         apiClient = mock(SebBalticsApiClient.class);
         createNewConsentStep =
                 new CreateNewConsentStep(
-                        authenticator, apiClient, persistentStorage, credentialsRequest, localDate);
+                        authenticator, apiClient, persistentStorage, user, localDate);
         consentResponse = mock(ConsentResponse.class);
     }
 

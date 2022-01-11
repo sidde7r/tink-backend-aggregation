@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import com.google.inject.Inject;
 import java.time.LocalDate;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -37,6 +38,7 @@ public class SebBalticsAgent extends SubsequentProgressiveGenerationAgent
     private final LocalDate localDate;
     private final String providerMarket;
     private final String bankBic;
+    private final User user;
 
     @Inject
     protected SebBalticsAgent(AgentComponentProvider componentProvider) {
@@ -44,13 +46,14 @@ public class SebBalticsAgent extends SubsequentProgressiveGenerationAgent
         configureHttpClient(client);
         this.localDate = componentProvider.getLocalDateTimeSource().now().toLocalDate();
         this.providerMarket = componentProvider.getCredentialsRequest().getProvider().getMarket();
+        this.user = componentProvider.getUser();
         this.apiClient = getApiClient();
         this.bankBic = getBankBicCode();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected SebBalticsApiClient getApiClient() {
-        return new SebBalticsApiClient(client, persistentStorage, request, providerMarket);
+        return new SebBalticsApiClient(client, persistentStorage, request, providerMarket, user);
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -77,7 +80,7 @@ public class SebBalticsAgent extends SubsequentProgressiveGenerationAgent
                 sessionStorage,
                 persistentStorage,
                 credentials,
-                request,
+                user,
                 bankBic,
                 localDate,
                 supplementalInformationController,

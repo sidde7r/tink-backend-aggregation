@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthenticator {
@@ -35,7 +35,7 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             Credentials credentials,
-            CredentialsRequest request,
+            User user,
             String bankBic,
             LocalDate localDate,
             SupplementalInformationController supplementalInformationController,
@@ -50,12 +50,11 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
                 Arrays.asList(
                         new CheckIfAccessTokenIsValidStep(apiClient, persistentStorage),
                         new RefreshAccessTokenStep(apiClient, persistentStorage, credentials),
-                        new InitStep(
-                                this, apiClient, sessionStorage, configuration, request, bankBic),
+                        new InitStep(this, apiClient, sessionStorage, configuration, user, bankBic),
                         new ExchangeCodeForTokenStep(
                                 apiClient, sessionStorage, persistentStorage, credentials),
                         new CreateNewConsentStep(
-                                this, apiClient, persistentStorage, request, localDate));
+                                this, apiClient, persistentStorage, user, localDate));
     }
 
     @Override

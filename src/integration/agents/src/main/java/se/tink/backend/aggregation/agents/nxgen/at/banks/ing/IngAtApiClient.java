@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.rpc.CreditCardTransactionPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.rpc.CSVTransactionsPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtAntiCacheParser;
@@ -45,10 +44,7 @@ public final class IngAtApiClient {
     // Account numbers -> account opening dates
     private final Map<String, Date> accountOpeningDates = new HashMap<>();
 
-    public IngAtApiClient(
-            final TinkHttpClient client,
-            final Provider provider,
-            IngAtSessionStorage ingAtSessionStorage) {
+    public IngAtApiClient(final TinkHttpClient client, IngAtSessionStorage ingAtSessionStorage) {
         this.client = client;
         this.ingAtSessionStorage = ingAtSessionStorage;
     }

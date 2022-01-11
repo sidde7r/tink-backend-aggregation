@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.ConsentStatus;
@@ -42,13 +43,12 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
 public class LhvApiClient {
     private final TinkHttpClient client;
     protected LhvConfiguration configuration;
-    private final CredentialsRequest credentialsRequest;
+    private final User user;
     private final String redirectUrl;
     private final PersistentStorage persistentStorage;
     private final LocalDate todaysDate;
@@ -56,12 +56,12 @@ public class LhvApiClient {
     public LhvApiClient(
             TinkHttpClient client,
             AgentConfiguration<LhvConfiguration> agentConfiguration,
-            CredentialsRequest credentialsRequest,
+            User user,
             PersistentStorage persistentStorage,
             LocalDate todaysDate) {
         this.client = client;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
-        this.credentialsRequest = credentialsRequest;
+        this.user = user;
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.persistentStorage = persistentStorage;
         this.todaysDate = todaysDate;
@@ -143,11 +143,10 @@ public class LhvApiClient {
     public ConsentResponse getConsent(AccountSummaryResponse accountSummaryResponse, String state) {
         final OAuth2Token token = getTokenFromStorage();
         final ConsentRequest request = generateConsentRequest(accountSummaryResponse);
-        final String ip = credentialsRequest.getUserAvailability().getOriginatingUserIp();
         return client.request(Url.CONSENT)
                 .addBearerToken(token)
                 .header(Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(Keys.PSU_IP_ADDRESS, ip)
+                .header(Keys.PSU_IP_ADDRESS, user.getIpAddress())
                 .body(request, MediaType.APPLICATION_JSON)
                 .header(Keys.TPP_REDIRECT_URI, createReturnURL(state, true))
                 .header(Keys.TPP_NOK_REDIRECT_URI, createReturnURL(state, false))

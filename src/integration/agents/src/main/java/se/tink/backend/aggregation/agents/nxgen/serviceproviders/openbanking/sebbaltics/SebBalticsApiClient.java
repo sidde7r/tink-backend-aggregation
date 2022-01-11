@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsConstants.ConsentStatus;
@@ -45,16 +46,19 @@ public class SebBalticsApiClient {
     protected final CredentialsRequest credentialsRequest;
     protected SebBalticsConfiguration configuration;
     private final String providerMarket;
+    private final User user;
 
     public SebBalticsApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             CredentialsRequest credentialsRequest,
-            String providerMarket) {
+            String providerMarket,
+            User user) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.credentialsRequest = credentialsRequest;
         this.providerMarket = providerMarket;
+        this.user = user;
     }
 
     public void setConfiguration(SebBalticsConfiguration configuration) {
@@ -90,9 +94,7 @@ public class SebBalticsApiClient {
 
     public ConsentResponse createNewConsent(ConsentRequest consentRequest) {
         return createRequest(Urls.NEW_CONSENT)
-                .header(
-                        Keys.PSU_IP_ADDRESS,
-                        credentialsRequest.getUserAvailability().getOriginatingUserIpOrDefault())
+                .header(Keys.PSU_IP_ADDRESS, user.getIpAddress())
                 .addBearerToken(getTokenFromStorage())
                 .post(ConsentResponse.class, consentRequest);
     }
@@ -159,8 +161,7 @@ public class SebBalticsApiClient {
                         .header(Keys.CONSENT_ID, persistentStorage.get(StorageKeys.USER_CONSENT_ID))
                         .addBearerToken(getTokenFromStorage());
 
-        requestBuilder.header(
-                HeaderKeys.PSU_INVOLVED, credentialsRequest.getUserAvailability().isUserPresent());
+        requestBuilder.header(HeaderKeys.PSU_INVOLVED, user.isPresent());
 
         final Credentials credentials = credentialsRequest.getCredentials();
 
