@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import java.util.List;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -60,13 +61,15 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         userState = new SibsUserState(persistentStorage);
         setConfiguration(agentsServiceConfiguration);
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
+
+        final User user = agentComponentProvider.getUser();
         apiClient =
                 new SibsBaseApiClient(
                         client,
                         userState,
                         request.getProvider().getPayload(),
-                        request.getUserAvailability().isUserPresent(),
-                        userIp,
+                        user.isPresent(),
+                        user.getIpAddress(),
                         agentComponentProvider.getLocalDateTimeSource(),
                         agentConfiguration);
 
