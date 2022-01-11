@@ -38,7 +38,7 @@ public class OpenIdAuthenticationValidator {
         }
     }
 
-    public void validateAccessToken(OAuth2Token oAuth2Token) {
+    public void validateRefreshableAccessToken(OAuth2Token oAuth2Token) {
         if (!oAuth2Token.isValid()) {
             throw SessionError.SESSION_EXPIRED.exception(
                     "[OpenIdAuthenticationValidator] Invalid access token.");

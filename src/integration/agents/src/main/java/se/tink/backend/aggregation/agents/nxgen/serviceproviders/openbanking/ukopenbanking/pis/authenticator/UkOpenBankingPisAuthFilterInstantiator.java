@@ -56,7 +56,7 @@ public class UkOpenBankingPisAuthFilterInstantiator {
     private UkPisAuthToken retrieveAccessToken(String authCode) {
         final OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(authCode);
 
-        authenticationValidator.validateAccessToken(oAuth2Token);
+        authenticationValidator.validateRefreshableAccessToken(oAuth2Token);
 
         return UkPisAuthToken.builder()
                 .oAuth2Token(oAuth2Token)

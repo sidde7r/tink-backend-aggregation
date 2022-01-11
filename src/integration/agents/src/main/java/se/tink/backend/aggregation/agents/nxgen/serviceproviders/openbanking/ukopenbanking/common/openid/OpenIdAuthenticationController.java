@@ -186,7 +186,7 @@ public class OpenIdAuthenticationController
 
         OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
 
-        authenticationValidator.validateAccessToken(oAuth2Token);
+        authenticationValidator.validateRefreshableAccessToken(oAuth2Token);
 
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(

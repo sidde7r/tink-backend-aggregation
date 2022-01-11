@@ -25,7 +25,10 @@ public class OpenIdAuthenticationValidatorTest {
     public void shouldValidateCorrectAccessToken() {
         // when
         final Throwable thrown =
-                catchThrowable(() -> authenticationValidator.validateAccessToken(CORRECT_TOKEN));
+                catchThrowable(
+                        () ->
+                                authenticationValidator.validateRefreshableAccessToken(
+                                        CORRECT_TOKEN));
 
         // then
         assertThat(thrown).isNull();
@@ -37,7 +40,7 @@ public class OpenIdAuthenticationValidatorTest {
         final Throwable thrown =
                 catchThrowable(
                         () ->
-                                authenticationValidator.validateAccessToken(
+                                authenticationValidator.validateRefreshableAccessToken(
                                         INCORRECT_TOKEN_WRONG_TYPE));
 
         // then
@@ -52,7 +55,9 @@ public class OpenIdAuthenticationValidatorTest {
         // when
         final Throwable thrown =
                 catchThrowable(
-                        () -> authenticationValidator.validateAccessToken(INCORRECT_TOKEN_EXPIRED));
+                        () ->
+                                authenticationValidator.validateRefreshableAccessToken(
+                                        INCORRECT_TOKEN_EXPIRED));
 
         // then
         assertThat(thrown)
