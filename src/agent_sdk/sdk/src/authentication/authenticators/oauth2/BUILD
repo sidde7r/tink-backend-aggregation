@@ -10,8 +10,8 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/libraries/serialization",
-        "//src/agent_sdk/sdk/src/authentication/new_consent",
-        "//src/agent_sdk/sdk/src/authentication/existing_consent",
+        "//src/agent_sdk/sdk/src/steppable_execution:steps",
+        "//src/agent_sdk/sdk/src/authentication/consent",
         "//src/agent_sdk/sdk/src/authentication/common_steps",
         "//src/agent_sdk/sdk/src/models/authentication",
         "//src/agent_sdk/sdk/src/operation",
@@ -20,7 +20,7 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
     exports = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
     ],

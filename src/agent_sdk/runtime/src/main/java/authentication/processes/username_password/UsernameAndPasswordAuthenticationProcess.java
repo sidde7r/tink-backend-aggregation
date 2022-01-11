@@ -3,13 +3,14 @@ package se.tink.agent.runtime.authentication.processes.username_password;
 import java.util.Optional;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.username_password.UsernameAndPasswordAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.username_password.steps.UsernameAndPasswordStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.authentication.features.AuthenticateUsernameAndPassword;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
+import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
+import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
 
 public class UsernameAndPasswordAuthenticationProcess
         implements AuthenticationProcess<UsernameAndPasswordAuthenticator> {
@@ -22,14 +23,16 @@ public class UsernameAndPasswordAuthenticationProcess
     }
 
     @Override
-    public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
+    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
             UsernameAndPasswordAuthenticator authenticator) {
-        return AuthenticationFlow.builder(new UsernameAndPasswordStep(authenticator)).build();
+        return InteractiveExecutionFlow.startStep(new UsernameAndPasswordStep(authenticator))
+                .build();
     }
 
     @Override
-    public AuthenticationFlow<ExistingConsentStep> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
             UsernameAndPasswordAuthenticator authenticator) {
-        return AuthenticationFlow.builder(new VerifyBankConnectionStep(authenticator)).build();
+        return NonInteractiveExecutionFlow.startStep(new VerifyBankConnectionStep(authenticator))
+                .build();
     }
 }

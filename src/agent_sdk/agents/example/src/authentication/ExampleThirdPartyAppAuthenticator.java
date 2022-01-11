@@ -2,8 +2,8 @@ package se.tink.agent.agents.example.authentication;
 
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.result.ThirdPartyAppResult;
-import se.tink.agent.sdk.authentication.existing_consent.ConsentStatus;
-import se.tink.agent.sdk.authentication.new_consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.storage.Reference;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;

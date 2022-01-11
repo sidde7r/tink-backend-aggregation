@@ -6,12 +6,13 @@ import se.tink.agent.sdk.authentication.authenticators.oauth2.ExchangeAuthorizat
 import se.tink.agent.sdk.authentication.authenticators.oauth2.HandleCallbackDataError;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Constants;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Utils;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.InteractiveStep;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
 
-public class Oauth2ExchangeAuthorizationCodeStep implements NewConsentStep {
+public class Oauth2ExchangeAuthorizationCodeStep extends InteractiveStep<ConsentLifetime> {
     private final HandleCallbackDataError agentHandleCallbackDataError;
     private final ExchangeAuthorizationCode agentExchangeAuthorizationCode;
 
@@ -23,7 +24,7 @@ public class Oauth2ExchangeAuthorizationCodeStep implements NewConsentStep {
     }
 
     @Override
-    public NewConsentResponse execute(NewConsentRequest request) {
+    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest request) {
         UserResponseData userResponseData =
                 request.getUserResponseData()
                         .orElseThrow(
@@ -51,6 +52,6 @@ public class Oauth2ExchangeAuthorizationCodeStep implements NewConsentStep {
         }
 
         request.getAgentStorage().putOauth2Token(result.getToken());
-        return NewConsentResponse.done(result.getConsentLifetime());
+        return InteractiveStepResponse.done(result.getConsentLifetime());
     }
 }

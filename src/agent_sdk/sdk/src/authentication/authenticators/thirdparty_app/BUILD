@@ -10,10 +10,11 @@ java_library_with_sources(
     intdeps = [
         "//src/agent_sdk/sdk/src/authentication/common_steps",
         "//src/agent_sdk/sdk/src/utils",
-        "//src/agent_sdk/sdk/src/authentication/new_consent",
+        "//src/agent_sdk/sdk/src/steppable_execution:steps",
+        "//src/agent_sdk/sdk/src/authentication/consent",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/user_interaction",
         "//src/agent_sdk/sdk/src/exceptions",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
 )

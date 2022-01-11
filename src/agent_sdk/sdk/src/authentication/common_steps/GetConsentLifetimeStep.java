@@ -1,11 +1,11 @@
 package se.tink.agent.sdk.authentication.common_steps;
 
-import se.tink.agent.sdk.authentication.new_consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.InteractiveStep;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 
-public class GetConsentLifetimeStep implements NewConsentStep {
+public class GetConsentLifetimeStep extends InteractiveStep<ConsentLifetime> {
     private final GetConsentLifetime agentGetConsentLifetime;
 
     public GetConsentLifetimeStep(GetConsentLifetime agentGetConsentLifetime) {
@@ -13,8 +13,8 @@ public class GetConsentLifetimeStep implements NewConsentStep {
     }
 
     @Override
-    public NewConsentResponse execute(NewConsentRequest request) {
+    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest request) {
         ConsentLifetime consentLifetime = this.agentGetConsentLifetime.getConsentLifetime();
-        return NewConsentResponse.done(consentLifetime);
+        return InteractiveStepResponse.done(consentLifetime);
     }
 }

@@ -5,14 +5,14 @@ import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAu
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAuthenticatorConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConsentStatus;
-import se.tink.agent.sdk.authentication.existing_consent.ConsentStatus;
-import se.tink.agent.sdk.authentication.new_consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.consent.ConsentStatus;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.InteractiveStep;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 
-public class BerlinGroupVerifyAuthorizedConsentStep implements NewConsentStep {
+public class BerlinGroupVerifyAuthorizedConsentStep extends InteractiveStep<ConsentLifetime> {
 
     private final BerlinGroupGetConfiguration agentGetConfiguration;
     private final BerlinGroupGetConsentStatus agentGetConsentStatus;
@@ -25,18 +25,18 @@ public class BerlinGroupVerifyAuthorizedConsentStep implements NewConsentStep {
     }
 
     @Override
-    public NewConsentResponse execute(NewConsentRequest request) {
+    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest request) {
         if (!request.getUserResponseData().isPresent()) {
             throw ThirdPartyAppError.TIMED_OUT.exception();
         }
 
         String consentId =
-                request.getAuthenticationStorage()
+                request.getStepStorage()
                         .tryGet(BerlinGroupAuthenticator.STATE_KEY_CONSENT_ID)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                "ConsentId was not present in AuthenticationStorage."));
+                                                "ConsentId was not present in StepStorage."));
 
         ConsentStatus consentStatus = agentGetConsentStatus.getConsentStatus(consentId);
         if (!ConsentStatus.VALID.equals(consentStatus)) {
@@ -50,6 +50,6 @@ public class BerlinGroupVerifyAuthorizedConsentStep implements NewConsentStep {
 
         Duration consentLifetime =
                 Duration.ofDays(configuration.getConsentValidForPeriod().getDays());
-        return NewConsentResponse.done(ConsentLifetime.specificLifetime(consentLifetime));
+        return InteractiveStepResponse.done(ConsentLifetime.specificLifetime(consentLifetime));
     }
 }

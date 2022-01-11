@@ -3,7 +3,6 @@ package se.tink.agent.runtime.authentication.processes.oauth2_decoupled_app;
 import java.util.Optional;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.steps.Oauth2ValidateOrRefreshAccessTokenStep;
 import se.tink.agent.sdk.authentication.authenticators.oauth2_decoupled_app.Oauth2DecoupledAppAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.oauth2_decoupled_app.steps.Oauth2FetchAccessToken;
@@ -11,9 +10,11 @@ import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.Thir
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppOpenAppStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppPollStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.authentication.features.AuthenticateOauth2DecoupledApp;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
+import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
+import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
 import se.tink.agent.sdk.utils.Sleeper;
 
 public class Oauth2DecoupledAppAuthenticationProcess
@@ -34,9 +35,9 @@ public class Oauth2DecoupledAppAuthenticationProcess
     }
 
     @Override
-    public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
+    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
             Oauth2DecoupledAppAuthenticator authenticator) {
-        return AuthenticationFlow.builder(
+        return InteractiveExecutionFlow.<ConsentLifetime>startStep(
                         new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
                 .addStep(new ThirdPartyAppOpenAppStep(authenticator, ThirdPartyAppPollStep.class))
                 .addStep(
@@ -50,9 +51,9 @@ public class Oauth2DecoupledAppAuthenticationProcess
     }
 
     @Override
-    public AuthenticationFlow<ExistingConsentStep> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
             Oauth2DecoupledAppAuthenticator authenticator) {
-        return AuthenticationFlow.builder(
+        return NonInteractiveExecutionFlow.startStep(
                         new Oauth2ValidateOrRefreshAccessTokenStep(
                                 authenticator, VerifyBankConnectionStep.class))
                 .addStep(new VerifyBankConnectionStep(authenticator))

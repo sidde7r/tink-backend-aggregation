@@ -1,15 +1,15 @@
 package se.tink.agent.sdk.authentication.authenticators.username_password.steps;
 
 import se.tink.agent.sdk.authentication.authenticators.username_password.UsernameAndPasswordLogin;
-import se.tink.agent.sdk.authentication.new_consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.InteractiveStep;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 
-public class UsernameAndPasswordStep implements NewConsentStep {
+public class UsernameAndPasswordStep extends InteractiveStep<ConsentLifetime> {
 
     private final UsernameAndPasswordLogin agentUsernameAndPasswordLogin;
 
@@ -18,7 +18,7 @@ public class UsernameAndPasswordStep implements NewConsentStep {
     }
 
     @Override
-    public NewConsentResponse execute(NewConsentRequest request) {
+    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest request) {
         StaticBankCredentials staticBankCredentials = request.getStaticBankCredentials();
 
         String username =
@@ -32,6 +32,6 @@ public class UsernameAndPasswordStep implements NewConsentStep {
 
         ConsentLifetime consentLifetime =
                 this.agentUsernameAndPasswordLogin.login(username, password);
-        return NewConsentResponse.done(consentLifetime);
+        return InteractiveStepResponse.done(consentLifetime);
     }
 }

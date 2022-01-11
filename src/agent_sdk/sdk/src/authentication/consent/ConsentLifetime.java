@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.authentication.new_consent;
+package se.tink.agent.sdk.authentication.consent;
 
 import java.time.Duration;
 

@@ -7,11 +7,12 @@ import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAu
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.steps.BerlinGroupOpenConsentAppStep;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.steps.BerlinGroupVerifyAuthorizedConsentStep;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.steps.BerlinGroupVerifyConsentStatusStep;
-import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.authentication.features.AuthenticateBerlinGroup;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
+import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
+import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
 import se.tink.agent.sdk.utils.TimeGenerator;
 
 public class BerlinGroupAuthenticationProcess
@@ -35,9 +36,9 @@ public class BerlinGroupAuthenticationProcess
     }
 
     @Override
-    public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
+    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
             BerlinGroupAuthenticator authenticator) {
-        return AuthenticationFlow.builder(
+        return InteractiveExecutionFlow.<ConsentLifetime>startStep(
                         new BerlinGroupOpenConsentAppStep(
                                 this.timeGenerator,
                                 this.multifactorAuthenticationState,
@@ -49,9 +50,9 @@ public class BerlinGroupAuthenticationProcess
     }
 
     @Override
-    public AuthenticationFlow<ExistingConsentStep> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
             BerlinGroupAuthenticator authenticator) {
-        return AuthenticationFlow.builder(
+        return NonInteractiveExecutionFlow.startStep(
                         new BerlinGroupVerifyConsentStatusStep(authenticator, authenticator))
                 .build();
     }

@@ -1,11 +1,11 @@
 package se.tink.agent.sdk.authentication.common_steps;
 
-import se.tink.agent.sdk.authentication.existing_consent.ConsentStatus;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentRequest;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentResponse;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
+import se.tink.agent.sdk.authentication.consent.ConsentStatus;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequestBase;
+import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractionStepResponse;
+import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractiveStep;
 
-public class VerifyBankConnectionStep implements ExistingConsentStep {
+public class VerifyBankConnectionStep extends NonInteractiveStep<ConsentStatus> {
     private final VerifyBankConnection agentVerifyBankConnection;
 
     public VerifyBankConnectionStep(VerifyBankConnection agentVerifyBankConnection) {
@@ -13,8 +13,8 @@ public class VerifyBankConnectionStep implements ExistingConsentStep {
     }
 
     @Override
-    public ExistingConsentResponse execute(ExistingConsentRequest request) {
+    public NonInteractionStepResponse<ConsentStatus> execute(StepRequestBase request) {
         ConsentStatus consentStatus = agentVerifyBankConnection.verifyBankConnection();
-        return ExistingConsentResponse.done(consentStatus);
+        return NonInteractionStepResponse.done(consentStatus);
     }
 }
