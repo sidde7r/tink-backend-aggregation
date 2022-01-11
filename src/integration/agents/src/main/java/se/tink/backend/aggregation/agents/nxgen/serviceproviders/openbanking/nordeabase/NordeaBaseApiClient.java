@@ -16,6 +16,7 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.nordea.NordeaConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.nordea.NordeaScope;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -72,7 +73,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -85,7 +85,7 @@ public class NordeaBaseApiClient implements TokenInterface {
     private final QsealcSigner qsealcSigner;
     private final boolean corporate;
     private GetAccountsResponse cachedAccounts;
-    private final UserAvailability userAvailability;
+    private final User user;
     private final LocalDate localDate;
     private final StrongAuthenticationState strongAuthenticationState;
 
@@ -101,7 +101,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.corporate = corporate;
-        this.userAvailability = componentProvider.getCredentialsRequest().getUserAvailability();
+        this.user = componentProvider.getUser();
         this.localDate = componentProvider.getLocalDateTimeSource().now().toLocalDate();
         this.strongAuthenticationState = strongAuthenticationState;
     }
@@ -139,8 +139,8 @@ public class NordeaBaseApiClient implements TokenInterface {
                                 HeaderKeys.SIGNATURE,
                                 createSignature(url, httpMethod, digest, date));
 
-        if (userAvailability.isUserPresent()) {
-            builder.header(HeaderKeys.USER_IP, userAvailability.getOriginatingUserIpOrDefault());
+        if (user.isPresent()) {
+            builder.header(HeaderKeys.USER_IP, user.getIpAddress());
         }
 
         if (!Strings.isNullOrEmpty(body)) {

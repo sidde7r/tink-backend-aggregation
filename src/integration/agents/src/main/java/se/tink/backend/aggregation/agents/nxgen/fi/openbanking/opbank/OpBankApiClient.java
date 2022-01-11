@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -45,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpBankApiClient {
@@ -56,7 +56,7 @@ public class OpBankApiClient {
     private final String redirectUrl;
     private final QsealcSigner qsealcSigner;
     private final String financialId;
-    private final UserAvailability userAvailability;
+    private final User user;
 
     @SneakyThrows
     public OpBankApiClient(
@@ -64,7 +64,7 @@ public class OpBankApiClient {
             PersistentStorage persistentStorage,
             AgentConfiguration<OpBankConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
-            UserAvailability userAvailability) {
+            User user) {
         this.client = client;
         configureClient();
         this.persistentStorage = persistentStorage;
@@ -73,7 +73,7 @@ public class OpBankApiClient {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.financialId =
                 CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc());
-        this.userAvailability = userAvailability;
+        this.user = user;
     }
 
     private void configureClient() {
@@ -159,11 +159,10 @@ public class OpBankApiClient {
                         .header(HeaderKeys.AUTHORIZATION, "Bearer " + accessToken)
                         .body(payment);
 
-        if (userAvailability.isUserPresent()) {
+        if (user.isPresent()) {
             requestBuilder =
                     requestBuilder.header(
-                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS,
-                            userAvailability.getOriginatingUserIp());
+                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, user.getIpAddress());
         }
         return requestBuilder.post(CreatePaymentResponse.class);
     }
@@ -276,11 +275,10 @@ public class OpBankApiClient {
                                                         new IllegalStateException(
                                                                 SessionError.SESSION_EXPIRED
                                                                         .exception())));
-        if (userAvailability.isUserPresent()) {
+        if (user.isPresent()) {
             requestBuilder =
                     requestBuilder.header(
-                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS,
-                            userAvailability.getOriginatingUserIp());
+                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, user.getIpAddress());
         }
 
         return requestBuilder;
@@ -296,11 +294,10 @@ public class OpBankApiClient {
                         .header(HeaderKeys.X_FAPI_INTERACTION_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.AUTHORIZATION, accessToken.toAuthorizeHeader());
 
-        if (userAvailability.isUserPresent()) {
+        if (user.isPresent()) {
             requestBuilder =
                     requestBuilder.header(
-                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS,
-                            userAvailability.getOriginatingUserIp());
+                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, user.getIpAddress());
         }
 
         return requestBuilder;

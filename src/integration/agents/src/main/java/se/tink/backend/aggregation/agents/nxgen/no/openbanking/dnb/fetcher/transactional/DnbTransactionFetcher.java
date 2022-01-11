@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.tran
 
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.rpc.TransactionResponse;
@@ -11,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @AllArgsConstructor
 public class DnbTransactionFetcher
@@ -22,7 +22,7 @@ public class DnbTransactionFetcher
     private final DnbStorage storage;
     private final DnbApiClient apiClient;
     private final DnbTransactionMapper transactionMapper;
-    private final UserAvailability userAvailability;
+    private final User user;
     private final LocalDateTimeSource localDateTimeSource;
 
     @Override
@@ -30,9 +30,7 @@ public class DnbTransactionFetcher
             TransactionalAccount account, @Nullable String nextUrl) {
 
         String fromDate =
-                userAvailability.isUserPresent()
-                        ? getFromDateWhenUserIsPresent()
-                        : getFromDateWhenUserIsAbsent();
+                user.isPresent() ? getFromDateWhenUserIsPresent() : getFromDateWhenUserIsAbsent();
 
         TransactionResponse transactionResponse =
                 nextUrl == null
