@@ -93,7 +93,7 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
             PisCapability.SEPA_CREDIT_TRANSFER,
             PisCapability.SEPA_INSTANT_CREDIT_TRANSFER
         },
-        markets = {"DE", "ES", "FR", "FI"})
+        markets = {"DE", "ES", "FR", "FI", "LT"})
 @AgentPisCapability(
         capabilities = {
             PisCapability.FASTER_PAYMENTS,
