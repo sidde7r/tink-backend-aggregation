@@ -1,0 +1,272 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "FI222222222222222",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 89.6,
+                "doubleValue": 89.6,
+                "unscaledValue": 896,
+                "scale": 1
+            },
+            "currencyCode": "EUR",
+            "bankId": "FI222222222222222",
+            "excluded": false,
+            "favored": false,
+            "name": "käyttö",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 89.6
+        },
+        {
+            "accountNumber": "FI3333333333333333",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 2635.28,
+                "doubleValue": 2635.28,
+                "unscaledValue": 263528,
+                "scale": 2
+            },
+            "currencyCode": "EUR",
+            "bankId": "FI3333333333333333",
+            "excluded": false,
+            "favored": false,
+            "name": "säästö",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 2635.28
+        },
+        {
+            "accountNumber": "FI1111111111111111",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 2635.28,
+                "doubleValue": 2635.28,
+                "unscaledValue": 263528,
+                "scale": 2
+            },
+            "currencyCode": "EUR",
+            "bankId": "FI1111111111111111",
+            "excluded": false,
+            "favored": false,
+            "name": "säästö",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 2635.28
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -35.51,
+            "date": 1641553200000,
+            "description": "K-CITYMARKET VANTAA MY, K-CITYMARKET VANTAA MY VANTAA FI 513358******8362 07600802 20220106, Card payment",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "81D3B8003ACC4C80109754C137012D2142ECF1B05B947CE15B60BCB874BB2907"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 15.0,
+            "date": 1641553200000,
+            "description": "40166 ISKOSKUJA 3 513358xxxxxx8362, ATM deposit",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "DE185C3F7F687846740E65F7CAD6C577F29155AF1ADA58EAA591580C80877426"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -35.0,
+            "date": 1640689200000,
+            "description": "Mob.Pay*Teemu Juhani M, Mob.Pay*Teemu Juhani M Helsinki FI 513358******8362 63130751 20211227, Card payment",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "30F1E93343ED4CE92A66EE0863EA7B4D6AA74B5D9552273FEB7ADC573836FF48"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -11.84,
+            "date": 1639998000000,
+            "description": "K-CITYMARKET VANTAA MY, K-CITYMARKET VANTAA MY VANTAA FI 513358******8362 07600802 20211218, Card payment",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "186E0138934F3D1329829967ED0FEBA24AF92E9F1E975CC563AB262B91FF9A8D"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -21.3,
+            "date": 1639998000000,
+            "description": "Mob.Pay*Teemu Juhani M, Mob.Pay*Teemu Juhani M Helsinki FI 513358******8362 63130751 20211217, Card payment",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "67C3DAA91E6ACE43DBF13371A315370EE02AF0A2081D74C70ECECB0EDBD18FCB"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -2.5,
+            "date": 1639393200000,
+            "description": "HSL Mobiili, HSL Mobiili HSL FI 513358******8362 09635087 20211211, Card payment",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "D4639C641874BC15300658ED3056CBC83650550CDC269E74D98915472119C4DF"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -400.0,
+            "date": 1641207600000,
+            "description": "FirstName LastName, Account transfer",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "AB22EFC317D85483823D877295905ACD998E7D16B14A46C1AC4EECBE539F6C34"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -100.0,
+            "date": 1640862000000,
+            "description": "FirstName LastName, Account transfer",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "069AE39835FD39BB9EB449919EEC8811079597B5692D1A3A1B4A96078A8A4782"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -400.0,
+            "date": 1641207600000,
+            "description": "FirstName LastName, Account transfer",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "AB22EFC317D85483823D877295905ACD998E7D16B14A46C1AC4EECBE539F6C34"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -100.0,
+            "date": 1640862000000,
+            "description": "FirstName LastName, Account transfer",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "069AE39835FD39BB9EB449919EEC8811079597B5692D1A3A1B4A96078A8A4782"
+            },
+            "transactionDates": [],
+            "booked": true
+        }
+    ]
+}
