@@ -122,30 +122,6 @@ public class StarlingApiClient {
                 .get(TransactionsResponse.class);
     }
 
-    private RequestBuilder request(URL url) {
-        return client.request(url)
-                .addBearerToken(this.getOAuthToken())
-                .accept(MediaType.APPLICATION_JSON);
-    }
-
-    private OAuth2Token getOAuthToken() {
-        return redirectTokensPersistedData
-                .getRefreshableAccessToken()
-                .map(RefreshableAccessToken::getAccessToken)
-                .map(
-                        accessToken ->
-                                OAuth2Token.create(
-                                        accessToken.getTokenType(),
-                                        new String(accessToken.getBody(), StandardCharsets.UTF_8),
-                                        null,
-                                        accessToken.getExpiresInSeconds()))
-                .orElseThrow(IllegalStateException::new);
-    }
-
-    private static String toFormattedDate(final Date date) {
-        return ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITHOUT_TIMEZONE.format(date);
-    }
-
     public void saveOAuthToken(OAuth2Token oAuth2Token) {
         Token.TokenBuilder builder = new Token.TokenBuilder();
         Token token =
@@ -208,5 +184,29 @@ public class StarlingApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .get(PaymentOrderPaymentsResponse.class)
                 .toPaymentResponse();
+    }
+
+    private static String toFormattedDate(final Date date) {
+        return ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITHOUT_TIMEZONE.format(date);
+    }
+
+    private RequestBuilder request(URL url) {
+        return client.request(url)
+                .addBearerToken(this.getOAuthToken())
+                .accept(MediaType.APPLICATION_JSON);
+    }
+
+    private OAuth2Token getOAuthToken() {
+        return redirectTokensPersistedData
+                .getRefreshableAccessToken()
+                .map(RefreshableAccessToken::getAccessToken)
+                .map(
+                        accessToken ->
+                                OAuth2Token.create(
+                                        accessToken.getTokenType(),
+                                        new String(accessToken.getBody(), StandardCharsets.UTF_8),
+                                        null,
+                                        accessToken.getExpiresInSeconds()))
+                .orElseThrow(IllegalStateException::new);
     }
 }
