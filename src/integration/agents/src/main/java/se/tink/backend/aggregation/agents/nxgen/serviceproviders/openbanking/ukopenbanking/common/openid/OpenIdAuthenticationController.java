@@ -256,7 +256,7 @@ public class OpenIdAuthenticationController
                         + "Has Refresh Token: [{}] Refresh Token Expires: [{}]",
                 LocalDateTime.ofEpochSecond(oAuth2Token.getIssuedAt(), 0, ZoneOffset.UTC),
                 LocalDateTime.ofEpochSecond(oAuth2Token.getAccessExpireEpoch(), 0, ZoneOffset.UTC),
-                !oAuth2Token.isRefreshNullOrEmpty(),
+                oAuth2Token.isRefreshNullOrEmpty(),
                 oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
                         ? LocalDateTime.ofEpochSecond(
                                 oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
@@ -297,7 +297,7 @@ public class OpenIdAuthenticationController
         log.info(
                 "[OpenIdAuthenticationController] Token refreshed successfully. New token - Access Expires: [{}] Has Refresh Token: [{}] Refresh Expires: [{}]",
                 LocalDateTime.ofEpochSecond(oAuth2Token.getAccessExpireEpoch(), 0, ZoneOffset.UTC),
-                !oAuth2Token.isRefreshNullOrEmpty(),
+                oAuth2Token.isRefreshNullOrEmpty(),
                 oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
                         ? LocalDateTime.ofEpochSecond(
                                 oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
