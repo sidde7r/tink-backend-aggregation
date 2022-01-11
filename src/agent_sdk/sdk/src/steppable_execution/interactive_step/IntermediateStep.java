@@ -5,7 +5,7 @@ import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.base_step.StepResponse;
 import se.tink.agent.sdk.steppable_execution.interactive_step.response.IntermediateStepResponse;
 
-public abstract class IntermediateStep extends BaseStep<Void> {
+public abstract class IntermediateStep implements BaseStep<Void> {
     @Override
     public final StepResponse<Void> executeInternal(StepRequest request) {
         return this.execute(request);
