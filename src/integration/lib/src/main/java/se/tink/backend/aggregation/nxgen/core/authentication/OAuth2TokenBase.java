@@ -35,20 +35,26 @@ public abstract class OAuth2TokenBase {
     public boolean hasAccessExpired() {
         final long validFor = getValidForSecondsTimeLeft();
         if (validFor > 0) {
-            String logMessage =
-                    "Access token is valid for %s seconds (issuedAtEpoch: %s, expiresIn: %s)";
-            logger.info(String.format(logMessage, validFor, issuedAt, expiresInSeconds));
+            logger.info(
+                    "Access token is valid for {} seconds (issuedAtEpoch: {}, expiresIn: {})",
+                    validFor,
+                    issuedAt,
+                    expiresInSeconds);
         }
         return validFor <= 0;
     }
 
     private boolean hasRefreshExpired() {
         if (refreshExpiresInSeconds == REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED) {
+            logger.warn(
+                    "[OAuth2TokenBase] refreshExpiresInSeconds not specified -> assuming optimistically that refreshing access token is possible");
             return false;
         }
 
         final long currentTime = getCurrentEpoch();
-        return currentTime >= (issuedAt + refreshExpiresInSeconds);
+        boolean isRefreshTokenExpired = currentTime >= (issuedAt + refreshExpiresInSeconds);
+        logger.info("[OAuth2TokenBase] Is refresh token expired: {}", isRefreshTokenExpired);
+        return isRefreshTokenExpired;
     }
 
     public void updateWithOldToken(OAuth2TokenBase oldOAuth2Token) {
@@ -72,7 +78,14 @@ public abstract class OAuth2TokenBase {
     }
 
     public boolean canRefresh() {
-        return getRefreshToken().isPresent() && !hasRefreshExpired();
+        Optional<String> maybeRefreshToken = getRefreshToken();
+
+        if (!maybeRefreshToken.isPresent()) {
+            logger.warn("[OAuth2TokenBase] Refresh token is missing");
+            return false;
+        }
+
+        return !hasRefreshExpired();
     }
 
     public boolean isRefreshTokenExpirationPeriodSpecified() {
