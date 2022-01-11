@@ -43,6 +43,8 @@ public class LaBanquePostaleAuthenticator extends BerlinGroupAuthenticator
             throw ThirdPartyAppError.TIMED_OUT.exception();
         } else if (ErrorMessages.TEMP_UNAVAILABLE.equals(errorType)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } else if (ErrorMessages.METHOD_SUSPENDED.equals(errorType)) {
+            throw LoginError.NOT_SUPPORTED.exception();
         } else if (ErrorMessages.BAD_REDIRECT.equals(errorType)
                 || ErrorMessages.CERTICODE_INACTIVE.equals(errorType)) {
             throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(

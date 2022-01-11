@@ -79,6 +79,7 @@ public final class LaBanquePostaleConstants {
                 "This service is temporarily unavailable. Please try again later.";
         public static final String BAD_REDIRECT = "badredirect";
         public static final String CERTICODE_INACTIVE = "SCA_PSU_METHOD_ERROR";
+        public static final String METHOD_SUSPENDED = "SCA_PSU_METHOD_ERROR_SUSPENDED";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
