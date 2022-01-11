@@ -45,6 +45,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                 ProgressiveAuthAgent {
 
     private static final int MAX_HTTP_NUM_RETRIES = 5;
+    private static final int SERVICE_INVALID_MAX_HTTP_NUM_RETRIES = 3;
     private static final int RETRY_SLEEP_MILLISECONDS = 1000;
     protected final SibsBaseApiClient apiClient;
     protected final SibsUserState userState;
@@ -84,7 +85,9 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                 .applyFilters(
                         client,
                         new SibsRetryFilterProperties(
-                                MAX_HTTP_NUM_RETRIES, RETRY_SLEEP_MILLISECONDS),
+                                MAX_HTTP_NUM_RETRIES,
+                                RETRY_SLEEP_MILLISECONDS,
+                                SERVICE_INVALID_MAX_HTTP_NUM_RETRIES),
                         new SibsRateLimitFilterProperties(
                                 RATE_LIMIT_RETRY_MS_MIN,
                                 RATE_LIMIT_RETRY_MS_MAX,

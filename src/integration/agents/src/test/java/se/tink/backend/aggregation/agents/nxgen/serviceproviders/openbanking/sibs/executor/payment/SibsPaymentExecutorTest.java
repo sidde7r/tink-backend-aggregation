@@ -275,7 +275,7 @@ public class SibsPaymentExecutorTest {
         new SibsTinkApiClientConfigurator()
                 .applyFilters(
                         client,
-                        new SibsRetryFilterProperties(1, 1),
+                        new SibsRetryFilterProperties(1, 1, 1),
                         new SibsRateLimitFilterProperties(1, 2, 1),
                         PROVIDER_NAME);
         client.addFilter(callFilter);

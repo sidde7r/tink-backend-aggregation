@@ -89,7 +89,7 @@ public class CaixaFiltersWireMockTest {
     }
 
     @Test
-    public void shouldThrowBankServiceExceptionWhenServiceIsInvalid() {
+    public void shouldRetryAndThrowBankServiceExceptionWhenServiceIsInvalid() {
         // given
         final String filePath = RESOURCE_PATH + "caixa_pt_service_invalid.aap";
         final AgentWireMockRefreshTest agentWireMockRefreshTest = buildAgentWireMockTest(filePath);

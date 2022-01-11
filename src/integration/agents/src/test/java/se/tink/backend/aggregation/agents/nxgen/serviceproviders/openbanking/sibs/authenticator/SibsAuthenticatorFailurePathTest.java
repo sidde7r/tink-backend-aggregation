@@ -152,7 +152,7 @@ public class SibsAuthenticatorFailurePathTest {
         new SibsTinkApiClientConfigurator()
                 .applyFilters(
                         tinkHttpClient,
-                        new SibsRetryFilterProperties(1, 1),
+                        new SibsRetryFilterProperties(1, 1, 1),
                         new SibsRateLimitFilterProperties(1, 2, 1),
                         "providerName");
         tinkHttpClient.addFilter(executionFilter);

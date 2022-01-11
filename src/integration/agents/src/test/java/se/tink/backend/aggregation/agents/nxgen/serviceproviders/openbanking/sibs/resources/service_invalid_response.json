@@ -1,0 +1,10 @@
+{
+    "transactionStatus": "RJCT",
+    "tppMessages": [
+        {
+            "category": "ERROR",
+            "code": "SERVICE_INVALID",
+            "text": "The addressed service is not valid for the addressed resources."
+        }
+    ]
+}
