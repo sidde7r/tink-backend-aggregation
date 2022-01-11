@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.authenticator.CajamarAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.account.CajamarAccountFetcher;
@@ -30,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.filter.CajamarR
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.session.CajamarSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.proxy.ProxyModule;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
@@ -39,10 +37,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @Slf4j
-@AgentDependencyModules(modules = ProxyModule.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, IDENTITY_DATA})
 public class CajamarAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -57,8 +53,9 @@ public class CajamarAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
 
     @Inject
-    protected CajamarAgent(TinkHttpClient client, AgentComponentProvider agentComponentProvider) {
+    protected CajamarAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
+        client.setProxyProfile(agentComponentProvider.getProxyProfiles().getMarketProxyProfile());
         this.apiClient = new CajamarApiClient(client, sessionStorage);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
