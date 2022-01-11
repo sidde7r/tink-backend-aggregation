@@ -189,11 +189,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
-    public void setProductionProxy(String uri, String username, String password) {
-        // NOOP
-    }
-
-    @Override
     public void setEidasIdentity(EidasIdentity eidasIdentity) {
         // NOOP
     }

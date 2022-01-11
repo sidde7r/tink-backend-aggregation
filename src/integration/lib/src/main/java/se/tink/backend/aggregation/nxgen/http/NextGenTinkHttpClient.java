@@ -696,11 +696,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.setProxyProfile(new LocalDebugProxyProfile(port));
     }
 
-    public void setProductionProxy(String uri, String username, String password) {
-        setProxy(uri);
-        requestExecutor.setProxyCredentials(username, password);
-    }
-
     public void setEidasIdentity(EidasIdentity eidasIdentity) {
         requestExecutor.setEidasIdentity(eidasIdentity);
     }
