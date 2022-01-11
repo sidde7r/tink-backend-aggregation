@@ -366,7 +366,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     }
 
     private boolean isUserPresent() {
-        return componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent();
+        return componentProvider.getUser().isPresent();
     }
 
     public HttpResponse getOfflineTransactions(String endPoint) {

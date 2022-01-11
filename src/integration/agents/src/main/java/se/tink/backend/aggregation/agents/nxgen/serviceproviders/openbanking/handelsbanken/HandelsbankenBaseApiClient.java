@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -66,14 +67,11 @@ public class HandelsbankenBaseApiClient {
     private final String userIp;
 
     public HandelsbankenBaseApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            String market,
-            HandelsbankenUserIpInformation userIpInformation) {
+            TinkHttpClient client, PersistentStorage persistentStorage, String market, User user) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.market = market;
-        this.userIp = userIpInformation.getUserIp();
+        this.userIp = user.getIpAddress();
     }
 
     public void setConfiguration(

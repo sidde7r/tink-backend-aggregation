@@ -56,7 +56,7 @@ public final class KbcAgent
         this.apiClient = new KbcApiClient(client);
         this.httpFilter = new KbcHttpFilter();
         configureHttpClient(client);
-        kbcLanguage = getKbcLanguage(request.getUser().getLocale());
+        kbcLanguage = getKbcLanguage(agentComponentProvider.getUser().getLocale());
 
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.transactionalAccountRefreshController =

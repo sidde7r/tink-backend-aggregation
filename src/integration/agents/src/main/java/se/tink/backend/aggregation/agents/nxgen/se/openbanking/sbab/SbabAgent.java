@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -58,6 +59,7 @@ public final class SbabAgent extends NextGenerationAgent
     private final SbabApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LocalDateTimeSource localDateTimeSource;
+    private final User user;
 
     @Inject
     public SbabAgent(AgentComponentProvider componentProvider) {
@@ -65,6 +67,7 @@ public final class SbabAgent extends NextGenerationAgent
 
         apiClient = new SbabApiClient(client, sessionStorage);
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        user = componentProvider.getUser();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         configureHttpClient(this.client);
     }
@@ -111,7 +114,7 @@ public final class SbabAgent extends NextGenerationAgent
                         request);
 
         return new SbabAuthenticationController(
-                request, systemUpdater, bankIdAuthenticationController);
+                user, systemUpdater, bankIdAuthenticationController);
     }
 
     @Override

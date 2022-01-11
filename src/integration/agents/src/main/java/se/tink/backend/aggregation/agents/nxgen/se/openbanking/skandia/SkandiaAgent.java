@@ -53,7 +53,7 @@ public final class SkandiaAgent extends NextGenerationAgent
         super(componentProvider);
 
         client.addFilter(new BankServiceInternalErrorFilter());
-        apiClient = new SkandiaApiClient(client, persistentStorage, getUserIpInformation());
+        apiClient = new SkandiaApiClient(client, persistentStorage, componentProvider.getUser());
 
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
@@ -69,10 +69,6 @@ public final class SkandiaAgent extends NextGenerationAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         apiClient.setConfiguration(getAgentConfiguration(), configuration.getEidasProxy());
-    }
-
-    private SkandiaUserIpInformation getUserIpInformation() {
-        return new SkandiaUserIpInformation(request.getUserAvailability().isUserPresent(), userIp);
     }
 
     @Override

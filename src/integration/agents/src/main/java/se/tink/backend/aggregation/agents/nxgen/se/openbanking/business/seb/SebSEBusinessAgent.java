@@ -32,7 +32,9 @@ public final class SebSEBusinessAgent extends SebBaseAgent<SebSEBusinessApiClien
     @Inject
     public SebSEBusinessAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.apiClient = new SebSEBusinessApiClient(client, persistentStorage, request);
+        this.apiClient =
+                new SebSEBusinessApiClient(
+                        client, persistentStorage, request, componentProvider.getUser());
 
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();

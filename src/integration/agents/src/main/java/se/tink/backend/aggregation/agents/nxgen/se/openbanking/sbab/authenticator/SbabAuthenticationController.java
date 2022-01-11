@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator;
 
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
@@ -8,19 +9,18 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SbabAuthenticationController implements Authenticator {
     private final BankIdAuthenticationController bankIdAuthenticationController;
     private final SystemUpdater systemUpdater;
-    private final CredentialsRequest request;
+    private final User user;
 
     public SbabAuthenticationController(
-            CredentialsRequest request,
+            User user,
             SystemUpdater systemUpdater,
             BankIdAuthenticationController bankIdAuthenticationController) {
         this.systemUpdater = systemUpdater;
-        this.request = request;
+        this.user = user;
         this.bankIdAuthenticationController = bankIdAuthenticationController;
     }
 
@@ -38,7 +38,7 @@ public class SbabAuthenticationController implements Authenticator {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        if (request.getUserAvailability().isUserAvailableForInteraction()) {
+        if (user.isAvailableForInteraction()) {
             bankIdAuthenticationController.authenticate(credentials);
         } else {
             bankIdAuthenticationController.autoAuthenticate();

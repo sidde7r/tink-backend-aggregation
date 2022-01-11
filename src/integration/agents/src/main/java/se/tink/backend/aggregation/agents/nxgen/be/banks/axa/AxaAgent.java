@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 
 import com.google.inject.Inject;
 import java.util.Locale;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -23,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS})
 public final class AxaAgent extends SubsequentProgressiveGenerationAgent
@@ -33,7 +33,6 @@ public final class AxaAgent extends SubsequentProgressiveGenerationAgent
 
     private final AxaApiClient apiClient;
     private final AxaStorage storage;
-    private final CredentialsRequest request;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AxaAuthenticator authenticator;
 
@@ -43,9 +42,8 @@ public final class AxaAgent extends SubsequentProgressiveGenerationAgent
         this.storage = new AxaStorage(sessionStorage, persistentStorage);
         this.client.addFilter(new TimeoutFilter());
         this.apiClient = new AxaApiClient(client, storage);
-        this.request = agentComponentProvider.getCredentialsRequest();
         this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
+                constructTransactionalAccountRefreshController(agentComponentProvider.getUser());
         storage.persistCardNumber(request.getCredentials().getField(Key.USERNAME));
     }
 
@@ -82,8 +80,9 @@ public final class AxaAgent extends SubsequentProgressiveGenerationAgent
         return authenticator;
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        initRefresh();
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            User user) {
+        initRefresh(user);
 
         final AccountFetcher<TransactionalAccount> accountFetcher =
                 new AxaAccountFetcher(apiClient, storage);
@@ -93,9 +92,9 @@ public final class AxaAgent extends SubsequentProgressiveGenerationAgent
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
 
-    private void initRefresh() {
+    private void initRefresh(User user) {
         // Should be updated prior to every refresh
-        final String locale = request.getUser().getLocale().replace('_', '-');
+        final String locale = user.getLocale().replace('_', '-');
         final String language = Locale.forLanguageTag(locale).getLanguage();
         storage.persistLanguage(language);
     }

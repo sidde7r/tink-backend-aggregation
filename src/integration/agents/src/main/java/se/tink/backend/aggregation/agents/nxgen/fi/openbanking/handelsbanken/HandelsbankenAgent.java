@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CH
 import com.google.inject.Inject;
 import java.time.LocalDate;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.executor.payment.HandelsbankenPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
@@ -74,8 +75,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
     }
 
     @Override
-    public HandelsbankenBaseApiClient constructApiClient() {
-        return new HandelsbankenFiApiClient(
-                client, persistentStorage, getMarket(), getUserIpInformation());
+    public HandelsbankenBaseApiClient constructApiClient(User user) {
+        return new HandelsbankenFiApiClient(client, persistentStorage, getMarket(), user);
     }
 }
