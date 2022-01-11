@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.p
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.OpBankTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.creditcard.OpBankCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount.OpBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.filter.OpBankServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
@@ -77,7 +78,7 @@ public final class OpBankAgent extends NextGenerationAgent
     public OpBankAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         this.agentComponentProvider = componentProvider;
-
+        client.addFilter(new OpBankServiceUnavailableFilter());
         apiClient =
                 new OpBankApiClient(
                         client,
