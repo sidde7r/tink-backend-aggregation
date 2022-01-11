@@ -44,7 +44,7 @@ public class OpenIdAuthenticationValidatorTest {
         assertThat(thrown)
                 .isExactlyInstanceOf(IllegalArgumentException.class)
                 .hasNoCause()
-                .hasMessage("Unknown token type 'Hmac'.");
+                .hasMessage("[OpenIdAuthenticationValidator] Unknown token type 'Hmac'.");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class OpenIdAuthenticationValidatorTest {
         assertThat(thrown)
                 .isExactlyInstanceOf(SessionException.class)
                 .hasNoCause()
-                .hasMessage("Invalid access token.");
+                .hasMessage("[OpenIdAuthenticationValidator] Invalid access token.");
     }
 
     @Test
@@ -82,6 +82,6 @@ public class OpenIdAuthenticationValidatorTest {
         assertThat(thrown)
                 .isExactlyInstanceOf(SessionException.class)
                 .hasNoCause()
-                .hasMessage("Client access token is not valid.");
+                .hasMessage("[OpenIdAuthenticationValidator] Client access token is not valid.");
     }
 }

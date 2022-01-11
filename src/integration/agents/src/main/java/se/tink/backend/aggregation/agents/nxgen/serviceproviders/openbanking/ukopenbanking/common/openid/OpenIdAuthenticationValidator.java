@@ -33,24 +33,34 @@ public class OpenIdAuthenticationValidator {
 
     public void validateClientToken(OAuth2Token clientOAuth2Token) {
         if (!clientOAuth2Token.isValid()) {
-            throw SessionError.SESSION_EXPIRED.exception("Client access token is not valid.");
+            throw SessionError.SESSION_EXPIRED.exception(
+                    "[OpenIdAuthenticationValidator] Client access token is not valid.");
         }
     }
 
     public void validateAccessToken(OAuth2Token oAuth2Token) {
         if (!oAuth2Token.isValid()) {
-            throw SessionError.SESSION_EXPIRED.exception("Invalid access token.");
+            throw SessionError.SESSION_EXPIRED.exception(
+                    "[OpenIdAuthenticationValidator] Invalid access token.");
         }
 
         if (!oAuth2Token.isBearer()) {
             throw new IllegalArgumentException(
-                    String.format("Unknown token type '%s'.", oAuth2Token.getTokenType()));
+                    String.format(
+                            "[OpenIdAuthenticationValidator] Unknown token type '%s'.",
+                            oAuth2Token.getTokenType()));
+        }
+
+        if (oAuth2Token.isRefreshNullOrEmpty()) {
+            log.warn(
+                    "[OpenIdAuthenticationValidator] Missing refresh token. Something might be wrong. Verify scope parameter and/or consider contacting the bank");
         }
 
         if (oAuth2Token.getIdToken() != null) {
             validateIdToken(oAuth2Token.getIdToken(), oAuth2Token.getAccessToken());
         } else {
-            log.warn("ID Token (access token) validation - no token provided");
+            log.warn(
+                    "[OpenIdAuthenticationValidator] ID Token (access token) validation - no token provided");
         }
     }
 
@@ -88,13 +98,20 @@ public class OpenIdAuthenticationValidator {
             TokenValidationResult validationResult, String msg) {
         switch (validationResult) {
             case SUCCESS:
-                log.info("ID Token (" + msg + ") validation successful");
+                log.info(
+                        "[OpenIdAuthenticationValidator] ID Token ("
+                                + msg
+                                + ") validation successful");
                 break;
             case FAILURE:
-                log.info("ID Token (" + msg + ") validation failed");
+                log.info(
+                        "[OpenIdAuthenticationValidator] ID Token (" + msg + ") validation failed");
                 break;
             default:
-                log.warn("ID Token (" + msg + ") validation not possible - no public keys");
+                log.warn(
+                        "[OpenIdAuthenticationValidator] ID Token ("
+                                + msg
+                                + ") validation not possible - no public keys");
                 break;
         }
     }
