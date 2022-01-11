@@ -23,6 +23,7 @@ public final class OpBankConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String SERVICE_UNAVAILABLE = "Service unavailable";
     }
 
     public static class Urls {
