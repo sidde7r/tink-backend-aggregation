@@ -7261,6 +7261,7 @@ agentsServiceConfiguration:
         clientSecret: dummyValue
         eidasQsealc: Tink
         eidasQwac: Tink
+        jwksEndpoint: endpoint
         redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
     paypal:
       tink:
