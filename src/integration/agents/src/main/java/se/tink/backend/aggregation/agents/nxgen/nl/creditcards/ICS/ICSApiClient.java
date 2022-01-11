@@ -86,21 +86,17 @@ public class ICSApiClient {
         final String clientSecret = getConfiguration().getClientSecret();
         final String xInteractionId = randomValueGenerator.getUUID().toString();
 
-        RequestBuilder requestBuilder =
-                createRequest(url)
-                        .addBearerToken(token)
-                        .header(HeaderKeys.CLIENT_ID, clientId)
-                        .header(HeaderKeys.CLIENT_SECRET, clientSecret)
-                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.FINANCIAL_ID)
-                        .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+        String userIpAddress = user.isPresent() ? user.getIpAddress() : "";
 
-        if (user.isPresent()) {
-            requestBuilder.header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, user.getIpAddress());
-        }
-
-        return requestBuilder;
+        return createRequest(url)
+                .addBearerToken(token)
+                .header(HeaderKeys.CLIENT_ID, clientId)
+                .header(HeaderKeys.CLIENT_SECRET, clientSecret)
+                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.FINANCIAL_ID)
+                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, userIpAddress)
+                .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
     }
 
     public AccountSetupResponse setupAccount(OAuth2Token token) {
