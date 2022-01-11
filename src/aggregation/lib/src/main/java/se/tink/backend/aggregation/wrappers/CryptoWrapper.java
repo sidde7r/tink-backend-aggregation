@@ -2,11 +2,15 @@ package se.tink.backend.aggregation.wrappers;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfigurationId;
 
+@Slf4j
 public class CryptoWrapper {
     private final ImmutableList<CryptoConfiguration> cryptoConfigurations;
 
@@ -24,9 +28,13 @@ public class CryptoWrapper {
     }
 
     public byte[] getCryptoKeyByKeyId(int keyId) {
-        return cryptoConfigurations.stream()
-                .filter(t -> Objects.equals(t.getKeyId(), keyId))
-                .map(CryptoConfiguration::getDecodedKey)
+        List<byte[]> keyList =
+                cryptoConfigurations.stream()
+                        .filter(t -> Objects.equals(t.getKeyId(), keyId))
+                        .map(CryptoConfiguration::getDecodedKey)
+                        .collect(Collectors.toList());
+        log.info("Key list size: " + keyList.size());
+        return keyList.stream()
                 .findAny()
                 .orElseThrow(
                         () ->
