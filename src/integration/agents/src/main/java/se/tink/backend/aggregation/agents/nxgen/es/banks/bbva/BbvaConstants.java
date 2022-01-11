@@ -71,6 +71,10 @@ public final class BbvaConstants {
         public static final String DASHBOARD_FILTER = "(showPending==true);(hasSicav==false)";
     }
 
+    public static final class Body {
+        public static final String EMPTY_BODY = "{}";
+    }
+
     public static final class LogTags {
         public static final LogTag TRANSACTIONS_RETRYING =
                 LogTag.from("bbva_transactions_retrying");
@@ -81,30 +85,31 @@ public final class BbvaConstants {
 
     public static final class Url {
         public static final String PARAM_ID = "ID";
-        public static final String BASE_URL = "https://asoexternos.grupobbva.com";
-        public static final String ASO = BASE_URL + "/TPPs";
+        public static final String BASE_URL = "https://servicios.bbva.es";
+        public static final String ASO = BASE_URL + "/ASO";
 
-        public static final String TICKET = BASE_URL + "/TPPs/TechArchitecture/grantingTickets/V02";
-        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/TPPs/financialDashBoard/V03";
-        public static final String LOAN_DETAILS = BASE_URL + "/TPPs/loans/V01/{" + PARAM_ID + "}";
+        public static final String TICKET = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
+        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03";
+        public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
 
-        public static final String REFRESH_TICKET = BASE_URL + "/TPPs/contextualData/V02/";
+        public static final String REFRESH_TICKET =
+                BASE_URL + "/ASO/grantingTicketActions/V01/refreshGrantingTicket/";
         public static final String UPDATE_ACCOUNT_TRANSACTION =
-                BASE_URL + "/TPPs/accountTransactions/V02/updateAccountTransactions";
+                BASE_URL + "/ASO/accountTransactions/V02/updateAccountTransactions";
         public static final String ACCOUNT_TRANSACTION =
-                BASE_URL + "/TPPs/accountTransactions/V02/accountTransactionsAdvancedSearch";
+                BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String CREDIT_CARD_TRANSACTIONS =
-                BASE_URL + "/TPPs/cardTransactions/V01/listIntegratedCardTransactions/";
+                BASE_URL + "/ASO/cardTransactions/V01/";
         public static final String IDENTITY_DATA =
-                BASE_URL + "/TPPs/contextualData/V02/{" + PARAM_ID + "}";
+                BASE_URL + "/ASO/contextualData/V02/{" + PARAM_ID + "}";
         public static final String HISTORICAL_DATE =
-                BASE_URL + "/TPPs/contracts/v0/financial-investment/historical-date";
+                BASE_URL + "/ASO/contracts/v0/financial-investment/historical-date";
         public static final String FINANCIAL_INVESTMENTS =
-                BASE_URL + "/TPPs/contracts/v0/financial-investment/daily-summaries";
+                BASE_URL + "/ASO/contracts/v0/financial-investment/daily-summaries";
         public static final String PARTICIPANTS =
-                BASE_URL + "/TPPs/contracts/V01/{" + PARAM_ID + "}/participants/";
+                BASE_URL + "/ASO/contracts/V01/{" + PARAM_ID + "}/participants/";
         public static final String IN_FORCE_CONDITIONS =
-                BASE_URL + "/TPPs/contracts/V01/{" + PARAM_ID + "}/inForceConditions";
+                BASE_URL + "/ASO/contracts/V01/{" + PARAM_ID + "}/inForceConditions";
     }
 
     public enum Headers implements HeaderEnum {
@@ -156,7 +161,7 @@ public final class BbvaConstants {
         public static final String AUTH_TYPE = "02";
         public static final String AUTH_OTP_TYPE = "121";
         public static final String USER_VALUE_PREFIX = "0019-";
-        public static final String CONSUMER_ID = "00000258";
+        public static final String CONSUMER_ID = "00000013";
     }
 
     public static final class Messages {

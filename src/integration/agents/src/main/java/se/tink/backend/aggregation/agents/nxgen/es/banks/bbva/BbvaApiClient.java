@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Body.EMPTY_BODY;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.CARD_STAMP_DATE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.END_OF_DAY;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Dates.OPENING_DATE_KEY;
@@ -30,11 +31,9 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
@@ -103,13 +102,21 @@ public class BbvaApiClient {
     }
 
     public HttpResponse isAlive() {
-        if (StringUtils.isNotBlank(getUserId())) {
-            return createGetRequestInSession(BbvaConstants.Url.REFRESH_TICKET + getUserId())
-                    .accept(MediaType.WILDCARD_TYPE)
-                    .get(HttpResponse.class);
-        } else {
-            throw SessionError.SESSION_EXPIRED.exception();
+        try {
+            return createPostRequestInSession(Url.REFRESH_TICKET)
+                    .queryParam(QueryKeys.ISALIVE_CUSTOMER_ID, getUserId())
+                    .post(HttpResponse.class, EMPTY_BODY);
+        } catch (HttpResponseException httpResponseException) {
+            if (isKeepAliveResponseOk(httpResponseException)) {
+                return httpResponseException.getResponse();
+            }
+            throw httpResponseException;
         }
+    }
+
+    private boolean isKeepAliveResponseOk(HttpResponseException httpResponseException) {
+        return httpResponseException != null
+                && httpResponseException.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
