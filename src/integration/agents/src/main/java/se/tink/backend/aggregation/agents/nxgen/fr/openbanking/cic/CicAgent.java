@@ -54,7 +54,7 @@ public final class CicAgent extends CmcicAgent {
         return String.format(
                 AUTH_URL_FORMAT,
                 CmcicAgent.getPreferredLanguage(
-                        componentProvider.getCredentialsRequest().getUser().getLocale(),
+                        componentProvider.getUser().getLocale(),
                         SUPPORTED_LANGUAGES,
                         PRIMARY_LANGUAGE));
     }
