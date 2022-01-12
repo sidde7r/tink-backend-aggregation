@@ -6,5 +6,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @Getter
 public class AuthorizationStatusResponse {
-    private String scaStatus;
+    private AuthorizationStatus scaStatus;
 }

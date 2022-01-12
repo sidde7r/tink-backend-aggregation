@@ -61,7 +61,7 @@ public class FabricEmbeddedAuthenticator implements MultiFactorAuthenticator {
                 collectAndSendOtp(authorizationObject);
 
         validateAndSave(
-                authorizationStatusResponse.getScaStatus(),
+                authorizationStatusResponse.getScaStatus().getValue(),
                 consentResponse.getConsentId(),
                 credentials);
     }

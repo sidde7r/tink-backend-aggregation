@@ -5,24 +5,28 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.CommerzBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.CommerzBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -30,104 +34,100 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 @Slf4j
-public class CommerzBankPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
+@RequiredArgsConstructor
+public class CommerzBankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    protected int retryAttempts;
-    protected int sleepTimeSecond;
-
-    public CommerzBankPaymentExecutor(
-            Xs2aDevelopersApiClient apiClient,
-            ThirdPartyAppAuthenticationController controller,
-            Credentials credentials,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
-            CommerzBankPaymentAuthenticator paymentAuthenticator) {
-        super(apiClient, controller, credentials, persistentStorage);
-        this.sessionStorage = sessionStorage;
-        this.authenticator = paymentAuthenticator;
-        this.retryAttempts = 270;
-        this.sleepTimeSecond = 2;
-    }
+    private final CommerzBankApiClient apiClient;
+    private final CommerzBankPaymentAuthenticator paymentAuthenticator;
 
     private final SessionStorage sessionStorage;
-    private final CommerzBankPaymentAuthenticator authenticator;
+    private final Credentials credentials;
+    private final int retryAttempts;
+    private final int sleepTimeSecond;
+
+    public CommerzBankPaymentExecutor(
+            CommerzBankApiClient apiClient,
+            CommerzBankPaymentAuthenticator paymentAuthenticator,
+            SessionStorage sessionStorage,
+            Credentials credentials) {
+        this.apiClient = apiClient;
+        this.paymentAuthenticator = paymentAuthenticator;
+        this.sessionStorage = sessionStorage;
+        this.credentials = credentials;
+        this.retryAttempts = 108;
+        this.sleepTimeSecond = 5;
+    }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        CreatePaymentResponse createPaymentResponse = getPaymentResponse(paymentRequest);
-        persistentStorage.put(StorageKeys.PAYMENT_ID, createPaymentResponse.getPaymentId());
-        sessionStorage.put("sca-links", createPaymentResponse.getLinks());
+        HttpResponse response = buildAndSendPaymentRequest(paymentRequest);
+
+        List<String> scaApproachHeadersList = response.getHeaders().get("ASPSP-SCA-Approach");
+        if (scaApproachHeadersList != null) {
+            String scaApproach = scaApproachHeadersList.get(0);
+            sessionStorage.put(StorageKeys.SCA_APPROACH, scaApproach);
+            log.info("PIS SCA approach - " + scaApproach);
+        }
+
+        CreatePaymentResponse createPaymentResponse = response.getBody(CreatePaymentResponse.class);
+        sessionStorage.put(
+                StorageKeys.SCA_OAUTH_LINK, createPaymentResponse.getLinks().getScaOAuth());
+        sessionStorage.put(
+                StorageKeys.SCA_STATUS_LINK, createPaymentResponse.getLinks().getScaStatus());
 
         return createPaymentResponse.toTinkPayment();
     }
 
-    @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    // Extract from 'parent', reuse
+    protected HttpResponse buildAndSendPaymentRequest(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
-        final String paymentId = payment.getUniqueId();
-        return apiClient.getPayment(paymentId).toTinkPayment(paymentId);
+        AccountEntity creditor =
+                new AccountEntity(
+                        payment.getCreditor().getAccountIdentifier(IbanIdentifier.class).getIban());
+        AccountEntity debtor =
+                new AccountEntity(
+                        payment.getDebtor().getAccountIdentifier(IbanIdentifier.class).getIban());
+
+        CreatePaymentRequest createPaymentRequest =
+                new CreatePaymentRequest(
+                        creditor,
+                        payment.getCreditor().getName(),
+                        debtor,
+                        new AmountEntity(
+                                payment.getCurrency(),
+                                payment.getExactCurrencyAmount().getExactValue()),
+                        payment.getRemittanceInformation().getValue());
+
+        return apiClient.createPayment(createPaymentRequest, credentials.getField(Key.USERNAME));
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
-
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         if (AuthenticationStepConstants.STEP_INIT.equals(paymentMultiStepRequest.getStep())) {
-            authorizePayment();
+            paymentAuthenticator.authorizePayment(paymentMultiStepRequest.getPayment());
         }
 
         return checkStatus(paymentMultiStepRequest);
     }
 
-    private void authorizePayment() {
-        LinksEntity scaLinks =
-                sessionStorage
-                        .get("sca-links", LinksEntity.class)
-                        .orElseThrow(
-                                () -> new IllegalStateException(ErrorMessages.MISSING_SCA_URL));
-        authenticator.authenticatePayment(scaLinks);
-        sign();
-    }
-
-    protected PaymentMultiStepResponse checkStatus(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
-        String paymentId = persistentStorage.get(StorageKeys.PAYMENT_ID);
-        PaymentStatus paymentStatus = poll(paymentId);
-
+    // extract to common class, and behaviour?
+    protected PaymentMultiStepResponse checkStatus(
+            PaymentMultiStepRequest paymentMultiStepRequest) {
+        PaymentStatus paymentStatus = poll(paymentMultiStepRequest.getPayment().getUniqueId());
         paymentMultiStepRequest.getPayment().setStatus(paymentStatus);
 
         return new PaymentMultiStepResponse(
                 paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
     }
 
-    @Override
-    public CreateBeneficiaryMultiStepResponse createBeneficiary(
-            CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
-        throw new NotImplementedException(
-                "createBeneficiary not yet implemented for " + this.getClass().getName());
-    }
-
-    @Override
-    public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
-    }
-
-    @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        return new PaymentListResponse(
-                paymentListRequest.getPaymentRequestList().stream()
-                        .map(paymentRequest -> new PaymentResponse(paymentRequest.getPayment()))
-                        .collect(Collectors.toList()));
-    }
-
-    private PaymentStatus poll(String paymentId) throws PaymentException {
+    private PaymentStatus poll(String paymentId) {
         Retryer<PaymentStatus> retryer = getPaymentStatusRetryer();
         PaymentStatus paymentStatus;
         log.info(
@@ -151,8 +151,7 @@ public class CommerzBankPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
         return checkPaymentStatus(paymentStatus);
     }
 
-    protected PaymentStatus checkPaymentStatus(PaymentStatus paymentStatus)
-            throws PaymentException {
+    protected PaymentStatus checkPaymentStatus(PaymentStatus paymentStatus) {
         switch (paymentStatus) {
             case SIGNED:
             case PAID:
@@ -174,5 +173,33 @@ public class CommerzBankPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
                 .withWaitStrategy(WaitStrategies.fixedWait(sleepTimeSecond, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
                 .build();
+    }
+
+    // --------------------------- unused crap
+    @Override
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        throw new NotImplementedException(
+                "fetch not yet implemented for " + this.getClass().getName());
+    }
+
+    @Override
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
+        throw new NotImplementedException(
+                "fetchMultiple not yet implemented for " + this.getClass().getName());
+    }
+
+    @Override
+    public CreateBeneficiaryMultiStepResponse createBeneficiary(
+            CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
+
+        throw new NotImplementedException(
+                "createBeneficiary not yet implemented for " + this.getClass().getName());
+    }
+
+    @Override
+    public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
+
+        throw new NotImplementedException(
+                "cancel not yet implemented for " + this.getClass().getName());
     }
 }

@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
@@ -165,6 +166,14 @@ public class Xs2aDevelopersApiClient {
                                 .parameter(IdTags.CONSENT_ID, getConsentIdOrThrow()))
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .get(ConsentStatusResponse.class);
+    }
+
+    public AuthorizationStatusResponse fetchAuthorizationStatus(String url) {
+        return createRequest(new URL(url))
+                .header(
+                        Xs2aDevelopersConstants.HeaderKeys.X_REQUEST_ID,
+                        randomValueGenerator.getUUID())
+                .get(AuthorizationStatusResponse.class);
     }
 
     private String getConsentIdOrThrow() {

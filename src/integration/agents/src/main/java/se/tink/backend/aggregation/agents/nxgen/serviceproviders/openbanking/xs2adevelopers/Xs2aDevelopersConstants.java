@@ -84,9 +84,9 @@ public final class Xs2aDevelopersConstants {
         public static final String PAYMENT_ID = "payment_id";
         public static final String PIS_TOKEN = "pis_token";
         public static final String CODE_VERIFIER = "code_verifier";
-        public static final String AUTHORISATION_URL = "authorisation_url";
         public static final String SCA_APPROACH = "sca_approach";
         public static final String SCA_OAUTH_LINK = "scaOAuthLink";
+        public static final String SCA_STATUS_LINK = "scaStatusLink";
     }
 
     public static class StorageValues {
@@ -150,5 +150,6 @@ public final class Xs2aDevelopersConstants {
 
     public static class SupplementalInfo {
         public static final String CONSENT_CONFIRMATION_FIELD = "consent-confirmation";
+        public static final String PAYMENT_CONFIRMATION_FIELD = "payment-confirmation";
     }
 }

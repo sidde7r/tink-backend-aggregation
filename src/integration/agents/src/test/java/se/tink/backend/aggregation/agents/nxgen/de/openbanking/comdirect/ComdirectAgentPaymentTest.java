@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.comdirect;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -34,9 +35,8 @@ public class ComdirectAgentPaymentTest {
         }
     }
 
-    private final ArgumentManager<ArgumentManager.UsernamePasswordArgumentEnum>
-            usernamePasswordManager =
-                    new ArgumentManager<>(ArgumentManager.UsernamePasswordArgumentEnum.values());
+    private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> usernamePasswordManager =
+            new ArgumentManager<>(ArgumentManager.UsernameArgumentEnum.values());
     private final ArgumentManager<ComdirectAgentPaymentTest.Arg> creditorDebtorManager =
             new ArgumentManager<>(ComdirectAgentPaymentTest.Arg.values());
 
@@ -53,15 +53,16 @@ public class ComdirectAgentPaymentTest {
                         .addCredentialField(
                                 Key.USERNAME,
                                 usernamePasswordManager.get(
-                                        ArgumentManager.UsernamePasswordArgumentEnum.USERNAME))
-                        .addCredentialField(
-                                Key.PASSWORD,
-                                usernamePasswordManager.get(
-                                        ArgumentManager.UsernamePasswordArgumentEnum.PASSWORD))
+                                        ArgumentManager.UsernameArgumentEnum.USERNAME))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(false)
                         .setAppId("tink");
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 
     @Test
