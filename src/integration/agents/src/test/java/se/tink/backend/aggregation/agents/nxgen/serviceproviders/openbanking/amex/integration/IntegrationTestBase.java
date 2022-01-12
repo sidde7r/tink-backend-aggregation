@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas.WiremockQSealcSignerProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
@@ -93,7 +94,8 @@ public abstract class IntegrationTestBase {
                 new UnleashClientProviderImpl(agentContext),
                 new AgentTemporaryStorageProviderImpl(agentContext.getAgentTemporaryStorage()),
                 new WireMockServerUrlProvider(fakeBankSocket),
-                new WiremockProxyProfilesProvider());
+                new WiremockProxyProfilesProvider(),
+                new WiremockQSealcSignerProvider());
     }
 
     CredentialsRequest createCredentialsRequest() {
