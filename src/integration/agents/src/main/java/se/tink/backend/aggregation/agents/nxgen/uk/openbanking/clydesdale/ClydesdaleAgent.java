@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 public class ClydesdaleAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private final AgentComponentProvider componentProvider;
 
     static {
         aisConfig =
@@ -51,8 +52,6 @@ public class ClydesdaleAgent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
-    private final AgentComponentProvider componentProvider;
-
     @Inject
     public ClydesdaleAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
@@ -62,16 +61,15 @@ public class ClydesdaleAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
     }
 
     @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
+    protected UkOpenBankingAis makeAis() {
+        return new UkOpenBankingV31Ais(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     @Override
