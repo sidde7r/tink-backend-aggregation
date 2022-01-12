@@ -6,20 +6,16 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BalanceFixtures {
 
-    private static final String UPPERCASE_BALANCE_CREDIT =
+    private static final String UPPERCASE_BALANCE =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"CREDIT\",\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
-    private static final String LOWERCASE_BALANCE_CREDIT =
-            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"credit\",\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
+    private static final String LOWERCASE_BALANCE =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"222.0512\",\"Currency\":\"EUR\"},\"CreditDebitIndicator\":\"debit\",\"Type\":\"ClosingBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String BALANCE_CREDIT =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String BALANCE_EMPTY =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String BALANCE_DEBIT =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"222.051234\",\"Currency\":\"EUR\"},\"CreditDebitIndicator\":\"Debit\",\"Type\":\"ClosingBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
-    private static final String UPPERCASE_BALANCE_DEBIT =
-            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"222.051234\",\"Currency\":\"EUR\"},\"CreditDebitIndicator\":\"DEBIT\",\"Type\":\"ClosingBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
-    private static final String LOWERCASE_BALANCE_DEBIT =
-            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"222.051234\",\"Currency\":\"EUR\"},\"CreditDebitIndicator\":\"debit\",\"Type\":\"ClosingBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String EMPTY_TYPE_BALANCE_CREDIT =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"CREDIT\",\"Type\":\"\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String WITHOUT_TYPE_BALANCE_CREDIT =
@@ -78,14 +74,14 @@ public class BalanceFixtures {
         return SerializationUtils.deserializeFromString(BALANCE_DEBIT, AccountBalanceEntity.class);
     }
 
-    public static AccountBalanceEntity balanceUppercaseDebit() {
+    public static AccountBalanceEntity balanceUppercaseCredit() {
         return SerializationUtils.deserializeFromString(
-                UPPERCASE_BALANCE_DEBIT, AccountBalanceEntity.class);
+                UPPERCASE_BALANCE, AccountBalanceEntity.class);
     }
 
     public static AccountBalanceEntity balanceLowercaseDebit() {
         return SerializationUtils.deserializeFromString(
-                LOWERCASE_BALANCE_DEBIT, AccountBalanceEntity.class);
+                LOWERCASE_BALANCE, AccountBalanceEntity.class);
     }
 
     public static AccountBalanceEntity balanceCredit() {
@@ -94,11 +90,6 @@ public class BalanceFixtures {
 
     public static AccountBalanceEntity balanceEmpty() {
         return SerializationUtils.deserializeFromString(BALANCE_EMPTY, AccountBalanceEntity.class);
-    }
-
-    public static AccountBalanceEntity balanceUppercaseCredit() {
-        return SerializationUtils.deserializeFromString(
-                UPPERCASE_BALANCE_CREDIT, AccountBalanceEntity.class);
     }
 
     public static AccountBalanceEntity balanceWithEmptyType() {
@@ -114,11 +105,6 @@ public class BalanceFixtures {
     public static AccountBalanceEntity balanceWithNullType() {
         return SerializationUtils.deserializeFromString(
                 NULL_TYPE_BALANCE_CREDIT, AccountBalanceEntity.class);
-    }
-
-    public static AccountBalanceEntity balanceLowercaseCredit() {
-        return SerializationUtils.deserializeFromString(
-                LOWERCASE_BALANCE_CREDIT, AccountBalanceEntity.class);
     }
 
     public static AccountBalanceEntity interimAvailableBalance() {

@@ -15,6 +15,8 @@ public class IdentifierFixtures {
             "{\"SchemeName\": \"UK.NWB.CurrencyAccount\",\"Identification\": \"111/11/11111111\",\"SecondaryIdentification\": \"111111111\",\"Name\": \"Kapitan Bomba\"}";
     private static final String RBS_CURRENCY_ACCOUNT_IDENTIFIER =
             "{\"SchemeName\": \"UK.RBS.CurrencyAccount\",\"Identification\": \"LULULUL-USDC\",\"SecondaryIdentification\": \"GB00RBOS00000000000000\",\"Name\": \"Jozek Maslaczek\"}";
+    private static final String UNKNOWN_IDENTIFIER =
+            "{\"SchemeName\": \"UK.OBIE.UNKNOWN\",\"Identification\": \"USDC\",\"SecondaryIdentification\": \"GB00RBOS00000000000000\",\"Name\": \"Fluffy\"}";
 
     public static AccountIdentifierEntity panIdentifier() {
         return SerializationUtils.deserializeFromString(
@@ -39,5 +41,10 @@ public class IdentifierFixtures {
     public static AccountIdentifierEntity currencyAccountIdentifierForRbs() {
         return SerializationUtils.deserializeFromString(
                 RBS_CURRENCY_ACCOUNT_IDENTIFIER, AccountIdentifierEntity.class);
+    }
+
+    public static AccountIdentifierEntity unknownIdentifier() {
+        return SerializationUtils.deserializeFromString(
+                UNKNOWN_IDENTIFIER, AccountIdentifierEntity.class);
     }
 }
