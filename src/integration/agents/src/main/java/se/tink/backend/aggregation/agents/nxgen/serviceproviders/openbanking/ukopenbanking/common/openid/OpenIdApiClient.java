@@ -12,6 +12,7 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
@@ -34,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class OpenIdApiClient {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -205,7 +207,9 @@ public class OpenIdApiClient {
             return TokenEndpointAuthMethod.valueOf(
                     clientInfo.getTokenEndpointAuthMethod().toUpperCase());
         }
-
+        log.info(
+                "[OpenIdApiClient]: Entering second return statement for TokenEndpointAuthMethod."
+                        + "Getting TokenEndpointAuthMethod from wellKnownConfiguration or throwing exception.");
         return wellKnownConfiguration
                 .getPreferredTokenEndpointAuthMethod(
                         OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
