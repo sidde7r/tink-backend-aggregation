@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -41,7 +41,7 @@ public class NordeaPartnerMarketUtil {
     }
 
     public static LocalDate getPaginationStartDate(
-            Account account, CredentialsRequest request, AgentComponentProvider componentProvider) {
+            Account account, CredentialsRequest request, LocalDateTimeSource dateTimeSource) {
 
         Optional<Date> certainDate =
                 request.getAccounts().stream()
@@ -53,26 +53,22 @@ public class NordeaPartnerMarketUtil {
         if (certainDate.isPresent()) {
             log.info("Certain date for getPaginationStartDate: " + certainDate);
             return certainDate.get().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        } else return getPaginationDateYearBack(componentProvider);
+        } else return getPaginationDateYearBack(dateTimeSource);
     }
 
-    public static LocalDate getPaginationDateYearBack(AgentComponentProvider componentProvider) {
-        return componentProvider
-                .getLocalDateTimeSource()
-                .now(ZoneId.systemDefault())
-                .toLocalDate()
-                .minus(1, ChronoUnit.YEARS);
+    public static LocalDate getPaginationDateYearBack(LocalDateTimeSource dateTimeSource) {
+        return dateTimeSource.now(ZoneId.systemDefault()).toLocalDate().minus(1, ChronoUnit.YEARS);
     }
 
     public static LocalDate getStartDate(
-            List<se.tink.backend.agents.rpc.Account> ac, AgentComponentProvider componentProvider) {
+            List<se.tink.backend.agents.rpc.Account> ac, LocalDateTimeSource dateTimeSource) {
         Date best =
                 Date.from(
-                        getPaginationDateYearBack(componentProvider)
+                        getPaginationDateYearBack(dateTimeSource)
                                 .atStartOfDay()
                                 .toInstant(ZoneOffset.UTC));
         if (ac.isEmpty() || ac.stream().anyMatch(account -> account.getCertainDate() == null)) {
-            return getPaginationDateYearBack(componentProvider);
+            return getPaginationDateYearBack(dateTimeSource);
         }
         for (se.tink.backend.agents.rpc.Account account : ac) {
             Date certainDate = (account.getCertainDate());
