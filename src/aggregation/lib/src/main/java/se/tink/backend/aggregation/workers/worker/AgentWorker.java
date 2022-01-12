@@ -158,7 +158,7 @@ public class AgentWorker extends ManagedSafeStop {
     }
 
     public void execute(AgentWorkerOperation operation) throws Exception {
-        log.info("[AgentWorker] Starting executing");
+        log.debug("[AgentWorker] Starting executing");
         CredentialsRequest request = operation.getRequest();
         InstrumentedRunnable instrumentedRunnable =
                 new InstrumentedRunnable(
@@ -197,13 +197,13 @@ public class AgentWorker extends ManagedSafeStop {
             }
         }
         instrumentedRunnable.submitted();
-        log.info("[AgentWorker] Finished scheduling");
+        log.debug("[AgentWorker] Finished scheduling");
     }
 
     public void executeAutomaticRefresh(
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerOperationCreatorRunnable)
             throws Exception {
-        log.info("[AgentWorker] Starting executing automatic refresh");
+        log.debug("[AgentWorker] Starting executing automatic refresh");
         InstrumentedRunnable instrumentedRunnable =
                 new InstrumentedRunnable(
                         metricRegistry,
@@ -231,14 +231,14 @@ public class AgentWorker extends ManagedSafeStop {
             automaticRefreshRateLimitedExecutorService.execute(
                     namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
         } catch (RuntimeException e) {
-            log.error(
+            log.debug(
                     "[AgentWorker] Failed to execute using automaticRefreshRateLimitedExecutorService",
                     e);
             throw e;
         }
 
         instrumentedRunnable.submitted();
-        log.info("[AgentWorker] Finished scheduling automatic refresh");
+        log.debug("[AgentWorker] Finished scheduling automatic refresh");
     }
 
     private void shutdownExecutorsInParallel() {

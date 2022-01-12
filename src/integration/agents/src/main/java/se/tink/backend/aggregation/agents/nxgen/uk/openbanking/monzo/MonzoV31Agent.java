@@ -73,6 +73,12 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         return new MonzoV31Ais(
                 aisConfig,
@@ -95,13 +101,6 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected DomesticScheduledPaymentConverter getDomesticScheduledPaymentConverter() {
         return new RequiredReferenceRemittanceInfoDomesticSchedulerPaymentConverter();
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

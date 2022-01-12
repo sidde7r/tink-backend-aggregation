@@ -39,7 +39,7 @@ public class JerseyUtils {
 
         Client client = interClusterJerseyClientFactory.build();
         client.addFilter(new ClientTracingFilter());
-        log.info("Build client in {}ms", Duration.between(start, Instant.now()).toMillis());
+        log.debug("Build client in {}ms", Duration.between(start, Instant.now()).toMillis());
 
         return client;
     }

@@ -52,6 +52,7 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
     private static final UkOpenBankingPisConfiguration pisConfig;
+    private final AgentComponentProvider componentProvider;
 
     static {
         aisConfig =
@@ -67,8 +68,6 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                         HsbcConstants.PERSONAL_PIS_API_URL, HsbcConstants.PERSONAL_WELL_KNOWN_URL);
     }
 
-    private final AgentComponentProvider componentProvider;
-
     @Inject
     public HsbcV31Agent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
@@ -83,6 +82,12 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                         componentProvider.getRandomValueGenerator()));
         this.componentProvider = componentProvider;
         client.addFilter(new HsbcBankSideErrorFilter());
+    }
+
+    @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
     }
 
     @Override
@@ -128,13 +133,6 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected DomesticScheduledPaymentConverter getDomesticScheduledPaymentConverter() {
         return new RequiredReferenceRemittanceInfoDomesticSchedulerPaymentConverter();
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

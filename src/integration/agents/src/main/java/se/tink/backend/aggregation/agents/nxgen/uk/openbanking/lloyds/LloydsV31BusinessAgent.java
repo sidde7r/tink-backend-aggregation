@@ -50,16 +50,15 @@ public final class LloydsV31BusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
     }
 
     @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
+    protected UkOpenBankingAis makeAis() {
+        return new UkOpenBankingV31Ais(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

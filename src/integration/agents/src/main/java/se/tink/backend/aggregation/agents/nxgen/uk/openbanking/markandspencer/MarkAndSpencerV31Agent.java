@@ -59,6 +59,12 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(
                 aisConfig,
@@ -68,10 +74,24 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+    protected UkOpenBankingApiClient createApiClient(
+            TinkHttpClient httpClient,
+            JwtSigner signer,
+            SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
+            ClientInfo providerConfiguration) {
 
-        return createAutoAuthController(authController);
+        // M&S is hsbc subsidiary so need to have the same overridden client
+        return new HsbcGroupApiClient(
+                httpClient,
+                signer,
+                softwareStatement,
+                redirectUrl,
+                providerConfiguration,
+                randomValueGenerator,
+                persistentStorage,
+                aisConfig,
+                componentProvider);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
@@ -96,26 +116,5 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
                 new ThirdPartyAppAuthenticationController<>(
                         authController, this.supplementalInformationHelper),
                 authController);
-    }
-
-    @Override
-    protected UkOpenBankingApiClient createApiClient(
-            TinkHttpClient httpClient,
-            JwtSigner signer,
-            SoftwareStatementAssertion softwareStatement,
-            String redirectUrl,
-            ClientInfo providerConfiguration) {
-
-        // M&S is hsbc subsidiary so need to have the same overridden client
-        return new HsbcGroupApiClient(
-                httpClient,
-                signer,
-                softwareStatement,
-                redirectUrl,
-                providerConfiguration,
-                randomValueGenerator,
-                persistentStorage,
-                aisConfig,
-                componentProvider);
     }
 }

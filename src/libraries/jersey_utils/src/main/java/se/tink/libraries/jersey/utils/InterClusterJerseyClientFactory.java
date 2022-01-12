@@ -79,7 +79,7 @@ public class InterClusterJerseyClientFactory {
 
             internalSslContextBuilder.loadKeyMaterial(
                     keyStore, null); // the keyStore doesn't have a PW.
-            log.info("Build KeyStore in {}ms", Duration.between(start, Instant.now()).toMillis());
+            log.debug("Build KeyStore in {}ms", Duration.between(start, Instant.now()).toMillis());
             return this;
         } catch (KeyStoreException
                 | NoSuchProviderException
@@ -130,7 +130,7 @@ public class InterClusterJerseyClientFactory {
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new IllegalStateException(e);
         }
-        log.info("Build SSL context in {}ms", Duration.between(start, Instant.now()).toMillis());
+        log.debug("Build SSL context in {}ms", Duration.between(start, Instant.now()).toMillis());
 
         RequestConfig reguestConfig = this.internalRequestConfigBuilder.build();
 
@@ -140,7 +140,7 @@ public class InterClusterJerseyClientFactory {
                         .setSslcontext(sslContext)
                         .setDefaultRequestConfig(reguestConfig)
                         .build();
-        log.info("Build HttpClient in {}ms", Duration.between(start, Instant.now()).toMillis());
+        log.debug("Build HttpClient in {}ms", Duration.between(start, Instant.now()).toMillis());
 
         TinkApacheHttpClient4Handler httpHandler =
                 new TinkApacheHttpClient4Handler(httpClient, new BasicCookieStore(), false);

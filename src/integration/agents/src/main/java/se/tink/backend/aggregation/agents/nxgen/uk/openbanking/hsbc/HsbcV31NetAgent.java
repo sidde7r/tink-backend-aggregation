@@ -37,8 +37,8 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
 
-    private final AgentComponentProvider componentProvider;
     private static final UkOpenBankingAisConfig aisConfig;
+    private final AgentComponentProvider componentProvider;
 
     static {
         aisConfig =
@@ -57,6 +57,12 @@ public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         return new HsbcV31Ais(
                 aisConfig,
@@ -64,13 +70,6 @@ public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
                 localDateTimeSource,
                 new PartyV31Fetcher(apiClient, aisConfig, persistentStorage, SCA_LIMIT_MINUTES),
                 transactionPaginationHelper);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
