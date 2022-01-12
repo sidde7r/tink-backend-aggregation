@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas.QSealcSignerProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas.WiremockQSealcSignerProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
@@ -57,5 +59,6 @@ public class AgentSystemTestComponentProviderModule extends AbstractModule {
         bind(FakeBankSocket.class).toInstance(fakeBankSocket);
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
         bind(ProxyProfilesProvider.class).to(WiremockProxyProfilesProvider.class);
+        bind(QSealcSignerProvider.class).to(WiremockQSealcSignerProvider.class);
     }
 }
