@@ -11,6 +11,8 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClientImpl;
+import se.tink.backend.aggregation.aggregationcontroller.InterClusterClientFactory;
+import se.tink.backend.aggregation.aggregationcontroller.InterClusterClientProvider;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
@@ -88,6 +90,8 @@ public class AggregationModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(InterClusterClientFactory.class).in(Scopes.SINGLETON);
+        bind(InterClusterClientProvider.class).in(Scopes.SINGLETON);
         bind(AggregationControllerAggregationClient.class)
                 .to(AggregationControllerAggregationClientImpl.class);
         bind(AgentWorker.class).in(Scopes.SINGLETON);

@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.config.ClientConfig;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
@@ -39,15 +38,12 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatory
 import se.tink.backend.aggregation.configuration.models.AccountInformationServiceConfiguration;
 import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
-import se.tink.libraries.jersey.utils.ClientLoggingFilter;
-import se.tink.libraries.jersey.utils.JerseyUtils;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class AggregationControllerAggregationClientImpl
         implements AggregationControllerAggregationClient {
-    private static final String EMPTY_PASSWORD = "";
     private static final Logger log =
             LoggerFactory.getLogger(AggregationControllerAggregationClientImpl.class);
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
@@ -56,22 +52,21 @@ public class AggregationControllerAggregationClientImpl
     private static final long WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS = 2000;
     private static final ImmutableSet<Integer> ERROR_CODES_FOR_RETRY =
             ImmutableSet.of(502, 503, 504);
-
-    private final ClientConfig config;
-    private final AccountInformationServiceConfiguration accountInformationServiceConfiguration;
-
-    private final MetricRegistry metricRegistry;
     private static final MetricId AGGREGATION_CONTROLLER_RETRIES =
             MetricId.newId("aggregation_controller_retries");
 
+    private final AccountInformationServiceConfiguration accountInformationServiceConfiguration;
+    private final MetricRegistry metricRegistry;
+    private final InterClusterClientProvider interClusterClientProvider;
+
     @Inject
     private AggregationControllerAggregationClientImpl(
-            ClientConfig custom,
             AccountInformationServiceConfiguration accountInformationServiceConfiguration,
-            MetricRegistry metricRegistry) {
-        this.config = custom;
+            MetricRegistry metricRegistry,
+            InterClusterClientProvider interClusterClientProvider) {
         this.accountInformationServiceConfiguration = accountInformationServiceConfiguration;
         this.metricRegistry = metricRegistry;
+        this.interClusterClientProvider = interClusterClientProvider;
     }
 
     private <T> T buildInterClusterServiceFromInterface(
@@ -80,15 +75,8 @@ public class AggregationControllerAggregationClientImpl
                 !Strings.isNullOrEmpty(hostConfiguration.getHost()),
                 "Aggregation controller host was not set.");
 
-        Client client =
-                JerseyUtils.getClusterClient(
-                        hostConfiguration.getClientCert(),
-                        EMPTY_PASSWORD,
-                        hostConfiguration.isDisablerequestcompression(),
-                        this.config);
-        client.addFilter(new ClientLoggingFilter());
-
-        JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
+        String clusterId = hostConfiguration.getClusterId();
+        Client client = interClusterClientProvider.getByClusterId(clusterId);
 
         return WebResourceFactory.newResource(
                 serviceInterface, client.resource(hostConfiguration.getHost()));

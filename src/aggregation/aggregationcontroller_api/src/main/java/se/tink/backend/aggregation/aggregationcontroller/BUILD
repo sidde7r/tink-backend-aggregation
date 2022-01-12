@@ -13,6 +13,7 @@ java_library(
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/rpc",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
