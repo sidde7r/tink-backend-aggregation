@@ -99,7 +99,7 @@ public final class BbvaConstants {
         public static final String ACCOUNT_TRANSACTION =
                 BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String CREDIT_CARD_TRANSACTIONS =
-                BASE_URL + "/ASO/cardTransactions/V01/";
+                BASE_URL + "/ASO/cardTransactions/V01/listIntegratedCardTransactions/";
         public static final String IDENTITY_DATA =
                 BASE_URL + "/ASO/contextualData/V02/{" + PARAM_ID + "}";
         public static final String HISTORICAL_DATE =
