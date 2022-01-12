@@ -3,7 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Provider;
+import se.tink.agent.runtime.operation.ProviderImpl;
+import se.tink.agent.sdk.operation.Provider;
 
 public class SdcNoConfigurationTest {
 
@@ -13,15 +14,12 @@ public class SdcNoConfigurationTest {
     private static final String PORTAL_BANK_INDIVIDUAL_URL = "https://sognbank.no/";
     private static final String EIKA_BANK_CODE = "1821";
     private static final String EIKA_INDIVIDUAL_URL = "https://eika.no/";
-    private static final Provider NETTBANK_PROVIDER = new Provider();
-    private static final Provider PORTALBANK_PROVIDER = new Provider();
-    private static final Provider EIKA_PROVIDER = new Provider();
-
-    static {
-        NETTBANK_PROVIDER.setPayload(NETT_BANK_CODE);
-        PORTALBANK_PROVIDER.setPayload(PORTAL_BANK_CODE);
-        EIKA_PROVIDER.setPayload(EIKA_BANK_CODE);
-    }
+    private static final Provider NETTBANK_PROVIDER =
+            new ProviderImpl(null, null, null, NETT_BANK_CODE);
+    private static final Provider PORTALBANK_PROVIDER =
+            new ProviderImpl(null, null, null, PORTAL_BANK_CODE);
+    private static final Provider EIKA_PROVIDER =
+            new ProviderImpl(null, null, null, EIKA_BANK_CODE);
 
     @Test
     public void testNettBankConfiguration() {

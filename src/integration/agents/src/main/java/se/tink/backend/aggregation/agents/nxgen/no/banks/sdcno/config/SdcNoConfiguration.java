@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Provider;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.EikaBankPortal;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.NettBankPortal;

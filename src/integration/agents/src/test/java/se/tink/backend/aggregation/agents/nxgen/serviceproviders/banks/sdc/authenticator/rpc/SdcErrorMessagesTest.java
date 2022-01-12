@@ -3,7 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.auth
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Provider;
+import se.tink.agent.runtime.operation.ProviderImpl;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.SdcSeConfiguration;
 
 public class SdcErrorMessagesTest {
@@ -11,8 +12,7 @@ public class SdcErrorMessagesTest {
 
     @Before
     public void setUp() throws Exception {
-        Provider provider = new Provider();
-        provider.setPayload("1234");
+        Provider provider = new ProviderImpl(null, null, null, "1234");
 
         agentConfiguration = new SdcSeConfiguration(provider);
     }

@@ -47,7 +47,7 @@ public final class SdcFoAgent extends SdcAgent
     public SdcFoAgent(AgentComponentProvider componentProvider) {
         super(
                 componentProvider,
-                new SdcFoConfiguration(componentProvider.getCredentialsRequest().getProvider()),
+                new SdcFoConfiguration(componentProvider.getProvider()),
                 new SdcFoTransactionParser());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

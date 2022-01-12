@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fo.banks.sdcfo;
 
-import se.tink.backend.agents.rpc.Provider;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
