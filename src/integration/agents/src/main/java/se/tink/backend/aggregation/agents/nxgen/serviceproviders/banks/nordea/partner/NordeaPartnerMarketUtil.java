@@ -45,7 +45,10 @@ public class NordeaPartnerMarketUtil {
 
         Optional<Date> certainDate =
                 request.getAccounts().stream()
-                        .filter(a -> account.isUniqueIdentifierEqual(a.getBankId()))
+                        .filter(
+                                a ->
+                                        !a.isClosed()
+                                                && account.isUniqueIdentifierEqual(a.getBankId()))
                         .map(se.tink.backend.agents.rpc.Account::getCertainDate)
                         .filter(Objects::nonNull)
                         .findFirst();
