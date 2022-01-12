@@ -16,11 +16,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @Slf4j
 public class SantanderPartyFetcher implements PartyFetcher {
 
+    private static final long LIMIT_IN_MINUTES = 5;
     private final UkOpenBankingApiClient apiClient;
     private final UkOpenBankingAisConfig config;
     private final PartyDataStorage storage;
     private final ScaExpirationValidator scaValidator;
-    private static final long LIMIT_IN_MINUTES = 5;
 
     public SantanderPartyFetcher(
             UkOpenBankingApiClient apiClient,

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.ie.openbanking.permanenttsb;
 import static se.tink.backend.aggregation.agents.nxgen.ie.openbanking.permanenttsb.PermanentTsbApiClient.PERMANENT_TSB_DATE_TIME_FORMATTER;
 
 import java.time.LocalDateTime;
-import se.tink.backend.agents.rpc.Provider;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.TransactionConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator;

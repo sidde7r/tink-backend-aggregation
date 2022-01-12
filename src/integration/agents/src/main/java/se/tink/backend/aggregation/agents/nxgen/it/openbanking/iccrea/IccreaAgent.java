@@ -85,7 +85,7 @@ public final class IccreaAgent extends CbiGlobeAgent {
                         supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState,
-                        request.getProvider(),
+                        provider,
                         new UserInteractions(supplementalInformationController, catalog),
                         new ConsentManager(apiClient, userState, localDateTimeSource, urlProvider),
                         urlProvider);

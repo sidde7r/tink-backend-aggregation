@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -44,12 +46,13 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor {
 
+    protected NordeaPartnerAccountMapper accountMapper;
+
     private final NordeaPartnerApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
-    private NordeaPartnerJweHelper jweHelper;
-    protected NordeaPartnerAccountMapper accountMapper;
-    private boolean isOnStaging;
+    private final NordeaPartnerJweHelper jweHelper;
+    private final boolean isOnStaging;
 
     @Inject
     public NordeaPartnerAgent(
@@ -60,6 +63,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
         isOnStaging =
                 "neston-staging".equalsIgnoreCase(componentProvider.getContext().getClusterId());
         User user = componentProvider.getUser();
+        Provider provider = componentProvider.getProvider();
         apiClient =
                 new NordeaPartnerApiClient(
                         client,
@@ -74,8 +78,10 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
         client.disableSignatureRequestHeader();
 
         transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController(componentProvider);
-        creditCardRefreshController = constructCreditCardRefreshController(componentProvider);
+                constructTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
+        creditCardRefreshController =
+                constructCreditCardRefreshController(componentProvider.getLocalDateTimeSource());
 
         NordeaPartnerConfiguration nordeaConfiguration =
                 getAgentConfigurationController()
@@ -166,10 +172,10 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
-            AgentComponentProvider componentProvider) {
+            LocalDateTimeSource dateTimeSource) {
         NordeaPartnerTransactionalAccountFetcher accountFetcher =
                 new NordeaPartnerTransactionalAccountFetcher(
-                        apiClient, getAccountMapper(), componentProvider, request, isOnStaging);
+                        apiClient, getAccountMapper(), dateTimeSource, request, isOnStaging);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -193,10 +199,10 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     protected abstract ZoneId getPaginatorZoneId();
 
     private CreditCardRefreshController constructCreditCardRefreshController(
-            AgentComponentProvider componentProvider) {
+            LocalDateTimeSource dateTimeSource) {
         final NordeaPartnerCreditCardAccountFetcher fetcher =
                 new NordeaPartnerCreditCardAccountFetcher(
-                        apiClient, componentProvider, request, isOnStaging);
+                        apiClient, dateTimeSource, request, isOnStaging);
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,

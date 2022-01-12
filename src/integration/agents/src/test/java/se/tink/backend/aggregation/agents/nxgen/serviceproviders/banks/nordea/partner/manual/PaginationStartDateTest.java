@@ -15,7 +15,6 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerMarketUtil;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -24,12 +23,12 @@ public class PaginationStartDateTest {
 
     private Account account;
     private se.tink.backend.agents.rpc.Account rpcAccount;
-    private AgentComponentProvider componentProvider;
+    private LocalDateTimeSource dateTimeSource;
     private CredentialsRequest credentialsRequest;
 
     @Before
     public void setUp() throws Exception {
-        componentProvider = mock(AgentComponentProvider.class);
+        dateTimeSource = getLocalDateTimeSource();
         credentialsRequest = mock(CredentialsRequest.class);
         account = mock(Account.class);
         rpcAccount = mock(se.tink.backend.agents.rpc.Account.class);
@@ -43,12 +42,11 @@ public class PaginationStartDateTest {
 
         // when
         when(credentialsRequest.getAccounts()).thenReturn(Collections.emptyList());
-        when(componentProvider.getLocalDateTimeSource()).thenReturn(getLocalDateTimeSource());
         when(account.isUniqueIdentifierEqual(any())).thenReturn(true);
 
         LocalDate result =
                 NordeaPartnerMarketUtil.getPaginationStartDate(
-                        account, credentialsRequest, componentProvider);
+                        account, credentialsRequest, dateTimeSource);
 
         // then
         assertEquals(result, localDateYearBack);
@@ -74,11 +72,10 @@ public class PaginationStartDateTest {
         when(account.getUniqueIdentifier()).thenReturn("123");
         when(rpcAccount.getBankId()).thenReturn("123");
         when(credentialsRequest.getAccounts()).thenReturn(Collections.singletonList(rpcAccount));
-        when(componentProvider.getLocalDateTimeSource()).thenReturn(getLocalDateTimeSource());
 
         LocalDate result =
                 NordeaPartnerMarketUtil.getPaginationStartDate(
-                        account, credentialsRequest, componentProvider);
+                        account, credentialsRequest, dateTimeSource);
 
         // then
         assertEquals(result, localDateTenDaysBack);

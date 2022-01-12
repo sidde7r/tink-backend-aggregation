@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.model.NordeaPartnerTransactionalPaginatorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc.AccountTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -34,7 +34,7 @@ public class NordeaPartnerTransactionalAccountFetcher
 
     private final NordeaPartnerApiClient apiClient;
     private final NordeaPartnerAccountMapper accountMapper;
-    private final AgentComponentProvider componentProvider;
+    private final LocalDateTimeSource dateTimeSource;
     private final CredentialsRequest request;
     private final boolean isOnStaging;
 
@@ -42,7 +42,7 @@ public class NordeaPartnerTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         if (isOnStaging) {
             apiClient.fetchAllData(
-                    NordeaPartnerMarketUtil.getStartDate(request.getAccounts(), componentProvider));
+                    NordeaPartnerMarketUtil.getStartDate(request.getAccounts(), dateTimeSource));
             return apiClient.getAllData().toTinkTransactionalAccounts(accountMapper);
         }
         return apiClient.fetchAccounts().toTinkTransactionalAccounts(accountMapper);
@@ -77,7 +77,7 @@ public class NordeaPartnerTransactionalAccountFetcher
             try {
                 final LocalDate dateLimit =
                         NordeaPartnerMarketUtil.getPaginationStartDate(
-                                account, request, componentProvider);
+                                account, request, dateTimeSource);
                 final AccountTransactionsResponse response =
                         apiClient.fetchAccountTransaction(
                                 account.getApiIdentifier(), key, dateLimit);

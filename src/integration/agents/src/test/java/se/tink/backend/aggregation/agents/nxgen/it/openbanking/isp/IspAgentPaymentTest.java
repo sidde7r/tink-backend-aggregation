@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.isp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.CreditorDebtorArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -22,13 +24,12 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class IspAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
-    private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
-            new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
-    private final ArgumentManager<IspAgentPaymentTest.Arg> creditorDebtorManager =
-            new ArgumentManager<>(IspAgentPaymentTest.Arg.values());
+    private final ArgumentManager<CreditorDebtorArgumentEnum> creditorDebtorManager =
+            new ArgumentManager<>(CreditorDebtorArgumentEnum.values());
 
     @Before
     public void setup() throws Exception {
+        creditorDebtorManager.before();
         builder =
                 new AgentIntegrationTest.Builder("it", "it-isp-oauth2")
                         .setFinancialInstitutionId("isp")
@@ -40,18 +41,21 @@ public class IspAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        manager.before();
-        creditorDebtorManager.before();
-
         builder.build().testTinkLinkPayment(createRealDomesticPayment().build());
     }
 
     @Test
     public void testRecurringPayments() throws Exception {
-        manager.before();
-        creditorDebtorManager.before();
-
         builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
+    }
+
+    @Test
+    public void testInstantPayments() throws Exception {
+        builder.build()
+                .testTinkLinkPayment(
+                        createRealDomesticPayment()
+                                .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
+                                .build());
     }
 
     private Payment.Builder createRealDomesticRecurringPayment() {
@@ -68,15 +72,13 @@ public class IspAgentPaymentTest {
     private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         AccountIdentifier creditorAccountIdentifier =
-                new IbanIdentifier(
-                        creditorDebtorManager.get(IspAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+                new IbanIdentifier(creditorDebtorManager.get(CreditorDebtorArgumentEnum.CREDITOR));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
-        remittanceInformation.setValue("Isp123");
+        remittanceInformation.setValue("Tink testing " + LocalDateTime.now());
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
         AccountIdentifier debtorAccountIdentifier =
-                new IbanIdentifier(
-                        creditorDebtorManager.get(IspAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+                new IbanIdentifier(creditorDebtorManager.get(CreditorDebtorArgumentEnum.DEBTOR));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
@@ -90,16 +92,6 @@ public class IspAgentPaymentTest {
                 .withCurrency(amount.getCurrencyCode())
                 .withRemittanceInformation(remittanceInformation)
                 .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
-    }
-
-    private enum Arg implements ArgumentManager.ArgumentManagerEnum {
-        DEBTOR_ACCOUNT, // Domestic IBAN account number
-        CREDITOR_ACCOUNT; // Domestic IBAN account number
-
-        @Override
-        public boolean isOptional() {
-            return false;
-        }
     }
 
     @AfterClass

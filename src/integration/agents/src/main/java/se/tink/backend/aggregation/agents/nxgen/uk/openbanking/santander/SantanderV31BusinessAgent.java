@@ -49,6 +49,13 @@ public class SantanderV31BusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         return new SantanderV31Ais(
                 aisConfig,
@@ -56,13 +63,6 @@ public class SantanderV31BusinessAgent extends UkOpenBankingBaseAgent {
                 localDateTimeSource,
                 apiClient,
                 transactionPaginationHelper);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

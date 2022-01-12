@@ -54,6 +54,13 @@ public class NatWestV31UniversalAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new UkOpenBankingV31Ais(
@@ -65,13 +72,6 @@ public class NatWestV31UniversalAgent extends UkOpenBankingBaseAgent {
                         new DefaultIdentifierMapper(valueExtractor)),
                 localDateTimeSource,
                 transactionPaginationHelper);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

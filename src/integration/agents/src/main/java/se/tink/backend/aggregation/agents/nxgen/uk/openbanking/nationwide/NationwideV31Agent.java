@@ -48,6 +48,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private final AgentComponentProvider componentProvider;
 
     static {
         aisConfig =
@@ -58,8 +59,6 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
                         .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTIES)
                         .build();
     }
-
-    private final AgentComponentProvider componentProvider;
 
     @Inject
     public NationwideV31Agent(

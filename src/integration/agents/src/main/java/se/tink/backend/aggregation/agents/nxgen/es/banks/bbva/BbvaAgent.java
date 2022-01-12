@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -41,7 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
     SAVINGS_ACCOUNTS,
-    //    CREDIT_CARDS,
+    CREDIT_CARDS,
     //    INVESTMENTS,
     IDENTITY_DATA,
     LOANS
@@ -51,7 +53,7 @@ public final class BbvaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 //                RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                //                RefreshCreditCardAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
     private final BbvaApiClient apiClient;
@@ -103,15 +105,15 @@ public final class BbvaAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    //    @Override
-    //    public FetchAccountsResponse fetchCreditCardAccounts() {
-    //        return creditCardRefreshController.fetchCreditCardAccounts();
-    //    }
-    //
-    //    @Override
-    //    public FetchTransactionsResponse fetchCreditCardTransactions() {
-    //        return creditCardRefreshController.fetchCreditCardTransactions();
-    //    }
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
 
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         return investmentRefreshController.fetchInvestmentAccounts();

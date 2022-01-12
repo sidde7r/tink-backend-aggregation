@@ -104,6 +104,7 @@ public class NorwegianConstants {
     }
 
     public class RegionId {
+        public static final String REGION_ID_DK = "DK";
         public static final String REGION_ID_NO = "NO";
         public static final String REGION_ID_SE = "SE";
     }

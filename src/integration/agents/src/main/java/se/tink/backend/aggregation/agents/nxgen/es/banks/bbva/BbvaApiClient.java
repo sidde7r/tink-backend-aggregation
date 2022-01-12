@@ -192,19 +192,22 @@ public class BbvaApiClient {
     }
 
     public Optional<CreditCardTransactionsResponse> fetchCreditCardTransactions(
-            Account account, String keyIndex) {
-        log.info("Pagination key: {}", keyIndex);
+            Account account, String pageKey) {
+        log.info("CreditCard Transaction Next Page: {}", pageKey);
         CreditCardTransactionsRequest body = createCreditCardTransactionsRequestBody(account);
+        String transactionsUrl =
+                isFirstPageOfAccountTransactions(pageKey)
+                        ? Url.CREDIT_CARD_TRANSACTIONS
+                        : Url.ASO + pageKey;
         try {
             return Optional.of(
-                    createPostRequestInSession(Url.CREDIT_CARD_TRANSACTIONS)
+                    createPostRequestInSession(transactionsUrl)
+                            .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE))
                             .post(CreditCardTransactionsResponse.class, body));
         } catch (HttpResponseException e) {
             if (isEmptyCreditCardTransactions(e)) {
                 return Optional.empty();
             }
-            throw e;
-        } catch (HttpClientException e) {
             throw e;
         }
     }

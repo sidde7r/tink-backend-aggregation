@@ -46,16 +46,16 @@ public class SiliconValleyBusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected UkOpenBankingAis makeAis() {
-        return new SiliconValleyAis(
-                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
-    }
-
-    @Override
     public Authenticator constructAuthenticator() {
         UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
 
         return createAutoAuthController(authController);
+    }
+
+    @Override
+    protected UkOpenBankingAis makeAis() {
+        return new SiliconValleyAis(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

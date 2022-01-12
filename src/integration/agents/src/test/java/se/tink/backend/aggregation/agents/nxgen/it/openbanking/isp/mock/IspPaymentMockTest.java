@@ -17,6 +17,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment.Builder;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -28,7 +29,8 @@ public class IspPaymentMockTest {
     private static final String CONFIGURATION_FILE = BASE_PATH + "configuration.yml";
     private static final String SINGLE_PAYMENT_ACCP_FILE =
             BASE_PATH + "isp-single-payment_accp.aap";
-
+    private static final String SINGLE_INSTANT_PAYMENT_ACCP_FILE =
+            BASE_PATH + "isp-single-instant-payment_accp.aap";
     private static final String SINGLE_PAYMENT_RJCT_FILE =
             BASE_PATH + "isp-single-payment_rjct.aap";
 
@@ -46,6 +48,28 @@ public class IspPaymentMockTest {
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(
                                 MarketCode.IT, "it-isp-oauth2", SINGLE_PAYMENT_ACCP_FILE)
+                        .withConfigurationFile(configuration)
+                        .withPayment(payment.build())
+                        .addCallbackData("state", "00000000-0000-4000-0000-000000000000")
+                        .addCallbackData("result", "success")
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        // then
+        Assertions.assertThatCode(agentWireMockPaymentTest::executePayment)
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testInstantSinglePaymentAccepted() throws Exception {
+        // given
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+
+        Builder payment = createInstantSinglePayment();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.IT, "it-isp-oauth2", SINGLE_INSTANT_PAYMENT_ACCP_FILE)
                         .withConfigurationFile(configuration)
                         .withPayment(payment.build())
                         .addCallbackData("state", "00000000-0000-4000-0000-000000000000")
@@ -127,6 +151,10 @@ public class IspPaymentMockTest {
 
         // then
         assertThat(throwable).isInstanceOf(PaymentAuthorizationException.class);
+    }
+
+    private Builder createInstantSinglePayment() {
+        return createSinglePayment().withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER);
     }
 
     private Builder createSinglePayment() {

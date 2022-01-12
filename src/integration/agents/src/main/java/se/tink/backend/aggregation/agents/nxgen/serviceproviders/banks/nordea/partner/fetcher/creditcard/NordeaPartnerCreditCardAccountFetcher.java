@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.model.NordeaPartnerCreditCardPaginatorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.rpc.CardTransactionListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc.AccountListResponse;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
@@ -28,7 +28,7 @@ public class NordeaPartnerCreditCardAccountFetcher
 
     private static final int PAGE_SIZE = 50;
     private final NordeaPartnerApiClient apiClient;
-    private final AgentComponentProvider componentProvider;
+    private final LocalDateTimeSource dateTimeSource;
     private final CredentialsRequest request;
     private final boolean isOnStaging;
 
@@ -59,7 +59,7 @@ public class NordeaPartnerCreditCardAccountFetcher
                 response.getTinkTransactions(apiClient.getMarket()),
                 response.canFetchMore(
                         NordeaPartnerMarketUtil.getPaginationStartDate(
-                                account, request, componentProvider)));
+                                account, request, dateTimeSource)));
     }
 
     @JsonIgnore

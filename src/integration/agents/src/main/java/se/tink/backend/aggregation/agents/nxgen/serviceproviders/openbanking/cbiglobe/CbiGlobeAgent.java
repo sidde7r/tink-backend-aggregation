@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import java.util.List;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -53,11 +54,13 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected TemporaryStorage temporaryStorage;
     protected StatelessProgressiveAuthenticator authenticator;
     protected CbiUserState userState;
-    private CbiGlobeProviderConfiguration providerConfiguration;
     protected LocalDateTimeSource localDateTimeSource;
     protected RandomValueGenerator randomValueGenerator;
     protected final String psuIpAddress;
     protected final CbiUrlProvider urlProvider;
+    protected final Provider provider;
+
+    private final CbiGlobeProviderConfiguration providerConfiguration;
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
@@ -71,6 +74,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         temporaryStorage = new TemporaryStorage();
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
+        provider = agentComponentProvider.getProvider();
         apiClient = getApiClient();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, credentials);
@@ -194,7 +198,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                         supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState,
-                        request.getProvider());
+                        provider);
         return Optional.of(
                 new PaymentController(
                         paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));

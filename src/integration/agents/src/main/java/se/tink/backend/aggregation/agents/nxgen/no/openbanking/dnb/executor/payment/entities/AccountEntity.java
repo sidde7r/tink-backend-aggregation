@@ -25,6 +25,7 @@ public class AccountEntity {
                 this.iban = accountNumber;
                 break;
             case NO:
+            case BBAN:
                 this.bban = accountNumber;
                 break;
             default:
