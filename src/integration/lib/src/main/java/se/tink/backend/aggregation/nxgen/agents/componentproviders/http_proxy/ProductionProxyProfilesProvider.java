@@ -17,6 +17,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
 public class ProductionProxyProfilesProvider implements ProxyProfilesProvider {
+    private static final String FEATURE_FLAG_SUFFIX = "Proxy";
+
     private final ProxyProfilesImpl proxyProfiles;
 
     @Inject
@@ -73,6 +75,11 @@ public class ProductionProxyProfilesProvider implements ProxyProfilesProvider {
             String userId = credentialsRequest.getCredentials().getUserId();
             Provider provider = credentialsRequest.getProvider();
             String countryCode = provider.getMarket().toLowerCase();
+
+            String featureFlag = countryCode + FEATURE_FLAG_SUFFIX;
+            if (!agentsServiceConfiguration.isFeatureEnabled(featureFlag)) {
+                return Optional.empty();
+            }
 
             return agentsServiceConfiguration.getCountryProxyProfile(
                     countryCode, userId.hashCode());
