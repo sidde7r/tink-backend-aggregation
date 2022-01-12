@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import se.tink.backend.agents.rpc.Provider;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.unregulated.authenticator.DemoBankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -46,7 +46,7 @@ public final class BankIdDemoAgent extends NextGenerationDemoAgent {
     @Inject
     public BankIdDemoAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        Provider provider = request.getProvider();
+        Provider provider = componentProvider.getProvider();
 
         String name = provider.getName();
         boolean successfulAuthentication = true;
