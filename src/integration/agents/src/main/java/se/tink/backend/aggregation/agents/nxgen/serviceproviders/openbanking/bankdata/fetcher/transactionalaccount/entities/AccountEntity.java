@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +14,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -20,6 +24,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class AccountEntity {
     private String resourceId;
     private String iban;
+    private String bban;
     private String currency;
     private String name;
     private String ownerName;
@@ -50,7 +55,7 @@ public class AccountEntity {
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
                                 .withAccountName(Strings.isNullOrEmpty(name) ? product : name)
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifiers(getIdentifiers())
                                 .build())
                 .addHolderName(ownerName)
                 .putInTemporaryStorage(BankdataConstants.StorageKeys.ACCOUNT_ID, iban)
@@ -59,6 +64,20 @@ public class AccountEntity {
                 .putInTemporaryStorage(
                         BankdataConstants.StorageKeys.TRANSACTIONS_URL, getTransactionLink())
                 .build();
+    }
+
+    private Collection<AccountIdentifier> getIdentifiers() {
+        List<AccountIdentifier> identifiers = new ArrayList<>();
+        if (!Strings.isNullOrEmpty(bic)) {
+            identifiers.add(new IbanIdentifier(bic, iban));
+        } else {
+            identifiers.add(new IbanIdentifier(iban));
+        }
+        if (!Strings.isNullOrEmpty(bban)) {
+            identifiers.add(new BbanIdentifier(bban));
+        }
+
+        return identifiers;
     }
 
     public String getTransactionLink() {
