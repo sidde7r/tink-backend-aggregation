@@ -46,12 +46,13 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor {
 
+    protected NordeaPartnerAccountMapper accountMapper;
+
     private final NordeaPartnerApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
-    private NordeaPartnerJweHelper jweHelper;
-    protected NordeaPartnerAccountMapper accountMapper;
-    private boolean isOnStaging;
+    private final NordeaPartnerJweHelper jweHelper;
+    private final boolean isOnStaging;
 
     @Inject
     public NordeaPartnerAgent(
