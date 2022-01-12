@@ -28,6 +28,9 @@ public abstract class ChallengeConfirmationStep
 
     private final ConfirmChallengeCall deviceRegistrationChallengeCall;
 
+    public abstract ConfirmChallengeRequest requestBody(
+            MetroAuthenticationData authenticationData, MetroProcessState processState);
+
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
         MetroPersistedDataAccessor persistedDataAccessor =
@@ -83,7 +86,4 @@ public abstract class ChallengeConfirmationStep
                 authenticationProcessState,
                 persistedDataAccessor.storeAuthenticationData(authenticationData));
     }
-
-    public abstract ConfirmChallengeRequest requestBody(
-            MetroAuthenticationData authenticationData, MetroProcessState processState);
 }

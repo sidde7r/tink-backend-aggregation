@@ -58,21 +58,6 @@ public class MetroAuthenticationData {
         return this;
     }
 
-    private void insertKey(KeyPair signatureECKeyPair, KeyType signatureEcKeyPair) {
-        keys.putIfAbsent(
-                signatureEcKeyPair,
-                KeyPairEntity.builder()
-                        .privateKey(
-                                Base64.getEncoder()
-                                        .encodeToString(
-                                                signatureECKeyPair.getPrivate().getEncoded()))
-                        .publicKey(
-                                Base64.getEncoder()
-                                        .encodeToString(
-                                                signatureECKeyPair.getPublic().getEncoded()))
-                        .build());
-    }
-
     public MetroAuthenticationData setDeviceId(String deviceId) {
         this.deviceId = deviceId;
         return this;
@@ -122,6 +107,21 @@ public class MetroAuthenticationData {
         return Option.of(keys.get(KeyType.SIGNATURE_EC_KEY_PAIR))
                 .map(KeyPairEntity::getPublicKey)
                 .getOrElseThrow(KEY_DOES_NOT_EXIST);
+    }
+
+    private void insertKey(KeyPair signatureECKeyPair, KeyType signatureEcKeyPair) {
+        keys.putIfAbsent(
+                signatureEcKeyPair,
+                KeyPairEntity.builder()
+                        .privateKey(
+                                Base64.getEncoder()
+                                        .encodeToString(
+                                                signatureECKeyPair.getPrivate().getEncoded()))
+                        .publicKey(
+                                Base64.getEncoder()
+                                        .encodeToString(
+                                                signatureECKeyPair.getPublic().getEncoded()))
+                        .build());
     }
 
     @JsonObject

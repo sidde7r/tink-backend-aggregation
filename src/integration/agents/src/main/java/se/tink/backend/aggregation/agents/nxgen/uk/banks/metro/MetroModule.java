@@ -26,13 +26,6 @@ public class MetroModule extends AbstractModule {
         ACCOUNT_TYPE_AND_PROVIDER_NAME.put("uk-metro-business-password", AccountType.BUSINESS);
     }
 
-    @Override
-    protected void configure() {
-        install(new MetroAuthenticationModule());
-        install(new MetroFetchersModule());
-        install(new MetroSessionHandlerModule());
-    }
-
     @Inject
     @Singleton
     @Provides
@@ -57,5 +50,12 @@ public class MetroModule extends AbstractModule {
                                                 ERROR_MESSAGE_TEMPLATE,
                                                 providerName,
                                                 ACCOUNT_TYPE_AND_PROVIDER_NAME.toString())));
+    }
+
+    @Override
+    protected void configure() {
+        install(new MetroAuthenticationModule());
+        install(new MetroFetchersModule());
+        install(new MetroSessionHandlerModule());
     }
 }

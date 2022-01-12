@@ -41,11 +41,11 @@ enum KnownErrors {
         this.definitionOfCase = definitionOfCase;
     }
 
-    private Case<ResponseEntity<String>, AgentBankApiError> getCase() {
-        return definitionOfCase;
-    }
-
     static Case<ResponseEntity<String>, AgentBankApiError>[] getCases() {
         return Stream.of(values()).map(KnownErrors::getCase).toArray(Case[]::new);
+    }
+
+    private Case<ResponseEntity<String>, AgentBankApiError> getCase() {
+        return definitionOfCase;
     }
 }

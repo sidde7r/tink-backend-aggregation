@@ -14,11 +14,6 @@ public class MetroPersistedDataAccessor
         super(agentAuthenticationPersistedData, objectMapper, MetroAuthenticationData.class);
     }
 
-    @Override
-    protected String storeKey() {
-        return "METRO_AUTHENTICATION_DATA";
-    }
-
     public MetroAuthenticationData getAuthenticationData() {
         return super.getFromStorage().orElse(new MetroAuthenticationData());
     }
@@ -26,5 +21,10 @@ public class MetroPersistedDataAccessor
     public AgentAuthenticationPersistedData storeAuthenticationData(
             MetroAuthenticationData authenticationData) {
         return super.store(authenticationData);
+    }
+
+    @Override
+    protected String storeKey() {
+        return "METRO_AUTHENTICATION_DATA";
     }
 }
