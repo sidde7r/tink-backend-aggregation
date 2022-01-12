@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 public class SainsburyAgent extends UkOpenBankingBaseAgent {
 
     private static final SainsburyAisConfiguration aisConfig;
+    private final AgentComponentProvider componentProvider;
 
     static {
         aisConfig =
@@ -44,13 +45,18 @@ public class SainsburyAgent extends UkOpenBankingBaseAgent {
                                 .withApiBaseURL(SainsburyConstants.AIS_API_URL));
     }
 
-    private final AgentComponentProvider componentProvider;
-
     @Inject
     public SainsburyAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
         this.componentProvider = componentProvider;
+    }
+
+    @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+
+        return createAutoAuthController(authController);
     }
 
     @Override
@@ -77,13 +83,6 @@ public class SainsburyAgent extends UkOpenBankingBaseAgent {
                 persistentStorage,
                 aisConfig,
                 componentProvider);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

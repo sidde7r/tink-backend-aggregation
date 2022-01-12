@@ -58,6 +58,13 @@ public class RbsV31BanklineAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new UkOpenBankingV31Ais(
@@ -69,13 +76,6 @@ public class RbsV31BanklineAgent extends UkOpenBankingBaseAgent {
                         new DefaultIdentifierMapper(valueExtractor)),
                 localDateTimeSource,
                 transactionPaginationHelper);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
