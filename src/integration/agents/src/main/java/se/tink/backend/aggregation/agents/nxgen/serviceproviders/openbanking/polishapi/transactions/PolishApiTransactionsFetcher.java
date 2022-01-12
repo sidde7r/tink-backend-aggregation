@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.TransactionHistoryRequiresSCAException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.TransactionTypeNotSupportedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions.dto.responses.TransactionsResponse;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -33,7 +33,7 @@ public class PolishApiTransactionsFetcher<A extends Account>
 
     private final PolishApiTransactionClient apiClient;
     private final LocalDateTimeSource localDateTimeSource;
-    private final UserAvailability userAvailability;
+    private final User user;
     private final List<TransactionTypeRequest> supportedTransactionTypes;
 
     @Override
@@ -60,18 +60,14 @@ public class PolishApiTransactionsFetcher<A extends Account>
             TransactionTypeRequest transactionTypeRequest) {
         LocalDate from = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate to = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        if (!isUserAvailable()) {
-            log.info("{} Transactions - Fetching transactions when user is not available", LOG_TAG);
+        if (!user.isPresent()) {
+            log.info("{} Transactions - Fetching transactions when user is not present", LOG_TAG);
             return fetchBackgroundRefreshTransactions(accountIdentifier, transactionTypeRequest);
         } else {
-            log.info("{} Transactions - Fetching transactions when user is available", LOG_TAG);
+            log.info("{} Transactions - Fetching transactions when user is present", LOG_TAG);
             return fetchManualRefreshTransactions(
                     accountIdentifier, from, to, transactionTypeRequest);
         }
-    }
-
-    private boolean isUserAvailable() {
-        return userAvailability.isUserPresent();
     }
 
     private Collection<? extends Transaction> fetchBackgroundRefreshTransactions(

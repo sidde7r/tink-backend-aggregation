@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -39,7 +40,8 @@ public final class AbnAmroAgent extends NextGenerationAgent
     public AbnAmroAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.apiClient = new AbnAmroApiClient(client, persistentStorage);
-        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(componentProvider.getUser());
         client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
@@ -96,7 +98,8 @@ public final class AbnAmroAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            User user) {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
@@ -104,11 +107,7 @@ public final class AbnAmroAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new AbnAmroTransactionFetcher(apiClient, getUserIpInformation()))));
-    }
-
-    private AbnAmroUserIpInformation getUserIpInformation() {
-        return new AbnAmroUserIpInformation(request.getUserAvailability().isUserPresent(), userIp);
+                                new AbnAmroTransactionFetcher(apiClient, user))));
     }
 
     @Override

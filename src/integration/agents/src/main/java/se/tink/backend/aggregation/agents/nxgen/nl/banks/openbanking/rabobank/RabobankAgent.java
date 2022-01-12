@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import java.security.cert.CertificateException;
 import java.time.ZoneId;
 import java.util.Date;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -92,13 +93,15 @@ public final class RabobankAgent
 
         RabobankSignatureHeaderBuilder signatureHeaderBuilder =
                 new RabobankSignatureHeaderBuilder(qsealPem, qsealcSigner);
+
+        final User user = componentProvider.getUser();
         apiClient =
                 new RabobankApiClient(
                         client,
                         persistentStorage,
                         rabobankConfiguration,
                         signatureHeaderBuilder,
-                        getUserIpInformation());
+                        user);
 
         RabobankConsentStatusValidator rabobankConsentStatusValidator =
                 new RabobankConsentStatusValidator(
@@ -109,7 +112,7 @@ public final class RabobankAgent
 
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
-                        componentProvider.getLocalDateTimeSource());
+                        componentProvider.getLocalDateTimeSource(), user);
 
         final OAuth2AuthenticationProgressiveController controller =
                 new RabobankAuthenticationController(
@@ -146,10 +149,6 @@ public final class RabobankAgent
         client.addFilter(new RabobankFailureFilter());
     }
 
-    private RabobankUserIpInformation getUserIpInformation() {
-        return new RabobankUserIpInformation(request.getUserAvailability().isUserPresent(), userIp);
-    }
-
     @Override
     public boolean login() {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
@@ -182,7 +181,7 @@ public final class RabobankAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource, User user) {
 
         Date dateLimit =
                 Date.from(
@@ -198,8 +197,7 @@ public final class RabobankAgent
         TransactionDatePaginator<TransactionalAccount> transactionFetcher =
                 isSandbox()
                         ? new SandboxTransactionFetcher(apiClient)
-                        : new TransactionFetcher(
-                                apiClient, dateLimit, getUserIpInformation().isUserPresent());
+                        : new TransactionFetcher(apiClient, dateLimit, user.isPresent());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

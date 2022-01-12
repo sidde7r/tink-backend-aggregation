@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
@@ -46,7 +47,7 @@ public final class RabobankApiClient {
     private final PersistentStorage persistentStorage;
     private final RabobankConfiguration rabobankConfiguration;
     private final RabobankSignatureHeaderBuilder signatureHeaderBuilder;
-    private final RabobankUserIpInformation userIpInformation;
+    private final User user;
 
     public TokenResponse exchangeAuthorizationCode(Form request) {
         return post(request);
@@ -141,9 +142,9 @@ public final class RabobankApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
         // This header must be present iff the request was initiated by the PSU
-        if (userIpInformation.isUserPresent()) {
+        if (user.isPresent()) {
             log.info("Request is attended -- adding PSU header for {}", url);
-            builder.header(QueryParams.PSU_IP_ADDRESS, userIpInformation.getUserIp());
+            builder.header(QueryParams.PSU_IP_ADDRESS, user.getIpAddress());
         } else {
             log.info("Request is unattended -- omitting PSU header for {}", url);
         }
@@ -209,7 +210,7 @@ public final class RabobankApiClient {
             boolean isSandbox, TransactionalTransactionsResponse page) {
         return page.getTransactions().getLinks().getNextKey() != null
                 && !isSandbox
-                && userIpInformation.isUserPresent();
+                && user.isPresent();
     }
 
     private void checkErrorBodyType(HttpResponse httpResponse) {

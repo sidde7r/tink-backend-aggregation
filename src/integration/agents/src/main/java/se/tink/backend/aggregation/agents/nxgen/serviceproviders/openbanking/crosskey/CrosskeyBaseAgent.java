@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import java.time.ZoneId;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -34,7 +35,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionH
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.RetryAfterRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
@@ -60,7 +60,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 createApiClient(
                         qsealcSigner,
                         marketConfiguration,
-                        componentProvider.getCredentialsRequest(),
+                        componentProvider.getUser(),
                         componentProvider.getCredentialsRequest().getProvider().getMarket());
         final LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
         transactionalAccountRefreshController =
@@ -159,13 +159,13 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     private CrosskeyBaseApiClient createApiClient(
             QsealcSigner qsealcSigner,
             CrosskeyMarketConfiguration marketConfiguration,
-            CredentialsRequest credentialsRequest,
+            User user,
             String providerMarket) {
         return new CrosskeyBaseApiClient(
                 client,
                 sessionStorage,
                 marketConfiguration,
-                credentialsRequest,
+                user,
                 agentConfiguration,
                 qsealcSigner,
                 providerMarket);

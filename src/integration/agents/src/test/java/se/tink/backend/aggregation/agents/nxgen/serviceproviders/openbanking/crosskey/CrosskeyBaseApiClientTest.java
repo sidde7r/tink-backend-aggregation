@@ -3,9 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyTransactionsResponse;
@@ -29,8 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrosskeyBaseApiClientTest {
@@ -38,15 +35,12 @@ public class CrosskeyBaseApiClientTest {
     @Mock private TinkHttpClient httpClientMock;
     @Mock private SessionStorage sessionStorage;
     @Mock private RequestBuilder requestBuilder;
-    @Mock private CredentialsRequest request;
-    private UserAvailability userAvailability;
-    private CredentialsRequest spyRequest;
+    @Mock private User user;
 
     private CrosskeyBaseApiClient crosskeyApiClient;
 
     @Before
     public void setUp() {
-        spyRequest = spy(request);
         QsealcSigner qsealcSigner = mock(QsealcSignerImpl.class);
         AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration =
                 mock(AgentConfiguration.class);
@@ -57,17 +51,14 @@ public class CrosskeyBaseApiClientTest {
         when(agentConfiguration.getProviderSpecificConfiguration())
                 .thenReturn(crosskeyBaseConfiguration);
         when(agentConfiguration.getQsealc()).thenReturn(EIdasTinkCert.QSEALC);
-        userAvailability = new UserAvailability();
-        userAvailability.setOriginatingUserIp("userIp");
-        userAvailability.setUserPresent(true);
-        doReturn(userAvailability).when(spyRequest).getUserAvailability();
+        when(user.getIpAddress()).thenReturn("userIp");
 
         crosskeyApiClient =
                 new CrosskeyBaseApiClient(
                         httpClientMock,
                         sessionStorage,
                         CrossKeyTestUtils.getCrossKeyMarketConfiguration(),
-                        spyRequest,
+                        user,
                         agentConfiguration,
                         qsealcSigner,
                         "FI");
@@ -86,6 +77,7 @@ public class CrosskeyBaseApiClientTest {
                 .thenReturn(
                         CrossKeyTestUtils.loadResourceFileContent(
                                 "checkingTransactions.json", CrosskeyTransactionsResponse.class));
+        when(user.isPresent()).thenReturn(false);
 
         // when
         CrosskeyTransactionsResponse crosskeyTransactionsResponse =
@@ -109,7 +101,7 @@ public class CrosskeyBaseApiClientTest {
                 .thenReturn(
                         CrossKeyTestUtils.loadResourceFileContent(
                                 "checkingTransactions.json", CrosskeyTransactionsResponse.class));
-        doReturn(false).when(spyRequest).isUserPresent();
+        when(user.isPresent()).thenReturn(false);
 
         CrosskeyTransactionsResponse crosskeyTransactionsResponse =
                 crosskeyApiClient.fetchCreditCardTransactions(
@@ -133,7 +125,7 @@ public class CrosskeyBaseApiClientTest {
                 .thenReturn(
                         CrossKeyTestUtils.loadResourceFileContent(
                                 "checkingTransactions.json", CrosskeyTransactionsResponse.class));
-        doReturn(true).when(spyRequest).isUserPresent();
+        when(user.isPresent()).thenReturn(true);
 
         CrosskeyTransactionsResponse crosskeyTransactionsResponse =
                 crosskeyApiClient.fetchCreditCardTransactions(

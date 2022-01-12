@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.agent.runtime.operation.UserImpl;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
@@ -92,7 +93,7 @@ public class RabobankConsentStatusValidatorTest {
                 persistentStorage,
                 new RabobankConfiguration(),
                 rabobankSignatureHeaderBuilder,
-                new RabobankUserIpInformation(true, "127.0.0.1"));
+                new UserImpl(true, true, "127.0.0.1", null));
     }
 
     private PersistentStorage initializePersistentStorage() {

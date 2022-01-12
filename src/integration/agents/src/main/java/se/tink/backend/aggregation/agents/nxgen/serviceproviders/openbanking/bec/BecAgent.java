@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class BecAgent extends NextGenerationAgent
@@ -40,7 +40,11 @@ public final class BecAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(componentProvider);
 
-        apiClient = new BecApiClient(client, persistentStorage, getApiConfigurration());
+        apiClient =
+                new BecApiClient(
+                        client,
+                        persistentStorage,
+                        getApiConfiguration(componentProvider.getUser()));
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         super.setConfiguration(agentsServiceConfiguration);
@@ -54,13 +58,13 @@ public final class BecAgent extends NextGenerationAgent
         client.setEidasProxy(eidasProxyConfiguration);
     }
 
-    private BecApiConfiguration getApiConfigurration() {
+    private BecApiConfiguration getApiConfiguration(User user) {
         String url = request.getProvider().getPayload().split(",")[1];
-        UserAvailability userAvailability = request.getUserAvailability();
+
         return BecApiConfiguration.builder()
                 .url(url)
-                .userIp(userAvailability.getOriginatingUserIp())
-                .isUserPresent(userAvailability.isUserPresent())
+                .userIp(user.getIpAddress())
+                .isUserPresent(user.isPresent())
                 .build();
     }
 

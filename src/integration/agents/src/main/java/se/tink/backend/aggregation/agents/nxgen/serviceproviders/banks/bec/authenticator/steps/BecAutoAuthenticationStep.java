@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.be
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -12,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.LoggedInEntity;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
@@ -21,7 +21,7 @@ public class BecAutoAuthenticationStep {
     private final BecApiClient apiClient;
     private final Credentials credentials;
     private final BecStorage storage;
-    private final UserAvailability userAvailability;
+    private final User user;
 
     /**
      * Try to auto authenticate.
@@ -30,7 +30,7 @@ public class BecAutoAuthenticationStep {
      */
     public boolean tryAutoAuthentication() {
         if (isSessionInvalid()) {
-            if (userAvailability.isUserAvailableForInteraction()) {
+            if (user.isAvailableForInteraction()) {
                 return false;
             }
             throw SessionError.SESSION_EXPIRED.exception();
@@ -44,7 +44,7 @@ public class BecAutoAuthenticationStep {
         } catch (LoginException loginException) {
             storage.clearSessionData();
 
-            if (userAvailability.isUserAvailableForInteraction()) {
+            if (user.isAvailableForInteraction()) {
                 log.error("Refresh SCA token error -> forcing manual auth");
                 return false;
             }

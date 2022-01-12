@@ -171,7 +171,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                 new PolishApiTransactionsFetcher(
                         transactionApiClient,
                         agentComponentProvider.getLocalDateTimeSource(),
-                        request.getUserAvailability(),
+                        agentComponentProvider.getUser(),
                         getSupportedTransactionTypes());
 
         return new TransactionalAccountRefreshController(
@@ -205,7 +205,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                 new PolishApiTransactionsFetcher<>(
                         transactionApiClient,
                         agentComponentProvider.getLocalDateTimeSource(),
-                        request.getUserAvailability(),
+                        agentComponentProvider.getUser(),
                         getSupportedTransactionTypes());
 
         return new CreditCardRefreshController(

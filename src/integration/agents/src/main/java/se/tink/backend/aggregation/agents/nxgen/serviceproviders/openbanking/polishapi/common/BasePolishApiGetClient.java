@@ -61,12 +61,7 @@ public class BasePolishApiGetClient {
                         .header(COMPANY_CONTEXT, false)
                         .header(TPP_REQUEST_ID, getUuid())
                         .header(PSU_USER_AGENT, PSU_USER_AGENT_VAL)
-                        .header(
-                                PSU_IP_ADDRESS,
-                                agentComponentProvider
-                                        .getCredentialsRequest()
-                                        .getUserAvailability()
-                                        .getOriginatingUserIp())
+                        .header(PSU_IP_ADDRESS, agentComponentProvider.getUser().getIpAddress())
                         .header(PSU_IP_PORT, PSU_IP_PORT_VAL)
                         .header(PSU_SESSION, isUserPresent())
                         .header(
@@ -80,7 +75,7 @@ public class BasePolishApiGetClient {
     }
 
     private boolean isUserPresent() {
-        return agentComponentProvider.getCredentialsRequest().getUserAvailability().isUserPresent();
+        return agentComponentProvider.getUser().isPresent();
     }
 
     protected OAuth2Token getTokenFromStorage() {
@@ -97,7 +92,7 @@ public class BasePolishApiGetClient {
 
     private String getLanguageCode() {
         return PolishApiConstants.Localization.getLanguageCode(
-                agentComponentProvider.getCredentialsRequest().getUser().getLocale(),
+                agentComponentProvider.getUser().getLocale(),
                 polishApiAgentCreator.getLogicFlowConfigurator().doesSupportEnglishLanguage());
     }
 }

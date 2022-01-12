@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LO
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -57,6 +58,7 @@ public final class BecAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final RandomValueGenerator randomValueGenerator;
+    private final User user;
 
     @Inject
     public BecAgent(AgentComponentProvider agentComponentProvider) {
@@ -74,6 +76,7 @@ public final class BecAgent extends NextGenerationAgent
         configureClient();
 
         this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
+        this.user = agentComponentProvider.getUser();
     }
 
     @Override
@@ -83,7 +86,7 @@ public final class BecAgent extends NextGenerationAgent
                         apiClient,
                         credentials,
                         storage,
-                        request.getUserAvailability(),
+                        user,
                         catalog,
                         supplementalInformationController,
                         randomValueGenerator);

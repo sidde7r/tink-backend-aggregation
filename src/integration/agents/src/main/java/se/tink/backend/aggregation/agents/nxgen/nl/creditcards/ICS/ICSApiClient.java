@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpHeaders;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.consent.generators.nl.ics.IcsConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HeaderKeys;
@@ -50,7 +51,7 @@ public class ICSApiClient {
     private final PersistentStorage persistentStorage;
     private final String redirectUri;
     private final ICSConfiguration configuration;
-    private final String customerIpAddress;
+    private final User user;
     private final AgentComponentProvider componentProvider;
     private final ICSOAuthTokenFactory tokenFactory;
     private final ICSTimeProvider timeProvider;
@@ -85,12 +86,14 @@ public class ICSApiClient {
         final String clientSecret = getConfiguration().getClientSecret();
         final String xInteractionId = randomValueGenerator.getUUID().toString();
 
+        String userIpAddress = user.isPresent() ? user.getIpAddress() : "";
+
         return createRequest(url)
                 .addBearerToken(token)
                 .header(HeaderKeys.CLIENT_ID, clientId)
                 .header(HeaderKeys.CLIENT_SECRET, clientSecret)
                 .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.FINANCIAL_ID)
-                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, customerIpAddress)
+                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, userIpAddress)
                 .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);

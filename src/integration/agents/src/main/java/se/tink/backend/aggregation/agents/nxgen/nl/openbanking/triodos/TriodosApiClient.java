@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.consent.generators.nl.triodos.TriodosConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.PathParameterKeys;
@@ -70,8 +71,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 redirectUrl,
                 qSealc);
         this.qSealc = qSealc;
-        this.isUserPresent = request.getUserAvailability().isUserPresent();
-        this.psuIpAddress = request.getUserAvailability().getOriginatingUserIpOrDefault();
+        User user = componentProvider.getUser();
+        this.isUserPresent = user.isPresent();
+        this.psuIpAddress = user.getIpAddress();
         this.qsealcSigner = qsealcSigner;
         this.componentProvider = componentProvider;
         try {

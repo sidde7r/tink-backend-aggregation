@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 
 import java.time.ZoneId;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -30,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ServerErrorRetryFilter;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 public abstract class BankdataAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor {
@@ -42,7 +42,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider, String baseUrl, String baseAuthUrl) {
         super(componentProvider);
 
-        BankdataApiConfiguration apiConfiguration = getApiConfiguration(baseUrl, baseAuthUrl);
+        BankdataApiConfiguration apiConfiguration =
+                getApiConfiguration(componentProvider, baseUrl, baseAuthUrl);
         configureHttpClient();
         apiClient =
                 new BankdataApiClient(
@@ -54,13 +55,14 @@ public abstract class BankdataAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    private BankdataApiConfiguration getApiConfiguration(String baseUrl, String baseAuthUrl) {
-        UserAvailability userAvailability = request.getUserAvailability();
+    private BankdataApiConfiguration getApiConfiguration(
+            AgentComponentProvider componentProvider, String baseUrl, String baseAuthUrl) {
+        User user = componentProvider.getUser();
         return BankdataApiConfiguration.builder()
                 .baseUrl(baseUrl)
                 .baseAuthUrl(baseAuthUrl)
-                .userIp(userAvailability.getOriginatingUserIp())
-                .isUserPresent(userAvailability.isUserPresent())
+                .userIp(user.getIpAddress())
+                .isUserPresent(user.isPresent())
                 .build();
     }
 
