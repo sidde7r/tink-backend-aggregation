@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
 import java.util.Map;
-import se.tink.backend.agents.rpc.Provider;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
