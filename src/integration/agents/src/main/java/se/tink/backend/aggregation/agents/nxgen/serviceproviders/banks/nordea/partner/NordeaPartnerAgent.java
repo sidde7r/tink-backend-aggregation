@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -60,6 +61,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
         isOnStaging =
                 "neston-staging".equalsIgnoreCase(componentProvider.getContext().getClusterId());
         User user = componentProvider.getUser();
+        Provider provider = componentProvider.getProvider();
         apiClient =
                 new NordeaPartnerApiClient(
                         client,
