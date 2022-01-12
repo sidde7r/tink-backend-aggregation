@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -53,7 +53,7 @@ public final class ThirdPartyAuthenticationDemoAgent extends NextGenerationDemoA
         super(componentProvider);
 
         this.username = request.getCredentials().getField(Field.Key.USERNAME);
-        Provider provider = request.getProvider();
+        Provider provider = componentProvider.getProvider();
 
         String name = provider.getName();
         this.successfulAuthentication = !name.contains("failing");
