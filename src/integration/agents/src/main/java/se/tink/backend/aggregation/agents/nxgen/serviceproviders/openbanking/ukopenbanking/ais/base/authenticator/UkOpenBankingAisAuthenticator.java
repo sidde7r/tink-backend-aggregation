@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.entities.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.entities.AuthorizeRequest.Builder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.WellKnownResponse;
@@ -17,8 +18,9 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
     }
 
     @Override
-    public URL decorateAuthorizeUrl(
-            URL authorizeUrl, String state, String nonce, String callbackUri) {
+    public URL createAuthorizeUrl(
+            String state, String nonce, String callbackUri, ClientMode accounts) {
+        URL authorizeUrl = apiClient.buildAuthorizeUrl(state, nonce, accounts, callbackUri);
         String intentId = apiClient.createConsent();
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 
@@ -32,8 +34,11 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
                         .withNonce(nonce)
                         .withCallbackUri(callbackUri)
                         .withWellKnownConfiguration(wellKnownConfiguration)
-                        .withIntentId(intentId)
-                        .withMaxAge(OpenIdAuthenticatorConstants.MAX_AGE);
+                        .withIntentId(intentId);
+
+        if (useMaxAge()) {
+            authorizeRequest.withMaxAge(OpenIdAuthenticatorConstants.MAX_AGE);
+        }
 
         if (wellKnownConfiguration.isOfflineAccessSupported()) {
             authorizeRequest.withOfflineAccess();
@@ -42,5 +47,10 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
         return authorizeUrl.queryParam(
                 OpenIdAuthenticatorConstants.Params.REQUEST,
                 authorizeRequest.build(apiClient.getSigner()));
+    }
+
+    @Override
+    public boolean useMaxAge() {
+        return true;
     }
 }

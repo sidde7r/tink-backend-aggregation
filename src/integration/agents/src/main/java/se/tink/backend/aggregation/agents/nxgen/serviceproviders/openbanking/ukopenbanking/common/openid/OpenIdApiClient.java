@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
 import com.google.common.base.Strings;
-import java.lang.invoke.MethodHandles;
 import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,8 +12,6 @@ import javax.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
@@ -37,8 +34,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 public class OpenIdApiClient {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     protected final TinkHttpClient httpClient;
     @Getter protected final SoftwareStatementAssertion softwareStatement;
@@ -244,15 +239,9 @@ public class OpenIdApiClient {
 
         URL authorizationEndpointUrl = wellKnownConfiguration.getAuthorizationEndpoint();
 
-        List<String> requiredScopes;
+        List<String> requiredScopes = createRequiredScopeList(mode, wellKnownConfiguration);
         String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
         String clientId = providerConfiguration.getClientId();
-
-        if (cachedWellKnownResponse.isOfflineAccessSupported()) {
-            requiredScopes = createScopeWithOfflineAccess(mode);
-        } else {
-            requiredScopes = createScopeList(mode);
-        }
 
         String scopeArray =
                 wellKnownConfiguration
@@ -278,12 +267,12 @@ public class OpenIdApiClient {
     }
 
     public void instantiateAisAuthFilter(OAuth2Token token) {
-        logger.debug("Instantiating the Ais Auth Filter.");
+        log.debug("Instantiating the Ais Auth Filter.");
         aisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
     }
 
     public void instantiatePisAuthFilter(OAuth2Token token) {
-        logger.debug("Instantiating the Pis Auth Filter.");
+        log.debug("Instantiating the Pis Auth Filter.");
         pisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
     }
 
@@ -293,14 +282,6 @@ public class OpenIdApiClient {
 
     public Optional<ErrorEntity> getErrorEntity() {
         return Optional.ofNullable(errorEntity);
-    }
-
-    public List<String> createScopeList(ClientMode mode) {
-        return Arrays.asList(Scopes.OPEN_ID, mode.getValue());
-    }
-
-    public List<String> createScopeWithOfflineAccess(ClientMode mode) {
-        return Arrays.asList(Scopes.OPEN_ID, mode.getValue(), Scopes.OFFLINE_ACCESS);
     }
 
     public Optional<Map<String, PublicKey>> getJwkPublicKeys() {
@@ -327,5 +308,13 @@ public class OpenIdApiClient {
                 .request(wellKnownConfiguration.getTokenEndpoint())
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    private List<String> createRequiredScopeList(
+            ClientMode mode, WellKnownResponse wellKnownConfiguration) {
+        if (wellKnownConfiguration.isOfflineAccessSupported()) {
+            return Arrays.asList(Scopes.OPEN_ID, mode.getValue(), Scopes.OFFLINE_ACCESS);
+        }
+        return Arrays.asList(Scopes.OPEN_ID, mode.getValue());
     }
 }
