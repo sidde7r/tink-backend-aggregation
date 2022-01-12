@@ -37,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -127,21 +126,12 @@ public class OpenIdAuthenticationController
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
-    // Prepare third party app payload containing authentication url
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         String nonce = randomValueGenerator.generateRandomHexEncoded(8);
-
-        URL authorizeUrl =
-                apiClient.buildAuthorizeUrl(
-                        strongAuthenticationState, nonce, ClientMode.ACCOUNTS, callbackUri);
-
-        // Let the agent add to or change the URL before we send it to the front-end.
-        authorizeUrl =
-                authenticator.decorateAuthorizeUrl(
-                        authorizeUrl, strongAuthenticationState, nonce, callbackUri);
-
-        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
+        return ThirdPartyAppAuthenticationPayload.of(
+                authenticator.createAuthorizeUrl(
+                        strongAuthenticationState, nonce, callbackUri, ClientMode.ACCOUNTS));
     }
 
     @Override
