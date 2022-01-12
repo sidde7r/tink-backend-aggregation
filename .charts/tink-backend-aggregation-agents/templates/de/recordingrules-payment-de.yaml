@@ -28,6 +28,9 @@ spec:
   - record: DE:agent_transfer:className:failed:delta1h
     expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h{ outcome="failed"})
 
+  - record: DE:agent_transfer:className:rejected:delta1h
+    expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h{ outcome="rejected"})
+
   - record: DE:agent_transfer:className:unavailable:delta1h
     expr: sum by(className) (DE:agent_transfer:className_outcome:delta1h{ outcome="unavailable"})
 

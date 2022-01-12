@@ -1,0 +1,119 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api-openbanking.cmb.fr/oauth-authorizationcode-psd2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+client_id=ErwGDtshPSHAApUoaNZp0TnhKVNFqyK6&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&code=dummyCode
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Fri, 17 Dec 2021 11:27:43 GMT
+Date: Fri, 17 Dec 2021 11:27:43 GMT
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+Content-Length: 118
+
+{"token_type": "Bearer", "access_token": "dummyAccessToken", "expires_in": 3599, "refresh_token": "dummyRefreshToken"}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://api-openbanking.cmb.fr/psd2/v1/accounts
+Accept: application/hal+json; charset=utf-8; version=1.4.2
+Authorization: Bearer dummyAccessToken
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Fri, 17 Dec 2021 11:27:43 GMT
+Date: Fri, 17 Dec 2021 11:27:44 GMT
+Content-Type: application/json; version=1.4.2;charset=UTF-8
+Vary: Origin,Accept-Encoding
+X-Frame-Options: DENY
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Length: 541
+
+{"accounts": [{"resourceId": "TE0000001","bicFi": "CMBRFR2BXXX","accountId": {"iban": "FR0000000000000000000000000"},"name": "ACCOUNT NAME","usage": "PRIV","cashAccountType": "CACC","psuStatus": "Account Holder","_links": {"balances": {"href": "/psd2/v1/accounts/TE0000001/balances","templated": true},"transactions": {"href": "/psd2/v1/accounts/TE0000001/transactions","templated": true}}}],"_links": {"self": {"href": "/psd2/v1/accounts"},"endUserIdentity": {"href": "/psd2/v1/end-user-identity"},"beneficiaries": {"href": "/psd2/v1/trusted-beneficiaries"}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api-openbanking.cmb.fr/psd2/v1/accounts/TE0000001/balances
+Accept: application/hal+json; charset=utf-8; version=1.4.2
+Authorization: Bearer dummyAccessToken
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Fri, 17 Dec 2021 11:27:44 GMT
+Date: Fri, 17 Dec 2021 11:27:45 GMT
+Content-Type: application/json; version=1.4.2;charset=UTF-8
+Vary: Origin,Accept-Encoding
+X-Frame-Options: DENY
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Length: 522
+
+{"balances": [{"name": "accounting balance","balanceAmount": {"amount": 2868.06,"currency": "EUR"},"balanceType": "CLBD","referenceDate": "2017-09-18T19:00:01"},{"name": "real time balance","balanceAmount": {"amount": 2090.27,"currency": "EUR"},"balanceType": "XPCD","referenceDate": "2018-11-05T12:00:00"}],"_links": {"self": {"href": "/psd2/v1/accounts/TE0000001/balances","templated": true},"parent-list": {"href": "/psd2/v1/accounts","templated": true},"transactions": {"href": "/psd2/v1/accounts/TE0000001/transactions","templated": true}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api-openbanking.cmb.fr/psd2/v1/accounts/TE0000001/transactions
+Accept: application/hal+json; charset=utf-8; version=1.4.2
+Authorization: Bearer dummyAccessToken
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Fri, 17 Dec 2021 11:27:45 GMT
+Date: Fri, 17 Dec 2021 11:27:46 GMT
+Content-Type: application/json; version=1.4.2;charset=UTF-8
+Vary: Origin,Accept-Encoding
+X-Frame-Options: DENY
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Length: 3336
+
+{"transactions": [{"transactionAmount": {"amount": 2868.06,"currency": "EUR"},"creditDebitIndicator": "CDRT","status": "BOOK","bookingDate": "2018-11-05T00:00:00","valueDate": "2018-11-05T00:00:00","transactionDate": "2018-11-05T00:00:00","remittanceInformation": {"unstructured": ["DESCRIPTION"]}},{"transactionAmount": {"amount": 2.64,"currency": "EUR"},"creditDebitIndicator": "DBIT","status": "BOOK","bookingDate": "2018-11-05T00:00:00","valueDate": "2018-11-05T00:00:00","transactionDate": "2018-11-05T00:00:00","remittanceInformation": {"unstructured": ["DESCRIPTION"]}},{"transactionAmount": {"amount": 8.14,"currency": "EUR"},"creditDebitIndicator": "DBIT","status": "BOOK","bookingDate": "2018-11-05T00:00:00","valueDate": "2018-11-05T00:00:00","transactionDate": "2018-11-05T00:00:00","remittanceInformation": {"unstructured": ["DESCRIPTION"]}}],"_links": {"self": {"href": "/api/v1/accounts/TE0000001/transactions?page\u003d0"},"first": {"href": "/api/v1/accounts/TE0000001/transactions?page\u003d0"},"last": {"href": "/api/v1/accounts/TE0000001/transactions?page\u003d0"}}}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api-openbanking.cmb.fr/psd2/v1/trusted-beneficiaries
+Accept: application/hal+json; charset=utf-8; version=1.4.2
+Authorization: Bearer dummyAccessToken
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Fri, 17 Dec 2021 11:27:46 GMT
+Date: Fri, 17 Dec 2021 11:27:47 GMT
+Content-Type: application/json; version=1.4.2;charset=UTF-8
+Vary: Origin,Accept-Encoding
+X-Frame-Options: DENY
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Length: 1309
+
+{"beneficiaries":[{"isTrusted": true,"creditorAgent": {"bicFi": "CMBRFR2BXXX"},"creditor": {"name": "BENEFICIARIE JEAN","postalAddress": {"country": "FR","addressLine": ["",""]}},"creditorAccount": {"iban": "FR0000000000000000000000000"}},{"isTrusted": true,"creditorAgent": {"bicFi": "CMBRFR2BXXX"},"creditor": {"name": "BENEFICIARIE SIMONE","postalAddress": {"country": "FR","addressLine": ["",""]}},"creditorAccount": {"iban": "FR0000000000000000000000000"}},{"isTrusted": true,"creditorAgent": {"bicFi": "CMBRFR2BXXX"},"creditor": {"name": "BENEFICIARIE CHANN","postalAddress": {"country": "FR","addressLine": ["",""]}},"creditorAccount": {"iban": "FR0000000000000000000000000"}},{"isTrusted": true,"creditorAgent": {"bicFi": "CMBRFR2BXXX"},"creditor": {"name": "Rental owner Claude","postalAddress": {"country": "FR","addressLine": ["",""]}},"creditorAccount": {"iban": "FR0000000000000000000000000"}},{"isTrusted": true,"creditorAgent": {"bicFi": "CMBRFR2BXXX"},"creditor": {"name": "Billy","postalAddress": {"country": "FR","addressLine": ["",""]}},"creditorAccount": {"iban": "FR0000000000000000000000000"}}],"_links": {"self": {"href": "/psd2/v1/trusted-beneficiaries","templated": true},"parent-list": {"href": "/psd2/v1/accounts","templated": true},"first": {"templated": true},"last": {"templated": true }, "next": {"templated": true},"prev": {"templated": true}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api-openbanking.cmb.fr/psd2/v1/end-user-identity
+Accept: application/hal+json; charset=utf-8; version=1.4.2
+Authorization: Bearer dummyAccessToken
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Fri, 17 Dec 2021 11:27:47 GMT
+Date: Fri, 17 Dec 2021 11:27:47 GMT
+Content-Type: application/json; version=1.4.2;charset=UTF-8
+Vary: Origin,Accept-Encoding
+X-Frame-Options: DENY
+Expires: 0
+X-Content-Type-Options: nosniff
+Content-Length: 136
+
+{"connectedPsu": "NAME SURNAME","_links": {"self": {"href": "/psd2/v1/end-user-identity"},"parent-list": {"href": "/psd2/v1/accounts"}}}

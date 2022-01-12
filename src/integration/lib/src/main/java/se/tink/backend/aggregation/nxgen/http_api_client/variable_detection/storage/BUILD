@@ -6,6 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/libraries/serialization",
         "//src/tink_backend_libs:aggregation_agent_api_client",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

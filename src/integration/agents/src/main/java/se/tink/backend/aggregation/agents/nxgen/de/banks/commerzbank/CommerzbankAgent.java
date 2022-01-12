@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CR
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -36,10 +37,12 @@ public final class CommerzbankAgent extends NextGenerationAgent
     private final CommerzbankApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final StaticBankCredentials staticBankCredentials;
 
     @Inject
     public CommerzbankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        staticBankCredentials = componentProvider.getStaticBankCredentials();
         apiClient = new CommerzbankApiClient(client);
 
         creditCardRefreshController = constructCreditCardRefreshController();
@@ -53,7 +56,8 @@ public final class CommerzbankAgent extends NextGenerationAgent
                 systemUpdater,
                 new CommerzbankPhotoTanAuthenticator(
                         persistentStorage, apiClient, supplementalInformationController, catalog),
-                new CommerzbankAutoAuthenticator(credentials, persistentStorage, apiClient));
+                new CommerzbankAutoAuthenticator(
+                        credentials, persistentStorage, apiClient, staticBankCredentials));
     }
 
     @Override

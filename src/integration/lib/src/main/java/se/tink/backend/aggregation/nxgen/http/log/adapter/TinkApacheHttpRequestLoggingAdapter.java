@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.http.log.adapter;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,17 +11,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.GZIPInputStreamFactory;
 import org.apache.http.client.methods.HttpRequestWrapper;
 import org.apache.http.entity.BasicHttpEntity;
 import se.tink.libraries.har_logger.src.model.HarRequest;
 import se.tink.libraries.har_logger.src.model.HarResponse;
 
+@Slf4j
 public class TinkApacheHttpRequestLoggingAdapter {
 
     public static HarRequest mapRequest(HttpRequest request, Instant requestTime)
@@ -28,7 +34,7 @@ public class TinkApacheHttpRequestLoggingAdapter {
         return HarRequest.builder()
                 .timestamp(Date.from(requestTime))
                 .method(request.getRequestLine().getMethod())
-                .url(request.getRequestLine().getUri())
+                .url(mapUrl(request))
                 .httpVersion(request.getRequestLine().getProtocolVersion().toString())
                 .headers(mapHeaders(request.getAllHeaders()))
                 .body(mapRequestBody(request))
@@ -43,6 +49,10 @@ public class TinkApacheHttpRequestLoggingAdapter {
                 .headers(mapHeaders(response.getAllHeaders()))
                 .body(mapEntityBody(response.getEntity()))
                 .build();
+    }
+
+    private static String mapUrl(HttpRequest request) {
+        return getWrapped(request).getRequestLine().getUri();
     }
 
     private static Map<String, List<String>> mapHeaders(Header[] headers) {
@@ -79,11 +89,7 @@ public class TinkApacheHttpRequestLoggingAdapter {
         return null;
     }
 
-    @SuppressWarnings("java:S1168") // suppress "Return an empty array instead of null." warning
-    private static byte[] mapEntityBody(HttpEntity entity) throws IOException {
-        if (entity == null) {
-            return null;
-        }
+    private static byte[] getEntityBody(HttpEntity entity) throws IOException {
         InputStream inputStream = entity.getContent();
         if (!entity.isRepeatable()) {
             inputStream = new BufferedInputStream(inputStream);
@@ -96,5 +102,32 @@ public class TinkApacheHttpRequestLoggingAdapter {
         IOUtils.copy(inputStream, outputStream);
         inputStream.reset();
         return outputStream.toByteArray();
+    }
+
+    private static byte[] decodeEntityBody(byte[] body, String contentEncoding) {
+        if (contentEncoding.contains("gzip")) {
+            InputStream bodyInputStream = new ByteArrayInputStream(body);
+            try (InputStream gzipInputStream =
+                    GZIPInputStreamFactory.getInstance().create(bodyInputStream)) {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                IOUtils.copy(gzipInputStream, outputStream);
+                return outputStream.toByteArray();
+            } catch (IOException e) {
+                log.warn("Could not decode gzip body", e);
+            }
+        }
+        return body;
+    }
+
+    @SuppressWarnings("java:S1168") // suppress "Return an empty array instead of null." warning
+    private static byte[] mapEntityBody(HttpEntity entity) throws IOException {
+        if (entity == null) {
+            return null;
+        }
+        String contentEncoding =
+                Optional.ofNullable(entity.getContentEncoding())
+                        .map(NameValuePair::getValue)
+                        .orElse("");
+        return decodeEntityBody(getEntityBody(entity), contentEncoding);
     }
 }

@@ -61,4 +61,9 @@ public class MetricActionComposite implements MetricActionIface {
     public void partiallyCompleted() {
         metricActions.forEach(MetricActionIface::partiallyCompleted);
     }
+
+    @Override
+    public void rejected() {
+        metricActions.forEach(MetricActionIface::rejected);
+    }
 }

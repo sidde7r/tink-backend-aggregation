@@ -12,7 +12,7 @@ spec:
     - alert: LongTermTransferUnknownErrorRate100%FR
       expr: |
         # Failed transfers outcome 100%
-        (count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test", outcome=~"failed"}[8h])) by (className,provider)
+        (count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test", outcome=~"failed|rejected"}[8h])) by (className,provider)
             / count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test"}[8h])) by (className,provider) > 0.99)
         # At least this many attempts
               and count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test"}[8h])) by (className,provider) > 3

@@ -26,6 +26,7 @@ public class MetricAction implements MetricActionIface {
         this.metricPath = metricPath;
     }
 
+    @Override
     public void start() {
         Preconditions.checkState(timer == null, "MetricAction already in progress");
 
@@ -33,6 +34,7 @@ public class MetricAction implements MetricActionIface {
         state.add(this);
     }
 
+    @Override
     public void start(List<? extends Number> metricBuckets) {
         Preconditions.checkState(timer == null, "MetricAction already in progress");
 
@@ -43,6 +45,7 @@ public class MetricAction implements MetricActionIface {
     /**
      * Stop action timer and ask AgentWorkerCommandMetricState to remove itself from ongoing actions
      */
+    @Override
     public void stop() {
         Preconditions.checkState(timer != null, "No active timer to stop");
 
@@ -50,10 +53,12 @@ public class MetricAction implements MetricActionIface {
         state.remove(this);
     }
 
+    @Override
     public void completed() {
         mark(Outcome.COMPLETED);
     }
 
+    @Override
     public void failed() {
         mark(Outcome.FAILED);
     }
@@ -63,6 +68,7 @@ public class MetricAction implements MetricActionIface {
         mark(Outcome.FAILED_DUE_TO_TINK_INFRASTRUCTURE_FAILURE);
     }
 
+    @Override
     public void cancelled() {
         mark(Outcome.CANCELLED);
     }
@@ -72,12 +78,19 @@ public class MetricAction implements MetricActionIface {
         mark(Outcome.CANCELLED_DUE_TO_THIRD_PARTY_APP_TIMEOUT);
     }
 
+    @Override
     public void unavailable() {
         mark(Outcome.UNAVAILABLE);
     }
 
+    @Override
     public void partiallyCompleted() {
         mark(Outcome.PARTIALLY_COMPLETED);
+    }
+
+    @Override
+    public void rejected() {
+        mark(Outcome.REJECTED);
     }
 
     private void mark(Outcome outcome) {
@@ -91,7 +104,8 @@ public class MetricAction implements MetricActionIface {
         FAILED_DUE_TO_TINK_INFRASTRUCTURE_FAILURE,
         CANCELLED,
         CANCELLED_DUE_TO_THIRD_PARTY_APP_TIMEOUT,
-        UNAVAILABLE;
+        UNAVAILABLE,
+        REJECTED;
 
         private String getMetricName() {
             return name().toLowerCase();

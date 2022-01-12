@@ -18,7 +18,7 @@ public class PaymentRejectedExceptionHandler implements ExceptionHandler<Payment
     @Override
     public AgentWorkerCommandResult handleException(
             PaymentRejectedException exception, ExceptionHandlerInput input) {
-        input.getMetricAction().failed();
+        input.getMetricAction().rejected();
 
         log.warn(
                 "[transferId: {}] Could not execute payment due to payment rejected by the bank. {}",

@@ -1,0 +1,165 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "FR0000000000000000000000000",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 2868.06,
+                "unscaledValue": 286806,
+                "scale": 2,
+                "exactValue": 2868.06
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 2090.27,
+                "unscaledValue": 209027,
+                "scale": 2,
+                "exactValue": 2090.27
+            },
+            "bankId": "FR0000000000000000000000000",
+            "excluded": false,
+            "favored": false,
+            "name": "ACCOUNT NAME",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 2868.06
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 2868.06,
+            "date": 1541415600000,
+            "description": "DESCRIPTION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "EXECUTION_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                }
+            ],
+            "booked": true
+        },
+        {
+            "amount": -2.64,
+            "date": 1541415600000,
+            "description": "DESCRIPTION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "EXECUTION_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                }
+            ],
+            "booked": true
+        },
+        {
+            "amount": -8.14,
+            "date": 1541415600000,
+            "description": "DESCRIPTION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "EXECUTION_DATE",
+                    "value": {
+                        "date": "2018-11-05",
+                        "instant": null
+                    }
+                }
+            ],
+            "booked": true
+        }
+    ],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FULLNAME",
+                "value": "NAME SURNAME"
+            }
+        ],
+        "dateOfBirth": null
+    }
+}

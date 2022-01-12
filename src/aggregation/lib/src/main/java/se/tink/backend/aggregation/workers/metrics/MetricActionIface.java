@@ -23,4 +23,7 @@ public interface MetricActionIface {
     void unavailable();
 
     void partiallyCompleted();
+
+    // To mark payments that are rejected by bank
+    void rejected();
 }

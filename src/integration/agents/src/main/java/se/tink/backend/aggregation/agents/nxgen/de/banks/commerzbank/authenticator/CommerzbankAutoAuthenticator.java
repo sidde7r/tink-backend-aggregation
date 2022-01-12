@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authentica
 import com.google.common.base.Strings;
 import java.security.KeyPair;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -27,22 +28,25 @@ public class CommerzbankAutoAuthenticator implements AutoAuthenticator {
     private final PersistentStorage persistentStorage;
     private final CommerzbankApiClient apiClient;
     private final Credentials credentials;
+    private final StaticBankCredentials staticBankCredentials;
 
     public CommerzbankAutoAuthenticator(
             Credentials credentials,
             PersistentStorage persistentStorage,
-            CommerzbankApiClient apiClient) {
+            CommerzbankApiClient apiClient,
+            StaticBankCredentials staticBankCredentials) {
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
+        this.staticBankCredentials = staticBankCredentials;
     }
 
     @Override
     public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
 
-        String username = this.credentials.getField(Field.Key.USERNAME);
-        String password = this.credentials.getField(Field.Key.PASSWORD);
+        String username = this.staticBankCredentials.tryGet(Field.Key.USERNAME).orElse(null);
+        String password = this.staticBankCredentials.tryGet(Field.Key.PASSWORD).orElse(null);
 
         String appId = persistentStorage.get(Storage.APP_ID);
         String keyPairFromStorage = persistentStorage.get(Storage.KEY_PAIR);
