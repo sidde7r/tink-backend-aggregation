@@ -96,22 +96,16 @@ public class OpenIdAuthenticationValidator {
 
     private static void logIdTokenValidationResult(
             TokenValidationResult validationResult, String msg) {
+        String idTokenMsg = "[OpenIdAuthenticationValidator] ID Token " + msg;
         switch (validationResult) {
             case SUCCESS:
-                log.info(
-                        "[OpenIdAuthenticationValidator] ID Token ("
-                                + msg
-                                + ") validation successful");
+                log.info("{} validation successful", idTokenMsg);
                 break;
             case FAILURE:
-                log.info(
-                        "[OpenIdAuthenticationValidator] ID Token (" + msg + ") validation failed");
+                log.info("{} validation failed", idTokenMsg);
                 break;
             default:
-                log.warn(
-                        "[OpenIdAuthenticationValidator] ID Token ("
-                                + msg
-                                + ") validation not possible - no public keys");
+                log.warn("{} validation not possible - no public keys", idTokenMsg);
                 break;
         }
     }
