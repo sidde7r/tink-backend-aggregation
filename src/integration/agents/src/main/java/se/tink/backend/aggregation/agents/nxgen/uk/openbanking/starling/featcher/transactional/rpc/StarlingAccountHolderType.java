@@ -20,6 +20,10 @@ public enum StarlingAccountHolderType {
         this.accountHolderType = accountHolderType;
     }
 
+    public AccountHolderType toTinkAccountHolderType() {
+        return this.accountHolderType;
+    }
+
     @JsonCreator
     private static StarlingAccountHolderType fromString(String key) {
         try {
@@ -31,9 +35,5 @@ public enum StarlingAccountHolderType {
             log.warn("`{}` is unmapped account holder type", key);
             return UNKNOWN;
         }
-    }
-
-    public AccountHolderType toTinkAccountHolderType() {
-        return this.accountHolderType;
     }
 }

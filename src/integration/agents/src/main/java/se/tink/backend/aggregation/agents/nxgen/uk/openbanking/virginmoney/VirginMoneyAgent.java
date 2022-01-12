@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 public class VirginMoneyAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private final AgentComponentProvider componentProvider;
 
     static {
         aisConfig =
@@ -48,14 +49,18 @@ public class VirginMoneyAgent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
-    private final AgentComponentProvider componentProvider;
-
     @Inject
     public VirginMoneyAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
         this.componentProvider = componentProvider;
         client.addFilter(new ClydesdaleGroupAuthorisationFilter());
+    }
+
+    @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
     }
 
     @Override
@@ -66,13 +71,6 @@ public class VirginMoneyAgent extends UkOpenBankingBaseAgent {
                 localDateTimeSource,
                 apiClient,
                 transactionPaginationHelper);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     @Override

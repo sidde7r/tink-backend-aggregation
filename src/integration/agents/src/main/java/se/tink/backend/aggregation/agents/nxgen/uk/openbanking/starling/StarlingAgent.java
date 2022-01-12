@@ -98,40 +98,10 @@ public final class StarlingAgent extends AgentPlatformAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
-            LocalDateTimeSource localDateTimeSource) {
-        StarlingTransactionFetcher starlingTransactionFetcher =
-                new StarlingTransactionFetcher(apiClient);
-        TransactionDatePaginationController<TransactionalAccount>
-                defaultTransactionPaginationController =
-                        new Builder<>(starlingTransactionFetcher)
-                                .setConsecutiveEmptyPagesLimit(8)
-                                .setLocalDateTimeSource(localDateTimeSource)
-                                .setZoneId(DEFAULT_ZONE_ID)
-                                .build();
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new StarlingTransactionalAccountFetcher(apiClient),
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new StarlingTransactionPaginationController<>(
-                                defaultTransactionPaginationController,
-                                starlingTransactionFetcher,
-                                localDateTimeSource,
-                                DEFAULT_ZONE_ID)));
-    }
-
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
                 accounts, AccountIdentifierType.SORT_CODE);
-    }
-
-    @Override
-    protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
     }
 
     @Override
@@ -179,5 +149,35 @@ public final class StarlingAgent extends AgentPlatformAgent
                         context.getCertId(),
                         context.getProviderId(),
                         getAgentClass()));
+    }
+
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
+        StarlingTransactionFetcher starlingTransactionFetcher =
+                new StarlingTransactionFetcher(apiClient);
+        TransactionDatePaginationController<TransactionalAccount>
+                defaultTransactionPaginationController =
+                        new Builder<>(starlingTransactionFetcher)
+                                .setConsecutiveEmptyPagesLimit(8)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .setZoneId(DEFAULT_ZONE_ID)
+                                .build();
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new StarlingTransactionalAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new StarlingTransactionPaginationController<>(
+                                defaultTransactionPaginationController,
+                                starlingTransactionFetcher,
+                                localDateTimeSource,
+                                DEFAULT_ZONE_ID)));
     }
 }

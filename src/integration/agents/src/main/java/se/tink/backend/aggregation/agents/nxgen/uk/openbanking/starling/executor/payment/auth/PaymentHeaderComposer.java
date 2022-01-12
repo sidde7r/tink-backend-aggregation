@@ -9,15 +9,15 @@ public class PaymentHeaderComposer {
 
     private static final String SIGNATURE_STRING_FORMAT =
             "Signature keyid=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"";
+    private static final String SIGN_TEXT_FORMAT =
+            "(request-target): %s %s\n" + "Date: %s\n" + "Digest: %s";
+    private static final String AUTH_HEADER_TEMPLATE = "%s;%s";
+
     private final String digest;
     private final String date;
     private final String method;
     private final String path;
     private final String bearer;
-
-    private static final String SIGN_TEXT_FORMAT =
-            "(request-target): %s %s\n" + "Date: %s\n" + "Digest: %s";
-    private static final String AUTH_HEADER_TEMPLATE = "%s;%s";
 
     private PaymentHeaderComposer(
             String digest, String date, String method, String path, String bearer) {
@@ -26,6 +26,41 @@ public class PaymentHeaderComposer {
         this.method = method;
         this.path = path;
         this.bearer = bearer;
+    }
+
+    public Map<String, Object> getSignedHeaders(PaymentMessageSigner paymentMessageSigner) {
+        String auth = getSignedAuthorizationHeaderValue(paymentMessageSigner);
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(StarlingConstants.HeaderKey.AUTH, auth);
+        headers.put(StarlingConstants.HeaderKey.DATE, this.date);
+        headers.put(StarlingConstants.HeaderKey.DIGEST, this.digest);
+        return headers;
+    }
+
+    public String getSignedAuthorizationHeaderValue() {
+        return bearer;
+    }
+
+    private String textToSign() {
+        return String.format(SIGN_TEXT_FORMAT, method, path, date, digest);
+    }
+
+    private String sign(String keyId, String signedText) {
+        return String.format(
+                SIGNATURE_STRING_FORMAT,
+                keyId,
+                "rsa-sha256",
+                "(request-target) Date Digest",
+                signedText);
+    }
+
+    private String getSignedAuthorizationHeaderValue(PaymentMessageSigner paymentMessageSigner) {
+        return String.format(
+                AUTH_HEADER_TEMPLATE,
+                bearer,
+                sign(
+                        paymentMessageSigner.getKeyUuId(),
+                        paymentMessageSigner.sign(textToSign().getBytes(StandardCharsets.UTF_8))));
     }
 
     public static class Builder {
@@ -58,40 +93,5 @@ public class PaymentHeaderComposer {
                     path,
                     bearer);
         }
-    }
-
-    private String textToSign() {
-        return String.format(SIGN_TEXT_FORMAT, method, path, date, digest);
-    }
-
-    private String sign(String keyId, String signedText) {
-        return String.format(
-                SIGNATURE_STRING_FORMAT,
-                keyId,
-                "rsa-sha256",
-                "(request-target) Date Digest",
-                signedText);
-    }
-
-    private String getSignedAuthorizationHeaderValue(PaymentMessageSigner paymentMessageSigner) {
-        return String.format(
-                AUTH_HEADER_TEMPLATE,
-                bearer,
-                sign(
-                        paymentMessageSigner.getKeyUuId(),
-                        paymentMessageSigner.sign(textToSign().getBytes(StandardCharsets.UTF_8))));
-    }
-
-    public Map<String, Object> getSignedHeaders(PaymentMessageSigner paymentMessageSigner) {
-        String auth = getSignedAuthorizationHeaderValue(paymentMessageSigner);
-        Map<String, Object> headers = new HashMap<>();
-        headers.put(StarlingConstants.HeaderKey.AUTH, auth);
-        headers.put(StarlingConstants.HeaderKey.DATE, this.date);
-        headers.put(StarlingConstants.HeaderKey.DIGEST, this.digest);
-        return headers;
-    }
-
-    public String getSignedAuthorizationHeaderValue() {
-        return bearer;
     }
 }
