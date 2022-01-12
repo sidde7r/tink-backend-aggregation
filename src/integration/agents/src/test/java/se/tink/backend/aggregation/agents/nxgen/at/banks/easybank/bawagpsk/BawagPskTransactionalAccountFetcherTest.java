@@ -12,9 +12,10 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.runtime.operation.ProviderImpl;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -67,8 +68,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
         credentials.setPassword(usernamePasswordHelper.get(UsernamePasswordArgumentEnum.PASSWORD));
         final AgentContext context = new AgentTestContext(credentials);
 
-        Provider provider = new Provider();
-        provider.setPayload("ebanking.bawagpsk.com, BAWAG");
+        Provider provider = new ProviderImpl(null, null, null, "ebanking.bawagpsk.com, BAWAG");
 
         final BawagPskApiClient apiClient =
                 new BawagPskApiClient(
