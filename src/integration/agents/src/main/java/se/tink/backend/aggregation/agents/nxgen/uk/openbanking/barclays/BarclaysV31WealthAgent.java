@@ -52,19 +52,8 @@ public final class BarclaysV31WealthAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected UkOpenBankingAis makeAis() {
-        return new BarclaysV31Ais(
-                aisConfig,
-                persistentStorage,
-                localDateTimeSource,
-                apiClient,
-                transactionPaginationHelper);
-    }
-
-    @Override
     public Authenticator constructAuthenticator() {
         UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
         return createAutoAuthController(authController);
     }
 
@@ -90,5 +79,15 @@ public final class BarclaysV31WealthAgent extends UkOpenBankingBaseAgent {
                 new ThirdPartyAppAuthenticationController<>(
                         authController, this.supplementalInformationHelper),
                 authController);
+    }
+
+    @Override
+    protected UkOpenBankingAis makeAis() {
+        return new BarclaysV31Ais(
+                aisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                apiClient,
+                transactionPaginationHelper);
     }
 }
