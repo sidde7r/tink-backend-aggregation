@@ -1,0 +1,15 @@
+agentsServiceConfiguration:
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
+  featureFlags:
+  testConfiguration:
+    debugOutput: true
+  integrations:
+    c758d66003e5493489b9c314d09e86bc:
+      tink:
+        clientId: dummyClient
+        clientSecret: dummySecret
+        jwksEndpoint: https://dummy/dummy/jwks-pss.json
+        apiKey: dummyApiKey
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback

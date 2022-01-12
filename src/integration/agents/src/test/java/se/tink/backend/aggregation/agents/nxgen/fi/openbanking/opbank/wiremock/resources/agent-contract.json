@@ -1,0 +1,523 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "FI1111111111111111",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "doubleValue" : 229.6,
+      "exactValue" : 229.6,
+      "unscaledValue" : 22960
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "dummy",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CURRENT ACCOUNT",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"bban://11111111111111\"]",
+    "closed" : false,
+    "holderName" : "Dummy Name",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Dummy Name",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 229.6
+  }, {
+    "accountNumber" : "4010 43** **** 0858",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "EUR",
+      "scale" : 1,
+      "doubleValue" : -274.6,
+      "exactValue" : -274.6,
+      "unscaledValue" : -2746
+    },
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 1,
+      "doubleValue" : -932.2,
+      "exactValue" : -932.2,
+      "unscaledValue" : -9322
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "dummyCard",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "OP-Visa Credit/Debit",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : -274.6,
+    "balance" : -932.2
+  } ],
+  "transactions" : [ {
+    "amount" : -3.5,
+    "date" : 1641726000000,
+    "description" : "TILINHOITOMAKSU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -0.39,
+    "date" : 1641726000000,
+    "description" : "KORKO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -20.0,
+    "date" : 1641726000000,
+    "description" : "SerenepalveluOy\tIisalmi",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -17.95,
+    "date" : 1641639600000,
+    "description" : "PRISMAIISALMI\tIISALMI",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -13.05,
+    "date" : 1633600800000,
+    "description" : "K-CITYMARKETHEINOLA\tHEINOLA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -16.9,
+    "date" : 1633600800000,
+    "description" : "ALMATALENTOY\tHELSINKI",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -21.25,
+    "date" : 1633168800000,
+    "description" : "VFI*SirkanRavintolatOy\tSAVONLINNA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -10.72,
+    "date" : 1633082400000,
+    "description" : "S-MARKETHEINOLA\tHEINOLA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 457.97,
+    "date" : 1633082400000,
+    "description" : "SUORITUS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -5.0,
+    "date" : 1623924000000,
+    "description" : "HUOMAUTUSKIRJE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -58.56,
+    "date" : 1623492000000,
+    "description" : "KCITYMARKETHEINOLA\tHEINOLA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -3.5,
+    "date" : 1623232800000,
+    "description" : "TILINHOITOMAKSU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -0.22,
+    "date" : 1623232800000,
+    "description" : "KORKO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -19.9,
+    "date" : 1623232800000,
+    "description" : "HeinolaMarieblatsOy\tHEINOLA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -97.08,
+    "date" : 1616065200000,
+    "description" : "Heinolankeskusapteekki\tHeinola",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -15.42,
+    "date" : 1615978800000,
+    "description" : "LIDLHEINOLA\tHEINOLA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -27.59,
+    "date" : 1615892400000,
+    "description" : "KCITYMARKETHEINOLA\tHEINOLA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -13.89,
+    "date" : 1615806000000,
+    "description" : "HeinolanVanhaapteekki\tHeinola",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -29.4,
+    "date" : 1610449200000,
+    "description" : "KCITYMARKETHEINOLA\tHEINOLA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 200.0,
+    "date" : 1641207600000,
+    "description" : "NORDNETBANKAB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"archiveId\":\"202201035UTH00551967\",\"message\":\"00000000000008495285\",\"reference\":null,\"amount\":\"200.00\",\"currency\":\"EUR\",\"bookingDate\":\"2022-01-03\",\"valueDate\":\"2022-01-03\",\"paymentDate\":\"2022-01-03\",\"recipient\":null,\"proprietaryTransactionDescription\":\"ACC.TRANSFER\",\"payer\":{\"name\":\"NORDNETBANKAB\"}}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "202201035UTH00551967"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2022-01-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2022-01-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2022-01-03",
+        "instant" : null
+      }
+    } ],
+    "booked" : true
+  }, {
+    "amount" : -200.0,
+    "date" : 1641207600000,
+    "description" : "DUMMYNAME",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"archiveId\":\"202201015936191R0470\",\"message\":\"AP-laina\",\"reference\":null,\"amount\":\"-200.00\",\"currency\":\"EUR\",\"bookingDate\":\"2022-01-03\",\"valueDate\":\"2022-01-01\",\"paymentDate\":\"2022-01-01\",\"recipient\":{\"name\":\"DUMMYNAME\",\"identifier\":\"FI1111111111111111\",\"servicer\":\"OKOYFIHH\"},\"proprietaryTransactionDescription\":\"INTERNALTRNSF\",\"payer\":null}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "202201015936191R0470"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2022-01-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2022-01-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2022-01-01",
+        "instant" : null
+      }
+    } ],
+    "booked" : true
+  }, {
+    "amount" : -200.0,
+    "date" : 1640948400000,
+    "description" : "DUMMYNAME",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"archiveId\":\"202112315936192L5077\",\"message\":\"\",\"reference\":null,\"amount\":\"-200.00\",\"currency\":\"EUR\",\"bookingDate\":\"2021-12-31\",\"valueDate\":\"2021-12-31\",\"paymentDate\":\"2021-12-31\",\"recipient\":{\"name\":\"DUMMYNAME\",\"identifier\":\"FI1111111111111111\",\"servicer\":\"OKOYFIHH\"},\"proprietaryTransactionDescription\":\"INTERNALTRNSF\",\"payer\":null}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "202112315936192L5077"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-12-31",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-12-31",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-12-31",
+        "instant" : null
+      }
+    } ],
+    "booked" : true
+  }, {
+    "amount" : 200.0,
+    "date" : 1640689200000,
+    "description" : "NORDNETBANKAB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"archiveId\":\"202112285UTH00895480\",\"message\":\"00000000000008495285\",\"reference\":null,\"amount\":\"200.00\",\"currency\":\"EUR\",\"bookingDate\":\"2021-12-28\",\"valueDate\":\"2021-12-28\",\"paymentDate\":\"2021-12-28\",\"recipient\":null,\"proprietaryTransactionDescription\":\"ACC.TRANSFER\",\"payer\":{\"name\":\"NORDNETBANKAB\"}}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "202112285UTH00895480"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-12-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-12-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-12-28",
+        "instant" : null
+      }
+    } ],
+    "booked" : true
+  }, {
+    "amount" : 120.0,
+    "date" : 1578999600000,
+    "description" : "DUMMYNAME",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"archiveId\":\"20200114593619183396\",\"message\":\"Katetta\",\"reference\":null,\"amount\":\"120.00\",\"currency\":\"EUR\",\"bookingDate\":\"2020-01-14\",\"valueDate\":\"2020-01-14\",\"paymentDate\":\"2020-01-14\",\"recipient\":null,\"proprietaryTransactionDescription\":\"DEPOSIT\",\"payer\":{\"name\":\"DUMMYNAME\"}}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20200114593619183396"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-01-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2020-01-14",
+        "instant" : null
+      }
+    } ],
+    "booked" : true
+  } ]
+}
