@@ -59,12 +59,12 @@ public class SqsConsumer {
     public boolean consume() {
         List<Message> messages = getMessages();
         if (messages.isEmpty()) {
-            log.info("[SqsConsumer] Messages empty");
+            log.debug("[SqsConsumer] Messages empty");
             return false;
         }
 
         for (Message message : messages) { // MAX_NUMBER_OF_MESSAGES is 1
-            log.info("[SqsConsumer] Attempting to consume message: {}", message.getMessageId());
+            log.debug("[SqsConsumer] Attempting to consume message: {}", message.getMessageId());
             delete(message);
             tryConsumeUntilNotRejected(message);
         }
@@ -102,7 +102,7 @@ public class SqsConsumer {
                         consume(sqsMessage.getBody());
                         sqsQueue.consumed();
                     } catch (RejectedExecutionException e) {
-                        log.warn(
+                        log.debug(
                                 "[SqsConsumer] Failed to consume message from '{}' SQS. Requeuing it. SqsMessageId: {}",
                                 name,
                                 sqsMessage.getMessageId(),
@@ -128,7 +128,7 @@ public class SqsConsumer {
         timedMethod(
                 "delete",
                 () -> {
-                    log.info("[SqsConsumer] Deleting message: {}", message.getMessageId());
+                    log.debug("[SqsConsumer] Deleting message: {}", message.getMessageId());
                     try {
                         sqsQueue.getSqs()
                                 .deleteMessage(

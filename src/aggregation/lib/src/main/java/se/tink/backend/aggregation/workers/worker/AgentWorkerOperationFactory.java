@@ -270,13 +270,13 @@ public class AgentWorkerOperationFactory {
             ClientInfo clientInfo) {
 
         if (isBalanceCalculationEnabled(context)) {
-            log.info("[BALANCE CALCULATOR] Enabled");
+            log.debug("[BALANCE CALCULATOR] Enabled");
 
             return createOrderedRefreshableItemsCommandsWithChanges(
                     request, context, itemsToRefresh, controllerWrapper, clientInfo);
         }
 
-        log.info("[BALANCE CALCULATOR] Disabled");
+        log.debug("[BALANCE CALCULATOR] Disabled");
         return createOrderedRefreshableItemsCommandsWithoutChanges(
                 request, context, itemsToRefresh, controllerWrapper, clientInfo);
     }
@@ -1746,12 +1746,12 @@ public class AgentWorkerOperationFactory {
             ClientInfo clientInfo) {
 
         if (isBalanceCalculationEnabled(context)) {
-            log.info("[BALANCE CALCULATOR] Enabled");
+            log.debug("[BALANCE CALCULATOR] Enabled");
             return createWhitelistRefreshableItemsCommandsWithChanges(
                     request, context, itemsToRefresh, controllerWrapper, clientInfo);
         }
 
-        log.info("[BALANCE CALCULATOR] Disabled");
+        log.debug("[BALANCE CALCULATOR] Disabled");
         return createWhitelistRefreshableItemsCommandsWithoutChanges(
                 request, context, itemsToRefresh, controllerWrapper, clientInfo);
     }

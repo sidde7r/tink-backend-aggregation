@@ -73,13 +73,13 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
 
             while (isRunning()) {
                 item = pollAndDelegateQueueItem(item);
-                log.info("queue size: {} for hash: {}", queue.size(), queue.hashCode());
+                log.debug("queue size: {} for hash: {}", queue.size(), queue.hashCode());
             }
 
             // Drain:
 
             while (queue.size() > 0 || item != null) {
-                log.info("Draining queue");
+                log.debug("Draining queue");
                 item = pollAndDelegateQueueItem(item);
             }
         }
@@ -88,7 +88,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                 WrappedRunnableListenableFutureTask<T, ?> item) {
             if (item == null) {
                 try {
-                    log.info("Item null - attempting to take from queue");
+                    log.debug("Item null - attempting to take from queue");
                     item = queue.take();
                 } catch (InterruptedException e) {
                     log.warn("Failed to take item from queue", e);
@@ -98,7 +98,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
             }
             if (item != null) {
                 try {
-                    log.info("Item not null - attempting to execute");
+                    log.debug("Item not null - attempting to execute");
                     threadPool.execute(item);
 
                     // Since there is no queue capacity for the threadPool, we know the item is
@@ -116,7 +116,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                                 "Unexpected error in when trying to delegate a Runnable to thread pool.",
                                 e);
                     } else {
-                        log.info("RejectedExecutionException thrown", e);
+                        log.debug("RejectedExecutionException thrown", e);
                     }
                 }
             }

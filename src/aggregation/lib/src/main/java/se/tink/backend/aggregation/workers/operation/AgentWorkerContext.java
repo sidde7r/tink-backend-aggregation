@@ -122,7 +122,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             UnleashClient unleashClient,
             RequestStatusManager requestStatusManager,
             RawBankDataEventAccumulator rawBankDataEventAccumulator) {
-        logger.info("Starting constructing AgentWorkerContext");
+        logger.debug("Starting constructing AgentWorkerContext");
 
         this.accountDataCache = new AccountDataCache();
         this.request = request;
@@ -179,7 +179,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                         SerializationUtils.serializeToString(logMetaEntity),
                         new TypeReference<Map<String, String>>() {});
         setHarLogCollector(new HarLogCollector(logMetaData));
-        logger.info("Finished constructing AgentWorkerContext");
+        logger.debug("Finished constructing AgentWorkerContext");
     }
 
     public String getOperationName() {

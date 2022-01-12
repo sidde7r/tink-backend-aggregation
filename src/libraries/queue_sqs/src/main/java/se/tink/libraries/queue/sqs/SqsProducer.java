@@ -34,7 +34,7 @@ public class SqsProducer implements QueueProducer {
                                     null); // FIXME: probably we want to use that in the future
             SendMessageResult sendMessageResult =
                     sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
-            logger.info(
+            logger.debug(
                     "[SQSProducer] Sent message with new id: {}", sendMessageResult.getMessageId());
             sqsQueue.produced();
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public class SqsProducer implements QueueProducer {
                                     randomTimeoutSeconds(REQUEUE_DELAY_MIN, REQUEUE_DELAY_MAX));
             SendMessageResult sendMessageResult =
                     sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
-            logger.info(
+            logger.debug(
                     "[SQSProducer] Requeued message with new id: {}",
                     sendMessageResult.getMessageId());
             sqsQueue.requeued();
