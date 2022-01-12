@@ -27,8 +27,7 @@ public class SibsServiceInvalidRetryFilterTest {
     @SneakyThrows
     public void shouldRetryOnServiceInvalidErrorResponse() {
         // given
-        given(response.getStatus()).willReturn(405);
-        given(response.getBody(String.class)).willReturn(readServiceInvalidResponse());
+        bankResponseWithStatusAndBody(405, readServiceInvalidResponse());
 
         // expect
         assertThat(filter.shouldRetry(response)).isTrue();
@@ -38,8 +37,7 @@ public class SibsServiceInvalidRetryFilterTest {
     @Parameters
     public void shouldNotRetry(int status, String responseBody) {
         // given
-        given(response.getStatus()).willReturn(status);
-        given(response.getBody(String.class)).willReturn(responseBody);
+        bankResponseWithStatusAndBody(status, responseBody);
 
         // expect
         assertThat(filter.shouldRetry(response)).isFalse();
@@ -57,6 +55,11 @@ public class SibsServiceInvalidRetryFilterTest {
             {404, TEST_ERROR_RESPONSE},
             {429, readServiceInvalidResponse()},
         };
+    }
+
+    private void bankResponseWithStatusAndBody(int status, String body) {
+        given(response.getStatus()).willReturn(status);
+        given(response.getBody(String.class)).willReturn(body);
     }
 
     private String readServiceInvalidResponse() throws IOException {

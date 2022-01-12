@@ -16,9 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
  * "The addressed service is not valid for the addressed resources."}]}
  */
 @Slf4j
-public class SibsServiceInvalidRetryFilter extends AbstractRetryFilter {
-
-    private static final String ERROR_CODE = "SERVICE_INVALID";
+public final class SibsServiceInvalidRetryFilter extends AbstractRetryFilter {
 
     public SibsServiceInvalidRetryFilter(int maxNumRetries, int retrySleepMilliseconds) {
         super(maxNumRetries, retrySleepMilliseconds);
@@ -32,7 +30,7 @@ public class SibsServiceInvalidRetryFilter extends AbstractRetryFilter {
 
     private boolean bodyContainsServiceInvalidErrorCode(HttpResponse response) {
         return Optional.ofNullable(response.getBody(String.class))
-                .map(body -> body.contains(ERROR_CODE))
+                .map(body -> body.contains("SERVICE_INVALID"))
                 .orElse(false);
     }
 
