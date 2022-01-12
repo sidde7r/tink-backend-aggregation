@@ -36,6 +36,7 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@com_google_protobuf//:protobuf_java",
         "@tink_backend//src/credentials/libraries/encryption/versions",
+        "@tink_backend//src/libraries/encrypted-payload/opaquepayload/proto:java_proto",
         "@tink_backend//src/libraries/serialization_utils",
     ],
 )

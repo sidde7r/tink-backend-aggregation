@@ -28,12 +28,23 @@ public class CryptoWrapper {
     }
 
     public byte[] getCryptoKeyByKeyId(int keyId) {
-        List<byte[]> keyList =
+        List<CryptoConfiguration> cryptoConfigs =
                 cryptoConfigurations.stream()
                         .filter(t -> Objects.equals(t.getKeyId(), keyId))
+                        .collect(Collectors.toList());
+
+        cryptoConfigs.forEach(
+                cc ->
+                        log.info(
+                                "Crypto config with key id: {} and client name: {}",
+                                cc.getKeyId(),
+                                cc.getCryptoConfigurationId().getClientName()));
+
+        List<byte[]> keyList =
+                cryptoConfigs.stream()
                         .map(CryptoConfiguration::getDecodedKey)
                         .collect(Collectors.toList());
-        log.info("Key list size: " + keyList.size());
+
         return keyList.stream()
                 .findAny()
                 .orElseThrow(

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.orchestration.grpc.OpaquePayload;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.credentials.libraries.encryption.versions.CredentialsCryptoV1;
@@ -127,11 +128,16 @@ public class CredentialsCrypto {
                 .setVersion2Handler(
                         v2 -> {
                             try {
-                                if (v2.getFields() != null) {
-                                    int keyId = v2.getFields().getKeyId();
+                                OpaquePayload fields = v2.getFields();
+                                if (fields != null) {
+                                    int keyId = fields.getKeyId();
                                     byte[] fieldsKey = cryptoWrapper.getCryptoKeyByKeyId(keyId);
                                     String result;
 
+                                    logger.info(
+                                            "Fields timestamp: {} key id: {}",
+                                            fields.getTimestamp(),
+                                            keyId);
                                     if (charset != null) {
                                         result =
                                                 CredentialsCryptoV2.decryptV2Fields(
