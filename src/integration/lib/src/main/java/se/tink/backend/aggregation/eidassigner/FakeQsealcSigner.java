@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.eidassigner;
 
-public final class FakeQsealcSigner implements QsealcSigner {
+import se.tink.agent.sdk.utils.signer.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.Signature;
 
+public final class FakeQsealcSigner
+        implements QsealcSigner, se.tink.agent.sdk.utils.signer.QsealcSigner {
+
+    private static final byte[] RAW_SIGNATURE = "FAKE_SIGNATURE\n".getBytes();
     private static final String SIGNATURE = "RkFLRV9TSUdOQVRVUkUK"; // b64(FAKE_SIGNATURE)
 
     @Override
@@ -20,17 +25,7 @@ public final class FakeQsealcSigner implements QsealcSigner {
     }
 
     @Override
-    public String getSignatureBase64(QsealcAlg algorithm, byte[] dataToSign) {
-        return SIGNATURE;
-    }
-
-    @Override
-    public String getJWSToken(QsealcAlg algorithm, byte[] jwsTokenData) {
-        return SIGNATURE;
-    }
-
-    @Override
-    public byte[] getSignature(QsealcAlg algorithm, byte[] dataToSign) {
-        return SIGNATURE.getBytes();
+    public Signature sign(QsealcAlgorithm algorithm, byte[] dataToSign) {
+        return Signature.create(RAW_SIGNATURE);
     }
 }
