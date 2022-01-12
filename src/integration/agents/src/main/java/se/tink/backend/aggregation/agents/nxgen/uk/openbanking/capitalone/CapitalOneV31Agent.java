@@ -57,6 +57,12 @@ public final class CapitalOneV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
 
@@ -91,13 +97,6 @@ public final class CapitalOneV31Agent extends UkOpenBankingBaseAgent {
                 persistentStorage,
                 aisConfig,
                 componentProvider);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

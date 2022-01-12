@@ -65,16 +65,16 @@ public final class BankOfScotlandV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
-    }
-
-    @Override
     public Authenticator constructAuthenticator() {
         UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
 
         return createAutoAuthController(authController);
+    }
+
+    @Override
+    protected UkOpenBankingAis makeAis() {
+        return new UkOpenBankingV31Ais(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

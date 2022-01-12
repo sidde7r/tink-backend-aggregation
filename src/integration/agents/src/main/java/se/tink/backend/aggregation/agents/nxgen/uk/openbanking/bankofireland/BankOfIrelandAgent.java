@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofireland;
 
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.*;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -46,16 +48,15 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
     }
 
     @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
+    protected UkOpenBankingAis makeAis() {
+        return new UkOpenBankingV31Ais(
+                aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

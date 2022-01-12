@@ -60,6 +60,12 @@ public class CaterAllenAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingApiClient createApiClient(
             TinkHttpClient httpClient,
             JwtSigner signer,
@@ -111,13 +117,6 @@ public class CaterAllenAgent extends UkOpenBankingBaseAgent {
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(
                 aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
