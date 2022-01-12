@@ -10,6 +10,7 @@ import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.agent.sdk.operation.User;
 import se.tink.agent.sdk.operation.http.ProxyProfiles;
+import se.tink.agent.sdk.utils.signer.QsealcSigner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas.QSealcSignerProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -42,7 +44,8 @@ public class AgentComponentProvider
                 UnleashClientProvider,
                 AgentTemporaryStorageProvider,
                 MockServerUrlProvider,
-                ProxyProfilesProvider {
+                ProxyProfilesProvider,
+                QSealcSignerProvider {
 
     private final TinkHttpClientProvider tinkHttpClientProvider;
     private final SupplementalInformationProvider supplementalInformationProvider;
@@ -55,6 +58,7 @@ public class AgentComponentProvider
     private final StaticBankCredentials staticBankCredentials;
     private final Provider provider;
     private final ProxyProfilesProvider proxyProfilesProvider;
+    private final QSealcSignerProvider qSealcSignerProvider;
 
     @Inject
     public AgentComponentProvider(
@@ -65,7 +69,8 @@ public class AgentComponentProvider
             UnleashClientProvider unleashClientProvider,
             AgentTemporaryStorageProvider agentTemporaryStorageProvider,
             MockServerUrlProvider mockServerUrlProvider,
-            ProxyProfilesProvider proxyProfilesProvider) {
+            ProxyProfilesProvider proxyProfilesProvider,
+            QSealcSignerProvider qSealcSignerProvider) {
         this.tinkHttpClientProvider = tinkHttpClientProvider;
         this.supplementalInformationProvider = supplementalInformationProvider;
         this.agentContextProvider = agentContextProvider;
@@ -74,6 +79,7 @@ public class AgentComponentProvider
         this.agentTemporaryStorageProvider = agentTemporaryStorageProvider;
         this.mockServerUrlProvider = mockServerUrlProvider;
         this.proxyProfilesProvider = proxyProfilesProvider;
+        this.qSealcSignerProvider = qSealcSignerProvider;
 
         CredentialsRequest credentialsRequest = agentContextProvider.getCredentialsRequest();
         this.user = mapToSdkUser(credentialsRequest);
@@ -217,5 +223,10 @@ public class AgentComponentProvider
     @Override
     public ProxyProfiles getProxyProfiles() {
         return proxyProfilesProvider.getProxyProfiles();
+    }
+
+    @Override
+    public QsealcSigner getQsealcSigner() {
+        return qSealcSignerProvider.getQsealcSigner();
     }
 }

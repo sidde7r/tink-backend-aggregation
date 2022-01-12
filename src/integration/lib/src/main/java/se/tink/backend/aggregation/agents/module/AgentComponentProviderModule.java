@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas.ProductionQSealcSignerProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas.QSealcSignerProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
@@ -34,7 +36,6 @@ public final class AgentComponentProviderModule extends AbstractModule {
 
     @Override
     protected void configure() {
-
         bind(TinkHttpClientProvider.class).to(NextGenTinkHttpClientProvider.class);
         bind(MockServerUrlProvider.class).to(EmptyMockServerUrlProvider.class);
         bind(SupplementalInformationProvider.class).to(SupplementalInformationProviderImpl.class);
@@ -47,5 +48,6 @@ public final class AgentComponentProviderModule extends AbstractModule {
         bind(AgentTemporaryStorageProvider.class).to(AgentTemporaryStorageProviderImpl.class);
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
         bind(ProxyProfilesProvider.class).to(ProductionProxyProfilesProvider.class);
+        bind(QSealcSignerProvider.class).to(ProductionQSealcSignerProvider.class);
     }
 }

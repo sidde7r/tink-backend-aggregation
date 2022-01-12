@@ -22,13 +22,15 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.agent.sdk.utils.signer.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.Signature;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
 @SuppressWarnings("java:S2129")
-public class QsealcSignerImpl implements QsealcSigner {
+public class QsealcSignerImpl implements QsealcSigner, se.tink.agent.sdk.utils.signer.QsealcSigner {
 
     private static final Logger log = LoggerFactory.getLogger(QsealcSignerImpl.class);
 
@@ -57,6 +59,13 @@ public class QsealcSignerImpl implements QsealcSigner {
         this.eidasIdentity = eidasIdentity;
     }
 
+    private QsealcSignerImpl(
+            QsealcSignerHttpClient qsealcSignerHttpClient,
+            String host,
+            EidasIdentity eidasIdentity) {
+        this(qsealcSignerHttpClient, null, host, eidasIdentity);
+    }
+
     /**
      * This is the preferred builder. This will send the cluster and app ID's chosen in the
      * EidasIdentity object.
@@ -66,6 +75,16 @@ public class QsealcSignerImpl implements QsealcSigner {
         try {
             return new QsealcSignerImpl(
                     QsealcSignerHttpClient.create(conf), alg, conf.getHost(), eidasIdentity);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static QsealcSignerImpl build(
+            InternalEidasProxyConfiguration conf, EidasIdentity eidasIdentity) {
+        try {
+            return new QsealcSignerImpl(
+                    QsealcSignerHttpClient.create(conf), conf.getHost(), eidasIdentity);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -149,18 +168,24 @@ public class QsealcSignerImpl implements QsealcSigner {
     }
 
     @Override
-    public String getSignatureBase64(QsealcAlg algorithm, byte[] dataToSign) {
-        return new String(callSecretsService(algorithm, dataToSign), StandardCharsets.US_ASCII);
+    public Signature sign(QsealcAlgorithm algorithm, byte[] dataToSign) {
+        QsealcAlg internalAlgorithm = convertQsealcAlgorithm(algorithm);
+        byte[] signatureData =
+                Base64.getDecoder().decode(callSecretsService(internalAlgorithm, dataToSign));
+        return Signature.create(signatureData);
     }
 
-    @Override
-    public String getJWSToken(QsealcAlg algorithm, byte[] jwsTokenData) {
-        return new String(Base64.getDecoder().decode(callSecretsService(algorithm, jwsTokenData)));
-    }
-
-    @Override
-    public byte[] getSignature(QsealcAlg algorithm, byte[] dataToSign) {
-        return Base64.getDecoder().decode(callSecretsService(algorithm, dataToSign));
+    private QsealcAlg convertQsealcAlgorithm(QsealcAlgorithm algorithm) {
+        switch (algorithm) {
+            case RSA_SHA256:
+                return QsealcAlg.EIDAS_RSA_SHA256;
+            case PSS_SHA256:
+                return QsealcAlg.EIDAS_PSS_SHA256;
+            case JWT_RSA_SHA256:
+                return QsealcAlg.EIDAS_JWT_RSA_SHA256;
+            default:
+                throw new IllegalStateException("Unexpected value: " + algorithm);
+        }
     }
 
     private void createClientTraceSpan(HttpPost request) {

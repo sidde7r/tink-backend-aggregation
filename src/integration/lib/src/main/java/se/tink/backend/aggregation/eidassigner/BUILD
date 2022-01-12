@@ -7,6 +7,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agent_sdk/sdk/src/utils/signer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/truststrategy",

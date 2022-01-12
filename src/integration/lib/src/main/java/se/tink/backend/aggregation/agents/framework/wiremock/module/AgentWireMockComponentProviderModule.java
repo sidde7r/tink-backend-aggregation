@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas.QSealcSignerProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas.WiremockQSealcSignerProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
@@ -59,7 +61,6 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
 
     @Override
     protected void configure() {
-
         bind(TinkHttpClientProvider.class).toInstance(wireMockTinkHttpClientProvider);
         bind(MockServerUrlProvider.class).toInstance(wireMockMockServerUrlProvider);
         bind(SupplementalInformationProvider.class).toInstance(mockSupplementalInformationProvider);
@@ -69,5 +70,6 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
         bind(UnleashClientProvider.class).to(FakeUnleashClientWithEnabledTogglesProvider.class);
         bind(ProxyProfilesProvider.class).to(WiremockProxyProfilesProvider.class);
+        bind(QSealcSignerProvider.class).to(WiremockQSealcSignerProvider.class);
     }
 }
