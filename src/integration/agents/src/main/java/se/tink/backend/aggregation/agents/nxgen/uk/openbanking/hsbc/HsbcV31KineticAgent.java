@@ -58,6 +58,12 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         return new HsbcV31Ais(
                 aisConfig,
@@ -68,10 +74,23 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+    protected UkOpenBankingApiClient createApiClient(
+            TinkHttpClient httpClient,
+            JwtSigner signer,
+            SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
+            ClientInfo providerConfiguration) {
 
-        return createAutoAuthController(authController);
+        return new HsbcGroupApiClient(
+                httpClient,
+                signer,
+                softwareStatement,
+                redirectUrl,
+                providerConfiguration,
+                randomValueGenerator,
+                persistentStorage,
+                aisConfig,
+                componentProvider);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
@@ -96,25 +115,5 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
                 new ThirdPartyAppAuthenticationController<>(
                         authController, this.supplementalInformationHelper),
                 authController);
-    }
-
-    @Override
-    protected UkOpenBankingApiClient createApiClient(
-            TinkHttpClient httpClient,
-            JwtSigner signer,
-            SoftwareStatementAssertion softwareStatement,
-            String redirectUrl,
-            ClientInfo providerConfiguration) {
-
-        return new HsbcGroupApiClient(
-                httpClient,
-                signer,
-                softwareStatement,
-                redirectUrl,
-                providerConfiguration,
-                randomValueGenerator,
-                persistentStorage,
-                aisConfig,
-                componentProvider);
     }
 }
