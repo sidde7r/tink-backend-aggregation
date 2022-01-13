@@ -37,7 +37,7 @@ public class ErrorResponse {
             return false;
         }
         return errors.stream()
-                .anyMatch(errorEntity -> errorCode.equals(errorEntity.getErrorCode()));
+                .anyMatch(errorEntity -> errorCode.equalsIgnoreCase(errorEntity.getErrorCode()));
     }
 
     @JsonIgnore
@@ -48,7 +48,10 @@ public class ErrorResponse {
                                 listOfErrors.stream()
                                         .anyMatch(
                                                 errorEntity ->
-                                                        errorEntity.getMessage().contains(pattern)))
+                                                        errorEntity
+                                                                .getMessage()
+                                                                .toLowerCase()
+                                                                .contains(pattern.toLowerCase())))
                 .orElse(false);
     }
 

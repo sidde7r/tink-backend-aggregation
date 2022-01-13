@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class ConsentErrorFilter extends Filter {
 
     private static final String MESSAGE_PATTERN =
-            "The consent error occurred for path `%s` with HTTP status `%s` and ErrorCodes `%s`";
+            "[ConsentErrorFilter] The consent error occurred for path: `%s`, with HTTP status: `%s` and ErrorCodes:`%s`";
 
     private final PersistentStorage persistentStorage;
 
@@ -35,8 +35,8 @@ public class ConsentErrorFilter extends Filter {
             throw SessionError.CONSENT_INVALID.exception(
                     String.format(
                             MESSAGE_PATTERN,
-                            response.getStatus(),
                             httpRequest.getUrl().toUri().getPath(),
+                            response.getStatus(),
                             response.getBody(ErrorResponse.class).getErrorCodes()));
         }
         return response;
