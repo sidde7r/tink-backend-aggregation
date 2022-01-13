@@ -37,7 +37,7 @@ public final class NordnetAgent extends NextGenerationAgent
                 getAgentConfigurationController()
                         .getAgentConfigurationFromK8s(
                                 Market.INTEGRATION_NAME,
-                                request.getProvider().getPayload(),
+                                componentProvider.getProvider().getPayload(),
                                 NordnetConfiguration.class);
 
         apiClient.setConfiguration(nordnetConfiguration);
