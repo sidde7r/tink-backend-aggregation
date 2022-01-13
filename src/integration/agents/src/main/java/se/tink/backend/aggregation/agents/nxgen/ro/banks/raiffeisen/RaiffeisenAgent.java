@@ -35,7 +35,7 @@ public final class RaiffeisenAgent extends NextGenerationAgent
     @Inject
     public RaiffeisenAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        String redirectUrl = request.getProvider().getPayload();
+        String redirectUrl = componentProvider.getProvider().getPayload();
 
         if (Strings.isNullOrEmpty(redirectUrl)) {
             throw new IllegalStateException("redirectUrl is null or empty!");
