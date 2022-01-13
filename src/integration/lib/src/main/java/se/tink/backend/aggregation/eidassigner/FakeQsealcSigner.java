@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.eidassigner;
 
-import se.tink.agent.sdk.utils.signer.QsealcAlgorithm;
-import se.tink.agent.sdk.utils.signer.Signature;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 
 public final class FakeQsealcSigner
-        implements QsealcSigner, se.tink.agent.sdk.utils.signer.QsealcSigner {
+        implements QsealcSigner, se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner {
 
     private static final byte[] RAW_SIGNATURE = "FAKE_SIGNATURE\n".getBytes();
     private static final String SIGNATURE = "RkFLRV9TSUdOQVRVUkUK"; // b64(FAKE_SIGNATURE)

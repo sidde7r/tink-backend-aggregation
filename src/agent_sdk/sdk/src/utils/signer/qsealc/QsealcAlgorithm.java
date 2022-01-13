@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.utils.signer;
+package se.tink.agent.sdk.utils.signer.qsealc;
 
 public enum QsealcAlgorithm {
     RSA_SHA256,
