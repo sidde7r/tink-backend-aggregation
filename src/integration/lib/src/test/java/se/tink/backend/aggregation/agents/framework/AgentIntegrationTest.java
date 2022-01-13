@@ -628,6 +628,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 logout(agent);
             }
         } finally {
+            context.printHar();
             saveCredentials(agent);
             context.stop();
         }
@@ -680,6 +681,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 logout(agent);
             }
         } finally {
+            context.printHar();
             saveCredentials(agent);
         }
 
@@ -700,6 +702,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 logout(agent);
             }
         } finally {
+            context.printHar();
             saveCredentials(agent);
         }
 
@@ -727,6 +730,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 logout(agent);
             }
         } finally {
+            context.printHar();
             saveCredentials(agent);
         }
 
@@ -770,6 +774,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 logout(agent);
             }
         } finally {
+            context.printHar();
             saveCredentials(agent);
         }
 

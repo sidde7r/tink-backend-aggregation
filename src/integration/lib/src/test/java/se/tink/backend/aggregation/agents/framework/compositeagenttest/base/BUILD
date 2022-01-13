@@ -29,6 +29,7 @@ java_library(
         "//src/libraries/metrics:registry",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_code_findbugs_jsr305",

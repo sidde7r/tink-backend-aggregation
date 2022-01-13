@@ -5,6 +5,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.dropwizard.lifecycle.Managed;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
@@ -62,6 +66,8 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarMasker;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarMaskerImpl;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
@@ -651,6 +657,19 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
                                                 accountData.getTransactions(),
                                                 accountData.getTransferDestinationPatterns())));
         return new CredentialDataDao(accountDataList, transfers, identityData);
+    }
+
+    public void printHar() {
+        try {
+            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            final HarMasker masker = new HarMaskerImpl(x -> true, Function.identity());
+            getHarLogCollector().writeHar(outputStream, masker);
+            final String logHar = outputStream.toString(StandardCharsets.UTF_8.name());
+            System.out.println("===== HTTP DEBUG TRACE LOG =====");
+            System.out.println(logHar);
+        } catch (IOException e) {
+            log.error("Could not serialize har: ", e);
+        }
     }
 
     @Override
