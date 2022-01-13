@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.filter.SamlinkSessionErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -55,6 +56,25 @@ public class SamlinkSessionErrorFilterTest {
 
         // then
         assertThat(t).isInstanceOf(SessionException.class).hasMessage("Cause: Consent is expired");
+    }
+
+    @Test
+    public void shouldThrowBankServerErrorWhenProxyError() {
+
+        // given
+        final String responseBody = "{\"proxyError\":true,\"errorText\":\"Connection reset\"}";
+
+        HttpResponse mockedResponse = mock(HttpResponse.class);
+        Filter nextFilter = mock(Filter.class);
+        when(mockedResponse.getBody(String.class)).thenReturn(responseBody);
+        when(nextFilter.handle(any())).thenThrow(new HttpResponseException(null, mockedResponse));
+
+        // when
+        sessionErrorFilter.setNext(nextFilter);
+        Throwable t = catchThrowable(() -> sessionErrorFilter.handle(null));
+
+        // then
+        assertThat(t).isInstanceOf(BankServiceException.class);
     }
 
     static HttpResponse mockResponse(String responseBody) {

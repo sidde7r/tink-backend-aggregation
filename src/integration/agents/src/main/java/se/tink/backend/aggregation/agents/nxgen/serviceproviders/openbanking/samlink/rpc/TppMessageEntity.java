@@ -15,4 +15,9 @@ public class TppMessageEntity {
     public boolean isConsentExpired() {
         return SamlinkConstants.ErrorCodes.CONSENT_EXPIRED.equalsIgnoreCase(code);
     }
+
+    @JsonIgnore
+    public boolean isServiceInvalid() {
+        return SamlinkConstants.ErrorCodes.SERVICE_INVALID.equalsIgnoreCase(code);
+    }
 }

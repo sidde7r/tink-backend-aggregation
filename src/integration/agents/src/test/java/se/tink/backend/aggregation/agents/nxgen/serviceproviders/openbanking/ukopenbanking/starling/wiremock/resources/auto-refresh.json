@@ -5,16 +5,16 @@
         "exactBalance" : {
             "currencyCode" : "GBP",
             "scale" : 2,
-            "unscaledValue" : 3394,
             "exactValue" : 33.94,
+            "unscaledValue" : 3394,
             "doubleValue" : 33.94
         },
         "currencyCode" : "GBP",
         "availableBalance" : {
             "currencyCode" : "GBP",
             "scale" : 2,
-            "unscaledValue" : 3394,
             "exactValue" : 33.94,
+            "unscaledValue" : 3394,
             "doubleValue" : 33.94
         },
         "bankId" : "GB73SRLG6083722222222",
@@ -136,7 +136,7 @@
     }, {
         "amount" : 0.03,
         "date" : 1596189600000,
-        "description" : "TRX B",
+        "description" : "Starling Bank",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },

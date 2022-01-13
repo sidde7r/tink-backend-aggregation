@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount;
 
+import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
@@ -10,8 +11,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sam
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
@@ -27,10 +32,26 @@ public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             final TransactionalAccount account, final String key) {
-        if (shouldFetchPending) {
-            return getPendingAndBookedTransactions(account, key);
+        try {
+            if (shouldFetchPending) {
+                return getPendingAndBookedTransactions(account, key);
+            }
+            return getBookedTransactions(account, key);
+        } catch (HttpResponseException ex) {
+            final HttpResponse httpResponse = ex.getResponse();
+            if (checkErrorService(httpResponse)) {
+                return getEmptyResponse();
+            }
+            throw ex;
         }
-        return getBookedTransactions(account, key);
+    }
+
+    private boolean checkErrorService(HttpResponse httpResponse) {
+        return httpResponse.getBody(ErrorResponse.class).checkErrorServiceInvalid();
+    }
+
+    private TransactionKeyPaginatorResponse<String> getEmptyResponse() {
+        return new TransactionKeyPaginatorResponseImpl<>(Collections.emptyList(), null);
     }
 
     private TransactionKeyPaginatorResponse<String> getPendingAndBookedTransactions(

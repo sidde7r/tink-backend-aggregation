@@ -56,5 +56,6 @@ public final class SamlinkConstants {
         private ErrorCodes() {}
 
         public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+        public static final String SERVICE_INVALID = "SERVICE_INVALID";
     }
 }
