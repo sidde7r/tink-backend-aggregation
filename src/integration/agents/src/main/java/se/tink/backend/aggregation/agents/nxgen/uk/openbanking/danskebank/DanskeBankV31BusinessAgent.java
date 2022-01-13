@@ -53,6 +53,12 @@ public class DanskeBankV31BusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected UkOpenBankingAis makeAis() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         CreditCardAccountMapper creditCardAccountMapper =
@@ -66,13 +72,6 @@ public class DanskeBankV31BusinessAgent extends UkOpenBankingBaseAgent {
                 creditCardAccountMapper,
                 UkOpenBankingV31Ais.defaultTransactionalAccountMapper(),
                 transactionPaginationHelper);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
