@@ -31,14 +31,6 @@ public class DeviceDetailsEntity {
     private final String osType;
     private final String deviceModel;
 
-    @Builder
-    @AllArgsConstructor
-    @JsonObject
-    static class WifiNetworkEntity {
-        private final String bssid;
-        private final String ssid;
-    }
-
     public static DeviceDetailsEntity getDefault() {
         return DeviceDetailsEntity.builder()
                 .loggedUsers(0)
@@ -65,5 +57,13 @@ public class DeviceDetailsEntity {
                 .deviceModel("iPhone7,2")
                 .osType("iPhone")
                 .build();
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @JsonObject
+    static class WifiNetworkEntity {
+        private final String bssid;
+        private final String ssid;
     }
 }
