@@ -31,7 +31,7 @@ public class SebKortAgent extends NextGenerationAgent implements RefreshCreditCa
         this.config = config;
 
         this.creditCardRefreshController =
-                constructCreditCardRefreshController(request.getProvider().getCurrency());
+                constructCreditCardRefreshController(componentProvider.getProvider().getCurrency());
     }
 
     @Override
