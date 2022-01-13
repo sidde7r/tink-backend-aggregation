@@ -4,6 +4,14 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("//tools/bzl:template_file.bzl", "templated_file")
 
 container_layer(
+    name = "libm4ri_installer",
+    debs = [
+        "@libm4ri_dev//file",
+        "@libm4ri_0.0.20140914//file",
+    ],
+)
+
+container_layer(
     name = "chromium_deps_for_java11",
     debs = [
         "@install-info_6.5.0.dfsg.1-4b1_amd64//file",
@@ -465,7 +473,10 @@ container_image(
         "development-decoupled.yaml",
     ],
     layers = [
+        ":libm4ri_installer",
         ":chromium_deps_for_java11",
+        ":libtesseract_installer",
+        ":libtesseract_installer_distroless_extra_dep",
     ],
     tags = ["manual"],
     tars = [
@@ -481,6 +492,26 @@ container_image(
     workdir = "/usr/share/tink-backend-aggregation",
 )
 
+container_layer(
+    name = "libtesseract_installer",
+    debs = [
+        "@libtesseract-dev_4.0.0-2//file",
+        "@libtesseract4_4.0.0-2//file",
+        "@liblept5_1.74.1-1//file",
+        "@libgomp1_8.3.0-6//file",
+        "@libwebp6_0.6.1-2//file",
+        "@libopenjp2-7_2.3.0-2//file",
+        "@libc6_2.28-10//file",
+    ],
+)
+
+container_layer(
+    name = "libtesseract_installer_distroless_extra_dep",
+    debs = [
+        "@libgif7_5.1.4-3//file",
+    ],
+)
+
 container_image(
     name = "aggregation_system_test_image",
     base = "@distroless_java_11//image",
@@ -490,7 +521,10 @@ container_image(
         "system-test.yaml",
     ],
     layers = [
+        ":libm4ri_installer",
         ":chromium_deps_for_java11",
+        ":libtesseract_installer",
+        ":libtesseract_installer_distroless_extra_dep",
     ],
     tags = ["manual"],
     tars = [

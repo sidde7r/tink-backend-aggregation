@@ -28,6 +28,13 @@ container_layer(
 )
 
 container_layer(
+    name = "libtesseract_installer_distroless_extra_dep",
+    debs = [
+        "@libgif7_5.1.4-3//file",
+    ],
+)
+
+container_layer(
     name = "chromium_deps_for_java11",
     debs = [
         "@install-info_6.5.0.dfsg.1-4b1_amd64//file",
@@ -449,6 +456,7 @@ container_image(
     layers = [
         ":libm4ri_installer",
         ":libtesseract_installer",
+        ":libtesseract_installer_distroless_extra_dep",
         ":chromium_deps_for_java11",
     ],
     tars = [
