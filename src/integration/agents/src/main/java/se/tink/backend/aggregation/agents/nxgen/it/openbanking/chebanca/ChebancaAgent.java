@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 import com.google.inject.Inject;
 import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
 import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;

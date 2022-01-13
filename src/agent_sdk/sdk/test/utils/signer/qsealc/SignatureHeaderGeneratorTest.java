@@ -1,4 +1,4 @@
-package src.integration.lib.src.test.java.se.tink.backend.aggregation.eidassigner;
+package src.agent_sdk.sdk.test.utils.signer.qsealc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -14,8 +14,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
 import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.SignatureHeaderGenerator;
 import se.tink.agent.sdk.utils.signer.signature.Signature;
-import se.tink.backend.aggregation.eidassigner.SignatureHeaderGenerator;
 
 public class SignatureHeaderGeneratorTest {
     private static final String SIGNATURE_HEADER =

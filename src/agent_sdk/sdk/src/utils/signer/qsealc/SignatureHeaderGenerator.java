@@ -1,12 +1,10 @@
-package se.tink.backend.aggregation.eidassigner;
+package se.tink.agent.sdk.utils.signer.qsealc;
 
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
-import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 
 public class SignatureHeaderGenerator {
 
