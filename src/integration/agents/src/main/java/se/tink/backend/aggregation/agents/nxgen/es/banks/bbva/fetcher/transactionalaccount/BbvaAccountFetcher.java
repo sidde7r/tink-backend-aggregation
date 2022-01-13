@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final BbvaApiClient apiClient;
-    private Collection<TransactionalAccount> accountsCache;
 
     public BbvaAccountFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;
@@ -27,31 +26,27 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        if (accountsCache == null) {
-            accountsCache =
-                    apiClient
-                            .fetchFinancialDashboard()
-                            .getPositions()
-                            .peek(
-                                    position ->
-                                            log.info(
-                                                    "[PRODUCT TYPE] balanceAgrupation: {}",
-                                                    position.getBalanceAgrupation()))
-                            .map(PositionEntity::getContract)
-                            .map(ContractEntity::getAccount)
-                            .filter(Option::isDefined)
-                            .map(Option::get)
-                            .filter(AccountEntity::isTransactionalAccount)
-                            .filter(AccountEntity::hasBalance)
-                            .map(
-                                    accountEntity ->
-                                            accountEntity.toTinkTransactionalAccount(
-                                                    fetchParticipants(accountEntity)))
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList());
-        }
-        return accountsCache;
+        return apiClient
+                .fetchFinancialDashboard()
+                .getPositions()
+                .peek(
+                        position ->
+                                log.info(
+                                        "[PRODUCT TYPE] balanceAgrupation: {}",
+                                        position.getBalanceAgrupation()))
+                .map(PositionEntity::getContract)
+                .map(ContractEntity::getAccount)
+                .filter(Option::isDefined)
+                .map(Option::get)
+                .filter(AccountEntity::isTransactionalAccount)
+                .filter(AccountEntity::hasBalance)
+                .map(
+                        accountEntity ->
+                                accountEntity.toTinkTransactionalAccount(
+                                        fetchParticipants(accountEntity)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     public List<ParticipantAccountEntity> fetchParticipants(AccountEntity account) {

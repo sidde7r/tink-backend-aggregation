@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -43,6 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Head
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.PostParameter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
@@ -73,7 +73,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.filter.BbvaInvestmentAccountBlockedFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.TransactionsFetchingDateFromManager;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -91,7 +90,6 @@ public class BbvaApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    @Setter private TransactionsFetchingDateFromManager transactionsFetchingDateFromManager;
 
     public BbvaApiClient(
             TinkHttpClient client,
@@ -178,11 +176,7 @@ public class BbvaApiClient {
     }
 
     public CreditCardTransactionsRequest createCreditCardTransactionsRequestBody(Account account) {
-        LocalDateTime fromTransactionDate =
-                getDateForFetchHistoryTransactions(
-                        account,
-                        true,
-                        transactionsFetchingDateFromManager.getComputedDateFrom().orElse(null));
+        LocalDateTime fromTransactionDate = getDateForFetchHistoryTransactions(account, true);
         final TransactionDateEntity transactionDateEntity =
                 new TransactionDateEntity(
                         YYYY_MM_DD_FORMAT.format(fromTransactionDate) + START_OF_DAY,
@@ -253,10 +247,7 @@ public class BbvaApiClient {
     }
 
     public TransactionsRequest createAccountTransactionsRequestBody(Account account) {
-        Optional<LocalDate> possiblerDateFrom =
-                transactionsFetchingDateFromManager.getComputedDateFrom();
-        LocalDateTime fromTransactionDate =
-                getDateForFetchHistoryTransactions(account, false, possiblerDateFrom.orElse(null));
+        LocalDateTime fromTransactionDate = getDateForFetchHistoryTransactions(account);
         final DateFilterEntity dateFilterEntity =
                 new DateFilterEntity(
                         YYYY_MM_DD_FORMAT.format(fromTransactionDate) + START_OF_DAY,
@@ -404,14 +395,15 @@ public class BbvaApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
+    private LocalDateTime getDateForFetchHistoryTransactions(Account account) {
+        return getDateForFetchHistoryTransactions(account, false);
+    }
+
     private LocalDateTime getDateForFetchHistoryTransactions(
-            Account account, boolean isCreditCard, LocalDate possibleDateFrom) {
+            Account account, boolean isCreditCard) {
         LocalDateTime currentDate = LocalDateTime.now(ZoneId.of(Defaults.TIMEZONE_CET));
 
-        if (possibleDateFrom != null) {
-            if (possibleDateFrom.isBefore(LocalDate.now().minusDays(89))) {
-                return LocalDateTime.of(possibleDateFrom, LocalTime.MIDNIGHT);
-            }
+        if (!sessionStorage.get(StorageKeys.IS_IN_EXTENDED_MODE, Boolean.class).orElse(false)) {
             return currentDate.minusDays(89);
         }
 
