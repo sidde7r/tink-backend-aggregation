@@ -28,7 +28,8 @@ public class RevolutConsentAuthorisationErrorFilter extends Filter {
         if (is401(response) && hasConsentUnauthorizedCode(response)) {
             String msgErr =
                     String.format(
-                            "[RevolutConsentAuthorisationErrorFilter] Invalid consent revoked by the bank with a message: %s",
+                            "[RevolutConsentAuthorisationErrorFilter] Invalid consent revoked "
+                                    + "by the bank with a message: %s",
                             response.getBody(ErrorResponse.class).getMessage());
             SessionKiller.cleanUpAndExpireSession(
                     persistentStorage, SessionError.CONSENT_INVALID.exception(msgErr));
@@ -37,11 +38,11 @@ public class RevolutConsentAuthorisationErrorFilter extends Filter {
         return response;
     }
 
-    private boolean hasConsentUnauthorizedCode(HttpResponse response) {
-        return response.getBody(ErrorResponse.class).hasErrorCode(UNAUTHORIZED);
-    }
-
     private boolean is401(HttpResponse response) {
         return response.getStatus() == HttpStatus.SC_UNAUTHORIZED;
+    }
+
+    private boolean hasConsentUnauthorizedCode(HttpResponse response) {
+        return response.getBody(ErrorResponse.class).hasErrorCode(UNAUTHORIZED);
     }
 }

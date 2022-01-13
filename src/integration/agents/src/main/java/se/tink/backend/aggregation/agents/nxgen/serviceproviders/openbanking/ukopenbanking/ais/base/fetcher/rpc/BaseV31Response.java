@@ -22,12 +22,6 @@ public class BaseV31Response<T> {
         return Optional.ofNullable(data);
     }
 
-    @JsonProperty("Data")
-    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    private void setData(Map<String, T> dataWrapper) {
-        data = dataWrapper.entrySet().stream().findAny().map(Map.Entry::getValue).orElse(null);
-    }
-
     protected String getLink(String linkId) {
         return searchLink(linkId)
                 .orElseThrow(() -> new IllegalStateException("No link with id: " + linkId));
@@ -35,5 +29,11 @@ public class BaseV31Response<T> {
 
     protected Optional<String> searchLink(String linkId) {
         return Optional.ofNullable(links).map(linkMap -> linkMap.get(linkId));
+    }
+
+    @JsonProperty("Data")
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    private void setData(Map<String, T> dataWrapper) {
+        data = dataWrapper.entrySet().stream().findAny().map(Map.Entry::getValue).orElse(null);
     }
 }

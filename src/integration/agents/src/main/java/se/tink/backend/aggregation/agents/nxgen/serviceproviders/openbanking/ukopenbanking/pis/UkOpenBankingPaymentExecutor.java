@@ -44,6 +44,20 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private final ProviderSessionCacheController providerSessionCacheController;
     private final UkOpenBankingCredentialsUpdater credentialsUpdater;
 
+    private static String getConsentId(PaymentRequest paymentRequest) {
+        final Optional<String> maybeConsentId =
+                Optional.ofNullable(
+                        paymentRequest
+                                .getStorage()
+                                .get(UkOpenBankingPaymentConstants.CONSENT_ID_KEY));
+
+        return maybeConsentId.orElseThrow(
+                () ->
+                        new IllegalArgumentException(
+                                ("[UkOpenBankingPaymentExecutor] consentId cannot "
+                                        + "be null or empty!")));
+    }
+
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         paymentRequestValidator.validate(paymentRequest);
@@ -83,6 +97,28 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 throw new IllegalArgumentException(
                         "Unknown step: " + paymentMultiStepRequest.getStep());
         }
+    }
+
+    @Override
+    public CreateBeneficiaryMultiStepResponse createBeneficiary(
+            CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
+        throw new NotImplementedException(
+                "[UkOpenBankingPaymentExecutor] createBeneficiary not yet implemented for "
+                        + this.getClass().getName());
+    }
+
+    @Override
+    public PaymentResponse cancel(PaymentRequest paymentRequest) {
+        throw new NotImplementedException(
+                "[UkOpenBankingPaymentExecutor] cancel not yet implemented for "
+                        + this.getClass().getName());
+    }
+
+    @Override
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
+        throw new NotImplementedException(
+                "[UkOpenBankingPaymentExecutor] fetchMultiple not yet implemented for "
+                        + this.getClass().getName());
     }
 
     private PaymentMultiStepResponse authenticate(PaymentMultiStepRequest paymentMultiStepRequest)
@@ -137,25 +173,6 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         providerSessionCacheController.setProviderSessionCacheInfo(cache);
     }
 
-    @Override
-    public CreateBeneficiaryMultiStepResponse createBeneficiary(
-            CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
-        throw new NotImplementedException(
-                "createBeneficiary not yet implemented for " + this.getClass().getName());
-    }
-
-    @Override
-    public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
-    }
-
-    @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        throw new NotImplementedException(
-                "fetchMultiple not yet implemented for " + this.getClass().getName());
-    }
-
     private Optional<String> getPaymentId(PaymentRequest paymentRequest) {
         Storage storage = paymentRequest.getStorage();
         if (!storage.containsKey(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY)) {
@@ -171,16 +188,5 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 .getProviderSessionCacheInformation()
                 .map(cache -> cache.get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY))
                 .orElse(null);
-    }
-
-    private static String getConsentId(PaymentRequest paymentRequest) {
-        final Optional<String> maybeConsentId =
-                Optional.ofNullable(
-                        paymentRequest
-                                .getStorage()
-                                .get(UkOpenBankingPaymentConstants.CONSENT_ID_KEY));
-
-        return maybeConsentId.orElseThrow(
-                () -> new IllegalArgumentException(("consentId cannot be null or empty!")));
     }
 }

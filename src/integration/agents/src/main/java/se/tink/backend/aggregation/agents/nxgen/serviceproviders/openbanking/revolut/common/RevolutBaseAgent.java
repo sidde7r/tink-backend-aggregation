@@ -67,6 +67,12 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        return createAutoAuthController(authController);
+    }
+
+    @Override
     protected TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController,
@@ -92,13 +98,6 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
                                 new TransactionalAccountBalanceMapper(valueExtractor),
                                 identifierMapper)),
                 transactionPaginationHelper);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {

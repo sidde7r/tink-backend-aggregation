@@ -25,6 +25,10 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
         this.organisationId = builder.organisationId;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public URL getBulkAccountRequestURL() {
         return apiBaseURL.concat(ApiServices.ACCOUNT_BULK_REQUEST);
@@ -109,10 +113,6 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     @Override
     public String getInitialTransactionsPaginationKey(String accountId) {
         return String.format(ApiServices.ACCOUNT_TRANSACTIONS_REQUEST, accountId);
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     @Override

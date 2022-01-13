@@ -11,9 +11,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @Slf4j
 public class PartyDataStorage {
 
-    private final PersistentStorage persistentStorage;
     public static final String RECENT_PARTY_DATA = "recent_identity_data";
     public static final String RECENT_PARTY_DATA_LIST = "recent_identity_data_list";
+    private final PersistentStorage persistentStorage;
 
     public PartyDataStorage(PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;

@@ -174,6 +174,10 @@ public abstract class PaymentConverterBase {
                                                 "%s unknown payment status!", responseStatus)));
     }
 
+    protected Creditor convertCreditorAccountToCreditor(CreditorAccount creditorAccount) {
+        return new Creditor(createAccountIdentifier(creditorAccount), creditorAccount.getName());
+    }
+
     private DebtorAccount convertDebtorToDebtorAccount(Debtor debtor) {
         return Optional.ofNullable(debtor.getAccountIdentifier())
                 .map(
@@ -200,10 +204,6 @@ public abstract class PaymentConverterBase {
                 .identification(creditor.getAccountNumber())
                 .name(name)
                 .build();
-    }
-
-    protected Creditor convertCreditorAccountToCreditor(CreditorAccount creditorAccount) {
-        return new Creditor(createAccountIdentifier(creditorAccount), creditorAccount.getName());
     }
 
     private AccountIdentifier createAccountIdentifier(BaseAccount baseAccount) {

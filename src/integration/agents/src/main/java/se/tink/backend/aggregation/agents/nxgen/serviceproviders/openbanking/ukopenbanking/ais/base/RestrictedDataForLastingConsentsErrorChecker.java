@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class RestrictedDataForLastingConsentsErrorChecker {
 
     private static List<Pattern> allowedEndpointsPatterns = new LinkedList<>();
+    private final int restrictedDataLastingConsentErrorHttpStatus;
 
     static {
         allowedEndpointsPatterns.add(Pattern.compile("/accounts$"));
@@ -16,8 +17,6 @@ public class RestrictedDataForLastingConsentsErrorChecker {
         allowedEndpointsPatterns.add(Pattern.compile("/accounts/\\w+/balances$"));
         allowedEndpointsPatterns.add(Pattern.compile("/accounts/\\w+/transactions$"));
     }
-
-    private final int restrictedDataLastingConsentErrorHttpStatus;
 
     public RestrictedDataForLastingConsentsErrorChecker(
             int restrictedDataLastingConsentErrorHttpStatus) {

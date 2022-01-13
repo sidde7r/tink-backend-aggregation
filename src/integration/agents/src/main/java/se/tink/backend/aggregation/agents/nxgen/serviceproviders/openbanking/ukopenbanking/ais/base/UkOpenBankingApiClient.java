@@ -116,23 +116,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 createAisRequest(aisConfig.getApiBaseURL().concat(path)));
     }
 
-    private Optional<PartyV31Entity> executeV31FetchPartyRequest(RequestBuilder requestBuilder) {
-        try {
-            return requestBuilder.get(PartyV31Response.class).getData();
-        } catch (HttpResponseException ex) {
-            checkForRestrictedDataForLastingConsentsError(ex);
-            return Optional.empty();
-        }
-    }
-
-    private void checkForRestrictedDataForLastingConsentsError(
-            HttpResponseException responseException) {
-        if (!new RestrictedDataForLastingConsentsErrorChecker(403)
-                .isRestrictedDataLastingConsentsError(responseException)) {
-            throw responseException;
-        }
-    }
-
     public List<PartyV31Entity> fetchAccountParties(String accountId) {
         try {
             String path = String.format(PartyEndpoint.ACCOUNT_ID_PARTIES.getPath(), accountId);
@@ -241,5 +224,22 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                         .map(AccountBalanceEntity::getDateTime)
                         .collect(Collectors.toList()));
         return accountBalanceEntities;
+    }
+
+    private Optional<PartyV31Entity> executeV31FetchPartyRequest(RequestBuilder requestBuilder) {
+        try {
+            return requestBuilder.get(PartyV31Response.class).getData();
+        } catch (HttpResponseException ex) {
+            checkForRestrictedDataForLastingConsentsError(ex);
+            return Optional.empty();
+        }
+    }
+
+    private void checkForRestrictedDataForLastingConsentsError(
+            HttpResponseException responseException) {
+        if (!new RestrictedDataForLastingConsentsErrorChecker(403)
+                .isRestrictedDataLastingConsentsError(responseException)) {
+            throw responseException;
+        }
     }
 }

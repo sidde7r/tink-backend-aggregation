@@ -21,7 +21,6 @@ public class UkObTransactionPaginationController<ACCOUNT extends Account>
 
     private final TransactionOffsetDateTimeKeyPaginator<ACCOUNT, String> paginator;
     private final UkObDateCalculator<ACCOUNT> ukCalculator;
-
     private final Period maxPeriodForSingleCycle;
 
     private OffsetDateTime toDateTime;

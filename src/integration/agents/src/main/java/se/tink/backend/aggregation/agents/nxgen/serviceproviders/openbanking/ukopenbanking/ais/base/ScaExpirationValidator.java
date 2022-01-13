@@ -30,6 +30,10 @@ public class ScaExpirationValidator {
                 .orElse(Boolean.TRUE);
     }
 
+    public long getLimitInMinutes() {
+        return limitInMinutes;
+    }
+
     private boolean hasXMinutesPassed(long limitInMinutes, LocalDateTime time) {
         // Subtracting 5 seconds - just in case
         return LocalDateTime.now().isAfter(time.plusMinutes(limitInMinutes).minusSeconds(5));
@@ -37,9 +41,5 @@ public class ScaExpirationValidator {
 
     private Optional<LocalDateTime> restoreLastScaTime() {
         return persistentStorage.get(LAST_SCA_TIME, String.class).map(LocalDateTime::parse);
-    }
-
-    public long getLimitInMinutes() {
-        return limitInMinutes;
     }
 }

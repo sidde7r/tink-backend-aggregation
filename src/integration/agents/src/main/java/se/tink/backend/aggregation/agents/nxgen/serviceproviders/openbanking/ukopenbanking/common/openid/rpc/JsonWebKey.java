@@ -47,6 +47,18 @@ public class JsonWebKey {
     }
 
     @JsonIgnore
+    public PublicKey getPublicKey() {
+        if (isRsaKey()) {
+            return createRsaKey();
+        } else if (isEcKey()) {
+            return createEcKey();
+        } else {
+            throw new IllegalStateException(
+                    String.format("[JsonWebKey] Unknown key type: %s", keyType));
+        }
+    }
+
+    @JsonIgnore
     private boolean isRsaKey() {
         return "rsa".equalsIgnoreCase(keyType);
     }
@@ -78,16 +90,5 @@ public class JsonWebKey {
         byte[] xPointBytes = EncodingUtils.decodeBase64String(ecXPoint);
         byte[] yPointBytes = EncodingUtils.decodeBase64String(ecYPoint);
         return EllipticCurve.getPublicKeyFromCurveAndPoints(curve, xPointBytes, yPointBytes);
-    }
-
-    @JsonIgnore
-    public PublicKey getPublicKey() {
-        if (isRsaKey()) {
-            return createRsaKey();
-        } else if (isEcKey()) {
-            return createEcKey();
-        } else {
-            throw new IllegalStateException(String.format("Unknown key type: %s", keyType));
-        }
     }
 }

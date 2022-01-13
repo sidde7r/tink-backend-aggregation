@@ -45,6 +45,11 @@ public class UkOpenBankingPisRequestFilter extends Filter {
         return httpResponse;
     }
 
+    public void setSoftwareStatement(SoftwareStatementAssertion softwareStatement) {
+        Objects.requireNonNull(softwareStatement);
+        jwtSignatureHelper.setSoftwareStatement(softwareStatement);
+    }
+
     protected void validateResponse(HttpResponse httpResponse, HttpRequest httpRequest) {
         final MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         final String xFapiInteractionId =
@@ -55,11 +60,6 @@ public class UkOpenBankingPisRequestFilter extends Filter {
             throw new HttpResponseException(
                     "X_FAPI_INTERACTION_ID does not match.", httpRequest, httpResponse);
         }
-    }
-
-    public void setSoftwareStatement(SoftwareStatementAssertion softwareStatement) {
-        Objects.requireNonNull(softwareStatement);
-        jwtSignatureHelper.setSoftwareStatement(softwareStatement);
     }
 
     private void addHeaders(HttpRequest httpRequest) {

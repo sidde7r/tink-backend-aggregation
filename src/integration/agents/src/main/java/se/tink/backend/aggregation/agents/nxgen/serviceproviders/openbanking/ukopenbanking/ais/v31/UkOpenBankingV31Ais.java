@@ -103,6 +103,27 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
         this.transactionPaginationHelper = transactionPaginationHelper;
     }
 
+    public static CreditCardAccountMapper defaultCreditCardAccountMapper() {
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
+        return new CreditCardAccountMapper(
+                new DefaultCreditCardBalanceMapper(valueExtractor),
+                new DefaultIdentifierMapper(valueExtractor));
+    }
+
+    public static TransactionalAccountMapper defaultTransactionalAccountMapper() {
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
+        return new TransactionalAccountMapper(
+                new TransactionalAccountBalanceMapper(valueExtractor),
+                new DefaultIdentifierMapper(valueExtractor));
+    }
+
+    public static PartyV31Fetcher defaultPartyFetcher(
+            UkOpenBankingApiClient apiClient,
+            UkOpenBankingAisConfig ukOpenBankingAisConfig,
+            PersistentStorage persistentStorage) {
+        return new PartyV31Fetcher(apiClient, ukOpenBankingAisConfig, persistentStorage);
+    }
+
     @Override
     public AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
             UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
@@ -159,25 +180,29 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
         return defaultPartyFetcher(apiClient, ukOpenBankingAisConfig, persistentStorage);
     }
 
-    public static CreditCardAccountMapper defaultCreditCardAccountMapper() {
-        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-        return new CreditCardAccountMapper(
-                new DefaultCreditCardBalanceMapper(valueExtractor),
-                new DefaultIdentifierMapper(valueExtractor));
+    protected <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
+        return new UkObDateCalculator<>(
+                scaValidator,
+                new DateRangeCalculator<>(
+                        localDateTimeSource, DEFAULT_OFFSET, transactionPaginationHelper),
+                Period.ofDays(90),
+                Period.ofYears(2));
     }
 
-    public static TransactionalAccountMapper defaultTransactionalAccountMapper() {
-        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-        return new TransactionalAccountMapper(
-                new TransactionalAccountBalanceMapper(valueExtractor),
-                new DefaultIdentifierMapper(valueExtractor));
+    protected Toggle createToggleForExperimentalTransactionPagination(
+            AgentComponentProvider componentProvider) {
+        String providerId = componentProvider.getContext().getProviderId();
+        return Toggle.of("ukob-experimental-transaction-pagination")
+                .context(
+                        UnleashContext.builder()
+                                .addProperty(Constants.Context.PROVIDER_NAME.getValue(), providerId)
+                                .build())
+                .build();
     }
 
-    public static PartyV31Fetcher defaultPartyFetcher(
-            UkOpenBankingApiClient apiClient,
-            UkOpenBankingAisConfig ukOpenBankingAisConfig,
-            PersistentStorage persistentStorage) {
-        return new PartyV31Fetcher(apiClient, ukOpenBankingAisConfig, persistentStorage);
+    protected ScaExpirationValidator getScaValidator() {
+        return new ScaExpirationValidator(
+                persistentStorage, UkOpenBankingV31Constants.Limits.SCA_IN_MINUTES);
     }
 
     private TransactionPaginator<TransactionalAccount>
@@ -243,30 +268,5 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         AccountTransactionsV31Response.class,
                         AccountTransactionsV31Response::toCreditCardPaginationResponse,
                         localDateTimeSource));
-    }
-
-    protected <T extends Account> UkObDateCalculator<T> constructUkObDateCalculator() {
-        return new UkObDateCalculator<>(
-                scaValidator,
-                new DateRangeCalculator<>(
-                        localDateTimeSource, DEFAULT_OFFSET, transactionPaginationHelper),
-                Period.ofDays(90),
-                Period.ofYears(2));
-    }
-
-    protected Toggle createToggleForExperimentalTransactionPagination(
-            AgentComponentProvider componentProvider) {
-        String providerId = componentProvider.getContext().getProviderId();
-        return Toggle.of("ukob-experimental-transaction-pagination")
-                .context(
-                        UnleashContext.builder()
-                                .addProperty(Constants.Context.PROVIDER_NAME.getValue(), providerId)
-                                .build())
-                .build();
-    }
-
-    protected ScaExpirationValidator getScaValidator() {
-        return new ScaExpirationValidator(
-                persistentStorage, UkOpenBankingV31Constants.Limits.SCA_IN_MINUTES);
     }
 }
