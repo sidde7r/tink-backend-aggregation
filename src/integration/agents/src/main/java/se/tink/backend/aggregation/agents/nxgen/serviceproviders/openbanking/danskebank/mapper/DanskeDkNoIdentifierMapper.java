@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.DANSKE_BANK_ACCOUNT_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant;
@@ -34,22 +34,17 @@ public abstract class DanskeDkNoIdentifierMapper implements IdentifierMapper {
     @Override
     public Collection<AccountIdentifier> mapIdentifiers(
             List<AccountIdentifierEntity> accountIdentifiers) {
-        return accountIdentifiers.stream()
-                .filter(
-                        accountIdentifierEntity ->
-                                accountIdentifierEntity.getIdentifierType() == IBAN)
-                .findFirst()
-                .map(
-                        ibanIdentifier ->
-                                Arrays.asList(
-                                        new IbanIdentifier(ibanIdentifier.getIdentification()),
-                                        getBbanFromIban(ibanIdentifier)))
-                .map(Collections::unmodifiableCollection)
-                .orElseGet(() -> defaultMapper.mapIdentifiers(accountIdentifiers));
+        return accountIdentifiers.stream().map(this::mapIdentifiers).collect(Collectors.toList());
     }
 
-    private BbanIdentifier getBbanFromIban(AccountIdentifierEntity accountIdentifierEntity) {
-        return new BbanIdentifier(accountIdentifierEntity.getIdentification().substring(4));
+    private AccountIdentifier mapIdentifiers(AccountIdentifierEntity identifier) {
+        if (identifier.getIdentifierType() == DANSKE_BANK_ACCOUNT_NUMBER) {
+            return new BbanIdentifier(identifier.getIdentification());
+        } else if (identifier.getIdentifierType() == IBAN) {
+            return new IbanIdentifier(identifier.getIdentification());
+        } else {
+            return mapIdentifier(identifier);
+        }
     }
 
     @Override

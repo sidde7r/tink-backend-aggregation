@@ -67,7 +67,7 @@ public final class SdcDkAgent extends SdcAgent
     public SdcDkAgent(AgentComponentProvider componentProvider) {
         super(
                 componentProvider,
-                new SdcDkConfiguration(componentProvider.getCredentialsRequest().getProvider()),
+                new SdcDkConfiguration(componentProvider.getProvider()),
                 new SdcDkTransactionParser());
 
         creditCardRefreshController = constructCreditCardRefreshController();

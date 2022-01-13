@@ -34,7 +34,7 @@ public class SdcNoAgent extends NextGenerationAgent
         super(componentProvider);
 
         agentTemporaryStorage = context.getAgentTemporaryStorage();
-        configuration = new SdcNoConfiguration(request.getProvider());
+        configuration = new SdcNoConfiguration(componentProvider.getProvider());
         bankClient = new SdcNoApiClient(client, configuration);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

@@ -4,9 +4,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
+import se.tink.agent.runtime.operation.ProviderImpl;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk.SdcDkConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcPersistentStorage;
@@ -33,8 +34,7 @@ public class SdcDkPinAuthenticatorTest {
         credentials.setType(CredentialsTypes.PASSWORD);
         credentials.setUsername(username);
         credentials.setPassword(password);
-        Provider provider = new Provider();
-        provider.setPayload(providerId);
+        Provider provider = new ProviderImpl(null, null, null, providerId);
         SdcDkConfiguration configuration = new SdcDkConfiguration(provider);
         SdcSessionStorage sessionStorage = new SdcSessionStorage(new SessionStorage());
         SdcPersistentStorage persistentStorage = new SdcPersistentStorage(new PersistentStorage());

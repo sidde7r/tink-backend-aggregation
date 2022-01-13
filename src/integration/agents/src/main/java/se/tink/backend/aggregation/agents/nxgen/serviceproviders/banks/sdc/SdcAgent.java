@@ -73,7 +73,9 @@ public abstract class SdcAgent extends NextGenerationAgent
                         this.metricRefreshController,
                         this.updateController,
                         new SdcLoanFetcher(
-                                this.bankClient, this.sdcSessionStorage, request.getProvider()));
+                                this.bankClient,
+                                this.sdcSessionStorage,
+                                componentProvider.getProvider()));
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
 
