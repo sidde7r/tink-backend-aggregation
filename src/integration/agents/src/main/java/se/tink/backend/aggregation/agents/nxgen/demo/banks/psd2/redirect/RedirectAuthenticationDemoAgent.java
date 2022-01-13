@@ -100,7 +100,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
     public RedirectAuthenticationDemoAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        this.provider = request.getProvider().getName();
+        this.provider = componentProvider.getProvider().getName();
         this.redirectToOxfordPreprod = Objects.equals("oxford-preprod", context.getClusterId());
     }
 
