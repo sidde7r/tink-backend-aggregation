@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LO
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -64,9 +65,11 @@ public final class BecAgent extends NextGenerationAgent
     public BecAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
 
-        this.apiClient = createBecApiClient();
+        this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
+        this.user = agentComponentProvider.getUser();
         this.storage = new BecStorage(persistentStorage);
 
+        this.apiClient = createBecApiClient(agentComponentProvider.getProvider());
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
         this.investmentRefreshController = createInvestmentRefreshController();
         this.loanRefreshController = createLoanRefreshController();
@@ -74,9 +77,6 @@ public final class BecAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         configureClient();
-
-        this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
-        this.user = agentComponentProvider.getUser();
     }
 
     @Override
@@ -102,11 +102,11 @@ public final class BecAgent extends NextGenerationAgent
                         5, 3000)); // increase standard 30sec into 1 minute
     }
 
-    private BecApiClient createBecApiClient() {
+    private BecApiClient createBecApiClient(Provider provider) {
         return new BecApiClient(
                 new BecSecurityHelper(),
                 client,
-                new BecUrlConfiguration(request.getProvider().getPayload()),
+                new BecUrlConfiguration(provider.getPayload()),
                 catalog);
     }
 
