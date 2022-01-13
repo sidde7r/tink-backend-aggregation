@@ -233,7 +233,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     private boolean shouldWriteHarLog() {
-        return false;
+        return "oxford-preprod".equalsIgnoreCase(context.getClusterId());
     }
 
     private boolean shouldLogCommonRequest() {
