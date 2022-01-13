@@ -157,6 +157,6 @@ public class OAuth2Token extends OAuth2TokenBase implements AuthorizationHeader 
     }
 
     public boolean isRefreshNullOrEmpty() {
-        return getRefreshToken().isPresent();
+        return !getRefreshToken().isPresent();
     }
 }
