@@ -53,7 +53,10 @@ public final class BawagPskAgent extends NextGenerationAgent
         configureHttpClient(client);
         this.apiClient =
                 new BawagPskApiClient(
-                        this.client, sessionStorage, persistentStorage, request.getProvider());
+                        this.client,
+                        sessionStorage,
+                        persistentStorage,
+                        componentProvider.getProvider());
 
         investmentRefreshController =
                 new InvestmentRefreshController(
