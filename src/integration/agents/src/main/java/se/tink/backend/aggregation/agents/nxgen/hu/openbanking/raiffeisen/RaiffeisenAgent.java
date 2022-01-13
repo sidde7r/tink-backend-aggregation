@@ -41,7 +41,7 @@ public final class RaiffeisenAgent extends NextGenerationAgent
                 getAgentConfigurationController()
                         .getAgentConfigurationFromK8s(
                                 Market.INTEGRATION_NAME,
-                                request.getProvider().getPayload(),
+                                componentProvider.getProvider().getPayload(),
                                 RaiffeisenConfiguration.class);
 
         apiClient.setConfiguration(raiffeisenConfiguration);
