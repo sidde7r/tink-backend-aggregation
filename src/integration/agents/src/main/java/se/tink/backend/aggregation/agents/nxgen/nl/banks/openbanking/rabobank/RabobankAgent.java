@@ -70,7 +70,7 @@ public final class RabobankAgent
     public RabobankAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         configureHttpClient(client);
-        clientName = request.getProvider().getPayload();
+        clientName = componentProvider.getProvider().getPayload();
 
         final AgentConfiguration<RabobankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
