@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.filter.AmericanExpressV62HttpRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.AmericanExpressV62SessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Storage;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -25,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.NoHttpResponseErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
@@ -35,7 +33,6 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
 
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
-    private final MultiIpGateway gateway;
     private final AmericanExpressV62Storage instanceStorage;
     private final CreditCardRefreshController creditCardRefreshController;
     private final RandomValueGenerator randomValueGenerator;
@@ -52,23 +49,17 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
                         AmericanExpressV62Constants.HttpFilters.MAX_NUM_RETRIES,
                         AmericanExpressV62Constants.HttpFilters.RETRY_SLEEP_MILLISECONDS));
 
+        // Amex is throttling how many requests we can send per IP address.
+        // Use this multiIp gateway to originate from different IP addresses.
+        this.client.setProxyProfile(componentProvider.getProxyProfiles().getAwsProxyProfile());
+
         this.apiClient =
                 new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
-        this.gateway = new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
         this.instanceStorage = new AmericanExpressV62Storage();
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        // Amex is throttling how many requests we can send per IP address.
-        // Use this multiIp gateway to originate from different IP addresses.
-        gateway.setMultiIpGateway(configuration.getIntegrations());
     }
 
     @Override

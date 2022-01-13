@@ -516,6 +516,7 @@ sendDataTrackingEvents: true
 featureFlags:
   esProxy: true
   beProxy: true
+  seProxy: true
   swedbankExtProxy: true
   createBeneficiary: true
   allowRefreshRegardlessOfRestrictions: true

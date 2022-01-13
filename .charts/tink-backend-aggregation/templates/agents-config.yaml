@@ -124,6 +124,7 @@ data:
       featureFlags:
         esProxy: {{ $featureFlagsConfig.esProxy | default false }}
         beProxy: {{ $featureFlagsConfig.beProxy | default false }}
+        seProxy: {{ $featureFlagsConfig.seProxy | default false }}
         createBeneficiary: {{ $featureFlagsConfig.createBeneficiary | default false }}
         allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
         supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}

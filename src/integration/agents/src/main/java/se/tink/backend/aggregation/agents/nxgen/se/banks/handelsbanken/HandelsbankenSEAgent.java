@@ -48,7 +48,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -60,7 +59,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -100,9 +98,7 @@ public final class HandelsbankenSEAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
-    public HandelsbankenSEAgent(
-            AgentComponentProvider agentComponentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+    public HandelsbankenSEAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider, new HandelsbankenSEConfiguration());
         investmentRefreshController =
                 new InvestmentRefreshController(
@@ -117,9 +113,7 @@ public final class HandelsbankenSEAgent
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
 
-        final MultiIpGateway gateway =
-                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
-        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
+        client.setProxyProfile(agentComponentProvider.getProxyProfiles().getAwsProxyProfile());
     }
 
     @Override

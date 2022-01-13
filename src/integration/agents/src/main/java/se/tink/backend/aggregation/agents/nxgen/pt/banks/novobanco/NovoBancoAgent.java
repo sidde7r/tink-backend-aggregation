@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoB
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -39,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
 public final class NovoBancoAgent extends NextGenerationAgent
@@ -57,9 +55,7 @@ public final class NovoBancoAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
 
     @Inject
-    public NovoBancoAgent(
-            AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+    public NovoBancoAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         apiClient = new NovoBancoApiClient(client, sessionStorage);
         authenticator = new NovoBancoAuthenticator(apiClient, sessionStorage);
@@ -69,9 +65,7 @@ public final class NovoBancoAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
         Security.addProvider(new BouncyCastleProvider());
 
-        final MultiIpGateway gateway =
-                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
-        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
+        client.setProxyProfile(componentProvider.getProxyProfiles().getAwsProxyProfile());
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {

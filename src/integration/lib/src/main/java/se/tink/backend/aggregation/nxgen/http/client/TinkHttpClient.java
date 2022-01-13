@@ -97,8 +97,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void setProxyProfile(ProxyProfile proxyProfile);
 
-    void setProductionProxy(String uri, String username, String password);
-
     void setEidasIdentity(EidasIdentity eidasIdentity);
 
     void setEidasProxy(EidasProxyConfiguration conf);

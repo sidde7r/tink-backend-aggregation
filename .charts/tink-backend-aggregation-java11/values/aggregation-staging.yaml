@@ -107,6 +107,7 @@ sendDataTrackingEvents: true
 featureFlags:
   esProxy: true
   beProxy: true
+  seProxy: true
   createBeneficiary: true
   allowRefreshRegardlessOfRestrictions: true
   supportIndividualAccountsRefresh: true
