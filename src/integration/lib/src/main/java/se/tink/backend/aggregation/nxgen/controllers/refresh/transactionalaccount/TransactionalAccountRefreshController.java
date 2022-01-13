@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.pair.Pair;
 
-public final class TransactionalAccountRefreshController
+public class TransactionalAccountRefreshController
         implements AccountRefresher,
                 TransactionRefresher,
                 RefreshCheckingAccountsExecutor,
