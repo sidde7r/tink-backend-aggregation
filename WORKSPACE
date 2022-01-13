@@ -300,9 +300,9 @@ http_file(
 
 http_file(
     name = "libwebp6_0.6.1-2",
-    downloaded_file_path = "libwebp6_0.6.1-2.1_amd64.deb",
-    sha256 = "52bfd0f8d3a1bbd2c25fcd72fab857d0f24aea35874af68e057dde869ae3902c",
-    urls = ["http://ftp.se.debian.org/debian/pool/main/libw/libwebp/libwebp6_0.6.1-2.1_amd64.deb"],
+    downloaded_file_path = "libwebp6_0.6.1-2+deb10u1_amd64.deb",
+    sha256 = "f4d8e88f87f41530bbe8ad45f60ab87e313ef1ebc9035f9ff24649fc9dd746a9",
+    urls = ["http://ftp.se.debian.org/debian/pool/main/libw/libwebp/libwebp6_0.6.1-2+deb10u1_amd64.deb"],
 )
 
 http_file(
@@ -317,6 +317,13 @@ http_file(
     downloaded_file_path = "libc6_2.28-10_amd64.deb",
     sha256 = "6f703e27185f594f8633159d00180ea1df12d84f152261b6e88af75667195a79",
     urls = ["http://ftp.se.debian.org/debian/pool/main/g/glibc/libc6_2.28-10_amd64.deb"],
+)
+
+http_file(
+    name = "libgif7_5.1.4-3",
+    downloaded_file_path = "libgif7_5.1.4-3_amd64.deb",
+    sha256 = "a7d7610a798cf3d72bf5ef9f6e44c4b0669f5df3e4a0014e83f9d788ce47f9a9",
+    urls = ["http://ftp.us.debian.org/debian/pool/main/g/giflib/libgif7_5.1.4-3_amd64.deb"],
 )
 
 # proto_library rules implicitly depend on @com_google_protobuf//:protoc,
