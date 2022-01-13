@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 
 import com.google.inject.Inject;
 import java.time.LocalDate;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
@@ -30,11 +31,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 public final class IngAgent extends IngBaseAgent implements RefreshCreditCardAccountsExecutor {
 
     private final CreditCardRefreshController creditCardRefreshController;
+    private final Provider provider;
 
     @Inject
     public IngAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
 
+        provider = agentComponentProvider.getProvider();
         creditCardRefreshController = constructCreditCardRefreshController();
     }
 
@@ -57,8 +60,7 @@ public final class IngAgent extends IngBaseAgent implements RefreshCreditCardAcc
     private CreditCardRefreshController constructCreditCardRefreshController() {
 
         IngBaseCreditCardsFetcher ingBaseCreditCardsFetcher =
-                new IngBaseCreditCardsFetcher(
-                        apiClient, request.getProvider().getCurrency().toUpperCase());
+                new IngBaseCreditCardsFetcher(apiClient, provider.getCurrency().toUpperCase());
         IngBaseCardTransactionsFetcher ingBaseCardTransactionsFetcher =
                 new IngBaseCardTransactionsFetcher(apiClient, this::getTransactionsFromDate);
 
