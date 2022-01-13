@@ -2,6 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.html.loginv
 
 import java.util.List;
 
-public interface LoginValidatorFactory {
-    List<LoginValidator> getValidators();
+public interface LoginValidatorFactory<INPUT> {
+    List<LoginValidator<INPUT>> getValidators();
 }
