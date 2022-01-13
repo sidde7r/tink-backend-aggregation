@@ -82,9 +82,12 @@ public class DnbPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .creditor(creditor)
                         .debtor(debtor)
                         .amount(AmountEntity.amountOf(paymentRequest))
-                        .requestedExecutionDate(
-                                paymentRequest.getPayment().getExecutionDate().toString())
                         .creditorName(paymentRequest.getPayment().getCreditor().getName());
+
+        if (paymentRequest.getPayment().getExecutionDate() != null) {
+            createPaymentRequestBuilder.requestedExecutionDate(
+                    paymentRequest.getPayment().getExecutionDate().toString());
+        }
 
         if (dnbPaymentType == NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS_PERIODIC) {
             createPaymentRequestBuilder
@@ -101,7 +104,7 @@ public class DnbPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         if (remittanceInformation.getType() == RemittanceInformationType.UNSTRUCTURED) {
             createPaymentRequestBuilder.remittanceInformationUnstructured(
                     remittanceInformation.getValue());
-        } else if (remittanceInformation.getType() == RemittanceInformationType.REFERENCE) {
+        } else if (remittanceInformation.getType() == RemittanceInformationType.KID) {
             createPaymentRequestBuilder.remittanceInformationStructured(
                     RemittanceInformationStructured.builder()
                             .reference(remittanceInformation.getValue())
