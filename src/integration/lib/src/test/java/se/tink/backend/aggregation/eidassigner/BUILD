@@ -7,6 +7,7 @@ junit_test(
         "//data:qsealc_crt",
     ],
     deps = [
+        "//src/agent_sdk/sdk/src/utils/signer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",

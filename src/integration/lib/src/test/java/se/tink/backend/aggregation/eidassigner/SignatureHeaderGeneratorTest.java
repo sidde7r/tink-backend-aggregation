@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 import se.tink.backend.aggregation.eidassigner.SignatureHeaderGenerator;
 
 public class SignatureHeaderGeneratorTest {
@@ -26,12 +27,16 @@ public class SignatureHeaderGeneratorTest {
 
     @BeforeClass
     public static void init() {
-        QsealcSigner signer = mock(QsealcSignerImpl.class);
-        when(signer.getSignatureBase64(any())).thenReturn("abcdefghijklmnoprstuw");
+        QsealcSigner signer = mock(QsealcSigner.class);
+        when(signer.sign(any(), any())).thenReturn(Signature.create("FAKE_SIGNATURE\n".getBytes()));
 
         signatureGenerator =
                 new SignatureHeaderGenerator(
-                        SIGNATURE_HEADER, HEADERS_TO_SIGN, applicationId, signer);
+                        SIGNATURE_HEADER,
+                        HEADERS_TO_SIGN,
+                        applicationId,
+                        signer,
+                        QsealcAlgorithm.RSA_SHA256);
     }
 
     @Test
@@ -41,7 +46,7 @@ public class SignatureHeaderGeneratorTest {
 
         // then
         assertEquals(
-                "keyId=\"1234\",algorithm=\"rsa-sha256\",headers=\"digest tpp-request-id\",signature=\"abcdefghijklmnoprstuw\"",
+                "keyId=\"1234\",algorithm=\"rsa-sha256\",headers=\"digest tpp-request-id\",signature=\"RkFLRV9TSUdOQVRVUkUK\"",
                 signature);
     }
 
