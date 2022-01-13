@@ -9,8 +9,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Slf4j
 @JsonObject
 @Setter
 @Getter
@@ -18,9 +20,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ErrorResponse {
 
     private String code;
-
     private String message;
-
     private List<ErrorEntity> errors = Collections.emptyList();
 
     @JsonIgnore
@@ -36,12 +36,17 @@ public class ErrorResponse {
         if (errors == null) {
             return false;
         }
+        log.info("[ErrorResponse] Received errors list: `{}`", errors);
         return errors.stream()
                 .anyMatch(errorEntity -> errorCode.equalsIgnoreCase(errorEntity.getErrorCode()));
     }
 
     @JsonIgnore
     public boolean messageContains(String pattern) {
+        log.info(
+                "[ErrorResponse] Received errors list: `{}` with messages: `{}`",
+                errors,
+                getErrorMessages());
         return Optional.ofNullable(errors)
                 .map(
                         listOfErrors ->

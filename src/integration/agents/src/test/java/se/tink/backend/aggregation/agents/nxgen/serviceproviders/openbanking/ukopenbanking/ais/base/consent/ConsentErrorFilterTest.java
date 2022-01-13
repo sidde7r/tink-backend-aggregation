@@ -45,7 +45,6 @@ public class ConsentErrorFilterTest {
                         ConsentResponse.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         given(httpResponse.getStatus()).willReturn(200);
-        given(httpResponse.hasBody()).willReturn(true);
         given(httpResponse.getBody(ConsentResponse.class)).willReturn(consentResponse);
         given(filter.handle(any())).willReturn(httpResponse);
 
