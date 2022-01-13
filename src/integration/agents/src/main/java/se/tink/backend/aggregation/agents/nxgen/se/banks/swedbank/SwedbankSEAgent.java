@@ -70,7 +70,7 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
         SwedbankDefaultInvestmentFetcher investmentFetcher =
                 new SwedbankDefaultInvestmentFetcher(
                         (SwedbankSEApiClient) apiClient,
-                        request.getProvider().getCurrency(),
+                        componentProvider.getProvider().getCurrency(),
                         componentProvider.getCredentialsRequest(),
                         componentProvider.getContext());
 

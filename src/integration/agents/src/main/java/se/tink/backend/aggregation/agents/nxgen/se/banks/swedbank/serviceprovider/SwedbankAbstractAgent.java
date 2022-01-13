@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -77,7 +78,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 apiClientProvider.createApiClient(
                         client, configuration, swedbankStorage, componentProvider);
 
-        creditCardRefreshController = constructCreditCardRefreshController();
+        creditCardRefreshController =
+                constructCreditCardRefreshController(componentProvider.getProvider());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -173,10 +175,9 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
+    private CreditCardRefreshController constructCreditCardRefreshController(Provider provider) {
         SwedbankDefaultCreditCardFetcher creditCardFetcher =
-                new SwedbankDefaultCreditCardFetcher(
-                        apiClient, request.getProvider().getCurrency());
+                new SwedbankDefaultCreditCardFetcher(apiClient, provider.getCurrency());
 
         TransactionFetcherController<CreditCardAccount> transactionFetcherController =
                 new TransactionFetcherController<>(
