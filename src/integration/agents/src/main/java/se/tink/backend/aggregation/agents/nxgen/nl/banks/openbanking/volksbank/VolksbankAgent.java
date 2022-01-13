@@ -54,7 +54,7 @@ public final class VolksbankAgent
     public VolksbankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        final String[] payload = request.getProvider().getPayload().split(" ");
+        final String[] payload = componentProvider.getProvider().getPayload().split(" ");
 
         bankPath = payload[1];
 
