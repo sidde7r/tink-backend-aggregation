@@ -113,18 +113,24 @@ public class TransactionsFetchingDateFromManager {
     }
 
     public void cleanCheckingAccountsFetchingLastSuccessDate() {
-        fetchingStatus.setCheckingAccountsFetchingLastSuccessDate(null);
+        getFetchingStatus().setCheckingAccountsFetchingLastSuccessDate(null);
     }
 
     public void cleanSavingsAccountsFetchingLastSuccessDate() {
-        fetchingStatus.setSavingsAccountsLastSuccessRefreshDate(null);
+        getFetchingStatus().setSavingsAccountsLastSuccessRefreshDate(null);
     }
 
     public void cleanCreditCardsFetchingLastSuccessDate() {
-        fetchingStatus.setCreditCardsLastSuccessRefreshDate(null);
+        getFetchingStatus().setCreditCardsLastSuccessRefreshDate(null);
     }
 
     private BbvaFetchingStatus getFetchingStatus() {
+        if (fetchingStatus == null) {
+            BbvaFetchingStatus fetchingStatus = BbvaFetchingStatus.getInstance(persistentStorage);
+            if (fetchingStatus.isInitiated()) {
+                this.fetchingStatus = fetchingStatus;
+            }
+        }
         Preconditions.checkState(fetchingStatus != null, "Call init method before use");
         return fetchingStatus;
     }
@@ -162,9 +168,7 @@ public class TransactionsFetchingDateFromManager {
         }
 
         boolean isInitiated() {
-            return checkingAccountsLastSuccessRefreshDate != null
-                    || savingsAccountsLastSuccessRefreshDate != null
-                    || creditCardsLastSuccessRefreshDate != null;
+            return persistentStorage.containsKey(BbvaFetchingStatus.class.getSimpleName());
         }
 
         public static BbvaFetchingStatus getInstance(PersistentStorage persistentStorage) {
