@@ -214,7 +214,7 @@ public final class BbvaConstants {
         public static final DateTimeFormatter YYYY_MM_DD_FORMAT =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd");
         public static final String START_OF_DAY = "T00:00:00.000Z";
-        public static final String END_OF_DAY = "T23:59:59.999Z";
+        public static final String END_OF_DAY = "T22:59:59.999Z";
         public static final String CARD_STAMP_DATE_KEY = "stamp-date";
         public static final String OPENING_DATE_KEY = "opening-date";
     }
