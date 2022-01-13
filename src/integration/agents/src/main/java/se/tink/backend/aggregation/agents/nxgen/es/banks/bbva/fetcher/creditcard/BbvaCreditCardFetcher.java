@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 public class BbvaCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     private final BbvaApiClient apiClient;
-    private Collection<CreditCardAccount> accountsCache;
 
     public BbvaCreditCardFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;
@@ -19,19 +18,15 @@ public class BbvaCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        if (accountsCache == null) {
-            accountsCache =
-                    apiClient
-                            .fetchFinancialDashboard()
-                            .getPositions()
-                            .map(PositionEntity::getContract)
-                            .map(ContractEntity::getCreditCard)
-                            .filter(Option::isDefined)
-                            .map(Option::get)
-                            .filter(CreditCardEntity::isNotComplementaryCard)
-                            .map(CreditCardEntity::toTinkCreditCard)
-                            .asJava();
-        }
-        return accountsCache;
+        return apiClient
+                .fetchFinancialDashboard()
+                .getPositions()
+                .map(PositionEntity::getContract)
+                .map(ContractEntity::getCreditCard)
+                .filter(Option::isDefined)
+                .map(Option::get)
+                .filter(CreditCardEntity::isNotComplementaryCard)
+                .map(CreditCardEntity::toTinkCreditCard)
+                .asJava();
     }
 }

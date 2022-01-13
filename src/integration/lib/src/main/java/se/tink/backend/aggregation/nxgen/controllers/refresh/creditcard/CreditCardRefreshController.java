@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.pair.Pair;
 
-public class CreditCardRefreshController
+public final class CreditCardRefreshController
         implements AccountRefresher, TransactionRefresher, RefreshCreditCardAccountsExecutor {
     private final MetricRefreshController metricRefreshController;
     private final UpdateController updateController;
