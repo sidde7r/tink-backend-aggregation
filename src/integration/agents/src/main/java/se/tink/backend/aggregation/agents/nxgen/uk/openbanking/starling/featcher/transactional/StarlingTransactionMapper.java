@@ -31,17 +31,12 @@ public final class StarlingTransactionMapper {
         Builder builder =
                 Transaction.builder()
                         .setAmount(transactionAmount)
-                        .setDescription(transaction.getReference())
                         .setPending(transaction.isPending())
                         .setProprietaryFinancialInstitutionType(transaction.getSource())
                         .setProviderMarket(String.valueOf(MarketCode.UK))
-                        .setTransactionDates(getTransactionDates(transaction));
-
-        if (transaction.hasSettlementTime()) {
-            builder.setDate(getDateOfTransaction(transaction.getSettlementTime()));
-        } else {
-            builder.setDate(getDateOfTransaction(transaction.getTransactionTime()));
-        }
+                        .setTransactionDates(getTransactionDates(transaction))
+                        .setDate(getDate(transaction))
+                        .setDescription(getDescription(transaction));
 
         if (transaction.hasFeedItemUid()) {
             builder.addExternalSystemIds(
@@ -53,6 +48,32 @@ public final class StarlingTransactionMapper {
             builder.setMerchantName(transaction.getCounterPartyName());
         }
         return (Transaction) builder.build();
+    }
+
+    private static String getDescription(TransactionEntity transaction) {
+        if (transaction.hasReference()) {
+            return transaction.getReference();
+        }
+        return transaction.getCounterPartyName();
+    }
+
+    private static Date getDate(TransactionEntity transaction) {
+        if (transaction.hasSettlementTime()) {
+            return getDateOfTransaction(transaction.getSettlementTime());
+        }
+        return getDateOfTransaction(transaction.getTransactionTime());
+    }
+
+    private static Date getDateOfTransaction(Instant instant) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return simpleDateFormat.parse(instant.toString());
+        } catch (ParseException e) {
+            log.warn(
+                    "[StarlingTransactionMapper] Issue with parsing date of transaction {}",
+                    instant);
+            return Date.from(instant);
+        }
     }
 
     private static TransactionDates getTransactionDates(TransactionEntity transaction) {
@@ -73,17 +94,5 @@ public final class StarlingTransactionMapper {
         return new AvailableDateInformation()
                 .setDate(LocalDateTime.ofInstant(transactionDateTime, DEFAULT_OFFSET).toLocalDate())
                 .setInstant(transactionDateTime);
-    }
-
-    private static Date getDateOfTransaction(Instant instant) {
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            return simpleDateFormat.parse(instant.toString());
-        } catch (ParseException e) {
-            log.warn(
-                    "[StarlingTransactionMapper] Issue with parsing date of transaction {}",
-                    instant);
-            return Date.from(instant);
-        }
     }
 }

@@ -189,7 +189,6 @@ Connection: keep-alive
              "counterPartyType": "STARLING",
              "counterPartyUid": "45df1294-8bfc-4523-8fac-e5210ce5d72d",
              "counterPartyName": "Starling Bank",
-             "reference": "TRX B",
              "country": "GB",
              "spendingCategory": "INCOME",
              "hasAttachment": false
