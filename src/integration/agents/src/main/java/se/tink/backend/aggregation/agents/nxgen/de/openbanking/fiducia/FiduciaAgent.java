@@ -67,7 +67,7 @@ public final class FiduciaAgent extends NextGenerationAgent
     public FiduciaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         FiduciaProviderInfo providerInfo =
-                parsePayloadToProviderInfo(request.getProvider().getPayload());
+                parsePayloadToProviderInfo(componentProvider.getProvider().getPayload());
 
         String userIp = componentProvider.getUser().getIpAddress();
 
