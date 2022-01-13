@@ -7,13 +7,13 @@ import com.google.inject.Inject;
 import java.security.cert.X509Certificate;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.authenticator.NickelAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.authenticator.NickelAuthorizationFilter;
@@ -26,8 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.utils.Nick
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.utils.NickelStorage;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -40,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.libraries.cryptography.hash.Hash;
 
-@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA})
 public class NickelAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor, RefreshCheckingAccountsExecutor {
@@ -55,7 +52,7 @@ public class NickelAgent extends NextGenerationAgent
     private final QsealcSigner qsealcSigner;
 
     @Inject
-    protected NickelAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+    protected NickelAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.storage = new NickelStorage(sessionStorage, persistentStorage);
         this.agentConfiguration =
@@ -63,7 +60,7 @@ public class NickelAgent extends NextGenerationAgent
         this.errorHandler = new NickelErrorHandler();
         this.apiClient = new NickelApiClient(client, storage);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        this.qsealcSigner = qsealcSigner;
+        this.qsealcSigner = componentProvider.getQsealcSigner();
         this.identityDataFetcher = new NickelIdentityDataFetcher(apiClient, errorHandler);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.client.setResponseStatusHandler(new NickelResponseHandler());

@@ -4,7 +4,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.integration.module.NickelWiremockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -35,7 +34,6 @@ public class NickelWiremockTest {
                         .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentTestModule(new NickelWiremockTestModule())
                         .addCredentialField("username", "username")
                         .addCredentialField("password", "password")
                         .addCallbackData("code", "dummyCode")
