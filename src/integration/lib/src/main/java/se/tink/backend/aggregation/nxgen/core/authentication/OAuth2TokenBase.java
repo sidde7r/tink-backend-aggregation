@@ -4,17 +4,16 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class OAuth2TokenBase {
 
     static final int REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED = 0;
-    private static final Logger logger = LoggerFactory.getLogger(OAuth2TokenBase.class);
 
     private String tokenType;
     private String accessToken;
@@ -35,7 +34,7 @@ public abstract class OAuth2TokenBase {
     public boolean hasAccessExpired() {
         final long validFor = getValidForSecondsTimeLeft();
         if (validFor > 0) {
-            logger.info(
+            log.info(
                     "Access token is valid for {} seconds (issuedAtEpoch: {}, expiresIn: {})",
                     validFor,
                     issuedAt,
@@ -46,14 +45,14 @@ public abstract class OAuth2TokenBase {
 
     private boolean hasRefreshExpired() {
         if (refreshExpiresInSeconds == REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED) {
-            logger.warn(
+            log.warn(
                     "[OAuth2TokenBase] refreshExpiresInSeconds not specified -> assuming optimistically that refreshing access token is possible");
             return false;
         }
 
         final long currentTime = getCurrentEpoch();
         boolean isRefreshTokenExpired = currentTime >= (issuedAt + refreshExpiresInSeconds);
-        logger.info("[OAuth2TokenBase] Is refresh token expired: {}", isRefreshTokenExpired);
+        log.info("[OAuth2TokenBase] Is refresh token expired: {}", isRefreshTokenExpired);
         return isRefreshTokenExpired;
     }
 
@@ -81,7 +80,7 @@ public abstract class OAuth2TokenBase {
         Optional<String> maybeRefreshToken = getRefreshToken();
 
         if (!maybeRefreshToken.isPresent()) {
-            logger.warn("[OAuth2TokenBase] Refresh token is missing");
+            log.warn("[OAuth2TokenBase] Refresh token is missing");
             return false;
         }
 
