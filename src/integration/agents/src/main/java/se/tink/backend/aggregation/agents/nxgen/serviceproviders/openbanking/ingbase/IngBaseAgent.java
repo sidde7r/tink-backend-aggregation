@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -101,7 +102,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                                 .build(),
                         agentComponentProvider);
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController(
+                        agentComponentProvider.getProvider());
     }
 
     @Override
@@ -167,12 +170,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            Provider provider) {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new IngBaseAccountsFetcher(
-                        apiClient, request.getProvider().getCurrency().toUpperCase(), this),
+                new IngBaseAccountsFetcher(apiClient, provider.getCurrency().toUpperCase(), this),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
@@ -220,7 +223,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     */
     @Override
     public String marketCode() {
-        return request.getProvider().getMarket().toUpperCase();
+        return provider.getMarket().toUpperCase();
     }
 
     protected LocalDate getTransactionsFromDate() {
