@@ -39,7 +39,7 @@ spec:
       labels:
         priority: P3
         severity: ping
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaClassLinkAbs4h }}
           {{ .Values.grafanaClassLinkAbs4h }}
@@ -57,7 +57,7 @@ spec:
       labels:
         priority: P3
         severity: ping
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaClassLinkAbs4h }}
           {{ .Values.grafanaClassLinkAbs4h }}

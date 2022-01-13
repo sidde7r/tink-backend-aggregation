@@ -17,7 +17,7 @@ spec:
       labels:
         priority: P3
         severity: ping
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
@@ -30,7 +30,7 @@ spec:
       labels:
         priority: P1
         severity: urgent
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
@@ -48,7 +48,7 @@ spec:
       labels:
         priority: P3
         severity: ping
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
@@ -61,7 +61,7 @@ spec:
       labels:
         priority: P1
         severity: urgent
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
@@ -79,7 +79,7 @@ spec:
       labels:
         priority: P1
         severity: urgent
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: {{ .Values.kibanaClassLinkAbs1h }}
           {{ .Values.grafanaClassLinkAbs1h }}
