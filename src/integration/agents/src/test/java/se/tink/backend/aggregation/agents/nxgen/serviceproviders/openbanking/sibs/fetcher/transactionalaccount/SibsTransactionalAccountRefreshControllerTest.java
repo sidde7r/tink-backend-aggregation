@@ -216,7 +216,10 @@ public class SibsTransactionalAccountRefreshControllerTest {
         new SibsTinkApiClientConfigurator()
                 .applyFilters(
                         client,
-                        new SibsRetryFilterProperties(TEST_MAX_RETRIES_NUMBER, TEST_RETRY_SLEEP_MS),
+                        new SibsRetryFilterProperties(
+                                TEST_MAX_RETRIES_NUMBER,
+                                TEST_RETRY_SLEEP_MS,
+                                TEST_MAX_RETRIES_NUMBER),
                         new SibsRateLimitFilterProperties(
                                 TEST_RETRY_SLEEP_MS, TEST_RETRY_SLEEP_MS, TEST_MAX_RETRIES_NUMBER),
                         "providerName");
