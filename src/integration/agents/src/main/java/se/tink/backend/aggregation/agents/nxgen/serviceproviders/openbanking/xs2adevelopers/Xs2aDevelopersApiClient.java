@@ -88,7 +88,7 @@ public class Xs2aDevelopersApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createRequestInSession(URL url) {
+    protected RequestBuilder createRequestInSession(URL url) {
         String scaApproach = persistentStorage.get(StorageKeys.SCA_APPROACH);
         RequestBuilder requestBuilder = createRequest(url);
         if (!DECOUPLED_APPROACH.equals(scaApproach)) {

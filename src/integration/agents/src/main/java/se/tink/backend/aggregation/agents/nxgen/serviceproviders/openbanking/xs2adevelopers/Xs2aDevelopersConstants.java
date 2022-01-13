@@ -76,6 +76,8 @@ public final class Xs2aDevelopersConstants {
                 "/berlingroup/v1/payments/sepa-credit-transfers";
         public static final String GET_PAYMENT =
                 "/berlingroup/v1/payments/sepa-credit-transfers/{paymentId}";
+        public static final String GET_PAYMENT_STATUS =
+                "/berlingroup/v1/{payment-service}/{payment-product}/{paymentId}/status";
     }
 
     public static class StorageKeys {

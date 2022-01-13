@@ -18,17 +18,16 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.CommerzBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentStatusMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentStatusMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -36,21 +35,22 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.rpc.Payment;
 
 @Slf4j
 @RequiredArgsConstructor
-public class CommerzBankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+public class CommerzBankPaymentExecutor implements PaymentExecutor {
+
+    private static final int RETRY_ATTEMPTS = 108;
+    private static final int SLEEP_TIME_SECOND = 5;
 
     private final CommerzBankApiClient apiClient;
     private final CommerzBankPaymentAuthenticator paymentAuthenticator;
-
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
-    private final int retryAttempts;
-    private final int sleepTimeSecond;
+
+    private final PaymentMapper<CreatePaymentRequest> paymentMapper;
+    private final PaymentStatusMapper paymentStatusMapper;
 
     public CommerzBankPaymentExecutor(
             CommerzBankApiClient apiClient,
@@ -61,51 +61,37 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor, FetchablePay
         this.paymentAuthenticator = paymentAuthenticator;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
-        this.retryAttempts = 108;
-        this.sleepTimeSecond = 5;
+        this.paymentMapper = new BasePaymentMapper();
+        this.paymentStatusMapper = new BasePaymentStatusMapper();
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        HttpResponse response = buildAndSendPaymentRequest(paymentRequest);
+        HttpResponse httpCreatePaymentResponse =
+                apiClient.createPayment(
+                        paymentMapper.getPaymentRequest(paymentRequest.getPayment()),
+                        credentials.getField(Key.USERNAME));
+        saveScaApproachAndLinksToStorage(httpCreatePaymentResponse);
 
-        List<String> scaApproachHeadersList = response.getHeaders().get("ASPSP-SCA-Approach");
+        return httpCreatePaymentResponse
+                .getBody(CreatePaymentResponse.class)
+                .toTinkPayment(paymentRequest.getPayment());
+    }
+
+    private void saveScaApproachAndLinksToStorage(HttpResponse httpCreatePaymentResponse) {
+        List<String> scaApproachHeadersList =
+                httpCreatePaymentResponse.getHeaders().get("ASPSP-SCA-Approach");
         if (scaApproachHeadersList != null) {
             String scaApproach = scaApproachHeadersList.get(0);
             sessionStorage.put(StorageKeys.SCA_APPROACH, scaApproach);
             log.info("PIS SCA approach - " + scaApproach);
         }
-
-        CreatePaymentResponse createPaymentResponse = response.getBody(CreatePaymentResponse.class);
+        CreatePaymentResponse createPaymentResponse =
+                httpCreatePaymentResponse.getBody(CreatePaymentResponse.class);
         sessionStorage.put(
                 StorageKeys.SCA_OAUTH_LINK, createPaymentResponse.getLinks().getScaOAuth());
         sessionStorage.put(
                 StorageKeys.SCA_STATUS_LINK, createPaymentResponse.getLinks().getScaStatus());
-
-        return createPaymentResponse.toTinkPayment();
-    }
-
-    // Extract from 'parent', reuse
-    protected HttpResponse buildAndSendPaymentRequest(PaymentRequest paymentRequest) {
-        Payment payment = paymentRequest.getPayment();
-        AccountEntity creditor =
-                new AccountEntity(
-                        payment.getCreditor().getAccountIdentifier(IbanIdentifier.class).getIban());
-        AccountEntity debtor =
-                new AccountEntity(
-                        payment.getDebtor().getAccountIdentifier(IbanIdentifier.class).getIban());
-
-        CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest(
-                        creditor,
-                        payment.getCreditor().getName(),
-                        debtor,
-                        new AmountEntity(
-                                payment.getCurrency(),
-                                payment.getExactCurrencyAmount().getExactValue()),
-                        payment.getRemittanceInformation().getValue());
-
-        return apiClient.createPayment(createPaymentRequest, credentials.getField(Key.USERNAME));
     }
 
     @Override
@@ -113,34 +99,34 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor, FetchablePay
         if (AuthenticationStepConstants.STEP_INIT.equals(paymentMultiStepRequest.getStep())) {
             paymentAuthenticator.authorizePayment(paymentMultiStepRequest.getPayment());
         }
-
         return checkStatus(paymentMultiStepRequest);
     }
 
-    // extract to common class, and behaviour?
     protected PaymentMultiStepResponse checkStatus(
             PaymentMultiStepRequest paymentMultiStepRequest) {
-        PaymentStatus paymentStatus = poll(paymentMultiStepRequest.getPayment().getUniqueId());
+        PaymentStatus paymentStatus = pollForFinalStatus(paymentMultiStepRequest);
         paymentMultiStepRequest.getPayment().setStatus(paymentStatus);
 
         return new PaymentMultiStepResponse(
                 paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
     }
 
-    private PaymentStatus poll(String paymentId) {
+    private PaymentStatus pollForFinalStatus(PaymentRequest paymentRequest) {
         Retryer<PaymentStatus> retryer = getPaymentStatusRetryer();
         PaymentStatus paymentStatus;
         log.info(
                 "Start to Get Payment Status every {} Seconds for a total of {} times.",
-                sleepTimeSecond,
-                retryAttempts);
+                SLEEP_TIME_SECOND,
+                RETRY_ATTEMPTS);
         try {
             paymentStatus =
                     retryer.call(
                             () ->
                                     apiClient
-                                            .getPayment(paymentId)
-                                            .toTinkPayment(paymentId)
+                                            .fetchPaymentStatus(paymentRequest)
+                                            .toTinkPayment(
+                                                    paymentRequest.getPayment(),
+                                                    paymentStatusMapper)
                                             .getPayment()
                                             .getStatus());
 
@@ -170,23 +156,12 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor, FetchablePay
     protected Retryer<PaymentStatus> getPaymentStatusRetryer() {
         return RetryerBuilder.<PaymentStatus>newBuilder()
                 .retryIfResult(status -> status == PaymentStatus.PENDING)
-                .withWaitStrategy(WaitStrategies.fixedWait(sleepTimeSecond, TimeUnit.SECONDS))
-                .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
+                .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME_SECOND, TimeUnit.SECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();
     }
 
     // --------------------------- unused crap
-    @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "fetch not yet implemented for " + this.getClass().getName());
-    }
-
-    @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        throw new NotImplementedException(
-                "fetchMultiple not yet implemented for " + this.getClass().getName());
-    }
 
     @Override
     public CreateBeneficiaryMultiStepResponse createBeneficiary(

@@ -7,9 +7,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.helper.PaymentUrlUtil;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -53,5 +56,16 @@ public class CommerzBankApiClient extends Xs2aDevelopersApiClient {
 
         requestBuilder.headers(getUserSpecificHeaders());
         return requestBuilder.post(HttpResponse.class);
+    }
+
+    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
+        return createRequest(
+                        PaymentUrlUtil.fillCommonPaymentParams(
+                                new URL(
+                                        configuration.getBaseUrl()
+                                                + ApiServices.GET_PAYMENT_STATUS),
+                                paymentRequest))
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .get(FetchPaymentStatusResponse.class);
     }
 }

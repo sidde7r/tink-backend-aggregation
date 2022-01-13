@@ -16,8 +16,8 @@ PSU-IP-ADDRESS: 127.0.0.1
     "iban": "DE27500105175141353468"
   },
   "instructedAmount": {
-    "currency": "EUR",
-    "amount": 1.0
+    "amount": "1.0",
+    "currency": "EUR"
   },
   "remittanceInformationUnstructured": "remittance information to creditor"
 }
@@ -123,11 +123,10 @@ Content-Length: 328
 
 -----------------------------------------------------------------------------------
 REQUEST 4
-GET https://psd2.api.commerzbank.com/berlingroup/v1/payments/sepa-credit-transfers/12345678
+GET https://psd2.api.commerzbank.com/berlingroup/v1/payments/sepa-credit-transfers/12345678/status
 Accept: application/json
 Content-Type: application/json
 X-Request-ID: 00000000-0000-4000-0000-000000000000
-Authorization: Bearer access
 
 -----------------------------------------------------------------------------------
 RESPONSE 4
