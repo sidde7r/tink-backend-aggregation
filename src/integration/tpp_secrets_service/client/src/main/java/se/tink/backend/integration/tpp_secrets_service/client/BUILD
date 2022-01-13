@@ -15,6 +15,7 @@ java_library(
         "//src/integration/tpp_secrets_service/proto:java_grpc",
         "//src/integration/tpp_secrets_service/proto:java_proto",
         "//src/libraries/dropwizard_lifecycle",
+        "//src/tink_backend_libs:secrets_service_client",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:io_netty_netty_all",
@@ -25,6 +26,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/grpc_tink_request_id_tracing_interceptor",
         "@tink_backend//src/libraries/tracing/grpc",
     ],
 )

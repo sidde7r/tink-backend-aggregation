@@ -66,7 +66,7 @@ public class TppSecretsServiceConfiguration {
         return enabledRetryPolicy;
     }
 
-    public boolean isUseSecretsServiceInternalClient()  {
+    public boolean isUseSecretsServiceInternalClient() {
         return useSecretsServiceInternalClient;
     }
 }
