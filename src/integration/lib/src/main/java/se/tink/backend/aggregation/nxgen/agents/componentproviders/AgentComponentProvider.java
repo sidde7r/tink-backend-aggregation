@@ -10,7 +10,7 @@ import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.agent.sdk.operation.User;
 import se.tink.agent.sdk.operation.http.ProxyProfiles;
-import se.tink.agent.sdk.utils.signer.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;

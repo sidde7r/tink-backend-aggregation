@@ -2,7 +2,7 @@ package src.agent_sdk.sdk.test.utils.signer;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.agent.sdk.utils.signer.Signature;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 
 public class SignatureTest {
     private static final byte[] RAW_DATA = {

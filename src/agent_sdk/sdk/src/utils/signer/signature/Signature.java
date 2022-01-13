@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.utils.signer;
+package se.tink.agent.sdk.utils.signer.signature;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

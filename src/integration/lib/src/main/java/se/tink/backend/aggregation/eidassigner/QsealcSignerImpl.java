@@ -22,15 +22,16 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.agent.sdk.utils.signer.QsealcAlgorithm;
-import se.tink.agent.sdk.utils.signer.Signature;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
 @SuppressWarnings("java:S2129")
-public class QsealcSignerImpl implements QsealcSigner, se.tink.agent.sdk.utils.signer.QsealcSigner {
+public class QsealcSignerImpl
+        implements QsealcSigner, se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner {
 
     private static final Logger log = LoggerFactory.getLogger(QsealcSignerImpl.class);
 

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.eidas;
 
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.agent.sdk.utils.signer.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.module.agentclass.AgentClass;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
