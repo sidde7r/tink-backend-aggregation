@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.AccountPartyAddress;
+import se.tink.backend.agents.rpc.BusinessIdentifier;
+import se.tink.backend.agents.rpc.BusinessIdentifierType;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.typeguesser.accountholder.AccountHolderTypeUtil;
@@ -94,8 +96,11 @@ public final class AccountConverter {
     private static AccountParty toSystemParty(Party party) {
         AccountParty systemParty = new AccountParty();
         systemParty.setName(party.getName());
+        systemParty.setFullLegalName(party.getFullLegalName());
         systemParty.setRole(toSystemPartyRole(party.getRole()));
         systemParty.setAddresses(toSystemPartyAddress(party.getAddresses()));
+        systemParty.setBusinessIdentifiers(
+                toSystemBusinessIdentifiers(party.getBusinessIdentifiers()));
         return systemParty;
     }
 
@@ -118,6 +123,20 @@ public final class AccountConverter {
                                         address.getPostalCode(),
                                         address.getCity(),
                                         address.getCountry()))
+                .collect(Collectors.toList());
+    }
+
+    private static List<BusinessIdentifier> toSystemBusinessIdentifiers(
+            List<se.tink.backend.aggregation.nxgen.core.account.entity.BusinessIdentifier>
+                    businessIdentifiers) {
+        if (businessIdentifiers == null || businessIdentifiers.isEmpty()) return null;
+
+        return businessIdentifiers.stream()
+                .map(
+                        it ->
+                                new BusinessIdentifier(
+                                        BusinessIdentifierType.valueOf(it.getType().name()),
+                                        it.getValue()))
                 .collect(Collectors.toList());
     }
 }

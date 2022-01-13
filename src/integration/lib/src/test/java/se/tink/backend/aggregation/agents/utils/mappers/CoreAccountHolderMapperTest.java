@@ -1,17 +1,26 @@
 package se.tink.backend.aggregation.agents.utils.mappers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Lists;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.AccountPartyAddress;
+import se.tink.backend.agents.rpc.BusinessIdentifier;
+import se.tink.backend.agents.rpc.BusinessIdentifierType;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountHolder;
+import se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountHolderIdentity;
 import se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountPartyAddressType;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -78,5 +87,72 @@ public class CoreAccountHolderMapperTest {
         assertEquals(
                 AccountPartyAddressType.ADDRESS_MAIL_TO,
                 acAccountHolder.getIdentities().get(2).getAddresses().get(0).getAddressType());
+    }
+
+    @Test
+    public void fromAggregationShouldProperlyMapBusinessIdentifierTypes() {
+        // given
+        List<se.tink.backend.aggregationcontroller.v1.rpc.accountholder.BusinessIdentifier>
+                expectedBusinessIdentifiers =
+                        Arrays.stream(
+                                        se.tink.backend.aggregationcontroller.v1.rpc.accountholder
+                                                .BusinessIdentifierType.values())
+                                .map(
+                                        it ->
+                                                se.tink.backend.aggregationcontroller.v1.rpc
+                                                        .accountholder.BusinessIdentifier.of(
+                                                        it, it.name()))
+                                .collect(Collectors.toList());
+
+        List<BusinessIdentifier> businessIdentifiers =
+                Arrays.stream(BusinessIdentifierType.values())
+                        .map(it -> new BusinessIdentifier(it, it.name()))
+                        .collect(Collectors.toList());
+
+        AccountParty accountParty = new AccountParty();
+        accountParty.setBusinessIdentifiers(businessIdentifiers);
+
+        se.tink.backend.agents.rpc.AccountHolder accountHolder =
+                new se.tink.backend.agents.rpc.AccountHolder();
+        accountHolder.setIdentities(Collections.singletonList(accountParty));
+
+        // when
+        Optional<AccountHolder> mappedAccountHolder =
+                CoreAccountHolderMapper.fromAggregation(accountHolder);
+
+        // then
+        assertTrue(mappedAccountHolder.isPresent());
+        List<AccountHolderIdentity> accountHolderIdentities =
+                mappedAccountHolder.get().getIdentities();
+        assertNotNull(accountHolderIdentities);
+        assertEquals(1, accountHolderIdentities.size());
+        AccountHolderIdentity accountHolderIdentity = accountHolderIdentities.get(0);
+        assertEquals(expectedBusinessIdentifiers, accountHolderIdentity.getBusinessIdentifiers());
+    }
+
+    @Test
+    public void fromAggregationShouldProperlyMapFullLegalName() {
+        // given
+        String fullLegalName = UUID.randomUUID().toString();
+
+        AccountParty accountParty = new AccountParty();
+        accountParty.setFullLegalName(fullLegalName);
+
+        se.tink.backend.agents.rpc.AccountHolder accountHolder =
+                new se.tink.backend.agents.rpc.AccountHolder();
+        accountHolder.setIdentities(Collections.singletonList(accountParty));
+
+        // when
+        Optional<AccountHolder> mappedAccountHolder =
+                CoreAccountHolderMapper.fromAggregation(accountHolder);
+
+        // then
+        assertTrue(mappedAccountHolder.isPresent());
+        List<AccountHolderIdentity> accountHolderIdentities =
+                mappedAccountHolder.get().getIdentities();
+        assertNotNull(accountHolderIdentities);
+        assertEquals(1, accountHolderIdentities.size());
+        AccountHolderIdentity accountHolderIdentity = accountHolderIdentities.get(0);
+        assertEquals(fullLegalName, accountHolderIdentity.getFullLegalName());
     }
 }
