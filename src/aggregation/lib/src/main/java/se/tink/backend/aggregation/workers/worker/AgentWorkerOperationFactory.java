@@ -105,7 +105,9 @@ import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAd
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
+import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
@@ -147,6 +149,7 @@ public class AgentWorkerOperationFactory {
     private final SupplementalInformationController supplementalInformationController;
     private final ProviderSessionCacheController providerSessionCacheController;
     private final TppSecretsServiceClient tppSecretsServiceClient;
+    private final SecretsServiceInternalClient secretsServiceInternalClient;
     private final InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
     private final UnleashClient unleashClient;
     private final RegulatoryRestrictions regulatoryRestrictions;
@@ -181,6 +184,7 @@ public class AgentWorkerOperationFactory {
             LoginAgentEventProducer loginAgentEventProducer,
             RefreshEventProducer refreshEventProducer,
             ManagedTppSecretsServiceClient tppSecretsServiceClient,
+            ManagedTppSecretsServiceInternalClient secretsServiceInternalClient,
             InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory,
             ProviderTierConfiguration providerTierConfiguration,
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands,
@@ -216,6 +220,7 @@ public class AgentWorkerOperationFactory {
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.refreshEventProducer = refreshEventProducer;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
+        this.secretsServiceInternalClient = secretsServiceInternalClient;
         this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
         this.providerTierConfiguration = providerTierConfiguration;
         this.shouldAddExtraCommands = shouldAddExtraCommands;
@@ -643,7 +648,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+                        context, tppSecretsServiceClient, secretsServiceInternalClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
         commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
@@ -783,7 +788,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+                        context, tppSecretsServiceClient, secretsServiceInternalClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
         commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
@@ -1026,7 +1031,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+                        context, tppSecretsServiceClient, secretsServiceInternalClient));
 
         commands.add(new CreateLogMaskerWorkerCommand(context));
 
@@ -1223,7 +1228,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+                        context, tppSecretsServiceClient, secretsServiceInternalClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
         commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
@@ -1302,7 +1307,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+                        context, tppSecretsServiceClient, secretsServiceInternalClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
         commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
@@ -1593,7 +1598,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+                        context, tppSecretsServiceClient, secretsServiceInternalClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
         commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
@@ -1718,7 +1723,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+                        context, tppSecretsServiceClient, secretsServiceInternalClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
         commands.add(new DebugAgentWorkerCommand(context, agentHttpLogsStorageHandler));
         commands.add(
