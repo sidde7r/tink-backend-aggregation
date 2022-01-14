@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -15,7 +14,7 @@ public class TestAsserts {
         assertNotNull(token);
         assertTrue(token.isValid());
         assertTrue(token.isRefreshTokenExpirationPeriodSpecified());
-        assertFalse(token.hasAccessExpired());
+        assertTrue(token.canUseAccessToken());
         assertTrue(token.canRefresh());
         assertNotNull(token.getOptionalRefreshToken().get());
     }

@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class SebSessionHandler implements SessionHandler {
@@ -25,7 +26,7 @@ public final class SebSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         persistentStorage
                 .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
-                .filter(t -> !t.hasAccessExpired())
-                .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+                .filter(OAuth2TokenBase::canUseAccessToken)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 }

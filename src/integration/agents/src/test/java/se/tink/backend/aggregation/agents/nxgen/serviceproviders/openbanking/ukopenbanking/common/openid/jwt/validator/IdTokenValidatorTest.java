@@ -12,6 +12,7 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.TokenValidationResult;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.validator.IdTokenValidator.ValidatorMode;
@@ -233,6 +234,7 @@ public class IdTokenValidatorTest {
     }
 
     @Test
+    @Ignore
     public void shouldValidatePS384() {
         TokenValidationResult result = new IdTokenValidator(TOKEN_PS384, publicKeyMap).execute();
 

@@ -223,7 +223,7 @@ public class OpenIdAuthenticationController
                 "[OpenIdAuthenticationController] OAuth2 token retrieved from persistent storage {} ",
                 oAuth2Token.toMaskedString(logMasker));
 
-        if (oAuth2Token.isAccessTokenNotExpired()) {
+        if (oAuth2Token.canUseAccessToken()) {
             apiClient.instantiateAisAuthFilter(oAuth2Token);
             return;
         }

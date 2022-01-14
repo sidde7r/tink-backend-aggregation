@@ -95,7 +95,7 @@ public class OAuth2AuthenticationController
         log.info(
                 "[forceAuthenticate] OAuth2AuthenticationController.autoAuthenticate token exists for credentials: {}",
                 credentials.getId());
-        if (oAuth2Token.hasAccessExpired()) {
+        if (!oAuth2Token.canUseAccessToken()) {
             if (!oAuth2Token.canRefresh()) {
                 invalidateToken();
                 throw SessionError.SESSION_EXPIRED.exception();
@@ -250,7 +250,7 @@ public class OAuth2AuthenticationController
         log.info(
                 String.format(
                         "Use a token valid for %s seconds. (issued at: %s s.; lifetime: %s s.)",
-                        token.getValidForSecondsTimeLeft(),
+                        token.getValidForSecondsTimeLeft(token.getExpiresInSeconds()),
                         token.getIssuedAt(),
                         token.getExpiresInSeconds()));
         authenticator.useAccessToken(token);

@@ -35,7 +35,7 @@ public class SkandiaBankenSessionHandler implements SessionHandler {
                         .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (oAuth2Token.hasAccessExpired()) {
+        if (!oAuth2Token.canUseAccessToken()) {
             persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN);
 
             String refreshToken =
