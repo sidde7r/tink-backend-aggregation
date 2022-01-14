@@ -45,6 +45,11 @@ deQueryLoginAll: tink_agent_login_total{ provider_type!="test", market="DE", act
 deQueryPaymentAll: tink_agent_transfer_total{ provider_type!="test", market="DE"}
 deQueryRefreshAll: tink_agent_refresh_total{ provider_type!="test", market="DE", action="refresh"}
 
+# Baseline queries used in FR
+frQueryLoginAll: tink_agent_login_total{ provider_type!="test", market="FR", action=~"login-manual|login-auto|login-cron"}
+frQueryPaymentAll: tink_agent_transfer_total{ provider_type!="test", market="FR"}
+frQueryRefreshAll: tink_agent_refresh_total{ provider_type!="test", market="FR", action="refresh"}
+
 # Baseline queries used in IT
 itQueryLoginAll: tink_agent_login_total{ provider_type!="test", market="IT", action=~"login-manual|login-auto|login-cron"}
 itQueryPaymentAll: tink_agent_transfer_total{ provider_type!="test", market="IT"}
