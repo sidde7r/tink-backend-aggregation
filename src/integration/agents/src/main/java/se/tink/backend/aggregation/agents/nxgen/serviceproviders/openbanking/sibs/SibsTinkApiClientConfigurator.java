@@ -23,8 +23,8 @@ public class SibsTinkApiClientConfigurator {
         client.addFilter(new ServiceInvalidErrorFilter());
         client.addFilter(
                 new SibsServiceInvalidRetryFilter(
-                        sibsRetryFilterProperties.getServiceInvalidMaxNumRetries(),
-                        sibsRetryFilterProperties.getRetrySleepMilliseconds()));
+                        sibsRetryFilterProperties.getMaxNumRetries(),
+                        sibsRetryFilterProperties.getServiceInvalidRetrySleepMilliseconds()));
         client.addFilter(new ConsentInvalidErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.addFilter(new SibsBadRequestErrorFilter());
