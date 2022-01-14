@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.builder.step.AuthenticationConfigurationStep;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.integration.module.IngAgentWireMockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -37,7 +36,6 @@ public class IngAgentWireMockTest {
                         .testFullAuthentication()
                         .testOnlyAuthentication()
                         .addCallbackData("code", "DUMMY_CODE")
-                        .withAgentTestModule(new IngAgentWireMockTestModule())
                         .build();
 
         // then
@@ -53,7 +51,6 @@ public class IngAgentWireMockTest {
                 prepareBasicWiremockConfiguration(wireMockFilePath)
                         .testAutoAuthentication()
                         .testOnlyAuthentication()
-                        .withAgentTestModule(new IngAgentWireMockTestModule())
                         .addPersistentStorageData(
                                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN,
                                 OAuth2Token.create(
@@ -73,7 +70,6 @@ public class IngAgentWireMockTest {
                 prepareBasicWiremockConfiguration(wireMockFilePath)
                         .skipAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .withAgentTestModule(new IngAgentWireMockTestModule())
                         .addPersistentStorageData("CLIENT_ID", "123_CLIENT_ID")
                         .addPersistentStorageData("AUTHENTICATION_TIME", 100l)
                         .addPersistentStorageData(
@@ -103,7 +99,6 @@ public class IngAgentWireMockTest {
                 prepareBasicWiremockConfiguration(wireMockFilePath)
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .withAgentTestModule(new IngAgentWireMockTestModule())
                         .addPersistentStorageData(
                                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN,
                                 OAuth2Token.create(
