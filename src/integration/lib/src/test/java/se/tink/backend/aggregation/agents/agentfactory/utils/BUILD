@@ -51,6 +51,7 @@ java_library(
         "//src/libraries/metrics:timers",
         "//src/libraries/strings",
         "//src/libraries/uuid",
+        "//src/tink_backend_libs:secrets_service_client",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_github_tomakehurst_wiremock",

@@ -65,6 +65,7 @@ junit_test(
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
         "//src/libraries/serialization",
+        "//src/tink_backend_libs:secrets_service_client",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:net_minidev_json_smart",

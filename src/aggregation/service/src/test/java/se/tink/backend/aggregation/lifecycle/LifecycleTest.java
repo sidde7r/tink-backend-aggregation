@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.unleash.FakeUnleashClient;
@@ -56,6 +57,7 @@ public class LifecycleTest {
     private AggregationServiceConfiguration configuration;
     private AggregationServiceContainer aggregationContainer;
     private ManagedTppSecretsServiceClient managedTppSecretsServiceClient;
+    private ManagedTppSecretsServiceInternalClient managedTppSecretsServiceInternalClient;
     private AgentWorker agentWorker;
 
     @Before
@@ -94,6 +96,10 @@ public class LifecycleTest {
         managedTppSecretsServiceClient =
                 setUpInjectorMock(injector, ManagedTppSecretsServiceClient.class);
         makeStartStopNoOp(managedTppSecretsServiceClient);
+
+        managedTppSecretsServiceInternalClient =
+                setUpInjectorMock(injector, ManagedTppSecretsServiceInternalClient.class);
+        makeStartStopNoOp(managedTppSecretsServiceInternalClient);
 
         agentWorker =
                 spy(
@@ -138,13 +144,23 @@ public class LifecycleTest {
                 });
         server.start();
 
-        InOrder startOrder = inOrder(managedTppSecretsServiceClient, agentWorker);
+        InOrder startOrder =
+                inOrder(
+                        managedTppSecretsServiceClient,
+                        managedTppSecretsServiceInternalClient,
+                        agentWorker);
         startOrder.verify(managedTppSecretsServiceClient).start();
+        startOrder.verify(managedTppSecretsServiceInternalClient).start();
         startOrder.verify(agentWorker).start();
 
         server.stop();
-        InOrder stopOrder = inOrder(agentWorker, managedTppSecretsServiceClient);
+        InOrder stopOrder =
+                inOrder(
+                        agentWorker,
+                        managedTppSecretsServiceInternalClient,
+                        managedTppSecretsServiceClient);
         stopOrder.verify(agentWorker).stop();
+        stopOrder.verify(managedTppSecretsServiceInternalClient).stop();
         stopOrder.verify(managedTppSecretsServiceClient).stop();
     }
 
@@ -185,6 +201,7 @@ public class LifecycleTest {
 
         // Should get called
         verify(managedTppSecretsServiceClient, times(1)).stop();
+        verify(managedTppSecretsServiceInternalClient, times(1)).stop();
         verify(agentWorker, times(1)).doStop();
     }
 

@@ -2027,6 +2027,7 @@ public class AgentWorkerOperationFactory {
                         cacheClient,
                         reportMetricsAgentWorkerCommandState,
                         tppSecretsServiceClient,
+                        secretsServiceInternalClient,
                         agentHttpLogsStorageHandler,
                         instantiateAgentWorkerCommandState,
                         loginAgentWorkerCommandState,

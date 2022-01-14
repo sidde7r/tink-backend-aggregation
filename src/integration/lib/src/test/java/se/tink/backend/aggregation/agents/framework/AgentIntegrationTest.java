@@ -80,7 +80,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceInternalClientImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -228,6 +230,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     new TppSecretsServiceClientImpl(
                             configuration.getTppSecretsServiceConfiguration());
             tppSecretsServiceClient.start();
+            ManagedTppSecretsServiceInternalClient tppSecretsServiceInternalClient =
+                    new TppSecretsServiceInternalClientImpl(
+                            configuration.getTppSecretsServiceConfiguration());
+            tppSecretsServiceInternalClient.start();
             CertificateIdProvider certIdProvider =
                     new UnleashCertificateIdProvider(context.getUnleashClient());
             context.setCertId(
@@ -241,6 +247,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             AgentConfigurationControllerable agentConfigurationController =
                     new AgentConfigurationController(
                             tppSecretsServiceClient,
+                            tppSecretsServiceInternalClient,
                             configuration.getIntegrations(),
                             provider,
                             context.getAppId(),

@@ -69,6 +69,7 @@ junit_test(
         "//src/libraries/pair",
         "//src/libraries/request_tracing",
         "//src/libraries/serialization",
+        "//src/tink_backend_libs:secrets_service_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
