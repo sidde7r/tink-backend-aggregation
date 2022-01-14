@@ -1,0 +1,232 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.s-pankki.fi/oidc/v1.0/token?client_id=dummyClient&grant_type=client_credentials&scope=openid+accounts+payments
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"eyJraWQiOiJhN2E3NzI3Zi1iYzQwLTRiMWQtYTQ5Ni04ZDg5N2UyZTJiZjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJ**HASHED:Og**wic2NvcGUiOiJvcGVuaWQgYWNjb3VudHMiLCJzdHJvbmdseUF1dGhlbnRpY2F0ZWQiOmZhbHNlLCJpc3MiOiJodHRwczpcL1wvYXBpLnMtcGFua2tpLmZpIiwiY25mIjp7Ing1dCNTMjU2IjoiVFZSb1NuZ2F6ZGpQLUNrc0ctejBIN1EwSGNGUFcyU0p6RWJqYUxEYW1ObyJ9LCJleHAiOjE2NDIxNjE3NzUsImlhdCI6MTY0MjE2MTU5NSwianRpIjoiYzA0Nzc3MGEtMTZmZC00NjBjLWEzYTktNTkxYzY4MmQ3NzVjIiwidGVuYW50Ijoicy1wYW5ra2kifQ.ajrhajuR_2Mj6UtK9on5lPzTeVMf5-XCRi6r99qCqnAPjw7Zg4y5kyQCD2HIe4iThNexac0S4DKkwiggjg7JTuz2zlXUOnWHmgElf2z0LEvr7MggYFtVLAi5fSYiT559Vk6Ra8VXarzp_zIr_NokqZvg-ahmKiwpbMrtqIpuUUYrnz4jHq1gW0oa5mkNievXSUll7p_waJ_Ce8x8QJOroT3FfvPIOokOlLtkcOPqpUA8nwDmMRSXv36s_3A8h_C25H7S0dqCM3URQ0zEitocGZV8va9MozLbehsBe-NNJAnwuLZWMV68nrQ5IzVSNTz_YXJf2ey71Utnfa0EhjQvVw","scope":"openid accounts","token_type":"Bearer","expires_in":180}
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://api.s-pankki.fi/open-banking/v3.1/aisp/account-access-consents
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: s-pankki
+
+{"Data":{"ExpirationDateTime":"","Permissions":["ReadAccountsDetail","ReadBalances","ReadTransactionsDetail","ReadTransactionsCredits","ReadTransactionsDebits"],"TransactionFromDateTime":"","TransactionToDateTime":""},"Risk":{}}
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"ConsentId":"dummy","CreationDateTime":"dummy","Status":"dummy","StatusUpdateDateTime":"dummy","Permissions":["ReadAccountsDetail","ReadBalances","ReadTransactionsDetail","ReadTransactionsCredits","ReadTransactionsDebits"],"ExpirationDateTime":""},"Risk":{},"Links":{"Self":"dummy"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://api.s-pankki.fi/oidc/v1.0/token?client_id=dummyClient&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&grant_type=authorization_code&code=dummyCode
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"accessDummy","refresh_token":"refreshDummy","scope":"openid accounts","id_token":"eyJraWQiOiJhN2E3NzI3Zi1iYzQwLTRiMWQtYTQ5Ni04ZDg5N2UyZTJiZjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpLnMtcGFua2tpLmZpIiwiYXVkIjoi**HASHED:YK**IsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6InVybjpjcm9zc2tleTphY2NvdW50Om**HASHED:GV**IsImV4cCI6MTY0MjE2NTk3NywiaWF0Ijo**HASHED:/l**.loDhejqkuwSt6xk3Nq8SSVepZNmd7YzWxZe7-2ECAC3a7hmiQAPLLZFDpHZK5PWSGJydM-YyC35DVaW8HzjAJPXTC4y_0t0uRcsMG8AFrvK97_TRsZ0FbYdxWjd0JsBsKbVS9cUqcqOXWngN64EuYaw3A8UBIYMC-fHubwMzqnm_nOXjjtGABlmJEmZVtvY_QgWwTsFLp9zwSx7zHUPX1zX-11LddI-tVg_tK7d4QbA0-sZ8A0FgnVL-nx6dT1BjhGJXjZApe9u5ugMfOD11IHGS-9e-f7TVA-1TMDejugF7MJDj7dm1KFqU_Q2KxQO8HxE_d_jekVZFNydxvx1CCw","token_type":"Bearer","expires_in":180}
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Account":[{"AccountId":"dummyCreditCard","Currency":"EUR","AccountType":"Personal","AccountSubType":"CreditCard","Description":"S-EtukorttiVisaCredit/Debit","Account":[{"SchemeName":"FI.S-Pankki.CreditCard","Identification":"FI2222222222222222","Name":"DUMMYNAME"}]},{"AccountId":"dummyAccountId","Currency":"EUR","AccountType":"Personal","AccountSubType":"CurrentAccount","Description":"S-TILI","Account":[{"SchemeName":"UK.OBIE.IBAN","Identification":"FI1111111111111111","Name":"DUMMY"}]}]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/balances
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Balance":[{"AccountId":"dummyAccountId","CreditDebitIndicator":"Credit","Type":"InterimBooked","DateTime":"2022-01-14T12:57:59.28Z","Amount":{"Amount":"30.08","Currency":"EUR"}},{"AccountId":"dummyAccountId","CreditDebitIndicator":"Credit","Type":"InterimAvailable","DateTime":"2022-01-14T12:57:59.28Z","Amount":{"Amount":"30.08","Currency":"EUR"}}]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/balances"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Account":[{"AccountId":"dummyCreditCard","Currency":"EUR","AccountType":"Personal","AccountSubType":"CreditCard","Description":"S-EtukorttiVisaCredit/Debit","Account":[{"SchemeName":"FI.S-Pankki.CreditCard","Identification":"FI2222222222222222","Name":"DUMMYNAME"}]},{"AccountId":"dummyAccountId","Currency":"EUR","AccountType":"Personal","AccountSubType":"CurrentAccount","Description":"S-TILI","Account":[{"SchemeName":"UK.OBIE.IBAN","Identification":"FI1111111111111111","Name":"DUMMY"}]}]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/balances
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Balance":[{"AccountId":"dummyCreditCard","CreditDebitIndicator":"Credit","Type":"InterimBooked","DateTime":"2022-01-14T15:14:42.346Z","Amount":{"Amount":"490.11","Currency":"EUR"}},{"AccountId":"dummyCreditCard","CreditDebitIndicator":"Credit","Type":"InterimAvailable","DateTime":"2022-01-14T15:14:42.346Z","Amount":{"Amount":"490.11","Currency":"EUR"}}]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/balances"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/creditCardCard/transactions?toBookingDateTime=1992-01-11T00:00:00&fromBookingDateTime=1991-10-14T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[{"AccountId":"dummyCreditCard","TransactionId":"20211028392900847436","TransactionReference":"00000000040002583530","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2021-10-28T00:00:00Z","Amount":{"Amount":"0.03","Currency":"EUR"},"BankTransactionCode":{"Code":"ICDT","SubCode":"ESCT"},"ProprietaryBankTransactionCode":{"Code":"GIR"},"CreditorAccount":{"Name":"S-Pankki"}}]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions?toBookingDateTime=1992-04-10T00:00:00&fromBookingDateTime=1992-01-12T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[{"AccountId":"dummyCreditCard","TransactionId":"20220112392990200792","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2022-01-12T00:00:00Z","Amount":{"Amount":"24.95","Currency":"EUR"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"PrismaHollola"}},{"AccountId":"dummyCreditCard","TransactionId":"20220110392961967703","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2022-01-10T00:00:00Z","Amount":{"Amount":"4.43","Currency":"EUR"},"BankTransactionCode":{"Code":"OTHR","SubCode":"OTHR"},"ProprietaryBankTransactionCode":{"Code":"MTP"},"DebtorAccount":{"Name":"HÄMEENMAA"}},{"AccountId":"dummyCreditCard","TransactionId":"20220110392961422029","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2022-01-10T00:00:00Z","Amount":{"Amount":"72.49","Currency":"EUR"},"BankTransactionCode":{"Code":"OTHR","SubCode":"OTHR"},"ProprietaryBankTransactionCode":{"Code":"BON"},"DebtorAccount":{"Name":"HÄMEENMAA"}},{"AccountId":"4e3117e2-b3c2-11eb-acb9-8f812f0709cb","TransactionId":"20220110392991125442","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2022-01-10T00:00:00Z","Amount":{"Amount":"13.60","Currency":"EUR"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"MCDHOLLOLA"}}]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions?toBookingDateTime=1992-01-11T00:00:00&fromBookingDateTime=1991-10-14T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 11
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions?toBookingDateTime=1991-10-13T00:00:00&fromBookingDateTime=1991-07-16T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 12
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions?toBookingDateTime=1991-07-15T00:00:00&fromBookingDateTime=1991-04-17T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions?toBookingDateTime=1991-04-16T00:00:00&fromBookingDateTime=1991-01-17T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 14
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions?toBookingDateTime=1991-04-16T00:00:00&fromBookingDateTime=1991-01-17T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 14
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyCreditCard/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 15
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions?toBookingDateTime=1992-04-10T00:00:00&fromBookingDateTime=1992-01-12T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 15
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[{"AccountId":"dummyAccountId","TransactionId":"20200722392990515804","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-07-22T00:00:00Z","Amount":{"Amount":"46.79","Currency":"EUR"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"KsupermarketLeppavaara"}},{"AccountId":"dummyAccountId","TransactionId":"20200720392992263388","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-07-20T00:00:00Z","Amount":{"Amount":"22.50","Currency":"EUR"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"VFI*IdeaosuuskuntaAito"}},{"AccountId":"dummyAccountId","TransactionId":"20200720392991141235","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-07-20T00:00:00Z","Amount":{"Amount":"6.60","Currency":"EUR"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"MCDJYVASKESKUS"}},{"AccountId":"dummyAccountId","TransactionId":"20200720392990296848","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-07-20T00:00:00Z","Amount":{"Amount":"57.99","Currency":"EUR"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"SmarketVaajala"}},{"AccountId":"dummyAccountId","TransactionId":"20200427392990818744","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-04-27T00:00:00Z","Amount":{"Amount":"12.70","Currency":"EUR"},"BankTransactionCode":{"Code":"CCRD","SubCode":"POSD"},"ProprietaryBankTransactionCode":{"Code":"KOO"},"CreditorAccount":{"Name":"MCDPALOMIEHENT"}}]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 16
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions?toBookingDateTime=1992-01-11T00:00:00&fromBookingDateTime=1991-10-14T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 16
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 17
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions?toBookingDateTime=1991-10-13T00:00:00&fromBookingDateTime=1991-07-16T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 17
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 18
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions?toBookingDateTime=1991-07-15T00:00:00&fromBookingDateTime=1991-04-17T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 18
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------
+REQUEST 19
+GET https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions?toBookingDateTime=1991-04-16T00:00:00&fromBookingDateTime=1991-01-17T00:00:00
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 19
+200
+Content-Type: application/json;charset=utf-8
+
+{"Data":{"Transaction":[]},"Links":{"Self":"https://api.s-pankki.fi/open-banking/v3.1/aisp/accounts/dummyAccountId/transactions"},"Meta":{}}
+-----------------------------------------------------------------------------------

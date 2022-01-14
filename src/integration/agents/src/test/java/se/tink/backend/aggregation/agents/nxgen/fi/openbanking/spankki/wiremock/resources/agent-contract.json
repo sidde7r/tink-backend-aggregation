@@ -1,0 +1,304 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "FI1111111111111111",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 3008,
+      "exactValue" : 30.08,
+      "doubleValue" : 30.08
+    },
+    "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 3008,
+      "exactValue" : 30.08,
+      "doubleValue" : 30.08
+    },
+    "bankId" : "FI1111111111111111",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "S-TILI",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"bban://11111111111111\"]",
+    "closed" : false,
+    "holderName" : "Dummy",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Dummy",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 30.08
+  }, {
+    "accountNumber" : "FI2222222222222222",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 49011,
+      "exactValue" : 490.11,
+      "doubleValue" : 490.11
+    },
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 49011,
+      "exactValue" : 490.11,
+      "doubleValue" : 490.11
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "FI2222222222222222",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "S-EtukorttiVisaCredit/Debit",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Dummyname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Dummyname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 490.11,
+    "balance" : 490.11
+  } ],
+  "transactions" : [ {
+    "amount" : -46.79,
+    "date" : 1595412000000,
+    "description" : "KsupermarketLeppavaara",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20200722392990515804"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-22",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "KOO",
+    "providerMarket" : "FI",
+    "booked" : true
+  }, {
+    "amount" : -22.5,
+    "date" : 1595239200000,
+    "description" : "VFI*IdeaosuuskuntaAito",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20200720392992263388"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "KOO",
+    "providerMarket" : "FI",
+    "booked" : true
+  }, {
+    "amount" : -6.6,
+    "date" : 1595239200000,
+    "description" : "MCDJYVASKESKUS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20200720392991141235"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "KOO",
+    "providerMarket" : "FI",
+    "booked" : true
+  }, {
+    "amount" : -57.99,
+    "date" : 1595239200000,
+    "description" : "SmarketVaajala",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20200720392990296848"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "KOO",
+    "providerMarket" : "FI",
+    "booked" : true
+  }, {
+    "amount" : -12.7,
+    "date" : 1587981600000,
+    "description" : "MCDPALOMIEHENT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20200427392990818744"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "KOO",
+    "providerMarket" : "FI",
+    "booked" : true
+  }, {
+    "amount" : -24.95,
+    "date" : 1641985200000,
+    "description" : "PrismaHollola",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20220112392990200792"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2022-01-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "KOO",
+    "providerMarket" : "FI",
+    "booked" : true
+  }, {
+    "amount" : 4.43,
+    "date" : 1641812400000,
+    "description" : "HÄMEENMAA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20220110392961967703"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2022-01-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "MTP",
+    "providerMarket" : "FI",
+    "booked" : true
+  }, {
+    "amount" : 72.49,
+    "date" : 1641812400000,
+    "description" : "HÄMEENMAA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20220110392961422029"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2022-01-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "BON",
+    "providerMarket" : "FI",
+    "booked" : true
+  }, {
+    "amount" : -13.6,
+    "date" : 1641812400000,
+    "description" : "MCDHOLLOLA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "20220110392991125442"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2022-01-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "KOO",
+    "providerMarket" : "FI",
+    "booked" : true
+  } ]
+}
