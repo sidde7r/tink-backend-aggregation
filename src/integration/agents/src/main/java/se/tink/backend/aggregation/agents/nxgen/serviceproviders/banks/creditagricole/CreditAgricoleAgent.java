@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 import com.google.inject.Inject;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.CreateBeneficiariesCapabilityExecutor;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -34,11 +35,13 @@ public final class CreditAgricoleAgent extends SubsequentProgressiveGenerationAg
 
     private final CreditAgricoleApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final Provider provider;
     private CreditAgricoleAuthenticator authenticator;
 
     @Inject
     public CreditAgricoleAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        this.provider = componentProvider.getProvider();
         client.setResponseStatusHandler(new CreditAgricoleStatusHandler());
         this.apiClient = new CreditAgricoleApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController =
@@ -90,7 +93,7 @@ public final class CreditAgricoleAgent extends SubsequentProgressiveGenerationAg
     }
 
     private void storeRegionId() {
-        String payload = request.getProvider().getPayload();
+        String payload = provider.getPayload();
         if (StringUtils.isBlank(payload)) {
             throw new IllegalStateException("regionId need to be configured in provider payload!");
         }

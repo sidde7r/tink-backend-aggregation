@@ -68,13 +68,12 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         psuIpAddress = agentComponentProvider.getUser().getIpAddress();
         urlProvider = new CbiUrlProvider(getBaseUrl());
+        provider = agentComponentProvider.getProvider();
         providerConfiguration =
-                PayloadParser.parse(
-                        request.getProvider().getPayload(), CbiGlobeProviderConfiguration.class);
+                PayloadParser.parse(provider.getPayload(), CbiGlobeProviderConfiguration.class);
         temporaryStorage = new TemporaryStorage();
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
-        provider = agentComponentProvider.getProvider();
         apiClient = getApiClient();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, credentials);

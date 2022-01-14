@@ -34,7 +34,7 @@ public final class VolksbankAgent extends NextGenerationAgent
         super(componentProvider);
 
         apiClient = new VolksbankApiClient(client, persistentStorage, sessionStorage, credentials);
-        clientName = request.getProvider().getPayload();
+        clientName = componentProvider.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 

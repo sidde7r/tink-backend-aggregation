@@ -39,7 +39,7 @@ public final class BawagAgent extends NextGenerationAgent
         super(componentProvider);
 
         apiClient = new BawagApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
+        clientName = componentProvider.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 

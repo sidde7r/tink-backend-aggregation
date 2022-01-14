@@ -68,7 +68,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                 new SibsBaseApiClient(
                         client,
                         userState,
-                        request.getProvider().getPayload(),
+                        agentComponentProvider.getProvider().getPayload(),
                         user.isPresent(),
                         user.getIpAddress(),
                         agentComponentProvider.getLocalDateTimeSource(),

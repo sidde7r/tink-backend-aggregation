@@ -70,7 +70,8 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         super(componentProvider);
         final CreditAgricoleBranchMapper configurationMapper = new CreditAgricoleBranchMapper();
         this.branchConfiguration =
-                configurationMapper.determineBranchConfiguration(request.getProvider().getName());
+                configurationMapper.determineBranchConfiguration(
+                        componentProvider.getProvider().getName());
         final CreditAgricoleStorage creditAgricoleStorage =
                 new CreditAgricoleStorage(this.persistentStorage);
 
