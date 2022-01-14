@@ -12,6 +12,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",

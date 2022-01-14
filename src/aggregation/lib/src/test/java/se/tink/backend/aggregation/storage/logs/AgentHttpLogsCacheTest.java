@@ -12,12 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.http.log.executor.json.JsonHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
 
 public class AgentHttpLogsCacheTest {
 
     private AgentHttpLogsMasker httpLogsMasker;
     private RawHttpTrafficLogger rawHttpTrafficLogger;
     private JsonHttpTrafficLogger jsonHttpTrafficLogger;
+    private HarLogCollector harLogCollector;
 
     private AgentHttpLogsCache httpLogsCache;
 
@@ -26,9 +28,14 @@ public class AgentHttpLogsCacheTest {
         httpLogsMasker = mock(AgentHttpLogsMasker.class);
         rawHttpTrafficLogger = mock(RawHttpTrafficLogger.class);
         jsonHttpTrafficLogger = mock(JsonHttpTrafficLogger.class);
+        harLogCollector = mock(HarLogCollector.class);
 
         httpLogsCache =
-                new AgentHttpLogsCache(httpLogsMasker, rawHttpTrafficLogger, jsonHttpTrafficLogger);
+                new AgentHttpLogsCache(
+                        httpLogsMasker,
+                        rawHttpTrafficLogger,
+                        jsonHttpTrafficLogger,
+                        harLogCollector);
     }
 
     @Test

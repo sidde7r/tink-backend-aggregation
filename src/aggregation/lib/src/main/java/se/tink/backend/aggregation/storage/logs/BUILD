@@ -16,6 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
         "//src/libraries/date",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//third_party:com_google_code_findbugs_jsr305",
@@ -24,6 +25,7 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/aggregation_http_loggable_headers",
         "@tink_backend//src/libraries/payments_legal_constraints/src/main/java/se/tink/libraries/payments_legal_constraints",
     ],
 )

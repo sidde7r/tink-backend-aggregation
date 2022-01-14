@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.storage.logs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLog
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.HttpLogType;
 import se.tink.backend.aggregation.storage.logs.handlers.AgentHttpLogsConstants.RawHttpLogsCatalog;
 import se.tink.backend.aggregation.storage.logs.handlers.S3StoragePathsProvider;
+import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;
 
 @RunWith(JUnitParamsRunner.class)
 public class AgentHttpLogsSaverTest {
@@ -34,6 +36,7 @@ public class AgentHttpLogsSaverTest {
 
     private RawHttpTrafficLogger rawHttpTrafficLogger;
     private JsonHttpTrafficLogger jsonHttpTrafficLogger;
+    private HarLogCollector harLogCollector;
 
     private AgentHttpLogsSaver logsSaver;
 
@@ -45,6 +48,7 @@ public class AgentHttpLogsSaverTest {
 
         rawHttpTrafficLogger = mock(RawHttpTrafficLogger.class);
         jsonHttpTrafficLogger = mock(JsonHttpTrafficLogger.class);
+        harLogCollector = mock(HarLogCollector.class);
 
         recreateLogsSaver();
     }
@@ -69,7 +73,8 @@ public class AgentHttpLogsSaverTest {
                 Stream.of(
                                 logsSaver.saveRawLogs(RawHttpLogsCatalog.DEFAULT),
                                 logsSaver.saveRawLogs(RawHttpLogsCatalog.LTS_PAYMENTS),
-                                logsSaver.saveJsonLogs())
+                                logsSaver.saveJsonLogs(),
+                                logsSaver.saveHarLogs(RawHttpLogsCatalog.DEFAULT))
                         .collect(Collectors.toList());
 
         // then
@@ -77,7 +82,7 @@ public class AgentHttpLogsSaverTest {
                 .containsOnly(
                         SaveLogsResult.builder().status(SaveLogsStatus.STORAGE_DISABLED).build());
 
-        verify(logsStorageHandler, times(3)).isEnabled();
+        verify(logsStorageHandler, times(4)).isEnabled();
         verifyNoMoreInteractions(logsStorageHandler);
     }
 
@@ -368,5 +373,63 @@ public class AgentHttpLogsSaverTest {
 
         // then
         assertThat(result).isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.ERROR).build());
+    }
+
+    @Test
+    public void should_skip_har_logs_if_log_has_no_entries() {
+        // given
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(rawHttpTrafficLogger.isEnabled()).thenReturn(true);
+        when(harLogCollector.isEmpty()).thenReturn(true);
+
+        // when
+        SaveLogsResult result = logsSaver.saveHarLogs(RawHttpLogsCatalog.DEFAULT);
+
+        // then
+        assertThat(result)
+                .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGS).build());
+
+        // verify(logsCache).getHarLogContent();
+
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
+        verify(rawHttpTrafficLogger).isEnabled();
+    }
+
+    @Test
+    @Parameters(method = "all_raw_logs_catalogs")
+    public void should_skip_har_logs_if_raw_logger_is_missing(RawHttpLogsCatalog logsCatalog) {
+        // given
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+
+        rawHttpTrafficLogger = null;
+        recreateLogsSaver();
+
+        // when
+        SaveLogsResult result = logsSaver.saveHarLogs(logsCatalog);
+
+        // then
+        assertThat(result)
+                .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGGER).build());
+
+        verify(logsStorageHandler).isEnabled();
+        verifyNoMoreInteractions(logsStorageHandler);
+    }
+
+    @Test
+    @SneakyThrows
+    public void should_handle_exceptions_when_saving_har_logs() {
+        // given
+        when(logsStorageHandler.isEnabled()).thenReturn(true);
+        when(rawHttpTrafficLogger.isEnabled()).thenReturn(true);
+        when(harLogCollector.isEmpty()).thenReturn(false);
+        doThrow(new IOException("IO ERROR")).when(harLogCollector).writeHar(any(), any());
+
+        // when
+        SaveLogsResult result = logsSaver.saveHarLogs(RawHttpLogsCatalog.DEFAULT);
+
+        // then
+        assertThat(result)
+                .isEqualTo(SaveLogsResult.builder().status(SaveLogsStatus.NO_LOGS).build());
     }
 }
