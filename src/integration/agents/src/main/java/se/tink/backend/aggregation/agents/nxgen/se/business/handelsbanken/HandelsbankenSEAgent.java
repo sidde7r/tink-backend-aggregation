@@ -54,7 +54,7 @@ public final class HandelsbankenSEAgent
             HandelsbankenSEConfiguration handelsbankenConfiguration) {
         client.addFilter(new HandelsbankenSEContentTypeFilter());
         client.addFilter(new HandelsbankenSEBankSideErrorFilter());
-        return new HandelsbankenSEApiClient(client, handelsbankenConfiguration);
+        return new HandelsbankenSEApiClient(client, handelsbankenConfiguration, provider.getName());
     }
 
     @Override

@@ -19,8 +19,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class HandelsbankenFIApiClient extends HandelsbankenApiClient {
 
     public HandelsbankenFIApiClient(
-            TinkHttpClient client, HandelsbankenFIConfiguration handelsbankenConfiguration) {
-        super(client, handelsbankenConfiguration);
+            TinkHttpClient client,
+            HandelsbankenFIConfiguration handelsbankenConfiguration,
+            String provider) {
+        super(client, handelsbankenConfiguration, provider);
     }
 
     public SecurityCardResponse authenticate(
