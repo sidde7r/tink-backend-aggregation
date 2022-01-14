@@ -6,11 +6,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelConstants.HeaderValues;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
@@ -44,7 +45,8 @@ public class NickelAuthorizationFilter extends Filter {
                         NickelConstants.SIGNATURE_FORMAT,
                         NickelConstants.SIGNABLE_HEADERS,
                         qsealcThumbprint,
-                        qsealcSigner);
+                        qsealcSigner,
+                        QsealcAlgorithm.RSA_SHA256);
     }
 
     @Override

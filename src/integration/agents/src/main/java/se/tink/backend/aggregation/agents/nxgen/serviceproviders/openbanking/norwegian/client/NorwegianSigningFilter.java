@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.NorwegianConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.NorwegianConstants.HeaderKeys;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
@@ -32,7 +33,8 @@ public class NorwegianSigningFilter extends Filter {
                         NorwegianConstants.SIGNATURE_FORMAT,
                         NorwegianConstants.SIGNABLE_HEADERS,
                         qsealcThumbprint,
-                        qsealcSigner);
+                        qsealcSigner,
+                        QsealcAlgorithm.RSA_SHA256);
     }
 
     @Override

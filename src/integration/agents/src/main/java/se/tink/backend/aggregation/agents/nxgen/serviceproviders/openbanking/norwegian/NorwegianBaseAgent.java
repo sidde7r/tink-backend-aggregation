@@ -5,6 +5,7 @@ import java.security.cert.X509Certificate;
 import java.time.ZoneId;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -50,16 +50,15 @@ public class NorwegianBaseAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final RandomValueGenerator randomValueGenerator;
-    private QsealcSigner qsealcSigner;
+    private final QsealcSigner qsealcSigner;
 
     public NorwegianBaseAgent(
             AgentComponentProvider componentProvider,
-            NorwegianMarketConfiguration marketConfiguration,
-            QsealcSigner qsealcSigner) {
+            NorwegianMarketConfiguration marketConfiguration) {
         super(componentProvider);
         Objects.requireNonNull(request);
         Objects.requireNonNull(context);
-        this.qsealcSigner = qsealcSigner;
+        this.qsealcSigner = componentProvider.getQsealcSigner();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.agentConfiguration = getAgentConfiguration();
         this.apiClient =

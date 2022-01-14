@@ -1,4 +1,4 @@
-package src.integration.lib.src.test.java.se.tink.backend.aggregation.eidassigner;
+package src.agent_sdk.sdk.test.utils.signer.qsealc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.SignatureHeaderGenerator;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.SignatureHeaderGenerator;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 
 public class SignatureHeaderGeneratorTest {
     private static final String SIGNATURE_HEADER =
@@ -26,12 +27,16 @@ public class SignatureHeaderGeneratorTest {
 
     @BeforeClass
     public static void init() {
-        QsealcSigner signer = mock(QsealcSignerImpl.class);
-        when(signer.getSignatureBase64(any())).thenReturn("abcdefghijklmnoprstuw");
+        QsealcSigner signer = mock(QsealcSigner.class);
+        when(signer.sign(any(), any())).thenReturn(Signature.create("FAKE_SIGNATURE\n".getBytes()));
 
         signatureGenerator =
                 new SignatureHeaderGenerator(
-                        SIGNATURE_HEADER, HEADERS_TO_SIGN, applicationId, signer);
+                        SIGNATURE_HEADER,
+                        HEADERS_TO_SIGN,
+                        applicationId,
+                        signer,
+                        QsealcAlgorithm.RSA_SHA256);
     }
 
     @Test
@@ -41,7 +46,7 @@ public class SignatureHeaderGeneratorTest {
 
         // then
         assertEquals(
-                "keyId=\"1234\",algorithm=\"rsa-sha256\",headers=\"digest tpp-request-id\",signature=\"abcdefghijklmnoprstuw\"",
+                "keyId=\"1234\",algorithm=\"rsa-sha256\",headers=\"digest tpp-request-id\",signature=\"RkFLRV9TSUdOQVRVUkUK\"",
                 signature);
     }
 

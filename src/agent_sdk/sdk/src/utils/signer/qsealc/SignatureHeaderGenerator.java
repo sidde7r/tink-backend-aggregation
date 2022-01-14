@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.eidassigner;
+package se.tink.agent.sdk.utils.signer.qsealc;
 
 import static java.util.Objects.requireNonNull;
 
@@ -12,23 +12,28 @@ public class SignatureHeaderGenerator {
     private final List<String> headersToSign;
     private final String applicationId;
     private final QsealcSigner qsealcSigner;
+    private final QsealcAlgorithm algorithm;
 
     public SignatureHeaderGenerator(
             String signatureHeaderFormat,
             List<String> headersToSign,
             String applicationId,
-            QsealcSigner qsealcSigner) {
+            QsealcSigner qsealcSigner,
+            QsealcAlgorithm algorithm) {
         this.signatureHeaderFormat = signatureHeaderFormat;
         this.headersToSign = requireNonNull(headersToSign);
         this.applicationId = requireNonNull(applicationId);
         this.qsealcSigner = requireNonNull(qsealcSigner);
+        this.algorithm = requireNonNull(algorithm);
     }
 
     public String generateSignatureHeader(Map<String, Object> headers) {
         String signedHeaders = getSignedHeaders(headers);
         String signedHeadersWithValues = getSignedHeadersWithValues(headers);
-        String signature = qsealcSigner.getSignatureBase64(signedHeadersWithValues.getBytes());
-
+        String signature =
+                qsealcSigner
+                        .sign(this.algorithm, signedHeadersWithValues.getBytes())
+                        .getBase64Encoded();
         return String.format(signatureHeaderFormat, applicationId, signedHeaders, signature);
     }
 
