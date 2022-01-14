@@ -19,7 +19,7 @@ public class SdcDkAgent extends SdcAgent {
     }
 
     protected SdcApiClient constructApiClient() {
-        return new SdcDkApiClient(
+        return new SdcApiClient(
                 client,
                 new SdcUrlProvider(),
                 persistentStorage,
