@@ -71,7 +71,8 @@ public final class BankOfScotlandCommercialV31Agent extends UkOpenBankingBaseAge
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
                 new OpenIdAuthenticationValidator(this.apiClient),
-                new ConsentStatusValidator(this.apiClient, this.persistentStorage));
+                new ConsentStatusValidator(this.apiClient, this.persistentStorage),
+                this.logMasker);
     }
 
     private AutoAuthenticationController createAutoAuthController(

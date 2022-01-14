@@ -104,7 +104,8 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
                 new OpenIdAuthenticationValidator(this.apiClient),
-                new ConsentStatusValidator(this.apiClient, this.persistentStorage));
+                new ConsentStatusValidator(this.apiClient, this.persistentStorage),
+                this.logMasker);
     }
 
     private AutoAuthenticationController createAutoAuthController(

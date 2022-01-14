@@ -68,7 +68,8 @@ public final class BarclaysV31WealthAgent extends UkOpenBankingBaseAgent {
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
                 new OpenIdAuthenticationValidator(this.apiClient),
-                new ConsentStatusValidator(this.apiClient, this.persistentStorage));
+                new ConsentStatusValidator(this.apiClient, this.persistentStorage),
+                this.logMasker);
     }
 
     public AutoAuthenticationController createAutoAuthController(
