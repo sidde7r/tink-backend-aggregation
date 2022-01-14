@@ -46,5 +46,10 @@ public class SwedbankSeHttpFilter extends Filter {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(
                     "Http status: " + response.getStatus() + ", body: " + error);
         }
+        if (response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+            String error = Strings.nullToEmpty(response.getBody(String.class)).toLowerCase();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Http status: " + response.getStatus() + ", body: " + error);
+        }
     }
 }
