@@ -96,6 +96,7 @@ public class AggregationCommonModule extends AbstractModule {
                 }
 
                 client = new CacheReplicator(client, replicas);
+                log.info("Cache replicator client created");
             }
 
             return client;
