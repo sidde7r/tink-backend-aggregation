@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.CommerzBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentStatusMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentStatusMapper;
@@ -61,7 +60,7 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor {
         this.paymentAuthenticator = paymentAuthenticator;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
-        this.paymentMapper = new BasePaymentMapper();
+        this.paymentMapper = new CommerzBankPaymentMapper();
         this.paymentStatusMapper = new BasePaymentStatusMapper();
     }
 
@@ -102,8 +101,7 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor {
         return checkStatus(paymentMultiStepRequest);
     }
 
-    protected PaymentMultiStepResponse checkStatus(
-            PaymentMultiStepRequest paymentMultiStepRequest) {
+    private PaymentMultiStepResponse checkStatus(PaymentMultiStepRequest paymentMultiStepRequest) {
         PaymentStatus paymentStatus = pollForFinalStatus(paymentMultiStepRequest);
         paymentMultiStepRequest.getPayment().setStatus(paymentStatus);
 
@@ -160,8 +158,6 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor {
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();
     }
-
-    // --------------------------- unused crap
 
     @Override
     public CreateBeneficiaryMultiStepResponse createBeneficiary(

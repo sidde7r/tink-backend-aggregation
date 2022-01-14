@@ -8,16 +8,15 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.rpc.Payment;
 
 @RequiredArgsConstructor
-// This class should be in xs2aDevelopers package, after we split n26 off of it totally
-// this is pretty much the same as normal authenticator, but different context, but it should not
-// matter here, hm hm.
 public class CommerzBankPaymentAuthenticator {
 
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
 
     private final ThirdPartyAppAuthenticationController redirectAuthenticator;
     private final CommerzBankDecoupledPaymentAuthenticator decoupledAuthenticator;
@@ -35,7 +34,7 @@ public class CommerzBankPaymentAuthenticator {
     }
 
     boolean isDecoupledAuthenticationPossible() {
-        String scaApproach = persistentStorage.get(StorageKeys.SCA_APPROACH);
+        String scaApproach = sessionStorage.get(StorageKeys.SCA_APPROACH);
         return DECOUPLED_APPROACH.equals(scaApproach);
     }
 }

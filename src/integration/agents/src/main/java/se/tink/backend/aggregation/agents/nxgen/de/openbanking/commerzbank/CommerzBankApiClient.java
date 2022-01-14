@@ -40,6 +40,9 @@ public class CommerzBankApiClient extends Xs2aDevelopersApiClient {
                 logMasker);
     }
 
+    // In future, these two methods should be put in the parent class, replacing similar methods
+    // there.
+    // This should happen after we extract n26 agent out of xs2adevelopers
     public HttpResponse createPayment(CreatePaymentRequest createPaymentRequest, String username) {
         RequestBuilder requestBuilder =
                 createRequest(new URL(configuration.getBaseUrl() + ApiServices.CREATE_PAYMENT))

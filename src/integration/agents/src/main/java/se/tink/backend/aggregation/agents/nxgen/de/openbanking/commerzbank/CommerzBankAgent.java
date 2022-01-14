@@ -29,13 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
-@AgentPisCapability(
-        capabilities = {
-            PisCapability.SEPA_CREDIT_TRANSFER,
-            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_FUTURE_DATE,
-            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
-        })
+@AgentPisCapability(capabilities = {PisCapability.SEPA_CREDIT_TRANSFER})
 public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
         implements RefreshTransferDestinationExecutor {
 
@@ -68,6 +62,7 @@ public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
                 new CommerzBankPaymentAuthenticator(
                         credentials,
                         persistentStorage,
+                        sessionStorage,
                         new ThirdPartyAppAuthenticationController<>(
                                 redirectPaymentAuthenticator, supplementalInformationHelper),
                         decoupledPaymentAuthenticator);

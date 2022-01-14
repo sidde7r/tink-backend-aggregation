@@ -51,13 +51,13 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
                 .requestedExecutionDate(payment.getExecutionDate());
     }
 
-    private AmountEntity getAmountEntity(Payment payment) {
+    protected AmountEntity getAmountEntity(Payment payment) {
         return new AmountEntity(
                 String.valueOf(payment.getExactCurrencyAmount().getDoubleValue()),
                 payment.getExactCurrencyAmount().getCurrencyCode());
     }
 
-    private String getUnstructuredRemittance(Payment payment) {
+    protected String getUnstructuredRemittance(Payment payment) {
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
 
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(

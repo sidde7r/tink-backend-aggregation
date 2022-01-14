@@ -39,13 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshake
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, TRANSFERS})
-@AgentPisCapability(
-        capabilities = {
-            PisCapability.SEPA_CREDIT_TRANSFER,
-            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_RECURRING_PAYMENTS,
-            PisCapability.PIS_FUTURE_DATE
-        })
+@AgentPisCapability(capabilities = {PisCapability.SEPA_CREDIT_TRANSFER})
 public final class ComdirectAgent extends Xs2aDevelopersAgent
         implements RefreshTransferDestinationExecutor {
 
@@ -99,6 +93,7 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent
                 new CommerzBankPaymentAuthenticator(
                         credentials,
                         persistentStorage,
+                        sessionStorage,
                         new ThirdPartyAppAuthenticationController<>(
                                 redirectPaymentAuthenticator, supplementalInformationHelper),
                         decoupledPaymentAuthenticator);

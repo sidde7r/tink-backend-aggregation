@@ -14,9 +14,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
-
-// Merge this class with similar in authenticator, make it work for both, cut the extra crap from
-// the other one or move to separate class
 public class Xs2aDevelopersPaymentRedirectOauthHelper implements OAuth2Authenticator {
     private final Xs2aDevelopersApiClient apiClient;
     private final PersistentStorage persistentStorage;

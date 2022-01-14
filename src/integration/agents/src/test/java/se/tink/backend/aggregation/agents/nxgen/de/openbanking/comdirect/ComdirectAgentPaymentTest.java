@@ -35,7 +35,7 @@ public class ComdirectAgentPaymentTest {
         }
     }
 
-    private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> usernamePasswordManager =
+    private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> usernameManager =
             new ArgumentManager<>(ArgumentManager.UsernameArgumentEnum.values());
     private final ArgumentManager<ComdirectAgentPaymentTest.Arg> creditorDebtorManager =
             new ArgumentManager<>(ComdirectAgentPaymentTest.Arg.values());
@@ -44,7 +44,7 @@ public class ComdirectAgentPaymentTest {
 
     @Before
     public void setup() {
-        usernamePasswordManager.before();
+        usernameManager.before();
         creditorDebtorManager.before();
 
         builder =
@@ -52,10 +52,9 @@ public class ComdirectAgentPaymentTest {
                         .setFinancialInstitutionId("5a86a5830c51e3230ed2f5e460f51b39")
                         .addCredentialField(
                                 Key.USERNAME,
-                                usernamePasswordManager.get(
-                                        ArgumentManager.UsernameArgumentEnum.USERNAME))
+                                usernameManager.get(ArgumentManager.UsernameArgumentEnum.USERNAME))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink");
     }
@@ -67,9 +66,7 @@ public class ComdirectAgentPaymentTest {
 
     @Test
     public void testSepaPayments() throws Exception {
-        builder.build()
-                .testTinkLinkPayment(
-                        createSepaPayment().withExecutionDate(LocalDate.now().plusDays(1)).build());
+        builder.build().testTinkLinkPayment(createSepaPayment().build());
     }
 
     @Test
@@ -79,7 +76,7 @@ public class ComdirectAgentPaymentTest {
 
     @Test
     public void testRecurringPayments() throws Exception {
-        usernamePasswordManager.before();
+        usernameManager.before();
         creditorDebtorManager.before();
 
         builder.build().testTinkLinkPayment(createRecurringPayment().build());
@@ -146,6 +143,7 @@ public class ComdirectAgentPaymentTest {
                 .withDebtor(debtor)
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
-                .withRemittanceInformation(remittanceInformation);
+                .withRemittanceInformation(remittanceInformation)
+                .withPaymentServiceType(PaymentServiceType.SINGLE);
     }
 }
