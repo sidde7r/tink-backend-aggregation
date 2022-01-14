@@ -25,11 +25,11 @@ public class ConsentStatusValidator {
     }
 
     public void validate() {
-        log.info("[CONSENT STATUS VALIDATOR] Entering consent validator");
+        log.info("[ConsentStatusValidator] Entering consent validator");
         String consentId = restoreConsentId();
         if (StringUtils.isEmpty(consentId)) {
             log.info(
-                    "[CONSENT STATUS VALIDATOR] ConsentId {} not available in storage. Skipping consent status validation.",
+                    "[ConsentStatusValidator] ConsentId {} not available in storage. Skipping consent status validation.",
                     consentId);
             return;
         }
@@ -52,7 +52,7 @@ public class ConsentStatusValidator {
             SessionKiller.cleanUpAndExpireSession(
                     storage,
                     SessionError.CONSENT_INVALID.exception(
-                            "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session."));
+                            "[ConsentStatusValidator] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session."));
         }
     }
 
@@ -62,11 +62,11 @@ public class ConsentStatusValidator {
                 SessionKiller.cleanUpAndExpireSession(
                         storage,
                         SessionError.CONSENT_INVALID.exception(
-                                "Invalid consent status. Expiring the session."));
+                                "[ConsentStatusValidator] Invalid consent status. Expiring the session."));
             }
         } catch (HttpResponseException e) {
             log.warn(
-                    "[CONSENT STATUS VALIDATOR] An error has occurred during validation of `{}` consentId",
+                    "[ConsentStatusValidator] An error has occurred during validation of `{}` consentId",
                     consentId,
                     e);
         }
@@ -81,11 +81,11 @@ public class ConsentStatusValidator {
                                 SessionKiller.cleanUpAndExpireSession(
                                         storage,
                                         SessionError.CONSENT_INVALID.exception(
-                                                "Consent has expired. Expiring the session.")));
+                                                "[ConsentStatusValidator] Consent has expired. Expiring the session.")));
     }
 
     private boolean isNotAuthorised(String consentId) {
-        log.info("[CONSENT STATUS VALIDATOR] Checking status for consentId {}", consentId);
+        log.info("[ConsentStatusValidator] Checking status for consentId {}", consentId);
         ConsentResponseEntity consent =
                 apiClient
                         .fetchConsent(consentId)

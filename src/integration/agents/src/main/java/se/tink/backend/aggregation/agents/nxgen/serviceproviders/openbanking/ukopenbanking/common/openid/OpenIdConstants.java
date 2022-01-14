@@ -80,6 +80,12 @@ public class OpenIdConstants {
         public static final String SERVER_ERROR_PROCESSING = "server_error_processing";
     }
 
+    public static class ErrorCodes {
+        public static final String NOT_FOUND = "UK.OBIE.Resource.NotFound";
+        public static final String REAUTHENTICATE = "UK.OBIE.Reauthenticate";
+        public static final String INVALID_CONSENT_STATUS = "UK.OBIE.Resource.InvalidConsentStatus";
+    }
+
     public static class Ps256 {
 
         public static class PayloadClaims {

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import java.util.function.Predicate;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
@@ -31,9 +32,9 @@ public interface OpenIdConsentValidator {
         ERROR_CODE(
                 response -> {
                     ErrorResponse errorBody = response.getBody(ErrorResponse.class);
-                    return errorBody.hasErrorCode("UK.OBIE.Resource.NotFound")
-                            || errorBody.hasErrorCode("UK.OBIE.Resource.InvalidConsentStatus")
-                            || errorBody.hasErrorCode("UK.OBIE.Reauthenticate");
+                    return errorBody.hasErrorCode(ErrorCodes.NOT_FOUND)
+                            || errorBody.hasErrorCode(ErrorCodes.INVALID_CONSENT_STATUS)
+                            || errorBody.hasErrorCode(ErrorCodes.REAUTHENTICATE);
                 }),
         ERROR_MESSAGE(
                 response -> {

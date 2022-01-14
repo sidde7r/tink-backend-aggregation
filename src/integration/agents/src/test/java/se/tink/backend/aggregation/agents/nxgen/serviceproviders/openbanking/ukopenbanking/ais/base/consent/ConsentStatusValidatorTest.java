@@ -77,7 +77,8 @@ public class ConsentStatusValidatorTest {
         // expected
         assertThatExceptionOfType(SessionException.class)
                 .isThrownBy(() -> validator.validate())
-                .withMessage("Invalid consent status. Expiring the session.");
+                .withMessage(
+                        "[ConsentStatusValidator] Invalid consent status. Expiring the session.");
         assertThat(
                         storage.get(
                                 UkOpenBankingV31Constants.PersistentStorageKeys
@@ -105,7 +106,7 @@ public class ConsentStatusValidatorTest {
         assertThatExceptionOfType(SessionException.class)
                 .isThrownBy(() -> validator.validate())
                 .withMessage(
-                        "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
+                        "[ConsentStatusValidator] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
         assertThat(storage.get(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED, String.class))
                 .isEmpty();
         assertThat(
@@ -133,6 +134,6 @@ public class ConsentStatusValidatorTest {
         // expected
         assertThatExceptionOfType(SessionException.class)
                 .isThrownBy(() -> validator.validate())
-                .withMessage("Consent has expired. Expiring the session.");
+                .withMessage("[ConsentStatusValidator] Consent has expired. Expiring the session.");
     }
 }
