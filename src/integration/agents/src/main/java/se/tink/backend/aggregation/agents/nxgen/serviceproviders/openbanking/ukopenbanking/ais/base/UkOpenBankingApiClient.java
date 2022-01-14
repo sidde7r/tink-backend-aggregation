@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
@@ -26,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.TrustedBeneficiariesV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.ConsentDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.AccountBlockedOrSuspendedValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
@@ -45,7 +45,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private static final String FROM_BOOKING_DATE_TIME_KEY = "fromBookingDateTime";
     private static final String TO_BOOKING_DATE_TIME_KEY = "toBookingDateTime";
 
-    private final PersistentStorage persistentStorage;
+    private final ConsentDataStorage consentDataStorage;
     private final UkOpenBankingAisConfig aisConfig;
     private final AgentComponentProvider componentProvider;
 
@@ -68,7 +68,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 aisConfig.getWellKnownURL(),
                 randomValueGenerator);
 
-        this.persistentStorage = persistentStorage;
+        this.consentDataStorage = new ConsentDataStorage(persistentStorage);
         this.aisConfig = aisConfig;
         this.componentProvider = componentProvider;
     }
@@ -90,7 +90,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         } catch (HttpResponseException e) {
             if (AccountBlockedOrSuspendedValidator.isAccountClosed(e.getResponse())) {
                 log.info(
-                        "[AccountBlockedOrSuspendedValidator]: Account closed or suspended, returning empty list ");
+                        "[AccountBlockedOrSuspendedValidator]: Account closed or suspended, "
+                                + "returning empty list ");
                 return Collections.emptyList();
             }
             throw new AccountRefreshException("Failed to fetch balances");
@@ -205,8 +206,11 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 createConsentRequest(permissionRequest).post(ConsentResponse.class);
 
         String consentId = consentResponse.getConsentId();
-        saveIntentId(consentId);
-        saveConsentCreationDate(consentResponse.getCreationDate());
+        consentDataStorage.saveConsentId(consentId);
+
+        Instant creationDate = consentResponse.getCreationDate();
+        consentDataStorage.saveConsentCreationDate(creationDate);
+
         return consentId;
     }
 
@@ -237,15 +241,5 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                         .map(AccountBalanceEntity::getDateTime)
                         .collect(Collectors.toList()));
         return accountBalanceEntities;
-    }
-
-    private void saveIntentId(String intentId) {
-        persistentStorage.put(
-                UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, intentId);
-    }
-
-    private void saveConsentCreationDate(Instant creationDate) {
-        persistentStorage.put(
-                PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE, creationDate);
     }
 }

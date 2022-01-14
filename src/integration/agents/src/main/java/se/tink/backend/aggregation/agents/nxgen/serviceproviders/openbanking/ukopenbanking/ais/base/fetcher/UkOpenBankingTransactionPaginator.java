@@ -11,6 +11,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.FetchedTransactionsDataStorage;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -42,17 +43,16 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private static final int PAGINATION_LIMIT =
             50; // Limits number of pages fetched in order to reduce loading.
     private static final long DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS = 23;
-    private static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
     protected final LocalDateTimeSource localDateTimeSource;
     protected final UkOpenBankingApiClient apiClient;
     protected final Class<ResponseType> responseType;
     private final TransactionConverter<ResponseType, AccountType> transactionConverter;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
-    private final PersistentStorage persistentStorage;
+    private final FetchedTransactionsDataStorage fetchedTransactionsDataStorage;
     private String lastAccount;
     private int paginationCount;
-    private UnleashClient unleashClient;
-    private Toggle toggle;
+    private final UnleashClient unleashClient;
+    private final Toggle toggle;
 
     /**
      * @param apiClient Ukob api client
@@ -74,7 +74,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         this.responseType = responseType;
         this.transactionConverter = transactionConverter;
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
-        this.persistentStorage = persistentStorage;
+        this.fetchedTransactionsDataStorage = new FetchedTransactionsDataStorage(persistentStorage);
         this.localDateTimeSource = localDateTimeSource;
         unleashClient = componentProvider.getUnleashClient();
         toggle =
@@ -117,7 +117,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         TransactionKeyPaginatorResponse<String> response =
                 transactionConverter.toPaginatorResponse(
                         apiClient.fetchAccountTransactions(key, responseType), account);
-        setFetchedTransactionsUntil(account.getApiIdentifier(), requestTime);
+        String accountID = account.getApiIdentifier();
+        fetchedTransactionsDataStorage.setFetchedTransactionsUntil(accountID, requestTime);
         return response;
     }
 
@@ -187,7 +188,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
     protected LocalDateTime calculateFromBookingDate(String accountId) {
         final Optional<LocalDateTime> dateOfLastTransactionFetching =
-                getFetchedTransactionsUntil(accountId);
+                fetchedTransactionsDataStorage.getFetchedTransactionsUntil(accountId);
 
         final LocalDateTime now = localDateTimeSource.now(DEFAULT_ZONE_ID);
         final LocalDateTime startingDateForFetchingRecentTransactions =
@@ -224,17 +225,6 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                         account.getApiIdentifier())
                 + FROM_BOOKING_DATE_TIME
                 + ISO_DATE_TIME_FORMATTER.format(fromDate);
-    }
-
-    private void setFetchedTransactionsUntil(String accountId, LocalDateTime requestTime) {
-        final String fetchedUntilDate = requestTime.format(DateTimeFormatter.ISO_DATE_TIME);
-        persistentStorage.put(FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
-    }
-
-    private Optional<LocalDateTime> getFetchedTransactionsUntil(String accountId) {
-        String dateString = persistentStorage.get(FETCHED_TRANSACTIONS_UNTIL + accountId);
-        return Optional.ofNullable(dateString)
-                .map(date -> LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME));
     }
 
     private boolean isFirstPage() {
