@@ -76,6 +76,7 @@ data:
     cache:
       hosts: {{ default "cache:11211" .Values.cacheHosts }}
       enabled: true
+      mirroredClusters: {{ .Values.mirrorCacheHosts }}
 
     coordination:
       hosts: {{ default "coordination:2181" .Values.coordinationHosts }}
