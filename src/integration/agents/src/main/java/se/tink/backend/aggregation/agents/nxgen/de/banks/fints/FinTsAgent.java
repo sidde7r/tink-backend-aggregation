@@ -52,7 +52,8 @@ public final class FinTsAgent extends NextGenerationAgent
         super(componentProvider);
 
         CredentialsRequest request = componentProvider.getCredentialsRequest();
-        PayloadParser.Payload payload = PayloadParser.parse(request.getProvider().getPayload());
+        PayloadParser.Payload payload =
+                PayloadParser.parse(componentProvider.getProvider().getPayload());
         FinTsConfiguration configuration =
                 new FinTsConfiguration(
                         payload.getBlz(),

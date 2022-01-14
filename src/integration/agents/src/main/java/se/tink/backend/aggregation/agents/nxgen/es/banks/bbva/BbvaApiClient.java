@@ -404,7 +404,7 @@ public class BbvaApiClient {
         LocalDateTime currentDate = LocalDateTime.now(ZoneId.of(Defaults.TIMEZONE_CET));
 
         if (!sessionStorage.get(StorageKeys.IS_IN_EXTENDED_MODE, Boolean.class).orElse(false)) {
-            return currentDate.minusDays(89);
+            return currentDate.minusDays(88);
         }
 
         String accountId = account.getApiIdentifier();
