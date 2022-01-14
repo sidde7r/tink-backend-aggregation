@@ -105,7 +105,7 @@ public class TinkApacheHttpRequestLoggingAdapter {
     }
 
     private static byte[] decodeEntityBody(byte[] body, String contentEncoding) {
-        if (contentEncoding.contains("gzip")) {
+        if (contentEncoding.contains("gzip") && hasGzipHeader(body)) {
             InputStream bodyInputStream = new ByteArrayInputStream(body);
             try (InputStream gzipInputStream =
                     GZIPInputStreamFactory.getInstance().create(bodyInputStream)) {
@@ -113,10 +113,17 @@ public class TinkApacheHttpRequestLoggingAdapter {
                 IOUtils.copy(gzipInputStream, outputStream);
                 return outputStream.toByteArray();
             } catch (IOException e) {
-                log.warn("Could not decode gzip body", e);
+                log.warn("Could not decode gzip body ({} bytes)", body.length, e);
             }
         }
         return body;
+    }
+
+    private static boolean hasGzipHeader(byte[] bytes) {
+        if (bytes.length < 10) {
+            return false;
+        }
+        return bytes[0] == 0x1f && bytes[1] == -0x75 && bytes[2] == 0x08;
     }
 
     @SuppressWarnings("java:S1168") // suppress "Return an empty array instead of null." warning
