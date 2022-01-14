@@ -27,7 +27,7 @@ public class SamlinkSessionErrorFilter extends Filter {
         }
     }
 
-    public void throwIfConsentError(HttpResponse httpResponse) {
+    public static void throwIfConsentError(HttpResponse httpResponse) {
         checkErrorResponseBodyType(httpResponse);
         final List<TppMessageEntity> errors =
                 httpResponse.getBody(ErrorResponse.class).getTppMessages();
