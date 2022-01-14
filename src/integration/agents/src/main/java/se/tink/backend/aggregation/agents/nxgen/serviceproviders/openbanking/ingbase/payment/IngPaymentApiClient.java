@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngApiInputData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
@@ -14,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
@@ -137,14 +138,16 @@ public class IngPaymentApiClient extends IngBaseApiClient {
         PaymentSignatureEntity signatureEntity =
                 new PaymentSignatureEntity(httpMethod, reqPath.toString(), date, digest, reqId);
 
+        String signature =
+                proxySigner
+                        .sign(QsealcAlgorithm.RSA_SHA256, signatureEntity.toString().getBytes())
+                        .getBase64Encoded();
+
         return buildRequest(reqId, date, digest, reqPath.toString())
                 .header(IngBaseConstants.HeaderKeys.X_REQUEST_ID, reqId)
                 .header(
                         IngBaseConstants.HeaderKeys.SIGNATURE,
-                        new PaymentAuthorizationEntity(
-                                        getClientIdFromSession(),
-                                        proxySigner.getSignatureBase64(
-                                                signatureEntity.toString().getBytes()))
+                        new PaymentAuthorizationEntity(getClientIdFromSession(), signature)
                                 .toString());
     }
 
