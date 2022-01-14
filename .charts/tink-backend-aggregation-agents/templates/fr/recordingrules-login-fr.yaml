@@ -1,0 +1,56 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: recordingrules-login-fr
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Ugly rule to be used by every other recording rule. It combines everything that other rules below look for.
+  # The calculations here are based on research and work described here: https://tinkab.atlassian.net/wiki/spaces/INT/pages/6036291705/
+  # This does what sum+increase should be doing on its own.
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: FR:agent_login:action_className_outcome:delta1h
+    expr: sum by (action, className, outcome) (
+        (floor(increase({{ .Values.frQueryLoginAll }}[1h])) and ({{ .Values.frQueryLoginAll }} offset 1h unless {{ .Values.frQueryLoginAll }}))
+        or 
+        (1 + floor(increase({{ .Values.frQueryLoginAll }}[1h])) - floor(count_over_time({{ .Values.frQueryLoginAll }}[1h]) / 360))
+      )
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Manual logins recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: FR:agent_login:className:manual:all_logins:delta1h
+    expr: sum by (className) (FR:agent_login:action_className_outcome:delta1h{ action="login-manual"})
+
+  - record: FR:agent_login:className:manual:failed:delta1h
+    expr: sum by (className) (FR:agent_login:action_className_outcome:delta1h{ action="login-manual", outcome="failed"})
+
+  - record: FR:agent_login:className:manual:unavailable:delta1h
+    expr: sum by (className) (FR:agent_login:action_className_outcome:delta1h{ action="login-manual", outcome="unavailable"})
+
+  - record: FR:agent_login:className:manual:tink_issues:delta1h
+    expr: sum by (className) (FR:agent_login:action_className_outcome:delta1h{ action="login-manual", outcome="failed_due_to_tink_infrastructure"})
+
+  - record: FR:agent_login:className:manual:cancelled:delta1h
+    expr: sum by (className) (FR:agent_login:action_className_outcome:delta1h{ action="login-manual", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"})
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Auto logins recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: FR:agent_login:action_className:auto:all_logins:delta1h
+    expr: sum by (action, className) (FR:agent_login:action_className_outcome:delta1h{ action=~"login-auto|login-cron"})
+
+  - record: FR:agent_login:action_className:auto:failed:delta1h
+    expr: sum by (action, className) (FR:agent_login:action_className_outcome:delta1h{ action=~"login-auto|login-cron", outcome="failed"})
+
+  - record: FR:agent_login:action_className:auto:unavailable:delta1h
+    expr: sum by (action, className) (FR:agent_login:action_className_outcome:delta1h{ action=~"login-auto|login-cron", outcome="unavailable"})
+
+  - record: FR:agent_login:action_className:auto:tink_issues:delta1h
+    expr: sum by (action, className) (FR:agent_login:action_className_outcome:delta1h{ action=~"login-auto|login-cron", outcome="failed_due_to_tink_infrastructure"})
+
+  - record: FR:agent_login:action_className:auto:cancelled:delta1h
+    expr: sum by (action, className) (FR:agent_login:action_className_outcome:delta1h{ action=~"login-auto|login-cron", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout"})
