@@ -98,7 +98,7 @@ spec:
     # This TH should be 10% or 20% right now I changed it to 50% as we don't have time to solve smaller issues, will change it back after 6.01 when OpenWorks migration will end
     - alert: RefreshErrorRateAbove50%GB
       expr: 0.5 <= sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 5) <= 0.9
-      for: 15m
+      for: 5m
       priority: P3
       labels:
         severity: ping
@@ -111,7 +111,7 @@ spec:
 
     - alert: RefreshErrorRateAbove90%GB
       expr: sum:failed_refreshes_per_type_gb:delta1h / (sum:all_refreshes_per_type_gb:delta1h > 2) > 0.9
-      for: 15m
+      for: 5m
       priority: P1
       labels:
         severity: urgent
@@ -124,7 +124,7 @@ spec:
     # This TH should be 10% or 20% right now I changed it to 50% as we don't have time to solve smaller issues, will change it back after 6.01 when OpenWorks migration will end
     - alert: LoginErrorRateAbove50%GB
       expr: 0.5 <= sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) <= 0.9
-      for: 15m
+      for: 5m
       priority: P3
       labels:
         severity: ping
@@ -137,7 +137,7 @@ spec:
 
     - alert: LoginErrorRateAbove90%GB
       expr: sum:failed_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
-      for: 15m
+      for: 5m
       priority: P1
       labels:
         severity: urgent
@@ -150,7 +150,7 @@ spec:
 
     - alert: BackgroundLoginErrorRateAbove90%GB
       expr: sum:unsuccessful_background_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
-      for: 15m
+      for: 5m
       priority: P2
       labels:
         severity: urgent
@@ -163,7 +163,7 @@ spec:
 
     - alert: OnDemandLoginErrorRateAbove90%GB
       expr: sum:unsuccessful_on_demand_logins_gb:delta1h / (sum:all_logins_gb:delta1h > 5) > 0.9
-      for: 15m
+      for: 5m
       priority: P2
       labels:
         severity: urgent
