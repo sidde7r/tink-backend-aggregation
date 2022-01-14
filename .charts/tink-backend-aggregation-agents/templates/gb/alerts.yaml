@@ -104,8 +104,8 @@ spec:
         severity: ping
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
@@ -117,8 +117,8 @@ spec:
         severity: urgent
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Refresh failures for <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
     # This TH should be 10% or 20% right now I changed it to 50% as we don't have time to solve smaller issues, will change it back after 6.01 when OpenWorks migration will end
@@ -130,8 +130,8 @@ spec:
         severity: ping
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
@@ -143,8 +143,8 @@ spec:
         severity: urgent
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
@@ -156,8 +156,8 @@ spec:
         severity: urgent
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Background login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
@@ -169,8 +169,8 @@ spec:
         severity: urgent
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+         <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: On-demand login error rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
 
     - alert: RefreshUnavailableErrorRateAbove90%GB
@@ -180,8 +180,8 @@ spec:
         priority: P2
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Refresh of <{ $labels.type }> over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
@@ -192,8 +192,8 @@ spec:
         priority: P2
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
 
@@ -211,7 +211,7 @@ spec:
         priority: P3
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: <{{ .Values.kibanaClassPaymentLinkAbs90m }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Transfer completion rate is below 50% actual % is <{ $value }> for <{ $labels.className }> the last 30m. More than 5 attempts.
         tags: <{ $labels.className }> , *#payments*
