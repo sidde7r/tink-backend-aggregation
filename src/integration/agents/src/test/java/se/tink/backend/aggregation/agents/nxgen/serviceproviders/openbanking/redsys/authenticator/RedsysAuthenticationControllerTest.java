@@ -59,7 +59,7 @@ public class RedsysAuthenticationControllerTest {
         OAuth2Token token = mock(OAuth2Token.class);
         when(token.isBearer()).thenReturn(true);
         when(token.hasAccessExpired()).thenReturn(false);
-        when(token.getRefreshToken()).thenReturn(Optional.of(REFRESH_TOKEN));
+        when(token.getOptionalRefreshToken()).thenReturn(Optional.of(REFRESH_TOKEN));
         when(token.isValid()).thenReturn(true);
         when(supplementalInformationHelper.waitForSupplementalInformation(
                         eq(STATE), anyLong(), any(TimeUnit.class)))

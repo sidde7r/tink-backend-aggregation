@@ -126,8 +126,8 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
         // then
         assertThat(oAuth2Token.getAccessToken()).isEqualTo(ACCESS_TOKEN);
         assertThat(oAuth2Token.getExpiresInSeconds()).isEqualTo(EXPIRES_IN);
-        assertThat(oAuth2Token.getRefreshToken().isPresent()).isTrue();
-        assertThat(oAuth2Token.getRefreshToken().get()).isEqualTo(REFRESH_TOKEN);
+        assertThat(oAuth2Token.getOptionalRefreshToken().isPresent()).isTrue();
+        assertThat(oAuth2Token.getOptionalRefreshToken().get()).isEqualTo(REFRESH_TOKEN);
         assertThat(oAuth2Token.getTokenType()).isEqualTo(TOKEN_TYPE);
     }
 
@@ -155,8 +155,8 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
         // then
         assertThat(oAuth2Token.getAccessToken()).isEqualTo(ACCESS_TOKEN);
         assertThat(oAuth2Token.getExpiresInSeconds()).isEqualTo(1L);
-        assertThat(oAuth2Token.getRefreshToken().isPresent()).isTrue();
-        assertThat(oAuth2Token.getRefreshToken().get()).isEqualTo(REFRESH_TOKEN);
+        assertThat(oAuth2Token.getOptionalRefreshToken().isPresent()).isTrue();
+        assertThat(oAuth2Token.getOptionalRefreshToken().get()).isEqualTo(REFRESH_TOKEN);
         assertThat(oAuth2Token.getTokenType()).isEqualTo(TOKEN_TYPE);
     }
 

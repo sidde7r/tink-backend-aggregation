@@ -252,7 +252,7 @@ public class OpenIdAuthenticationController
                                 oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
                         : "N/A");
 
-        String refreshToken = oAuth2Token.getRefreshToken().get();
+        String refreshToken = oAuth2Token.getOptionalRefreshToken().get();
         try {
             OAuth2Token refreshedOAuth2Token =
                     apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS);

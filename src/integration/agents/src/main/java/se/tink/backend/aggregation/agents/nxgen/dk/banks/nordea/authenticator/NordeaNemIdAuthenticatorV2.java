@@ -95,7 +95,7 @@ public class NordeaNemIdAuthenticatorV2
             OAuth2Token token =
                     getToken().orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
             String refreshToken =
-                    token.getRefreshToken()
+                    token.getOptionalRefreshToken()
                             .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
             OAuth2Token newToken =
                     bankClient

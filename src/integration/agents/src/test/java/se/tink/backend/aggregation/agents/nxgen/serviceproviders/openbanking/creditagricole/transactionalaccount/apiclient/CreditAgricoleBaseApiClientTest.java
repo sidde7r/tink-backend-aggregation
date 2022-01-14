@@ -129,8 +129,8 @@ public class CreditAgricoleBaseApiClientTest {
 
         // then
         assertThat(returnedResponse.getAccessToken()).isEqualTo(ACCESS_TOKEN);
-        assertThat(returnedResponse.getRefreshToken().isPresent()).isTrue();
-        assertThat(returnedResponse.getRefreshToken().get()).isEqualTo(REFRESH_TOKEN);
+        assertThat(returnedResponse.getOptionalRefreshToken().isPresent()).isTrue();
+        assertThat(returnedResponse.getOptionalRefreshToken().get()).isEqualTo(REFRESH_TOKEN);
 
         final String requestString = tokenRequestStringCaptor.getValue();
 

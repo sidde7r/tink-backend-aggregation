@@ -93,7 +93,7 @@ public class OAuth2AuthenticationProgressiveController
 
             // Refresh token is not always present, if it's absent we fall back to the manual
             // authentication.
-            Optional<String> refreshToken = oAuth2Token.getRefreshToken();
+            Optional<String> refreshToken = oAuth2Token.getOptionalRefreshToken();
 
             if (!refreshToken.isPresent()) {
                 log.info("[oAUth2Token] is not present");

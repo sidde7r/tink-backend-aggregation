@@ -36,7 +36,7 @@ public class DemobankAutoAuthenticator implements AutoAuthenticator {
             }
 
             try {
-                oAuth2Token = apiClient.refreshToken(oAuth2Token.getRefreshToken().get());
+                oAuth2Token = apiClient.refreshToken(oAuth2Token.getOptionalRefreshToken().get());
                 apiClient.setTokenToStorage(oAuth2Token);
             } catch (HttpResponseException ex) {
                 persistentStorage.remove(DemobankConstants.StorageKeys.OAUTH2_TOKEN);

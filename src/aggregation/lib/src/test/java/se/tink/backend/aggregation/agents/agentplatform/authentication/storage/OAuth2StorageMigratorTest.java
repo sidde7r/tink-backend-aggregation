@@ -68,7 +68,8 @@ public class OAuth2StorageMigratorTest {
     public void shouldMapRefreshToken() {
         // given
         mockAccessToken();
-        Mockito.when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("dummyRefreshToken"));
+        Mockito.when(oAuth2Token.getOptionalRefreshToken())
+                .thenReturn(Optional.of("dummyRefreshToken"));
         // when
         AgentAuthenticationPersistedData result = objectUnderTest.migrate(persistentStorage);
         // then
@@ -85,7 +86,7 @@ public class OAuth2StorageMigratorTest {
         RefreshableAccessToken redirectTokens =
                 redirectTokensAuthenticationPersistedData.getRefreshableAccessToken().get();
         Assertions.assertThat(redirectTokens.getRefreshToken().getBody())
-                .isEqualTo(oAuth2Token.getRefreshToken().get().getBytes());
+                .isEqualTo(oAuth2Token.getOptionalRefreshToken().get().getBytes());
     }
 
     @Test

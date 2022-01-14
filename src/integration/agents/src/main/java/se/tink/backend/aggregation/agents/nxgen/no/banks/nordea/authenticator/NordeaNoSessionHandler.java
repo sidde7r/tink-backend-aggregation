@@ -26,7 +26,7 @@ public class NordeaNoSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         String refreshToken =
                 storage.retrieveOauthToken()
-                        .flatMap(OAuth2TokenBase::getRefreshToken)
+                        .flatMap(OAuth2TokenBase::getOptionalRefreshToken)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         OauthTokenResponse oauthTokenResponse =

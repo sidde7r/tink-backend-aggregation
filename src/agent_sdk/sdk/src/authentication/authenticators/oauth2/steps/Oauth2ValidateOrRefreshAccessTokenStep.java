@@ -50,7 +50,7 @@ public class Oauth2ValidateOrRefreshAccessTokenStep implements ExistingConsentSt
         Preconditions.checkState(accessToken.canRefresh(), "Refresh token must be valid.");
         String refreshToken =
                 accessToken
-                        .getRefreshToken()
+                        .getOptionalRefreshToken()
                         // This should not be able to happen.
                         .orElseThrow(() -> new IllegalStateException("Refresh token must exist."));
 

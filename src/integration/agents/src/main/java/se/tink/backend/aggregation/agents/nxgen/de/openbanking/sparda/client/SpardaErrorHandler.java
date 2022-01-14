@@ -36,7 +36,8 @@ public class SpardaErrorHandler {
                 if (isTokenInvalid) {
                     TokenResponse tokenResponse =
                             tokenApiClient.refreshToken(
-                                    storage.getToken().getRefreshToken().orElse(""), clientId);
+                                    storage.getToken().getOptionalRefreshToken().orElse(""),
+                                    clientId);
 
                     storage.saveToken(tokenResponse.toTinkToken());
                     return;

@@ -92,6 +92,6 @@ public class KbcStorageMigratorTest {
                                 .get()
                                 .getRefreshToken()
                                 .getBody())
-                .isEqualTo(oAuth2Token.getRefreshToken().get().getBytes());
+                .isEqualTo(oAuth2Token.getOptionalRefreshToken().get().getBytes());
     }
 }

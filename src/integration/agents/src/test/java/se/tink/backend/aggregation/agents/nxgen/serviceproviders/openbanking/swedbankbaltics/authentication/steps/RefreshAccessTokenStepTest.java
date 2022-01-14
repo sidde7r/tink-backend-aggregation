@@ -68,7 +68,7 @@ public class RefreshAccessTokenStepTest {
         when(persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(token));
         when(token.canRefresh()).thenReturn(true);
-        when(token.getRefreshToken()).thenReturn(Optional.empty());
+        when(token.getOptionalRefreshToken()).thenReturn(Optional.empty());
 
         // when
         final Throwable thrown =
@@ -90,7 +90,7 @@ public class RefreshAccessTokenStepTest {
         when(persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(token));
         when(token.canRefresh()).thenReturn(true);
-        when(token.getRefreshToken()).thenReturn(Optional.of(refreshToken));
+        when(token.getOptionalRefreshToken()).thenReturn(Optional.of(refreshToken));
 
         OAuth2Token newToken = mock(OAuth2Token.class);
         when(apiClient.refreshToken(refreshToken)).thenReturn(newToken);
@@ -120,7 +120,7 @@ public class RefreshAccessTokenStepTest {
         when(persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(token));
         when(token.canRefresh()).thenReturn(true);
-        when(token.getRefreshToken()).thenReturn(Optional.empty());
+        when(token.getOptionalRefreshToken()).thenReturn(Optional.empty());
 
         // when
         final Throwable thrown =

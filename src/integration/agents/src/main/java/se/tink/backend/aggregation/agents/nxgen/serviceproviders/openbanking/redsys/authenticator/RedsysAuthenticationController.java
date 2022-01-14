@@ -83,7 +83,7 @@ public class RedsysAuthenticationController extends OAuth2AuthenticationControll
         return persistentStorage
                 .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception)
-                .getRefreshToken()
+                .getOptionalRefreshToken()
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 

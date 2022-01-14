@@ -74,7 +74,7 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
                 tag,
                 token.getTokenType(),
                 Hash.sha256AsHex(token.getAccessToken()),
-                token.getRefreshToken().map(Hash::sha256AsHex).orElse("null"),
+                token.getOptionalRefreshToken().map(Hash::sha256AsHex).orElse("null"),
                 new Date(token.getAccessExpireEpoch() * 1000));
     }
 }

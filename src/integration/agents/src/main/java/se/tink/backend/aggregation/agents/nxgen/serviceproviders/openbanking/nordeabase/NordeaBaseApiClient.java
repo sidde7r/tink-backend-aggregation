@@ -456,7 +456,7 @@ public class NordeaBaseApiClient implements TokenInterface {
             OAuth2Token oAuth2Token =
                     this.refreshToken(
                             getStoredToken()
-                                    .getRefreshToken()
+                                    .getOptionalRefreshToken()
                                     .orElseThrow(
                                             () ->
                                                     new IllegalStateException(

@@ -29,7 +29,7 @@ public class KnabAuthenticatorTest {
 
     private final String refreshToken =
             accessToken
-                    .getRefreshToken()
+                    .getOptionalRefreshToken()
                     .orElseThrow(
                             () ->
                                     new IllegalStateException(

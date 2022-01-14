@@ -287,8 +287,8 @@ public class CmcicApiClientTest {
         assertTrue(token.canRefresh());
         assertThat(token.getAccessToken()).isEqualTo(ACCESS_TOKEN);
         assertThat(token.getTokenType()).isEqualTo(TOKEN_TYPE);
-        assertTrue(token.getRefreshToken().isPresent());
-        assertThat(token.getRefreshToken().get()).isEqualTo(REFRESH_TOKEN);
+        assertTrue(token.getOptionalRefreshToken().isPresent());
+        assertThat(token.getOptionalRefreshToken().get()).isEqualTo(REFRESH_TOKEN);
     }
 
     private static String getRefreshRequest() {

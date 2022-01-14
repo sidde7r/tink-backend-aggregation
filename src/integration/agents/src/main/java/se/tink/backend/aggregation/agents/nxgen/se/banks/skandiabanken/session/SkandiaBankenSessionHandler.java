@@ -40,7 +40,7 @@ public class SkandiaBankenSessionHandler implements SessionHandler {
 
             String refreshToken =
                     oAuth2Token
-                            .getRefreshToken()
+                            .getOptionalRefreshToken()
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
             oAuth2Token = getOAuth2Token(refreshToken);
 

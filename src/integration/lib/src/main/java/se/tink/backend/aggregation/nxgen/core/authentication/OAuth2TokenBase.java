@@ -23,7 +23,7 @@ public abstract class OAuth2TokenBase {
     private long refreshExpiresInSeconds;
     private long issuedAt;
 
-    public Optional<String> getRefreshToken() { // left for compatibility with the rest of the code
+    public Optional<String> getOptionalRefreshToken() {
         return Optional.ofNullable(refreshToken);
     }
 
@@ -57,8 +57,8 @@ public abstract class OAuth2TokenBase {
     }
 
     public void updateWithOldToken(OAuth2TokenBase oldOAuth2Token) {
-        Optional<String> possibleOldRefreshToken = oldOAuth2Token.getRefreshToken();
-        if (!this.getRefreshToken().isPresent() && possibleOldRefreshToken.isPresent()) {
+        Optional<String> possibleOldRefreshToken = oldOAuth2Token.getOptionalRefreshToken();
+        if (!this.getOptionalRefreshToken().isPresent() && possibleOldRefreshToken.isPresent()) {
             String oldRefreshToken = possibleOldRefreshToken.get();
             this.setRefreshToken(oldRefreshToken);
             this.setRefreshExpiresInSeconds(
@@ -77,7 +77,7 @@ public abstract class OAuth2TokenBase {
     }
 
     public boolean canRefresh() {
-        Optional<String> maybeRefreshToken = getRefreshToken();
+        Optional<String> maybeRefreshToken = getOptionalRefreshToken();
 
         if (!maybeRefreshToken.isPresent()) {
             log.warn("[OAuth2TokenBase] Refresh token is missing");

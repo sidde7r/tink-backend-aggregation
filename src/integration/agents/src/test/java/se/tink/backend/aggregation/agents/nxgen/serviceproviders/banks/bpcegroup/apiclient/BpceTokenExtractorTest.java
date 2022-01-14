@@ -35,7 +35,7 @@ public class BpceTokenExtractorTest {
                 .isEqualTo("vqqgboKxVY7fXxhXi9tJF7EgGeXi1P1g1D4CTWdlec1z5b880OkZxB");
         assertThat(returnedToken.getExpiresInSeconds()).isEqualTo(296);
         assertThat(returnedToken.getTokenType()).isEqualTo("Bearer");
-        assertThat(returnedToken.getRefreshToken().isPresent()).isFalse();
+        assertThat(returnedToken.getOptionalRefreshToken().isPresent()).isFalse();
     }
 
     @Test
@@ -50,7 +50,7 @@ public class BpceTokenExtractorTest {
         assertThat(returnedToken.getAccessToken()).isEqualTo(null);
         assertThat(returnedToken.getExpiresInSeconds()).isEqualTo(0);
         assertThat(returnedToken.getTokenType()).isEqualTo(null);
-        assertThat(returnedToken.getRefreshToken().isPresent()).isFalse();
+        assertThat(returnedToken.getOptionalRefreshToken().isPresent()).isFalse();
     }
 
     private HttpResponse createHttpResponseMock(String uri) throws URISyntaxException {

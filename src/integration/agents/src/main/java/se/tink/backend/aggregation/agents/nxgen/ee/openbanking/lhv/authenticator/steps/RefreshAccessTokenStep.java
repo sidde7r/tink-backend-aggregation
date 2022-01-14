@@ -36,7 +36,7 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
             return AuthenticationStepResponse.executeNextStep();
         }
 
-        Optional<String> refreshToken = token.getRefreshToken();
+        Optional<String> refreshToken = token.getOptionalRefreshToken();
 
         if (!refreshToken.isPresent()) {
             return AuthenticationStepResponse.executeNextStep();

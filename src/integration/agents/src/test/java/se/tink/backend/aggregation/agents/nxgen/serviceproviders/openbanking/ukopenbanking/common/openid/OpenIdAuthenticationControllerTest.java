@@ -163,7 +163,7 @@ public class OpenIdAuthenticationControllerTest {
         when(persistentStorage.get(
                         OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(oAuth2Token));
-        when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("refreshToken"));
+        when(oAuth2Token.getOptionalRefreshToken()).thenReturn(Optional.of("refreshToken"));
         when(apiClient.refreshAccessToken("refreshToken", ClientMode.ACCOUNTS))
                 .thenThrow(httpResponseException);
         when(httpResponseException.getResponse().getStatus()).thenReturn(400);
@@ -188,7 +188,7 @@ public class OpenIdAuthenticationControllerTest {
         when(persistentStorage.get(
                         OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(oAuth2Token));
-        when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("refreshToken"));
+        when(oAuth2Token.getOptionalRefreshToken()).thenReturn(Optional.of("refreshToken"));
         when(apiClient.refreshAccessToken("refreshToken", ClientMode.ACCOUNTS))
                 .thenThrow(httpResponseException);
         when(httpResponseException.getResponse().getStatus()).thenReturn(500);

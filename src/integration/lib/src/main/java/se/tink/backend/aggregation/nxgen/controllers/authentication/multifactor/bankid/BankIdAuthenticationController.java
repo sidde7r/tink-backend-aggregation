@@ -208,7 +208,7 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             // authentication.
             String refreshToken =
                     oAuth2Token
-                            .getRefreshToken()
+                            .getOptionalRefreshToken()
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
             OAuth2Token refreshedOAuth2Token =
                     authenticator
