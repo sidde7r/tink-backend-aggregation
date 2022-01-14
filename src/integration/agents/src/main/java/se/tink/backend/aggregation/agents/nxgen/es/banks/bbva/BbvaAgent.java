@@ -6,7 +6,10 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.ID
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -28,9 +31,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.BbvaL
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.session.BbvaSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.AccountsProvider;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.CreditCardRefreshControllerTransactionsFetchingDateFromManagerAware;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.TransactionalAccountRefreshControllerTransactionsFetchingDateFromManagerAware;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.TransactionsFetchingDateFromManager;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -39,6 +47,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -61,14 +72,30 @@ public final class BbvaAgent extends NextGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final TransactionsFetchingDateFromManager transactionsFetchingDateFromManager;
 
     @Inject
     public BbvaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        client.setProxyProfile(componentProvider.getProxyProfiles().getMarketProxyProfile());
+        // client.setProxyProfile(componentProvider.getProxyProfiles().getMarketProxyProfile());
         this.apiClient = new BbvaApiClient(client, sessionStorage, supplementalInformationHelper);
-
+        BbvaAccountFetcher accountFetcher = new BbvaAccountFetcher(apiClient);
+        BbvaCreditCardFetcher creditCardFetcher = new BbvaCreditCardFetcher(apiClient);
+        this.transactionsFetchingDateFromManager =
+                new TransactionsFetchingDateFromManager(
+                        new AccountsProvider() {
+                            @Override
+                            public Collection<? extends Account> getAccounts() {
+                                return Lists.newArrayList(
+                                        Iterables.concat(
+                                                accountFetcher.fetchAccounts(),
+                                                creditCardFetcher.fetchAccounts()));
+                            }
+                        },
+                        transactionPaginationHelper,
+                        persistentStorage);
+        apiClient.setTransactionsFetchingDateFromManager(transactionsFetchingDateFromManager);
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
@@ -79,10 +106,10 @@ public final class BbvaAgent extends NextGenerationAgent
                 new LoanRefreshController(
                         metricRefreshController, updateController, new BbvaLoanFetcher(apiClient));
 
-        this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.creditCardRefreshController = constructCreditCardRefreshController(creditCardFetcher);
 
         this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
+                constructTransactionalAccountRefreshController(accountFetcher);
     }
 
     @Override
@@ -146,8 +173,7 @@ public final class BbvaAgent extends NextGenerationAgent
                         apiClient,
                         supplementalInformationHelper,
                         request,
-                        transactionPaginationHelper,
-                        sessionStorage);
+                        transactionsFetchingDateFromManager);
         log.info(
                 "Credentials status after authenticating is equal {}",
                 this.credentials.getStatus());
@@ -159,25 +185,29 @@ public final class BbvaAgent extends NextGenerationAgent
         return new BbvaSessionHandler(apiClient);
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        return new TransactionalAccountRefreshController(
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            AccountFetcher<TransactionalAccount> accountFetcher) {
+        return new TransactionalAccountRefreshControllerTransactionsFetchingDateFromManagerAware(
                 metricRefreshController,
                 updateController,
-                new BbvaAccountFetcher(apiClient),
+                accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new BbvaTransactionFetcher(apiClient))));
+                                new BbvaTransactionFetcher(apiClient))),
+                transactionsFetchingDateFromManager);
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
-        return new CreditCardRefreshController(
+    private CreditCardRefreshController constructCreditCardRefreshController(
+            AccountFetcher<CreditCardAccount> accountFetcher) {
+        return new CreditCardRefreshControllerTransactionsFetchingDateFromManagerAware(
                 metricRefreshController,
                 updateController,
-                new BbvaCreditCardFetcher(apiClient),
+                accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new BbvaCreditCardTransactionFetcher(apiClient))));
+                                new BbvaCreditCardTransactionFetcher(apiClient))),
+                transactionsFetchingDateFromManager);
     }
 }
