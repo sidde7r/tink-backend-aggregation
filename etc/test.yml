@@ -5736,6 +5736,11 @@ agentsServiceConfiguration:
         clientId: 98ddc5f345c67f029ac56e39ad198c0d
         keyId: dac579ef4ca6231e517fcc81af4a834a832a34df
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    creditmutueldebretagne:
+      tink:
+        clientKey: clientKey
+        qsealcUrl: https://cdn.tink.se/eidas/tink-qsealc-without-whitespaces.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
     creditoagricola:
       tink:
         aspspCode: GCA
