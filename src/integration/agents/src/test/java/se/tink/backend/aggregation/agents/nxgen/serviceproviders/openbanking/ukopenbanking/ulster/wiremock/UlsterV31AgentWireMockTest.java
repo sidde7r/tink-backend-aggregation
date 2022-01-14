@@ -20,9 +20,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class UlsterV31AgentWireMockTest {
 
     private static final WireMockTestServer WIREMOCK_TEST_SERVER = new WireMockTestServer(true);
-
     private static final String PROVIDER_NAME = "uk-ulster-oauth2";
-
     private static final String RESOURCES_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ulster/wiremock/resources/";
 
@@ -62,7 +60,6 @@ public class UlsterV31AgentWireMockTest {
                         .testFullAuthentication()
                         .testOnlyAuthentication()
                         .addCallbackData(CODE_PARAM, DUMMY_CODE)
-                        .enableHttpDebugTrace()
                         .build();
 
         // expected
@@ -89,7 +86,6 @@ public class UlsterV31AgentWireMockTest {
                         .withRefreshableItems(itemsExpectedToBeRefreshed)
                         .addPersistentStorageData(
                                 OPEN_ID_ACCESS_TOKEN_STORAGE_KEY, createOpenIdAccessToken())
-                        .enableDataDumpForContractFile()
                         .build();
 
         // when
@@ -116,7 +112,6 @@ public class UlsterV31AgentWireMockTest {
                         .addPersistentStorageData(
                                 OPEN_ID_ACCESS_TOKEN_STORAGE_KEY, createOpenIdExpiredAccessToken())
                         .addCallbackData(CODE_PARAM, DUMMY_CODE)
-                        .enableHttpDebugTrace()
                         .build();
 
         // expected
@@ -135,14 +130,13 @@ public class UlsterV31AgentWireMockTest {
                         .testAutoAuthentication()
                         .testOnlyAuthentication()
                         .addPersistentStorageData(AIS_ACCOUNT_CONSENT_ID, DUMMY_CONSENT_ID)
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         // expected
         assertThatExceptionOfType(SessionException.class)
                 .isThrownBy(test::executeRefresh)
-                .withMessage("Invalid consent status. Expiring the session.");
+                .withMessage(
+                        "[ConsentStatusValidator] Invalid consent status. Expiring the session.");
     }
 
     private String createOpenIdAccessToken() {
