@@ -49,7 +49,7 @@ Content-Type: application/json;charset=utf-8
 }
 
 REQUEST 3
-GET https://psd.bancairediensten.nl/psd2/asnbank/v1/accounts
+GET https://psd.bancairediensten.nl/psd2/asnbank/v1.1/accounts
 
 RESPONSE 3
 200
@@ -58,27 +58,36 @@ Content-Type: application/json
 {"accounts":[{"resourceId":"105db209-2c6f-4031-ae41-3cc0fc72fae9","iban":"NL1111111111","currency":"EUR","name":"first last","ownerName":"owner","product":"ASN Bankrekening","customerBic":"ASNBNL21"}]}
 
 REQUEST 4
-GET https://psd.bancairediensten.nl/psd2/asnbank/v1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/balances
+GET https://psd.bancairediensten.nl/psd2/asnbank/v1.1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/balances
 
 RESPONSE 4
 200
 Content-Type: application/json
 
-{"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"788.66"},"lastChangeDateTime":"2021-05-01T22:00:00.000Z"}]}
+{"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"788.66"},"lastChangeDateTime":"2021-05-01T22:00:00Z"}]}
 
 REQUEST 5
-GET https://psd.bancairediensten.nl/psd2/asnbank/v1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/transactions?dateFrom=1992-01-11&dateTo=1992-04-09&bookingStatus=booked&pageDirection=next&limit=1000
+GET https://psd.bancairediensten.nl/psd2/asnbank/v1.1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/transactions?dateFrom=1992-01-11&dateTo=1992-04-09&bookingStatus=booked&limit=1000
 
 RESPONSE 5
 200
 Content-Type: application/json
 
-{"account":{"iban":"NL1111111111","currency":"EUR"},"transactions":{"booked":[{"entryReference":"19920101-80426544","endToEndId":"NOTPROVIDED","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-150.00"},"creditorName":"Spaarrekeningkinderen","creditorAccount":{"iban":"NL52ASNB0934972362","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"Spaargeldkinderen","purposeCode":"","bankTransactionCode":9802,"proprietaryBankTransactionCode":"FPOV"},{"entryReference":"19920101-81288016","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-48.00"},"creditorAccount":{"iban":"","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"CoopvanWijlen>HEUSDENG1.02.202111U16KV005H683V3MCC:5411ContactlozebetalingNLNEDERLAND","purposeCode":"","bankTransactionCode":7903,"proprietaryBankTransactionCode":"FBEA"}],"_links":{"account":{"href":"/psd2/asnbank/v1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9"},"next":{"href":"/psd2/asnbank/v1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/transactions?bookingStatus=booked&limit=1000&pageDirection=next&entryReferenceFrom=20210502-80644671"},"previous":{"href":"/psd2/asnbank/v1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/transactions?bookingStatus=booked&limit=1000&pageDirection=previous&entryReferenceFrom=20210201-80426544"}}}}
+{"account":{"iban":"NL1111111111","currency":"EUR"},"transactions":{"booked":[{"entryReference":"19920101-80426544","endToEndId":"NOTPROVIDED","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-150.00"},"creditorName":"Spaarrekeningkinderen","creditorAccount":{"iban":"NL52ASNB0934972362","bban":""},"debtorAccount":{"iban":"","bban":""}, "remittanceInformationUnstructured":"Spaargeldkinderen","purposeCode":"","bankTransactionCode":9802,"proprietaryBankTransactionCode":"FPOV"},{"entryReference":"19920101-81288016","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-48.00"},"remittanceInformationUnstructured":"CoopvanWijlen>HEUSDENG1.02.202111U16KV005H683V3MCC:5411ContactlozebetalingNLNEDERLAND","purposeCode":"","bankTransactionCode":7903,"proprietaryBankTransactionCode":"FBEA"}],"_links":{"account":{"href":"/psd2/asnbank/v1.1/accounts       /105db209-2c6f-4031-ae41-3cc0fc72fae9"},"next":{"href":"/psd2/asnbank/v1.1/accounts       /105db209-2c6f-4031-ae41-3cc0fc72fae9/transactions?bookingStatus=booked&limit=1000&entryReferenceFrom=19920101-80644671"}}}}
 
 REQUEST 6
-GET https://psd.bancairediensten.nl/psd2/asnbank/v1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/transactions
+GET https://psd.bancairediensten.nl/psd2/asnbank/v1.1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/transactions?bookingStatus=booked&limit=1000&entryReferenceFrom=19920101-80644671
 
 RESPONSE 6
+200
+Content-Type: application/json
+
+{"account":null,"transactions":{"booked":[],"_links":null}}
+
+REQUEST 7
+GET https://psd.bancairediensten.nl/psd2/asnbank/v1.1/accounts/105db209-2c6f-4031-ae41-3cc0fc72fae9/transactions
+
+RESPONSE 7
 200
 Content-Type: application/json
 

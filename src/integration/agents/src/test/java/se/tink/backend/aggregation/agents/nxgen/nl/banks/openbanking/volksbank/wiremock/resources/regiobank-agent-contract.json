@@ -42,7 +42,7 @@
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : {
-            "TRANSFER_ACCOUNT_EXTERNAL" : "",
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL52ASNB0934972362",
             "MESSAGE" : "Kosten gebruik betaalrekening inclusief 1 betaalpas",
             "TRANSFER_ACCOUNT_NAME_EXTERNAL" : ""
         },
@@ -59,7 +59,7 @@
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : {
-            "TRANSFER_ACCOUNT_EXTERNAL" : "",
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL52ASNB0934972362",
             "MESSAGE" : "Kosten gebruik betaalrekening inclusief 2 betaalpas",
             "TRANSFER_ACCOUNT_NAME_EXTERNAL" : ""
         },
