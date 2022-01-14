@@ -132,6 +132,7 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
         } catch (HttpResponseException e) {
             final HttpResponse httpResponse = e.getResponse();
             handleApiKeyError(httpResponse);
+            SamlinkSessionErrorFilter.throwIfConsentError(httpResponse);
             throw e;
         }
     }
