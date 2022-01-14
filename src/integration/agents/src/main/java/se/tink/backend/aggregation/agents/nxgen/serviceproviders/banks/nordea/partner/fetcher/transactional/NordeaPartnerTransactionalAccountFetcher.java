@@ -42,7 +42,11 @@ public class NordeaPartnerTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         if (isOnStaging) {
             apiClient.fetchAllData(
-                    NordeaPartnerMarketUtil.getStartDate(request.getAccounts(), dateTimeSource));
+                    NordeaPartnerMarketUtil.getStartDate(
+                            request.getAccounts().stream()
+                                    .filter(account -> !account.isClosed())
+                                    .collect(Collectors.toList()),
+                            dateTimeSource));
             return apiClient.getAllData().toTinkTransactionalAccounts(accountMapper);
         }
         return apiClient.fetchAccounts().toTinkTransactionalAccounts(accountMapper);
