@@ -18,6 +18,7 @@ public enum LastError {
     CONSENT_INVALID("consent_invalid"),
     COUNTRY_ID_INVALID("country_id_invalid"),
     FORCED_TRANSPORT_DISABLED("forced_transport_disabled"),
+    INIT_FAILED("init_failed"),
     LOGIN_BLACKLISTED("login_blacklisted"),
     LOGIN_FAILED("login_failed"),
     LOGIN_NEXT_FAILED("login_next_failed"),
