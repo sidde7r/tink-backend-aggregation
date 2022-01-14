@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.ing.integration;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.ing.integration.module.IngWireMockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
@@ -36,7 +35,6 @@ public class IngWireMockTest {
                         .withConfigurationFile(configuration)
                         .withPayment(
                                 createMockedDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER))
-                        .withAgentModule(new IngWireMockTestModule())
                         .buildWithoutLogin(PaymentCommand.class);
 
         // when / then (execution and assertion currently done in the same step)
