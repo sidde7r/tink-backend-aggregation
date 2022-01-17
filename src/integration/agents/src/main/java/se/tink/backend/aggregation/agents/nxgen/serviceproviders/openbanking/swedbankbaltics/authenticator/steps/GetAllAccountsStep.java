@@ -44,7 +44,7 @@ public class GetAllAccountsStep implements AuthenticationStep {
         GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
 
         if (errorResponse.isConsentInvalid()
-                || errorResponse.isResourceUnknown()
+                || errorResponse.isResourceNotFound()
                 || errorResponse.isConsentExpired()) {
             removeConsent();
         }
