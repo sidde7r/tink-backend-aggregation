@@ -9,6 +9,7 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -66,7 +67,9 @@ public final class SparebankAgent extends NextGenerationAgent
                 new SparebankApiClient(
                         client,
                         qsealcSigner,
-                        getApiConfiguration(agentComponentProvider.getUser()),
+                        getApiConfiguration(
+                                agentComponentProvider.getUser(),
+                                agentComponentProvider.getProvider()),
                         storage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -78,7 +81,7 @@ public final class SparebankAgent extends NextGenerationAgent
                 .getAgentConfiguration(SparebankConfiguration.class);
     }
 
-    private SparebankApiConfiguration getApiConfiguration(User user) {
+    private SparebankApiConfiguration getApiConfiguration(User user, Provider provider) {
         try {
             AgentConfiguration<SparebankConfiguration> agentConfiguration = getAgentConfiguration();
             String qsealcBase64 =
@@ -86,7 +89,7 @@ public final class SparebankAgent extends NextGenerationAgent
                             agentConfiguration.getQsealc());
 
             return SparebankApiConfiguration.builder()
-                    .baseUrl(splitPayload(request.getProvider().getPayload()).get(1))
+                    .baseUrl(splitPayload(provider.getPayload()).get(1))
                     .redirectUrl(agentConfiguration.getRedirectUrl())
                     .qsealcBase64(qsealcBase64)
                     .certificateIssuerDN(CertificateUtils.getCertificateIssuerDN(qsealcBase64))

@@ -60,11 +60,11 @@ public final class Sparebank1Agent extends NextGenerationAgent
     private final String branchId;
 
     @Inject
-    public Sparebank1Agent(AgentComponentProvider agentComponentProvider) {
-        super(agentComponentProvider);
+    public Sparebank1Agent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         configureHttpClient(client);
 
-        this.branchId = request.getProvider().getPayload();
+        this.branchId = componentProvider.getProvider().getPayload();
 
         apiClient = new Sparebank1ApiClient(client, branchId);
 

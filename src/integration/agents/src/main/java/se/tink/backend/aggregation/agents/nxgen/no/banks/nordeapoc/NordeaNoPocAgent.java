@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.MO
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -96,7 +97,7 @@ public final class NordeaNoPocAgent extends NextGenerationAgent
                 new BankIdOidcIframeAuthenticationService(
                         supplementalInformationHelper,
                         strongAuthenticationState,
-                        getTinkApiUrl(credentialsRequest),
+                        getTinkApiUrl(componentProvider.getProvider()),
                         agentContext.isTestContext());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -111,8 +112,8 @@ public final class NordeaNoPocAgent extends NextGenerationAgent
                 authenticationClient, storage, new RandomValueGeneratorImpl(), bankIdOidcService);
     }
 
-    private String getTinkApiUrl(CredentialsRequest credentialsRequest) {
-        return credentialsRequest.getProvider().getPayload();
+    private String getTinkApiUrl(Provider provider) {
+        return provider.getPayload();
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
