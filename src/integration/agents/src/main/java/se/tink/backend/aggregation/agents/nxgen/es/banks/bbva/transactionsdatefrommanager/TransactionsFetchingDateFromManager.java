@@ -108,15 +108,15 @@ public class TransactionsFetchingDateFromManager {
     }
 
     public void cleanCheckingAccountsFetchingLastSuccessDate() {
-        fetchingStatus.setCheckingAccountsFetchingLastSuccessDate(null);
+        getFetchingStatus().setCheckingAccountsFetchingLastSuccessDate(null);
     }
 
     public void cleanSavingsAccountsFetchingLastSuccessDate() {
-        fetchingStatus.setSavingsAccountsLastSuccessRefreshDate(null);
+        getFetchingStatus().setSavingsAccountsLastSuccessRefreshDate(null);
     }
 
     public void cleanCreditCardsFetchingLastSuccessDate() {
-        fetchingStatus.setCreditCardsLastSuccessRefreshDate(null);
+        getFetchingStatus().setCreditCardsLastSuccessRefreshDate(null);
     }
 
     private BbvaFetchingStatus getFetchingStatus() {
