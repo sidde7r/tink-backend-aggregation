@@ -47,9 +47,9 @@ public class NordeaPartnerTransactionalAccountFetcher
                                     .filter(account -> !account.isClosed())
                                     .collect(Collectors.toList()),
                             dateTimeSource));
-            return apiClient.getAllData().toTinkTransactionalAccounts(accountMapper);
+            return apiClient.getAllData().toTinkTransactionalAccounts(accountMapper, isOnStaging);
         }
-        return apiClient.fetchAccounts().toTinkTransactionalAccounts(accountMapper);
+        return apiClient.fetchAccounts().toTinkTransactionalAccounts(accountMapper, false);
     }
 
     @Override

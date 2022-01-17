@@ -21,7 +21,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Slf4j
 public class DefaultPartnerAccountMapper implements NordeaPartnerAccountMapper {
     @Override
-    public Optional<TransactionalAccount> toTinkTransactionalAccount(AccountEntity account) {
+    public Optional<TransactionalAccount> toTinkTransactionalAccount(
+            AccountEntity account, boolean isOnStaging) {
         if (Strings.isNullOrEmpty(account.getIban())
                 || Strings.isNullOrEmpty(account.getCategory())
                 || Strings.isNullOrEmpty(account.getCurrency())) {

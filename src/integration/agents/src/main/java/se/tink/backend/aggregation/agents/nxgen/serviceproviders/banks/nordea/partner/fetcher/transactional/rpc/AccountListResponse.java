@@ -27,11 +27,14 @@ public class AccountListResponse {
     private List<CardEntity> cards;
 
     public Collection<TransactionalAccount> toTinkTransactionalAccounts(
-            NordeaPartnerAccountMapper accountMapper) {
+            NordeaPartnerAccountMapper accountMapper, boolean isOnStaging) {
         return Stream.of(result, accounts).filter(Objects::nonNull).findFirst()
                 .orElse(Collections.emptyList()).stream()
                 .filter(AccountEntity::hasIban)
-                .map(accountMapper::toTinkTransactionalAccount)
+                .map(
+                        accountEntity ->
+                                accountMapper.toTinkTransactionalAccount(
+                                        accountEntity, isOnStaging))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
