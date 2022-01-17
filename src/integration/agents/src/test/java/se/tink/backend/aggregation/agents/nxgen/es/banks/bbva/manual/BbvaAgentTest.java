@@ -32,7 +32,7 @@ public class BbvaAgentTest {
                         Field.Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                .loadCredentialsBefore(false)
+                .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .doLogout(true)
                 .setFinancialInstitutionId("f601e6ab24d042d7b92cafa974133e82")
