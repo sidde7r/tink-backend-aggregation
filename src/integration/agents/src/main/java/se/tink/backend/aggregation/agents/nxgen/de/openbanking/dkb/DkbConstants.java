@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import java.time.ZoneId;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -10,8 +11,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public final class DkbConstants {
 
     public static final Integer MAX_CONSENT_VALIDITY_DAYS = 89;
-
+    public static final Integer MAX_TRANSACTIONS_DAYS_WITHOUT_SCA = 89;
     public static final String INTEGRATION_NAME = "dkb";
+    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Berlin");
 
     @NoArgsConstructor(access = PRIVATE)
     public static class ErrorMessages {

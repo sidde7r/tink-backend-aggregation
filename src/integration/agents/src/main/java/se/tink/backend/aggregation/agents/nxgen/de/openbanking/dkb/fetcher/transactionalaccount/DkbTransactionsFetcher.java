@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.MAX_TRANSACTIONS_DAYS_WITHOUT_SCA;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ZONE_ID;
+
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +31,9 @@ public class DkbTransactionsFetcher implements TransactionFetcher<TransactionalA
 
         final GetTransactionsResponse transactionsResponse =
                 apiClient.getTransactions(
-                        account, getFetchStartDate(), localDateTimeSource.now().toLocalDate());
+                        account,
+                        getFetchStartDate(),
+                        localDateTimeSource.now(ZONE_ID).toLocalDate());
 
         transactions.addAll(transactionsResponse.toTinkTransactions());
         return transactions;
@@ -41,7 +46,11 @@ public class DkbTransactionsFetcher implements TransactionFetcher<TransactionalA
             startDate = LocalDate.ofEpochDay(89); // change to EpochDay(0) after investigation
             storage.markFirstFetchAsDone();
         } else {
-            startDate = localDateTimeSource.now().toLocalDate().minusDays(89);
+            startDate =
+                    localDateTimeSource
+                            .now(ZONE_ID)
+                            .toLocalDate()
+                            .minusDays(MAX_TRANSACTIONS_DAYS_WITHOUT_SCA);
         }
         return startDate;
     }
