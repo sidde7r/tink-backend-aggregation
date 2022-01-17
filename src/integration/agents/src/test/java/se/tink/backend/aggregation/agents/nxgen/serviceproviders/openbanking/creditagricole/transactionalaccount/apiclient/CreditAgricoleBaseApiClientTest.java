@@ -224,8 +224,7 @@ public class CreditAgricoleBaseApiClientTest {
 
         // then
         final PutConsentsRequest expectedConsentsRequest =
-                new PutConsentsRequest(
-                        listOfNecessaryConsents, listOfNecessaryConsents, true, true);
+                PutConsentsRequest.create(listOfNecessaryConsents);
         verify(requestBuilder).put(expectedConsentsRequest);
     }
 

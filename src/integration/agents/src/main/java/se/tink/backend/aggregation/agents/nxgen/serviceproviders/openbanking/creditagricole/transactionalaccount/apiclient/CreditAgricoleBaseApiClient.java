@@ -201,7 +201,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
 
     private static PutConsentsRequest buildBody(
             final List<AccountIdEntity> listOfNecessaryConsents) {
-        return new PutConsentsRequest(listOfNecessaryConsents, listOfNecessaryConsents, true, true);
+        return PutConsentsRequest.create(listOfNecessaryConsents);
     }
 
     private boolean isNoAccountsAvailableException(HttpResponseException exception) {
