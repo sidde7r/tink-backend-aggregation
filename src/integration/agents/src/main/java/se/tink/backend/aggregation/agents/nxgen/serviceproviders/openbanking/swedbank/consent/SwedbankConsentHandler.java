@@ -164,7 +164,7 @@ public class SwedbankConsentHandler {
 
     private boolean isConsentError(GenericResponse errorResponse) {
         return errorResponse.isConsentInvalid()
-                || errorResponse.isResourceUnknown()
+                || errorResponse.isResourceNotFound()
                 || errorResponse.isConsentExpired();
     }
 
