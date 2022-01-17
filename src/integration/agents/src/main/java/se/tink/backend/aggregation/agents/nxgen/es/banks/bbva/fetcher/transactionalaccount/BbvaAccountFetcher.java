@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final BbvaApiClient apiClient;
-    private Collection<TransactionalAccount> accountsCache;
+    private List<TransactionalAccount> accountsCache;
 
     public BbvaAccountFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;
@@ -50,6 +50,7 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList());
+            apiClient.fetchUpdateTransactions(accountsCache);
         }
         return accountsCache;
     }

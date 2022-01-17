@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.AccountsProvider;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.TransactionsFetchingDateFromManager;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -43,7 +44,8 @@ public class BbvaAuthenticatorTest {
                         apiClient,
                         mock(SupplementalInformationHelper.class),
                         mock(CredentialsRequest.class),
-                        mock(TransactionsFetchingDateFromManager.class));
+                        mock(TransactionsFetchingDateFromManager.class),
+                        mock(AccountsProvider.class));
     }
 
     @Test
@@ -188,7 +190,8 @@ public class BbvaAuthenticatorTest {
                         apiClient,
                         mock(SupplementalInformationHelper.class),
                         mock(CredentialsRequest.class),
-                        mock(TransactionsFetchingDateFromManager.class));
+                        mock(TransactionsFetchingDateFromManager.class),
+                        mock(AccountsProvider.class));
 
         // when
         Throwable thrown = catchThrowable(() -> authenticator.authenticate(credentials));

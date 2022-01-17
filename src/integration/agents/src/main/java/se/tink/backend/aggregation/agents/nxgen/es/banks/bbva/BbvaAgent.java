@@ -6,10 +6,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.ID
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LOANS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -22,6 +19,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAccountsProvider;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardTransactionFetcher;
@@ -47,7 +45,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -73,28 +70,20 @@ public final class BbvaAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransactionsFetchingDateFromManager transactionsFetchingDateFromManager;
+    private final AccountsProvider accountsProvider;
 
     @Inject
     public BbvaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        // client.setProxyProfile(componentProvider.getProxyProfiles().getMarketProxyProfile());
+        client.setProxyProfile(componentProvider.getProxyProfiles().getMarketProxyProfile());
         this.apiClient = new BbvaApiClient(client, sessionStorage, supplementalInformationHelper);
         BbvaAccountFetcher accountFetcher = new BbvaAccountFetcher(apiClient);
         BbvaCreditCardFetcher creditCardFetcher = new BbvaCreditCardFetcher(apiClient);
+        accountsProvider = new BbvaAccountsProvider(accountFetcher, creditCardFetcher);
         this.transactionsFetchingDateFromManager =
                 new TransactionsFetchingDateFromManager(
-                        new AccountsProvider() {
-                            @Override
-                            public Collection<? extends Account> getAccounts() {
-                                return Lists.newArrayList(
-                                        Iterables.concat(
-                                                accountFetcher.fetchAccounts(),
-                                                creditCardFetcher.fetchAccounts()));
-                            }
-                        },
-                        transactionPaginationHelper,
-                        persistentStorage);
+                        accountsProvider, transactionPaginationHelper, persistentStorage);
         apiClient.setTransactionsFetchingDateFromManager(transactionsFetchingDateFromManager);
         this.investmentRefreshController =
                 new InvestmentRefreshController(
@@ -173,7 +162,8 @@ public final class BbvaAgent extends NextGenerationAgent
                         apiClient,
                         supplementalInformationHelper,
                         request,
-                        transactionsFetchingDateFromManager);
+                        transactionsFetchingDateFromManager,
+                        accountsProvider);
         log.info(
                 "Credentials status after authenticating is equal {}",
                 this.credentials.getStatus());

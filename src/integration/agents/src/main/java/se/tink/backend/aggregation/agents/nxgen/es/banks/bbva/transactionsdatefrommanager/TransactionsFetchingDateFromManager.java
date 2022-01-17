@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
  * <ol>
  *   <li>The <code>AccountsProvider</code> implementation has to provide a set of accounts combined
  *       from: checking accounts, savings accounts and credit cards.
- *   <li>After regular consent authentication the <code>init()</code> method has to be called.
  *   <li>The date returned by <code>getComputedDateFrom()</code> should be used to decide if
  *       extended consent is needed.
  *   <li>The <code>TransactionalAccountRefreshControllerTransactionsFetchingDateFromManagerAware

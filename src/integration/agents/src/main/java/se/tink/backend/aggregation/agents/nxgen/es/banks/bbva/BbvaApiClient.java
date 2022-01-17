@@ -25,6 +25,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -478,7 +479,7 @@ public class BbvaApiClient {
     }
 
     public void requestMoreThan90DaysTransactionsForFirstAccount(
-            List<TransactionalAccount> accounts) {
+            Collection<? extends Account> accounts) {
         accounts.stream()
                 .findFirst()
                 .ifPresent(firstAccount -> fetchAccountTransactionsToForceOtp(firstAccount, ""));

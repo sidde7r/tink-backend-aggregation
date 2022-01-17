@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -19,10 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Auth
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.AccountsProvider;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.transactionsdatefrommanager.TransactionsFetchingDateFromManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -34,8 +32,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CredentialsRequest request;
     private final TransactionsFetchingDateFromManager transactionsFetchingDateFromManager;
-
-    private List<TransactionalAccount> accounts = Collections.emptyList();
+    private final AccountsProvider accountsProvider;
 
     @Override
     public void authenticate(Credentials credentials)
@@ -156,7 +153,8 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
 
     public void forcedOtpForExtendedPeriod() {
         try {
-            apiClient.requestMoreThan90DaysTransactionsForFirstAccount(accounts);
+            apiClient.requestMoreThan90DaysTransactionsForFirstAccount(
+                    accountsProvider.getAccounts());
         } catch (HttpResponseException e) {
             mapHttpErrors(e, true);
         }
