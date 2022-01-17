@@ -108,15 +108,15 @@ public class TransactionsFetchingDateFromManager {
     }
 
     public void cleanCheckingAccountsFetchingLastSuccessDate() {
-        fetchingStatus.setCheckingAccountsFetchingLastSuccessDate(null);
+        getFetchingStatus().setCheckingAccountsFetchingLastSuccessDate(null);
     }
 
     public void cleanSavingsAccountsFetchingLastSuccessDate() {
-        fetchingStatus.setSavingsAccountsLastSuccessRefreshDate(null);
+        getFetchingStatus().setSavingsAccountsLastSuccessRefreshDate(null);
     }
 
     public void cleanCreditCardsFetchingLastSuccessDate() {
-        fetchingStatus.setCreditCardsLastSuccessRefreshDate(null);
+        getFetchingStatus().setCreditCardsLastSuccessRefreshDate(null);
     }
 
     private BbvaFetchingStatus getFetchingStatus() {
@@ -129,13 +129,13 @@ public class TransactionsFetchingDateFromManager {
     private Optional<LocalDate> findTheMostRecentCertainDateForAccounts() {
         return accountsProvider.getAccounts().stream()
                 .map(account -> transactionPaginationHelper.getTransactionDateLimit(account))
-                .filter(o -> o.isPresent())
-                .map(o -> o.get())
+                .filter(maybeDateFrom -> maybeDateFrom.isPresent())
+                .map(dateFrom -> dateFrom.get())
                 .sorted(Comparator.reverseOrder())
                 .findFirst()
                 .map(
-                        o ->
-                                o.toInstant()
+                        dateFrom ->
+                                dateFrom.toInstant()
                                         .atZone(ZoneId.of(BbvaConstants.Defaults.TIMEZONE_CET))
                                         .toLocalDate());
     }

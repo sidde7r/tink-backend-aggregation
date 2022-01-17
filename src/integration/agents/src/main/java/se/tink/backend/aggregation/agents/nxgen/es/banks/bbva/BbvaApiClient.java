@@ -254,10 +254,10 @@ public class BbvaApiClient {
     }
 
     public TransactionsRequest createAccountTransactionsRequestBody(Account account) {
-        Optional<LocalDate> possiblerDateFrom =
+        Optional<LocalDate> possibleDateFrom =
                 transactionsFetchingDateFromManager.getComputedDateFrom();
         LocalDateTime fromTransactionDate =
-                getDateForFetchHistoryTransactions(account, false, possiblerDateFrom.orElse(null));
+                getDateForFetchHistoryTransactions(account, false, possibleDateFrom.orElse(null));
         final DateFilterEntity dateFilterEntity =
                 new DateFilterEntity(
                         YYYY_MM_DD_FORMAT.format(fromTransactionDate) + START_OF_DAY,
