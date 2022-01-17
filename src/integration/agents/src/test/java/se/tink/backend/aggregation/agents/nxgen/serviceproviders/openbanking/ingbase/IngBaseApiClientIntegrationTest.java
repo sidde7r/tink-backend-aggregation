@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,9 +14,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
@@ -51,13 +53,16 @@ public class IngBaseApiClientIntegrationTest {
     public void setUp() throws CertificateException {
         defaultMockSetUp();
 
+        QsealcSigner qsealcSigner = mock(QsealcSigner.class);
+        when(qsealcSigner.sign(any(), any())).thenReturn(Signature.create("test".getBytes()));
+
         baseApiClient =
                 new IngBaseApiClient(
                         WIREMOCK_TEST_SERVER.createTinkHttpClient(),
                         persistentStorage = new PersistentStorage(),
                         mock(ProviderSessionCacheController.class),
                         marketConfiguration,
-                        mock(QsealcSigner.class),
+                        qsealcSigner,
                         IngApiInputData.builder()
                                 .userAuthenticationData(
                                         new IngUserAuthenticationData(true, "psuIpAddress"))

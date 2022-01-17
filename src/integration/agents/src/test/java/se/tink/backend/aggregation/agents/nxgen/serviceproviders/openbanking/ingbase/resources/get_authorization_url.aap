@@ -4,7 +4,7 @@ Accept: application/json
 Digest: SHA-256=w0mymuL8aCrbJmmabs1pytZhon8lQucTuJMUtuKr+uw=
 Date: Fri, 10 Apr 1992 00:00:00 GMT
 X-ING-ReqID: 00000000-0000-4000-0000-000000000000
-Authorization: Signature keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="null"
+Authorization: Signature keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="dGVzdA=="
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=client_credentials
@@ -45,7 +45,7 @@ Accept: application/json
 Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 Date: Fri, 10 Apr 1992 00:00:00 GMT
 X-ING-ReqID: 00000000-0000-4000-0000-000000000000
-Signature: keyId="0440f53f-93e0-4ebf-95a6-64cfd2d52a90",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="null"
+Signature: keyId="0440f53f-93e0-4ebf-95a6-64cfd2d52a90",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="dGVzdA=="
 Authorization: Bearer access_token
 
 RESPONSE 2

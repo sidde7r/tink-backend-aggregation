@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngApiInputData;
@@ -33,7 +36,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration.Builder;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -345,6 +347,9 @@ public class IngPaymentControllerTest {
 
     @SneakyThrows
     private IngPaymentApiClient createIngPaymentApiClient() {
+        QsealcSigner qsealcSigner = mock(QsealcSigner.class);
+        when(qsealcSigner.sign(any(), any())).thenReturn(Signature.create("test".getBytes()));
+
         IngPaymentApiClient ingPaymentApiClient =
                 new IngPaymentApiClient(
                         createTinkHttpClient(),
@@ -352,7 +357,7 @@ public class IngPaymentControllerTest {
                         new ProviderSessionCacheController(
                                 new MockSessionCacheProvider(new HashMap<>())),
                         marketConfiguration,
-                        mock(QsealcSigner.class),
+                        qsealcSigner,
                         IngApiInputData.builder()
                                 .userAuthenticationData(
                                         new IngUserAuthenticationData(true, "psuIpAddress"))

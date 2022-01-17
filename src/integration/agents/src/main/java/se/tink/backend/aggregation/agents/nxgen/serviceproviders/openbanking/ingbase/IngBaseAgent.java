@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentM
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -65,7 +64,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected final LocalDateTimeSource localDateTimeSource;
 
-    public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
+    public IngBaseAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         new IngBaseTinkClientConfigurator()
                 .configureClient(client, MAX_ATTEMPTS, RETRY_SLEEP_MILLISECONDS);
@@ -77,7 +76,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         providerSessionCacheController,
                         this,
-                        qsealcSigner,
+                        agentComponentProvider.getQsealcSigner(),
                         IngApiInputData.builder()
                                 .userAuthenticationData(
                                         new IngUserAuthenticationData(
@@ -92,7 +91,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         providerSessionCacheController,
                         this,
-                        qsealcSigner,
+                        agentComponentProvider.getQsealcSigner(),
                         IngApiInputData.builder()
                                 .userAuthenticationData(
                                         new IngUserAuthenticationData(
