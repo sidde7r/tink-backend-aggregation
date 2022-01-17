@@ -137,7 +137,7 @@ public final class SwedbankConstants {
         public static final String PSD2 = "PSD2";
         public static final String MOBILE_ID = "MOBILE_ID";
         public static final String SMART_ID = "SMART_ID";
-        public static final String ALL_ACCOUNTS_SCOPES = "PSD2";
+        public static final String ALL_ACCOUNTS_SCOPES = "PSD2 PSD2account_list";
     }
 
     public static class BICProduction {
