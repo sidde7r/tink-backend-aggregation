@@ -143,6 +143,7 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
                         ErrorEntity.create(lastError, lastError),
                         InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
 
+            case INIT_FAILED:
             case SESSION_EXPIRED:
                 return new PaymentAuthorizationTimeOutException(
                         lastError, InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT);
@@ -183,7 +184,14 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
                                             paymentMultiStepRequest.getPayment().getUniqueId()));
         } catch (ExecutionException | RetryException e) {
             log.error("Unable to get Session Status from FTS", e);
-            throw new PaymentException(e.getMessage(), e.getCause());
+            sessionsResponse =
+                    apiClient.fetchSessionStatus(
+                            paymentMultiStepRequest.getPayment().getUniqueId());
+            if (sessionsResponse != null) {
+                throw getPaymentExceptionFromFtsErrorMessage(sessionsResponse.getLastError());
+            } else {
+                throw new PaymentException(e.getMessage(), e.getCause());
+            }
         }
         return sessionsResponse;
     }
