@@ -378,11 +378,14 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                     createRequestInSession(
                                     Urls.ACCOUNT_TRANSACTIONS.parameter(
                                             UrlParameters.ACCOUNT_ID, accountId),
-                                    true)
+                                    false)
                             .queryParam(SwedbankConstants.HeaderKeys.FROM_DATE, fromDate.toString())
                             .queryParam(SwedbankConstants.HeaderKeys.TO_DATE, toDate.toString())
-                            .queryParam(SwedbankConstants.QueryKeys.BOOKING_STATUS, bookingStatus);
-
+                            .queryParam(SwedbankConstants.QueryKeys.BOOKING_STATUS, bookingStatus)
+                            .header(
+                                    HeaderKeys.CONSENT_ID,
+                                    persistentStorage.get(
+                                            StorageKeys.CONSENT_TRANSACTIONS_OVER_90_DAYS));
             try {
                 return Optional.of(requestBuilder.post(StatementResponse.class));
             } catch (HttpResponseException hre) {
@@ -401,7 +404,10 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     }
 
     public HttpResponse getOfflineTransactions(String endPoint) {
-        return createRequestInSession(new URL(Urls.BASE.concat(endPoint)), true)
+        return createRequestInSession(new URL(Urls.BASE.concat(endPoint)), false)
+                .header(
+                        HeaderKeys.CONSENT_ID,
+                        persistentStorage.get(StorageKeys.CONSENT_TRANSACTIONS_OVER_90_DAYS))
                 .get(HttpResponse.class);
     }
 
