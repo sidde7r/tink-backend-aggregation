@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -30,7 +31,8 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
             RandomValueGenerator randomValueGenerator,
-            OpenIdAuthenticationValidator openIdAuthenticationValidator) {
+            OpenIdAuthenticationValidator openIdAuthenticationValidator,
+            LogMasker logMasker) {
         super(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -40,7 +42,8 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
                 strongAuthenticationState,
                 callbackUri,
                 randomValueGenerator,
-                openIdAuthenticationValidator);
+                openIdAuthenticationValidator,
+                logMasker);
 
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;

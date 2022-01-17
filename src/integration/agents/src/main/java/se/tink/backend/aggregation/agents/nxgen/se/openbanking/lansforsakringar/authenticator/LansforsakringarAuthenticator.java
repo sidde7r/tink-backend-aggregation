@@ -70,7 +70,7 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
     private void refreshAndStoreNewToken(OAuth2Token token) throws SessionException {
         OAuth2Token oAuth2Token =
                 apiClient.refreshToken(
-                        token.getRefreshToken()
+                        token.getOptionalRefreshToken()
                                 .orElseThrow(SessionError.SESSION_EXPIRED::exception));
         storageHelper.setOAuth2Token(oAuth2Token);
     }

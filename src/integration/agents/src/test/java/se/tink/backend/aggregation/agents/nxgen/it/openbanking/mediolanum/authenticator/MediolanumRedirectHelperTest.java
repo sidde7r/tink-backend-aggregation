@@ -74,7 +74,7 @@ public class MediolanumRedirectHelperTest {
                         "code=test_code&client_id=test_client_id&client_secret=test_client_secret&redirect_uri=test_redirect_url&grant_type=authorization_code");
         assertThat(oAuth2Token.getTokenType()).isEqualTo("Bearer");
         assertThat(oAuth2Token.getAccessToken()).isEqualTo("1234567890");
-        assertThat(oAuth2Token.getRefreshToken().isPresent()).isFalse();
+        assertThat(oAuth2Token.getOptionalRefreshToken().isPresent()).isFalse();
         assertThat(oAuth2Token.getExpiresInSeconds()).isEqualTo(7776000);
     }
 }

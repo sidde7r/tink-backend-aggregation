@@ -28,7 +28,7 @@ public class TokenResponseConverterTest {
         // then
         OAuth2Token expected = getExpectedToken();
         assertEquals(expected.getAccessToken(), token.getAccessToken());
-        assertEquals(expected.getRefreshToken(), token.getRefreshToken());
+        assertEquals(expected.getOptionalRefreshToken(), token.getOptionalRefreshToken());
         assertEquals(expected.getTokenType(), token.getTokenType());
         assertEquals(expected.getAccessExpireEpoch(), token.getAccessExpireEpoch());
     }

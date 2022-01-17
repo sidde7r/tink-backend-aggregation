@@ -55,7 +55,7 @@ public class LansforsakringarSessionHandler implements SessionHandler {
     private void refreshAndStoreNewToken(OAuth2Token token) throws SessionException {
         OAuth2Token refreshToken =
                 apiClient.refreshToken(
-                        token.getRefreshToken()
+                        token.getOptionalRefreshToken()
                                 .orElseThrow(SessionError.SESSION_EXPIRED::exception));
         storageHelper.setOAuth2Token(refreshToken);
     }

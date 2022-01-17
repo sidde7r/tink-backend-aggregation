@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -163,7 +164,7 @@ public class OpenIdAuthenticationControllerTest {
         when(persistentStorage.get(
                         OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(oAuth2Token));
-        when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("refreshToken"));
+        when(oAuth2Token.getOptionalRefreshToken()).thenReturn(Optional.of("refreshToken"));
         when(apiClient.refreshAccessToken("refreshToken", ClientMode.ACCOUNTS))
                 .thenThrow(httpResponseException);
         when(httpResponseException.getResponse().getStatus()).thenReturn(400);
@@ -188,7 +189,7 @@ public class OpenIdAuthenticationControllerTest {
         when(persistentStorage.get(
                         OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(oAuth2Token));
-        when(oAuth2Token.getRefreshToken()).thenReturn(Optional.of("refreshToken"));
+        when(oAuth2Token.getOptionalRefreshToken()).thenReturn(Optional.of("refreshToken"));
         when(apiClient.refreshAccessToken("refreshToken", ClientMode.ACCOUNTS))
                 .thenThrow(httpResponseException);
         when(httpResponseException.getResponse().getStatus()).thenReturn(500);
@@ -282,7 +283,8 @@ public class OpenIdAuthenticationControllerTest {
                 strongAuthenticationState,
                 "callbackUri",
                 randomValueGenerator,
-                authenticationValidator);
+                authenticationValidator,
+                new FakeLogMasker());
     }
 
     private OAuth2Token createValidOAuth2Token() {

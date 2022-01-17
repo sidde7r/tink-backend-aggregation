@@ -29,7 +29,7 @@ public class OAuth2StorageMigrator implements AgentPlatformStorageMigrator {
         RefreshableAccessToken.RefreshableAccessTokenBuilder redirectTokensBuilder =
                 RefreshableAccessToken.builder().accessToken(migrateAccessToken(oAuth2Token));
         oAuth2Token
-                .getRefreshToken()
+                .getOptionalRefreshToken()
                 .map(body -> Token.builder().body(body).build())
                 .ifPresent(refreshToken -> redirectTokensBuilder.refreshToken(refreshToken));
         return new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(

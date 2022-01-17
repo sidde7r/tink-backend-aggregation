@@ -59,12 +59,14 @@ public class EnterCardAuthenticator implements OAuth2Authenticator {
         // TODO temporary log: to trace persist refresh token
         logger.info(
                 "Entercard - get persist refresh token: {}",
-                persistedRefreshToken.getRefreshToken().get().hashCode());
+                persistedRefreshToken.getOptionalRefreshToken().get().hashCode());
 
         OAuth2Token token = apiClient.refreshToken(refreshToken);
 
         // TODO temporary log to trace new refresh token
-        logger.info("Entercard - get new refresh token: {}", token.getRefreshToken().hashCode());
+        logger.info(
+                "Entercard - get new refresh token: {}",
+                token.getOptionalRefreshToken().hashCode());
         return token;
     }
 

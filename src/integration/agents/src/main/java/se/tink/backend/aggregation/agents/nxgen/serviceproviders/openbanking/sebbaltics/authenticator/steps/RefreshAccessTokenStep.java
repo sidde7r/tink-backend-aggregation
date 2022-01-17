@@ -52,7 +52,7 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
             return AuthenticationStepResponse.executeNextStep();
         }
 
-        Optional<String> refreshToken = oAuth2Token.getRefreshToken();
+        Optional<String> refreshToken = oAuth2Token.getOptionalRefreshToken();
 
         if (!refreshToken.isPresent()) {
             return AuthenticationStepResponse.executeNextStep();

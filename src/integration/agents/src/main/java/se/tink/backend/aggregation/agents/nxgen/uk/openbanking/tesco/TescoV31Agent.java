@@ -91,7 +91,8 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
                 new OpenIdAuthenticationValidator(this.apiClient),
-                new ConsentStatusValidator(this.apiClient, this.persistentStorage));
+                new ConsentStatusValidator(this.apiClient, this.persistentStorage),
+                this.logMasker);
     }
 
     private AutoAuthenticationController createAutoAuthController(

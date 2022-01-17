@@ -17,12 +17,12 @@ public class TestAsserts {
         assertTrue(token.isRefreshTokenExpirationPeriodSpecified());
         assertFalse(token.hasAccessExpired());
         assertTrue(token.canRefresh());
-        assertNotNull(token.getRefreshToken().get());
+        assertNotNull(token.getOptionalRefreshToken().get());
     }
 
     public static void assertEqual(OAuth2Token expected, OAuth2Token given) {
         assertEquals(expected.getAccessToken(), given.getAccessToken());
-        assertEquals(expected.getRefreshToken(), given.getRefreshToken());
+        assertEquals(expected.getOptionalRefreshToken(), given.getOptionalRefreshToken());
         assertEquals(expected.getTokenType(), given.getTokenType());
         assertEquals(expected.getAccessExpireEpoch(), given.getAccessExpireEpoch());
         assertEquals(expected.getRefreshExpireEpoch(), given.getRefreshExpireEpoch());

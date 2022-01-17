@@ -77,7 +77,9 @@ class OAuth2TokenPredicate implements Predicate<OAuth2Token> {
     public boolean test(OAuth2Token actualToken) {
         return expectedToken.getTokenType().equals(actualToken.getTokenType())
                 && expectedToken.getAccessToken().equals(actualToken.getAccessToken())
-                && expectedToken.getRefreshToken().equals(actualToken.getRefreshToken())
+                && expectedToken
+                        .getOptionalRefreshToken()
+                        .equals(actualToken.getOptionalRefreshToken())
                 && expectedToken.getExpiresInSeconds() == actualToken.getExpiresInSeconds();
     }
 }

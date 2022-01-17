@@ -51,7 +51,7 @@ public class TokenDetector implements VariableDetector {
                 VariableKey.AUTHORIZATION,
                 toAuthorizeHeader(token.getTokenType(), token.getAccessToken()));
         variableStore.addVariable(VariableKey.ACCESS_TOKEN, token.getAccessToken());
-        token.getRefreshToken()
+        token.getOptionalRefreshToken()
                 .ifPresent(
                         refreshToken ->
                                 variableStore.addVariable(VariableKey.REFRESH_TOKEN, refreshToken));

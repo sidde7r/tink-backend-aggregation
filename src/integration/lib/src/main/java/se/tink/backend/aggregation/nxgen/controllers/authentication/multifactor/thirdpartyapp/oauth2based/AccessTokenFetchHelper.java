@@ -33,7 +33,7 @@ public class AccessTokenFetchHelper<T extends OAuth2TokenBase> {
     }
 
     Optional<T> retrieveRefreshedToken(T token) {
-        return token.getRefreshToken()
+        return token.getOptionalRefreshToken()
                 .flatMap(tokenProvider::refreshAccessToken)
                 .filter(OAuth2TokenBase::isValid)
                 .map(refreshedToken -> updateRefreshToken(refreshedToken, token));

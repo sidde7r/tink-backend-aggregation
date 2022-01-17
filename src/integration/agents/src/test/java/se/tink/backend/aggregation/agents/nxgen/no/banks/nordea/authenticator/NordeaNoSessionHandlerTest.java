@@ -168,7 +168,7 @@ public class NordeaNoSessionHandlerTest {
 
     private static OAuth2Token mockOAuth2TokenWithRefreshToken(@Nullable String refreshToken) {
         OAuth2Token token = mock(OAuth2Token.class);
-        when(token.getRefreshToken()).thenReturn(Optional.ofNullable(refreshToken));
+        when(token.getOptionalRefreshToken()).thenReturn(Optional.ofNullable(refreshToken));
         return token;
     }
 

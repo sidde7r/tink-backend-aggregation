@@ -28,7 +28,7 @@ public abstract class BerlinGroupAuthenticator implements OAuth2Authenticator {
         final OAuth2Token token = apiClient.refreshToken(refreshToken);
         apiClient.setTokenToSession(token, StorageKeys.OAUTH_TOKEN);
 
-        token.getRefreshToken()
+        token.getOptionalRefreshToken()
                 .ifPresent(
                         refreshedToken ->
                                 log.info("Refreshed token hash: {}", refreshedToken.hashCode()));

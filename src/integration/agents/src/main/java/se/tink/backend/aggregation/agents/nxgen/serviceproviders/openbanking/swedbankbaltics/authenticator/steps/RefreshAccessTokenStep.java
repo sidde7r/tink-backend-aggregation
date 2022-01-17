@@ -29,7 +29,7 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
                 persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
 
         if (token.isPresent() && token.get().canRefresh()) {
-            Optional<String> refreshToken = token.get().getRefreshToken();
+            Optional<String> refreshToken = token.get().getOptionalRefreshToken();
 
             if (refreshToken.isPresent()) {
                 try {

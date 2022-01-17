@@ -98,7 +98,7 @@ public class AuthenticationClient {
     public OauthTokenResponse refreshAccessToken() {
         String refreshToken =
                 storage.retrieveOauthToken()
-                        .flatMap(OAuth2TokenBase::getRefreshToken)
+                        .flatMap(OAuth2TokenBase::getOptionalRefreshToken)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         String body =

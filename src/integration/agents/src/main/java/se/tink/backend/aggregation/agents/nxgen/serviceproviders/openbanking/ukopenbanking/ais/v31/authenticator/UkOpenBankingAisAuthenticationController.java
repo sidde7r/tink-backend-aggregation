@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -32,7 +33,8 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
             String callbackUri,
             RandomValueGenerator randomValueGenerator,
             OpenIdAuthenticationValidator authenticationValidator,
-            ConsentStatusValidator consentStatusValidator) {
+            ConsentStatusValidator consentStatusValidator,
+            LogMasker logMasker) {
         super(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -42,7 +44,8 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
                 strongAuthenticationState,
                 callbackUri,
                 randomValueGenerator,
-                authenticationValidator);
+                authenticationValidator,
+                logMasker);
 
         this.apiClient = apiClient;
         this.consentStatusValidator = consentStatusValidator;

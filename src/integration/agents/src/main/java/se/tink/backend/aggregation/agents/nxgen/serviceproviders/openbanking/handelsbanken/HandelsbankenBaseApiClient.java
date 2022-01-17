@@ -449,7 +449,7 @@ public class HandelsbankenBaseApiClient {
     private void refreshAndStoreOauthToken() {
         String refreshToken =
                 getOauthToken()
-                        .getRefreshToken()
+                        .getOptionalRefreshToken()
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(

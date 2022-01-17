@@ -180,7 +180,7 @@ public class SdcApiClient {
 
     private String getRefreshTokenFromStorage() {
         return getTokenFromStorage()
-                .getRefreshToken()
+                .getOptionalRefreshToken()
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 

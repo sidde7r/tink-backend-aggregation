@@ -112,7 +112,8 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
                 new OpenIdAuthenticationValidator(this.apiClient),
-                getConsentStatusValidation(unleashClient, currentAppId, currentProviderName));
+                getConsentStatusValidation(unleashClient, currentAppId, currentProviderName),
+                this.logMasker);
     }
 
     private AutoAuthenticationController createAutoAuthController(

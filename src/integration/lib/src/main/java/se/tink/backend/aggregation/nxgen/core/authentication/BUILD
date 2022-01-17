@@ -7,6 +7,7 @@ java_library_with_sources(
         "//third_party:com_auth0_java_jwt",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",

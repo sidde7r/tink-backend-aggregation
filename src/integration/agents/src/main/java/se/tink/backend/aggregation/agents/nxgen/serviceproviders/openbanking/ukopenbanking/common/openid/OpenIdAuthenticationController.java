@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorDescriptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -62,6 +63,7 @@ public class OpenIdAuthenticationController
     private final RandomValueGenerator randomValueGenerator;
     private final String callbackUri;
     private final OpenIdAuthenticationValidator authenticationValidator;
+    private final LogMasker logMasker;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -72,7 +74,8 @@ public class OpenIdAuthenticationController
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
             RandomValueGenerator randomValueGenerator,
-            OpenIdAuthenticationValidator authenticationValidator) {
+            OpenIdAuthenticationValidator authenticationValidator,
+            LogMasker logMasker) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -84,7 +87,8 @@ public class OpenIdAuthenticationController
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT,
                 randomValueGenerator,
-                authenticationValidator);
+                authenticationValidator,
+                logMasker);
     }
 
     private OpenIdAuthenticationController(
@@ -98,7 +102,8 @@ public class OpenIdAuthenticationController
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit,
             RandomValueGenerator randomValueGenerator,
-            OpenIdAuthenticationValidator authenticationValidator) {
+            OpenIdAuthenticationValidator authenticationValidator,
+            LogMasker logMasker) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
@@ -113,6 +118,7 @@ public class OpenIdAuthenticationController
         this.strongAuthenticationState = strongAuthenticationState.getState();
         this.randomValueGenerator = randomValueGenerator;
         this.authenticationValidator = authenticationValidator;
+        this.logMasker = logMasker;
     }
 
     @Override
@@ -175,6 +181,9 @@ public class OpenIdAuthenticationController
         }
 
         OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
+        log.info(
+                "[OpenIdAuthenticationController] OAuth2 token received from bank: {}",
+                oAuth2Token.toMaskedString(logMasker));
 
         authenticationValidator.validateRefreshableAccessToken(oAuth2Token);
 
@@ -209,6 +218,10 @@ public class OpenIdAuthenticationController
                                             "[OpenIdAuthenticationController] Failed to retrieve access token from persistent storage.");
                                     return SessionError.SESSION_EXPIRED.exception();
                                 });
+
+        log.info(
+                "[OpenIdAuthenticationController] OAuth2 token retrieved from persistent storage {} ",
+                oAuth2Token.toMaskedString(logMasker));
 
         if (oAuth2Token.isAccessTokenNotExpired()) {
             apiClient.instantiateAisAuthFilter(oAuth2Token);
@@ -252,7 +265,7 @@ public class OpenIdAuthenticationController
                                 oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
                         : "N/A");
 
-        String refreshToken = oAuth2Token.getRefreshToken().get();
+        String refreshToken = oAuth2Token.getOptionalRefreshToken().get();
         try {
             OAuth2Token refreshedOAuth2Token =
                     apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS);

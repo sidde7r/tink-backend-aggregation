@@ -378,7 +378,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
-                new OpenIdAuthenticationValidator(this.apiClient));
+                new OpenIdAuthenticationValidator(this.apiClient),
+                this.logMasker);
     }
 
     protected OpenIdAuthenticator getAisAuthenticator() {

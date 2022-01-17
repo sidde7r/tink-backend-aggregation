@@ -207,7 +207,9 @@ public class OAuth2AuthenticationController
         // Refresh token is not always present, if it's absent we fall back to the manual
         // authentication.
         String refreshToken =
-                oAuth2Token.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+                oAuth2Token
+                        .getOptionalRefreshToken()
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         try {
             OAuth2Token refreshedOAuth2Token = authenticator.refreshAccessToken(refreshToken);
 

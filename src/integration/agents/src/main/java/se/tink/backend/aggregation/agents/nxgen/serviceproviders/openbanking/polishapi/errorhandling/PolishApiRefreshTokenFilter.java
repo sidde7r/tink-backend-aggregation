@@ -36,7 +36,7 @@ public class PolishApiRefreshTokenFilter extends AbstractRetryFilter {
                 return false;
             }
             log.warn("{} Refresh Token Filter - Faced 401 error", LOG_TAG);
-            Optional<String> refreshToken = persistentStorage.getToken().getRefreshToken();
+            Optional<String> refreshToken = persistentStorage.getToken().getOptionalRefreshToken();
             if (refreshToken.isPresent()) {
                 log.info("{} Refresh Token Filter - Token is present trying to exchange", LOG_TAG);
                 TokenResponse tokenResponse =

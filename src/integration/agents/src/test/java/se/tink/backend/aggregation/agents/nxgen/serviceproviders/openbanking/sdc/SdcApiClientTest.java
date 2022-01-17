@@ -279,7 +279,7 @@ public class SdcApiClientTest {
 
     private void mockRefreshToken(@Nullable String refreshToken) {
         OAuth2Token sampleToken = mock(OAuth2Token.class);
-        when(sampleToken.getRefreshToken()).thenReturn(Optional.ofNullable(refreshToken));
+        when(sampleToken.getOptionalRefreshToken()).thenReturn(Optional.ofNullable(refreshToken));
 
         when(persistentStorage.get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class))
                 .thenReturn(Optional.of(sampleToken));

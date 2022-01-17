@@ -29,6 +29,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
         "//src/libraries/agent-storage",
         "//src/libraries/cryptography",
         "//src/libraries/encoding",

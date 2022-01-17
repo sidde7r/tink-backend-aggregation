@@ -1,12 +1,20 @@
 package se.tink.backend.aggregation.nxgen.core.authentication;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.header.AuthorizationHeader;
 
+@Slf4j
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -157,6 +165,70 @@ public class OAuth2Token extends OAuth2TokenBase implements AuthorizationHeader 
     }
 
     public boolean isRefreshNullOrEmpty() {
-        return !getRefreshToken().isPresent();
+        return !getOptionalRefreshToken().isPresent();
+    }
+
+    /**
+     * Useful for debugging (e.g token mismatch between refreshes). Will hide the outcome even if
+     * masking is off. It is null and exception safe.
+     *
+     * @param logMasker
+     * @return masked token details
+     */
+    public String toMaskedString(LogMasker logMasker) {
+        try {
+            logMasker.addNewSensitiveValuesToMasker(
+                    ImmutableSet.of(
+                            Strings.nullToEmpty(getAccessToken()),
+                            Strings.nullToEmpty(getRefreshToken()),
+                            Strings.nullToEmpty(getIdToken())));
+            return toGuardedNullSafeMaskedString(
+                    logMasker,
+                    "OAuth2Token{"
+                            + "tokenType = "
+                            + toNullSafeMaskedString(logMasker, getTokenType())
+                            + ", accessToken = "
+                            + toNullSafeMaskedString(logMasker, getAccessToken())
+                            + ", refreshToken = "
+                            + toNullSafeMaskedString(logMasker, getRefreshToken())
+                            + ", idToken = "
+                            + toNullSafeMaskedString(logMasker, getIdToken())
+                            + ", expiresInSeconds = "
+                            + getExpiresInSeconds()
+                            + " ["
+                            + toLocalDateTime(getExpiresInSeconds())
+                            + "]"
+                            + ", refreshExpiresInSeconds = "
+                            + getRefreshExpiresInSeconds()
+                            + " ["
+                            + toLocalDateTime(getRefreshExpiresInSeconds())
+                            + "]"
+                            + ", issuedAt = "
+                            + getIssuedAt()
+                            + " ["
+                            + toLocalDateTime(getIssuedAt())
+                            + "]"
+                            + '}');
+        } catch (Exception e) {
+            String maskingFailedMsg = "Masking token failed";
+            log.error(maskingFailedMsg, e);
+            return maskingFailedMsg;
+        }
+    }
+
+    private String toGuardedNullSafeMaskedString(LogMasker logMasker, String value) {
+        String masked = toNullSafeMaskedString(logMasker, value);
+        if (!StringUtils.contains(masked, "HASHED")) {
+            return "Masking not applied correctly. Hiding the output.";
+        }
+        return masked;
+    }
+
+    private String toNullSafeMaskedString(LogMasker logMasker, String value) {
+        return Optional.ofNullable(value).map(logMasker::mask).orElse("null");
+    }
+
+    private LocalDateTime toLocalDateTime(long seconds) {
+        return LocalDateTime.ofEpochSecond(seconds, 0, ZoneOffset.UTC);
     }
 }
