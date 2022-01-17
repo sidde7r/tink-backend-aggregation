@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
@@ -177,7 +178,7 @@ public class AccountEntity implements GeneralAccountEntity {
                 break;
             default:
                 logger.info("unknown_account_type {}", SerializationUtils.serializeToString(this));
-                account.setType(AccountTypes.OTHER);
+                account.setType(AccountTypes.CHECKING);
                 break;
         }
 
@@ -211,15 +212,20 @@ public class AccountEntity implements GeneralAccountEntity {
                 .build();
     }
 
-    private void setTypeForAccountTypeUnknown(Account account) {
+    @VisibleForTesting
+    void setTypeForAccountTypeUnknown(Account account) {
         // Our ambassador has confirmed that accounts called Aktielikvid doesn't hold investments,
         // only balance to buy stocks/funds with. Therefore map it as a savings account.
         if (StringUtils.containsIgnoreCase(accountName, "aktielikvid")) {
             account.setType(AccountTypes.SAVINGS);
+        } else if (accountName.toLowerCase().matches("aktie.*")) {
+            account.setType(AccountTypes.INVESTMENT);
+        } else if (StringUtils.containsIgnoreCase(accountName, "sparkonto")) {
+            account.setType(AccountTypes.SAVINGS);
         } else {
             logger.info(
-                    "Account with type UNKNOWN and accountName {} mapped as OTHER", accountName);
-            account.setType(AccountTypes.OTHER);
+                    "Account with type UNKNOWN and accountName {} mapped as CHECKING", accountName);
+            account.setType(AccountTypes.CHECKING);
         }
     }
 
