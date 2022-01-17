@@ -129,6 +129,8 @@ public class TransactionsEntity {
     }
 
     private static String getStructuredDescription(String unStructuredDescription) {
-        return String.join(" ", unStructuredDescription.split("\\s+"));
+        return Optional.ofNullable(unStructuredDescription)
+                .map(description -> String.join(" ", description.split("\\s+")))
+                .orElse(null);
     }
 }
