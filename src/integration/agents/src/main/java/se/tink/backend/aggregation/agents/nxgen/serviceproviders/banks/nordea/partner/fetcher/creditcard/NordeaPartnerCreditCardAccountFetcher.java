@@ -35,9 +35,9 @@ public class NordeaPartnerCreditCardAccountFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         if (isOnStaging) {
-            return apiClient.getAllData().toTinkCreditCardAccounts();
+            return apiClient.getAllData().toTinkCreditCardAccounts(true);
         }
-        return apiClient.fetchCreditCards().toTinkCreditCardAccounts();
+        return apiClient.fetchCreditCards().toTinkCreditCardAccounts(false);
     }
 
     @Override

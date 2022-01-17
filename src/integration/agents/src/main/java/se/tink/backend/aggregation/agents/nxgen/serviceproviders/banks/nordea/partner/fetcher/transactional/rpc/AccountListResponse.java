@@ -41,9 +41,9 @@ public class AccountListResponse {
     }
 
     @JsonIgnore
-    public Collection<CreditCardAccount> toTinkCreditCardAccounts() {
+    public Collection<CreditCardAccount> toTinkCreditCardAccounts(boolean isOnStaging) {
         return Optional.ofNullable(cards).orElse(Collections.emptyList()).stream()
-                .map(CardEntity::toTinkCreditCardAccount)
+                .map(cardEntity -> cardEntity.toTinkCreditCardAccount(isOnStaging))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

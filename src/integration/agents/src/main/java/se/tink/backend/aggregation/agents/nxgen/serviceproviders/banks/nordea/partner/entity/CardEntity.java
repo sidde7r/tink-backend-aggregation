@@ -73,7 +73,7 @@ public class CardEntity {
     }
 
     @JsonIgnore
-    public Optional<CreditCardAccount> toTinkCreditCardAccount() {
+    public Optional<CreditCardAccount> toTinkCreditCardAccount(boolean isOnStaging) {
         if (!isCreditCard()) {
             return Optional.empty();
         }
