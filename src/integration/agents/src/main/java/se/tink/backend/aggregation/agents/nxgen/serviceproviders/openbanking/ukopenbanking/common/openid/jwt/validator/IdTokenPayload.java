@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.validator;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.List;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -18,11 +20,13 @@ public class IdTokenPayload {
 
     private String acr;
 
-    private String aud;
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    private List<String> aud;
 
     private String sub;
 
-    private String openbankingIntentId;
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    private List<String> openbankingIntentId;
 
     private Integer authTime;
 
