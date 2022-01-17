@@ -168,7 +168,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 Optional<Boolean> loggedIn = isLoggedIn();
                 if (!loggedIn.isPresent()) {
                     result = AgentWorkerCommandResult.ABORT;
-                } else if (loggedIn.get()) {
+                } else if (Boolean.TRUE.equals(loggedIn.get())) {
                     result = AgentWorkerCommandResult.CONTINUE;
                 } else if (!acquireLock()) {
                     // If this is a BankID credentials, we need to take a lock around the login
