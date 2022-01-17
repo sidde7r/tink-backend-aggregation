@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarC
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.AuthenticationKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.HeaderValues;
@@ -48,8 +49,12 @@ public class CajamarApiClient {
     }
 
     public HttpResponse isAlive() {
-        return createAuthorizedRequest(URLs.UPDATE_PUSH_TOKEN)
-                .post(HttpResponse.class, new KeepAliveRequest(getPushToken()));
+        if (getPushToken() != null) {
+            return createAuthorizedRequest(URLs.UPDATE_PUSH_TOKEN)
+                    .post(HttpResponse.class, new KeepAliveRequest(getPushToken()));
+        } else {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     public EnrollmentResponse fetchEnrollment(EnrollmentRequest request) {

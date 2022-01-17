@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.INVESTMENTS;
 
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.TimeoutFilter;
@@ -39,12 +37,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @Slf4j
-@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, IDENTITY_DATA})
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    CREDIT_CARDS,
+    //    INVESTMENTS,
+    IDENTITY_DATA
+})
 public class CajamarAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
-                RefreshInvestmentAccountsExecutor,
+                //                RefreshInvestmentAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
     private final CajamarApiClient apiClient;
@@ -97,12 +100,10 @@ public class CajamarAgent extends NextGenerationAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         return investmentRefreshController.fetchInvestmentAccounts();
     }
 
-    @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
         return investmentRefreshController.fetchInvestmentTransactions();
     }
