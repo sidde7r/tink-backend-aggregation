@@ -33,7 +33,6 @@ public class SwedbankFallbackHttpFilter extends Filter {
     private final EidasIdentity eidasIdentity;
     private final String qSealcBase64;
     private final SignatureProvider signatureProvider;
-    private boolean hasAlreadyAddedHeaders = false;
 
     public SwedbankFallbackHttpFilter(
             RandomValueGenerator randomValueGenerator,
@@ -59,10 +58,8 @@ public class SwedbankFallbackHttpFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
-        if (!hasAlreadyAddedHeaders) {
-            appendFallbackHeaders(httpRequest);
-            hasAlreadyAddedHeaders = true;
-        }
+        appendFallbackHeaders(httpRequest);
+
         HttpResponse resp = nextFilter(httpRequest);
 
         // Don't handle http exceptions when fetching transactions. Since Swedbank frequently
