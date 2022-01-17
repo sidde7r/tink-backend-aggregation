@@ -30,7 +30,7 @@ public abstract class BunqBaseAgent extends NextGenerationAgent
     @Inject
     public BunqBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        payload = Preconditions.checkNotNull(request.getProvider().getPayload());
+        payload = Preconditions.checkNotNull(componentProvider.getProvider().getPayload());
         this.apiClient = new BunqBaseApiClient(client, getBackendHost());
         temporaryStorage = new TemporaryStorage();
 
