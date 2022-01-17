@@ -66,8 +66,8 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
             new HashMap<>();
 
     public HandelsbankenSEApiClient(
-            TinkHttpClient client, HandelsbankenSEConfiguration configuration) {
-        super(client, configuration);
+            TinkHttpClient client, HandelsbankenSEConfiguration configuration, String provider) {
+        super(client, configuration, provider);
     }
 
     public InitBankIdResponse initToBank(InitBankIdRequest initBankIdRequest) {

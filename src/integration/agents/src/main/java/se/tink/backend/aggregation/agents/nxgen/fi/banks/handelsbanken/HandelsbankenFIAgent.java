@@ -44,11 +44,12 @@ public final class HandelsbankenFIAgent
 
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final String provider;
 
     @Inject
     public HandelsbankenFIAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, new HandelsbankenFIConfiguration());
-
+        provider = componentProvider.getProvider().getName();
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -56,7 +57,7 @@ public final class HandelsbankenFIAgent
     @Override
     protected HandelsbankenFIApiClient constructApiClient(
             HandelsbankenFIConfiguration handelsbankenConfiguration) {
-        return new HandelsbankenFIApiClient(this.client, handelsbankenConfiguration);
+        return new HandelsbankenFIApiClient(this.client, handelsbankenConfiguration, this.provider);
     }
 
     @Override

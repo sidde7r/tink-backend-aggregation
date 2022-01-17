@@ -42,7 +42,9 @@ public class HandelsbankenSEContentTypeFilterTest {
                         .build();
         client.addFilter(new HandelsbankenSEContentTypeFilter());
 
-        apiClient = new HandelsbankenSEApiClient(client, new HandelsbankenSEConfiguration());
+        apiClient =
+                new HandelsbankenSEApiClient(
+                        client, new HandelsbankenSEConfiguration(), "handelsbanken-bankid");
     }
 
     @AfterClass

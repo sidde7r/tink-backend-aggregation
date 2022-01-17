@@ -44,16 +44,28 @@ public abstract class HandelsbankenApiClient {
 
     private final TinkHttpClient client;
     protected final HandelsbankenConfiguration<?> handelsbankenConfiguration;
+    private final String provider;
 
     public HandelsbankenApiClient(
-            TinkHttpClient client, HandelsbankenConfiguration handelsbankenConfiguration) {
+            TinkHttpClient client,
+            HandelsbankenConfiguration handelsbankenConfiguration,
+            String provider) {
         this.client = client;
         this.handelsbankenConfiguration = handelsbankenConfiguration;
+        this.provider = provider;
+    }
+
+    private boolean isCardReader() {
+        return provider.equals("handelsbanken");
     }
 
     public EntryPointResponse fetchEntryPoint() {
-        return createRequest(handelsbankenConfiguration.getEntryPoint())
+        return createRequestWithOrWithoutXmlHeader(handelsbankenConfiguration.getEntryPoint())
                 .get(EntryPointResponse.class);
+    }
+
+    protected RequestBuilder createRequestWithOrWithoutXmlHeader(URL url) {
+        return isCardReader() ? createRequestWithoutXmlAcceptHeader(url) : createRequest(url);
     }
 
     public InitNewProfileResponse initNewProfile(
@@ -69,7 +81,8 @@ public abstract class HandelsbankenApiClient {
     }
 
     public CommitProfileResponse commitProfile(ActivateProfileResponse activateProfile) {
-        return createRequest(activateProfile.toCommitProfile()).get(CommitProfileResponse.class);
+        return createRequestWithOrWithoutXmlHeader(activateProfile.toCommitProfile())
+                .get(CommitProfileResponse.class);
     }
 
     public HandshakeResponse handshake(
@@ -97,7 +110,7 @@ public abstract class HandelsbankenApiClient {
     }
 
     public ApplicationEntryPointResponse applicationEntryPoint(AuthorizeResponse authorize) {
-        return createRequest(authorize.toApplicationEntryPoint())
+        return createRequestWithOrWithoutXmlHeader(authorize.toApplicationEntryPoint())
                 .get(ApplicationEntryPointResponse.class);
     }
 
@@ -107,7 +120,8 @@ public abstract class HandelsbankenApiClient {
             // it's 'only' a ping so Handelsbanken doesn't return anything when alive but returns
             // XML if not...
             HttpResponse httpResponse =
-                    createRequest(applicationEntryPoint.toKeepAlive()).get(HttpResponse.class);
+                    createRequestWithOrWithoutXmlHeader(applicationEntryPoint.toKeepAlive())
+                            .get(HttpResponse.class);
 
             if (httpResponse.hasBody()) {
                 long stop = System.nanoTime();
@@ -144,7 +158,7 @@ public abstract class HandelsbankenApiClient {
     }
 
     public AccountListResponse accountList(ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toAccounts())
+        return createRequestWithOrWithoutXmlHeader(applicationEntryPoint.toAccounts())
                 .get(handelsbankenConfiguration.getAccountListResponse());
     }
 
@@ -154,7 +168,7 @@ public abstract class HandelsbankenApiClient {
     }
 
     public AccountInfoResponse accountInfo(URL accountInfoUrl) {
-        return createRequest(accountInfoUrl).get(AccountInfoResponse.class);
+        return createRequestWithOrWithoutXmlHeader(accountInfoUrl).get(AccountInfoResponse.class);
     }
 
     public abstract TransactionsResponse transactions(HandelsbankenAccount handelsbankenAccount);
@@ -166,7 +180,7 @@ public abstract class HandelsbankenApiClient {
             CreditCardTransactionsResponse<CreditCard> creditCardTransactions(URL url);
 
     protected RequestBuilder createPostRequest(URL url) {
-        return createRequest(url).type(MediaType.APPLICATION_JSON);
+        return createRequestWithOrWithoutXmlHeader(url).type(MediaType.APPLICATION_JSON);
     }
 
     protected RequestBuilder createRequest(URL url) {

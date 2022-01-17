@@ -19,8 +19,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public HandelsbankenSEApiClient(
-            TinkHttpClient client, HandelsbankenSEConfiguration configuration) {
-        super(client, configuration);
+            TinkHttpClient client, HandelsbankenSEConfiguration configuration, String provider) {
+        super(client, configuration, provider);
     }
 
     public InitBankIdResponse initToBank(InitBankIdRequest initBankIdRequest) {
