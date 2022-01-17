@@ -25,13 +25,16 @@ public class HandelsbankenSEBusinessAgentWireMockTest {
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "handelsbanken-business-bankid", wireMockFilePath)
-                        .withConfigurationFile(configuration)
-                        .addCredentialField("psu-corporate-id", "123456-7890")
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("handelsbanken-business-bankid")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addCredentialField("psu-corporate-id", "123456-7890")
                         .build();
 
         final AgentContractEntity expected =
