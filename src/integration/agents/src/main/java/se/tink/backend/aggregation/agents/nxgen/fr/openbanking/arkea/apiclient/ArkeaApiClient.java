@@ -70,7 +70,7 @@ public class ArkeaApiClient implements FrAispApiClient {
                         ArkeaTransactionResponse.class)
                 : createRequest(
                         HttpMethod.GET,
-                        String.format("%s/%s", API_PSD_BASE_PATH, nextPagePath),
+                        String.format("%s/%s", Urls.API_BASE_PATH, nextPagePath),
                         ArkeaTransactionResponse.class);
     }
 

@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 @RunWith(JUnitParamsRunner.class)
 public class ArkeaTransactionFetcherTest {
 
-    private final String nextPagePath = "v1/accounts/Alias1/transactions?page=3";
+    private final String nextPagePath = "/psd2/v1/accounts/Alias1/transactions?page=1";
     private final String apiIdentifier = "apiIdentifier";
 
     @Mock private TransactionalAccount account;
@@ -43,7 +43,7 @@ public class ArkeaTransactionFetcherTest {
     }
 
     @Test
-    @Parameters({"v1/accounts/Alias1/transactions?page=3", "null"})
+    @Parameters({"/psd2/v1/accounts/Alias1/transactions?page=1", "null"})
     public void shouldFetchTransactions(@Nullable String nextPageURL) {
         // given
         when(apiClient.getTransactions(eq(apiIdentifier), any()))
