@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
@@ -211,7 +212,8 @@ public class AccountEntity implements GeneralAccountEntity {
                 .build();
     }
 
-    private void setTypeForAccountTypeUnknown(Account account) {
+    @VisibleForTesting
+    void setTypeForAccountTypeUnknown(Account account) {
         // Our ambassador has confirmed that accounts called Aktielikvid doesn't hold investments,
         // only balance to buy stocks/funds with. Therefore map it as a savings account.
         if (StringUtils.containsIgnoreCase(accountName, "aktielikvid")) {
