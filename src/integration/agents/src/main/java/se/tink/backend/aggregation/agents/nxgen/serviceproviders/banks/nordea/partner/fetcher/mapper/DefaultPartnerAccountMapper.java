@@ -37,6 +37,16 @@ public class DefaultPartnerAccountMapper implements NordeaPartnerAccountMapper {
                 MoreObjects.firstNonNull(
                         Strings.emptyToNull(account.getDisplayAccountNumber()),
                         identifiers.get(0).getIdentifier());
+        String accountName;
+        if (isOnStaging) {
+            accountName =
+                    MoreObjects.firstNonNull(
+                            Strings.emptyToNull(account.getNickname()), account.getProductName());
+        } else {
+            accountName =
+                    MoreObjects.firstNonNull(
+                            Strings.emptyToNull(account.getNickname()), formattedAccountNumber);
+        }
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         NordeaPartnerConstants.TRANSACTIONAL_ACCOUNT_TYPE_MAPPER,
@@ -51,10 +61,7 @@ public class DefaultPartnerAccountMapper implements NordeaPartnerAccountMapper {
                         IdModule.builder()
                                 .withUniqueIdentifier(account.getIban())
                                 .withAccountNumber(identifiers.get(0).getIdentifier())
-                                .withAccountName(
-                                        MoreObjects.firstNonNull(
-                                                Strings.emptyToNull(account.getNickname()),
-                                                formattedAccountNumber))
+                                .withAccountName(accountName)
                                 .addIdentifiers(identifiers)
                                 .build())
                 .addHolderName(account.getHolderName())
