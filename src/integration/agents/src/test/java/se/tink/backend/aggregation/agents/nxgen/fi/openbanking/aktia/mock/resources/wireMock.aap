@@ -1,0 +1,548 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1a
+POST https://mobile-auth2.aktia.fi/cauth/oauth2/mobileauth/access_token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&username=dummyUser&password=dummyPassword&scope=aktiaUser
+
+-----------------------------------------------------------------------------------
+RESPONSE 1a
+200
+Date: Mon, 10 Jan 2022 18:24:44 GMT
+Date: Mon, 10 Jan 2022 18:24:45 GMT
+Content-Type: application/json
+Content-Length: 83
+
+{"access_token":"token","scope":"aktiaUser","token_type":"Bearer","expires_in":600}
+
+-----------------------------------------------------------------------------------
+REQUEST 2a
+GET https://mobile-gateway2.aktia.fi/api/login/details
+
+-----------------------------------------------------------------------------------
+RESPONSE 2a
+200
+Date: Mon, 10 Jan 2022 18:24:45 GMT
+Date: Mon, 10 Jan 2022 18:24:49 GMT
+Content-Type: application/json
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Length: 992
+
+{
+  "domainSettings": {
+    "pinTouchActivationAvailable": true,
+    "pinTouchTermsPdfUrl": "https://www.aktia.fi/documents/10556/50573/helppo-kirjautuminen-kayttoehdot-en.pdf",
+    "ownTransferWithoutOtp": true
+  },
+  "otpChallenge": {
+    "otpRequired": false,
+    "otpInfo": {
+      "nextOtpIndex": "58",
+      "currentOtpCard": "123",
+      "fixedOtpCard": false
+    },
+    "readMessagesWithoutOtp": true
+  },
+  "userAccountInfo": {
+    "customerName": "FirstName LastName",
+    "passwordUpdateRequired": false,
+    "accountLocked": false,
+    "updateOrCreateKYCInfo": false,
+    "customerType": "PERSON",
+    "customerServiceInfo": {
+      "serviceClass": "Customer Service",
+      "phone": "123",
+      "openHours": "8-20,10-17,10-15"
+    },
+    "personalAdvisor": {
+      "name": "FirstName Last Name",
+      "phone": "123",
+      "advisorServiceClass": "AdvisorServiceClass.BENEFIT.name"
+    }
+  },
+  "termsAcceptanceInfo": {
+    "mustAcceptTerms": false
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3a
+POST https://mobile-gateway2.aktia.fi/api/login/otp/authenticate
+Content-Type: application/json
+
+{
+  "otpCode": "123"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3a
+200
+Date: Mon, 10 Jan 2022 18:25:13 GMT
+Date: Mon, 10 Jan 2022 18:25:14 GMT
+Content-Type: application/json
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Length: 135
+
+{
+  "otpAccepted": true,
+  "otpInfo": {
+    "nextOtpIndex": "8",
+    "currentOtpCard": "**HASHED:ms**",
+    "fixedOtpCard": false
+  }
+}
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://mobile-gateway2.aktia.fi/api/summary
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Fri, 07 Jan 2022 10:35:50 GMT
+Date: Fri, 07 Jan 2022 10:35:51 GMT
+Content-Type: application/json
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Length: 5151
+
+{
+  "frontPageHighlight": {
+    "showHighlight": false
+  },
+  "accountSummary": {
+    "accountSummaryList": [
+      {
+        "id": "accountId123",
+        "name": "käyttö",
+        "primaryOwnerName": "FirstName LastName",
+        "iban": "FI222222222222222",
+        "bic": "HELSFIHH",
+        "accountType": {
+          "accountType": "Current Account",
+          "categoryCode": "CURRENT_ACCOUNT",
+          "productCode": "1410",
+          "longTermSavings": false
+        },
+        "balance": 89.6,
+        "balanceTotal": 154.9,
+        "duePaymentsTotal": 0.00,
+        "hideFromSummary": false,
+        "sortingOrder": 1,
+        "fabInfo": {
+          "fabOperations": [
+            {
+              "fabOperationCode": "COPY_IBAN",
+              "fabOperation": "Copy account number"
+            },
+            {
+              "fabOperationCode": "NEW_PAYMENT",
+              "fabOperation": "New payment"
+            },
+            {
+              "fabOperationCode": "OWN_TRANSFER",
+              "fabOperation": "Own transfer"
+            }
+          ]
+        },
+        "parties": [
+          {
+            "name": "FirstName LastName",
+            "customerTypeCode": "PRIVATE",
+            "roleCode": "PRIMARY_OWNER"
+          }
+        ]
+      },
+      {
+        "id": "accountId123456",
+        "name": "säästö",
+        "primaryOwnerName": "FirstName LastName",
+        "iban": "FI3333333333333333",
+        "bic": "HELSFIHH",
+        "accountType": {
+          "accountType": "Savings Account",
+          "categoryCode": "SAVINGS_ACCOUNT",
+          "productCode": "6611",
+          "longTermSavings": false
+        },
+        "balance": 2635.28,
+        "balanceTotal": 2635.28,
+        "duePaymentsTotal": 0.00,
+        "hideFromSummary": false,
+        "sortingOrder": 2,
+        "fabInfo": {
+          "fabOperations": [
+            {
+              "fabOperationCode": "COPY_IBAN",
+              "fabOperation": "Copy account number"
+            },
+            {
+              "fabOperationCode": "NEW_PAYMENT",
+              "fabOperation": "New payment"
+            },
+            {
+              "fabOperationCode": "OWN_TRANSFER",
+              "fabOperation": "Own transfer"
+            }
+          ]
+        },
+        "parties": [
+          {
+            "name": "FirstName LastName",
+            "customerTypeCode": "PRIVATE",
+            "roleCode": "PRIMARY_OWNER"
+          }
+        ]
+      },
+      {
+        "id": "C6A816CC57ACC31A5C0706A6712191F015FB43BBE1226C5FB283F2621649DD74",
+        "name": "FirstName LastName",
+        "primaryOwnerName": "FirstName LastName",
+        "iban": "FI44444444444444",
+        "bic": "HELSFIHH",
+        "accountType": {
+          "accountType": "ASP Account",
+          "categoryCode": "ASP_ACCOUNT",
+          "productCode": "6547",
+          "longTermSavings": false
+        },
+        "balance": 1770.12,
+        "balanceTotal": 1770.12,
+        "duePaymentsTotal": 0.00,
+        "hideFromSummary": false,
+        "sortingOrder": 3,
+        "fabInfo": {
+          "fabOperations": [
+            {
+              "fabOperationCode": "COPY_IBAN",
+              "fabOperation": "Copy account number"
+            },
+            {
+              "fabOperationCode": "NEW_PAYMENT",
+              "fabOperation": "New payment"
+            },
+            {
+              "fabOperationCode": "OWN_TRANSFER",
+              "fabOperation": "Own transfer"
+            }
+          ]
+        },
+        "parties": [
+          {
+            "name": "FirstName LastName",
+            "customerTypeCode": "PRIVATE",
+            "roleCode": "PRIMARY_OWNER"
+          }
+        ]
+      }
+    ]
+  },
+  "paymentsTodoItemCount": 0,
+  "paymentAccounts": {
+    "paymentAccounts": [
+      {
+        "id": "accountId123",
+        "name": "käyttö",
+        "iban": "FI222222222222222",
+        "balance": 89.6,
+        "defaultPaymentAccount": false
+      }
+    ],
+    "ownTransferFromAccounts": [
+      {
+        "id": "accountId123",
+        "name": "käyttö",
+        "iban": "FI222222222222222",
+        "balance": 89.6
+      },
+      {
+        "id": "accountId123456",
+        "name": "säästö",
+        "iban": "FI3333333333333333",
+        "balance": 2635.28
+      }
+    ],
+    "ownTransferToAccounts": [
+      {
+        "id": "C6A816CC57ACC31A5C0706A6712191F015FB43BBE1226C5FB283F2621649DD74",
+        "name": "FirstName LastName",
+        "iban": "FI1111111111111111",
+        "balance": 1770.12
+      },
+      {
+        "id": "accountId123",
+        "name": "käyttö",
+        "iban": "FI222222222222222",
+        "balance": 89.6
+      },
+      {
+        "id": "accountId123456",
+        "name": "säästö",
+        "iban": "FI3333333333333333",
+        "balance": 2635.28
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://mobile-gateway2.aktia.fi/api/account/accountId123/transactionsAndLockedEvents
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Fri, 07 Jan 2022 10:35:51 GMT
+Date: Fri, 07 Jan 2022 10:35:52 GMT
+Content-Type: application/json
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "id": "accountId123",
+    "iban": "FI94 4055 6920 0487 02",
+    "bic": "HELSFIHH",
+    "name": "käyttö",
+    "primaryOwnerName": "FirstName LastName",
+    "balance": 89.6
+  },
+  "lockedEvents": [
+    {
+      "id": "1E03BC5ACEA5FF876EA98DDA706626F9CB14710EE3D16AF542EF2B6D1833D134",
+      "eventName": "Cover reservation",
+      "fromDate": "2022-01-07",
+      "amount": -65.30,
+      "description": "Mob.Pay*HSL"
+    }
+  ],
+  "transactions": [
+    {
+      "bookingDate": "2022-01-07",
+      "amount": -35.51,
+      "receiverOrPayerName": "K-CITYMARKET VANTAA MY",
+      "message": "K-CITYMARKET VANTAA MY VANTAA FI 513358******8362 07600802 20220106",
+      "transactionId": "81D3B8003ACC4C80109754C137012D2142ECF1B05B947CE15B60BCB874BB2907",
+      "transactionType": "Card payment"
+    },
+    {
+      "bookingDate": "2022-01-07",
+      "amount": 15.00,
+      "receiverOrPayerName": "",
+      "message": "40166 ISKOSKUJA 3 513358xxxxxx8362",
+      "transactionId": "557AB380FC13B372A16C0E0CD476DAB5625AF02E7E94995342A01F3299093AD4",
+      "transactionType": "ATM deposit"
+    },
+    {
+      "bookingDate": "2022-01-05",
+      "amount": -34.80,
+      "receiverOrPayerName": "EVEREST DINE",
+      "message": "Last transaction on first page",
+      "transactionId": "DE185C3F7F687846740E65F7CAD6C577F29155AF1ADA58EAA591580C80877426",
+      "transactionType": "Card payment"
+    }
+  ],
+  "continuationKey": "197234014437901.080001_DW"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://mobile-gateway2.aktia.fi/api/account/accountId123/transactionsAndLockedEvents?continuationKey=197234014437901.080001_DW
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Fri, 07 Jan 2022 10:35:52 GMT
+Date: Fri, 07 Jan 2022 10:35:53 GMT
+Content-Type: application/json
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "id": "accountId123",
+    "iban": "FI222222222222222",
+    "bic": "HELSFIHH",
+    "name": "käyttö",
+    "primaryOwnerName": "FirstName LastName",
+    "balance": 89.6
+  },
+  "lockedEvents": [],
+  "transactions": [
+        {
+          "bookingDate": "2022-01-05",
+          "amount": -34.80,
+          "receiverOrPayerName": "EVEREST DINE",
+          "message": "Last transaction on first page",
+          "transactionId": "DE185C3F7F687846740E65F7CAD6C577F29155AF1ADA58EAA591580C80877426",
+          "transactionType": "Card payment"
+        },
+    {
+      "bookingDate": "2021-12-29",
+      "amount": -19.9,
+      "receiverOrPayerName": "Fitness24seven OY",
+      "reference": "752 61683",
+      "transactionId": "8D40B91026DA40910A2D10BC2C5B9CF324D4C6181A4ED9808433EFA3EF4C175E",
+      "transactionType": "E-invoice"
+    },
+    {
+      "bookingDate": "2021-12-28",
+      "amount": -35,
+      "receiverOrPayerName": "Mob.Pay*Teemu Juhani M",
+      "message": "Mob.Pay*Teemu Juhani M Helsinki FI 513358******8362 63130751 20211227",
+      "transactionId": "30F1E93343ED4CE92A66EE0863EA7B4D6AA74B5D9552273FEB7ADC573836FF48",
+      "transactionType": "Card payment"
+    }
+  ],
+  "continuationKey": "197129999388269.040001_DW"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://mobile-gateway2.aktia.fi/api/account/accountId123/transactionsAndLockedEvents?continuationKey=197129999388269.040001_DW
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Fri, 07 Jan 2022 10:35:53 GMT
+Date: Fri, 07 Jan 2022 10:35:53 GMT
+Content-Type: application/json
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "id": "accountId123",
+    "iban": "FI222222222222222",
+    "bic": "HELSFIHH",
+    "name": "käyttö",
+    "primaryOwnerName": "FirstName LastName",
+    "balance": 89.6
+  },
+  "lockedEvents": [],
+  "transactions": [
+    {
+      "bookingDate": "2021-12-20",
+      "amount": -11.84,
+      "receiverOrPayerName": "K-CITYMARKET VANTAA MY",
+      "message": "K-CITYMARKET VANTAA MY VANTAA FI 513358******8362 07600802 20211218",
+      "transactionId": "186E0138934F3D1329829967ED0FEBA24AF92E9F1E975CC563AB262B91FF9A8D",
+      "transactionType": "Card payment"
+    },
+    {
+      "bookingDate": "2021-12-20",
+      "amount": 100,
+      "receiverOrPayerName": "FirstName LastName",
+      "transactionId": "BC5CA408093EB70BA337D0A8F46BB0E98EF5D34D01EEDC1A2D45BC47E6A17B3A",
+      "transactionType": "Account transfer"
+    },
+    {
+      "bookingDate": "2021-12-20",
+      "amount": -21.3,
+      "receiverOrPayerName": "Mob.Pay*Teemu Juhani M",
+      "message": "Mob.Pay*Teemu Juhani M Helsinki FI 513358******8362 63130751 20211217",
+      "transactionId": "67C3DAA91E6ACE43DBF13371A315370EE02AF0A2081D74C70ECECB0EDBD18FCB",
+      "transactionType": "Card payment"
+    }
+  ],
+  "continuationKey": "197066135081483.030001_DW"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://mobile-gateway2.aktia.fi/api/account/accountId123/transactionsAndLockedEvents?continuationKey=197066135081483.030001_DW
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Fri, 07 Jan 2022 10:35:53 GMT
+Date: Fri, 07 Jan 2022 10:35:54 GMT
+Content-Type: application/json
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "id": "accountId123",
+    "iban": "FI222222222222222",
+    "bic": "HELSFIHH",
+    "name": "käyttö",
+    "primaryOwnerName": "FirstName LastName",
+    "balance": 89.6
+  },
+  "lockedEvents": [],
+  "transactions": [
+    {
+      "bookingDate": "2021-12-13",
+      "amount": -2.5,
+      "receiverOrPayerName": "HSL Mobiili",
+      "message": "HSL Mobiili HSL FI 513358******8362 09635087 20211211",
+      "transactionId": "D4639C641874BC15300658ED3056CBC83650550CDC269E74D98915472119C4DF",
+      "transactionType": "Card payment"
+    },
+    {
+      "bookingDate": "2021-12-13",
+      "amount": -2.5,
+      "receiverOrPayerName": "HSL Mobiili",
+      "message": "HSL Mobiili HSL FI 513358******8362 09635087 20211211",
+      "transactionId": "2D64859935DF2502F6E66BF508268B9E433D0C8B1D0739AEBC747EDDBE62C41D",
+      "transactionType": "Card payment"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 19
+GET https://mobile-gateway2.aktia.fi/api/account/accountId123456/transactionsAndLockedEvents
+
+-----------------------------------------------------------------------------------
+RESPONSE 19
+200
+Date: Fri, 07 Jan 2022 10:36:00 GMT
+Date: Fri, 07 Jan 2022 10:36:01 GMT
+Content-Type: application/json
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Length: 7485
+
+{
+  "account": {
+    "id": "accountId123456",
+    "iban": "FI3333333333333333",
+    "bic": "HELSFIHH",
+    "name": "säästö",
+    "primaryOwnerName": "FirstName LastName",
+    "balance": 2635.28
+  },
+  "lockedEvents": [],
+  "transactions": [
+    {
+      "bookingDate": "2022-01-03",
+      "amount": -400.00,
+      "receiverOrPayerName": "FirstName LastName",
+      "transactionId": "AB22EFC317D85483823D877295905ACD998E7D16B14A46C1AC4EECBE539F6C34",
+      "transactionType": "Account transfer"
+    },
+    {
+      "bookingDate": "2021-12-30",
+      "amount": -100,
+      "receiverOrPayerName": "FirstName LastName",
+      "transactionId": "069AE39835FD39BB9EB449919EEC8811079597B5692D1A3A1B4A96078A8A4782",
+      "transactionType": "Account transfer"
+    }
+  ]
+}

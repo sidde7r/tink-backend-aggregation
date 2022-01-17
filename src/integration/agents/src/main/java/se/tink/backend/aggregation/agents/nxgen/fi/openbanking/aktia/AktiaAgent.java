@@ -64,7 +64,8 @@ public final class AktiaAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
+        return AktiaUtils.removeDuplicates(
+                transactionalAccountRefreshController.fetchCheckingTransactions());
     }
 
     @Override
@@ -74,7 +75,8 @@ public final class AktiaAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
+        return AktiaUtils.removeDuplicates(
+                transactionalAccountRefreshController.fetchSavingsTransactions());
     }
 
     @Override

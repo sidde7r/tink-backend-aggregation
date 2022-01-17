@@ -1,0 +1,18 @@
+{
+    "amount": -700,
+    "date": 1641553200000,
+    "description": "K-CITYMARKET VANTAA MY, K-CITYMARKET VANTAA MY VANTAA FI 513358******8362 07600802 20220106, Card payment",
+    "internalPayload": {
+    },
+    "originalAmount": 0.0,
+    "payload": {},
+    "pending": false,
+    "timestamp": 0,
+    "type": "DEFAULT",
+    "upcoming": false,
+    "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "81D3B8003ACC4C80109754C137012D2142ECF1B05B947CE15B60BCB874BB2907"
+    },
+    "transactionDates": [],
+    "booked": true
+}
