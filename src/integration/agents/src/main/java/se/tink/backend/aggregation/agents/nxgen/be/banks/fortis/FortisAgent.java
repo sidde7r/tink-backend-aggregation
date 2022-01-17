@@ -48,7 +48,7 @@ public final class FortisAgent extends AgentPlatformAgent
 
         configureHttpClient(client);
 
-        String[] payload = request.getProvider().getPayload().split(" ");
+        String[] payload = agentComponentProvider.getProvider().getPayload().split(" ");
         String baseUrl = payload[0];
         String distributorId = payload[1];
 

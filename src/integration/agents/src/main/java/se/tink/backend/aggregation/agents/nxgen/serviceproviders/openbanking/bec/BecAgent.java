@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -44,7 +45,8 @@ public final class BecAgent extends NextGenerationAgent
                 new BecApiClient(
                         client,
                         persistentStorage,
-                        getApiConfiguration(componentProvider.getUser()));
+                        getApiConfiguration(
+                                componentProvider.getUser(), componentProvider.getProvider()));
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         super.setConfiguration(agentsServiceConfiguration);
@@ -58,8 +60,8 @@ public final class BecAgent extends NextGenerationAgent
         client.setEidasProxy(eidasProxyConfiguration);
     }
 
-    private BecApiConfiguration getApiConfiguration(User user) {
-        String url = request.getProvider().getPayload().split(",")[1];
+    private BecApiConfiguration getApiConfiguration(User user, Provider provider) {
+        String url = provider.getPayload().split(",")[1];
 
         return BecApiConfiguration.builder()
                 .url(url)
