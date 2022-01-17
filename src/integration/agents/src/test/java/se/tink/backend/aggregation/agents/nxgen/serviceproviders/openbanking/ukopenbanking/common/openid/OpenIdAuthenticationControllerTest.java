@@ -7,10 +7,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
@@ -31,7 +28,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.CallbackParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorDescriptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -68,26 +64,6 @@ public class OpenIdAuthenticationControllerTest {
     @Before
     public void setup() {
         openIdAuthenticationController = initOpenIdAuthenticationController();
-    }
-
-    @Test
-    public void shouldBreakAutoAuthenticationWhenCredentialsMarkedWithErrorFlag() {
-        // given
-        when(persistentStorage.get(
-                        OpenIdConstants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class))
-                .thenReturn(Optional.of(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED));
-
-        // when
-        Throwable thrown = catchThrowable(() -> openIdAuthenticationController.autoAuthenticate());
-
-        // then
-        verify(persistentStorage, times(1))
-                .get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class);
-        verify(persistentStorage, times(1)).remove(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
-        verify(persistentStorage, times(1)).remove(PersistentStorageKeys.AIS_ACCESS_TOKEN);
-        verifyNoMoreInteractions(persistentStorage);
-        verifyNoInteractions(apiClient);
-        assertThat(thrown).isExactlyInstanceOf(SessionException.class);
     }
 
     @Test

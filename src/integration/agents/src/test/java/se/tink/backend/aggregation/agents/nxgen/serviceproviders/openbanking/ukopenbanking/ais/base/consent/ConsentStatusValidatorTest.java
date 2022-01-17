@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.ConsentResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class ConsentStatusValidatorTest {
@@ -84,30 +83,6 @@ public class ConsentStatusValidatorTest {
                                 UkOpenBankingV31Constants.PersistentStorageKeys
                                         .AIS_ACCOUNT_CONSENT_ID,
                                 String.class))
-                .isEmpty();
-        assertThat(
-                        storage.get(
-                                UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
-                                String.class))
-                .isEmpty();
-    }
-
-    @Test
-    public void shouldThrowSessionExceptionWhenMarkedWithErrorFlag() {
-        // given
-        storage.put(
-                UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
-                OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED);
-        storage.put(
-                UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
-                DUMMY_ACCESS_TOKEN);
-
-        // expected
-        assertThatExceptionOfType(SessionException.class)
-                .isThrownBy(() -> validator.validate())
-                .withMessage(
-                        "[ConsentStatusValidator] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
-        assertThat(storage.get(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED, String.class))
                 .isEmpty();
         assertThat(
                         storage.get(
