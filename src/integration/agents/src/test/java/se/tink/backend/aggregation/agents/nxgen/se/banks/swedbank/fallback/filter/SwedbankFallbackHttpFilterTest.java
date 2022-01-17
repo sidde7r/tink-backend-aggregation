@@ -88,6 +88,21 @@ public class SwedbankFallbackHttpFilterTest {
     }
 
     @Test
+    public void shouldNotAddDuplicatesHeadersIfRetryRequest() {
+        HttpRequest request = setupHttpRequest("/v5/engagement/transactions");
+        Assert.assertEquals(1, request.getHeaders().size());
+
+        swedbankFallbackHttpFilter.handle(request);
+
+        Assert.assertEquals(5, request.getHeaders().size());
+        Assert.assertEquals(1, request.getHeaders().get("tpp-x-request-id").size());
+
+        swedbankFallbackHttpFilter.handle(request);
+
+        Assert.assertEquals(1, request.getHeaders().get("tpp-x-request-id").size());
+    }
+
+    @Test
     public void shouldAddHeadersAndReturnResponseIfNotTransactionEndpoint() {
         HttpResponse httpResponse = setupOKHttpResponse();
         HttpRequest request = setupHttpRequest("random url");
