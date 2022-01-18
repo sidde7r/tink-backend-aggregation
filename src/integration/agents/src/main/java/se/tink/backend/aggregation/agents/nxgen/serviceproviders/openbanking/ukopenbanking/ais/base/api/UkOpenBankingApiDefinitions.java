@@ -113,7 +113,8 @@ public class UkOpenBankingApiDefinitions {
         NWB_CURRENCY_ACCOUNT,
         RBS_CURRENCY_ACCOUNT,
         SAVINGS_ROLL_NUMBER,
-        DANSKE_BANK_ACCOUNT_NUMBER;
+        DANSKE_BANK_ACCOUNT_NUMBER,
+        NOT_SUPPORTED;
 
         private static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
                 ACCOUNT_IDENTIFIER_TYPE_MAPPER =
@@ -131,6 +132,7 @@ public class UkOpenBankingApiDefinitions {
                                 .put(SORT_CODE_ACCOUNT_NUMBER, "UK.OBIE.SortCodeAccountNumber")
                                 .put(PAN, "UK.OBIE.PAN", "PAN")
                                 .put(SAVINGS_ROLL_NUMBER, "UK.Santander.SavingsRollNumber")
+                                .put(NOT_SUPPORTED, "US.RoutingNumberAccountNumber")
                                 .build();
 
         @JsonCreator
