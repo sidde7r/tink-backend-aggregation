@@ -5,7 +5,7 @@ Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_list PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
 
 RESPONSE 1
 200
