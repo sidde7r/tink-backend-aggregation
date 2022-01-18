@@ -1053,7 +1053,7 @@ MYSQL_CONNECTOR_VERSION = "5.1.49"
 
 NETTY_BORINGSSL_VERSION = "2.0.30.Final"
 
-BOUNCYCASTLE_VERSION = "1.59"
+BOUNCYCASTLE_VERSION = "1.68"
 
 maven_install(
     name = "agents_platform_maven",
