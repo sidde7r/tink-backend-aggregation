@@ -9,6 +9,7 @@ import junitparams.JUnitParamsRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.configuration.SdcConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
@@ -28,12 +29,11 @@ public class SdcDkApiClientTest {
                     "https://auth.sdc.dk/Account/Login?scope=psd2.aisp&response_type=code&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id="
                             + MOCK_CLIENT_ID
                             + "&state="
-                            + MOCK_STATE
-                            + "&login_type=NemID+Bank+2+factor");
+                            + MOCK_STATE);
 
     private PersistentStorage persistentStorage;
 
-    private SdcDkApiClient apiClient;
+    private SdcApiClient apiClient;
     private SdcUrlProvider sdcUrlProvider = mock(SdcUrlProvider.class);
     private SdcConfiguration sdcConfiguration = mock(SdcConfiguration.class);
 
@@ -47,7 +47,7 @@ public class SdcDkApiClientTest {
         persistentStorage = mock(PersistentStorage.class);
 
         apiClient =
-                new SdcDkApiClient(
+                new SdcApiClient(
                         httpClient,
                         sdcUrlProvider,
                         persistentStorage,
