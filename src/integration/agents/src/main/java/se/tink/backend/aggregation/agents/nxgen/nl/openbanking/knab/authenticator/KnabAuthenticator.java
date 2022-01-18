@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator;
 
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -43,12 +44,21 @@ public class KnabAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        storage.findConsentId()
-                .filter(consentId -> apiClient.consentStatus(consentId, accessToken))
-                .ifPresent(ignored -> storage.persistBearerToken(accessToken));
+        if (consentIsValid(accessToken)) {
+            storage.persistBearerToken(accessToken);
+        } else {
+            storage.invalidatePersistedBearerToken();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     private String consentScope(String consentId) {
         return String.format("psd2 offline_access AIS:%s", consentId);
+    }
+
+    private boolean consentIsValid(OAuth2Token accessToken) {
+        return storage.findConsentId()
+                .filter(consentId -> apiClient.consentStatus(consentId, accessToken))
+                .isPresent();
     }
 }

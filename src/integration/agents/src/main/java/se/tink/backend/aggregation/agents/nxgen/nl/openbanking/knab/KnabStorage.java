@@ -28,4 +28,10 @@ public class KnabStorage {
     public void persistBearerToken(OAuth2Token token) {
         persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, token);
     }
+
+    public void invalidatePersistedBearerToken() {
+        if (findBearerToken().isPresent()) {
+            persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
+        }
+    }
 }
