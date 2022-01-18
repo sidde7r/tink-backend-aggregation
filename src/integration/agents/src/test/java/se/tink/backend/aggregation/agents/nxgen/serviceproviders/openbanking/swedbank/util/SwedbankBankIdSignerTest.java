@@ -64,7 +64,7 @@ public class SwedbankBankIdSignerTest {
 
     private AuthenticationResponse setUpScaResponseInterruption() throws JsonProcessingException {
         String jsonString =
-                "{\"tppMessages\":[{\"category\":\"INFO\",\"code\":\"USER_INTERUPTION\",\"text\":\"PSU must add recipient to recipient list first.\"}]}";
+                "{\"tppMessages\":[{\"category\":\"INFO\",\"code\":\"USER_INTERRUPTION\",\"text\":\"PSU must add recipient to recipient list first.\"}]}";
         return new ObjectMapper().readValue(jsonString, AuthenticationResponse.class);
     }
 
