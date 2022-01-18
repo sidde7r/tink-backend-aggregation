@@ -765,6 +765,7 @@ maven_install(
         "io.netty:netty-buffer:4.1.50.Final",
         "io.netty:netty-codec-dns:4.1.50.Final",
         "io.netty:netty-codec-http2:4.1.50.Final",
+        "io.netty:netty-codec-socks:4.1.50.Final",
         "io.netty:netty-codec:4.1.50.Final",
         "io.netty:netty-common:4.1.50.Final",
         "io.netty:netty-handler:4.1.50.Final",

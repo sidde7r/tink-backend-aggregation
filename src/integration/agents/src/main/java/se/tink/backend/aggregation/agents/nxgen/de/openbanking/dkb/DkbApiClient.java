@@ -32,7 +32,7 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @Slf4j
 @RequiredArgsConstructor
-public final class DkbApiClient implements PaymentApiClient {
+public class DkbApiClient implements PaymentApiClient {
 
     private final TinkHttpClient client;
     private final DkbStorage storage;
