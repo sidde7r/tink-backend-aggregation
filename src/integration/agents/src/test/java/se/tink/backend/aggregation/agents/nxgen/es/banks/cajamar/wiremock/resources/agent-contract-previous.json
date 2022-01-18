@@ -46,6 +46,38 @@
             "balance": 0.0
         },
         {
+            "accountNumber": "3058/0000/00/0000000000",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 1,
+                "exactValue": 63.2,
+                "unscaledValue": 632,
+                "doubleValue": 63.2
+            },
+            "currencyCode": "EUR",
+            "bankId": "3",
+            "excluded": false,
+            "favored": false,
+            "name": "Money money money",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"other://3058/0000/00/0000000000?name=Money+money+money\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 63.2
+        },
+        {
             "accountNumber": "12345",
             "accountExclusion": "NONE",
             "exactBalance": {
