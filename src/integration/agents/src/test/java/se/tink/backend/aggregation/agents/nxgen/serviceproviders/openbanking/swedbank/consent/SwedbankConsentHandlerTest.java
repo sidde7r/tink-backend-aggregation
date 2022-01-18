@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import agents_platform_agents_framework.org.springframework.test.util.ReflectionTestUtils;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
@@ -76,8 +77,10 @@ public class SwedbankConsentHandlerTest {
     @Test
     public void shouldStoreValidAccountDetailsConsent() {
         // given
-        when(apiClient.fetchAccounts())
-                .thenReturn(SwedbankConsentHandlerTestData.ACCOUNTS_RESPONSE);
+        ReflectionTestUtils.setField(
+                objectUnderTest,
+                "fetchAccountResponse",
+                SwedbankConsentHandlerTestData.ACCOUNTS_RESPONSE);
         when(apiClient.getConsentAccountDetails(any()))
                 .thenReturn(SwedbankConsentHandlerTestData.VALID_CONSENT_RESPONSE);
 
@@ -102,7 +105,7 @@ public class SwedbankConsentHandlerTest {
         when(apiClient.fetchAccounts()).thenThrow(httpResponseException);
 
         // when
-        final ThrowingCallable callable = () -> objectUnderTest.getAndStoreDetailedConsent();
+        final ThrowingCallable callable = () -> objectUnderTest.getListOfAccounts();
 
         // then
         assertThatThrownBy(callable).isInstanceOf(HttpResponseException.class);
@@ -119,7 +122,7 @@ public class SwedbankConsentHandlerTest {
         when(apiClient.fetchAccounts()).thenThrow(httpResponseException);
 
         // when
-        final ThrowingCallable callable = () -> objectUnderTest.getAndStoreDetailedConsent();
+        final ThrowingCallable callable = () -> objectUnderTest.getListOfAccounts();
 
         // then
         assertThatThrownBy(callable)
@@ -133,12 +136,12 @@ public class SwedbankConsentHandlerTest {
         // given
         when(httpResponse.getType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
         when(httpResponse.getBody(GenericResponse.class))
-                .thenReturn(GenericResponseTestData.MISSING_BANK_AGREEMENT);
+                .thenReturn(GenericResponseTestData.INTERNET_BANK_AGREEMENT);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
         when(apiClient.fetchAccounts()).thenThrow(httpResponseException);
 
         // when
-        final ThrowingCallable callable = () -> objectUnderTest.getAndStoreDetailedConsent();
+        final ThrowingCallable callable = () -> objectUnderTest.getListOfAccounts();
 
         // then
         assertThatThrownBy(callable).isInstanceOf(AuthorizationException.class);
@@ -151,7 +154,7 @@ public class SwedbankConsentHandlerTest {
                 .thenReturn(SwedbankConsentHandlerTestData.EMPTY_ACCOUNTS_RESPONSE);
 
         // when
-        final ThrowingCallable callable = () -> objectUnderTest.getAndStoreDetailedConsent();
+        final ThrowingCallable callable = () -> objectUnderTest.getListOfAccounts();
 
         // then
         assertThatThrownBy(callable)
@@ -162,8 +165,11 @@ public class SwedbankConsentHandlerTest {
     @Test
     public void shouldThrowIllegalStateExceptionIfAccountDetailsConsentIsInvalid() {
         // given
-        when(apiClient.fetchAccounts())
-                .thenReturn(SwedbankConsentHandlerTestData.ACCOUNTS_RESPONSE);
+        ReflectionTestUtils.setField(
+                objectUnderTest,
+                "fetchAccountResponse",
+                SwedbankConsentHandlerTestData.ACCOUNTS_RESPONSE);
+
         when(apiClient.getConsentAccountDetails(any()))
                 .thenReturn(SwedbankConsentHandlerTestData.INVALID_CONSENT_RESPONSE);
 
