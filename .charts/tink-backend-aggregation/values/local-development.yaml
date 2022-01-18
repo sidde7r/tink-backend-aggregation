@@ -30,6 +30,9 @@ clients:
   provision-job-testing:
     aggregatorIdentifier: "Provision Job Testing"
 
+eidasProxy:
+  useEidasProxyQsealcSignerHttpClient: false
+
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true

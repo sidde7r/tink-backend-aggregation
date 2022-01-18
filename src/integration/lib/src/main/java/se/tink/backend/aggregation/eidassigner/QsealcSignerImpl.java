@@ -26,6 +26,8 @@ import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
 import se.tink.agent.sdk.utils.signer.signature.Signature;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
+import se.tink.backend.tink_integration_eidas_proxy.client.EidasProxyFacade;
+import se.tink.backend.tink_integration_eidas_proxy.client.EidasProxyFacadeImpl;
 import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
@@ -43,28 +45,53 @@ public class QsealcSignerImpl
     private static final String TINK_REQUESTER = "X-SignRequester";
 
     private final QsealcSignerHttpClient qsealcSignerHttpClient;
+    private final EidasProxyFacade eidasProxyFacade;
     private final QsealcAlg alg;
     private final String host;
     private final EidasIdentity eidasIdentity;
+    private final se.tink.backend.tink_integration_eidas_proxy.client.EidasIdentity
+            proxyEidasIdentity;
+    private final boolean isUseEidasProxyQsealcSignerHttpClient;
     private Span span;
     private Scope scope;
 
     private QsealcSignerImpl(
             QsealcSignerHttpClient qsealcSignerHttpClient,
+            EidasProxyFacade eidasProxyFacade,
             QsealcAlg alg,
             String host,
-            EidasIdentity eidasIdentity) {
+            EidasIdentity eidasIdentity,
+            boolean isUseEidasProxyQsealcSignerHttpClient) {
         this.qsealcSignerHttpClient = qsealcSignerHttpClient;
+        this.eidasProxyFacade = eidasProxyFacade;
         this.alg = alg;
         this.host = host;
         this.eidasIdentity = eidasIdentity;
+        this.proxyEidasIdentity =
+                isUseEidasProxyQsealcSignerHttpClient
+                        ? new se.tink.backend.tink_integration_eidas_proxy.client.EidasIdentity(
+                                eidasIdentity.getClusterId(),
+                                eidasIdentity.getAppId(),
+                                eidasIdentity.getCertId(),
+                                eidasIdentity.getProviderId(),
+                                eidasIdentity.getRequester())
+                        : null;
+        this.isUseEidasProxyQsealcSignerHttpClient = isUseEidasProxyQsealcSignerHttpClient;
     }
 
     private QsealcSignerImpl(
             QsealcSignerHttpClient qsealcSignerHttpClient,
+            EidasProxyFacade eidasProxyFacade,
             String host,
-            EidasIdentity eidasIdentity) {
-        this(qsealcSignerHttpClient, null, host, eidasIdentity);
+            EidasIdentity eidasIdentity,
+            boolean isUseEidasProxyQsealcSignerHttpClient) {
+        this(
+                qsealcSignerHttpClient,
+                eidasProxyFacade,
+                null,
+                host,
+                eidasIdentity,
+                isUseEidasProxyQsealcSignerHttpClient);
     }
 
     /**
@@ -74,21 +101,57 @@ public class QsealcSignerImpl
     public static QsealcSigner build(
             InternalEidasProxyConfiguration conf, QsealcAlg alg, EidasIdentity eidasIdentity) {
         try {
+            se.tink.backend.tink_integration_eidas_proxy.client.InternalEidasProxyConfiguration
+                    configuration = buildUnifiedEidasProxyQsealcHttpClient(conf);
             return new QsealcSignerImpl(
-                    QsealcSignerHttpClient.create(conf), alg, conf.getHost(), eidasIdentity);
+                    QsealcSignerHttpClient.create(conf),
+                    EidasProxyFacadeImpl.build(configuration),
+                    alg,
+                    conf.getHost(),
+                    eidasIdentity,
+                    conf.isUseEidasProxyQsealcSignerHttpClient());
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
+    private static se.tink.backend.tink_integration_eidas_proxy.client
+                    .InternalEidasProxyConfiguration
+            buildUnifiedEidasProxyQsealcHttpClient(InternalEidasProxyConfiguration conf) {
+        se.tink.backend.tink_integration_eidas_proxy.client.InternalEidasProxyConfiguration
+                configuration =
+                        new se.tink.backend.tink_integration_eidas_proxy.client
+                                .InternalEidasProxyConfiguration();
+        configuration.setCaPath(conf.getCaPath());
+        configuration.setLocalEidasDev(conf.getLocalEidasDev());
+        configuration.setTlsCrtPath(conf.getTlsCrtPath());
+        configuration.setTlsKeyPath(conf.getTlsKeyPath());
+        configuration.setUri(conf.getHost());
+        return configuration;
+    }
+
     public static QsealcSignerImpl build(
             InternalEidasProxyConfiguration conf, EidasIdentity eidasIdentity) {
         try {
+            se.tink.backend.tink_integration_eidas_proxy.client.InternalEidasProxyConfiguration
+                    configuration = buildUnifiedEidasProxyQsealcHttpClient(conf);
             return new QsealcSignerImpl(
-                    QsealcSignerHttpClient.create(conf), conf.getHost(), eidasIdentity);
+                    QsealcSignerHttpClient.create(conf),
+                    EidasProxyFacadeImpl.build(configuration),
+                    conf.getHost(),
+                    eidasIdentity,
+                    conf.isUseEidasProxyQsealcSignerHttpClient());
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private byte[] callSecretsServiceThroughEidasProxyClient(
+            QsealcAlg algorithm, byte[] signingData) {
+        se.tink.backend.tink_integration_eidas_proxy.client.QsealcAlg proxyAlgorithm =
+                se.tink.backend.tink_integration_eidas_proxy.client.QsealcAlg.valueOf(
+                        algorithm.name());
+        return this.eidasProxyFacade.signData(signingData, proxyAlgorithm, proxyEidasIdentity);
     }
 
     private byte[] callSecretsService(QsealcAlg algorithm, byte[] signingData) {
@@ -136,11 +199,22 @@ public class QsealcSignerImpl
 
     @Override
     public String getSignatureBase64(byte[] signingData) {
+        if (this.isUseEidasProxyQsealcSignerHttpClient) {
+            byte[] encodedData =
+                    Base64.getEncoder()
+                            .encode(
+                                    callSecretsServiceThroughEidasProxyClient(
+                                            this.alg, signingData));
+            return new String(encodedData, StandardCharsets.US_ASCII);
+        }
         return new String(callSecretsService(this.alg, signingData), StandardCharsets.US_ASCII);
     }
 
     @Override
     public String getJWSToken(byte[] jwsTokenData) {
+        if (this.isUseEidasProxyQsealcSignerHttpClient) {
+            return new String(callSecretsServiceThroughEidasProxyClient(this.alg, jwsTokenData));
+        }
         return new String(Base64.getDecoder().decode(callSecretsService(this.alg, jwsTokenData)));
     }
 
@@ -165,14 +239,23 @@ public class QsealcSignerImpl
      */
     @Override
     public byte[] getSignature(byte[] signingData) {
+        if (this.isUseEidasProxyQsealcSignerHttpClient) {
+            return callSecretsServiceThroughEidasProxyClient(this.alg, signingData);
+        }
         return Base64.getDecoder().decode(callSecretsService(this.alg, signingData));
     }
 
     @Override
     public Signature sign(QsealcAlgorithm algorithm, byte[] dataToSign) {
         QsealcAlg internalAlgorithm = convertQsealcAlgorithm(algorithm);
-        byte[] signatureData =
-                Base64.getDecoder().decode(callSecretsService(internalAlgorithm, dataToSign));
+        byte[] signatureData;
+        if (isUseEidasProxyQsealcSignerHttpClient) {
+            signatureData =
+                    callSecretsServiceThroughEidasProxyClient(internalAlgorithm, dataToSign);
+        } else {
+            signatureData =
+                    Base64.getDecoder().decode(callSecretsService(internalAlgorithm, dataToSign));
+        }
         return Signature.create(signatureData);
     }
 

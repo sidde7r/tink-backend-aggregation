@@ -105,7 +105,7 @@ public class QsealcSignerHttpClientTest {
                 QsealcSignerImpl.build(
                         configuration,
                         QsealcAlg.EIDAS_JWT_RSA_SHA256,
-                        new EidasIdentity("", "", "", "", ""));
+                        new EidasIdentity("", "", "", "se-nordea-ob", ""));
         String result = signer.getJWSToken("".getBytes());
         Assert.assertEquals("signature", result);
     }
@@ -236,12 +236,19 @@ public class QsealcSignerHttpClientTest {
         @JsonProperty private String tlsKeyPath;
         @JsonProperty private String environment;
         @JsonProperty private boolean localEidasDev;
+        @JsonProperty private boolean useEidasProxyQsealcSignerHttpClient;
 
         public EidasProxy() {}
 
         InternalEidasProxyConfiguration toInternalConfig() {
             return new InternalEidasProxyConfiguration(
-                    host, caPath, tlsCrtPath, tlsKeyPath, environment, localEidasDev);
+                    host,
+                    caPath,
+                    tlsCrtPath,
+                    tlsKeyPath,
+                    environment,
+                    localEidasDev,
+                    useEidasProxyQsealcSignerHttpClient);
         }
 
         public String getHost() {

@@ -501,6 +501,9 @@ clients:
   uk-openwrks-production:
     aggregatorIdentifier: "OpenWrks MyBudget"
 
+eidasProxy:
+  useEidasProxyQsealcSignerHttpClient: false
+
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
