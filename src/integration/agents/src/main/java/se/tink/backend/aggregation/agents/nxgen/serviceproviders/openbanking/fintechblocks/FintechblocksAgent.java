@@ -29,7 +29,7 @@ public abstract class FintechblocksAgent extends NextGenerationAgent
     protected FintechblocksAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        clientName = request.getProvider().getPayload();
+        clientName = componentProvider.getProvider().getPayload();
         apiClient = new FintechblocksApiClient(client, persistentStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

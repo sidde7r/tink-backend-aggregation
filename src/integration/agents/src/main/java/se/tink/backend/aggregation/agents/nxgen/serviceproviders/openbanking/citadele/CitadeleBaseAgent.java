@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -50,8 +51,9 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
                         componentProvider.getRandomValueGenerator(),
                         user,
                         componentProvider.getLocalDateTimeSource().now().toLocalDate());
-        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        this.clientName = request.getProvider().getPayload();
+        this.transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(componentProvider.getProvider());
+        this.clientName = componentProvider.getProvider().getPayload();
         authenticator =
                 new CitadeleBaseAuthenticator(
                         apiClient,
@@ -97,11 +99,12 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
         return new CitadeleSessionHandler(apiClient);
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            Provider provider) {
         CitadeleTransactionalAccountFetcher accountFetcher =
                 new CitadeleTransactionalAccountFetcher(apiClient);
         CitadeleTransactionFetcher transactionFetcher =
-                new CitadeleTransactionFetcher(apiClient, request.getProvider().getMarket());
+                new CitadeleTransactionFetcher(apiClient, provider.getMarket());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

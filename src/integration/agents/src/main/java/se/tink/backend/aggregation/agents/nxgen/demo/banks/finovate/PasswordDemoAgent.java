@@ -39,13 +39,13 @@ This is a temporary solution and should be deleted as soon as the demo is done
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
 public final class PasswordDemoAgent extends NextGenerationDemoAgent {
     private final String username;
-    private final String provider;
+    private final String providerName;
 
     @Inject
     public PasswordDemoAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.username = request.getCredentials().getField(Field.Key.USERNAME);
-        this.provider = request.getProvider().getName();
+        this.providerName = componentProvider.getProvider().getName();
     }
 
     @Override
@@ -74,7 +74,7 @@ public final class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoInvestmentAccount getInvestmentAccounts() {
-        if (request.getProvider().getName().equals("at-test-easy-bank")) {
+        if (providerName.equals("at-test-easy-bank")) {
 
             if (!username.equals("tink")) {
                 return null;
@@ -103,9 +103,9 @@ public final class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoSavingsAccount getDemoSavingsAccounts() {
-        if (request.getProvider().getName().equals("at-test-erste-bank")) {
+        if (providerName.equals("at-test-erste-bank")) {
             return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(
-                    this.username, this.provider);
+                    this.username, providerName);
         }
 
         return null;
@@ -113,7 +113,7 @@ public final class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoLoanAccount getDemoLoanAccounts() {
-        if (request.getProvider().getName().equals("at-test-bawag")) {
+        if (providerName.equals("at-test-bawag")) {
 
             if (!username.equals("tink")) {
                 return null;
@@ -172,10 +172,10 @@ public final class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public List<DemoTransactionAccount> getTransactionAccounts() {
-        if (request.getProvider().getName().equals("at-test-erste-bank")) {
+        if (providerName.equals("at-test-erste-bank")) {
             return Collections.singletonList(
                     DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                            this.username, this.provider));
+                            this.username, providerName));
         }
 
         return Collections.emptyList();

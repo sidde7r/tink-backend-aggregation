@@ -66,7 +66,7 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
     public DemoFinancialInstitutionAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        clientName = request.getProvider().getPayload();
+        clientName = componentProvider.getProvider().getPayload();
         sessionStorage = new SessionStorage();
         apiClient = new DemoFinancialInstitutionApiClient(client, sessionStorage);
 

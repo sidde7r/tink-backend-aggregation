@@ -60,7 +60,7 @@ public final class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAge
         super(componentProvider);
 
         this.username = request.getCredentials().getField(Field.Key.USERNAME);
-        this.provider = request.getProvider().getName();
+        this.provider = componentProvider.getProvider().getName();
     }
 
     @Override
