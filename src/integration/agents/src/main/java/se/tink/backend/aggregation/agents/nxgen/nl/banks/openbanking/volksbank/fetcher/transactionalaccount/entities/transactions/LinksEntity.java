@@ -9,4 +9,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LinksEntity {
 
     private Href next;
+    private Href previous;
 }

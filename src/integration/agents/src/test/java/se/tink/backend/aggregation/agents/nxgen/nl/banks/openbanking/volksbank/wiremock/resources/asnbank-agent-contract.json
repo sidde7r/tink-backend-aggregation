@@ -35,6 +35,7 @@
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [
+
             ],
             "availableCredit": 0.0,
             "balance": 788.66
@@ -46,6 +47,7 @@
             "date": 694263600000,
             "description": "Spaarrekeningkinderen",
             "internalPayload": {
+
             },
             "originalAmount": 0.0,
             "payload": {
@@ -58,8 +60,10 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
+
             },
             "transactionDates": [
+
             ]
         },
         {
@@ -67,6 +71,7 @@
             "date": 694263600000,
             "description": "CoopvanWijlen>HEUSDENG1.02.202111U16KV005H683V3MCC:5411ContactlozebetalingNLNEDERLAND",
             "internalPayload": {
+
             },
             "originalAmount": 0.0,
             "payload": {
@@ -79,28 +84,11 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
+
             },
             "transactionDates": [
+
             ]
-        },
-        {
-            "amount": -69.0,
-            "date": 694350000000,
-            "description": "CJIB",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "MESSAGE": null,
-                "TRANSFER_ACCOUNT_EXTERNAL": "NL1111111111",
-                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "CJIB"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": [],
-            "booked": true
         }
     ]
 }

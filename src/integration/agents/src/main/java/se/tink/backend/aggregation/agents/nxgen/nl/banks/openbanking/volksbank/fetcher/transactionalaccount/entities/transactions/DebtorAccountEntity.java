@@ -7,6 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class DebtorAccountEntity {
 
+    private String currency;
     private String iban;
-    private String bban;
 }

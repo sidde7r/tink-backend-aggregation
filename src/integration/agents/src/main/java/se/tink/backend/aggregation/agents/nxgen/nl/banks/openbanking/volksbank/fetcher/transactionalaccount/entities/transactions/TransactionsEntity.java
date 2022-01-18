@@ -38,35 +38,33 @@ public class TransactionsEntity {
                                 !VolksbankUtils.isEntryReferenceFromAfterDate(
                                         bookedEntity.getEntryReference(), limitDate))
                 .map(
-                        bookedEntity ->
+                        movement ->
                                 Transaction.builder()
-                                        .setAmount(createAmount(bookedEntity))
-                                        .setDescription(createDescription(bookedEntity))
-                                        .setDate(parseDate(bookedEntity.getEntryReference()))
+                                        .setAmount(createAmount(movement))
+                                        .setDescription(createDescription(movement))
+                                        .setDate(parseDate(movement.getEntryReference()))
                                         .setPayload(
                                                 TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL,
-                                                getCounterPartyAccount(bookedEntity))
+                                                getCounterPartyAccount(movement))
                                         .setPayload(
                                                 TransactionPayloadTypes
                                                         .TRANSFER_ACCOUNT_NAME_EXTERNAL,
-                                                getCounterPartyName(bookedEntity))
+                                                getCounterPartyName(movement))
                                         .setPayload(
                                                 TransactionPayloadTypes.MESSAGE,
-                                                bookedEntity.getRemittanceInformationUnstructured())
+                                                movement.getRemittanceInformationUnstructured())
                                         .build())
                 .collect(Collectors.toList());
     }
 
     public String getNextLink() {
-        return links != null && links.getNext() != null
-                ? links.getNext().getHref().split("\\?")[1]
-                : null;
+        return links != null ? links.getNext().getHref().split("\\?")[1] : null;
     }
 
-    private static ExactCurrencyAmount createAmount(final BookedEntity bookedEntity) {
+    private static ExactCurrencyAmount createAmount(final BookedEntity movement) {
         return ExactCurrencyAmount.of(
-                new BigDecimal(bookedEntity.getTransactionAmount().getAmount()),
-                bookedEntity.getTransactionAmount().getCurrency());
+                new BigDecimal(movement.getTransactionAmount().getAmount()),
+                movement.getTransactionAmount().getCurrency());
     }
 
     @SneakyThrows(ParseException.class)
@@ -79,49 +77,28 @@ public class TransactionsEntity {
         return formatter.parse(dateString);
     }
 
-    private static String createDescription(final BookedEntity bookedEntity) {
+    private static String createDescription(final BookedEntity movement) {
         return Stream.of(
-                        bookedEntity.getDebtorName(),
-                        bookedEntity.getCreditorName(),
-                        getStructuredDescription(
-                                bookedEntity.getRemittanceInformationUnstructured()))
+                        movement.getDebtorName(),
+                        movement.getCreditorName(),
+                        getStructuredDescription(movement.getRemittanceInformationUnstructured()))
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Couldn't find description"));
     }
 
-    private static String getCounterPartyAccount(final BookedEntity bookedEntity) {
-
-        String creditorAccount =
-                Optional.ofNullable(bookedEntity.getCreditorAccount())
-                        .map(CreditorAccountEntity::getIban)
-                        .filter(iban -> !iban.isEmpty())
-                        .map(Optional::of)
-                        .orElseGet(
-                                () ->
-                                        Optional.ofNullable(bookedEntity.getCreditorAccount())
-                                                .map(CreditorAccountEntity::getBban))
-                        .orElse(StringUtils.EMPTY);
-
-        String debtorAccount =
-                Optional.ofNullable(bookedEntity.getDebtorAccount())
-                        .map(DebtorAccountEntity::getIban)
-                        .filter(iban -> !iban.isEmpty())
-                        .map(Optional::of)
-                        .orElseGet(
-                                () ->
-                                        Optional.ofNullable(bookedEntity.getDebtorAccount())
-                                                .map(DebtorAccountEntity::getBban))
-                        .orElse(StringUtils.EMPTY);
-
-        return Stream.of(creditorAccount, debtorAccount)
+    private static String getCounterPartyAccount(final BookedEntity movement) {
+        return Stream.of(
+                        movement.getCreditorAccount().getIban(),
+                        movement.getDebtorAccount().getIban())
+                .filter(Objects::nonNull)
                 .filter(s -> !s.isEmpty())
                 .findFirst()
                 .orElse(StringUtils.EMPTY);
     }
 
-    private static String getCounterPartyName(final BookedEntity bookedEntity) {
-        return Stream.of(bookedEntity.getCreditorName(), bookedEntity.getDebtorName())
+    private static String getCounterPartyName(final BookedEntity movement) {
+        return Stream.of(movement.getCreditorName(), movement.getDebtorName())
                 .filter(Objects::nonNull)
                 .filter(s -> !s.isEmpty())
                 .findFirst()
@@ -129,8 +106,6 @@ public class TransactionsEntity {
     }
 
     private static String getStructuredDescription(String unStructuredDescription) {
-        return Optional.ofNullable(unStructuredDescription)
-                .map(description -> String.join(" ", description.split("\\s+")))
-                .orElse(null);
+        return String.join(" ", unStructuredDescription.split("\\s+"));
     }
 }

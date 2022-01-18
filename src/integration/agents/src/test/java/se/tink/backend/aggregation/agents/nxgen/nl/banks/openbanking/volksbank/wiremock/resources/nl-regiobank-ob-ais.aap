@@ -48,7 +48,7 @@ Content-Type: application/json;charset=utf-8
 }
 
 REQUEST 3
-GET https://psd.bancairediensten.nl/psd2/regiobank/v1.1/accounts
+GET https://psd.bancairediensten.nl/psd2/regiobank/v1/accounts
 
 RESPONSE 3
 200
@@ -57,37 +57,29 @@ Content-Type: application/json
 {"accounts":[{"resourceId":"57badc4e-eae3-49a6-b9fe-63bdc28a75e5","iban":"NL33333333333","currency":"EUR","name":"first last","ownerName":"owner name","product":"Plus Betalen","customerBic":"RBRBNL21"}]}
 
 REQUEST 4
-GET https://psd.bancairediensten.nl/psd2/regiobank/v1.1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/balances
+GET https://psd.bancairediensten.nl/psd2/regiobank/v1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/balances
 
 RESPONSE 4
 200
 Content-Type: application/json
 
-{"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"108.82"},"lastChangeDateTime":"2021-04-24T22:00:00Z"}]}
+{"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"108.82"},"lastChangeDateTime":"2021-04-24T22:00:00.000Z"}]}
 
 REQUEST 5
-GET https://psd.bancairediensten.nl/psd2/regiobank/v1.1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/transactions?dateFrom=1992-01-11&dateTo=1992-04-09&bookingStatus=booked&limit=1000
+GET https://psd.bancairediensten.nl/psd2/regiobank/v1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/transactions
 
 RESPONSE 5
 200
 Content-Type: application/json
 
-{"account":{"iban":"NL33333333333","currency":"EUR"},"transactions":{"booked":[{"entryReference":"19920101-81182411","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-2.45"},"creditorAccount":{"iban":"","bban":"NL52ASNB0934972362"},"debtorAccount":{"iban":"","bban":""},"remittanceInformationUnstructured":"Kosten gebruik betaalrekening inclusief 1 betaalpas","purposeCode":"","bankTransactionCode":7241,"proprietaryBankTransactionCode":"FMSC"},{"entryReference":"19920101-81161382","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-2.45"},"creditorAccount":{"iban":"","bban":""},"debtorAccount":{"iban":"","bban":"NL52ASNB0934972362"},"remittanceInformationUnstructured":"Kosten gebruik betaalrekening inclusief 2 betaalpas","purposeCode":"","bankTransactionCode":7241,"proprietaryBankTransactionCode":"FMSC"},{"entryReference":"19920101-81187935","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-2.45"},"remittanceInformationUnstructured":"Kosten gebruik betaalrekening inclusief 3 betaalpas","purposeCode":"","bankTransactionCode":7241,"proprietaryBankTransactionCode":"FMSC"}],"_links":{"account":{"href":"/psd2/regiobank/v1.1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5"},"next":{"href":"/psd2/regiobank/v1.1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/transactions?bookingStatus=booked&limit=1000&entryReferenceFrom=19920101-81187935"}}}}
+{"account":null,"transactions":{"booked":[],"_links":null}}
 
 REQUEST 6
-GET https://psd.bancairediensten.nl/psd2/regiobank/v1.1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/transactions?bookingStatus=booked&limit=1000&entryReferenceFrom=19920101-81187935
+GET https://psd.bancairediensten.nl/psd2/regiobank/v1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/transactions?dateFrom=1992-01-11&dateTo=1992-04-09&bookingStatus=booked&pageDirection=next&limit=1000
 
 RESPONSE 6
 200
 Content-Type: application/json
 
-{"account":null,"transactions":{"booked":[],"_links":null}}
+{"account":{"iban":"NL33333333333","currency":"EUR"},"transactions":{"booked":[{"entryReference":"19920101-81182411","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-2.45"},"creditorAccount":{"iban":"","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"Kosten gebruik betaalrekening inclusief 1 betaalpas","purposeCode":"","bankTransactionCode":7241,"proprietaryBankTransactionCode":"FMSC"},{"entryReference":"19920101-81161382","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-2.45"},"creditorAccount":{"iban":"","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"Kosten gebruik betaalrekening inclusief 2 betaalpas","purposeCode":"","bankTransactionCode":7241,"proprietaryBankTransactionCode":"FMSC"},{"entryReference":"19920101-81187935","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-2.45"},"creditorAccount":{"iban":"","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"Kosten gebruik betaalrekening inclusief 3 betaalpas","purposeCode":"","bankTransactionCode":7241,"proprietaryBankTransactionCode":"FMSC"}],"_links":{"account":{"href":"/psd2/regiobank/v1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5"},"next":{"href":"/psd2/regiobank/v1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/transactions?bookingStatus=booked&limit=1000&pageDirection=next&entryReferenceFrom=20210125-81187935"},"previous":{"href":"/psd2/regiobank/v1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/transactions?bookingStatus=booked&limit=1000&pageDirection=previous&entryReferenceFrom=20201125-81182411"}}}}
 
-REQUEST 7
-GET https://psd.bancairediensten.nl/psd2/regiobank/v1.1/accounts/57badc4e-eae3-49a6-b9fe-63bdc28a75e5/transactions
-
-RESPONSE 7
-200
-Content-Type: application/json
-
-{"account":null,"transactions":{"booked":[],"_links":null}}
