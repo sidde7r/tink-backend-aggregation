@@ -56,6 +56,9 @@ public class VolksbankApiClient {
                                 TransactionFetcherParams.BOOKING_STATUS,
                                 TransactionFetcherParams.BOOKING_STATUS_VALUE)
                         .queryParam(
+                                TransactionFetcherParams.PAGE_DIRECTION,
+                                TransactionFetcherParams.PAGE_DIRECTION_VALUE)
+                        .queryParam(
                                 TransactionFetcherParams.LIMIT,
                                 TransactionFetcherParams.LIMIT_VALUE.toString());
         return readTransactions(request, consentId, oauth2Token);
