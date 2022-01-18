@@ -1,0 +1,8 @@
+apiVersion: v3
+env: prod
+certainDate: 2019-04-17 10:15:30
+urlList:
+  - serverUrl: https://fake1.ulr
+    port: 1111
+  - serverUrl: https://fake2.ulr
+    port: 2222

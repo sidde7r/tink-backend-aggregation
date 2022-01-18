@@ -260,6 +260,8 @@ generate_codeowners(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/command:owners",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment:owners",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh:owners",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/propertiesloader:owners",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/propertiesloader:owners",
         "//src/agent_sdk:owners",
     ],
 )
