@@ -77,7 +77,7 @@ public final class StarlingAgent extends AgentPlatformAgent
                 constructTransactionalAccountRefreshController(
                         componentProvider.getLocalDateTimeSource());
         client.addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
-        client.addFilter(new StarlingTerminatedHandshakeRetryFilter(3, 1500));
+        client.addFilter(new StarlingTerminatedHandshakeRetryFilter(3, 900));
     }
 
     @Override
