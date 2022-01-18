@@ -23,7 +23,6 @@ public class AutoAuthenticationController implements TypedAuthenticator {
     private final SystemUpdater systemUpdater;
     private final TypedAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
-    private final boolean isDebugEnabled;
 
     public AutoAuthenticationController(
             CredentialsRequest request,
@@ -34,20 +33,6 @@ public class AutoAuthenticationController implements TypedAuthenticator {
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
         this.autoAuthenticator = Preconditions.checkNotNull(autoAuthenticator);
-        this.isDebugEnabled = false;
-    }
-
-    public AutoAuthenticationController(
-            CredentialsRequest request,
-            SystemUpdater systemUpdater,
-            TypedAuthenticator manualAuthenticator,
-            AutoAuthenticator autoAuthenticator,
-            boolean isDebugEnabled) {
-        this.request = Preconditions.checkNotNull(request);
-        this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
-        this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
-        this.autoAuthenticator = Preconditions.checkNotNull(autoAuthenticator);
-        this.isDebugEnabled = isDebugEnabled;
     }
 
     @Override
@@ -74,21 +59,24 @@ public class AutoAuthenticationController implements TypedAuthenticator {
     }
 
     private boolean shouldDoManualAuthentication(final CredentialsRequest request) {
-        if (isDebugEnabled) {
-            log.debug("shouldAutoAuthBeForced status: {}", shouldAutoAuthBeForced());
-            log.debug("manualAuthenticatorType: {}", manualAuthenticator.getType());
-            log.debug("credentialsType: {}", request.getCredentials().getType());
-            log.debug("request create status: {}", request.isCreate());
-            log.debug("requestUpdate status: {}", request.isUpdate());
-            log.debug("requestType: {}", request.getType());
-            log.debug(
-                    "credentials.shouldManualAuthBeForced status: {}",
-                    request.shouldManualAuthBeForced());
-        }
-        return !shouldAutoAuthBeForced()
-                        && (doesCredentialsTypeMatchAuthenticator(request.getCredentials())
-                                || (request.isUpdate() && isNotTransferType(request)))
-                || request.shouldManualAuthBeForced();
+        boolean shouldAutoAuthBeForced = shouldAutoAuthBeForced();
+        boolean doesCredentialsTypeMatchAuthenticator =
+                doesCredentialsTypeMatchAuthenticator(request.getCredentials());
+        boolean isUpdate = request.isUpdate();
+        boolean isNotTransfer = isNotTransferType(request);
+        boolean shouldManualAuthBeForced = request.shouldManualAuthBeForced();
+
+        log.info(
+                "[AutoAuthenticationController] shouldAutoAuthBeForced: {}, doesCredentialsTypeMatchAuthenticator: {}, isUpdate: {}, isNotTransferType: {}, shouldManualAuthBeForced: {}",
+                shouldAutoAuthBeForced,
+                doesCredentialsTypeMatchAuthenticator,
+                isUpdate,
+                isNotTransfer,
+                shouldManualAuthBeForced);
+
+        return !shouldAutoAuthBeForced
+                        && (doesCredentialsTypeMatchAuthenticator || (isUpdate && isNotTransfer))
+                || shouldManualAuthBeForced;
     }
 
     private boolean isNotTransferType(CredentialsRequest request) {
