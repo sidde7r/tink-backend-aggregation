@@ -141,7 +141,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "4478f13d74f7eb083971851400db264065997522",
+    commit = "dcf691e7115118b6e5e2cf677734ad94f32eafed",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1640855783 +0000",
 )
@@ -806,6 +806,9 @@ maven_install(
         "org.apache.curator:curator-recipes:4.3.0",
         "org.apache.httpcomponents:httpclient:4.5.12",
         "org.apache.httpcomponents:httpcore:4.4.13",
+        "org.apache.httpcomponents.client5:httpclient5:5.0.1",
+        "org.apache.httpcomponents.client5:httpclient5-fluent:5.0.1",
+        "org.apache.httpcomponents.core5:httpcore5:5.0.1",
         "org.apache.kafka:kafka-clients:2.3.1",
         "org.apache.kafka:kafka-streams:2.3.1",
         "org.apache.logging.log4j:log4j-api:2.17.1",
