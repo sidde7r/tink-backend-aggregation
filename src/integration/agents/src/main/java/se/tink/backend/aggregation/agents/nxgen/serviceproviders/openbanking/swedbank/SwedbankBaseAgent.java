@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 
 import java.util.List;
 import java.util.Optional;
+import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -73,14 +74,12 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         marketConfiguration);
 
         consentHandler = new SwedbankConsentHandler(apiClient, persistentStorage);
+        Provider provider = componentProvider.getProvider();
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient,
-                        request.getProvider().getMarket(),
-                        persistentStorage,
-                        componentProvider);
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+                        apiClient, provider.getMarket(), persistentStorage, componentProvider);
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController(provider);
         transferDestinationRefreshController = constructTransferDestinationController();
     }
 
@@ -141,7 +140,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            Provider provider) {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
@@ -149,7 +149,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 new SwedbankTransactionFetcher(
                         apiClient,
                         sessionStorage,
-                        request.getProvider().getMarket(),
+                        provider.getMarket(),
                         componentProvider,
                         transactionPaginationHelper));
     }

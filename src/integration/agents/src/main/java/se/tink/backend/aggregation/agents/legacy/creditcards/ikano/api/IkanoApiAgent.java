@@ -56,7 +56,7 @@ public final class IkanoApiAgent extends AbstractAgent
                 new IkanoApiClient(
                         client,
                         credentials,
-                        request.getProvider().getPayload(),
+                        agentComponentProvider.getProvider().getPayload(),
                         CommonHeaders.DEFAULT_USER_AGENT);
         this.persistentStorage = new PersistentStorage();
         this.credentialsPersistence =
