@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -50,7 +49,7 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
             Collection<PartyV31Entity> parties) {
 
         List<AccountIdentifierEntity> accountIdentifiers =
-                account.getIdentifiers().stream().distinct().collect(Collectors.toList());
+                RevolutAccountIdentifierFilter.getFilteredAccountIdentifiers(account);
 
         AccountIdentifierEntity primaryIdentifier =
                 identifierMapper.getTransactionalAccountPrimaryIdentifier(accountIdentifiers);
