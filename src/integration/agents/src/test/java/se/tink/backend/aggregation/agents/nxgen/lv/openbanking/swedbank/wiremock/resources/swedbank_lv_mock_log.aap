@@ -4,7 +4,7 @@ Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"authenticationMethodId":"SMART_ID","clientID":"dummyClientId","psuData":{"personalID":"200012121213"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2"}
+{"authenticationMethodId":"SMART_ID","clientID":"dummyClientId","psuData":{"personalID":"200012121213"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_list"}
 
 RESPONSE 1
 200

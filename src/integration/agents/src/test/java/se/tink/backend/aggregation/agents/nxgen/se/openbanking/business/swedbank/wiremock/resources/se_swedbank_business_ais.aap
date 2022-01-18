@@ -5,7 +5,7 @@ POST https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled?bic=SWEDSESS
 Accept: application/json
 Content-Type: application/json
 
-{"authenticationMethodId": "MOBILE_ID", "clientID": "dummyId", "psuData": {"bankID": "08999"}, "redirectUri": "https://api.tink.se/api/v1/credentials/third-party/callback", "scope": "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
+{"authenticationMethodId": "MOBILE_ID", "clientID": "dummyId", "psuData": {"bankID": "08999"}, "redirectUri": "https://api.tink.se/api/v1/credentials/third-party/callback", "scope": "PSD2 PSD2account_list PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
 
 -----------------------------------------------------------------------------------
 RESPONSE 1
