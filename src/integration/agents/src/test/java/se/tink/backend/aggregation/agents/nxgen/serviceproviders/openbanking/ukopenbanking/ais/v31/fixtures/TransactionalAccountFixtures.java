@@ -9,6 +9,8 @@ public class TransactionalAccountFixtures {
             "{\"AccountId\":\"xxxiddddxxxx\",\"Currency\":\"GBP\",\"AccountType\":\"Business\",\"AccountSubType\":\"CurrentAccount\",\"Nickname\":\"someNickname\",\"Account\":[{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"},{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"1234 NAIA 5678 1234 55 1111\",\"Name\":\"Myszo Jelen\"}]}";
     private static final String CURRENT_ACCOUNT =
             "{\"AccountId\":\"xxxiddddxxxx\",\"Currency\":\"GBP\",\"AccountType\":\"Personal\",\"AccountSubType\":\"CurrentAccount\",\"Nickname\":\"someNickname\",\"Account\":[{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"},{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"1234 NAIA 5678 1234 55 1111\",\"Name\":\"Myszo Jelen\"}]}";
+    private static final String SWITCHED_OUT_ACCOUNT =
+            "{\"AccountId\":\"xxxiddddxxxx\",\"SwitchStatus\":\"UK.CASS.SwitchCompleted\"}";
     private static final String CURRENT_ACCOUNT_WITH_EMPTY_ACCOUNT_ID =
             "{\"AccountId\":\"\",\"Currency\":\"GBP\",\"AccountType\":\"Personal\",\"AccountSubType\":\"CurrentAccount\",\"Nickname\":\"someNickname\",\"Account\":[{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"},{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"1234 NAIA 5678 1234 55 1111\",\"Name\":\"Myszo Jelen\"}]}";
     private static final String SAVINGS_ACCOUNT =
@@ -18,6 +20,10 @@ public class TransactionalAccountFixtures {
 
     public static AccountEntity currentAccount() {
         return SerializationUtils.deserializeFromString(CURRENT_ACCOUNT, AccountEntity.class);
+    }
+
+    public static AccountEntity switchedOutAccount() {
+        return SerializationUtils.deserializeFromString(SWITCHED_OUT_ACCOUNT, AccountEntity.class);
     }
 
     public static AccountEntity currentAccountBusiness() {

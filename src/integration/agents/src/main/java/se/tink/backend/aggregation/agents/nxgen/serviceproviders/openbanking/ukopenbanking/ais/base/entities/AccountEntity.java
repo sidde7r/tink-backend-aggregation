@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Slf4j
@@ -30,6 +31,8 @@ public class AccountEntity {
 
     private String description;
 
+    private String switchStatus;
+
     @JsonProperty("Account")
     private List<AccountIdentifierEntity> identifiers = new ArrayList<>();
 
@@ -37,6 +40,15 @@ public class AccountEntity {
     public boolean hasAccountId() {
         if (Strings.isNullOrEmpty(accountId)) {
             log.warn("[AccountEntity] AccountId is empty");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isNotSwitchedOutAccount() {
+        if (!Strings.isNullOrEmpty(switchStatus)
+                && UkOpenBankingV31Constants.SWITCHED_OUT_ACCOUNT.equals(switchStatus)) {
+            log.warn("[AccountEntity] Account is switched out.");
             return false;
         }
         return true;

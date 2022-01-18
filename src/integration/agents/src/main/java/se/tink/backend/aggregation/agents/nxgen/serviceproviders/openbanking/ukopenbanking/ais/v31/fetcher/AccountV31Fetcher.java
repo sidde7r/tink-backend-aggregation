@@ -48,6 +48,7 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
                         .collect(Collectors.toList()));
         return Observable.fromIterable(allAccountEntities)
                 .filter(AccountEntity::hasAccountId)
+                .filter(AccountEntity::isNotSwitchedOutAccount)
                 .filter(
                         acc ->
                                 accountMapper.supportsAccountType(
