@@ -77,7 +77,7 @@ public class TransactionsFetchingDateFromManager {
                             fetchingStatus.setSavingsAccountsLastSuccessRefreshDate(date);
                             fetchingStatus.setCreditCardsLastSuccessRefreshDate(date);
                             log.info(
-                                    "Fetching status is already in the place: "
+                                    "Fetching status has been initiated from the certain date: "
                                             + fetchingStatus.toString());
                         });
         fetchingStatus.save();
@@ -164,6 +164,7 @@ public class TransactionsFetchingDateFromManager {
                     .map(
                             s -> {
                                 s.persistentStorage = persistentStorage;
+                                log.info("Fetching status is already in the place: " + s);
                                 return s;
                             })
                     .orElse(new BbvaFetchingStatus(persistentStorage));
