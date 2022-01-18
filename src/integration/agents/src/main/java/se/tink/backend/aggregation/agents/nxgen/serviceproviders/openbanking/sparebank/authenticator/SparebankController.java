@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -25,10 +26,6 @@ import se.tink.libraries.i18n.LocalizableKey;
 @Slf4j
 @RequiredArgsConstructor
 public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-
-    private static final String FIELD_PSU_ID = "psu-id";
-    private static final String FIELD_TPP_SESSION_ID = "tpp-session-id";
-    private static final String FIELD_MESSAGE = "message";
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SparebankAuthenticator authenticator;
@@ -63,15 +60,20 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
                         supplementalInformation -> {
                             if (supplementalInfoContainsRequiredFields(supplementalInformation)) {
                                 authenticator.storeSessionData(
-                                        supplementalInformation.get(FIELD_PSU_ID),
-                                        supplementalInformation.get(FIELD_TPP_SESSION_ID));
+                                        supplementalInformation.get(
+                                                SparebankConstants.StorageKeys.FIELD_PSU_ID),
+                                        supplementalInformation.get(
+                                                SparebankConstants.StorageKeys
+                                                        .FIELD_TPP_SESSION_ID));
                                 authenticator.handleSuccessfulManualAuth();
                                 credentials.setSessionExpiryDate(
                                         LocalDate.now().plusDays(CONSENT_VALIDITY_IN_DAYS));
                                 return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
 
                             } else {
-                                errorMessage = supplementalInformation.get(FIELD_MESSAGE);
+                                errorMessage =
+                                        supplementalInformation.get(
+                                                SparebankConstants.StorageKeys.FIELD_MESSAGE);
                                 return ThirdPartyAppResponseImpl.create(
                                         ThirdPartyAppStatus.CANCELLED);
                             }
@@ -81,8 +83,9 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
 
     private boolean supplementalInfoContainsRequiredFields(
             Map<String, String> supplementalInformation) {
-        return supplementalInformation.containsKey(FIELD_PSU_ID)
-                && supplementalInformation.containsKey(FIELD_TPP_SESSION_ID);
+        return supplementalInformation.containsKey(SparebankConstants.StorageKeys.FIELD_PSU_ID)
+                && supplementalInformation.containsKey(
+                        SparebankConstants.StorageKeys.FIELD_TPP_SESSION_ID);
     }
 
     @Override
