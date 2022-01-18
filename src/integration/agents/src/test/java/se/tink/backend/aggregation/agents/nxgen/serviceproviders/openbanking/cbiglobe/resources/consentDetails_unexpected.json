@@ -1,0 +1,11 @@
+{
+    "access": {
+        "allPsd2": "allAccountsWithOwnerName"
+    },
+    "consentStatus": "received",
+    "frequencyPerDay": "4",
+    "lastActionDate": "2022-01-23",
+    "recurringIndicator": "true",
+    "scaStatus": "INITIATED",
+    "validUntil": "20220422"
+}

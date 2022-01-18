@@ -3,14 +3,12 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.payment.helper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.PathVariables;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentProduct;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class PaymentUrlUtil {
 
-    public static URL fillCommonPaymentParams(URL url, PaymentRequest paymentRequest) {
-        Payment payment = paymentRequest.getPayment();
+    public static URL fillCommonPaymentParams(URL url, Payment payment) {
         URL returnUrl = url;
 
         // Ternary ifs only needed because those method in enums are a bit too eager to assign one

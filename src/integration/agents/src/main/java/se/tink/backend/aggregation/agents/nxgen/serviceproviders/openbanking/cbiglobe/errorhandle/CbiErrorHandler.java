@@ -34,16 +34,22 @@ public class CbiErrorHandler {
 
         log.error(String.format("Handling error in context: %s", context.name()));
 
+        if (RequestContext.PSU_CREDENTIALS_UPDATE.equals(context)) {
+            throwIfMatches(
+                    errorResponse,
+                    ErrorMessages.PSU_CREDENTIALS_INVALID,
+                    LoginError.INCORRECT_CREDENTIALS.exception(httpResponseException));
+        }
+
         throwIfMatches(
                 errorResponse,
                 ErrorMessages.RESOURCE_UNKNOWN,
-                BankServiceError.BANK_SIDE_FAILURE.exception(httpResponseException.getCause()));
+                BankServiceError.BANK_SIDE_FAILURE.exception(httpResponseException));
 
         throwIfMatches(
                 errorResponse,
                 ErrorMessages.PSU_CREDENTIALS_INVALID,
-                LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(
-                        httpResponseException.getCause()));
+                LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(httpResponseException));
     }
 
     private static void throwIfMatches(

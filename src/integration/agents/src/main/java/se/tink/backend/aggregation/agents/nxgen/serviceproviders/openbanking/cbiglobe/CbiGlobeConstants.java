@@ -31,11 +31,9 @@ public final class CbiGlobeConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CONSENT_ID = "consent-id";
-        public static final String ALL_PSD2_SUPPORTED = "all-psd2-supported";
         public static final String SCA_URL = "sca_url";
         public static final String ACCOUNTS = "accounts";
         public static final String LINK = "link";
-        public static final String PAYMENT_PRODUCT = "payment-product";
     }
 
     public static class QueryKeys {
@@ -77,34 +75,16 @@ public final class CbiGlobeConstants {
 
     public static class HeaderValues {
         public static final String UPDATE_PSU_DATA = "updatePsuData";
-        public static final String CODE = "code";
     }
 
     public static class FormValues {
-
         public static final String TRANSACTION_TYPE = "remote_transaction";
-        public static final String ALL_ACCOUNTS = "allAccounts";
-        public static final String TRUE = "true";
-        public static final String FREQUENCY_PER_DAY_ONE = "1";
-        public static final String FALSE = "false";
-        public static final String FREQUENCY_PER_DAY = "4";
-        public static final int CONSENT_VALID_PERIOD_DAYS = 89;
     }
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
         public static final String PAYMENT_ID = "payment-id";
-    }
-
-    public static class PathParameterKeys {
-        public static final String PAYMENT_PRODUCT = "payment-product";
-        public static final String PAYMENT_SERVICE = "payment-service";
-    }
-
-    public static class PathParameterValues {
-        public static final String PAYMENT_SERVICE_PAYMENTS = "payments";
-        public static final String PAYMENT_SERVICE_PERIODIC_PAYMENTS = "periodic-payments";
     }
 
     public static class PSUAuthenticationStatus {
@@ -141,7 +121,7 @@ public final class CbiGlobeConstants {
         CONSENT_CREATE,
         CONSENT_UPDATE,
         CONSENT_DETAILS,
-        CONSENT_PSU_CREDENTIALS_UPDATE,
+        PSU_CREDENTIALS_UPDATE,
         PAYMENT_CREATE,
         PAYMENT_GET,
         PAYMENT_STATUS_GET,
@@ -170,4 +150,13 @@ public final class CbiGlobeConstants {
                             "ONDP",
                             "SVGS")
                     .build();
+
+    public enum MessageCodes {
+        RESOURCE_UNKNOWN,
+        CONSENT_INVALID,
+        CONSENT_EXPIRED,
+        NO_ACCESS_TOKEN_IN_STORAGE,
+        CONSENT_ALREADY_IN_USE,
+        PSU_CREDENTIALS_INVALID
+    }
 }

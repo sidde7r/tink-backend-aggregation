@@ -4,15 +4,13 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CH
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.BancoPostaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -26,36 +24,25 @@ public final class PostePayAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient() {
-        return new BancoPostaApiClient(
-                client,
-                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                getProviderConfiguration(),
-                psuIpAddress,
-                randomValueGenerator,
-                localDateTimeSource,
-                urlProvider);
-    }
-
-    @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
-        if (authenticator == null) {
-            authenticator =
-                    new BancoPostaAuthenticator(
-                            apiClient,
-                            strongAuthenticationState,
-                            userState,
-                            new ConsentManager(
-                                    apiClient, userState, localDateTimeSource, urlProvider),
-                            getAgentConfiguration().getProviderSpecificConfiguration());
-        }
-        return authenticator;
+    protected Authenticator constructAuthenticator() {
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new BancoPostaAuthenticator(
+                        authApiClient,
+                        fetcherApiClient,
+                        storage,
+                        localDateTimeSource,
+                        supplementalInformationController,
+                        credentials,
+                        urlProvider),
+                new CbiGlobeAutoAuthenticator(authApiClient, storage));
     }
 
     @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
-                CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);
+                CbiGlobeTransactionalAccountFetcher.createFromBooked(fetcherApiClient, storage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

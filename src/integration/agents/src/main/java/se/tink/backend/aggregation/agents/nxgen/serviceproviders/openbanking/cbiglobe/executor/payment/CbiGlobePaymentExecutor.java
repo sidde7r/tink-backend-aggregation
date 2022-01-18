@@ -16,13 +16,13 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.errorhandle.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
@@ -64,7 +64,8 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 @RequiredArgsConstructor
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    protected final CbiGlobeApiClient apiClient;
+    protected final CbiGlobeAuthApiClient authApiClient;
+    protected final CbiGlobePaymentApiClient paymentApiClient;
     private List<PaymentResponse> paymentResponses = new ArrayList<>();
     private final SupplementalInformationHelper supplementalInformationHelper;
     protected final SessionStorage sessionStorage;
@@ -75,10 +76,6 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        fetchToken();
-
-        sessionStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
-
         CreatePaymentRequest createPaymentRequest =
                 PaymentServiceType.PERIODIC.equals(
                                 paymentRequest.getPayment().getPaymentServiceType())
@@ -86,7 +83,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         : getCreatePaymentRequest(paymentRequest.getPayment());
 
         CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
+                paymentApiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
         authorizePayment(createPaymentResponse);
         return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
     }
@@ -185,31 +182,15 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
     }
 
-    private void fetchToken() {
-        try {
-            if (!apiClient.isTokenValid()) {
-                apiClient.getAndSaveToken();
-            }
-        } catch (IllegalStateException e) {
-            String message = e.getMessage();
-            if (message.contains(MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name())) {
-                apiClient.getAndSaveToken();
-            } else {
-                throw e;
-            }
-        }
-    }
-
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        return apiClient
+        return paymentApiClient
                 .getPayment(paymentRequest.getPayment())
                 .toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
 
         PaymentMultiStepResponse paymentMultiStepResponse;
         CreatePaymentResponse createPaymentResponse = fetchPaymentStatus(paymentMultiStepRequest);
@@ -289,7 +270,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         CreatePaymentResponse createPaymentResponse;
         try {
             createPaymentResponse =
-                    apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
+                    paymentApiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
         } catch (HttpResponseException httpResponseException) {
             ErrorResponse errorResponse =
                     ErrorResponse.createFrom(httpResponseException.getResponse());

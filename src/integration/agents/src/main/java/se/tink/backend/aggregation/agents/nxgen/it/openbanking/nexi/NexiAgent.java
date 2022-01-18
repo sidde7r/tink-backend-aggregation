@@ -5,14 +5,10 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.nexi.client.NexiFetcherApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeFetcherApiClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class NexiAgent extends CbiGlobeAgent {
@@ -23,28 +19,7 @@ public final class NexiAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient() {
-        return new NexiApiClient(
-                client,
-                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                getProviderConfiguration(),
-                psuIpAddress,
-                randomValueGenerator,
-                localDateTimeSource,
-                urlProvider);
-    }
-
-    @Override
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final CbiGlobeTransactionalAccountFetcher accountFetcher =
-                CbiGlobeTransactionalAccountFetcher.createFromBoth(apiClient, persistentStorage);
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(accountFetcher, 1)));
+    protected CbiGlobeFetcherApiClient buildFetcherApiClient() {
+        return new NexiFetcherApiClient(cbiRequestBuilder, urlProvider, storage);
     }
 }

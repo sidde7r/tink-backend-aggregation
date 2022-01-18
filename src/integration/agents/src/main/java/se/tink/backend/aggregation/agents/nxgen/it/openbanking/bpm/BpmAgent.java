@@ -9,9 +9,9 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.PisCapability
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpm.client.BpmFetcherApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeFetcherApiClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
@@ -24,14 +24,7 @@ public final class BpmAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient() {
-        return new BpmApiClient(
-                client,
-                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                getProviderConfiguration(),
-                psuIpAddress,
-                randomValueGenerator,
-                localDateTimeSource,
-                urlProvider);
+    protected CbiGlobeFetcherApiClient buildFetcherApiClient() {
+        return new BpmFetcherApiClient(cbiRequestBuilder, urlProvider, storage);
     }
 }

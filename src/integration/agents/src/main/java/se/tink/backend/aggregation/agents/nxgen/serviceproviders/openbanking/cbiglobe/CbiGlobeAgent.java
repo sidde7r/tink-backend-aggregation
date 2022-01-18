@@ -14,71 +14,108 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HttpClientParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeFetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeTokenFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeUnknownResourceRetryFilter;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payloadparser.PayloadParser;
 
-public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
+public abstract class CbiGlobeAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshTransferDestinationExecutor {
 
-    protected CbiGlobeApiClient apiClient;
-    protected TransactionalAccountRefreshController transactionalAccountRefreshController;
-    protected TemporaryStorage temporaryStorage;
-    protected StatelessProgressiveAuthenticator authenticator;
-    protected CbiUserState userState;
-    protected LocalDateTimeSource localDateTimeSource;
-    protected RandomValueGenerator randomValueGenerator;
-    protected final String psuIpAddress;
-    protected final CbiUrlProvider urlProvider;
-    protected final Provider provider;
+    protected final RandomValueGenerator randomValueGenerator;
+    protected final LocalDateTimeSource localDateTimeSource;
 
-    private final CbiGlobeProviderConfiguration providerConfiguration;
+    protected final String psuIpAddress;
+    protected final Provider provider;
+    protected final CbiGlobeProviderConfiguration providerConfiguration;
+
+    protected final CbiStorage storage;
+    protected final CbiUrlProvider urlProvider;
+
+    protected final CbiGlobeRequestBuilder cbiRequestBuilder;
+    protected final CbiGlobeAuthApiClient authApiClient;
+    protected final CbiGlobeFetcherApiClient fetcherApiClient;
+
+    protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
+
         psuIpAddress = agentComponentProvider.getUser().getIpAddress();
-        urlProvider = new CbiUrlProvider(getBaseUrl());
         provider = agentComponentProvider.getProvider();
         providerConfiguration =
                 PayloadParser.parse(provider.getPayload(), CbiGlobeProviderConfiguration.class);
-        temporaryStorage = new TemporaryStorage();
-        localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
-        randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
-        apiClient = getApiClient();
+
+        storage = new CbiStorage(persistentStorage, sessionStorage, new TemporaryStorage());
+        urlProvider = new CbiUrlProvider(getBaseUrl());
+
+        cbiRequestBuilder = buildRequestBuilder();
+        authApiClient = buildAuthApiClient();
+        fetcherApiClient = buildFetcherApiClient();
+
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        userState = new CbiUserState(persistentStorage, credentials);
-        authenticator = getAuthenticator();
+
+        configureTinkHttpClient();
+    }
+
+    private void configureTinkHttpClient() {
         client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
-        applyFilters(client);
+        client.addFilter(
+                new CbiGlobeUnknownResourceRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new AccessExceededFilter());
+        client.addFilter(new BadGatewayFilter());
+        client.addFilter(
+                new CbiGlobeRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new CbiGlobeTokenFilter(
+                        client,
+                        storage,
+                        getAgentConfiguration().getProviderSpecificConfiguration(),
+                        urlProvider));
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
+    }
+
+    protected AgentConfiguration<CbiGlobeConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(CbiGlobeConfiguration.class);
     }
 
     /**
@@ -91,59 +128,53 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         return Urls.BASE_URL;
     }
 
-    protected CbiGlobeProviderConfiguration getProviderConfiguration() {
-        return providerConfiguration;
-    }
-
-    private void applyFilters(TinkHttpClient client) {
-        client.addFilter(
-                new CbiGlobeUnknownResourceRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new AccessExceededFilter());
-        client.addFilter(new BadGatewayFilter());
-        client.addFilter(
-                new CbiGlobeRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-    }
-
-    protected CbiGlobeApiClient getApiClient() {
-        return new CbiGlobeApiClient(
+    protected CbiGlobeRequestBuilder buildRequestBuilder() {
+        return new CbiGlobeRequestBuilder(
                 client,
-                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                getProviderConfiguration(),
-                psuIpAddress,
                 randomValueGenerator,
                 localDateTimeSource,
-                urlProvider);
+                providerConfiguration,
+                strongAuthenticationState,
+                getAgentConfiguration().getRedirectUrl(),
+                psuIpAddress);
+    }
+
+    protected CbiGlobeAuthApiClient buildAuthApiClient() {
+        return new CbiGlobeAuthApiClient(cbiRequestBuilder, providerConfiguration, urlProvider);
+    }
+
+    protected CbiGlobeFetcherApiClient buildFetcherApiClient() {
+        return new CbiGlobeFetcherApiClient(cbiRequestBuilder, urlProvider, storage);
     }
 
     @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        final AgentConfiguration<CbiGlobeConfiguration> agentConfiguration =
-                getAgentConfiguration();
-        apiClient.setConfiguration(agentConfiguration);
-        this.client.setEidasProxy(configuration.getEidasProxy());
+    protected Authenticator constructAuthenticator() {
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new CbiGlobeAuthenticator(
+                        authApiClient,
+                        fetcherApiClient,
+                        storage,
+                        localDateTimeSource,
+                        supplementalInformationController,
+                        credentials),
+                new CbiGlobeAutoAuthenticator(authApiClient, storage));
     }
 
-    protected AgentConfiguration<CbiGlobeConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(CbiGlobeConfiguration.class);
-    }
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        CbiGlobeTransactionalAccountFetcher accountFetcher =
+                CbiGlobeTransactionalAccountFetcher.createFromBoth(
+                        new CbiGlobeFetcherApiClient(cbiRequestBuilder, urlProvider, storage),
+                        storage);
 
-    @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
-        if (authenticator == null) {
-            authenticator =
-                    new CbiGlobeAuthenticator(
-                            apiClient,
-                            strongAuthenticationState,
-                            userState,
-                            new ConsentManager(
-                                    apiClient, userState, localDateTimeSource, urlProvider),
-                            getAgentConfiguration().getProviderSpecificConfiguration());
-        }
-
-        return authenticator;
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(accountFetcher, 1)));
     }
 
     @Override
@@ -166,19 +197,6 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final CbiGlobeTransactionalAccountFetcher accountFetcher =
-                CbiGlobeTransactionalAccountFetcher.createFromBoth(apiClient, persistentStorage);
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(accountFetcher, 1)));
-    }
-
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
@@ -188,11 +206,14 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         CbiGlobePaymentExecutor paymentExecutor =
                 new CbiGlobePaymentExecutor(
-                        apiClient,
+                        authApiClient,
+                        new CbiGlobePaymentApiClient(
+                                cbiRequestBuilder, urlProvider, providerConfiguration),
                         supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState,
                         provider);
+
         return Optional.of(
                 new PaymentController(
                         paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));

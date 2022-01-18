@@ -16,7 +16,8 @@ public class BperPaymentRetryFilter extends AbstractRetryFilter {
     }
 
     @Override
-    protected boolean shouldRetry(HttpResponse response) {
+    // This is only public because tests live in ..cbi.. subpackages for clarity :/
+    public boolean shouldRetry(HttpResponse response) {
         boolean shouldRetry = false;
         if (response.getStatus() == HttpStatus.SC_FORBIDDEN) {
             ErrorResponse errorResponse = ErrorResponse.createFrom(response);

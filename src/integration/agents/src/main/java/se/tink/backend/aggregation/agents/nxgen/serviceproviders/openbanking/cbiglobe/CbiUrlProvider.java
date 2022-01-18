@@ -6,15 +6,15 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @RequiredArgsConstructor
 public class CbiUrlProvider {
 
-    private static final String TOKEN = "/auth/oauth/v2/token";
+    public static final String TOKEN = "/auth/oauth/v2/token";
 
     private static final String BASE_PATH = "/platform/enabler/psd2orchestrator/";
-    private static final String CONSENTS = BASE_PATH + "ais/2.3.2/consents";
-    private static final String ALL_PSD2_CONSENTS = BASE_PATH + "ais/3.0.0/consents";
+    private static final String CONSENTS = BASE_PATH + "ais/3.0.0/consents";
+    private static final String UPDATE_CONSENTS_RAW = BASE_PATH + "ais/2.3.2";
     private static final String UPDATE_CONSENTS = BASE_PATH + "ais/2.3.2/consents";
-    private static final String CONSENTS_DETAILS = BASE_PATH + "ais/2.3.2/consents/{consentId}";
-    private static final String ALL_PSD2_CONSENTS_DETAILS =
-            BASE_PATH + "ais/3.0.0/consents/{consentId}";
+    private static final String CONSENTS_DETAILS = BASE_PATH + "ais/3.0.0/consents/{consentId}";
+    private static final String CONSENTS_STATUS =
+            BASE_PATH + "ais/2.3.2/consents/{consentId}/status";
 
     private static final String ACCOUNTS = BASE_PATH + "ais/3.0.0/accounts";
     private static final String BALANCES = BASE_PATH + "ais/2.3.2/accounts/{accountId}/balances";
@@ -31,9 +31,9 @@ public class CbiUrlProvider {
     private static final String PAYMENT_WITH_PATH_VARIABLES =
             PAYMENT + "/{payment-service}/{payment-product}";
     private static final String FETCH_PAYMENT =
-            BASE_PATH + "pis/3.0.0/{payment-service}/{payment-product}/{payment-id}";
+            BASE_PATH + "pis/3.0.0/{payment-service}/{payment-product}/{paymentId}";
     private static final String FETCH_PAYMENT_STATUS =
-            BASE_PATH + "pis/2.3.2/{payment-service}/{payment-product}/{payment-id}/status";
+            BASE_PATH + "pis/2.3.2/{payment-service}/{payment-product}/{paymentId}/status";
 
     private final String baseUrl;
 
@@ -45,20 +45,20 @@ public class CbiUrlProvider {
         return new URL(baseUrl + CONSENTS);
     }
 
-    public URL getAllPsd2ConsentsUrl() {
-        return new URL(baseUrl + ALL_PSD2_CONSENTS);
-    }
-
     public URL getUpdateConsentsUrl() {
         return new URL(baseUrl + UPDATE_CONSENTS);
+    }
+
+    public URL getUpdateConsentsRawUrl() {
+        return new URL(baseUrl + UPDATE_CONSENTS_RAW);
     }
 
     public URL getConsentsDetailsUrl() {
         return new URL(baseUrl + CONSENTS_DETAILS);
     }
 
-    public URL getAllPsd2ConsentsDetailsUrl() {
-        return new URL(baseUrl + ALL_PSD2_CONSENTS_DETAILS);
+    public URL getConsentsStatusUrl() {
+        return new URL(baseUrl + CONSENTS_STATUS);
     }
 
     public URL getAccountsUrl() {

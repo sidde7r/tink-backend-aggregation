@@ -8,7 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiCredentialsAuthenticatable;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entity.PsuCredentialsDefinition;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -22,7 +23,7 @@ import se.tink.libraries.payment.rpc.Payment;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreatePaymentResponse {
+public class CreatePaymentResponse implements CbiCredentialsAuthenticatable {
 
     private String transactionStatus;
     private String paymentId;
@@ -33,7 +34,7 @@ public class CreatePaymentResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    private PsuCredentialsResponse psuCredentials;
+    private PsuCredentialsDefinition psuCredentials;
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(Payment tinkPayment) {
@@ -53,5 +54,10 @@ public class CreatePaymentResponse {
             tinkPayment.setUniqueId(paymentId); // bank Unique payment Id
         }
         return new PaymentResponse(tinkPayment);
+    }
+
+    @Override
+    public String getUpdatePsuAuthenticationLink() {
+        return links.getUpdatePsuAuthentication().getHref();
     }
 }

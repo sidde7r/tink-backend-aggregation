@@ -12,13 +12,13 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePa
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.payment.rpc.Payment;
 
 @Slf4j
 public class CommerzBankApiClient extends Xs2aDevelopersApiClient {
@@ -67,13 +67,13 @@ public class CommerzBankApiClient extends Xs2aDevelopersApiClient {
         }
     }
 
-    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
+    public FetchPaymentStatusResponse fetchPaymentStatus(Payment payment) {
         return createRequest(
                         PaymentUrlUtil.fillCommonPaymentParams(
                                 new URL(
                                         configuration.getBaseUrl()
                                                 + ApiServices.GET_PAYMENT_STATUS),
-                                paymentRequest))
+                                payment))
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .get(FetchPaymentStatusResponse.class);
     }
