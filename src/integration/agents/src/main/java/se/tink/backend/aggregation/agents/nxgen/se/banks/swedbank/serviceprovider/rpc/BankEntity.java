@@ -17,7 +17,6 @@ public class BankEntity {
     private String url;
     private String bankId;
     private PrivateProfileEntity privateProfile;
-    private PrivateProfileEntity servicePortalProfile;
 
     @JsonProperty("corporateProfiles")
     private List<BusinessProfileEntity> businessProfiles;
@@ -71,15 +70,5 @@ public class BankEntity {
     public boolean isSwedbank() {
         // First element of BANK_IDS ("08999") is Swedbank, the rest are Sparbanken bank IDs
         return SwedbankConstants.BANK_IDS.get(0).equalsIgnoreCase(bankId);
-    }
-
-    @JsonIgnore
-    public boolean isPrivateOrServicePortalProfile() {
-        return privateProfile != null || servicePortalProfile != null;
-    }
-
-    @JsonIgnore
-    public PrivateProfileEntity getPrivateOrServicePortalProfile() {
-        return privateProfile != null ? privateProfile : servicePortalProfile;
     }
 }
