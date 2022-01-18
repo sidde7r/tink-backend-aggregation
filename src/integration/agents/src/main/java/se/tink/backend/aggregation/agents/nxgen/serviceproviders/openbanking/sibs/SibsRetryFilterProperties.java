@@ -6,5 +6,5 @@ import lombok.Value;
 public class SibsRetryFilterProperties {
     int maxNumRetries;
     int retrySleepMilliseconds;
-    int serviceInvalidRetrySleepMilliseconds;
+    int serviceInvalidMaxNumRetries;
 }
