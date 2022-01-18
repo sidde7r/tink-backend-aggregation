@@ -106,7 +106,7 @@ Content-Length: 282
 }
 
 REQUEST 7
-POST https://psd2.api.swedbank.com/v3/consents?bic=SWEDSESS&app-id=dummyClientId
+POST https://psd2.api.swedbank.com/v4/consents?bic=SWEDSESS&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -125,7 +125,7 @@ Content-Length: 49
 {"consentId":"consentId","consentStatus":"valid"}
 
 REQUEST 9
-GET https://psd2.api.swedbank.com/v3/accounts?bic=SWEDSESS&app-id=dummyClientId
+GET https://psd2.api.swedbank.com/v4/accounts?bic=SWEDSESS&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -140,7 +140,7 @@ Content-Length: 435
 {"accounts":[{"resourceId":"bf6265426add55b6bed3d4f694bcad02","iban":"SE1230000815059436018123","bban":"8150-5,923 123 573-4","currency":"SEK","product":"Privatkonto","cashAccountType":"CACC","name":"Firstname Secondname Surname","bankId":"08999"}]}
 
 REQUEST 10
-POST https://psd2.api.swedbank.com/v3/consents?bic=SWEDSESS&app-id=dummyClientId
+POST https://psd2.api.swedbank.com/v4/consents?bic=SWEDSESS&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
