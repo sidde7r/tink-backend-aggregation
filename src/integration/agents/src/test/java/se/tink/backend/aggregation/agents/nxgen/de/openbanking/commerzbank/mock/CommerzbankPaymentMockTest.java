@@ -32,7 +32,7 @@ public class CommerzbankPaymentMockTest {
     private static final String SINGLE_PAYMENT_TIMEOUT_FILE =
             BASE_PATH + "commerzbank-single-payment_timeout.aap";
     private static final String SINGLE_PAYMENT_DECOUPLED_FILE =
-            BASE_PATH + "single-payment-decoupled-ok.aap";
+            BASE_PATH + "commerzbank-single-payment_decoupled-ok.aap";
 
     @Test
     public void testSinglePaymentAccepted() throws Exception {

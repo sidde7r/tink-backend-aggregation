@@ -56,12 +56,13 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor {
             CommerzBankPaymentAuthenticator paymentAuthenticator,
             SessionStorage sessionStorage,
             Credentials credentials) {
-        this.apiClient = apiClient;
-        this.paymentAuthenticator = paymentAuthenticator;
-        this.sessionStorage = sessionStorage;
-        this.credentials = credentials;
-        this.paymentMapper = new CommerzBankPaymentMapper();
-        this.paymentStatusMapper = new BasePaymentStatusMapper();
+        this(
+                apiClient,
+                paymentAuthenticator,
+                sessionStorage,
+                credentials,
+                new CommerzBankPaymentMapper(),
+                new BasePaymentStatusMapper());
     }
 
     @Override
@@ -162,14 +163,12 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor {
     @Override
     public CreateBeneficiaryMultiStepResponse createBeneficiary(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
-
         throw new NotImplementedException(
                 "createBeneficiary not yet implemented for " + this.getClass().getName());
     }
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
-
         throw new NotImplementedException(
                 "cancel not yet implemented for " + this.getClass().getName());
     }

@@ -41,7 +41,6 @@ public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-
         OAuth2AuthenticationController redirectPaymentAuthenticator =
                 new OAuth2AuthenticationController(
                         persistentStorage,

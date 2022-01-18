@@ -33,8 +33,7 @@ public class CommerzBankPaymentAuthenticator {
         }
     }
 
-    boolean isDecoupledAuthenticationPossible() {
-        String scaApproach = sessionStorage.get(StorageKeys.SCA_APPROACH);
-        return DECOUPLED_APPROACH.equals(scaApproach);
+    private boolean isDecoupledAuthenticationPossible() {
+        return DECOUPLED_APPROACH.equals(sessionStorage.get(StorageKeys.SCA_APPROACH));
     }
 }

@@ -20,12 +20,12 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 @RequiredArgsConstructor
 public class CommerzBankDecoupledPaymentAuthenticator {
 
+    private static final int MAX_POLL_ATTEMPTS = 40;
+
     private final CommerzBankApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final SupplementalInformationController controller;
     private final SupplementalInformationFormer supplementalInformationFormer;
-
-    private static final int MAX_POLL_ATTEMPTS = 40;
 
     public void authenticate() {
         displayMessageAndWait();
@@ -34,11 +34,7 @@ public class CommerzBankDecoupledPaymentAuthenticator {
 
     private void pollForAuthorizationStatus() {
         for (int i = 0; i < MAX_POLL_ATTEMPTS; i++) {
-
-            AuthorizationStatusResponse authorizationStatusResponse =
-                    apiClient.fetchAuthorizationStatus(
-                            sessionStorage.get(StorageKeys.SCA_STATUS_LINK));
-            AuthorizationStatus scaStatus = authorizationStatusResponse.getScaStatus();
+            AuthorizationStatus scaStatus = getAuthorizationStatus();
 
             if (scaStatus.isFinalised() || scaStatus.isExempted()) {
                 return;
@@ -53,13 +49,19 @@ public class CommerzBankDecoupledPaymentAuthenticator {
         throw ThirdPartyAppError.TIMED_OUT.exception();
     }
 
+    private AuthorizationStatus getAuthorizationStatus() {
+        AuthorizationStatusResponse authorizationStatusResponse =
+                apiClient.fetchAuthorizationStatus(sessionStorage.get(StorageKeys.SCA_STATUS_LINK));
+        return authorizationStatusResponse.getScaStatus();
+    }
+
     private void displayMessageAndWait() {
         Field field =
                 supplementalInformationFormer.getField(SupplementalInfo.PAYMENT_CONFIRMATION_FIELD);
         try {
             controller.askSupplementalInformationSync(field);
         } catch (SupplementalInfoException e) {
-            log.info("Suppelmental Exception: " + e.getMessage());
+            log.info("Supplemental Exception: " + e.getMessage());
         }
     }
 }
