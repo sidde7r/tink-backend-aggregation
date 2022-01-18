@@ -63,6 +63,23 @@ java_library(
     ],
 )
 
+java_library(
+    name = "qsealc_http_signer_client",
+    srcs = ["@tink_backend//src/tink-integration-eidas-proxy/client:client_srcjar"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//third_party:com_google_guava_guava",
+        "//third_party/log4j",
+        "@aggregation//:com_nimbusds_nimbus_jose_jwt",
+        "@maven//:io_prometheus_simpleclient",
+        "@maven//:org_apache_httpcomponents_client5_httpclient5",
+        "@maven//:org_apache_httpcomponents_core5_httpcore5",
+        "@org_slf4j_slf4j_api//jar",
+        "@tink_backend//src/eidas-dev-issuer/client",
+        "@tink_backend//src/libraries/cryptography:parsing",
+    ],
+)
+
 java_grpc_library(
     name = "ss_java_grpc",
     srcs = [
