@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.entity;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +33,6 @@ public class AccountEntity {
     private List<BalancesEntity> balances;
 
     public Optional<TransactionalAccount> toTinkAccount() {
-        logDataCompleteness();
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
@@ -53,12 +50,6 @@ public class AccountEntity {
                         links.getTransactions().getHref())
                 .addHolderName(Optional.ofNullable(ownerName).orElse(""))
                 .build();
-    }
-
-    private void logDataCompleteness() {
-        if (isBlank(ownerName)) {
-            log.warn("missing owner name in account entity received from bank");
-        }
     }
 
     private BalanceModule getBalanceModule() {
