@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
@@ -295,8 +296,8 @@ public class OpenIdApiClient {
                         OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
                 .orElseThrow(
                         () ->
-                                new IllegalStateException(
-                                        "Preferred token endpoint auth method not found."));
+                                AuthorizationError.UNAUTHORIZED.exception(
+                                        "[OpenIdApiClient]: Preferred token endpoint auth method not found."));
     }
 
     private TokenRequestForm createTokenRequestFormWithoutScope(String grantType) {
