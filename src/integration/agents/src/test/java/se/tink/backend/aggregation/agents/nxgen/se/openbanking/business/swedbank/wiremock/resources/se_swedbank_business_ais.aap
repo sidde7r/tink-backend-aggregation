@@ -99,6 +99,24 @@ Content-Length: 79
 {"consentId": "6885094f-0193-44bf-bbf2-e79492169f05", "consentStatus": "valid"}
 
 -----------------------------------------------------------------------------------
+REQUEST 10a
+POST https://psd2.api.swedbank.com/v4/consents?bic=SWEDSESS&app-id=dummyId
+Accept: application/json
+Content-Type: application/json
+TPP-Redirect-URI: https://api.tink.se/api/v1/credentials/third-party/callback
+TPP-Nok-Redirect-URI: https://api.tink.se/api/v1/credentials/third-party/callback
+
+{"recurringIndicator": false, "combinedServiceIndicator": false, "access": {"transactionsOver90Days": [{"iban": "SE4550000000058398257466"}, {"iban": "SE4550000000058398257466"} ] } }
+
+-----------------------------------------------------------------------------------
+RESPONSE 10a
+201
+Content-Type: application/json;charset=utf-8
+Content-Length: 79
+
+{"consentId": "6885094f-0193-44bf-bbf2-e11112169f05", "consentStatus": "valid"}
+
+-----------------------------------------------------------------------------------
 REQUEST 11
 GET https://psd2.api.swedbank.com/v4/accounts?bic=SWEDSESS&app-id=dummyId
 Accept: application/json

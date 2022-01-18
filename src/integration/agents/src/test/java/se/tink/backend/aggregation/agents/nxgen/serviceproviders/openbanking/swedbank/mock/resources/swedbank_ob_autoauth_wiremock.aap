@@ -104,4 +104,4 @@ RESPONSE 17
 210
 Content-Type: application/json;charset=utf-8
 
-{"_links":{"status":{"href":"**HASHED:Io**"},"download":{"href":"**HASHED:T/**"}},"statementId":"**HASHED:n4**","statementStatus":"**HASHED:Sj**"}
+{"account":{"iban":"SE1230000815059436018123"},"transactions":{"booked":[{"bookingDate":"2022-01-13","valueDate":"2022-01-12","transactionDate":"2022-01-12","transactionAmount":{"currency":"SEK","amount":"-3000.00"},"remittanceInformationUnstructured":"832797341381171","remittanceInformationStructured":"Överföring via internet"},{"bookingDate":"2021-12-30","valueDate":"2021-12-30","transactionDate":"2021-12-30","transactionAmount":{"currency":"SEK","amount":"-100.00"},"remittanceInformationUnstructured":"BILLOGRAM AB","remittanceInformationStructured":"Autogiro"},{"bookingDate":"2021-12-27","valueDate":"2021-12-25","transactionDate":"2021-12-25","transactionAmount":{"currency":"SEK","amount":"-5000.00"},"remittanceInformationUnstructured":"ISK spar","remittanceInformationStructured":"Överföring"}],"pending":[]}}
