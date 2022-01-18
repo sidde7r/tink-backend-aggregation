@@ -43,6 +43,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private static final int PAGINATION_LIMIT =
             50; // Limits number of pages fetched in order to reduce loading.
     private static final long DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS = 23;
+
     protected final LocalDateTimeSource localDateTimeSource;
     protected final UkOpenBankingApiClient apiClient;
     protected final Class<ResponseType> responseType;

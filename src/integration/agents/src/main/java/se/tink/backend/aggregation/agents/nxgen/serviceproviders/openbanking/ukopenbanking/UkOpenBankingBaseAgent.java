@@ -113,26 +113,22 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor,
                 TypedPaymentControllerable {
 
+    protected final RandomValueGenerator randomValueGenerator;
+    protected final LocalDateTimeSource localDateTimeSource;
+
     private final AgentComponentProvider componentProvider;
     private final AccountsBalancesUpdater accountsBalancesUpdater;
-
     private final JwtSigner jwtSigner;
     private final EidasIdentity eidasIdentity;
     private final TlsConfigurationSetter tlsConfigurationSetter;
     private final AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             agentConfiguration;
-
     private final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingPisConfig pisConfig;
-
     private final FetcherInstrumentationRegistry fetcherInstrumentation;
     private final UkOpenBankingPisRequestFilter pisRequestFilter;
 
-    protected final RandomValueGenerator randomValueGenerator;
-    protected final LocalDateTimeSource localDateTimeSource;
     // Lazy loaded
-    private UkOpenBankingAis aisSupport;
-    private AccountFetcher<TransactionalAccount> transactionalAccountFetcher;
     protected TransferDestinationRefreshController transferDestinationRefreshController;
     protected CreditCardRefreshController creditCardRefreshController;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -140,6 +136,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected UkOpenBankingApiClient apiClient;
     protected SoftwareStatementAssertion softwareStatement;
     protected ClientInfo providerConfiguration;
+
+    private UkOpenBankingAis aisSupport;
+    private AccountFetcher<TransactionalAccount> transactionalAccountFetcher;
     private String redirectUrl;
 
     public UkOpenBankingBaseAgent(
@@ -174,9 +173,52 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this(componentProvider, ukOpenBankingFlowFacade, aisConfig, null, null);
     }
 
-    private void addFilter(Filter filter) {
-        client.addFilter(filter);
+    protected static UkOpenBankingPisRequestFilter createPisRequestFilterUsingPs256Base64Signature(
+            JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
+        return createPisRequestFilter(
+                new UkOpenBankingPs256Base64SignatureCreator(jwtSigner),
+                jwtSigner,
+                randomValueGenerator);
     }
+
+    protected static UkOpenBankingPisRequestFilter
+            createPisRequestFilterUsingPs256WithoutBase64Signature(
+                    JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
+        return createPisRequestFilter(
+                new UkOpenBankingPs256WithoutBase64SignatureCreator(jwtSigner),
+                jwtSigner,
+                randomValueGenerator);
+    }
+
+    protected static UkOpenBankingPisRequestFilter createPisRequestFilterUsingPs256MinimalSignature(
+            JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
+        return createPisRequestFilter(
+                new UkOpenBankingPs256MinimalSignatureCreator(jwtSigner),
+                jwtSigner,
+                randomValueGenerator);
+    }
+
+    protected static UkOpenBankingPisRequestFilter createPisRequestFilter(
+            UkOpenBankingPs256SignatureCreator ps256SignatureCreator,
+            JwtSigner jwtSigner,
+            RandomValueGenerator randomValueGenerator) {
+        final UkOpenBankingPaymentStorage paymentStorage = new UkOpenBankingPaymentStorage();
+        final UkOpenBankingJwtSignatureHelper jwtSignatureHelper =
+                new UkOpenBankingJwtSignatureHelper(
+                        new ObjectMapper(),
+                        paymentStorage,
+                        new UkOpenBankingRs256SignatureCreator(jwtSigner),
+                        ps256SignatureCreator);
+
+        return new UkOpenBankingPisRequestFilter(
+                jwtSignatureHelper, paymentStorage, randomValueGenerator);
+    }
+
+    private static void configureMdcPropagation() {
+        RxJavaPlugins.setScheduleHandler(RunnableMdcWrapper::wrap);
+    }
+
+    protected abstract UkOpenBankingAis makeAis();
 
     @Override
     public final void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -213,29 +255,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     @Override
-    protected EidasIdentity getEidasIdentity() {
-        return eidasIdentity;
-    }
-
-    protected UkOpenBankingApiClient createApiClient(
-            TinkHttpClient httpClient,
-            JwtSigner signer,
-            SoftwareStatementAssertion softwareStatement,
-            String redirectUrl,
-            ClientInfo providerConfiguration) {
-        return new UkOpenBankingApiClient(
-                httpClient,
-                signer,
-                softwareStatement,
-                redirectUrl,
-                providerConfiguration,
-                randomValueGenerator,
-                persistentStorage,
-                aisConfig,
-                componentProvider);
-    }
-
-    @Override
     public Authenticator constructAuthenticator() {
         final OpenIdAuthenticationController openIdAuthenticationController =
                 createUkOpenBankingAuthenticationController();
@@ -268,20 +287,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        UkOpenBankingAis ais = getAisSupport();
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                getTransactionalAccountFetcher(),
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        ais.makeAccountTransactionPaginatorController(
-                                apiClient, componentProvider, componentProvider.getProvider()),
-                        ais.makeUpcomingTransactionFetcher(apiClient).orElse(null)));
-    }
-
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
         return creditCardRefreshController.fetchCreditCardAccounts();
@@ -292,19 +297,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
-        UkOpenBankingAis ais = getAisSupport();
-
-        return new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                ais.makeCreditCardAccountFetcher(apiClient, fetcherInstrumentation),
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        ais.makeCreditCardTransactionPaginatorController(
-                                apiClient, componentProvider, componentProvider.getProvider())));
-    }
-
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
@@ -313,25 +305,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
-    }
-
-    protected TransferDestinationRefreshController constructTransferDestinationRefreshController() {
-        return new TransferDestinationRefreshController(
-                metricRefreshController,
-                new UkOpenBankingTransferDestinationFetcher(
-                        new NoOpTransferDestinationAccountsProvider(),
-                        AccountIdentifierType.SORT_CODE,
-                        SortCodeIdentifier.class));
-    }
-
-    @Override
-    protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
     }
 
     @Override
@@ -346,44 +319,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 .map(PartyMapper::toIdentityData)
                 .map(FetchIdentityDataResponse::new)
                 .orElse(responseWithEmptyIdentityData);
-    }
-
-    private AccountFetcher<TransactionalAccount> getTransactionalAccountFetcher() {
-        if (Objects.nonNull(transactionalAccountFetcher)) {
-            return transactionalAccountFetcher;
-        }
-
-        transactionalAccountFetcher =
-                getAisSupport().makeTransactionalAccountFetcher(apiClient, fetcherInstrumentation);
-        return transactionalAccountFetcher;
-    }
-
-    protected UkOpenBankingAis getAisSupport() {
-        if (Objects.nonNull(aisSupport)) {
-            return aisSupport;
-        }
-        aisSupport = makeAis();
-        return aisSupport;
-    }
-
-    protected abstract UkOpenBankingAis makeAis();
-
-    private OpenIdAuthenticationController createUkOpenBankingAuthenticationController() {
-        return new OpenIdAuthenticationController(
-                this.persistentStorage,
-                this.supplementalInformationHelper,
-                this.apiClient,
-                getAisAuthenticator(),
-                this.credentials,
-                this.strongAuthenticationState,
-                this.request.getCallbackUri(),
-                this.randomValueGenerator,
-                new OpenIdAuthenticationValidator(this.apiClient),
-                this.logMasker);
-    }
-
-    protected OpenIdAuthenticator getAisAuthenticator() {
-        return new UkOpenBankingAisAuthenticator(this.apiClient);
     }
 
     @Override
@@ -430,6 +365,138 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         credentialsUpdater);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    @Override
+    public void afterRefreshPostProcess(AccountDataCache cache) {
+
+        if (request.getCredentials() != null
+                && isBalanceCalculationEnabled(componentProvider)
+                && cache != null) {
+            accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(
+                    cache.getFilteredAccountData());
+        }
+    }
+
+    @Override
+    protected EidasIdentity getEidasIdentity() {
+        return eidasIdentity;
+    }
+
+    protected UkOpenBankingApiClient createApiClient(
+            TinkHttpClient httpClient,
+            JwtSigner signer,
+            SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
+            ClientInfo providerConfiguration) {
+        return new UkOpenBankingApiClient(
+                httpClient,
+                signer,
+                softwareStatement,
+                redirectUrl,
+                providerConfiguration,
+                randomValueGenerator,
+                persistentStorage,
+                aisConfig,
+                componentProvider);
+    }
+
+    protected TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController,
+                new UkOpenBankingTransferDestinationFetcher(
+                        new NoOpTransferDestinationAccountsProvider(),
+                        AccountIdentifierType.SORT_CODE,
+                        SortCodeIdentifier.class));
+    }
+
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    protected Optional<TransferController> constructTransferController() {
+        return Optional.empty();
+    }
+
+    protected UkOpenBankingAis getAisSupport() {
+        if (Objects.nonNull(aisSupport)) {
+            return aisSupport;
+        }
+        aisSupport = makeAis();
+        return aisSupport;
+    }
+
+    protected OpenIdAuthenticator getAisAuthenticator() {
+        return new UkOpenBankingAisAuthenticator(this.apiClient);
+    }
+
+    protected UkOpenBankingPaymentRequestValidator getPaymentRequestValidator() {
+        return new DefaultUkOpenBankingPaymentRequestValidator();
+    }
+
+    protected DomesticPaymentConverter getDomesticPaymentConverter() {
+        return new DomesticPaymentConverter();
+    }
+
+    protected DomesticScheduledPaymentConverter getDomesticScheduledPaymentConverter() {
+        return new DomesticScheduledPaymentConverter();
+    }
+
+    private void addFilter(Filter filter) {
+        client.addFilter(filter);
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        UkOpenBankingAis ais = getAisSupport();
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                getTransactionalAccountFetcher(),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        ais.makeAccountTransactionPaginatorController(
+                                apiClient, componentProvider, componentProvider.getProvider()),
+                        ais.makeUpcomingTransactionFetcher(apiClient).orElse(null)));
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        UkOpenBankingAis ais = getAisSupport();
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                ais.makeCreditCardAccountFetcher(apiClient, fetcherInstrumentation),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        ais.makeCreditCardTransactionPaginatorController(
+                                apiClient, componentProvider, componentProvider.getProvider())));
+    }
+
+    private AccountFetcher<TransactionalAccount> getTransactionalAccountFetcher() {
+        if (Objects.nonNull(transactionalAccountFetcher)) {
+            return transactionalAccountFetcher;
+        }
+
+        transactionalAccountFetcher =
+                getAisSupport().makeTransactionalAccountFetcher(apiClient, fetcherInstrumentation);
+        return transactionalAccountFetcher;
+    }
+
+    private OpenIdAuthenticationController createUkOpenBankingAuthenticationController() {
+        return new OpenIdAuthenticationController(
+                this.persistentStorage,
+                this.supplementalInformationHelper,
+                this.apiClient,
+                getAisAuthenticator(),
+                this.credentials,
+                this.strongAuthenticationState,
+                this.request.getCallbackUri(),
+                this.randomValueGenerator,
+                new OpenIdAuthenticationValidator(this.apiClient),
+                this.logMasker);
     }
 
     private UkOpenBankingPisAuthApiClient createAuthApiClient(
@@ -479,78 +546,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         }
     }
 
-    protected UkOpenBankingPaymentRequestValidator getPaymentRequestValidator() {
-        return new DefaultUkOpenBankingPaymentRequestValidator();
-    }
-
-    protected DomesticPaymentConverter getDomesticPaymentConverter() {
-        return new DomesticPaymentConverter();
-    }
-
-    protected DomesticScheduledPaymentConverter getDomesticScheduledPaymentConverter() {
-        return new DomesticScheduledPaymentConverter();
-    }
-
     private void setSoftwareStatementForSignatureCreator(
             SoftwareStatementAssertion softwareStatement) {
         if (Objects.nonNull(pisRequestFilter)) {
             pisRequestFilter.setSoftwareStatement(softwareStatement);
-        }
-    }
-
-    protected static UkOpenBankingPisRequestFilter createPisRequestFilterUsingPs256Base64Signature(
-            JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
-        return createPisRequestFilter(
-                new UkOpenBankingPs256Base64SignatureCreator(jwtSigner),
-                jwtSigner,
-                randomValueGenerator);
-    }
-
-    protected static UkOpenBankingPisRequestFilter
-            createPisRequestFilterUsingPs256WithoutBase64Signature(
-                    JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
-        return createPisRequestFilter(
-                new UkOpenBankingPs256WithoutBase64SignatureCreator(jwtSigner),
-                jwtSigner,
-                randomValueGenerator);
-    }
-
-    protected static UkOpenBankingPisRequestFilter createPisRequestFilterUsingPs256MinimalSignature(
-            JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
-        return createPisRequestFilter(
-                new UkOpenBankingPs256MinimalSignatureCreator(jwtSigner),
-                jwtSigner,
-                randomValueGenerator);
-    }
-
-    protected static UkOpenBankingPisRequestFilter createPisRequestFilter(
-            UkOpenBankingPs256SignatureCreator ps256SignatureCreator,
-            JwtSigner jwtSigner,
-            RandomValueGenerator randomValueGenerator) {
-        final UkOpenBankingPaymentStorage paymentStorage = new UkOpenBankingPaymentStorage();
-        final UkOpenBankingJwtSignatureHelper jwtSignatureHelper =
-                new UkOpenBankingJwtSignatureHelper(
-                        new ObjectMapper(),
-                        paymentStorage,
-                        new UkOpenBankingRs256SignatureCreator(jwtSigner),
-                        ps256SignatureCreator);
-
-        return new UkOpenBankingPisRequestFilter(
-                jwtSignatureHelper, paymentStorage, randomValueGenerator);
-    }
-
-    private static void configureMdcPropagation() {
-        RxJavaPlugins.setScheduleHandler(RunnableMdcWrapper::wrap);
-    }
-
-    @Override
-    public void afterRefreshPostProcess(AccountDataCache cache) {
-
-        if (request.getCredentials() != null
-                && isBalanceCalculationEnabled(componentProvider)
-                && cache != null) {
-            accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(
-                    cache.getFilteredAccountData());
         }
     }
 

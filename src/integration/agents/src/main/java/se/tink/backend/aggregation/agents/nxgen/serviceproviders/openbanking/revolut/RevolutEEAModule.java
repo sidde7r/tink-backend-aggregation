@@ -47,6 +47,21 @@ public class RevolutEEAModule extends AbstractModule {
                 eidasIdentity);
     }
 
+    private EidasIdentity createEidasIdentity(
+            CompositeAgentContext context, Class<? extends Agent> agentClass) {
+        return new EidasIdentity(
+                context.getClusterId(),
+                context.getAppId(),
+                context.getCertId(),
+                context.getProviderId(),
+                agentClass);
+    }
+
+    private TlsConfigurationSetter createEidasProxyTlsConfigurationSetter(
+            AgentsServiceConfiguration configuration) {
+        return new EidasProxyTlsConfigurationSetter(configuration);
+    }
+
     private JwtSigner jwtSigner(
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
@@ -56,21 +71,6 @@ public class RevolutEEAModule extends AbstractModule {
                 createEidasJwsSigner(eidasIdentity, agentsServiceConfiguration);
         KeyIdProvider keyIdProvider = createKidProvider(context);
         return new EidasProxyJwtSigner(keyIdProvider, eidasJwsSigner);
-    }
-
-    private TlsConfigurationSetter createEidasProxyTlsConfigurationSetter(
-            AgentsServiceConfiguration configuration) {
-        return new EidasProxyTlsConfigurationSetter(configuration);
-    }
-
-    private EidasIdentity createEidasIdentity(
-            CompositeAgentContext context, Class<? extends Agent> agentClass) {
-        return new EidasIdentity(
-                context.getClusterId(),
-                context.getAppId(),
-                context.getCertId(),
-                context.getProviderId(),
-                agentClass);
     }
 
     private EidasJwsSigner createEidasJwsSigner(

@@ -92,15 +92,100 @@ public class OpenIdApiClient {
         return cachedWellKnownResponse;
     }
 
-    private TokenRequestForm createTokenRequestFormWithoutScope(String grantType) {
-        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
+    public OAuth2Token requestClientCredentials(ClientMode scope) {
+        TokenRequestForm postData = createTokenRequestForm("client_credentials", scope);
 
-        TokenRequestForm requestForm =
-                new TokenRequestForm().withGrantType(grantType).withRedirectUri(redirectUrl);
+        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
+    }
 
-        handleFormAuthentication(requestForm, wellknownConfiguration);
+    public OAuth2Token refreshAccessToken(String refreshToken, ClientMode scope) {
+        TokenRequestForm postData =
+                createTokenRequestForm("refresh_token", scope).withRefreshToken(refreshToken);
 
-        return requestForm;
+        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
+    }
+
+    public OAuth2Token exchangeAccessCode(String code) {
+        TokenRequestForm postData =
+                createTokenRequestFormWithoutScope("authorization_code").withCode(code);
+
+        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
+    }
+
+    public URL buildAuthorizeUrl(String state, String nonce, ClientMode mode, String callbackUri) {
+        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
+
+        URL authorizationEndpointUrl = wellKnownConfiguration.getAuthorizationEndpoint();
+
+        List<String> requiredScopes = createRequiredScopeList(mode, wellKnownConfiguration);
+        String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
+        String clientId = providerConfiguration.getClientId();
+
+        String scopeArray =
+                wellKnownConfiguration
+                        .verifyAndGetScopes(requiredScopes)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "[OpenIdApiClient] Provider does not support required scopes: "
+                                                        + String.join(" ", requiredScopes)));
+        String redirectUri =
+                Optional.ofNullable(callbackUri).filter(s -> !s.isEmpty()).orElse(redirectUrl);
+
+        /*  'response_type=id_token' only supports 'response_mode=fragment',
+         *  setting 'response_mode=query' has no effect the the moment.
+         */
+        return authorizationEndpointUrl
+                .queryParam(OpenIdConstants.Params.RESPONSE_TYPE, responseType)
+                .queryParam(OpenIdConstants.Params.CLIENT_ID, clientId)
+                .queryParam(OpenIdConstants.Params.SCOPE, scopeArray)
+                .queryParam(OpenIdConstants.Params.STATE, state)
+                .queryParam(OpenIdConstants.Params.NONCE, nonce)
+                .queryParam(OpenIdConstants.Params.REDIRECT_URI, redirectUri);
+    }
+
+    public void instantiateAisAuthFilter(OAuth2Token token) {
+        log.debug("Instantiating the Ais Auth Filter.");
+        aisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
+    }
+
+    public void instantiatePisAuthFilter(OAuth2Token token) {
+        log.debug("Instantiating the Pis Auth Filter.");
+        pisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
+    }
+
+    public void storeOpenIdError(ErrorEntity error) {
+        errorEntity = error;
+    }
+
+    public Optional<ErrorEntity> getErrorEntity() {
+        return Optional.ofNullable(errorEntity);
+    }
+
+    public Optional<Map<String, PublicKey>> getJwkPublicKeys() {
+        if (Objects.nonNull(cachedJwkPublicKeys)) {
+            return Optional.of(cachedJwkPublicKeys);
+        }
+
+        String response =
+                httpClient.request(getWellKnownConfiguration().getJwksUri()).get(String.class);
+
+        JsonWebKeySet jsonWebKeySet =
+                SerializationUtils.deserializeFromString(response, JsonWebKeySet.class);
+
+        if (jsonWebKeySet == null) {
+            return Optional.empty();
+        }
+
+        cachedJwkPublicKeys = jsonWebKeySet.getAllKeysMap();
+        return Optional.ofNullable(cachedJwkPublicKeys);
+    }
+
+    protected RequestBuilder createBasicTokenRequest(WellKnownResponse wellKnownConfiguration) {
+        return httpClient
+                .request(wellKnownConfiguration.getTokenEndpoint())
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 
     protected void handleFormAuthentication(
@@ -214,100 +299,15 @@ public class OpenIdApiClient {
                                         "Preferred token endpoint auth method not found."));
     }
 
-    public OAuth2Token requestClientCredentials(ClientMode scope) {
-        TokenRequestForm postData = createTokenRequestForm("client_credentials", scope);
+    private TokenRequestForm createTokenRequestFormWithoutScope(String grantType) {
+        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
-        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
-    }
+        TokenRequestForm requestForm =
+                new TokenRequestForm().withGrantType(grantType).withRedirectUri(redirectUrl);
 
-    public OAuth2Token refreshAccessToken(String refreshToken, ClientMode scope) {
-        TokenRequestForm postData =
-                createTokenRequestForm("refresh_token", scope).withRefreshToken(refreshToken);
+        handleFormAuthentication(requestForm, wellknownConfiguration);
 
-        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
-    }
-
-    public OAuth2Token exchangeAccessCode(String code) {
-        TokenRequestForm postData =
-                createTokenRequestFormWithoutScope("authorization_code").withCode(code);
-
-        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
-    }
-
-    public URL buildAuthorizeUrl(String state, String nonce, ClientMode mode, String callbackUri) {
-        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
-
-        URL authorizationEndpointUrl = wellKnownConfiguration.getAuthorizationEndpoint();
-
-        List<String> requiredScopes = createRequiredScopeList(mode, wellKnownConfiguration);
-        String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
-        String clientId = providerConfiguration.getClientId();
-
-        String scopeArray =
-                wellKnownConfiguration
-                        .verifyAndGetScopes(requiredScopes)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "[OpenIdApiClient] Provider does not support required scopes: "
-                                                        + String.join(" ", requiredScopes)));
-        String redirectUri =
-                Optional.ofNullable(callbackUri).filter(s -> !s.isEmpty()).orElse(redirectUrl);
-
-        /*  'response_type=id_token' only supports 'response_mode=fragment',
-         *  setting 'response_mode=query' has no effect the the moment.
-         */
-        return authorizationEndpointUrl
-                .queryParam(OpenIdConstants.Params.RESPONSE_TYPE, responseType)
-                .queryParam(OpenIdConstants.Params.CLIENT_ID, clientId)
-                .queryParam(OpenIdConstants.Params.SCOPE, scopeArray)
-                .queryParam(OpenIdConstants.Params.STATE, state)
-                .queryParam(OpenIdConstants.Params.NONCE, nonce)
-                .queryParam(OpenIdConstants.Params.REDIRECT_URI, redirectUri);
-    }
-
-    public void instantiateAisAuthFilter(OAuth2Token token) {
-        log.debug("Instantiating the Ais Auth Filter.");
-        aisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
-    }
-
-    public void instantiatePisAuthFilter(OAuth2Token token) {
-        log.debug("Instantiating the Pis Auth Filter.");
-        pisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
-    }
-
-    public void storeOpenIdError(ErrorEntity error) {
-        errorEntity = error;
-    }
-
-    public Optional<ErrorEntity> getErrorEntity() {
-        return Optional.ofNullable(errorEntity);
-    }
-
-    public Optional<Map<String, PublicKey>> getJwkPublicKeys() {
-        if (Objects.nonNull(cachedJwkPublicKeys)) {
-            return Optional.of(cachedJwkPublicKeys);
-        }
-
-        String response =
-                httpClient.request(getWellKnownConfiguration().getJwksUri()).get(String.class);
-
-        JsonWebKeySet jsonWebKeySet =
-                SerializationUtils.deserializeFromString(response, JsonWebKeySet.class);
-
-        if (jsonWebKeySet == null) {
-            return Optional.empty();
-        }
-
-        cachedJwkPublicKeys = jsonWebKeySet.getAllKeysMap();
-        return Optional.ofNullable(cachedJwkPublicKeys);
-    }
-
-    protected RequestBuilder createBasicTokenRequest(WellKnownResponse wellKnownConfiguration) {
-        return httpClient
-                .request(wellKnownConfiguration.getTokenEndpoint())
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        return requestForm;
     }
 
     private List<String> createRequiredScopeList(
