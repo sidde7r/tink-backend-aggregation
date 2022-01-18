@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorMessages.UNAUTHORIZED_OTP_ERROR;
+
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -112,7 +114,8 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     }
 
     private void processOtpError(BbvaErrorResponse errorResponse) {
-        if (errorResponse.getHttpStatus() == HttpStatus.SC_UNAUTHORIZED) {
+        if (errorResponse.getHttpStatus() == HttpStatus.SC_UNAUTHORIZED
+                && UNAUTHORIZED_OTP_ERROR.equals(errorResponse.getErrorMessage())) {
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
         String message =

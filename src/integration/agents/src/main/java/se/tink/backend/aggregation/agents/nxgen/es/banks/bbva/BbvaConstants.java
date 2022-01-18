@@ -177,6 +177,7 @@ public final class BbvaConstants {
                 "El servicio no est&aacute; disponible temporalmente.";
         public static final String MAX_TRY_ATTEMPTS =
                 String.format("Reached max retry attempts of %d", Fetchers.MAX_TRY_ATTEMPTS);
+        public static final String UNAUTHORIZED_OTP_ERROR = "El otp no coincide con el generado";
     }
 
     public static final class IdTypeCodes {
