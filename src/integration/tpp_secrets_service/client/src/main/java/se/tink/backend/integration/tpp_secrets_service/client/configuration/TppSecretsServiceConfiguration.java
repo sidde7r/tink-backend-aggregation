@@ -21,7 +21,7 @@ public class TppSecretsServiceConfiguration {
     private boolean enabled;
     private String environment;
     private boolean enabledRetryPolicy;
-    private boolean useSecretsServiceInternalClient = false;
+    private boolean useSecretsServiceInternalClient;
 
     public boolean isEnabled() {
         return enabled;

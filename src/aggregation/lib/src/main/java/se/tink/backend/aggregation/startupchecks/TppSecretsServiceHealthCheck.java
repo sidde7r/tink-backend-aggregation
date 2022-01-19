@@ -16,7 +16,7 @@ public class TppSecretsServiceHealthCheck implements HealthCheck {
 
     // Used to fake a startup probe, we wait for this to be true one first time and then throw an
     // exception again if we fail
-    private boolean firstCheckPassed = false;
+    private boolean firstCheckPassed;
 
     @Inject
     public TppSecretsServiceHealthCheck(SecretsServiceInternalClient secretsServiceInternalClient) {
