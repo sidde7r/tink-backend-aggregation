@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants.MultiFactorAuthentication.AUTOSTART_TOKEN;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -76,12 +77,14 @@ public class CrossKeyBankIdAuthenticator
         }
         BankiIdResponse bankiIdResponse = apiClient.collectBankId();
 
+        List<String> body = bankiIdResponse.getStatus().getErrors();
         if (bankiIdResponse.getStatus().isSuccess()) {
             return BankIdStatus.DONE;
         }
 
         Optional<BankIdStatus> bankIdStatus =
-                bankiIdResponse.getStatus().getErrors().stream()
+                body.stream()
+                        .filter(s -> !s.matches("AUTHENTICATION_FAILURE"))
                         .map(
                                 s ->
                                         CrossKeyConstants.MultiFactorAuthentication
