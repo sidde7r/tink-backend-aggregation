@@ -141,7 +141,8 @@ public class BbvaAuthenticatorTest {
     @Test
     public void shouldThrowIncorrectChallengeErrorWhenReceiveUnauthorizedOtpResponse() {
         // given
-        HttpResponseException exception = mockResponse(401);
+        HttpResponseException exception =
+                mockOtpErrorResponse(401, "El otp no coincide con el generado");
         doThrow(exception).when(apiClient).requestMoreThan90DaysTransactionsForFirstAccount(any());
 
         // when
@@ -173,6 +174,38 @@ public class BbvaAuthenticatorTest {
                                         + "    \"system-error-description\": \"Error description\",\n"
                                         + "    \"version\": 1\n"
                                         + "}\n",
+                                BbvaErrorResponse.class));
+
+        return exception;
+    }
+
+    private HttpResponseException mockOtpErrorResponse(int status, String errorMessage) {
+        HttpResponse mocked = mock(HttpResponse.class);
+        when(mocked.getStatus()).thenReturn(status);
+        HttpResponseException exception = new HttpResponseException(null, mocked);
+
+        when(exception.getResponse().getBody(BbvaErrorResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\n"
+                                        + "    \"version\": 1,\n"
+                                        + "    \"severity\": \"FATAL\",\n"
+                                        + "    \"http-status\": "
+                                        + status
+                                        + ",\n"
+                                        + "    \"error-code\": \"168\",\n"
+                                        + "    \"error-message\": \""
+                                        + errorMessage
+                                        + "\",\n"
+                                        + "    \"consumer-request-id\": \"31e5d8cd-cd9c-4f95-8230-a107e7f4e686\",\n"
+                                        + "    \"system-error-code\": \"unauthorized\",\n"
+                                        + "    \"system-error-description\": \""
+                                        + errorMessage
+                                        + "\",\n"
+                                        + "    \"system-error-cause\": \"errorSAS=168, errorHTTP=401, errorMessage="
+                                        + errorMessage
+                                        + ", exceptionMessage=The OTP generated does not match the OTP sent by the user\"\n"
+                                        + "}",
                                 BbvaErrorResponse.class));
 
         return exception;

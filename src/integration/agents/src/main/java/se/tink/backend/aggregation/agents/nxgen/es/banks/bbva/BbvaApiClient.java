@@ -155,9 +155,9 @@ public class BbvaApiClient {
     }
 
     public AccountTransactionsResponse fetchAccountTransactions(
-            Account account, String pageKey, boolean firstRequest) {
+            Account account, String pageKey, boolean otpRequest) {
         TransactionsRequest body = createAccountTransactionsRequestBody(account);
-        RequestBuilder request = buildAccountTransactionRequest(pageKey, firstRequest);
+        RequestBuilder request = buildAccountTransactionRequest(pageKey, otpRequest);
         try {
             return request.post(AccountTransactionsResponse.class, body);
         } catch (HttpResponseException e) {
@@ -170,11 +170,12 @@ public class BbvaApiClient {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
             log.info(
-                    "Unknown error: httpStatus {}, code {}, message {}",
+                    "Unknown error: httpStatus {}, code {}, message {} otpRequest {}",
                     errorResponse.getHttpStatus(),
                     errorResponse.getErrorCode(),
-                    errorResponse.getErrorMessage());
-            throw BankServiceError.DEFAULT_MESSAGE.exception();
+                    errorResponse.getErrorMessage(),
+                    otpRequest);
+            throw e;
         }
     }
 
