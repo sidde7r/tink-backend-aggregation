@@ -65,7 +65,7 @@ Connection: Keep-Alive
 {
 	"banks": [
 		{
-			"name": "Sparbanken Skåne AB (publ)",
+			"name": "Swedbank AB (publ)",
 			"bankId": "08264",
 			"url": "https://www.swedbank.se",
 			"corporateProfiles": [
@@ -78,8 +78,8 @@ Connection: Keep-Alive
 				"customerNumber": "20200202-0202",
 				"id": "84f0cf1007d6bfbef361fe1317e9d75ad956b8a2",
 				"bankId": "08264",
-				"bankName": "Sparbanken Skåne AB (publ)",
-				"url": "https://www.sparbankenskane.se",
+				"bankName": "Swedbank AB (publ)",
+				"url": "https://www.swedbank.se",
 				"customerInternational": false,
 				"youthProfile": false,
 				"links": {
