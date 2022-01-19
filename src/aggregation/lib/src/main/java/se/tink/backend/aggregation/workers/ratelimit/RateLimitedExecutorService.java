@@ -36,7 +36,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.dk.banks.danskebank.DanskeBankDKAgent", 0.01)
                     .put("nxgen.nl.openbanking.triodos.TriodosAgent", 0.02)
                     .put("nxgen.no.banks.danskebank.DanskeBankNOAgent", 0.01)
-                    .put("nxgen.serviceproviders.openbanking.sparebank.SparebankAgent", 0.01)
+                    .put("nxgen.serviceproviders.openbanking.sparebank.SparebankAgent", 0.005)
                     .put("nxgen.se.openbanking.handelsbanken.HandelsbankenSEAgent", 0.02)
                     .put("nxgen.se.openbanking.nordea.NordeaSeAgent", 0.01)
                     .put("nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent.java", 0.05)
