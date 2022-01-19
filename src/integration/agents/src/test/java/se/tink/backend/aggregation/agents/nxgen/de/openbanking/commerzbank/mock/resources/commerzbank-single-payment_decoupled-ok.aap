@@ -1,0 +1,211 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+PSU-ID: test_username
+PSU-ID-TYPE: retail
+TPP-Redirect-Preferred: false
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-ADDRESS: 127.0.0.1
+
+{
+  "creditorAccount": {
+    "iban": "DE89370400440532013000"
+  },
+  "creditorName": "Creditor Name",
+  "debtorAccount": {
+    "iban": "DE27500105175141353468"
+  },
+  "instructedAmount": {
+    "amount": "1.0",
+    "currency": "EUR"
+  },
+  "remittanceInformationUnstructured": "remittance information to creditor"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+Date: Fri, 14 Jan 2022 13:47:05 GMT
+Date: Fri, 14 Jan 2022 13:47:06 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-Notification-Support: ***
+ASPSP-SCA-Approach: DECOUPLED
+Location: https://psd2.api.commerzbank.de/berlingroup/v1/payments/SEPA_CREDIT_TRANSFERS/1642168026-bp9710c
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 629
+
+{
+  "transactionStatus" : "RCVD",
+  "paymentId" : "1642168026-bp9710c",
+  "psuMessage" : "Bitte benutzen Sie Ihre photoTAN App zur Freigabe",
+  "_links" : {
+    "scaStatus" : {
+      "href" : "https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c/authorisations/658872ef-e10e-4146-8a80-d09519d6b5c2"
+    },
+    "self" : {
+      "href" : "https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c"
+    },
+    "status" : {
+      "href" : "https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c/status"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c/authorisations/658872ef-e10e-4146-8a80-d09519d6b5c2
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET 001
+200
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 29
+
+{
+  "scaStatus" : "started"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH 001
+GET https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c/authorisations/658872ef-e10e-4146-8a80-d09519d6b5c2
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET 002
+200
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 29
+
+{
+  "scaStatus" : "started"
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH 002
+GET https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c/authorisations/658872ef-e10e-4146-8a80-d09519d6b5c2
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Referrer-Policy: ***
+Referrer-Policy: ***
+
+{
+  "scaStatus" : "finalised"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET 003
+200
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Date: Fri, 14 Jan 2022 13:47:08 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 34
+
+{
+  "transactionStatus" : "RCVD"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH 003
+GET https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET 004
+200
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Date: Fri, 14 Jan 2022 13:47:08 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 34
+
+{
+  "transactionStatus" : "PDNG"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH 004
+GET https://psd2.api.commerzbank.de/berlingroup/v1/payments/sepa-credit-transfers/1642168026-bp9710c/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Fri, 14 Jan 2022 13:47:07 GMT
+Date: Fri, 14 Jan 2022 13:47:08 GMT
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Referrer-Policy: ***
+Referrer-Policy: ***
+Content-Length: 34
+
+{
+  "transactionStatus" : "ACFC"
+}

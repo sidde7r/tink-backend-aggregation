@@ -6,7 +6,6 @@ Content-Type: application/json
 TPP-Redirect-URI:  https://127.0.0.1:7357/api/v1/thirdparty/callback
 X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-ADDRESS: 127.0.0.1
-TPP-Explicit-Authorisation-Preferred: false
 
 {
   "creditorAccount": {
@@ -17,8 +16,8 @@ TPP-Explicit-Authorisation-Preferred: false
     "iban": "DE27500105175141353468"
   },
   "instructedAmount": {
-    "currency": "EUR",
-    "amount": 1.0
+    "amount": "1.0",
+    "currency": "EUR"
   },
   "remittanceInformationUnstructured": "remittance information to creditor"
 }
@@ -65,8 +64,6 @@ Content-Length: 742
 REQUEST 2
 GET https://psd2.api.commerzbank.com/berlingroup/.well-known/openid-configuration?authorizationId=90123456
 Accept: application/json
-Content-Type: application/json
-X-Request-ID: 00000000-0000-4000-0000-000000000000
 
 -----------------------------------------------------------------------------------
 RESPONSE 2

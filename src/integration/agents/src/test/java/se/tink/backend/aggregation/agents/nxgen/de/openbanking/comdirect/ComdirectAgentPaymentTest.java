@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.comdirect;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -34,9 +35,8 @@ public class ComdirectAgentPaymentTest {
         }
     }
 
-    private final ArgumentManager<ArgumentManager.UsernamePasswordArgumentEnum>
-            usernamePasswordManager =
-                    new ArgumentManager<>(ArgumentManager.UsernamePasswordArgumentEnum.values());
+    private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> usernameManager =
+            new ArgumentManager<>(ArgumentManager.UsernameArgumentEnum.values());
     private final ArgumentManager<ComdirectAgentPaymentTest.Arg> creditorDebtorManager =
             new ArgumentManager<>(ComdirectAgentPaymentTest.Arg.values());
 
@@ -44,7 +44,7 @@ public class ComdirectAgentPaymentTest {
 
     @Before
     public void setup() {
-        usernamePasswordManager.before();
+        usernameManager.before();
         creditorDebtorManager.before();
 
         builder =
@@ -52,23 +52,21 @@ public class ComdirectAgentPaymentTest {
                         .setFinancialInstitutionId("5a86a5830c51e3230ed2f5e460f51b39")
                         .addCredentialField(
                                 Key.USERNAME,
-                                usernamePasswordManager.get(
-                                        ArgumentManager.UsernamePasswordArgumentEnum.USERNAME))
-                        .addCredentialField(
-                                Key.PASSWORD,
-                                usernamePasswordManager.get(
-                                        ArgumentManager.UsernamePasswordArgumentEnum.PASSWORD))
+                                usernameManager.get(ArgumentManager.UsernameArgumentEnum.USERNAME))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink");
     }
 
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
+
     @Test
     public void testSepaPayments() throws Exception {
-        builder.build()
-                .testTinkLinkPayment(
-                        createSepaPayment().withExecutionDate(LocalDate.now().plusDays(1)).build());
+        builder.build().testTinkLinkPayment(createSepaPayment().build());
     }
 
     @Test
@@ -78,7 +76,7 @@ public class ComdirectAgentPaymentTest {
 
     @Test
     public void testRecurringPayments() throws Exception {
-        usernamePasswordManager.before();
+        usernameManager.before();
         creditorDebtorManager.before();
 
         builder.build().testTinkLinkPayment(createRecurringPayment().build());
@@ -145,6 +143,7 @@ public class ComdirectAgentPaymentTest {
                 .withDebtor(debtor)
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
-                .withRemittanceInformation(remittanceInformation);
+                .withRemittanceInformation(remittanceInformation)
+                .withPaymentServiceType(PaymentServiceType.SINGLE);
     }
 }

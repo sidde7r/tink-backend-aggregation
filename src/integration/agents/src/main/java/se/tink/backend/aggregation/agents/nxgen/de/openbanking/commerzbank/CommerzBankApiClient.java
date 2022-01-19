@@ -1,21 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank;
 
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.CommerzBankConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.payment.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.helper.PaymentUrlUtil;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -40,29 +40,15 @@ public class CommerzBankApiClient extends Xs2aDevelopersApiClient {
                 logMasker);
     }
 
-    public void authenticate(String authenticationUrl, String username) {
-        try {
-
-            AuthorizationResponse authorizationResponse =
-                    createRequest(new URL(authenticationUrl))
-                            .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                            .header(HeaderKeys.PSU_ID, username)
-                            .get(AuthorizationResponse.class);
-
-            persistentStorage.put(
-                    StorageKeys.AUTHORISATION_URL,
-                    authorizationResponse.getAuthorizationEndpoint());
-
-        } catch (HttpResponseException e) {
-            log.error("Error during CommerzBank payment authorization", e);
-            throw e;
-        }
-    }
-
-    @Override
-    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+    // In future, these two methods should be put in the parent class, replacing similar methods
+    // there.
+    // This should happen after we extract n26 agent out of xs2adevelopers
+    public HttpResponse createPayment(CreatePaymentRequest createPaymentRequest, String username) {
         RequestBuilder requestBuilder =
                 createRequest(new URL(configuration.getBaseUrl() + ApiServices.CREATE_PAYMENT))
+                        .header(HeaderKeys.PSU_ID, username)
+                        .header(HeaderKeys.PSU_ID_TYPE, HeaderValues.RETAIL)
+                        .header(HeaderKeys.TPP_REDIRECT_PREFFERED, "false")
                         .header(
                                 Xs2aDevelopersConstants.HeaderKeys.TPP_REDIRECT_URI,
                                 configuration.getRedirectUrl())
@@ -72,13 +58,17 @@ public class CommerzBankApiClient extends Xs2aDevelopersApiClient {
                         .body(createPaymentRequest);
 
         requestBuilder.headers(getUserSpecificHeaders());
-        return requestBuilder.post(CreatePaymentResponse.class);
+        return requestBuilder.post(HttpResponse.class);
     }
 
-    @Override
-    protected Map<String, Object> getUserSpecificHeaders() {
-        Map<String, Object> headers = super.getUserSpecificHeaders();
-        headers.put(HeaderKeys.TPP_EXPLICIT_AUTHORISATION_PREFERRED, false);
-        return headers;
+    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
+        return createRequest(
+                        PaymentUrlUtil.fillCommonPaymentParams(
+                                new URL(
+                                        configuration.getBaseUrl()
+                                                + ApiServices.GET_PAYMENT_STATUS),
+                                paymentRequest))
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .get(FetchPaymentStatusResponse.class);
     }
 }

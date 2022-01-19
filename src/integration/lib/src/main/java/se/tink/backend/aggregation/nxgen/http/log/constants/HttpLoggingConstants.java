@@ -16,6 +16,7 @@ public final class HttpLoggingConstants {
                     "access-control-allow-origin",
                     "age",
                     "allow",
+                    "aspsp-sca-approach",
                     "cache-control",
                     "connection",
                     "content-encoding",

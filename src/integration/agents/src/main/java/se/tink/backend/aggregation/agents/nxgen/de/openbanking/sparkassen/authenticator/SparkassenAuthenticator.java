@@ -230,7 +230,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         AuthorizationStatusResponse authorizationStatusResponse =
                 apiClient.finalizeAuthorization(
                         authorizationResponse.getLinks().getAuthoriseTransaction(), otp);
-        switch (authorizationStatusResponse.getScaStatus()) {
+        switch (authorizationStatusResponse.getScaStatus().getValue()) {
             case FINALISED:
                 break;
             case FAILED:

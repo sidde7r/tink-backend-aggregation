@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,7 +12,7 @@ public class CommerzBankAgentTest {
     private AgentIntegrationTest.Builder builder;
 
     private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> manager =
-            new ArgumentManager<>(UsernameArgumentEnum.values());;
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @AfterClass
     public static void afterClass() {

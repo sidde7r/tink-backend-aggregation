@@ -1,0 +1,19 @@
+{
+    "transactionStatus": "RCVD",
+    "paymentId": "test_payment_id",
+    "psuMessage": "Bitte benutzen Sie Ihre photoTAN App zur Freigabe",
+    "_links": {
+        "scaOAuth": {
+            "href": "https://xs2a-api.comdirect.de/berlingroup/.well-known/openid-configuration?authorizationId=auth_id"
+        },
+        "scaStatus": {
+            "href": "https://xs2a-api.comdirect.de/berlingroup/v1/payments/sepa-credit-transfers/test_payment_id/authorisations/auth_id"
+        },
+        "self": {
+            "href": "https://xs2a-api.comdirect.de/berlingroup/v1/payments/sepa-credit-transfers/test_payment_id"
+        },
+        "status": {
+            "href": "https://xs2a-api.comdirect.de/berlingroup/v1/payments/sepa-credit-transfers/test_payment_id/status"
+        }
+    }
+}

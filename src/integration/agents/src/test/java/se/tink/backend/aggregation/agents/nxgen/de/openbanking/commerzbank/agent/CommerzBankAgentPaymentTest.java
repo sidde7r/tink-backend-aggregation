@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.agent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,9 +35,8 @@ public class CommerzBankAgentPaymentTest {
         }
     }
 
-    private final ArgumentManager<ArgumentManager.UsernamePasswordArgumentEnum>
-            usernamePasswordManager =
-                    new ArgumentManager<>(ArgumentManager.UsernamePasswordArgumentEnum.values());
+    private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> usernameManager =
+            new ArgumentManager<>(ArgumentManager.UsernameArgumentEnum.values());
     private final ArgumentManager<CommerzBankAgentPaymentTest.Arg> creditorDebtorManager =
             new ArgumentManager<>(CommerzBankAgentPaymentTest.Arg.values());
 
@@ -45,7 +44,7 @@ public class CommerzBankAgentPaymentTest {
 
     @Before
     public void setup() {
-        usernamePasswordManager.before();
+        usernameManager.before();
         creditorDebtorManager.before();
 
         builder =
@@ -53,14 +52,9 @@ public class CommerzBankAgentPaymentTest {
                         .setFinancialInstitutionId("fadaee91c1f3453eb844c0b9e7a77c81")
                         .addCredentialField(
                                 Key.USERNAME,
-                                usernamePasswordManager.get(
-                                        ArgumentManager.UsernamePasswordArgumentEnum.USERNAME))
-                        .addCredentialField(
-                                Key.PASSWORD,
-                                usernamePasswordManager.get(
-                                        ArgumentManager.UsernamePasswordArgumentEnum.PASSWORD))
+                                usernameManager.get(ArgumentManager.UsernameArgumentEnum.USERNAME))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink");
     }
@@ -79,7 +73,7 @@ public class CommerzBankAgentPaymentTest {
 
     @Test
     public void testRecurringPayments() throws Exception {
-        usernamePasswordManager.before();
+        usernameManager.before();
         creditorDebtorManager.before();
 
         builder.build().testTinkLinkPayment(createRecurringPayment().build());
@@ -147,7 +141,8 @@ public class CommerzBankAgentPaymentTest {
                 .withDebtor(debtor)
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
-                .withRemittanceInformation(remittanceInformation);
+                .withRemittanceInformation(remittanceInformation)
+                .withPaymentServiceType(PaymentServiceType.SINGLE);
     }
 
     @AfterClass

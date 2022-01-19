@@ -13,12 +13,12 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.payment.CommerzBankDecoupledPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.payment.CommerzBankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.payment.CommerzBankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersTransactionalAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentRedirectOauthHelper;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -29,13 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
-@AgentPisCapability(
-        capabilities = {
-            PisCapability.SEPA_CREDIT_TRANSFER,
-            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_FUTURE_DATE,
-            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
-        })
+@AgentPisCapability(capabilities = {PisCapability.SEPA_CREDIT_TRANSFER})
 public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
         implements RefreshTransferDestinationExecutor {
 
@@ -47,34 +41,41 @@ public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-
-        CommerzBankPaymentAuthenticator authenticator =
-                new CommerzBankPaymentAuthenticator((CommerzBankApiClient) apiClient, credentials);
-
-        final OAuth2AuthenticationController controller =
+        OAuth2AuthenticationController redirectPaymentAuthenticator =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new Xs2aDevelopersPaymentAuthenticator(
-                                apiClient, persistentStorage, configuration),
+                        new Xs2aDevelopersPaymentRedirectOauthHelper(
+                                apiClient, persistentStorage, sessionStorage, configuration),
                         credentials,
                         strongAuthenticationState);
 
-        Xs2aDevelopersPaymentExecutor xs2aDevelopersPaymentExecutor =
-                new CommerzBankPaymentExecutor(
-                        apiClient,
-                        new ThirdPartyAppAuthenticationController<>(
-                                controller, supplementalInformationHelper),
+        CommerzBankDecoupledPaymentAuthenticator decoupledPaymentAuthenticator =
+                new CommerzBankDecoupledPaymentAuthenticator(
+                        (CommerzBankApiClient) apiClient,
+                        sessionStorage,
+                        supplementalInformationController,
+                        supplementalInformationFormer);
+
+        CommerzBankPaymentAuthenticator authenticator =
+                new CommerzBankPaymentAuthenticator(
                         credentials,
                         persistentStorage,
                         sessionStorage,
-                        authenticator);
+                        new ThirdPartyAppAuthenticationController<>(
+                                redirectPaymentAuthenticator, supplementalInformationHelper),
+                        decoupledPaymentAuthenticator);
+
+        CommerzBankPaymentExecutor commerzBankPaymentExecutor =
+                new CommerzBankPaymentExecutor(
+                        (CommerzBankApiClient) apiClient,
+                        authenticator,
+                        sessionStorage,
+                        credentials);
 
         return Optional.of(
                 new PaymentController(
-                        xs2aDevelopersPaymentExecutor,
-                        xs2aDevelopersPaymentExecutor,
-                        new PaymentControllerExceptionMapper()));
+                        commerzBankPaymentExecutor, new PaymentControllerExceptionMapper()));
     }
 
     @Override

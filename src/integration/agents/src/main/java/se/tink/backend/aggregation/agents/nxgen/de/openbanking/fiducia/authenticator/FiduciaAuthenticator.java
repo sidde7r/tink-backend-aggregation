@@ -186,7 +186,7 @@ public class FiduciaAuthenticator
                 apiClient.authorizeWithOtp(
                         authorizationResponse.getLinks().getAuthoriseTransaction(),
                         collectOtp(authorizationResponse));
-        if (!FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {
+        if (!scaStatusResponse.getScaStatus().isFinalised()) {
             throw LoginError.DEFAULT_MESSAGE.exception("Invalid sca status");
         }
 

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment;
 
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
@@ -9,27 +11,38 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
+@RequiredArgsConstructor
+public class Xs2aDevelopersPaymentRedirectOauthHelper implements OAuth2Authenticator {
     private final Xs2aDevelopersApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
     private final Xs2aDevelopersProviderConfiguration configuration;
-
-    public Xs2aDevelopersPaymentAuthenticator(
-            Xs2aDevelopersApiClient apiClient,
-            PersistentStorage persistentStorage,
-            Xs2aDevelopersProviderConfiguration configuration) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-    }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
+        String scaUrl = retrieveScaUrl();
         return apiClient.buildAuthorizeUrl(
-                state,
-                "PIS:" + persistentStorage.get(StorageKeys.PAYMENT_ID),
-                persistentStorage.get(StorageKeys.AUTHORISATION_URL));
+                state, "PIS:" + persistentStorage.get(StorageKeys.PAYMENT_ID), scaUrl);
+    }
+
+    private String retrieveScaUrl() {
+        String scaOAuthSourceUrl = getScaOAuthLinkFromStorage();
+        if (isWellKnownURI(scaOAuthSourceUrl)) {
+            return apiClient.getAuthorizationEndpointFromWellKnownURI(scaOAuthSourceUrl);
+        }
+        return scaOAuthSourceUrl;
+    }
+
+    private boolean isWellKnownURI(String uri) {
+        return uri.contains("/.well-known/");
+    }
+
+    private String getScaOAuthLinkFromStorage() {
+        return sessionStorage
+                .get(StorageKeys.SCA_OAUTH_LINK, String.class)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
     @Override
