@@ -114,6 +114,8 @@ public class DebugAgentWorkerCommandTest {
         when(logsSaver.saveRawLogs(RawHttpLogsCatalog.LTS_PAYMENTS))
                 .thenReturn(SaveLogsResult.saved(RAW_LTS_STORAGE_DESCRIPTION));
         when(logsSaver.saveJsonLogs()).thenReturn(SaveLogsResult.saved(JSON_STORAGE_DESCRIPTION));
+        when(logsSaver.saveHarLogs(RawHttpLogsCatalog.DEFAULT))
+                .thenReturn(SaveLogsResult.saved(RAW_STORAGE_DESCRIPTION));
 
         logsSaverProvider = mock(AgentHttpLogsSaverProvider.class);
         when(logsSaverProvider.createLogsSaver(any(), any())).thenReturn(logsSaver);
@@ -270,9 +272,12 @@ public class DebugAgentWorkerCommandTest {
                                                 + "\n"
                                                 + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
                                                 + "\n"
-                                                + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
+                                                + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage"
+                                                + "\n"
+                                                + "Flushed transfer (614fe2465614491dae2ae88736fdac20) http archive: HTTP s3://raw/storage");
                         verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                         verify(logsSaver).saveJsonLogs();
+                        verify(logsSaver).saveHarLogs(RawHttpLogsCatalog.DEFAULT);
 
                     } else {
                         assertThat(logResultsBuilder)
@@ -360,10 +365,14 @@ public class DebugAgentWorkerCommandTest {
                                             + "\n"
                                             + "Flushed transfer (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/storage"
                                             + "\n"
-                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
+                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage"
+                                            + "\n"
+                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) http archive: HTTP s3://raw/storage");
 
                     verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                     verify(logsSaver).saveJsonLogs();
+                    verify(logsSaver).saveHarLogs(RawHttpLogsCatalog.DEFAULT);
+
                     verifyNoMoreInteractions(logsSaver);
                 });
     }
@@ -414,11 +423,14 @@ public class DebugAgentWorkerCommandTest {
                                             + "\n"
                                             + "Flushed transfer to long term storage for payments disputes (614fe2465614491dae2ae88736fdac20) debug log for further investigation: HTTP s3://raw/lts/storage"
                                             + "\n"
-                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage");
+                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) json logs: HTTP s3://json/storage"
+                                            + "\n"
+                                            + "Flushed transfer (614fe2465614491dae2ae88736fdac20) http archive: HTTP s3://raw/storage");
 
                     verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                     verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.LTS_PAYMENTS);
                     verify(logsSaver).saveJsonLogs();
+                    verify(logsSaver).saveHarLogs(RawHttpLogsCatalog.DEFAULT);
                     verifyNoMoreInteractions(logsSaver);
                 });
     }
@@ -464,9 +476,12 @@ public class DebugAgentWorkerCommandTest {
                                                 + "\n"
                                                 + "Flushed http logs: HTTP s3://raw/storage"
                                                 + "\n"
-                                                + "Flushed http json logs: HTTP s3://json/storage");
+                                                + "Flushed http json logs: HTTP s3://json/storage"
+                                                + "\n"
+                                                + "Flushed http archive: HTTP s3://raw/storage");
                         verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                         verify(logsSaver).saveJsonLogs();
+                        verify(logsSaver).saveHarLogs(RawHttpLogsCatalog.DEFAULT);
 
                     } else {
                         assertThat(logResultsBuilder)
@@ -546,10 +561,13 @@ public class DebugAgentWorkerCommandTest {
                                             + "\n"
                                             + "Flushed http logs: HTTP s3://raw/storage"
                                             + "\n"
-                                            + "Flushed http json logs: HTTP s3://json/storage");
+                                            + "Flushed http json logs: HTTP s3://json/storage"
+                                            + "\n"
+                                            + "Flushed http archive: HTTP s3://raw/storage");
 
                     verify(logsSaver).saveRawLogs(RawHttpLogsCatalog.DEFAULT);
                     verify(logsSaver).saveJsonLogs();
+                    verify(logsSaver).saveHarLogs(RawHttpLogsCatalog.DEFAULT);
                     verifyNoMoreInteractions(logsSaver);
                 });
     }
@@ -683,6 +701,7 @@ public class DebugAgentWorkerCommandTest {
                                     AggregationWorkerConfiguration.builder()
                                             .debugLogFrequencyPercent(
                                                     testCase.getDebugLogFrequencyPercent())
+                                            .debugLogHarFrequencyPercent(100)
                                             .build())
                             .build();
             when(context.getAgentsServiceConfiguration()).thenReturn(agentsServiceConfiguration);
