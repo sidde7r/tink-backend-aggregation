@@ -114,6 +114,9 @@ data:
         {{- if .Values.debugLogFrequencyPercent }}
           debugLogFrequencyPercent: {{ .Values.debugLogFrequencyPercent }}
         {{- end }}
+        {{- if .Values.debugLogHarFrequencyPercent }}
+          debugLogHarFrequencyPercent: {{ .Values.debugLogHarFrequencyPercent }}
+        {{- end }}
         {{- if .Values.longTermStorageDisputeBasePrefix }}
           longTermStorageDisputeBasePrefix: {{ .Values.longTermStorageDisputeBasePrefix }}
         {{- end }}

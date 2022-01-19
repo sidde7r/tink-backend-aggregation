@@ -100,6 +100,7 @@ tppSecretsServiceConfiguration:
   enabledRetryPolicy: true
 
 debugLogFrequencyPercent: 100
+debugLogHarFrequencyPercent: 100
 longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
 
 eventProducerServiceConfiguration:
