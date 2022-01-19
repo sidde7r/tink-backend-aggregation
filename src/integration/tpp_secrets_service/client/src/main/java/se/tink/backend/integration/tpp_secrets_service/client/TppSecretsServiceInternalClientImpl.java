@@ -3,8 +3,7 @@ package se.tink.backend.integration.tpp_secrets_service.client;
 import com.google.inject.Inject;
 import io.grpc.StatusException;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.backend.secretservice.grpc.CertificateResponse;
 import se.tink.backend.secretservice.grpc.GetAllSecretsResponse;
@@ -15,10 +14,9 @@ import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.grpc_tink_request_id_tracing_interceptor.TinkRequestIdClientTracingInterceptor;
 import se.tink.libraries.tracing.grpc.interceptor.ClientTracingInterceptor;
 
+@Slf4j
 public final class TppSecretsServiceInternalClientImpl extends ManagedSafeStop
         implements ManagedTppSecretsServiceInternalClient {
-    private static final Logger log =
-            LoggerFactory.getLogger(TppSecretsServiceInternalClientImpl.class);
     private SecretsServiceInternalClient secretsServiceInternalClient;
     private GrpcClientConfig grpcClientConfig;
 

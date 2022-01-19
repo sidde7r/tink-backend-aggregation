@@ -1,16 +1,13 @@
 package se.tink.backend.aggregation.startupchecks;
 
 import com.google.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheck;
 import se.tink.backend.libraries.healthcheckhandler.NotHealthyException;
 import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 
+@Slf4j
 public class TppSecretsServiceHealthCheck implements HealthCheck {
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(TppSecretsServiceHealthCheck.class);
 
     private final SecretsServiceInternalClient secretsServiceInternalClient;
 
@@ -26,7 +23,7 @@ public class TppSecretsServiceHealthCheck implements HealthCheck {
     @Override
     public void check() throws NotHealthyException {
         if (!firstCheckPassed) {
-            logger.info("TppSecretsServiceHealthCheck has not passed yet.");
+            log.info("TppSecretsServiceHealthCheck has not passed yet.");
         }
         try {
             secretsServiceInternalClient.ping();
@@ -34,12 +31,12 @@ public class TppSecretsServiceHealthCheck implements HealthCheck {
             if (!firstCheckPassed) {
                 throw new NotHealthyException("TppSecretsServiceHealthCheck failed", e);
             } else {
-                logger.warn("TppSecretsServiceHealthCheck failed", e);
+                log.warn("TppSecretsServiceHealthCheck failed", e);
             }
         }
         if (!firstCheckPassed) {
             firstCheckPassed = true;
-            logger.info("TppSecretsServiceHealthCheck passed.");
+            log.info("TppSecretsServiceHealthCheck passed.");
         }
     }
 }
