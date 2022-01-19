@@ -15,7 +15,3 @@ spec:
     pods:
       metricName: cpu_usage
       targetAverageValue: {{ default "0.75" .Values.targetAverageCpuValue }}
-  - type: Pods
-    pods:
-      metricName: tink_api_http_requests_per_second
-      targetAverageValue: "3"
