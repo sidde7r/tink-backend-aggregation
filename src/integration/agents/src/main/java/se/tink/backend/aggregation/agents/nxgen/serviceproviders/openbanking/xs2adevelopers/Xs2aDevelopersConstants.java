@@ -76,8 +76,10 @@ public final class Xs2aDevelopersConstants {
                 "/berlingroup/v1/payments/sepa-credit-transfers";
         public static final String GET_PAYMENT =
                 "/berlingroup/v1/payments/sepa-credit-transfers/{paymentId}";
+        // This URL, and ones above, are errenously always targetting single non instant payment.
+        // I have to carry over the error to the new endpoint to not break things any further.
         public static final String GET_PAYMENT_STATUS =
-                "/berlingroup/v1/{payment-service}/{payment-product}/{paymentId}/status";
+                "/berlingroup/v1/payments/sepa-credit-transfers/{paymentId}/status";
     }
 
     public static class StorageKeys {
