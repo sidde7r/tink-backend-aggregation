@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants.MultiFactorAuthentication.AUTOSTART_TOKEN;
 
+import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
@@ -80,6 +82,10 @@ public class CrossKeyBankIdAuthenticator
         List<String> body = bankiIdResponse.getStatus().getErrors();
         if (bankiIdResponse.getStatus().isSuccess()) {
             return BankIdStatus.DONE;
+        } else {
+            if (!Strings.isNullOrEmpty(body.toString()) && body.contains("USER_LOCKED")) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
         }
 
         Optional<BankIdStatus> bankIdStatus =
