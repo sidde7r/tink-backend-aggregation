@@ -34,9 +34,9 @@ public class ThirdPartyAppAuthenticationProcess
     }
 
     @Override
-    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
+    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
             ThirdPartyAppAuthenticator authenticator) {
-        return InteractiveExecutionFlow.<ConsentLifetime>startStep(
+        return InteractiveExecutionFlow.<Void, ConsentLifetime>startStep(
                         new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
                 .addStep(new ThirdPartyAppOpenAppStep(authenticator, ThirdPartyAppPollStep.class))
                 .addStep(
@@ -50,7 +50,7 @@ public class ThirdPartyAppAuthenticationProcess
     }
 
     @Override
-    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
             ThirdPartyAppAuthenticator authenticator) {
         return NonInteractiveExecutionFlow.startStep(new VerifyBankConnectionStep(authenticator))
                 .build();

@@ -1,18 +1,18 @@
 package se.tink.agent.sdk.authentication.common_steps;
 
 import java.util.Optional;
+import se.tink.agent.sdk.authentication.base_steps.NewConsentStep;
 import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
-import se.tink.agent.sdk.steppable_execution.interactive_step.InteractiveStep;
 import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 import se.tink.agent.sdk.user_interaction.SupplementalInformation;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
 
-public abstract class SupplementalInformationStep extends InteractiveStep<ConsentLifetime> {
+public abstract class SupplementalInformationStep extends NewConsentStep {
 
     @Override
-    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest request) {
+    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest<Void> request) {
         Optional<UserResponseData> optionalUserResponseData = request.getUserResponseData();
 
         if (optionalUserResponseData.isPresent()) {

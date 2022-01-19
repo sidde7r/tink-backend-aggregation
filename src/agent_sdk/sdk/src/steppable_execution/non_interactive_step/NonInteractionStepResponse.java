@@ -35,8 +35,8 @@ public class NonInteractionStepResponse<T> implements StepResponse<T> {
         return Optional.empty();
     }
 
-    public static <T> NonInteractionStepResponse<T> nextStep(
-            Class<? extends NonInteractiveStep<T>> nextStep) {
+    public static <T, R> NonInteractionStepResponse<R> nextStep(
+            Class<? extends NonInteractiveStep<T, R>> nextStep) {
         return new NonInteractionStepResponse<>(nextStep.toString());
     }
 

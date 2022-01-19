@@ -36,9 +36,9 @@ public class BerlinGroupAuthenticationProcess
     }
 
     @Override
-    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
+    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
             BerlinGroupAuthenticator authenticator) {
-        return InteractiveExecutionFlow.<ConsentLifetime>startStep(
+        return InteractiveExecutionFlow.<Void, ConsentLifetime>startStep(
                         new BerlinGroupOpenConsentAppStep(
                                 this.timeGenerator,
                                 this.multifactorAuthenticationState,
@@ -50,7 +50,7 @@ public class BerlinGroupAuthenticationProcess
     }
 
     @Override
-    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
             BerlinGroupAuthenticator authenticator) {
         return NonInteractiveExecutionFlow.startStep(
                         new BerlinGroupVerifyConsentStatusStep(authenticator, authenticator))

@@ -4,6 +4,7 @@ java_library_with_sources(
     name = "authentication",
     intdeps = [
         "//src/agent_sdk/sdk/src/authentication/authenticators",
+        "//src/agent_sdk/sdk/src/authentication/base_steps",
         "//src/agent_sdk/sdk/src/authentication/common_steps",
         "//src/agent_sdk/sdk/src/authentication/consent",
         "//src/agent_sdk/sdk/src/authentication/features",
@@ -11,6 +12,7 @@ java_library_with_sources(
     visibility = ["//src/agent_sdk/sdk:__subpackages__"],
     exports = [
         "//src/agent_sdk/sdk/src/authentication/authenticators",
+        "//src/agent_sdk/sdk/src/authentication/base_steps",
         "//src/agent_sdk/sdk/src/authentication/common_steps",
         "//src/agent_sdk/sdk/src/authentication/consent",
         "//src/agent_sdk/sdk/src/authentication/features",

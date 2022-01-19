@@ -13,17 +13,17 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 
 public class ThirdPartyAppInitStep extends IntermediateStep {
     private final ThirdPartyAppInitAuthentication agentInitAuthentication;
-    private final Class<? extends BaseStep<?>> nextStep;
+    private final Class<? extends BaseStep<?, ?>> nextStep;
 
     public ThirdPartyAppInitStep(
             ThirdPartyAppInitAuthentication agentInitAuthentication,
-            Class<? extends BaseStep<?>> nextStep) {
+            Class<? extends BaseStep<?, ?>> nextStep) {
         this.agentInitAuthentication = agentInitAuthentication;
         this.nextStep = nextStep;
     }
 
     @Override
-    public IntermediateStepResponse execute(StepRequest request) {
+    public IntermediateStepResponse execute(StepRequest<Void> request) {
         ThirdPartyAppResult thirdPartyAppResult =
                 this.agentInitAuthentication.initThirdPartyAppAuthentication();
         handleStatus(thirdPartyAppResult.getStatus());

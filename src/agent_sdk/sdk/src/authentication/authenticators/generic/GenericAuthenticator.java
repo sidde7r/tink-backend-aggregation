@@ -7,8 +7,8 @@ import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecut
 
 public interface GenericAuthenticator {
     // "full authentication"
-    InteractiveExecutionFlow<ConsentLifetime> issueNewConsent();
+    InteractiveExecutionFlow<Void, ConsentLifetime> issueNewConsent();
 
     // "is logged in"
-    NonInteractiveExecutionFlow<ConsentStatus> useExistingConsent();
+    NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsent();
 }

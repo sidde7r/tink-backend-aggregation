@@ -4,12 +4,12 @@ import java.util.Optional;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAuthenticatorConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConsentStatus;
+import se.tink.agent.sdk.authentication.base_steps.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequestBase;
 import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractionStepResponse;
-import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractiveStep;
 
-public class BerlinGroupVerifyConsentStatusStep extends NonInteractiveStep<ConsentStatus> {
+public class BerlinGroupVerifyConsentStatusStep extends ExistingConsentStep {
     private final BerlinGroupGetConfiguration agentGetConfiguration;
     private final BerlinGroupGetConsentStatus agentGetConsentStatus;
 
@@ -21,7 +21,7 @@ public class BerlinGroupVerifyConsentStatusStep extends NonInteractiveStep<Conse
     }
 
     @Override
-    public NonInteractionStepResponse<ConsentStatus> execute(StepRequestBase request) {
+    public NonInteractionStepResponse<ConsentStatus> execute(StepRequestBase<Void> request) {
         // Read the `consentId` from the AgentStorage, previously written by
         // {@link #BerlinGroupVerifyAuthorizedConsentStep}
         BerlinGroupAuthenticatorConfiguration configuration =

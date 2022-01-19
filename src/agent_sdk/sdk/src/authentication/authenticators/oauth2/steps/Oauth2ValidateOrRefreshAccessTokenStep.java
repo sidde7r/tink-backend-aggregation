@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.RefreshAccessToken;
+import se.tink.agent.sdk.authentication.base_steps.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequestBase;
 import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractionStepResponse;
@@ -12,19 +13,19 @@ import se.tink.agent.sdk.storage.Storage;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 
-public class Oauth2ValidateOrRefreshAccessTokenStep extends NonInteractiveStep<ConsentStatus> {
+public class Oauth2ValidateOrRefreshAccessTokenStep extends ExistingConsentStep {
     private final RefreshAccessToken agentRefreshAccessToken;
-    private final Class<? extends NonInteractiveStep<ConsentStatus>> nextStep;
+    private final Class<? extends NonInteractiveStep<Void, ConsentStatus>> nextStep;
 
     public Oauth2ValidateOrRefreshAccessTokenStep(
             RefreshAccessToken agentRefreshAccessToken,
-            Class<? extends NonInteractiveStep<ConsentStatus>> nextStep) {
+            Class<? extends NonInteractiveStep<Void, ConsentStatus>> nextStep) {
         this.agentRefreshAccessToken = agentRefreshAccessToken;
         this.nextStep = nextStep;
     }
 
     @Override
-    public NonInteractionStepResponse<ConsentStatus> execute(StepRequestBase request) {
+    public NonInteractionStepResponse<ConsentStatus> execute(StepRequestBase<Void> request) {
         Storage agentStorage = request.getAgentStorage();
 
         Optional<OAuth2Token> accessToken = agentStorage.getOauth2Token();

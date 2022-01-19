@@ -5,14 +5,14 @@ import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAu
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAuthenticatorConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConsentStatus;
+import se.tink.agent.sdk.authentication.base_steps.NewConsentStep;
 import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
 import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
-import se.tink.agent.sdk.steppable_execution.interactive_step.InteractiveStep;
 import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 
-public class BerlinGroupVerifyAuthorizedConsentStep extends InteractiveStep<ConsentLifetime> {
+public class BerlinGroupVerifyAuthorizedConsentStep extends NewConsentStep {
 
     private final BerlinGroupGetConfiguration agentGetConfiguration;
     private final BerlinGroupGetConsentStatus agentGetConsentStatus;
@@ -25,7 +25,7 @@ public class BerlinGroupVerifyAuthorizedConsentStep extends InteractiveStep<Cons
     }
 
     @Override
-    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest request) {
+    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest<Void> request) {
         if (!request.getUserResponseData().isPresent()) {
             throw ThirdPartyAppError.TIMED_OUT.exception();
         }

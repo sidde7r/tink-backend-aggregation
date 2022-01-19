@@ -35,9 +35,9 @@ public class Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess
     }
 
     @Override
-    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
+    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
             Oauth2DecoupledSwedishMobileBankIdAuthenticator authenticator) {
-        return InteractiveExecutionFlow.<ConsentLifetime>startStep(
+        return InteractiveExecutionFlow.<Void, ConsentLifetime>startStep(
                         new ThirdPartyAppInitStep(
                                 authenticator, SwedishMobileBankIdOpenAppStep.class))
                 .addStep(
@@ -54,7 +54,7 @@ public class Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess
     }
 
     @Override
-    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
             Oauth2DecoupledSwedishMobileBankIdAuthenticator authenticator) {
         return NonInteractiveExecutionFlow.startStep(
                         new Oauth2ValidateOrRefreshAccessTokenStep(

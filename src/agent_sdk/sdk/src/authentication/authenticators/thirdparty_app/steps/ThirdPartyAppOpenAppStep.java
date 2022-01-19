@@ -13,16 +13,16 @@ import se.tink.agent.sdk.user_interaction.UserInteraction;
 public class ThirdPartyAppOpenAppStep extends IntermediateStep {
 
     private final ThirdPartyAppGetAppInfo agentGetAppInfo;
-    private final Class<? extends BaseStep<?>> nextStep;
+    private final Class<? extends BaseStep<?, ?>> nextStep;
 
     public ThirdPartyAppOpenAppStep(
-            ThirdPartyAppGetAppInfo agentGetAppInfo, Class<? extends BaseStep<?>> nextStep) {
+            ThirdPartyAppGetAppInfo agentGetAppInfo, Class<? extends BaseStep<?, ?>> nextStep) {
         this.agentGetAppInfo = agentGetAppInfo;
         this.nextStep = nextStep;
     }
 
     @Override
-    public IntermediateStepResponse execute(StepRequest request) {
+    public IntermediateStepResponse execute(StepRequest<Void> request) {
         SerializableReference reference =
                 request.getStepStorage()
                         .tryGet(

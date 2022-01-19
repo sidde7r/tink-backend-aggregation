@@ -42,7 +42,7 @@ public class InteractiveStepResponse<T> implements StepResponse<T> {
     }
 
     public static UserInteractionBuildStep<InteractiveStepResponseBuildStep> nextStep(
-            Class<? extends BaseStep<?>> nextStep) {
+            Class<? extends BaseStep<?, ?>> nextStep) {
         return new InteractiveStepResponseBuilder(nextStep.toString());
     }
 

@@ -33,7 +33,7 @@ public class IntermediateStepResponse implements StepResponse<Void> {
     }
 
     public static UserInteractionBuildStep<IntermediateStepResponseBuildStep> nextStep(
-            Class<? extends BaseStep<?>> nextStep) {
+            Class<? extends BaseStep<?, ?>> nextStep) {
         return new IntermediateStepResponseBuilder(nextStep.toString());
     }
 }

@@ -21,15 +21,15 @@ public class ThirdPartyAppPollStep extends IntermediateStep {
     private final ThirdPartyAppPollStatus agentPollStatus;
     private final Sleeper sleeper;
 
-    private final Class<? extends BaseStep<?>> reopenAppStep;
-    private final Class<? extends BaseStep<?>> nextStep;
+    private final Class<? extends BaseStep<?, ?>> reopenAppStep;
+    private final Class<? extends BaseStep<?, ?>> nextStep;
 
     public ThirdPartyAppPollStep(
             Integer maxPollAttempts,
             ThirdPartyAppPollStatus agentPollStatus,
             Sleeper sleeper,
-            Class<? extends BaseStep<?>> reopenAppStep,
-            Class<? extends BaseStep<?>> nextStep) {
+            Class<? extends BaseStep<?, ?>> reopenAppStep,
+            Class<? extends BaseStep<?, ?>> nextStep) {
         this.maxPollAttempts = maxPollAttempts;
         this.agentPollStatus = agentPollStatus;
         this.sleeper = sleeper;
@@ -40,13 +40,13 @@ public class ThirdPartyAppPollStep extends IntermediateStep {
     public ThirdPartyAppPollStep(
             ThirdPartyAppPollStatus agentPollStatus,
             Sleeper sleeper,
-            Class<? extends BaseStep<?>> reopenAppStep,
-            Class<? extends BaseStep<?>> nextStep) {
+            Class<? extends BaseStep<?, ?>> reopenAppStep,
+            Class<? extends BaseStep<?, ?>> nextStep) {
         this(DEFAULT_MAX_POLL_ATTEMPTS, agentPollStatus, sleeper, reopenAppStep, nextStep);
     }
 
     @Override
-    public IntermediateStepResponse execute(StepRequest request) {
+    public IntermediateStepResponse execute(StepRequest<Void> request) {
         Storage stepStorage = request.getStepStorage();
 
         checkAndIncrementAttemptsCounter(stepStorage);

@@ -14,19 +14,19 @@ public class Oauth2OpenAuthorizationAppStep extends IntermediateStep {
 
     private final MultifactorAuthenticationState multifactorAuthenticationState;
     private final BuildAuthorizationAppUrl agentBuildAuthorizationAppUrl;
-    private final Class<? extends BaseStep<?>> handleCallbackDataStep;
+    private final Class<? extends BaseStep<?, ?>> handleCallbackDataStep;
 
     public Oauth2OpenAuthorizationAppStep(
             MultifactorAuthenticationState multifactorAuthenticationState,
             BuildAuthorizationAppUrl agentBuildAuthorizationAppUrl,
-            Class<? extends BaseStep<?>> handleCallbackDataStep) {
+            Class<? extends BaseStep<?, ?>> handleCallbackDataStep) {
         this.multifactorAuthenticationState = multifactorAuthenticationState;
         this.agentBuildAuthorizationAppUrl = agentBuildAuthorizationAppUrl;
         this.handleCallbackDataStep = handleCallbackDataStep;
     }
 
     @Override
-    public IntermediateStepResponse execute(StepRequest request) {
+    public IntermediateStepResponse execute(StepRequest<Void> request) {
         URL authorizeUrl =
                 this.agentBuildAuthorizationAppUrl.buildAuthorizationAppUrl(
                         this.multifactorAuthenticationState.getState());

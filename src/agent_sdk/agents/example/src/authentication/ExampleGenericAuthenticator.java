@@ -9,12 +9,12 @@ import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecut
 public class ExampleGenericAuthenticator implements GenericAuthenticator {
 
     @Override
-    public InteractiveExecutionFlow<ConsentLifetime> issueNewConsent() {
+    public InteractiveExecutionFlow<Void, ConsentLifetime> issueNewConsent() {
         return null;
     }
 
     @Override
-    public NonInteractiveExecutionFlow<ConsentStatus> useExistingConsent() {
+    public NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsent() {
         return null;
     }
 }

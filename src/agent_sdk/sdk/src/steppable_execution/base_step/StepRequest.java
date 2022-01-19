@@ -4,13 +4,13 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
-import se.tink.agent.sdk.operation.User;
 import se.tink.agent.sdk.storage.Storage;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
 
 @AllArgsConstructor
-public class StepRequest implements StepRequestBase, StepRequestUserResponse {
-    private final User user;
+public class StepRequest<T> implements StepRequestBase<T>, StepRequestUserResponse {
+    private final T stepArgument;
+
     private final StaticBankCredentials staticBankCredentials;
 
     // This storage/state should be used by steps to not interfere with the agent's storage keys.
@@ -21,8 +21,8 @@ public class StepRequest implements StepRequestBase, StepRequestUserResponse {
     @Nullable private final UserResponseData userResponseData;
 
     @Override
-    public User getUser() {
-        return this.user;
+    public T getStepArgument() {
+        return this.stepArgument;
     }
 
     @Override

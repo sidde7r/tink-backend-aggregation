@@ -35,9 +35,9 @@ public class Oauth2DecoupledAppAuthenticationProcess
     }
 
     @Override
-    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
+    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
             Oauth2DecoupledAppAuthenticator authenticator) {
-        return InteractiveExecutionFlow.<ConsentLifetime>startStep(
+        return InteractiveExecutionFlow.<Void, ConsentLifetime>startStep(
                         new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
                 .addStep(new ThirdPartyAppOpenAppStep(authenticator, ThirdPartyAppPollStep.class))
                 .addStep(
@@ -51,7 +51,7 @@ public class Oauth2DecoupledAppAuthenticationProcess
     }
 
     @Override
-    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
             Oauth2DecoupledAppAuthenticator authenticator) {
         return NonInteractiveExecutionFlow.startStep(
                         new Oauth2ValidateOrRefreshAccessTokenStep(

@@ -10,7 +10,7 @@ import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecut
 public interface AuthenticationProcess<T> {
     Optional<T> tryInstantiateAuthenticator(AgentInstance agentInstance);
 
-    InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(T authenticator);
+    InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(T authenticator);
 
-    NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(T authenticator);
+    NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(T authenticator);
 }

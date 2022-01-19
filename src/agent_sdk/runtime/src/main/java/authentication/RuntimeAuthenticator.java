@@ -67,13 +67,13 @@ public class RuntimeAuthenticator {
     }
 
     public StepResponse<ConsentLifetime> executeNewConsentStep(
-            @Nullable String stepId, StepRequest request)
+            @Nullable String stepId, StepRequest<Void> request)
             throws AuthenticationStepNotFoundException {
 
-        InteractiveExecutionFlow<ConsentLifetime> newConsentFlow =
+        InteractiveExecutionFlow<Void, ConsentLifetime> newConsentFlow =
                 this.authenticationFlows.getNewConsentFlow();
 
-        BaseStep<ConsentLifetime> newConsentStep =
+        BaseStep<Void, ConsentLifetime> newConsentStep =
                 newConsentFlow
                         .getStep(stepId)
                         .orElseThrow(AuthenticationStepNotFoundException::new);
@@ -82,13 +82,13 @@ public class RuntimeAuthenticator {
     }
 
     public StepResponse<ConsentStatus> executeUseExistingConsentStep(
-            @Nullable String stepId, StepRequest request)
+            @Nullable String stepId, StepRequest<Void> request)
             throws AuthenticationStepNotFoundException {
 
-        NonInteractiveExecutionFlow<ConsentStatus> useExistingConsentFlow =
+        NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsentFlow =
                 this.authenticationFlows.getUseExistingConsentFlow();
 
-        BaseStep<ConsentStatus> useExistingConsentStep =
+        BaseStep<Void, ConsentStatus> useExistingConsentStep =
                 useExistingConsentFlow
                         .getStep(stepId)
                         .orElseThrow(AuthenticationStepNotFoundException::new);
@@ -101,32 +101,34 @@ public class RuntimeAuthenticator {
                 .tryInstantiateAuthenticator(this.agentInstance)
                 .map(
                         agentAuthenticator -> {
-                            InteractiveExecutionFlow<ConsentLifetime> newConsentFlow =
+                            InteractiveExecutionFlow<Void, ConsentLifetime> newConsentFlow =
                                     authProcess.getNewConsentFlow(agentAuthenticator);
 
-                            NonInteractiveExecutionFlow<ConsentStatus> useExistingConsentFlow =
-                                    authProcess.getUseExistingConsentFlow(agentAuthenticator);
+                            NonInteractiveExecutionFlow<Void, ConsentStatus>
+                                    useExistingConsentFlow =
+                                            authProcess.getUseExistingConsentFlow(
+                                                    agentAuthenticator);
 
                             return new AuthenticationFlows(newConsentFlow, useExistingConsentFlow);
                         });
     }
 
     private static class AuthenticationFlows {
-        private final InteractiveExecutionFlow<ConsentLifetime> newConsentFlow;
-        private final NonInteractiveExecutionFlow<ConsentStatus> useExistingConsentFlow;
+        private final InteractiveExecutionFlow<Void, ConsentLifetime> newConsentFlow;
+        private final NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsentFlow;
 
         public AuthenticationFlows(
-                InteractiveExecutionFlow<ConsentLifetime> newConsentFlow,
-                NonInteractiveExecutionFlow<ConsentStatus> useExistingConsentFlow) {
+                InteractiveExecutionFlow<Void, ConsentLifetime> newConsentFlow,
+                NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsentFlow) {
             this.newConsentFlow = newConsentFlow;
             this.useExistingConsentFlow = useExistingConsentFlow;
         }
 
-        public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow() {
+        public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow() {
             return newConsentFlow;
         }
 
-        public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow() {
+        public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow() {
             return useExistingConsentFlow;
         }
     }

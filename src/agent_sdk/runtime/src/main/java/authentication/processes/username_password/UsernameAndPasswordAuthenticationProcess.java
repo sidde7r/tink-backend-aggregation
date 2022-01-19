@@ -23,14 +23,14 @@ public class UsernameAndPasswordAuthenticationProcess
     }
 
     @Override
-    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
+    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
             UsernameAndPasswordAuthenticator authenticator) {
         return InteractiveExecutionFlow.startStep(new UsernameAndPasswordStep(authenticator))
                 .build();
     }
 
     @Override
-    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
             UsernameAndPasswordAuthenticator authenticator) {
         return NonInteractiveExecutionFlow.startStep(new VerifyBankConnectionStep(authenticator))
                 .build();

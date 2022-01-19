@@ -19,13 +19,13 @@ public class GenericAuthenticationProcess implements AuthenticationProcess<Gener
     }
 
     @Override
-    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
+    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
             GenericAuthenticator authenticator) {
         return authenticator.issueNewConsent();
     }
 
     @Override
-    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
             GenericAuthenticator authenticator) {
         return authenticator.useExistingConsent();
     }

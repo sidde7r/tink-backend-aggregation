@@ -23,14 +23,14 @@ public class BerlinGroupOpenConsentAppStep extends IntermediateStep {
     private final MultifactorAuthenticationState multifactorAuthenticationState;
     private final BerlinGroupGetConfiguration agentGetConfiguration;
     private final BerlinGroupCreateConsent agentCreateConsent;
-    private final Class<? extends BaseStep<?>> handleCallbackDataStep;
+    private final Class<? extends BaseStep<?, ?>> handleCallbackDataStep;
 
     public BerlinGroupOpenConsentAppStep(
             TimeGenerator timeGenerator,
             MultifactorAuthenticationState multifactorAuthenticationState,
             BerlinGroupGetConfiguration agentGetConfiguration,
             BerlinGroupCreateConsent agentCreateConsent,
-            Class<? extends BaseStep<?>> handleCallbackDataStep) {
+            Class<? extends BaseStep<?, ?>> handleCallbackDataStep) {
         this.timeGenerator = timeGenerator;
         this.multifactorAuthenticationState = multifactorAuthenticationState;
         this.agentGetConfiguration = agentGetConfiguration;
@@ -39,7 +39,7 @@ public class BerlinGroupOpenConsentAppStep extends IntermediateStep {
     }
 
     @Override
-    public IntermediateStepResponse execute(StepRequest request) {
+    public IntermediateStepResponse execute(StepRequest<Void> request) {
         // Calculate the new consent's valid until date.
         BerlinGroupAuthenticatorConfiguration configuration =
                 this.agentGetConfiguration.getConfiguration();

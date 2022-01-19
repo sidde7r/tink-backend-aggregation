@@ -31,52 +31,54 @@ public class ExecutionFlowTest {
 
     @Test
     public void interactiveFlowWithIntermediateStep() {
-        InteractiveStep<Void> stepA = new InteractiveStepA();
-        InteractiveStep<Void> stepB = new InteractiveStepB();
+        InteractiveStep<Void, Void> stepA = new InteractiveStepA();
+        InteractiveStep<Void, Void> stepB = new InteractiveStepB();
         IntermediateStep stepC = new InteractiveStepC();
 
-        ExecutionFlow<Void> flow =
+        ExecutionFlow<Void, Void> flow =
                 InteractiveExecutionFlow.startStep(stepA).addStep(stepB).addStep(stepC).build();
 
-        Optional<BaseStep<Void>> shouldBeStepC = flow.getStep(InteractiveStepC.class.toString());
+        Optional<BaseStep<Void, Void>> shouldBeStepC =
+                flow.getStep(InteractiveStepC.class.toString());
         Assert.assertEquals(Optional.of(stepC), shouldBeStepC);
     }
 
     @Test
     public void nullStepIdShouldReturnStartStep() {
-        InteractiveStep<Void> stepA = new InteractiveStepA();
-        InteractiveStep<Void> stepB = new InteractiveStepB();
+        InteractiveStep<Void, Void> stepA = new InteractiveStepA();
+        InteractiveStep<Void, Void> stepB = new InteractiveStepB();
 
-        ExecutionFlow<Void> flow = InteractiveExecutionFlow.startStep(stepA).addStep(stepB).build();
+        ExecutionFlow<Void, Void> flow =
+                InteractiveExecutionFlow.startStep(stepA).addStep(stepB).build();
 
-        Optional<BaseStep<Void>> startStep = flow.getStep(null);
+        Optional<BaseStep<Void, Void>> startStep = flow.getStep(null);
         Assert.assertEquals(Optional.of(stepA), startStep);
     }
 
-    private static class InteractiveStepA extends InteractiveStep<Void> {
+    private static class InteractiveStepA extends InteractiveStep<Void, Void> {
         @Override
-        public InteractiveStepResponse<Void> execute(StepRequest request) {
+        public InteractiveStepResponse<Void> execute(StepRequest<Void> request) {
             return null;
         }
     }
 
-    private static class InteractiveStepB extends InteractiveStep<Void> {
+    private static class InteractiveStepB extends InteractiveStep<Void, Void> {
         @Override
-        public InteractiveStepResponse<Void> execute(StepRequest request) {
+        public InteractiveStepResponse<Void> execute(StepRequest<Void> request) {
             return null;
         }
     }
 
     private static class InteractiveStepC extends IntermediateStep {
         @Override
-        public IntermediateStepResponse execute(StepRequest request) {
+        public IntermediateStepResponse execute(StepRequest<Void> request) {
             return null;
         }
     }
 
-    private static class NonInteractiveStepA extends NonInteractiveStep<Void> {
+    private static class NonInteractiveStepA extends NonInteractiveStep<Void, Void> {
         @Override
-        public NonInteractionStepResponse<Void> execute(StepRequestBase request) {
+        public NonInteractionStepResponse<Void> execute(StepRequestBase<Void> request) {
             return null;
         }
     }

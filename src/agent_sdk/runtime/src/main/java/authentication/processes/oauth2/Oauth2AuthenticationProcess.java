@@ -31,9 +31,9 @@ public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2
     }
 
     @Override
-    public InteractiveExecutionFlow<ConsentLifetime> getNewConsentFlow(
+    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
             Oauth2Authenticator authenticator) {
-        return InteractiveExecutionFlow.<ConsentLifetime>startStep(
+        return InteractiveExecutionFlow.<Void, ConsentLifetime>startStep(
                         new Oauth2OpenAuthorizationAppStep(
                                 this.multifactorAuthenticationState,
                                 authenticator,
@@ -43,7 +43,7 @@ public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2
     }
 
     @Override
-    public NonInteractiveExecutionFlow<ConsentStatus> getUseExistingConsentFlow(
+    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
             Oauth2Authenticator authenticator) {
         return NonInteractiveExecutionFlow.startStep(
                         new Oauth2ValidateOrRefreshAccessTokenStep(
