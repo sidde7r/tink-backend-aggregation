@@ -22,6 +22,8 @@ public class AggregationWorkerConfiguration {
 
     @JsonProperty private int debugLogFrequencyPercent;
 
+    @JsonProperty private int debugLogHarFrequencyPercent;
+
     @JsonProperty private String longTermStorageDisputeBasePrefix;
 
     @JsonProperty
@@ -32,5 +34,12 @@ public class AggregationWorkerConfiguration {
                 debugLogFrequencyPercent >= 0 && debugLogFrequencyPercent <= 100,
                 "Debug log frequency has to be between 0 and 100.");
         this.debugLogFrequencyPercent = debugLogFrequencyPercent;
+    }
+
+    public void setDebugLogHarFrequencyPercent(int debugLogHarFrequencyPercent) {
+        Preconditions.checkArgument(
+                debugLogFrequencyPercent >= 0 && debugLogFrequencyPercent <= 100,
+                "Debug log HAR frequency has to be between 0 and 100.");
+        this.debugLogHarFrequencyPercent = debugLogHarFrequencyPercent;
     }
 }
