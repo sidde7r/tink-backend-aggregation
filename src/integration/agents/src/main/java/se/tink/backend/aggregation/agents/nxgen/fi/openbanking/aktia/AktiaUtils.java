@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
@@ -18,36 +19,34 @@ public class AktiaUtils {
     public FetchTransactionsResponse removeDuplicates(
             FetchTransactionsResponse fetchTransactionsResponse) {
 
-        List<List<Transaction>> tempTrx = new ArrayList<>();
+        List<Account> accounts = new ArrayList<>();
+        fetchTransactionsResponse.getTransactions().forEach((a, t) -> accounts.add(a));
 
-        fetchTransactionsResponse
-                .getTransactions()
-                .forEach((account, transactions) -> tempTrx.add(transactions));
+        for (int i = 0; i < fetchTransactionsResponse.getTransactions().size(); i++) {
 
-        if (!tempTrx.stream().findFirst().isPresent()) return fetchTransactionsResponse;
-        else {
-            List<Transaction> resultTrx =
-                    tempTrx.stream()
-                            .findFirst()
-                            .get()
-                            .stream()
-                            .filter(
-                                    distinctByKey(
-                                            transaction ->
-                                                    transaction
-                                                            .getExternalSystemIds()
-                                                            .get(
-                                                                    TransactionExternalSystemIdType
-                                                                            .PROVIDER_GIVEN_TRANSACTION_ID)))
-                            .collect(Collectors.toList());
+            final Account number = accounts.get(i);
 
-            fetchTransactionsResponse
-                    .getTransactions()
-                    .forEach(
-                            (account, transactions) -> {
-                                transactions.clear();
-                                transactions.addAll(resultTrx);
-                            });
+            List<Transaction> transactionsToReplace =
+                    fetchTransactionsResponse.getTransactions().get(number);
+
+            if (!transactionsToReplace.stream().findFirst().isPresent())
+                return fetchTransactionsResponse;
+            else {
+                List<Transaction> resultTrx =
+                        transactionsToReplace.stream()
+                                .filter(
+                                        distinctByKey(
+                                                transaction ->
+                                                        transaction
+                                                                .getExternalSystemIds()
+                                                                .get(
+                                                                        TransactionExternalSystemIdType
+                                                                                .PROVIDER_GIVEN_TRANSACTION_ID)))
+                                .collect(Collectors.toList());
+
+                transactionsToReplace.clear();
+                transactionsToReplace.addAll(resultTrx);
+            }
         }
         return fetchTransactionsResponse;
     }
