@@ -11,22 +11,24 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 
 public class UsernameAndPasswordStep extends NewConsentStep {
 
+    private final StaticBankCredentials staticBankCredentials;
     private final UsernameAndPasswordLogin agentUsernameAndPasswordLogin;
 
-    public UsernameAndPasswordStep(UsernameAndPasswordLogin agentUsernameAndPasswordLogin) {
+    public UsernameAndPasswordStep(
+            StaticBankCredentials staticBankCredentials,
+            UsernameAndPasswordLogin agentUsernameAndPasswordLogin) {
+        this.staticBankCredentials = staticBankCredentials;
         this.agentUsernameAndPasswordLogin = agentUsernameAndPasswordLogin;
     }
 
     @Override
     public InteractiveStepResponse<ConsentLifetime> execute(StepRequest<Void> request) {
-        StaticBankCredentials staticBankCredentials = request.getStaticBankCredentials();
-
         String username =
-                staticBankCredentials
+                this.staticBankCredentials
                         .tryGet(Field.Key.USERNAME)
                         .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
         String password =
-                staticBankCredentials
+                this.staticBankCredentials
                         .tryGet(Field.Key.PASSWORD)
                         .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 
