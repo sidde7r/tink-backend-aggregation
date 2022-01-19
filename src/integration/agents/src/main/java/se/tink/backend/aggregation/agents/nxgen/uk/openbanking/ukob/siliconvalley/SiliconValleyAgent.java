@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.caterallen;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.siliconvalley;
 
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -9,16 +9,14 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.siliconvalley.authenticator.SiliconValleyAisAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -27,22 +25,22 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
-public class CaterAllenAgent extends UkOpenBankingBaseAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
+public class SiliconValleyAgent extends UkOpenBankingBaseAgent {
 
-    private static final UkOpenBankingAisConfig aisConfig;
+    private static final SiliconValleyConfiguration aisConfig;
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId(CaterAllenConstants.ORGANISATION_ID)
-                        .withWellKnownURL(CaterAllenConstants.WELL_KNOWN_URL)
-                        .withApiBaseURL(CaterAllenConstants.AIS_API_URL)
-                        .build();
+                new SiliconValleyConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withOrganisationId(SiliconValleyConstants.ORGANISATION_ID)
+                                .withWellKnownURL(SiliconValleyConstants.WELL_KNOWN_URL)
+                                .withApiBaseURL(SiliconValleyConstants.AIS_API_URL));
     }
 
     @Inject
-    public CaterAllenAgent(
+    public SiliconValleyAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
     }
@@ -50,12 +48,13 @@ public class CaterAllenAgent extends UkOpenBankingBaseAgent {
     @Override
     public Authenticator constructAuthenticator() {
         UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+
         return createAutoAuthController(authController);
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(
+        return new SiliconValleyAis(
                 aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
     }
 
@@ -64,7 +63,7 @@ public class CaterAllenAgent extends UkOpenBankingBaseAgent {
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new UkOpenBankingAisAuthenticator(this.apiClient),
+                new SiliconValleyAisAuthenticator(apiClient),
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),
