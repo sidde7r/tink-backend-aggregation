@@ -1,0 +1,128 @@
+REQUEST 1
+GET https://psd2.swedbank.se/fallback/api/v5/identification/touch
+Accept: application/json
+
+RESPONSE 1
+200
+Server: -
+Date: Fri, 06 Mar 2020 23:29:12 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{
+	"chosenProfileName": "Name Surname",
+	"identifiedUserName": "Name Surname",
+	"identifiedUser": "20200202-0202",
+	"chosenProfile": "**HASHED:cI**",
+	"authMethodName": "BANKID_MOBILE",
+	"authMethodDescription": "Mobile BankID",
+	"authMethodExtendedUsage": true,
+	"bankId": "08264",
+	"bankName": "Swedbank AB (publ)",
+	"chosenProfileLanguage": "sv",
+	"client": {
+		"software": {
+			"name": "Tink",
+			"version": "unknown",
+			"family": "OTHER"
+		},
+		"os": {
+			"name": "+https://www.tink.se/",
+			"version": "noc@tink.se)",
+			"family": "OTHER"
+		},
+		"device": {
+			"manufacturer": "unknown",
+			"model": "unknown"
+		}
+	},
+	"authenticationRole": "CUSTOMER",
+	"serverTime": "20211130 14:38",
+	"formattedServerTime": "2021-11-30 14:38"
+}
+
+REQUEST 5
+GET https://psd2.swedbank.se/fallback/api/v5/profile/
+Accept: application/json
+
+RESPONSE 5
+200
+Server: -
+Date: Thu, 17 Sep 2020 07:34:26 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{
+  "banks": [
+    {
+      "name": "Ivetofta Sparbank i Bromölla",
+      "bankId": "08143",
+      "url": "https://www.ivetoftasparbank.se",
+      "servicePortalProfile": {
+        "activeProfileLanguage": "sv",
+        "targetType": "NEUTRAL",
+        "customerName": "Esbjorn Fakename",
+        "customerNumber": "********",
+        "id": "FakeId1",
+        "bankId": "08143",
+        "bankName": "Ivetofta Sparbank i Bromölla",
+        "url": "https://www.ivetoftasparbank.se",
+        "customerInternational": false,
+        "youthProfile": false,
+        "links": {
+          "edit": {
+            "method": "PUT",
+            "uri": "/v5/profile/subscription/FakeId1"
+          },
+          "next": {
+            "method": "POST",
+            "uri": "/v5/profile/FakeId1"
+          }
+        }
+      },
+      "corporateProfiles": []
+    },
+    {
+      "name": "Swedbank AB (publ)",
+      "bankId": "08313",
+      "url": "https://www.swedbank.se",
+      "corporateProfiles": [],
+      "privateProfile": {
+        "activeProfileLanguage": "sv",
+        "numberOfUnreadDocuments": 9,
+        "targetType": "PRIVATE",
+        "customerName": "Esbjorn Fakename",
+        "customerNumber": "******",
+        "id": "FakeId",
+        "bankId": "08313",
+        "bankName": "Swedbank AB (publ)",
+        "url": "https://www.swedbank.se",
+        "customerInternational": false,
+        "youthProfile": false,
+        "links": {
+          "edit": {
+            "method": "PUT",
+            "uri": "/v5/profile/subscription/FakeId"
+          },
+          "next": {
+            "method": "POST",
+            "uri": "/v5/profile/FakeId"
+          }
+        }
+      }
+    }
+  ],
+  "hasSwedbankProfile": true,
+  "hasSavingbankProfile": true,
+  "userId": "**HASHED:sp**"
+}
