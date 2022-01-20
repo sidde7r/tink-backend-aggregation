@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,
-            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_FUTURE_DATE,
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })

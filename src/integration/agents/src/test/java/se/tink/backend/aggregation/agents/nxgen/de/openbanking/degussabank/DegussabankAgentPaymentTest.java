@@ -74,11 +74,6 @@ public class DegussabankAgentPaymentTest {
     }
 
     @Test
-    public void testSepaInstantPayments() throws Exception {
-        builder.build().testTinkLinkPayment(createSepaInstantPayment().build());
-    }
-
-    @Test
     public void testRecurringPayments() throws Exception {
         builder.build().testTinkLinkPayment(createRecurringPayment().build());
     }
@@ -101,15 +96,6 @@ public class DegussabankAgentPaymentTest {
 
     private Payment.Builder createSepaPayment() {
         return createRealDomesticPayment().withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
-    }
-
-    private Payment.Builder createSepaInstantPayment() {
-        RemittanceInformation remittanceInformation = new RemittanceInformation();
-        setUnstructuredRemittanceInformation(remittanceInformation);
-
-        return createRealDomesticPayment()
-                .withRemittanceInformation(remittanceInformation)
-                .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER);
     }
 
     private Payment.Builder createRealDomesticPayment() {
