@@ -1,0 +1,13 @@
+{
+  "errorManagement": {
+    "errorCode": "PSD2_00.188.A0005",
+    "errorDescription": "ASPSP provided error. Reference to the TPP-messages"
+  },
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "GENERIC_ERROR",
+      "text": "Unknown Payment Identifier"
+    }
+  ]
+}

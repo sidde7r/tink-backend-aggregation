@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bper;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.CreditorDebtorArgumentEnum;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -23,13 +25,12 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class BperAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
-    private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
-            new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
-    private final ArgumentManager<BperAgentPaymentTest.Arg> creditorDebtorManager =
-            new ArgumentManager<>(BperAgentPaymentTest.Arg.values());
+    private final ArgumentManager<CreditorDebtorArgumentEnum> creditorDebtorManager =
+            new ArgumentManager<>(CreditorDebtorArgumentEnum.values());
 
     @Before
     public void setup() throws Exception {
+        creditorDebtorManager.before();
         builder =
                 new AgentIntegrationTest.Builder("it", "it-bper-oauth2")
                         .setFinancialInstitutionId("bper")
@@ -41,15 +42,11 @@ public class BperAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        manager.before();
-        creditorDebtorManager.before();
-
         builder.build().testTinkLinkPayment(createRealDomesticPayment().build());
     }
 
     @Test
     public void testRecurringPayments() throws Exception {
-        manager.before();
         creditorDebtorManager.before();
 
         builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
@@ -71,15 +68,13 @@ public class BperAgentPaymentTest {
     private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         AccountIdentifier creditorAccountIdentifier =
-                new IbanIdentifier(
-                        creditorDebtorManager.get(BperAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+                new IbanIdentifier(creditorDebtorManager.get(CreditorDebtorArgumentEnum.CREDITOR));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+        remittanceInformation.setValue("Tink testing " + LocalDateTime.now());
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-        remittanceInformation.setValue("Bper");
 
         AccountIdentifier debtorAccountIdentifier =
-                new IbanIdentifier(
-                        creditorDebtorManager.get(BperAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+                new IbanIdentifier(creditorDebtorManager.get(CreditorDebtorArgumentEnum.DEBTOR));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
@@ -94,16 +89,6 @@ public class BperAgentPaymentTest {
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
                 .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
-    }
-
-    private enum Arg implements ArgumentManager.ArgumentManagerEnum {
-        DEBTOR_ACCOUNT, // Domestic IBAN account number
-        CREDITOR_ACCOUNT; // Domestic IBAN account number
-
-        @Override
-        public boolean isOptional() {
-            return false;
-        }
     }
 
     @AfterClass

@@ -1,0 +1,13 @@
+{
+  "errorManagement": {
+    "errorCode": "PSD2_01.000.A0038",
+    "errorDescription": "Invalid response received by the ASPSP system"
+  },
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "GENERIC_ERROR",
+      "text": "Generic error"
+    }
+  ]
+}
