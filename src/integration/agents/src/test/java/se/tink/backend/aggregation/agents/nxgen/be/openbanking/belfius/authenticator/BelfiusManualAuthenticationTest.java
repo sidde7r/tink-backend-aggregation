@@ -17,10 +17,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants;
@@ -123,8 +124,8 @@ public class BelfiusManualAuthenticationTest {
 
         // expect
         assertThatThrownBy(() -> authenticationController.authenticate(credentials))
-                .isInstanceOf(LoginException.class)
-                .hasFieldOrPropertyWithValue("error", LoginError.NOT_SUPPORTED);
+                .isInstanceOf(AuthorizationException.class)
+                .hasFieldOrPropertyWithValue("error", AuthorizationError.UNAUTHORIZED);
     }
 
     @SuppressWarnings("unused")
