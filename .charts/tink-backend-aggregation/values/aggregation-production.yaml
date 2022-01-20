@@ -3,7 +3,7 @@ podCpuLimit: "2000m"
 podMemoryRequest: "6Gi"
 podMemoryLimit: "6Gi"
 heapSize: "4G"
-replicas: 40
+replicas: 75
 maxReplicas: 150
 targetAverageCpuValue: "800m"
 initialDelaySeconds: "300"
