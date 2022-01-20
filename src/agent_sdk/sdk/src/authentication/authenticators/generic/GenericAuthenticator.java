@@ -1,14 +1,12 @@
 package se.tink.agent.sdk.authentication.authenticators.generic;
 
-import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.consent.ConsentStatus;
-import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
-import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 
 public interface GenericAuthenticator {
     // "full authentication"
-    InteractiveExecutionFlow<Void, ConsentLifetime> issueNewConsent();
+    NewConsentFlow issueNewConsent();
 
     // "is logged in"
-    NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsent();
+    ExistingConsentFlow useExistingConsent();
 }

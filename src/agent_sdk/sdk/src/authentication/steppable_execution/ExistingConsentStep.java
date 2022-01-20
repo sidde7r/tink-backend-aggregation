@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.authentication.base_steps;
+package se.tink.agent.sdk.authentication.steppable_execution;
 
 import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractiveStep;

@@ -10,11 +10,9 @@ import se.tink.agent.sdk.authentication.authenticators.swedish_mobile_bankid.ste
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppInitStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppPollStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
-import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.authentication.features.AuthenticateOauth2DecoupledSwedishMobileBankId;
-import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
-import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.utils.Sleeper;
 
 public class Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess
@@ -35,9 +33,10 @@ public class Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess
     }
 
     @Override
-    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
+    public NewConsentFlow getNewConsentFlow(
             Oauth2DecoupledSwedishMobileBankIdAuthenticator authenticator) {
-        return InteractiveExecutionFlow.<Void, ConsentLifetime>startStep(
+        return NewConsentFlow.builder()
+                .startStep(
                         new ThirdPartyAppInitStep(
                                 authenticator, SwedishMobileBankIdOpenAppStep.class))
                 .addStep(
@@ -54,9 +53,10 @@ public class Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess
     }
 
     @Override
-    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
+    public ExistingConsentFlow getUseExistingConsentFlow(
             Oauth2DecoupledSwedishMobileBankIdAuthenticator authenticator) {
-        return NonInteractiveExecutionFlow.startStep(
+        return ExistingConsentFlow.builder()
+                .startStep(
                         new Oauth2ValidateOrRefreshAccessTokenStep(
                                 authenticator, VerifyBankConnectionStep.class))
                 .addStep(new VerifyBankConnectionStep(authenticator))

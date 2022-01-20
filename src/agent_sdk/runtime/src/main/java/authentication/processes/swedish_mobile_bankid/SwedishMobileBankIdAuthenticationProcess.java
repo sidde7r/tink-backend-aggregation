@@ -9,11 +9,9 @@ import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.Thir
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppPollStep;
 import se.tink.agent.sdk.authentication.common_steps.GetConsentLifetimeStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
-import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.authentication.features.AuthenticateSwedishMobileBankId;
-import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
-import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.utils.Sleeper;
 
 public class SwedishMobileBankIdAuthenticationProcess
@@ -34,9 +32,9 @@ public class SwedishMobileBankIdAuthenticationProcess
     }
 
     @Override
-    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
-            SwedishMobileBankIdAuthenticator authenticator) {
-        return InteractiveExecutionFlow.<Void, ConsentLifetime>startStep(
+    public NewConsentFlow getNewConsentFlow(SwedishMobileBankIdAuthenticator authenticator) {
+        return NewConsentFlow.builder()
+                .startStep(
                         new ThirdPartyAppInitStep(
                                 authenticator, SwedishMobileBankIdOpenAppStep.class))
                 .addStep(
@@ -53,9 +51,10 @@ public class SwedishMobileBankIdAuthenticationProcess
     }
 
     @Override
-    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
+    public ExistingConsentFlow getUseExistingConsentFlow(
             SwedishMobileBankIdAuthenticator authenticator) {
-        return NonInteractiveExecutionFlow.startStep(new VerifyBankConnectionStep(authenticator))
+        return ExistingConsentFlow.builder()
+                .startStep(new VerifyBankConnectionStep(authenticator))
                 .build();
     }
 }

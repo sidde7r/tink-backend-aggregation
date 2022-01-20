@@ -22,8 +22,7 @@ import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.base_step.StepResponse;
-import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
-import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
+import se.tink.agent.sdk.steppable_execution.execution_flow.ExecutionFlow;
 
 public class RuntimeAuthenticator {
     private final AgentInstance agentInstance;
@@ -74,7 +73,7 @@ public class RuntimeAuthenticator {
             @Nullable String stepId, StepRequest<Void> request)
             throws AuthenticationStepNotFoundException {
 
-        InteractiveExecutionFlow<Void, ConsentLifetime> newConsentFlow =
+        ExecutionFlow<Void, ConsentLifetime> newConsentFlow =
                 this.authenticationFlows.getNewConsentFlow();
 
         BaseStep<Void, ConsentLifetime> newConsentStep =
@@ -89,7 +88,7 @@ public class RuntimeAuthenticator {
             @Nullable String stepId, StepRequest<Void> request)
             throws AuthenticationStepNotFoundException {
 
-        NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsentFlow =
+        ExecutionFlow<Void, ConsentStatus> useExistingConsentFlow =
                 this.authenticationFlows.getUseExistingConsentFlow();
 
         BaseStep<Void, ConsentStatus> useExistingConsentStep =
@@ -105,34 +104,32 @@ public class RuntimeAuthenticator {
                 .tryInstantiateAuthenticator(this.agentInstance)
                 .map(
                         agentAuthenticator -> {
-                            InteractiveExecutionFlow<Void, ConsentLifetime> newConsentFlow =
+                            ExecutionFlow<Void, ConsentLifetime> newConsentFlow =
                                     authProcess.getNewConsentFlow(agentAuthenticator);
 
-                            NonInteractiveExecutionFlow<Void, ConsentStatus>
-                                    useExistingConsentFlow =
-                                            authProcess.getUseExistingConsentFlow(
-                                                    agentAuthenticator);
+                            ExecutionFlow<Void, ConsentStatus> useExistingConsentFlow =
+                                    authProcess.getUseExistingConsentFlow(agentAuthenticator);
 
                             return new AuthenticationFlows(newConsentFlow, useExistingConsentFlow);
                         });
     }
 
     private static class AuthenticationFlows {
-        private final InteractiveExecutionFlow<Void, ConsentLifetime> newConsentFlow;
-        private final NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsentFlow;
+        private final ExecutionFlow<Void, ConsentLifetime> newConsentFlow;
+        private final ExecutionFlow<Void, ConsentStatus> useExistingConsentFlow;
 
         public AuthenticationFlows(
-                InteractiveExecutionFlow<Void, ConsentLifetime> newConsentFlow,
-                NonInteractiveExecutionFlow<Void, ConsentStatus> useExistingConsentFlow) {
+                ExecutionFlow<Void, ConsentLifetime> newConsentFlow,
+                ExecutionFlow<Void, ConsentStatus> useExistingConsentFlow) {
             this.newConsentFlow = newConsentFlow;
             this.useExistingConsentFlow = useExistingConsentFlow;
         }
 
-        public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow() {
+        public ExecutionFlow<Void, ConsentLifetime> getNewConsentFlow() {
             return newConsentFlow;
         }
 
-        public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow() {
+        public ExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow() {
             return useExistingConsentFlow;
         }
     }

@@ -1,7 +1,7 @@
 package se.tink.agent.sdk.authentication.common_steps;
 
-import se.tink.agent.sdk.authentication.base_steps.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.consent.ConsentStatus;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequestBase;
 import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractionStepResponse;
 

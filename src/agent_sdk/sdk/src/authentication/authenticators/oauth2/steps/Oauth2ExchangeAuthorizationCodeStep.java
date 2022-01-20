@@ -6,8 +6,8 @@ import se.tink.agent.sdk.authentication.authenticators.oauth2.ExchangeAuthorizat
 import se.tink.agent.sdk.authentication.authenticators.oauth2.HandleCallbackDataError;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Constants;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Utils;
-import se.tink.agent.sdk.authentication.base_steps.NewConsentStep;
 import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 import se.tink.agent.sdk.user_interaction.UserResponseData;

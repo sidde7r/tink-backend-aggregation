@@ -8,12 +8,10 @@ import se.tink.agent.sdk.authentication.authenticators.oauth2.steps.Oauth2Exchan
 import se.tink.agent.sdk.authentication.authenticators.oauth2.steps.Oauth2OpenAuthorizationAppStep;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.steps.Oauth2ValidateOrRefreshAccessTokenStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
-import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.authentication.features.AuthenticateOauth2;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
-import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
-import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
 
 public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2Authenticator> {
     private final MultifactorAuthenticationState multifactorAuthenticationState;
@@ -31,9 +29,9 @@ public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2
     }
 
     @Override
-    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
-            Oauth2Authenticator authenticator) {
-        return InteractiveExecutionFlow.<Void, ConsentLifetime>startStep(
+    public NewConsentFlow getNewConsentFlow(Oauth2Authenticator authenticator) {
+        return NewConsentFlow.builder()
+                .startStep(
                         new Oauth2OpenAuthorizationAppStep(
                                 this.multifactorAuthenticationState,
                                 authenticator,
@@ -43,9 +41,9 @@ public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2
     }
 
     @Override
-    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
-            Oauth2Authenticator authenticator) {
-        return NonInteractiveExecutionFlow.startStep(
+    public ExistingConsentFlow getUseExistingConsentFlow(Oauth2Authenticator authenticator) {
+        return ExistingConsentFlow.builder()
+                .startStep(
                         new Oauth2ValidateOrRefreshAccessTokenStep(
                                 authenticator, VerifyBankConnectionStep.class))
                 .addStep(new VerifyBankConnectionStep(authenticator))

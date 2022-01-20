@@ -9,7 +9,7 @@ java_library_with_sources(
     intdeps = [
         "//src/agent_sdk/sdk/src/steppable_execution:steps",
         "//src/agent_sdk/sdk/src/authentication/consent",
-        "//src/agent_sdk/sdk/src/authentication/base_steps",
+        "//src/agent_sdk/sdk/src/authentication/steppable_execution",
         "//src/agent_sdk/sdk/src/user_interaction",
         "//src/agent_sdk/sdk/src/models/field",
     ],

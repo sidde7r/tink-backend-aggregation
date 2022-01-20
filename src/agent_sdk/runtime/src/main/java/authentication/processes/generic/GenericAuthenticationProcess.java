@@ -4,11 +4,9 @@ import java.util.Optional;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.generic.GenericAuthenticator;
-import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.authentication.features.AuthenticateGeneric;
-import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
-import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 
 public class GenericAuthenticationProcess implements AuthenticationProcess<GenericAuthenticator> {
     @Override
@@ -19,14 +17,12 @@ public class GenericAuthenticationProcess implements AuthenticationProcess<Gener
     }
 
     @Override
-    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
-            GenericAuthenticator authenticator) {
+    public NewConsentFlow getNewConsentFlow(GenericAuthenticator authenticator) {
         return authenticator.issueNewConsent();
     }
 
     @Override
-    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
-            GenericAuthenticator authenticator) {
+    public ExistingConsentFlow getUseExistingConsentFlow(GenericAuthenticator authenticator) {
         return authenticator.useExistingConsent();
     }
 }

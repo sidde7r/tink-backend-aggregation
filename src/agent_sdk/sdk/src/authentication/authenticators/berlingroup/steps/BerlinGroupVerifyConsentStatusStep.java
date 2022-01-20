@@ -4,8 +4,8 @@ import java.util.Optional;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAuthenticatorConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConsentStatus;
-import se.tink.agent.sdk.authentication.base_steps.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.consent.ConsentStatus;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequestBase;
 import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractionStepResponse;
 

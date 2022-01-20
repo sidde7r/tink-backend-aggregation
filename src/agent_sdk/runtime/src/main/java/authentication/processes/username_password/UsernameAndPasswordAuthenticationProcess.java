@@ -6,12 +6,10 @@ import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.username_password.UsernameAndPasswordAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.username_password.steps.UsernameAndPasswordStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
-import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.authentication.features.AuthenticateUsernameAndPassword;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
-import se.tink.agent.sdk.steppable_execution.execution_flow.InteractiveExecutionFlow;
-import se.tink.agent.sdk.steppable_execution.execution_flow.NonInteractiveExecutionFlow;
 
 public class UsernameAndPasswordAuthenticationProcess
         implements AuthenticationProcess<UsernameAndPasswordAuthenticator> {
@@ -31,17 +29,17 @@ public class UsernameAndPasswordAuthenticationProcess
     }
 
     @Override
-    public InteractiveExecutionFlow<Void, ConsentLifetime> getNewConsentFlow(
-            UsernameAndPasswordAuthenticator authenticator) {
-        return InteractiveExecutionFlow.startStep(
-                        new UsernameAndPasswordStep(this.staticBankCredentials, authenticator))
+    public NewConsentFlow getNewConsentFlow(UsernameAndPasswordAuthenticator authenticator) {
+        return NewConsentFlow.builder()
+                .startStep(new UsernameAndPasswordStep(this.staticBankCredentials, authenticator))
                 .build();
     }
 
     @Override
-    public NonInteractiveExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow(
+    public ExistingConsentFlow getUseExistingConsentFlow(
             UsernameAndPasswordAuthenticator authenticator) {
-        return NonInteractiveExecutionFlow.startStep(new VerifyBankConnectionStep(authenticator))
+        return ExistingConsentFlow.builder()
+                .startStep(new VerifyBankConnectionStep(authenticator))
                 .build();
     }
 }
