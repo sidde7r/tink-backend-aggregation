@@ -59,14 +59,14 @@ public class PasswordVirtualKeyboardOcr {
         int horizontalVal = imageParameters.getFirstRowHorizontalInit();
         int verticalVal = imageParameters.getFirstRowVerticalInit();
         CRC32 checksum = new CRC32();
-        imageN =
-                image.getSubimage(
-                        horizontalVal,
-                        verticalVal,
-                        imageParameters.getImgWidth(),
-                        imageParameters.getImgHeight());
-        byte[] arrayN = new byte[imageN.getWidth() * imageN.getHeight()];
         for (int k = 0; k < 10; k++) {
+            imageN =
+                    image.getSubimage(
+                            horizontalVal,
+                            verticalVal,
+                            imageParameters.getImgWidth(),
+                            imageParameters.getImgHeight());
+            byte[] arrayN = new byte[imageN.getWidth() * imageN.getHeight()];
             proccessImage(arrayN, imageN);
             checksum.reset();
             checksum.update(arrayN);

@@ -4,6 +4,7 @@ junit_test(
     name = "cajasur",
     srcs = glob(
         ["**/*.java"],
+        exclude = ["CajasurAgentTest.java"]
     ),
     data = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/webpage/cajasur/resources",
@@ -39,5 +40,34 @@ junit_test(
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
+    ],
+)
+
+junit_test(
+    name = "bbva_manual",
+    srcs = glob(["CajasurAgentTest.java"]),
+    data = [
+        "//data:agent_unit_tests",
+        "//data:aggregation_test",
+        "//data:provider_configurations",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/webpage/cajasur",
+    ],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/webpage/cajasur",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//third_party:io_vavr",
+        "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

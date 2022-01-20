@@ -19,7 +19,7 @@ public class PasswordVirtualKeyboardImageFetchRequest
         implements ConnectivityRequest<BufferedImage> {
 
     private static final String URL_PATH =
-            "/NASApp/BesaideNet2/Gestor?PRESTACION=login&FUNCION=login&ACCION=directoportalImage&idioma=ES";
+            "/NASApp/BesaideNet2/Gestor?PRESTACION=login&FUNCION=login&ACCION=directoportalImage&idioma=ES&i=11";
 
     private final String authUrlDomain;
 
