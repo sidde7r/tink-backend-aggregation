@@ -77,6 +77,7 @@ import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
@@ -379,6 +380,8 @@ public final class AgentWorkerOperationFactoryTest {
             bind(RefreshEventProducer.class).toInstance(mock(RefreshEventProducer.class));
             bind(ManagedTppSecretsServiceClient.class)
                     .toInstance(mock(ManagedTppSecretsServiceClient.class));
+            bind(ManagedTppSecretsServiceInternalClient.class)
+                    .toInstance(mock(ManagedTppSecretsServiceInternalClient.class));
             bind(InterProcessSemaphoreMutexFactory.class)
                     .toInstance(mock(InterProcessSemaphoreMutexFactory.class));
             bind(AccountInformationServiceEventsProducer.class)

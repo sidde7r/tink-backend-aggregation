@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
 import se.tink.io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import se.tink.io.dropwizard.configuration.SubstitutingSourceProvider;
 import se.tink.libraries.draining.DrainModeTask;
@@ -80,6 +81,9 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
 
         environment.lifecycle().manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
+        environment
+                .lifecycle()
+                .manage(injector.getInstance(ManagedTppSecretsServiceInternalClient.class));
         environment.lifecycle().manage(injector.getInstance(UnleashClient.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
         environment.lifecycle().manage(injector.getInstance(QueueConsumerService.class));

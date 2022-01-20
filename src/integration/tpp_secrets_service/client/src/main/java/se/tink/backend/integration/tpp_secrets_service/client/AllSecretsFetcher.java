@@ -2,20 +2,17 @@ package se.tink.backend.integration.tpp_secrets_service.client;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
+import se.tink.backend.integration.tpp_secrets_service.client.entities.utils.EntityUtils;
 import se.tink.backend.secretservice.grpc.GetAllSecretsResponse;
 import se.tink.backend.secretservice.grpc.GetLicenseModelRequest;
 import se.tink.backend.secretservice.grpc.GetLicenseModelResponse;
 import se.tink.backend.secretservice.grpc.GetSecretsRequest;
 import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;
-import se.tink.backend.secretservice.grpc.TppSecret;
 
 class AllSecretsFetcher {
 
@@ -56,23 +53,7 @@ class AllSecretsFetcher {
 
         GetAllSecretsResponse response =
                 internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
-
-        List<TppSecret> allSecretsList = new ArrayList<>();
-        allSecretsList.addAll(response.getEncryptedSecretsList());
-        allSecretsList.addAll(response.getSecretsList());
-
-        return Optional.of(
-                new SecretsEntityCore.Builder()
-                        .setSecrets(
-                                allSecretsList.stream()
-                                        .collect(
-                                                Collectors.toMap(
-                                                        TppSecret::getKey, TppSecret::getValue)))
-                        .setRedirectUrls(response.getRedirectUrlsList())
-                        .setScopes(response.getScopesList())
-                        .setQwac(response.getCertificates().getQwac())
-                        .setQsealc(response.getCertificates().getQsealc())
-                        .build());
+        return Optional.of(EntityUtils.createSecretsEntityCore(response));
     }
 
     public Optional<String> getLicenseModel(String appId, String clusterId, String providerId) {

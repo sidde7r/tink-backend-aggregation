@@ -32,7 +32,9 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration.Build
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
+import se.tink.backend.integration.tpp_secrets_service.client.entities.utils.EntityUtils;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
+import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 
@@ -45,6 +47,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             "Trying to read information from k8s for an OB agent: {}. Consider uploading the configuration to ESS instead.";
 
     private final TppSecretsServiceClient tppSecretsServiceClient;
+    private final SecretsServiceInternalClient secretsServiceInternalClient;
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
     private final String financialInstitutionId;
@@ -77,10 +80,12 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         tppSecretsServiceEnabled = false;
         integrationsConfiguration = null;
         tppSecretsServiceClient = null;
+        secretsServiceInternalClient = null;
     }
 
     public AgentConfigurationController(
             TppSecretsServiceClient tppSecretsServiceClient,
+            SecretsServiceInternalClient secretsServiceInternalClient,
             IntegrationsConfiguration integrationsConfiguration,
             Provider provider,
             String appId,
@@ -112,6 +117,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
 
         this.tppSecretsServiceEnabled = tppSecretsServiceClient.isEnabled();
         this.tppSecretsServiceClient = tppSecretsServiceClient;
+        this.secretsServiceInternalClient = secretsServiceInternalClient;
         if (!tppSecretsServiceEnabled) {
             Preconditions.checkNotNull(
                     integrationsConfiguration,
@@ -157,8 +163,18 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private void initSecrets() {
         if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
-                Optional<SecretsEntityCore> allSecretsOpt =
-                        tppSecretsServiceClient.getAllSecrets(appId, clusterId, certId, providerId);
+                Optional<SecretsEntityCore> allSecretsOpt;
+                if (!tppSecretsServiceClient.isUseSecretsServiceInternalClient()) {
+                    allSecretsOpt =
+                            tppSecretsServiceClient.getAllSecrets(
+                                    appId, clusterId, certId, providerId);
+                } else {
+                    allSecretsOpt =
+                            Optional.of(
+                                    EntityUtils.createSecretsEntityCore(
+                                            secretsServiceInternalClient.getAllSecrets(
+                                                    clusterId, appId, certId, providerId)));
+                }
 
                 // TODO: Remove if once Access team confirms there are no null appIds around.
                 if (!allSecretsOpt.isPresent()) {

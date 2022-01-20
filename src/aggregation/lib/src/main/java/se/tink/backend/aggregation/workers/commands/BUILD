@@ -105,6 +105,7 @@ java_library(
         "//src/libraries/metrics:timers",
         "//src/libraries/pair",
         "//src/libraries/uuid",
+        "//src/tink_backend_libs:secrets_service_client",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_google_guava_guava",

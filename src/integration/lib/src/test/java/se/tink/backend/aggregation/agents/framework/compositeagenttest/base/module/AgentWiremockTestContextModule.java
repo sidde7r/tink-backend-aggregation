@@ -26,7 +26,9 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.raw_data_events.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceInternalClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -167,14 +169,19 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
 
         final ManagedTppSecretsServiceClient tppSecretsServiceClient =
                 new TppSecretsServiceClientImpl(configuration.getTppSecretsServiceConfiguration());
+        final ManagedTppSecretsServiceInternalClient tppSecretsServiceInternalClient =
+                new TppSecretsServiceInternalClientImpl(
+                        configuration.getTppSecretsServiceConfiguration());
         try {
             tppSecretsServiceClient.start();
+            tppSecretsServiceInternalClient.start();
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
 
         return new AgentConfigurationController(
                 tppSecretsServiceClient,
+                tppSecretsServiceInternalClient,
                 configuration.getIntegrations(),
                 provider,
                 DEFAULT_APP_ID,

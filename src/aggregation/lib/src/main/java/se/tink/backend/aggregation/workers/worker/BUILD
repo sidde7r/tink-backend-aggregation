@@ -49,6 +49,7 @@ java_library(
         "//src/libraries/cache",
         "//src/libraries/concurrency",
         "//src/libraries/executor_utils",
+        "//src/tink_backend_libs:secrets_service_client",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",

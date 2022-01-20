@@ -33,6 +33,7 @@ public final class TppSecretsServiceClientImpl extends ManagedSafeStop
     private final TppSecretsServiceConfiguration tppSecretsServiceConfiguration;
     private ManagedChannel channel;
     private final boolean enabled;
+    private final boolean useSecretsServiceInternalClient;
     private SslContext sslContext;
     private final boolean enabledRetryPolicy;
 
@@ -44,6 +45,8 @@ public final class TppSecretsServiceClientImpl extends ManagedSafeStop
 
         this.tppSecretsServiceConfiguration = tppSecretsServiceConfiguration;
         this.enabled = tppSecretsServiceConfiguration.isEnabled();
+        this.useSecretsServiceInternalClient =
+                tppSecretsServiceConfiguration.isUseSecretsServiceInternalClient();
         if (this.enabled) {
             sslContext = buildSslContext();
         }
@@ -121,6 +124,11 @@ public final class TppSecretsServiceClientImpl extends ManagedSafeStop
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public boolean isUseSecretsServiceInternalClient() {
+        return useSecretsServiceInternalClient;
     }
 
     private SslContext buildSslContext() {
