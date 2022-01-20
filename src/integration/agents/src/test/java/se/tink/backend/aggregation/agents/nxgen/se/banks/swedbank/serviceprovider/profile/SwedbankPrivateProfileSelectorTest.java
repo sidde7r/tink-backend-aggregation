@@ -14,11 +14,11 @@ public class SwedbankPrivateProfileSelectorTest {
     SwedbankProfileSelector swedbankProfileSelector = new SwedbankPrivateProfileSelector();
 
     @Test
-    public void shouldTakePortalProfileAsPrivateProfile() {
+    public void shouldNotTakePortalProfileAsPrivateProfile() {
         List<Pair<BankEntity, ProfileEntity>> result =
                 swedbankProfileSelector.selectBankProfiles(getProfiles());
 
-        Assert.assertEquals(2, result.size());
+        Assert.assertEquals(1, result.size());
     }
 
     private List<BankEntity> getProfiles() {
