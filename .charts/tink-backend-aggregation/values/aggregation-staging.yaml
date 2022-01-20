@@ -106,7 +106,7 @@ tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
   enabledRetryPolicy: true
-  useSecretsServiceInternalClient: true
+  useSecretsServiceInternalClient: false
 
 debugLogFrequencyPercent: 100
 debugLogHarFrequencyPercent: 100
