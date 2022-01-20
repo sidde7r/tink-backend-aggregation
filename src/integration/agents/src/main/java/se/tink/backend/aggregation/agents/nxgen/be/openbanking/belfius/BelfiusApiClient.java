@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
@@ -84,7 +84,7 @@ public final class BelfiusApiClient {
             return Arrays.asList(consentResponses);
         } catch (HttpResponseException e) {
             if (isAccountNotSupportedError(e)) {
-                throw LoginError.NOT_SUPPORTED.exception(
+                throw AuthorizationError.UNAUTHORIZED.exception(
                         "This account can't be consulted via electronic channel");
             }
             throw e;

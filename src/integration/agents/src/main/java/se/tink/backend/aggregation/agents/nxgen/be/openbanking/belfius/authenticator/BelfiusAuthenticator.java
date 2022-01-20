@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormValues;
@@ -52,7 +52,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
                             + Form.builder().put(QueryKeys.STATE, state).build());
         } catch (HttpResponseException ex) {
             if (ErrorDiscover.isChannelNotPermitted(ex)) {
-                throw LoginError.NOT_SUPPORTED.exception(
+                throw AuthorizationError.UNAUTHORIZED.exception(
                         "This account can't be consulted via electronic channel");
             }
             throw ex;
