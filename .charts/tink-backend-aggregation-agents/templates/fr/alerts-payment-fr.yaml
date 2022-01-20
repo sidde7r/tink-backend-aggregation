@@ -18,7 +18,7 @@ spec:
       priority: P1
       who: connectivity-penguins
     annotations:
-      description: Failed outcome is when rejected by bank, agent threw generic payment exception or any unhandled exception, etc
+      description: Failed outcome is when agent threw generic payment exception or any unhandled exception, etc
       summary: |
         Error rate: <{ $value | humanizePercentage }>
         Class: <{ $labels.className }>
