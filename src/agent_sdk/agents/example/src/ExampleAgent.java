@@ -1,6 +1,5 @@
 package se.tink.agent.agents.example;
 
-import java.util.Optional;
 import javax.inject.Inject;
 import se.tink.agent.agents.example.authentication.ExampleOauth2Authenticator;
 import se.tink.agent.agents.example.fetcher.ExampleCheckingAccountsFetcher;
@@ -8,10 +7,8 @@ import se.tink.agent.agents.example.fetcher.ExampleCheckingTransactionsFetcher;
 import se.tink.agent.agents.example.fetcher.ExampleIdentityDataFetcher;
 import se.tink.agent.agents.example.fetcher.ExampleSavingsAccountsFetcher;
 import se.tink.agent.agents.example.fetcher.ExampleSavingsTransactionsFetcher;
-import se.tink.agent.agents.example.payments.ExampleBankTransferExecutor;
-import se.tink.agent.agents.example.payments.ExampleCreateBeneficiaryExecutor;
-import se.tink.agent.agents.example.payments.ExampleGPIPaymentExecutor;
-import se.tink.agent.agents.example.payments.ExamplePaymentExecutor;
+import se.tink.agent.agents.example.payments.ExampleBulkPaymentInitiator;
+import se.tink.agent.agents.example.payments.ExampleSinglePaymentInitiator;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Authenticator;
 import se.tink.agent.sdk.authentication.features.AuthenticateOauth2;
 import se.tink.agent.sdk.environment.Operation;
@@ -25,16 +22,16 @@ import se.tink.agent.sdk.fetching.features.FetchSavingsAccounts;
 import se.tink.agent.sdk.fetching.features.FetchSavingsTransactions;
 import se.tink.agent.sdk.fetching.identity_data.IdentityDataFetcher;
 import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.payments.CreateBeneficiaryControllerable;
-import se.tink.backend.aggregation.agents.payments.PaymentControllerable;
-import se.tink.backend.aggregation.agents.payments.TransferExecutorNxgen;
-import se.tink.backend.aggregation.agents.payments.TypedPaymentControllerable;
-import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.agent.sdk.payments.beneficiary.BeneficiariesFetcher;
+import se.tink.agent.sdk.payments.beneficiary.generic.GenericBeneficiaryRegistrator;
+import se.tink.agent.sdk.payments.bulk.generic.GenericBulkPaymentInitiator;
+import se.tink.agent.sdk.payments.features.beneficiary.FetchBeneficiaries;
+import se.tink.agent.sdk.payments.features.beneficiary.RegisterBeneficiaryGeneric;
+import se.tink.agent.sdk.payments.features.bulk.InitiateBulkPaymentGeneric;
+import se.tink.agent.sdk.payments.features.global_signing_basket.DeleteUnsignedPayments;
+import se.tink.agent.sdk.payments.features.single.InitiateSinglePaymentGeneric;
+import se.tink.agent.sdk.payments.global_signing_basket.UnsignedPaymentsDeleter;
+import se.tink.agent.sdk.payments.single.generic.GenericSinglePaymentInitiator;
 
 public class ExampleAgent
         implements AuthenticateOauth2,
@@ -43,10 +40,11 @@ public class ExampleAgent
                 FetchSavingsAccounts,
                 FetchSavingsTransactions,
                 FetchIdentityData,
-                CreateBeneficiaryControllerable,
-                PaymentControllerable,
-                TransferExecutorNxgen,
-                TypedPaymentControllerable {
+                InitiateBulkPaymentGeneric,
+                InitiateSinglePaymentGeneric,
+                RegisterBeneficiaryGeneric,
+                FetchBeneficiaries,
+                DeleteUnsignedPayments {
 
     private final Utilities utilities;
     private final Operation operation;
@@ -88,27 +86,27 @@ public class ExampleAgent
     }
 
     @Override
-    public Optional<CreateBeneficiaryController> getCreateBeneficiaryController() {
-        return Optional.of(new CreateBeneficiaryController(new ExampleCreateBeneficiaryExecutor()));
+    public GenericBulkPaymentInitiator bulkPaymentInitiator() {
+        return new ExampleBulkPaymentInitiator();
     }
 
     @Override
-    public Optional<PaymentController> getPaymentController() {
-        ExampleGPIPaymentExecutor examplePaymentExecutor = new ExampleGPIPaymentExecutor();
-        return Optional.of(new PaymentController(examplePaymentExecutor, examplePaymentExecutor));
+    public GenericSinglePaymentInitiator singlePaymentInitiator() {
+        return new ExampleSinglePaymentInitiator();
     }
 
     @Override
-    public Optional<PaymentController> getPaymentController(Payment payment)
-            throws PaymentRejectedException {
-        ExampleGPIPaymentExecutor examplePaymentExecutor = new ExampleGPIPaymentExecutor();
-        return Optional.of(new PaymentController(examplePaymentExecutor, examplePaymentExecutor));
+    public BeneficiariesFetcher beneficiariesFetcher() {
+        return null;
     }
 
     @Override
-    public Optional<String> execute(Transfer transfer) {
-        return new TransferController(
-                        new ExamplePaymentExecutor(), new ExampleBankTransferExecutor())
-                .execute(transfer);
+    public GenericBeneficiaryRegistrator beneficiaryRegistrator() {
+        return null;
+    }
+
+    @Override
+    public UnsignedPaymentsDeleter unsignedPaymentsDeleter() {
+        return null;
     }
 }

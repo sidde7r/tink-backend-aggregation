@@ -1,12 +1,17 @@
-# Note: Change this to `java_library_with_sources` once that target uses `java_library_with_sources`.
-alias(
-    name = "payments",
-    actual = "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/payment",
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
-)
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-alias(
-    name = "transfers",
-    actual = "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/transfer",
+java_library_with_sources(
+    name = "payments",
+    # TODO: use individual BUILD files for each package once we're happy with the layout.
+    srcs = glob(["**/*.java"]),
+    extdeps = [
+        "@aggregation//:com_google_guava_guava",
+    ],
+    intdeps = [
+        "//src/agent_sdk/sdk/src/models/payments",
+        "//src/agent_sdk/sdk/src/storage",
+        "//src/agent_sdk/sdk/src/steppable_execution",
+        "@tink_backend//src/libraries/account_identifier",
+    ],
     visibility = ["//src/agent_sdk/sdk:__subpackages__"],
 )
