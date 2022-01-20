@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -65,16 +64,14 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final CmcicRepository cmcicRepository;
 
-    protected CmcicAgent(
-            AgentComponentProvider componentProvider,
-            QsealcSigner qsealcSigner,
-            CmcicAgentConfig agentConfig) {
+    protected CmcicAgent(AgentComponentProvider componentProvider, CmcicAgentConfig agentConfig) {
         super(componentProvider);
 
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
 
-        final CmcicSignatureProvider signatureProvider = new CmcicSignatureProvider(qsealcSigner);
+        final CmcicSignatureProvider signatureProvider =
+                new CmcicSignatureProvider(componentProvider.getQsealcSigner());
         final CmcicDigestProvider digestProvider = new CmcicDigestProvider();
         final CmcicCodeChallengeProvider codeChallengeProvider = new CmcicCodeChallengeProvider();
 

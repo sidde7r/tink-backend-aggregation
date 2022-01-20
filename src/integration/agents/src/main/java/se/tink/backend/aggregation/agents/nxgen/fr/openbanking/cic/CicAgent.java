@@ -12,14 +12,10 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
-import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
     SAVINGS_ACCOUNTS,
@@ -40,10 +36,9 @@ public final class CicAgent extends CmcicAgent {
     private static final String PRIMARY_LANGUAGE = "fr";
 
     @Inject
-    public CicAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+    public CicAgent(AgentComponentProvider componentProvider) {
         super(
                 componentProvider,
-                qsealcSigner,
                 new CmcicAgentConfig(
                         "https://oauth2-apiii.e-i.com",
                         "/cic/",

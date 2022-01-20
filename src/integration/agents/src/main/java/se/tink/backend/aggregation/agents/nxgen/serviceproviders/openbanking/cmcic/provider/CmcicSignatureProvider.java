@@ -3,7 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import java.net.URI;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
 @RequiredArgsConstructor
@@ -51,7 +52,9 @@ public class CmcicSignatureProvider {
     }
 
     private String signAndEncode(String signatureEntity) {
-        return qsealcSigner.getSignatureBase64(signatureEntity.getBytes());
+        return qsealcSigner
+                .sign(QsealcAlgorithm.RSA_SHA256, signatureEntity.getBytes())
+                .getBase64Encoded();
     }
 
     private static String getMandatoryHeadersSignature(

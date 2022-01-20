@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentCon
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.cic.integration.module.CicWireMockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -51,7 +50,6 @@ public class CicWireMockTest {
                         .withConfigFile(configuration)
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
-                        .withAgentTestModule(new CicWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .enableHttpDebugTrace()
@@ -86,7 +84,6 @@ public class CicWireMockTest {
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentTestModule(new CicWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .enableHttpDebugTrace()
@@ -114,7 +111,6 @@ public class CicWireMockTest {
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentTestModule(new CicWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .enableHttpDebugTrace()
@@ -142,7 +138,6 @@ public class CicWireMockTest {
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentTestModule(new CicWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .enableHttpDebugTrace()
@@ -170,7 +165,6 @@ public class CicWireMockTest {
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentTestModule(new CicWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .enableHttpDebugTrace()
@@ -199,7 +193,6 @@ public class CicWireMockTest {
                                 createMockedDomesticPayment(
                                         PaymentScheme.SEPA_CREDIT_TRANSFER,
                                         LocalDate.of(2021, 4, 20)))
-                        .withAgentModule(new CicWireMockTestModule())
                         .buildWithoutLogin(PaymentCommand.class);
 
         // when / then (execution and assertion currently done in the same step)
@@ -224,7 +217,6 @@ public class CicWireMockTest {
                         .withPayment(
                                 createMockedDomesticPayment(
                                         PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, null))
-                        .withAgentModule(new CicWireMockTestModule())
                         .buildWithoutLogin(PaymentCommand.class);
 
         // when / then (execution and assertion currently done in the same step)

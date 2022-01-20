@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicTestFixtures.DATE;
@@ -12,12 +13,14 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicTestFixtures.KEY_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicTestFixtures.REQUEST_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicTestFixtures.SERVER_URI;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicTestFixtures.SIGNATURE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicTestFixtures.SIGNATURE_RAW;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 
 public class CmcicSignatureProviderTest {
 
@@ -37,8 +40,9 @@ public class CmcicSignatureProviderTest {
         // given
         final ArgumentCaptor<byte[]> signingDataArgumentCaptor =
                 ArgumentCaptor.forClass(byte[].class);
-        when(qsealcSignerMock.getSignatureBase64(signingDataArgumentCaptor.capture()))
-                .thenReturn(SIGNATURE);
+        when(qsealcSignerMock.sign(
+                        eq(QsealcAlgorithm.RSA_SHA256), signingDataArgumentCaptor.capture()))
+                .thenReturn(Signature.create(SIGNATURE_RAW.getBytes()));
 
         // when
         final String result =
@@ -58,8 +62,9 @@ public class CmcicSignatureProviderTest {
         // given
         final ArgumentCaptor<byte[]> signingDataArgumentCaptor =
                 ArgumentCaptor.forClass(byte[].class);
-        when(qsealcSignerMock.getSignatureBase64(signingDataArgumentCaptor.capture()))
-                .thenReturn(SIGNATURE);
+        when(qsealcSignerMock.sign(
+                        eq(QsealcAlgorithm.RSA_SHA256), signingDataArgumentCaptor.capture()))
+                .thenReturn(Signature.create(SIGNATURE_RAW.getBytes()));
 
         // when
         final String result =
