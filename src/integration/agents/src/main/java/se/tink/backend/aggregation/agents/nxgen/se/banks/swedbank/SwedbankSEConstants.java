@@ -33,9 +33,9 @@ public class SwedbankSEConstants {
                             "swedbank-business",
                             new ProfileParameters(
                                     "swedbank-business",
-                                    "nk2EwMK7B5eZqP7p",
+                                    "VWSRJtHL89MyCY2u",
                                     false,
-                                    "SwedbankMOBCorporateIOS/3.24.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
+                                    "SwedbankMOBCorporateIOS/3.25.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .put(
                             "savingsbank",
                             new ProfileParameters(
@@ -47,9 +47,9 @@ public class SwedbankSEConstants {
                             "savingsbank-business",
                             new ProfileParameters(
                                     "savingsbank-business",
-                                    "gOPBCdXSKBkwzYxH",
+                                    "Mvn6xeX0CM2vkxVr",
                                     true,
-                                    "SavingbankMOBCorporateIOS/3.24.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
+                                    "SavingbankMOBCorporateIOS/3.25.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .build();
 
     public static final TypeMapper<InstrumentModule.InstrumentType> INSTRUMENT_TYPE_MAP =
