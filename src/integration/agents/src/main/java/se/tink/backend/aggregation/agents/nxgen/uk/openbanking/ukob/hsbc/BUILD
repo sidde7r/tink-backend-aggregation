@@ -1,0 +1,42 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+load("@rules_java//java:defs.bzl", "java_library")
+
+codeowners(
+    name = "paycon-owners",
+    patterns = [
+        "pis/signature/HsbcSignatureCreator.java",
+    ],
+    teams = [
+        "@tink-ab/payments-connectivity-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+java_library(
+    name = "hsbc",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/module",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/v31",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid/jwt/signer/iface",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/pis",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents/utils",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
+        "//third_party:com_google_inject_guice",
+        "//third_party:lombok_libs",
+        "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
+    ],
+)

@@ -232,6 +232,7 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/revolut/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/danskebank/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/danskebank/ @tink-ab/aggregation-fluffy-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/danskebank/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/aib/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/ @tink-ab/aggregation-fluffy-maintainer
@@ -331,6 +332,7 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/pis/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/starling/executor/payment/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/hsbc/pis/signature/HsbcSignatureCreator.java @tink-ab/payments-connectivity-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/hsbc/pis/signature/HsbcSignatureCreator.java @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/ @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/ @tink-ab/aggregation-toros-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys/ @tink-ab/aggregation-toros-maintainer
