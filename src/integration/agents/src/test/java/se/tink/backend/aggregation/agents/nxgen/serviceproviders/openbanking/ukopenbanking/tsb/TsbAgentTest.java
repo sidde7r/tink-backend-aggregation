@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.tsb;
 
 import java.time.LocalDate;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -13,7 +12,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class TsbAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
@@ -26,7 +24,7 @@ public class TsbAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("tsb")
+                .setFinancialInstitutionId("a4667f95a9c4464eb505dd5e3543d41e")
                 .build()
                 .testRefresh();
     }
@@ -39,7 +37,7 @@ public class TsbAgentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink")
-                        .setFinancialInstitutionId("tsb");
+                        .setFinancialInstitutionId("a4667f95a9c4464eb505dd5e3543d41e");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

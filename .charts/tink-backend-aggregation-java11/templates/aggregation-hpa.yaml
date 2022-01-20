@@ -14,4 +14,4 @@ spec:
   - type: Pods
     pods:
       metricName: cpu_usage
-      targetAverageValue: {{ default "0.75" .Values.targetAverageCpuValue }}
+      targetAverageValue: {{ default "1500m" .Values.targetAverageCpuValue }}
