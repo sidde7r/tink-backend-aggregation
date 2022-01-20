@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DemobankSessionHandler implements SessionHandler {
@@ -22,7 +23,7 @@ public class DemobankSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         persistentStorage
                 .get(DemobankConstants.StorageKeys.OAUTH2_TOKEN, OAuth2Token.class)
-                .filter(token -> !token.hasAccessExpired())
+                .filter(OAuth2TokenBase::canUseAccessToken)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 }

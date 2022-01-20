@@ -84,8 +84,8 @@ public class OAuth2AuthenticationProgressiveController
                         .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (oAuth2Token.hasAccessExpired()) {
-            log.info("[oAUth2Token] has expied");
+        if (!oAuth2Token.canUseAccessToken()) {
+            log.info("[oAuth2Token] cannot be used, since it is about to expire");
             if (!oAuth2Token.canRefresh()) {
                 log.info("[oAUth2Token] cannot be refreshed");
                 throw SessionError.SESSION_EXPIRED.exception();

@@ -85,7 +85,7 @@ public class BpceGroupAuthenticatorTest {
         assertNotNull(token);
         assertTrue(token.isValid());
         assertFalse(token.isRefreshTokenExpirationPeriodSpecified());
-        assertFalse(token.hasAccessExpired());
+        assertTrue(token.canUseAccessToken());
         assertTrue(token.canRefresh());
         assertThat(token.getAccessToken()).isEqualTo(ACCESS_TOKEN);
         assertThat(token.getTokenType()).isEqualTo(TOKEN_TYPE);

@@ -29,7 +29,7 @@ public class DemobankAutoAuthenticator implements AutoAuthenticator {
                 persistentStorage
                         .get(DemobankConstants.StorageKeys.OAUTH2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        if (oAuth2Token.hasAccessExpired()) {
+        if (!oAuth2Token.canUseAccessToken()) {
             if (!oAuth2Token.canRefresh()) {
                 persistentStorage.remove(DemobankConstants.StorageKeys.OAUTH2_TOKEN);
                 throw SessionError.SESSION_EXPIRED.exception();

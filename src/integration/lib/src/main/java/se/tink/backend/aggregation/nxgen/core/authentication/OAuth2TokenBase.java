@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class OAuth2TokenBase {
 
     static final int REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED = 0;
+    static final int FIVE_MINUTE_TIME_LIMIT = 300;
 
     private String tokenType;
     private String accessToken;
@@ -23,35 +24,41 @@ public abstract class OAuth2TokenBase {
     private long refreshExpiresInSeconds;
     private long issuedAt;
 
+    /**
+     * getTokenMinimumAllowedSecondsValidFor() is used to fetch a minimum time limit before the
+     * access token has to be renewed. This limit will either be five minutes, or it will be 10% of
+     * the tokens initial lifespan. The last case is added to prevent deadlocks with access tokens
+     * with a lifespan shorter than five minutes.
+     */
+    public double getTokenMinimumAllowedSecondsValidFor() {
+        return Math.min(expiresInSeconds * 0.1, FIVE_MINUTE_TIME_LIMIT);
+    }
+
     public Optional<String> getOptionalRefreshToken() {
         return Optional.ofNullable(refreshToken);
     }
 
-    public boolean isAccessTokenNotExpired() {
-        return !hasAccessExpired();
-    }
+    public boolean canUseAccessToken() {
+        final long validFor = getValidForSecondsTimeLeft(expiresInSeconds);
 
-    public boolean hasAccessExpired() {
-        final long validFor = getValidForSecondsTimeLeft();
-        if (validFor > 0) {
+        if (validFor > getTokenMinimumAllowedSecondsValidFor()) {
             log.info(
-                    "Access token is valid for {} seconds (issuedAtEpoch: {}, expiresIn: {})",
+                    "Access token can be used for {} seconds (issuedAtEpoch: {}, expiresIn: {})",
                     validFor,
                     issuedAt,
                     expiresInSeconds);
         }
-        return validFor <= 0;
+        return validFor > getTokenMinimumAllowedSecondsValidFor();
     }
 
-    private boolean hasRefreshExpired() {
+    private boolean hasRefreshTokenExpired() {
         if (refreshExpiresInSeconds == REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED) {
             log.warn(
                     "[OAuth2TokenBase] refreshExpiresInSeconds not specified -> assuming optimistically that refreshing access token is possible");
             return false;
         }
 
-        final long currentTime = getCurrentEpoch();
-        boolean isRefreshTokenExpired = currentTime >= (issuedAt + refreshExpiresInSeconds);
+        boolean isRefreshTokenExpired = getValidForSecondsTimeLeft(refreshExpiresInSeconds) <= 0;
         log.info("[OAuth2TokenBase] Is refresh token expired: {}", isRefreshTokenExpired);
         return isRefreshTokenExpired;
     }
@@ -69,7 +76,7 @@ public abstract class OAuth2TokenBase {
     }
 
     public boolean isValid() {
-        return !hasAccessExpired() && StringUtils.isNotEmpty(accessToken);
+        return canUseAccessToken() && StringUtils.isNotEmpty(accessToken);
     }
 
     public boolean canNotRefreshAccessToken() {
@@ -84,7 +91,7 @@ public abstract class OAuth2TokenBase {
             return false;
         }
 
-        return !hasRefreshExpired();
+        return !hasRefreshTokenExpired();
     }
 
     public boolean isRefreshTokenExpirationPeriodSpecified() {
@@ -101,8 +108,8 @@ public abstract class OAuth2TokenBase {
 
     public abstract boolean isTokenTypeValid();
 
-    public long getValidForSecondsTimeLeft() {
-        return (issuedAt + expiresInSeconds) - getCurrentEpoch();
+    public long getValidForSecondsTimeLeft(Long tokenExpiresInSeconds) {
+        return (issuedAt + tokenExpiresInSeconds) - getCurrentEpoch();
     }
 
     static long getCurrentEpoch() {

@@ -174,7 +174,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
     }
 
     private OAuth2Token refetchIfExpired(OAuth2Token oAuth2Token) {
-        if (oAuth2Token.hasAccessExpired()) {
+        if (!oAuth2Token.canUseAccessToken()) {
             return tokenApiClient.getPispToken().toOauthToken();
         } else {
             return oAuth2Token;

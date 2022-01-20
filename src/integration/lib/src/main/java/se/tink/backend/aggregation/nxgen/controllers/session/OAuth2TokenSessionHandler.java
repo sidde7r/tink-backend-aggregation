@@ -24,7 +24,7 @@ public class OAuth2TokenSessionHandler implements SessionHandler {
                         .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (token.hasAccessExpired()) {
+        if (!token.canUseAccessToken()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

@@ -30,7 +30,7 @@ public class LansforsakringarSessionHandler implements SessionHandler {
          * With lansforsakringar we can refresh the token but have a expired consentId which will cause the agent to think we have a valid session.
          * Therefore, all storage is cleared.
          */
-        if (token.hasAccessExpired() && apiClient.isConsentValid()) {
+        if (!token.canUseAccessToken() && apiClient.isConsentValid()) {
             refreshAndStoreNewToken(token);
             return;
         }

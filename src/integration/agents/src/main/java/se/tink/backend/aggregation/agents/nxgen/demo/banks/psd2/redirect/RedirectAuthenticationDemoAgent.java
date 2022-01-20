@@ -64,6 +64,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.identitydata.NameElement;
@@ -149,7 +150,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
             public void keepAlive() throws SessionException {
                 persistentStorage
                         .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
-                        .filter(t -> !t.hasAccessExpired())
+                        .filter(OAuth2TokenBase::canUseAccessToken)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
             }
         };

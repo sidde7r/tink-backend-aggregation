@@ -20,7 +20,7 @@ public class NordeaPartnerSessionHandler implements SessionHandler {
         Optional<OAuth2Token> token =
                 this.sessionStorage.get(
                         OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
-        return token.isPresent() && !token.get().hasAccessExpired();
+        return token.isPresent() && token.get().canUseAccessToken();
     }
 
     @Override
