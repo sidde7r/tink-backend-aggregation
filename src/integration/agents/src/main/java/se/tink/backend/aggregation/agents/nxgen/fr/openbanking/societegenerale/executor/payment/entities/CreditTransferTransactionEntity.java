@@ -35,7 +35,8 @@ public class CreditTransferTransactionEntity {
 
         Payment payment = paymentRequest.getPayment();
 
-        PaymentId paymentId = new PaymentId(payment.getUniqueId(), UUID.randomUUID().toString());
+        String uniqueId = UUID.randomUUID().toString().replace("-", "");
+        PaymentId paymentId = new PaymentId(payment.getUniqueId(), uniqueId);
         RemittanceInformation remittanceInformationFromPayment = payment.getRemittanceInformation();
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
                 remittanceInformationFromPayment, null, RemittanceInformationType.UNSTRUCTURED);
