@@ -26,9 +26,9 @@ public class SwedbankSEConstants {
                             "swedbank",
                             new ProfileParameters(
                                     "swedbank",
-                                    "p0Tp9pvvHe7vvuGb",
+                                    "3KyuFRHV1ekakxSQ",
                                     false,
-                                    "SwedbankMOBPrivateIOS/7.37.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
+                                    "SwedbankMOBPrivateIOS/7.39.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .put(
                             "swedbank-business",
                             new ProfileParameters(
@@ -40,9 +40,9 @@ public class SwedbankSEConstants {
                             "savingsbank",
                             new ProfileParameters(
                                     "savingsbank",
-                                    "OtS1S038Xov7IK9h",
+                                    "Yqb2VsweiKH9c6nv",
                                     true,
-                                    "SavingbankMOBPrivateIOS/7.38.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
+                                    "SavingbankMOBPrivateIOS/7.39.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .put(
                             "savingsbank-business",
                             new ProfileParameters(
