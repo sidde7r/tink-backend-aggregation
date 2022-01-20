@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.siliconvalley.wiremock;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.siliconvalley.wiremock;
 
 import com.google.common.collect.Sets;
 import java.util.Set;
@@ -10,12 +10,12 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class SiliconValleyBusinessAgentWireMockTest {
+public class SiliconValleyAgentWireMockTest {
 
     private static final String PROVIDER_NAME = "uk-siliconvalley-business-ob";
 
     private static final String RESOURCES_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/siliconvalley/wiremock/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/siliconvalley/wiremock/resources/";
 
     private static final String FULL_AUTH_FETCH_DATA_TRAFFIC =
             RESOURCES_PATH + "full-auth-fetch-data.aap";
