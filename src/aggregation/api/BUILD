@@ -45,6 +45,7 @@ java_library(
         "@aggregation//:joda_time_joda_time",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/authentication_options",
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
         "@tink_backend//src/libraries/uuid",
     ],
