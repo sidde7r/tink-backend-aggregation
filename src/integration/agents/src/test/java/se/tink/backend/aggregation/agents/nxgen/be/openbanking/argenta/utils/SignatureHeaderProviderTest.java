@@ -9,8 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
+import se.tink.agent.sdk.utils.signer.signature.Signature;
 
 public class SignatureHeaderProviderTest {
 
@@ -22,10 +23,11 @@ public class SignatureHeaderProviderTest {
         when(certificateValues.getSerialNumber()).thenReturn("SERIAL_NUM");
         when(certificateValues.getCertificateAuthority()).thenReturn("DUMMY_CA");
 
-        QsealcSigner qsealcSigner = mock(QsealcSignerImpl.class);
+        QsealcSigner qsealcSigner = mock(QsealcSigner.class);
         String headersWithValues =
                 "digest: HEADER_TO_SIGN_ONE\n" + "x-request-id: HEADER_TO_SIGN_TWO";
-        when(qsealcSigner.getSignatureBase64(headersWithValues.getBytes())).thenReturn("=SCVBrdxv");
+        when(qsealcSigner.sign(QsealcAlgorithm.RSA_SHA256, headersWithValues.getBytes()))
+                .thenReturn(Signature.create("FAKE_SIGNATURE\n".getBytes()));
         signatureHeaderProvider = new SignatureHeaderProvider(qsealcSigner, certificateValues);
     }
 
@@ -43,6 +45,6 @@ public class SignatureHeaderProviderTest {
         // then
         assertThat(result)
                 .isEqualTo(
-                        "keyId=\"SN=SERIAL_NUM,CA=DUMMY_CA\",algorithm=\"rsa-sha256\",headers=\"digest x-request-id\",signature=\"=SCVBrdxv\"");
+                        "keyId=\"SN=SERIAL_NUM,CA=DUMMY_CA\",algorithm=\"rsa-sha256\",headers=\"digest x-request-id\",signature=\"RkFLRV9TSUdOQVRVUkUK\"");
     }
 }
