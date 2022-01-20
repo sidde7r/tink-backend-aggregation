@@ -341,4 +341,6 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/command/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment/ @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh/ @tink-ab/aggregation-agent-platform-maintainer
+/src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/propertiesloader/ @tink-ab/aggregation-minion-maintainer
+/src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/propertiesloader/ @tink-ab/aggregation-minion-maintainer
 /src/agent_sdk/ @tink-ab/agent-effectiveness-maintainer
