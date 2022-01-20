@@ -1,12 +1,12 @@
 package se.tink.agent.sdk.authentication.authenticators.generic;
 
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 
 public interface GenericAuthenticator {
     // "full authentication"
-    AuthenticationFlow<NewConsentStep> issueNewConsent();
+    NewConsentFlow issueNewConsent();
 
     // "is logged in"
-    AuthenticationFlow<ExistingConsentStep> useExistingConsent();
+    ExistingConsentFlow useExistingConsent();
 }

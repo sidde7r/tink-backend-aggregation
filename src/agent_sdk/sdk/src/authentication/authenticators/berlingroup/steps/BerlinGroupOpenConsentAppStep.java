@@ -7,29 +7,30 @@ import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAu
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupConsent;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupCreateConsent;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConfiguration;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
+import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.IntermediateStep;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.IntermediateStepResponse;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.utils.TimeGenerator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class BerlinGroupOpenConsentAppStep implements NewConsentStep {
+public class BerlinGroupOpenConsentAppStep extends IntermediateStep {
 
     private final TimeGenerator timeGenerator;
     private final MultifactorAuthenticationState multifactorAuthenticationState;
     private final BerlinGroupGetConfiguration agentGetConfiguration;
     private final BerlinGroupCreateConsent agentCreateConsent;
-    private final Class<? extends NewConsentStep> handleCallbackDataStep;
+    private final Class<? extends BaseStep<?, ?>> handleCallbackDataStep;
 
     public BerlinGroupOpenConsentAppStep(
             TimeGenerator timeGenerator,
             MultifactorAuthenticationState multifactorAuthenticationState,
             BerlinGroupGetConfiguration agentGetConfiguration,
             BerlinGroupCreateConsent agentCreateConsent,
-            Class<? extends NewConsentStep> handleCallbackDataStep) {
+            Class<? extends BaseStep<?, ?>> handleCallbackDataStep) {
         this.timeGenerator = timeGenerator;
         this.multifactorAuthenticationState = multifactorAuthenticationState;
         this.agentGetConfiguration = agentGetConfiguration;
@@ -38,7 +39,7 @@ public class BerlinGroupOpenConsentAppStep implements NewConsentStep {
     }
 
     @Override
-    public NewConsentResponse execute(NewConsentRequest request) {
+    public IntermediateStepResponse execute(StepRequest<Void> request) {
         // Calculate the new consent's valid until date.
         BerlinGroupAuthenticatorConfiguration configuration =
                 this.agentGetConfiguration.getConfiguration();
@@ -51,13 +52,13 @@ public class BerlinGroupOpenConsentAppStep implements NewConsentStep {
                 this.agentCreateConsent.createConsent(
                         this.multifactorAuthenticationState.getState(), consentValidUntil);
 
-        request.getAuthenticationStorage()
+        request.getStepStorage()
                 .put(BerlinGroupAuthenticator.STATE_KEY_CONSENT_ID, response.getConsentId());
 
         UserInteraction<ThirdPartyAppInfo> thirdPartyAppUserInteraction =
                 buildThirdPartyApp(response.getConsentAppUrl());
 
-        return NewConsentResponse.nextStep(this.handleCallbackDataStep)
+        return IntermediateStepResponse.nextStep(this.handleCallbackDataStep)
                 .userInteraction(thirdPartyAppUserInteraction)
                 .build();
     }

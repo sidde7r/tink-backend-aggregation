@@ -1,18 +1,17 @@
 package se.tink.agent.agents.example.authentication;
 
-import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.generic.GenericAuthenticator;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 
 public class ExampleGenericAuthenticator implements GenericAuthenticator {
     @Override
-    public AuthenticationFlow<NewConsentStep> issueNewConsent() {
+    public NewConsentFlow issueNewConsent() {
         return null;
     }
 
     @Override
-    public AuthenticationFlow<ExistingConsentStep> useExistingConsent() {
+    public ExistingConsentFlow useExistingConsent() {
         return null;
     }
 }

@@ -2,14 +2,10 @@ load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
 java_library_with_sources(
     name = "generic",
-    srcs = glob(["**/*.java"]),
-    extdeps = [
-        "@aggregation//:com_google_guava_guava",
-        "@aggregation//:com_google_code_findbugs_jsr305",
-    ],
+    srcs = glob(["*.java"]),
     intdeps = [
-        "//src/agent_sdk/sdk/src/authentication/new_consent",
-        "//src/agent_sdk/sdk/src/authentication/existing_consent",
+        "//src/agent_sdk/sdk/src/authentication/consent",
+        "//src/agent_sdk/sdk/src/authentication/steppable_execution",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
 )

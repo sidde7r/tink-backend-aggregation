@@ -3,16 +3,15 @@ package se.tink.agent.runtime.authentication.processes.thirdparty_app;
 import java.util.Optional;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppInitStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppOpenAppStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppPollStep;
 import se.tink.agent.sdk.authentication.common_steps.GetConsentLifetimeStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.features.AuthenticateThirdPartyApp;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.utils.Sleeper;
 
 public class ThirdPartyAppAuthenticationProcess
@@ -33,10 +32,9 @@ public class ThirdPartyAppAuthenticationProcess
     }
 
     @Override
-    public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
-            ThirdPartyAppAuthenticator authenticator) {
-        return AuthenticationFlow.builder(
-                        new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
+    public NewConsentFlow getNewConsentFlow(ThirdPartyAppAuthenticator authenticator) {
+        return NewConsentFlow.builder()
+                .startStep(new ThirdPartyAppInitStep(authenticator, ThirdPartyAppOpenAppStep.class))
                 .addStep(new ThirdPartyAppOpenAppStep(authenticator, ThirdPartyAppPollStep.class))
                 .addStep(
                         new ThirdPartyAppPollStep(
@@ -49,8 +47,9 @@ public class ThirdPartyAppAuthenticationProcess
     }
 
     @Override
-    public AuthenticationFlow<ExistingConsentStep> getUseExistingConsentFlow(
-            ThirdPartyAppAuthenticator authenticator) {
-        return AuthenticationFlow.builder(new VerifyBankConnectionStep(authenticator)).build();
+    public ExistingConsentFlow getUseExistingConsentFlow(ThirdPartyAppAuthenticator authenticator) {
+        return ExistingConsentFlow.builder()
+                .startStep(new VerifyBankConnectionStep(authenticator))
+                .build();
     }
 }

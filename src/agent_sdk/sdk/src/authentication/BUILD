@@ -5,16 +5,16 @@ java_library_with_sources(
     intdeps = [
         "//src/agent_sdk/sdk/src/authentication/authenticators",
         "//src/agent_sdk/sdk/src/authentication/common_steps",
-        "//src/agent_sdk/sdk/src/authentication/existing_consent",
+        "//src/agent_sdk/sdk/src/authentication/consent",
         "//src/agent_sdk/sdk/src/authentication/features",
-        "//src/agent_sdk/sdk/src/authentication/new_consent",
+        "//src/agent_sdk/sdk/src/authentication/steppable_execution",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
     exports = [
         "//src/agent_sdk/sdk/src/authentication/authenticators",
         "//src/agent_sdk/sdk/src/authentication/common_steps",
-        "//src/agent_sdk/sdk/src/authentication/existing_consent",
+        "//src/agent_sdk/sdk/src/authentication/consent",
         "//src/agent_sdk/sdk/src/authentication/features",
-        "//src/agent_sdk/sdk/src/authentication/new_consent",
+        "//src/agent_sdk/sdk/src/authentication/steppable_execution",
     ],
 )

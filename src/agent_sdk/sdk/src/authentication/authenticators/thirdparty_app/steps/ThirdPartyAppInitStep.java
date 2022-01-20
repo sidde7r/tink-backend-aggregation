@@ -4,34 +4,34 @@ import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdParty
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppInitAuthentication;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.result.ThirdPartyAppResult;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.result.ThirdPartyAppStatus;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
+import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.IntermediateStep;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.IntermediateStepResponse;
 import se.tink.agent.sdk.storage.SerializableReference;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 
-public class ThirdPartyAppInitStep implements NewConsentStep {
+public class ThirdPartyAppInitStep extends IntermediateStep {
     private final ThirdPartyAppInitAuthentication agentInitAuthentication;
-    private final Class<? extends NewConsentStep> nextStep;
+    private final Class<? extends BaseStep<?, ?>> nextStep;
 
     public ThirdPartyAppInitStep(
             ThirdPartyAppInitAuthentication agentInitAuthentication,
-            Class<? extends NewConsentStep> nextStep) {
+            Class<? extends BaseStep<?, ?>> nextStep) {
         this.agentInitAuthentication = agentInitAuthentication;
         this.nextStep = nextStep;
     }
 
     @Override
-    public NewConsentResponse execute(NewConsentRequest request) {
+    public IntermediateStepResponse execute(StepRequest<Void> request) {
         ThirdPartyAppResult thirdPartyAppResult =
                 this.agentInitAuthentication.initThirdPartyAppAuthentication();
         handleStatus(thirdPartyAppResult.getStatus());
 
         SerializableReference reference = thirdPartyAppResult.getReference().orElse(null);
-        request.getAuthenticationStorage()
-                .put(ThirdPartyAppAuthenticator.STATE_KEY_REFERENCE, reference);
+        request.getStepStorage().put(ThirdPartyAppAuthenticator.STATE_KEY_REFERENCE, reference);
 
-        return NewConsentResponse.nextStep(this.nextStep).noUserInteraction().build();
+        return IntermediateStepResponse.nextStep(this.nextStep).noUserInteraction().build();
     }
 
     private void handleStatus(ThirdPartyAppStatus status) {

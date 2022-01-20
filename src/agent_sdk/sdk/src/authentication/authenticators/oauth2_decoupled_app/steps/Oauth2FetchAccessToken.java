@@ -3,11 +3,12 @@ package se.tink.agent.sdk.authentication.authenticators.oauth2_decoupled_app.ste
 import java.util.Objects;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.AccessTokenAndConsentLifetime;
 import se.tink.agent.sdk.authentication.authenticators.oauth2_decoupled_app.FetchAccessToken;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentStep;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 
-public class Oauth2FetchAccessToken implements NewConsentStep {
+public class Oauth2FetchAccessToken extends NewConsentStep {
     private final FetchAccessToken agentFetchAccessToken;
 
     public Oauth2FetchAccessToken(FetchAccessToken agentFetchAccessToken) {
@@ -15,13 +16,13 @@ public class Oauth2FetchAccessToken implements NewConsentStep {
     }
 
     @Override
-    public NewConsentResponse execute(final NewConsentRequest request) {
+    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest<Void> request) {
         AccessTokenAndConsentLifetime result = this.agentFetchAccessToken.fetchAccessToken();
         if (Objects.isNull(result.getToken()) || !result.getToken().isValid()) {
             throw new IllegalStateException("AccessToken is invalid.");
         }
         request.getAgentStorage().putOauth2Token(result.getToken());
 
-        return NewConsentResponse.done(result.getConsentLifetime());
+        return InteractiveStepResponse.done(result.getConsentLifetime());
     }
 }

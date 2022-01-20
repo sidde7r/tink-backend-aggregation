@@ -5,7 +5,7 @@ import java.time.Period;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAuthenticatorConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupConsent;
-import se.tink.agent.sdk.authentication.existing_consent.ConsentStatus;
+import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 
 public class ExampleBerlinGroupAuthenticator implements BerlinGroupAuthenticator {
     @Override

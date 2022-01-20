@@ -2,28 +2,29 @@ package se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps;
 
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.ThirdPartyAppGetAppInfo;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
+import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.IntermediateStep;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.IntermediateStepResponse;
 import se.tink.agent.sdk.storage.SerializableReference;
 import se.tink.agent.sdk.user_interaction.ThirdPartyAppInfo;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 
-public class ThirdPartyAppOpenAppStep implements NewConsentStep {
+public class ThirdPartyAppOpenAppStep extends IntermediateStep {
 
     private final ThirdPartyAppGetAppInfo agentGetAppInfo;
-    private final Class<? extends NewConsentStep> nextStep;
+    private final Class<? extends BaseStep<?, ?>> nextStep;
 
     public ThirdPartyAppOpenAppStep(
-            ThirdPartyAppGetAppInfo agentGetAppInfo, Class<? extends NewConsentStep> nextStep) {
+            ThirdPartyAppGetAppInfo agentGetAppInfo, Class<? extends BaseStep<?, ?>> nextStep) {
         this.agentGetAppInfo = agentGetAppInfo;
         this.nextStep = nextStep;
     }
 
     @Override
-    public NewConsentResponse execute(NewConsentRequest request) {
+    public IntermediateStepResponse execute(StepRequest<Void> request) {
         SerializableReference reference =
-                request.getAuthenticationStorage()
+                request.getStepStorage()
                         .tryGet(
                                 ThirdPartyAppAuthenticator.STATE_KEY_REFERENCE,
                                 SerializableReference.class)
@@ -32,7 +33,7 @@ public class ThirdPartyAppOpenAppStep implements NewConsentStep {
         UserInteraction<ThirdPartyAppInfo> thirdPartyAppInfo =
                 this.agentGetAppInfo.getThirdPartyAppInfo(reference);
 
-        return NewConsentResponse.nextStep(this.nextStep)
+        return IntermediateStepResponse.nextStep(this.nextStep)
                 .userInteraction(thirdPartyAppInfo)
                 .build();
     }

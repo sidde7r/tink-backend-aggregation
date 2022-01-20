@@ -12,7 +12,7 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/authentication/authenticators/swedish_mobile_bankid",
         "//src/agent_sdk/sdk/src/authentication/authenticators/oauth2_decoupled_swedish_mobile_bankid",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
     exports = [
         "//src/agent_sdk/sdk/src/authentication/authenticators/berlingroup",
         "//src/agent_sdk/sdk/src/authentication/authenticators/generic",

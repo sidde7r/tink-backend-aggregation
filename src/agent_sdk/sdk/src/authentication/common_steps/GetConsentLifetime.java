@@ -1,6 +1,6 @@
 package se.tink.agent.sdk.authentication.common_steps;
 
-import se.tink.agent.sdk.authentication.new_consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
 
 public interface GetConsentLifetime {
     ConsentLifetime getConsentLifetime();

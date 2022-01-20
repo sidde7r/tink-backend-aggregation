@@ -4,12 +4,12 @@ import java.util.Optional;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAuthenticatorConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConfiguration;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupGetConsentStatus;
-import se.tink.agent.sdk.authentication.existing_consent.ConsentStatus;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentRequest;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentResponse;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
+import se.tink.agent.sdk.authentication.consent.ConsentStatus;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentStep;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequestBase;
+import se.tink.agent.sdk.steppable_execution.non_interactive_step.NonInteractionStepResponse;
 
-public class BerlinGroupVerifyConsentStatusStep implements ExistingConsentStep {
+public class BerlinGroupVerifyConsentStatusStep extends ExistingConsentStep {
     private final BerlinGroupGetConfiguration agentGetConfiguration;
     private final BerlinGroupGetConsentStatus agentGetConsentStatus;
 
@@ -21,7 +21,7 @@ public class BerlinGroupVerifyConsentStatusStep implements ExistingConsentStep {
     }
 
     @Override
-    public ExistingConsentResponse execute(ExistingConsentRequest request) {
+    public NonInteractionStepResponse<ConsentStatus> execute(StepRequestBase<Void> request) {
         // Read the `consentId` from the AgentStorage, previously written by
         // {@link #BerlinGroupVerifyAuthorizedConsentStep}
         BerlinGroupAuthenticatorConfiguration configuration =
@@ -34,6 +34,6 @@ public class BerlinGroupVerifyConsentStatusStep implements ExistingConsentStep {
                         .map(this.agentGetConsentStatus::getConsentStatus)
                         .orElse(ConsentStatus.EXPIRED);
 
-        return ExistingConsentResponse.done(consentStatus);
+        return NonInteractionStepResponse.done(consentStatus);
     }
 }

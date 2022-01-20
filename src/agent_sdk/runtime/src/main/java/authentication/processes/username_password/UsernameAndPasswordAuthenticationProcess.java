@@ -3,16 +3,23 @@ package se.tink.agent.runtime.authentication.processes.username_password;
 import java.util.Optional;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.sdk.authentication.authenticators.generic.AuthenticationFlow;
 import se.tink.agent.sdk.authentication.authenticators.username_password.UsernameAndPasswordAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.username_password.steps.UsernameAndPasswordStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
-import se.tink.agent.sdk.authentication.existing_consent.ExistingConsentStep;
 import se.tink.agent.sdk.authentication.features.AuthenticateUsernameAndPassword;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
+import se.tink.agent.sdk.operation.StaticBankCredentials;
 
 public class UsernameAndPasswordAuthenticationProcess
         implements AuthenticationProcess<UsernameAndPasswordAuthenticator> {
+
+    private final StaticBankCredentials staticBankCredentials;
+
+    public UsernameAndPasswordAuthenticationProcess(StaticBankCredentials staticBankCredentials) {
+        this.staticBankCredentials = staticBankCredentials;
+    }
+
     @Override
     public Optional<UsernameAndPasswordAuthenticator> tryInstantiateAuthenticator(
             AgentInstance agentInstance) {
@@ -22,14 +29,17 @@ public class UsernameAndPasswordAuthenticationProcess
     }
 
     @Override
-    public AuthenticationFlow<NewConsentStep> getNewConsentFlow(
-            UsernameAndPasswordAuthenticator authenticator) {
-        return AuthenticationFlow.builder(new UsernameAndPasswordStep(authenticator)).build();
+    public NewConsentFlow getNewConsentFlow(UsernameAndPasswordAuthenticator authenticator) {
+        return NewConsentFlow.builder()
+                .startStep(new UsernameAndPasswordStep(this.staticBankCredentials, authenticator))
+                .build();
     }
 
     @Override
-    public AuthenticationFlow<ExistingConsentStep> getUseExistingConsentFlow(
+    public ExistingConsentFlow getUseExistingConsentFlow(
             UsernameAndPasswordAuthenticator authenticator) {
-        return AuthenticationFlow.builder(new VerifyBankConnectionStep(authenticator)).build();
+        return ExistingConsentFlow.builder()
+                .startStep(new VerifyBankConnectionStep(authenticator))
+                .build();
     }
 }

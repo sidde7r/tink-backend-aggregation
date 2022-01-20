@@ -1,16 +1,18 @@
 package se.tink.agent.sdk.authentication.common_steps;
 
 import java.util.Optional;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentRequest;
-import se.tink.agent.sdk.authentication.new_consent.NewConsentStep;
-import se.tink.agent.sdk.authentication.new_consent.response.NewConsentResponse;
+import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentStep;
+import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
+import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 import se.tink.agent.sdk.user_interaction.SupplementalInformation;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
 
-public abstract class SupplementalInformationStep implements NewConsentStep {
+public abstract class SupplementalInformationStep extends NewConsentStep {
+
     @Override
-    public NewConsentResponse execute(NewConsentRequest request) {
+    public InteractiveStepResponse<ConsentLifetime> execute(StepRequest<Void> request) {
         Optional<UserResponseData> optionalUserResponseData = request.getUserResponseData();
 
         if (optionalUserResponseData.isPresent()) {
@@ -24,7 +26,7 @@ public abstract class SupplementalInformationStep implements NewConsentStep {
                             .build();
 
             // Visit ourselves again when we get a userInteraction response.
-            return NewConsentResponse.nextStep(this.getClass())
+            return InteractiveStepResponse.nextStep(this.getClass())
                     .userInteraction(userInteraction)
                     .build();
         }
@@ -32,5 +34,6 @@ public abstract class SupplementalInformationStep implements NewConsentStep {
 
     public abstract SupplementalInformation getSupplementalInformation();
 
-    public abstract NewConsentResponse handleUserResponse(UserResponseData response);
+    public abstract InteractiveStepResponse<ConsentLifetime> handleUserResponse(
+            UserResponseData response);
 }
