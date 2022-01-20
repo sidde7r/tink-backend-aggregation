@@ -61,7 +61,9 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
         super(componentProvider);
         log.info("Nordea Partner: Start of the agent");
         isOnStaging =
-                "neston-staging".equalsIgnoreCase(componentProvider.getContext().getClusterId());
+                "neston-staging".equalsIgnoreCase(componentProvider.getContext().getClusterId())
+                        || "neston-preprod"
+                                .equalsIgnoreCase(componentProvider.getContext().getClusterId());
         User user = componentProvider.getUser();
         Provider provider = componentProvider.getProvider();
         apiClient =
