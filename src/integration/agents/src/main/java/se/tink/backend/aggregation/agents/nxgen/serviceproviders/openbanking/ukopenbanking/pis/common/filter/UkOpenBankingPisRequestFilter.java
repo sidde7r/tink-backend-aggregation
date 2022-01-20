@@ -72,16 +72,18 @@ public class UkOpenBankingPisRequestFilter extends Filter {
 
     private void addAuthorizationHeader(MultivaluedMap<String, Object> headers) {
         final OAuth2Token accessToken = storage.getToken().getOAuth2Token();
-        headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
+        headers.putSingle(
+                OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
     }
 
     private void addInteractionIdHeader(MultivaluedMap<String, Object> headers) {
         final String interactionId = randomValueGenerator.getUUID().toString();
-        headers.add(OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID, interactionId);
+        headers.putSingle(OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID, interactionId);
     }
 
     private void addXIdempotencyKeyHeader(MultivaluedMap<String, Object> headers) {
-        headers.add(X_IDEMPOTENCY_KEY_HEADER, randomValueGenerator.generateRandomHexEncoded(8));
+        headers.putSingle(
+                X_IDEMPOTENCY_KEY_HEADER, randomValueGenerator.generateRandomHexEncoded(8));
     }
 
     private void addSignatureHeaderIfBodyIsPresent(
