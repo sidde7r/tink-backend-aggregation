@@ -23,11 +23,11 @@ public abstract class AbstractAuthenticationStep implements AuthenticationStep {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AbstractAuthenticationStep that = (AbstractAuthenticationStep) o;
-        return Objects.equals(stepId, that.stepId);
+        return Objects.equals(getIdentifier(), that.getIdentifier());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stepId);
+        return Objects.hash(getIdentifier());
     }
 }
