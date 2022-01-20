@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sa
 
 import com.google.common.base.Strings;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sam
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.entities.CardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -27,15 +29,20 @@ public class SamlinkCardTransactionFetcher implements TransactionFetcher<CreditC
 
     private final SamlinkApiClient apiClient;
     private final SamlinkAgentsConfiguration configuration;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public SamlinkCardTransactionFetcher(
-            final SamlinkApiClient apiClient, final SamlinkAgentsConfiguration configuration) {
+            final SamlinkApiClient apiClient,
+            final SamlinkAgentsConfiguration configuration,
+            LocalDateTimeSource localDateTimeSource) {
         this.apiClient = apiClient;
         this.configuration = configuration;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     public List<AggregationTransaction> fetchTransactionsFor(final CreditCardAccount account) {
-        LocalDate earliestPossible = LocalDate.now().minusMonths(4);
+        LocalDate earliestPossible =
+                localDateTimeSource.now(ZoneId.of("CET")).toLocalDate().minusMonths(4);
         CardTransactionsResponse cardTransactionsResponse =
                 apiClient.fetchCardAccountTransactions(
                         new URL(configuration.getBaseUrl().concat(Urls.CARD_TRANSACTIONS))

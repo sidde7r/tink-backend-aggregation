@@ -9,6 +9,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +49,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -68,6 +70,7 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
     private final SystemUpdater systemUpdater;
     private final Credentials credentials;
     private String organizationIdentifier;
+    private final AgentComponentProvider componentProvider;
 
     public SamlinkApiClient(
             final TinkHttpClient client,
@@ -79,7 +82,8 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
             final SamlinkAgentsConfiguration agentConfiguration,
             final LogMasker logMasker,
             final SystemUpdater systemUpdater,
-            final Credentials credentials) {
+            final Credentials credentials,
+            final AgentComponentProvider componentProvider) {
         super(
                 client,
                 persistentStorage,
@@ -95,7 +99,7 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
         this.organizationIdentifier = getOrganizationIdentifier();
         this.systemUpdater = systemUpdater;
         this.credentials = credentials;
-
+        this.componentProvider = componentProvider;
         client.addFilter(new SamlinkSessionErrorFilter());
     }
 
@@ -231,7 +235,12 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
     public String getConsentId() {
 
         AccessEntity accessEntity = new AccessEntity.Builder().build();
-        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
+        final ConsentBaseRequest consentsRequest =
+                new ConsentBaseRequest(
+                        componentProvider
+                                .getLocalDateTimeSource()
+                                .now(ZoneOffset.UTC)
+                                .toLocalDate());
         consentsRequest.setAccess(accessEntity);
 
         return buildRequestWithSignature(
