@@ -8,6 +8,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class ConsentDataStorageTest {
@@ -94,6 +95,30 @@ public class ConsentDataStorageTest {
     }
 
     @Test
+    public void shouldRemoveConsentIdFromTheStorage() {
+        // given
+        persistentStorage.put(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, "dummyConsentID");
+
+        // when
+        consentDataStorage.removeConsentId();
+
+        // then
+        assertThat(persistentStorage).isEmpty();
+    }
+
+    @Test
+    public void shouldDoNotChangePersistentStorageStateWhileRemovingAbsentConsentId() {
+        // given
+        persistentStorage.put("dummyKey", "dummyValue");
+
+        // when
+        consentDataStorage.removeConsentId();
+
+        // then
+        assertThat(persistentStorage).hasSize(1);
+    }
+
+    @Test
     public void shouldThrowNullPointerExceptionWhenCreationDateIsNull() {
         assertThatThrownBy(() -> consentDataStorage.saveConsentCreationDate(null))
                 .isInstanceOf(NullPointerException.class)
@@ -150,5 +175,31 @@ public class ConsentDataStorageTest {
         // then
         assertThatThrownBy(throwingCallable)
                 .isExactlyInstanceOf(SessionError.CONSENT_EXPIRED.exception().getClass());
+    }
+
+    @Test
+    public void shouldRemoveConsentCreationDateFromTheStorage() {
+        // given
+        Instant consentCreationDate = Instant.parse("2018-11-30T18:35:24.00Z");
+        persistentStorage.put(
+                PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE, consentCreationDate);
+
+        // when
+        consentDataStorage.removeConsentCreationDate();
+
+        // then
+        assertThat(persistentStorage).isEmpty();
+    }
+
+    @Test
+    public void shouldDoNotChangePersistentStorageStateWhileRemovingAbsentConsentCreationDate() {
+        // given
+        persistentStorage.put("dummyKey", "dummyValue");
+
+        // when
+        consentDataStorage.removeConsentCreationDate();
+
+        // then
+        assertThat(persistentStorage).hasSize(1);
     }
 }
