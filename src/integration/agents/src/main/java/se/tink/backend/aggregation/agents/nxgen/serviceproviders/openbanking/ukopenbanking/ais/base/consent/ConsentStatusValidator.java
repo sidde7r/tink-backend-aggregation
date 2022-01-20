@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.ConsentResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.ConsentDataStorage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -35,20 +34,8 @@ public class ConsentStatusValidator {
             return;
         }
 
-        checkIfMarkedWithErrorFlag(consentId);
         checkIfAuthorised(consentId);
         checkIfConsentExpired();
-    }
-
-    // TODO: To be removed when consent management becomes stable
-    private void checkIfMarkedWithErrorFlag(String consentId) {
-        if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
-            SessionKiller.cleanUpAndExpireSession(
-                    consentDataStorage.getPersistentStorage(),
-                    SessionError.CONSENT_INVALID.exception(
-                            "[ConsentStatusValidator] These credentials were marked with "
-                                    + "CONSENT_ERROR_OCCURRED flag in the past. Expiring the session."));
-        }
     }
 
     private void checkIfAuthorised(String consentId) {
@@ -57,7 +44,8 @@ public class ConsentStatusValidator {
                 SessionKiller.cleanUpAndExpireSession(
                         consentDataStorage.getPersistentStorage(),
                         SessionError.CONSENT_INVALID.exception(
-                                "[ConsentStatusValidator] Invalid consent status. Expiring the session."));
+                                "[ConsentStatusValidator] Invalid consent status."
+                                        + " Expiring the session."));
             }
         } catch (HttpResponseException e) {
             log.warn(

@@ -201,11 +201,6 @@ public class OpenIdAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        if (getConsentId().equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
-            cleanAuthenticationPersistentStorage();
-            throw SessionError.CONSENT_INVALID.exception(
-                    "[OpenIdAuthenticationController] These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
-        }
 
         OAuth2Token oAuth2Token =
                 persistentStorage

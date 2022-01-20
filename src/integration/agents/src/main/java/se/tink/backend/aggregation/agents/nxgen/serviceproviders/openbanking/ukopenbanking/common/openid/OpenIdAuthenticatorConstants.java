@@ -4,8 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class OpenIdAuthenticatorConstants {
 
-    public static final String CONSENT_ERROR_OCCURRED = "UNSPECIFIED_CONSENT_ID";
-
     /** According to examples the max age is 24h */
     public static final long MAX_AGE = TimeUnit.DAYS.toSeconds(90);
 

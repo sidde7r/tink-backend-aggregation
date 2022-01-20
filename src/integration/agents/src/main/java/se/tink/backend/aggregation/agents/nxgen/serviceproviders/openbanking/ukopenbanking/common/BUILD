@@ -10,6 +10,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",

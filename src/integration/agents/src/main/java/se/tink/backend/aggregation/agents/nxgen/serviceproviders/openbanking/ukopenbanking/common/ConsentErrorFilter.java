@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common;
 
+import java.util.List;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.SessionKiller;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConsentValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -14,9 +15,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class ConsentErrorFilter extends Filter {
 
-    private static final String MESSAGE_PATTERN =
-            "[ConsentErrorFilter] The consent error occurred for path: `%s`, with HTTP status: `%s` and ErrorCodes:`%s`";
-
     private final PersistentStorage persistentStorage;
 
     public ConsentErrorFilter(PersistentStorage persistentStorage) {
@@ -24,21 +22,33 @@ public class ConsentErrorFilter extends Filter {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest)
+    public HttpResponse handle(HttpRequest request)
             throws HttpClientException, HttpResponseException {
-        HttpResponse response = nextFilter(httpRequest);
-
-        if (OpenIdConsentValidator.hasInvalidConsent(response)) {
-            persistentStorage.put(
-                    OpenIdConstants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
-                    OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED);
-            throw SessionError.CONSENT_INVALID.exception(
-                    String.format(
-                            MESSAGE_PATTERN,
-                            httpRequest.getUrl().toUri().getPath(),
-                            response.getStatus(),
-                            response.getBody(ErrorResponse.class).getErrorCodes()));
-        }
+        HttpResponse response = nextFilter(request);
+        validateIfHasValidConsent(request, response);
         return response;
+    }
+
+    private void validateIfHasValidConsent(HttpRequest request, HttpResponse response) {
+        if (OpenIdConsentValidator.hasValidConsent(response)) {
+            return;
+        }
+        terminateSession(request, response);
+    }
+
+    private void terminateSession(HttpRequest request, HttpResponse response) {
+        String exceptionMessage = getExceptionMessage(request, response);
+        SessionException exception = SessionError.CONSENT_INVALID.exception(exceptionMessage);
+        SessionKiller.cleanUpAndExpireSession(persistentStorage, exception);
+    }
+
+    private String getExceptionMessage(HttpRequest request, HttpResponse response) {
+        String messagePattern =
+                "[ConsentErrorFilter] The consent error occurred for path: `%s`,"
+                        + " with HTTP status: `%s` and ErrorCodes:`%s`";
+        String path = request.getUrl().toUri().getPath();
+        int status = response.getStatus();
+        List<String> errorCodes = response.getBody(ErrorResponse.class).getErrorCodes();
+        return String.format(messagePattern, path, status, errorCodes);
     }
 }

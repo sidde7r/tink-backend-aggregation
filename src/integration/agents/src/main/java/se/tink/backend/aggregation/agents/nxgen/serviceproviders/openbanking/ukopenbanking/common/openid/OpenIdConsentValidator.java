@@ -8,6 +8,10 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public interface OpenIdConsentValidator {
 
+    static boolean hasValidConsent(HttpResponse response) {
+        return !hasInvalidConsent(response);
+    }
+
     static boolean hasInvalidConsent(HttpResponse response) {
         if (Validator.STATUS.predicate().negate().test(response)) {
             return false;
