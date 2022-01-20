@@ -19,6 +19,7 @@ public class TransferRequest extends CredentialsRequest implements HasRefreshSco
     private boolean update;
     private boolean skipRefresh;
     private RefreshScope refreshScope;
+    private String paymentRequestId;
 
     public TransferRequest() {}
 
@@ -87,5 +88,13 @@ public class TransferRequest extends CredentialsRequest implements HasRefreshSco
 
     public void setRefreshScope(RefreshScope refreshScope) {
         this.refreshScope = refreshScope;
+    }
+
+    public String getPaymentRequestId() {
+        return paymentRequestId;
+    }
+
+    public void setPaymentRequestId(String paymentRequestId) {
+        this.paymentRequestId = paymentRequestId;
     }
 }
