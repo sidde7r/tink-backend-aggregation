@@ -9,7 +9,6 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/argenta",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/argenta/integration/module",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",

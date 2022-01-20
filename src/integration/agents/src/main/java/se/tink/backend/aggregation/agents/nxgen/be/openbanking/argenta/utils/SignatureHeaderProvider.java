@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils;
 
-import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.*;
-import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderValues.*;
+import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderValues.SIGNATURE_HEADER;
+import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeadersToSign;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 @RequiredArgsConstructor
 public final class SignatureHeaderProvider {
@@ -32,7 +33,10 @@ public final class SignatureHeaderProvider {
                         .map(header -> String.format("%s: %s", header, headers.get(header)))
                         .collect(Collectors.joining("\n"));
 
-        String signature = qsealcSigner.getSignatureBase64(signedHeadersWithValues.getBytes());
+        String signature =
+                qsealcSigner
+                        .sign(QsealcAlgorithm.RSA_SHA256, signedHeadersWithValues.getBytes())
+                        .getBase64Encoded();
 
         return String.format(
                 SIGNATURE_HEADER,

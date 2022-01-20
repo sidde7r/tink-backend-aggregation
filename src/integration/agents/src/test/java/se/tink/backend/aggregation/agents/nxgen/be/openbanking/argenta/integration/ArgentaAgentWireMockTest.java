@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.integration.module.ArgentaAgentWireMockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -40,7 +39,6 @@ public class ArgentaAgentWireMockTest {
                         .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addCallbackData("code", "DUMMY_CODE")
-                        .withAgentTestModule(new ArgentaAgentWireMockTestModule())
                         .enableDataDumpForContractFile()
                         .addCredentialField(
                                 ArgentaConstants.CredentialKeys.IBAN, "BE92199493742823")
@@ -77,7 +75,6 @@ public class ArgentaAgentWireMockTest {
                         .withConfigFile(configuration)
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .withAgentTestModule(new ArgentaAgentWireMockTestModule())
                         .enableDataDumpForContractFile()
                         .addPersistentStorageData(
                                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN,
