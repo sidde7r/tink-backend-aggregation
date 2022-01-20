@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.siliconvalley;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.siliconvalley;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-public class SiliconValleyBusinessAgentTest {
+public class SiliconValleyAgentTest {
 
     @Test
     public void testRefresh() throws Exception {

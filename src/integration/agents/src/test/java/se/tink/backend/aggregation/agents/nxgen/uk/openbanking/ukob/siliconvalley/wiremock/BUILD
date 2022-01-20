@@ -4,15 +4,15 @@ junit_test(
     name = "mock",
     srcs = glob(["**/*.java"]),
     data = [
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/siliconvalley/wiremock/resources",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/siliconvalley/wiremock/resources",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/siliconvalley"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/siliconvalley"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/v31",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/siliconvalley",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/siliconvalley",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
