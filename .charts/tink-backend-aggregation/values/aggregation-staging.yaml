@@ -11,7 +11,7 @@ podMemoryRequest: "2Gi"
 podMemoryLimit: "2Gi"
 replicas: 2
 maxReplicas: 9
-targetAverageCpuValue: "1000m"
+targetAverageCpuValue: "800m"
 
 regularSqsQueueConfiguration:
   enabled: True

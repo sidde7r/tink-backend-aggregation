@@ -1,4 +1,4 @@
-targetAverageCpuValue: "1000m"
+targetAverageCpuValue: "800m"
 
 coordinationHosts: coordination-0.internal.staging.aggregation.tink.network:2181,coordination-1.internal.staging.aggregation.tink.network:2181,coordination-2.internal.staging.aggregation.tink.network:2181
 initialDelaySeconds: "300"
