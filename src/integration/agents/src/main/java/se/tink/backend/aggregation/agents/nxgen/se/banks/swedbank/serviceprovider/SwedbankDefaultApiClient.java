@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.SAVINGSBANKLIST;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -11,11 +14,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -23,6 +25,7 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.BankName;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.MenuItemKey;
@@ -86,8 +89,8 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@Slf4j
 public class SwedbankDefaultApiClient {
-    private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
     @Getter private final String host;
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
@@ -96,7 +99,7 @@ public class SwedbankDefaultApiClient {
     private final SwedbankStorage swedbankStorage;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
-    @Getter private boolean refreshOnlyLoanData;
+    @Getter private final boolean refreshOnlyLoanData;
 
     private enum Method {
         GET,
@@ -647,12 +650,47 @@ public class SwedbankDefaultApiClient {
     }
 
     private boolean hasValidProfile(ProfileResponse profileResponse) {
+        if (isFallbackWithBothBanks(profileResponse)) {
+            for (BankEntity bankEntity : profileResponse.getBanks()) {
+                if (hasValidPrivateProfileForChosenBank(bankEntity)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         boolean hasValidBank =
                 configuration.isSavingsBank()
                         ? profileResponse.isHasSavingbankProfile()
                         : profileResponse.isHasSwedbankProfile();
 
         return hasValidBank && profileResponse.getBanks().size() > 0;
+    }
+
+    private boolean isFallbackWithBothBanks(ProfileResponse profileResponse) {
+        return configuration.getName().contains(BankName.FALLBACK)
+                && (profileResponse.isHasSavingbankProfile()
+                        && profileResponse.isHasSwedbankProfile());
+    }
+
+    private boolean hasValidPrivateProfileForChosenBank(BankEntity bankEntity) {
+        return profileBankMatchesChosenBank(bankEntity.getName().toLowerCase())
+                && bankEntity.getPrivateProfile() != null;
+    }
+
+    private boolean profileBankMatchesChosenBank(String profileBank) {
+        List<String> chosenBanks = new ArrayList<>();
+        if (configurationNameContains(BankName.SWEDBANK)) {
+            chosenBanks.add(BankName.SWEDBANK);
+        }
+        if (configurationNameContains(BankName.SAVINGSBANK)) {
+            chosenBanks.addAll(SAVINGSBANKLIST);
+        }
+        return chosenBanks.stream().anyMatch(profileBank::contains);
+    }
+
+    private boolean configurationNameContains(String bankName) {
+        return configuration.getName().toLowerCase().contains(bankName);
     }
 
     private boolean modeAndProfileMismatch(ProfileResponse profileResponse) {
