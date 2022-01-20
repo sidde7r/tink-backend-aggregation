@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -29,6 +32,7 @@ public class SamlinkCardTransactionFetcherTest {
 
     @Mock private SamlinkApiClient apiClient;
     @Mock private SamlinkAgentsConfiguration configuration;
+    @Mock private LocalDateTimeSource localDateTimeSource;
     private SamlinkCardTransactionFetcher fetcher;
 
     private static final String BASE_PATH =
@@ -41,12 +45,13 @@ public class SamlinkCardTransactionFetcherTest {
     @Before
     public void setup() {
         when(configuration.getBaseUrl()).thenReturn("http://base-url.com");
-        fetcher = new SamlinkCardTransactionFetcher(apiClient, configuration);
+        fetcher = new SamlinkCardTransactionFetcher(apiClient, configuration, localDateTimeSource);
     }
 
     @Test
     public void shouldFetchCardsAndConvertToTinkModel() {
         // given
+        when(localDateTimeSource.now(ZoneId.of("CET"))).thenReturn(LocalDateTime.now());
         when(apiClient.fetchCardAccountTransactions(
                         eq(
                                 "http://base-url.com/psd2/v1/card-accounts/resource-id/transactions?bookingStatus=both&dateFrom="
