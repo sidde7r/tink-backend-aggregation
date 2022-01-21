@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.libraries.authentication_options.AuthenticationOption;
+import se.tink.libraries.authentication_options.AuthenticationOption.AuthenticationOptions;
 import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 import se.tink.libraries.authentication_options.AuthenticationOptionDto;
 import se.tink.libraries.authentication_options.AuthenticationOptionField;
@@ -30,6 +31,11 @@ public class AuthenticationOptionsExtractor {
         validateAuthenticationOptions();
     }
 
+    @VisibleForTesting
+    AuthenticationOptionsExtractor(boolean doNotValidate) {
+        log.warn("Instantiating AuthenticationOptionsExtractor without validating agents first.");
+    }
+
     public Map<String, Set<AuthenticationOptionDto>> getAgentsAuthenticationOptions() {
         return reflections.getSubTypesOf(Agent.class).stream()
                 .filter(hasAuthenticationOptions)
@@ -37,7 +43,9 @@ public class AuthenticationOptionsExtractor {
     }
 
     private final Predicate<Class<? extends Agent>> hasAuthenticationOptions =
-            klass -> klass.isAnnotationPresent(AuthenticationOption.class);
+            klass ->
+                    klass.isAnnotationPresent(AuthenticationOptions.class)
+                            || klass.isAnnotationPresent(AuthenticationOption.class);
 
     private final Function<Class<? extends Agent>, String> getAgentName =
             klass -> klass.getName().replace(DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + ".", "");

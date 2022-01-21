@@ -20,7 +20,7 @@ public class AuthenticationOptionsExtractorTest {
 
     @Before
     public void setUp() {
-        extractor = new AuthenticationOptionsExtractor();
+        extractor = new AuthenticationOptionsExtractor(true);
     }
 
     @Test
