@@ -5,14 +5,10 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CR
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyMarketConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
 public final class AlandsbankenAgent extends CrosskeyBaseAgent {
 
@@ -23,7 +19,7 @@ public final class AlandsbankenAgent extends CrosskeyBaseAgent {
                     "https://open.alandsbanken.fi");
 
     @Inject
-    public AlandsbankenAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
-        super(componentProvider, qsealcSigner, ALANDSBANKEN_FI_CONFIGURATION);
+    public AlandsbankenAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider, ALANDSBANKEN_FI_CONFIGURATION);
     }
 }

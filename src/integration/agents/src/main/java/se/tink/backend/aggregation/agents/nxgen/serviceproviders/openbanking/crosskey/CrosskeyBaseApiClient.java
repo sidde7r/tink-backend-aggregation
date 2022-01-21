@@ -14,6 +14,8 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.agent.sdk.operation.User;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.HeaderKeys;
@@ -45,7 +47,6 @@ import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -343,7 +344,9 @@ public class CrosskeyBaseApiClient {
                 String.format("%s.%s", headerBase64, serializedToJsonPayload);
 
         final String signedBase64HeadersAndPayload =
-                qsealcSigner.getSignatureBase64(headerBase64WithPayload.getBytes());
+                qsealcSigner
+                        .sign(QsealcAlgorithm.RSA_SHA256, headerBase64WithPayload.getBytes())
+                        .getBase64Encoded();
 
         return String.format("%s..%s", headerBase64, signedBase64HeadersAndPayload);
     }

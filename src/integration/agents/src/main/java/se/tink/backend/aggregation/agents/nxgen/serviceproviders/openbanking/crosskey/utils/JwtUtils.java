@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.oidcrequestobject.JwtAuthPayload;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public final class JwtUtils {
 
@@ -25,9 +26,10 @@ public final class JwtUtils {
             String toBeSignedPayload =
                     String.format("%s.%s", base64encodedHeader, base64encodedPayload);
 
-            byte[] signedPayload = qsealcSigner.getSignature(toBeSignedPayload.getBytes());
-
-            String signedAndEncodedPayload = Base64.getUrlEncoder().encodeToString(signedPayload);
+            String signedAndEncodedPayload =
+                    qsealcSigner
+                            .sign(QsealcAlgorithm.RSA_SHA256, toBeSignedPayload.getBytes())
+                            .getBase64UrlEncoded();
 
             return String.format("%s.%s", toBeSignedPayload, signedAndEncodedPayload);
 

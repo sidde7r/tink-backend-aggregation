@@ -14,12 +14,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.agent.sdk.operation.User;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.EIdasTinkCert;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -41,7 +40,7 @@ public class CrosskeyBaseApiClientTest {
 
     @Before
     public void setUp() {
-        QsealcSigner qsealcSigner = mock(QsealcSignerImpl.class);
+        QsealcSigner qsealcSigner = mock(QsealcSigner.class);
         AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration =
                 mock(AgentConfiguration.class);
         when(agentConfiguration.getRedirectUrl()).thenReturn(CrossKeyTestUtils.REDIRECT_URL);
