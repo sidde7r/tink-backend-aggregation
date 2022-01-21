@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -25,14 +26,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
 @RequiredArgsConstructor
 public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private final BbvaApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final CredentialsRequest request;
+    private final User user;
     private final TransactionsFetchingDateFromManager transactionsFetchingDateFromManager;
     private final AccountsProvider accountsProvider;
 
@@ -90,7 +90,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     }
 
     private boolean userNotAvailableForInteraction() {
-        return !request.getUserAvailability().isUserAvailableForInteraction();
+        return !user.isAvailableForInteraction();
     }
 
     private void mapHttpErrors(HttpResponseException e) throws LoginException {

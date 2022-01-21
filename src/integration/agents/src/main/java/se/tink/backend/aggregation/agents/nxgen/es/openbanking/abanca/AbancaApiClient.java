@@ -8,6 +8,7 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.httpclient.HttpStatus;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.ChallengeType;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.HeaderKeys;
@@ -38,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 @Slf4j
 public class AbancaApiClient {
@@ -48,7 +48,7 @@ public class AbancaApiClient {
     private final SessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Map<String, Field> supplementalFields;
-    private final UserAvailability userAvailability;
+    private final User user;
 
     public AbancaApiClient(
             TinkHttpClient client,
@@ -56,7 +56,7 @@ public class AbancaApiClient {
             SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             List<Field> supplementalFields,
-            UserAvailability userAvailability) {
+            User user) {
         this.client = client;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
@@ -65,7 +65,7 @@ public class AbancaApiClient {
         this.supplementalFields =
                 supplementalFields.stream()
                         .collect(Collectors.toMap(Field::getName, field -> field));
-        this.userAvailability = userAvailability;
+        this.user = user;
     }
 
     private String getRedirectUrl() {
@@ -144,7 +144,7 @@ public class AbancaApiClient {
     }
 
     private boolean isUserNotAvailableForInteraction() {
-        return !this.userAvailability.isUserAvailableForInteraction();
+        return !this.user.isAvailableForInteraction();
     }
 
     private String requestChallengeSolution(DetailsEntity challengeDetails) {

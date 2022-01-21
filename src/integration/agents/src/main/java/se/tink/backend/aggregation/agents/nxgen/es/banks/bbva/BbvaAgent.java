@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -65,6 +66,7 @@ public final class BbvaAgent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
     private final BbvaApiClient apiClient;
+    private final User user;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -85,6 +87,7 @@ public final class BbvaAgent extends NextGenerationAgent
                 new TransactionsFetchingDateFromManager(
                         accountsProvider, transactionPaginationHelper, persistentStorage);
         apiClient.setTransactionsFetchingDateFromManager(transactionsFetchingDateFromManager);
+        this.user = componentProvider.getUser();
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
@@ -161,7 +164,7 @@ public final class BbvaAgent extends NextGenerationAgent
                 new BbvaAuthenticator(
                         apiClient,
                         supplementalInformationHelper,
-                        request,
+                        user,
                         transactionsFetchingDateFromManager,
                         accountsProvider);
         log.info(

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BbvaAuthenticatorTest {
@@ -43,7 +43,7 @@ public class BbvaAuthenticatorTest {
                 new BbvaAuthenticator(
                         apiClient,
                         mock(SupplementalInformationHelper.class),
-                        mock(CredentialsRequest.class),
+                        mock(User.class),
                         mock(TransactionsFetchingDateFromManager.class),
                         mock(AccountsProvider.class));
     }
@@ -222,7 +222,7 @@ public class BbvaAuthenticatorTest {
                 new BbvaAuthenticator(
                         apiClient,
                         mock(SupplementalInformationHelper.class),
-                        mock(CredentialsRequest.class),
+                        mock(User.class),
                         mock(TransactionsFetchingDateFromManager.class),
                         mock(AccountsProvider.class));
 

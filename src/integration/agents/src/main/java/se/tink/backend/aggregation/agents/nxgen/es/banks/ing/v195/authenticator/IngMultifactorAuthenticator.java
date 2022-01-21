@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.LoginStep;
@@ -16,14 +17,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticator {
     private final IngApiClient apiClient;
     private final RandomValueGenerator randomValueGenerator;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
-    private final CredentialsRequest credentialsRequest;
+    private final User user;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
     public IngMultifactorAuthenticator(
@@ -31,13 +31,13 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
             RandomValueGenerator randomValueGenerator,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
-            CredentialsRequest credentialsRequest,
+            User user,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.randomValueGenerator = randomValueGenerator;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
-        this.credentialsRequest = credentialsRequest;
+        this.user = user;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
@@ -52,7 +52,7 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
                         persistentStorage,
                         randomValueGenerator,
                         scaStepMapper,
-                        credentialsRequest.getUserAvailability().isUserAvailableForInteraction()),
+                        user.isAvailableForInteraction()),
                 new MobileValidationStep(apiClient, sessionStorage),
                 new OtpStep(
                         apiClient,

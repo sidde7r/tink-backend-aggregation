@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaApiClient;
@@ -17,22 +18,21 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.rpc.ErrorR
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AbancaAuthenticatorTest {
 
     private AbancaApiClient apiClient;
     private AbancaConfiguration abancaConfiguration;
-    private UserAvailability userAvailability;
+    private User user;
     private AbancaAuthenticator authenticator;
 
     @Before
     public void setup() {
         apiClient = mock(AbancaApiClient.class);
         abancaConfiguration = mock(AbancaConfiguration.class);
-        userAvailability = mock(UserAvailability.class);
-        authenticator = new AbancaAuthenticator(apiClient, abancaConfiguration, userAvailability);
+        user = mock(User.class);
+        authenticator = new AbancaAuthenticator(apiClient, abancaConfiguration, user);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class AbancaAuthenticatorTest {
         OAuth2Token token = OAuth2Token.create("type", "accessToken", "refreshToken", 500);
         String clientId = "1234";
 
-        when(userAvailability.isUserAvailableForInteraction()).thenReturn(false);
+        when(user.isAvailableForInteraction()).thenReturn(false);
         when(abancaConfiguration.getClientId()).thenReturn(clientId);
         when(apiClient.getToken(any())).thenReturn(token);
 
@@ -60,7 +60,7 @@ public class AbancaAuthenticatorTest {
         HttpResponseException exception = createErrorResponse(403, "API_00006");
         AccountsResponse accounts = getAccountsResponse();
 
-        when(userAvailability.isUserAvailableForInteraction()).thenReturn(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
         when(abancaConfiguration.getClientId()).thenReturn(clientId);
         when(apiClient.getToken(any())).thenReturn(token);
         when(apiClient.fetchAccounts()).thenReturn(accounts);
@@ -81,7 +81,7 @@ public class AbancaAuthenticatorTest {
         HttpResponseException exception = createErrorResponse(409, "API_00011");
         AccountsResponse accounts = getAccountsResponse();
 
-        when(userAvailability.isUserAvailableForInteraction()).thenReturn(true);
+        when(user.isAvailableForInteraction()).thenReturn(true);
         when(abancaConfiguration.getClientId()).thenReturn(clientId);
         when(apiClient.getToken(any())).thenReturn(token);
         when(apiClient.fetchAccounts()).thenReturn(accounts);
