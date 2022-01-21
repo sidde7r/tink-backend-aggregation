@@ -291,10 +291,9 @@ public class CrosskeyBaseApiClient {
             String apiIdentifier, Date fromDate, Date toDate) {
 
         String fromBookingDateTime = formatAndSetZeroTime(fromDate);
-
         String toBookingDateTime = formatAndSetZeroTime(toDate);
 
-        CrosskeyTransactionsResponse response;
+        CrosskeyTransactionsResponse response = new CrosskeyTransactionsResponse();
         try {
             response =
                     createRequestInSession(
@@ -307,9 +306,22 @@ public class CrosskeyBaseApiClient {
             return response.setProviderMarket(providerMarket);
         } catch (HttpResponseException exception) {
             HttpResponse exceptionResponse = exception.getResponse();
-            log.error("Error status from bank: " + exceptionResponse.getStatus());
-            throw exception;
+            if (isIntervalLimited(exceptionResponse)) {
+                response.setCanFetchMoreFalse();
+                log.error(
+                        String.format(
+                                "Error status from bank: %s. [SCA: false]",
+                                exceptionResponse.getStatus()));
+                return response.setProviderMarket(providerMarket);
+            } else {
+                log.error("Error status from bank: " + exceptionResponse.getStatus());
+                throw exception;
+            }
         }
+    }
+
+    private boolean isIntervalLimited(HttpResponse exceptionResponse) {
+        return !exceptionResponse.getBody(String.class).startsWith(ErrorMessages.WRONG_INTERVAL);
     }
 
     private OAuth2Token getTokenFromSession() {
