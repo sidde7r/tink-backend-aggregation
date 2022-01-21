@@ -150,7 +150,7 @@ public class KnabApiClientTest {
         givenResponseFromFile(filename, ConsentStatusResponse.class);
 
         // when
-        boolean isValid = apiClient.consentStatus("any-consent-id", mock(OAuth2Token.class));
+        boolean isValid = apiClient.consentIsValid("any-consent-id", mock(OAuth2Token.class));
 
         // then
         assertThat(isValid).isEqualTo(expected);

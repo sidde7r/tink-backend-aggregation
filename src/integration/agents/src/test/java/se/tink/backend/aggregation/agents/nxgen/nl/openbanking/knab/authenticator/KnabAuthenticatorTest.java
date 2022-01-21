@@ -194,11 +194,11 @@ public class KnabAuthenticatorTest {
     }
 
     private void bankRespondsWithValidConsentStatus() {
-        when(apiClient.consentStatus(consentId, accessToken)).thenReturn(true);
+        when(apiClient.consentIsValid(consentId, accessToken)).thenReturn(true);
     }
 
     private void bankRespondsWithInvalidConsentStatus() {
-        when(apiClient.consentStatus(consentId, accessToken)).thenReturn(false);
+        when(apiClient.consentIsValid(consentId, accessToken)).thenReturn(false);
     }
 
     private void noConsent() {

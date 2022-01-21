@@ -98,7 +98,7 @@ public class KnabApiClient {
                 .toTinkToken();
     }
 
-    public boolean consentStatus(String consentId, OAuth2Token accessToken) {
+    public boolean consentIsValid(String consentId, OAuth2Token accessToken) {
         return request(Urls.CONSENT_STATUS.parameter("consent-id", consentId))
                 .addBearerToken(accessToken)
                 .get(ConsentStatusResponse.class)

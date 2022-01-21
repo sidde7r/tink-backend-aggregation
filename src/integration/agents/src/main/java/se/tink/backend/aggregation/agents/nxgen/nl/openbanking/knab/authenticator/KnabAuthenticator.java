@@ -44,7 +44,7 @@ public class KnabAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        if (consentIsValid(accessToken)) {
+        if (consentExistsAndIsValid(accessToken)) {
             storage.persistBearerToken(accessToken);
         } else {
             storage.invalidatePersistedBearerToken();
@@ -56,9 +56,9 @@ public class KnabAuthenticator implements OAuth2Authenticator {
         return String.format("psd2 offline_access AIS:%s", consentId);
     }
 
-    private boolean consentIsValid(OAuth2Token accessToken) {
+    private boolean consentExistsAndIsValid(OAuth2Token accessToken) {
         return storage.findConsentId()
-                .filter(consentId -> apiClient.consentStatus(consentId, accessToken))
+                .filter(consentId -> apiClient.consentIsValid(consentId, accessToken))
                 .isPresent();
     }
 }
