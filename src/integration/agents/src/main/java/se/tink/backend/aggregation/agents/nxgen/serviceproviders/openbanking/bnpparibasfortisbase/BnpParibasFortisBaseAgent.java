@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibasfortisbase;
 
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -12,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibasfortisbase.transactionalaccount.BnpParibasFortisBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
@@ -34,10 +34,9 @@ public abstract class BnpParibasFortisBaseAgent extends NextGenerationAgent
 
     public BnpParibasFortisBaseAgent(
             AgentComponentProvider agentComponentProvider,
-            QsealcSigner qsealcSigner,
             BnpParibasFortisBaseBankConfiguration bnpParibasFortisBankConfiguration) {
         super(agentComponentProvider);
-        client.addFilter(constructSigningFilter(qsealcSigner));
+        client.addFilter(constructSigningFilter(agentComponentProvider.getQsealcSigner()));
         client.setResponseStatusHandler(new BnpParibasFortisResponseStatusHandler());
         apiClient =
                 new BnpParibasFortisBaseApiClient(
