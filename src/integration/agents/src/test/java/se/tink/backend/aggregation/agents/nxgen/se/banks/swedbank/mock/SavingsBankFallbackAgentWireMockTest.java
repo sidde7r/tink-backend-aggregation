@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.mock;
 
 import java.time.ZoneId;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
@@ -52,4 +53,38 @@ public class SavingsBankFallbackAgentWireMockTest {
 
     // no payment tests, since we have known issue TC-5523
 
+    @Test(expected = LoginException.class)
+    public void testRefreshWhereUserHasMultiProfilesButPrivateProfileInNotSelectedBank()
+            throws Exception {
+
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/swedbank-fallback-private-profile-in-not-selected-bank.aap";
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/agent-contract-multiprofile-savingsbank.json";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(
+                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/configuration-savingsbank.yml");
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-savingsbank-fallback")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .withAgentTestModule(new SwedbankFallbackWireMockTestModule())
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 }

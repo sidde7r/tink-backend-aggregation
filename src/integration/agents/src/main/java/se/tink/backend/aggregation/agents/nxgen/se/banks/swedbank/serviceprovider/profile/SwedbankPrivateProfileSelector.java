@@ -12,11 +12,8 @@ public class SwedbankPrivateProfileSelector implements SwedbankProfileSelector {
     @Override
     public List<Pair<BankEntity, ProfileEntity>> selectBankProfiles(List<BankEntity> banks) {
         return banks.stream()
-                .filter(BankEntity::isPrivateOrServicePortalProfile)
-                .map(
-                        bank ->
-                                new Pair<BankEntity, ProfileEntity>(
-                                        bank, bank.getPrivateOrServicePortalProfile()))
+                .filter(bank -> bank.getPrivateProfile() != null)
+                .map(bank -> new Pair<BankEntity, ProfileEntity>(bank, bank.getPrivateProfile()))
                 .collect(Collectors.toList());
     }
 }

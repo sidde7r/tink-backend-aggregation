@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileParameters;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -23,9 +25,9 @@ public class SwedbankSEConstants {
     public static final ImmutableMap<String, ProfileParameters> PROFILE_PARAMETERS =
             new ImmutableMap.Builder<String, ProfileParameters>()
                     .put(
-                            "swedbank",
+                            BankName.SWEDBANK,
                             new ProfileParameters(
-                                    "swedbank",
+                                    BankName.SWEDBANK,
                                     "3KyuFRHV1ekakxSQ",
                                     false,
                                     "SwedbankMOBPrivateIOS/7.39.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
@@ -37,9 +39,9 @@ public class SwedbankSEConstants {
                                     false,
                                     "SwedbankMOBCorporateIOS/3.25.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
                     .put(
-                            "savingsbank",
+                            BankName.SAVINGSBANK,
                             new ProfileParameters(
-                                    "savingsbank",
+                                    BankName.SAVINGSBANK,
                                     "Yqb2VsweiKH9c6nv",
                                     true,
                                     "SavingbankMOBPrivateIOS/7.39.0_(iOS;_14.7.1)_Apple/iPhone9,3"))
@@ -77,4 +79,16 @@ public class SwedbankSEConstants {
         public static final String ADRUM = "isAjax:true";
         public static final String ADRUM_1 = "isMobile:true";
     }
+
+    public static class BankName {
+        public static final String SWEDBANK = "swedbank";
+        public static final String SAVINGSBANK = "savingsbank";
+        public static final String SPARBANK = "sparbank";
+        public static final String OLAND = "öland";
+        public static final String DEFAULT = "default";
+        public static final String FALLBACK = "fallback";
+    }
+
+    public static final List<String> SAVINGSBANKLIST =
+            ImmutableList.of(BankName.SPARBANK, BankName.SAVINGSBANK, BankName.OLAND);
 }
