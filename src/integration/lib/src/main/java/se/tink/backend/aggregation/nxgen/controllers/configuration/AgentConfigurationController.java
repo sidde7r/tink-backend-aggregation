@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -164,16 +165,18 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
                 Optional<SecretsEntityCore> allSecretsOpt;
-                if (!tppSecretsServiceClient.isUseSecretsServiceInternalClient()) {
-                    allSecretsOpt =
-                            tppSecretsServiceClient.getAllSecrets(
-                                    appId, clusterId, certId, providerId);
-                } else {
+                double randomDouble = ThreadLocalRandom.current().nextDouble(0.000_01, 1.0);
+                if (tppSecretsServiceClient.isUseSecretsServiceInternalClient()
+                        && randomDouble <= getRate(tppSecretsServiceClient.getRate())) {
                     allSecretsOpt =
                             Optional.of(
                                     EntityUtils.createSecretsEntityCore(
                                             secretsServiceInternalClient.getAllSecrets(
                                                     clusterId, appId, certId, providerId)));
+                } else {
+                    allSecretsOpt =
+                            tppSecretsServiceClient.getAllSecrets(
+                                    appId, clusterId, certId, providerId);
                 }
 
                 // TODO: Remove if once Access team confirms there are no null appIds around.
@@ -216,6 +219,15 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                     throw e;
                 }
             }
+        }
+    }
+
+    private double getRate(String rate) {
+        try {
+            return Double.parseDouble(rate);
+        } catch (NumberFormatException e) {
+            log.error("incorrect number format of rate {}", rate);
+            return 0;
         }
     }
 

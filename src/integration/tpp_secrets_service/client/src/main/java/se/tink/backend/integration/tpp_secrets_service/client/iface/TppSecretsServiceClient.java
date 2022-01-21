@@ -16,4 +16,8 @@ public interface TppSecretsServiceClient {
     // control if secrets service new client should be used
     // will be removed after the migration
     boolean isUseSecretsServiceInternalClient();
+
+    // control the percentage of live traffic using new client
+    // will be removed after the migration
+    String getRate();
 }
