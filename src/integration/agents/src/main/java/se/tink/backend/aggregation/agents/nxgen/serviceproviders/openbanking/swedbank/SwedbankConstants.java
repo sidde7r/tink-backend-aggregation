@@ -74,6 +74,8 @@ public final class SwedbankConstants {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String CONSENT = "CONSENT";
         public static final String HOLDER_NAME = "HOLDER_NAME";
+        public static final String CONSENT_TRANSACTIONS_OVER_90_DAYS =
+                "CONSENT_TRANSACTIONS_OVER_90_DAYS";
     }
 
     public static class QueryKeys {
@@ -172,6 +174,8 @@ public final class SwedbankConstants {
                 "To add a new recipient, activate Mobile BankID for extended use.";
         public static final String AUTHORIZATION_FAILED = "authorization_failed";
         public static final String UNKNOWN_AUTHORIZATION_ID = "Unknown authorizationId";
+        public static final String ERROR_INVESTIGATION_MESSAGE =
+                "It's expected to be valid, this needs to be investigated.";
     }
 
     public static class ConsentStatus {

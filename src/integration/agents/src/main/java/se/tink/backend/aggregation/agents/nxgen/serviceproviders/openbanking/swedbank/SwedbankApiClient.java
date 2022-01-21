@@ -35,11 +35,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.SwedbankAccessAccountCheckEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.SwedbankAccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.SwedbankTransactionsOver90DayAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.consent.ConsentAllAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentRequestForTransactionsOver90Days;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.SupplyBankIdRequest;
@@ -263,14 +265,30 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
                 SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
-                getAccessEntity(list));
+                getAccessEntity(list, false));
     }
 
-    public Object getAccessEntity(List<String> list) {
+    // for consent over 90 days, recurringIndicator must be false. Values validUntil and
+    // frequencyPerDay are not compatible with this consent type.
+    public ConsentRequestForTransactionsOver90Days createConsentRequestForTransactionsOver90Days(
+            List<String> list) {
+        return new ConsentRequestForTransactionsOver90Days<>(
+                false,
+                SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
+                getAccessEntity(list, true));
+    }
+
+    public Object getAccessEntity(List<String> list, boolean isTransactionOver90Days) {
         return ItemsSupplier.get(componentProvider.getCredentialsRequest())
                         .contains(RefreshableItem.CHECKING_TRANSACTIONS)
-                ? new SwedbankAccessEntity().addIbans(list)
+                ? getTransactionsAccessEntity(list, isTransactionOver90Days)
                 : new SwedbankAccessAccountCheckEntity().addIbans(list);
+    }
+
+    public Object getTransactionsAccessEntity(List<String> list, boolean isTransactionOver90Days) {
+        return isTransactionOver90Days
+                ? new SwedbankTransactionsOver90DayAccessEntity().addIbans(list)
+                : new SwedbankAccessEntity().addIbans(list);
     }
 
     /**
@@ -279,13 +297,22 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
      * PSU-IP-Address, PSU-IP-Port, PSU-User-Agent, and PSU-Http-Method are required.
      */
     public ConsentResponse getConsentAccountDetails(List<String> list) {
-        return createRequestInSession(SwedbankConstants.Urls.CONSENTS, false)
-                .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
-                .post(ConsentResponse.class, createConsentRequest(list));
+        return getConsent().post(ConsentResponse.class, createConsentRequest(list));
+    }
+
+    /* the agent should make sure to not call this method when CHECKING_TRANSACTIONS scope is not
+    provided. This part should be handled by the consent management library. Due to a possible bug,
+    the agent calls for transactions even when only CHECKING_ACCOUNTS scope is granted. This should
+    be fixed in TC-5664 which will also fix calling of this method. */
+
+    /**
+     * Get consent for transactions over 90 days. Has to be approved by SCA for every account. In
+     * order to not count as a call without PSU interaction the headers PSU-IP-Address, PSU-IP-Port,
+     * PSU-User-Agent, and PSU-Http-Method are required.
+     */
+    public ConsentResponse getConsentTransactionOver90Days(List<String> list) {
+        return getConsent()
+                .post(ConsentResponse.class, createConsentRequestForTransactionsOver90Days(list));
     }
 
     /**
@@ -295,12 +322,16 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
      * PSU-Http-Method are required.
      */
     public ConsentResponse getConsentAllAccounts() {
+        return getConsent().post(ConsentResponse.class, createConsentRequest());
+    }
+
+    private RequestBuilder getConsent() {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS, false)
                 .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
+                .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
-                .type(MediaType.APPLICATION_JSON)
-                .post(ConsentResponse.class, createConsentRequest());
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl());
     }
 
     public OAuth2Token exchangeCodeForToken(String code) {
