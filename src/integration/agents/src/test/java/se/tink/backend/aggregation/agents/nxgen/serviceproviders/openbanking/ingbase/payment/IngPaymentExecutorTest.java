@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.inOrder;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.IngPaymentsLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
@@ -41,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @RunWith(JUnitParamsRunner.class)
@@ -312,6 +315,24 @@ public class IngPaymentExecutorTest {
         assertThat(allTestedStatuses).containsExactlyInAnyOrder(PaymentStatus.values());
 
         return allTestParams.stream().map(SignTestParams::toMethodParams).toArray();
+    }
+
+    @Test
+    public void shouldThrowPaymentValidationExceptionIfPaymentSchemaIsInstant() {
+        // given
+        Payment payment =
+                new Payment.Builder()
+                        .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
+                        .build();
+        PaymentRequest paymentRequest = new PaymentRequest(payment);
+
+        // when
+        Throwable throwable = catchThrowable(() -> paymentExecutor.create(paymentRequest));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(PaymentValidationException.class)
+                .hasMessage("Instant payment is not supported");
     }
 
     @Getter
