@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.SparkassenErrorHandler.handeHttpException;
+
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenConsentGenerator;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryKeys;
@@ -14,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.OauthEndpointsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.SparkassenErrorHandler;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.SparkassenKnownErrors;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.SparkassenErrorHandler.ErrorSource;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
@@ -26,7 +27,6 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRespo
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.SelectAuthorizationMethodRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
@@ -112,7 +112,7 @@ public class SparkassenApiClient implements PaymentApiClient {
                     "FAILED_LOGIN username charset: [{}]  password charset: [{}]",
                     CharsetGuesser.getCharset(username),
                     CharsetGuesser.getCharset(password));
-            SparkassenErrorHandler.handleError(
+            handeHttpException(
                     e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_USERNAME_PASSWORD);
             throw e;
         }
@@ -125,8 +125,7 @@ public class SparkassenApiClient implements PaymentApiClient {
                             AuthorizationResponse.class,
                             new SelectAuthorizationMethodRequest(methodId));
         } catch (HttpResponseException e) {
-            SparkassenErrorHandler.handleError(
-                    e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_SELECT_METHOD);
+            handeHttpException(e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_SELECT_METHOD);
             throw e;
         }
     }
@@ -140,8 +139,7 @@ public class SparkassenApiClient implements PaymentApiClient {
             return createRequest(new URL(url))
                     .put(AuthorizationStatusResponse.class, new FinalizeAuthorizationRequest(otp));
         } catch (HttpResponseException e) {
-            SparkassenErrorHandler.handleError(
-                    e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_OTP);
+            handeHttpException(e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_OTP);
             throw e;
         }
     }
@@ -152,8 +150,7 @@ public class SparkassenApiClient implements PaymentApiClient {
                             Urls.CONSENT_DETAILS.parameter(PathVariables.CONSENT_ID, consentId))
                     .get(ConsentDetailsResponse.class);
         } catch (HttpResponseException e) {
-            SparkassenErrorHandler.handleError(
-                    e, SparkassenErrorHandler.ErrorSource.CONSENT_DETAILS);
+            handeHttpException(e, SparkassenErrorHandler.ErrorSource.CONSENT_DETAILS);
             throw e;
         }
     }
@@ -197,22 +194,28 @@ public class SparkassenApiClient implements PaymentApiClient {
                         ? paymentRequestMapper.getRecurringPaymentRequest(
                                 paymentRequest.getPayment())
                         : paymentRequestMapper.getPaymentRequest(paymentRequest.getPayment());
-
-        return createRequest(
-                        SparkassenConstants.Urls.PAYMENT_INITIATION
-                                .parameter(
-                                        PaymentConstants.PathVariables.PAYMENT_SERVICE,
-                                        PaymentService.getPaymentService(
-                                                paymentRequest
-                                                        .getPayment()
-                                                        .getPaymentServiceType()))
-                                .parameter(
-                                        PaymentConstants.PathVariables.PAYMENT_PRODUCT,
-                                        PaymentProduct.getPaymentProduct(
-                                                paymentRequest.getPayment().getPaymentScheme())))
-                .header(PaymentConstants.HeaderKeys.TPP_REJECTION_NOFUNDS_PREFERRED, true)
-                .header(SparkassenConstants.HeaderKeys.TPP_REDIRECT_PREFERRED, false)
-                .post(CreatePaymentResponse.class, createPaymentRequest);
+        try {
+            return createRequest(
+                            SparkassenConstants.Urls.PAYMENT_INITIATION
+                                    .parameter(
+                                            PaymentConstants.PathVariables.PAYMENT_SERVICE,
+                                            PaymentService.getPaymentService(
+                                                    paymentRequest
+                                                            .getPayment()
+                                                            .getPaymentServiceType()))
+                                    .parameter(
+                                            PaymentConstants.PathVariables.PAYMENT_PRODUCT,
+                                            PaymentProduct.getPaymentProduct(
+                                                    paymentRequest
+                                                            .getPayment()
+                                                            .getPaymentScheme())))
+                    .header(PaymentConstants.HeaderKeys.TPP_REJECTION_NOFUNDS_PREFERRED, true)
+                    .header(SparkassenConstants.HeaderKeys.TPP_REDIRECT_PREFERRED, false)
+                    .post(CreatePaymentResponse.class, createPaymentRequest);
+        } catch (HttpResponseException httpResponseException) {
+            handeHttpException(httpResponseException, ErrorSource.CREATE_PAYMENT);
+            throw httpResponseException;
+        }
     }
 
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
@@ -234,15 +237,7 @@ public class SparkassenApiClient implements PaymentApiClient {
                                             PaymentConstants.PathVariables.PAYMENT_ID, paymentId))
                     .get(FetchPaymentStatusResponse.class);
         } catch (HttpResponseException httpResponseException) {
-            // This handling is done here instead of SparkassenErrorHandler due to the fact that
-            // payment exceptions are not AgentError friendly.
-            if (ErrorResponse.fromHttpException(httpResponseException)
-                    .filter(
-                            ErrorResponse.anyTppMessageMatchesPredicate(
-                                    SparkassenKnownErrors.PAYMENT_STATUS_UNKNOWN))
-                    .isPresent()) {
-                throw new PaymentRejectedException(httpResponseException);
-            }
+            handeHttpException(httpResponseException, ErrorSource.FETCH_PAYMENT);
             throw httpResponseException;
         }
     }
