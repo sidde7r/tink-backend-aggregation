@@ -13,8 +13,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
@@ -25,8 +23,6 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
-        "@maven//:no_finn_unleash_unleash_client_java",
         "@tink_backend//src/libraries/account_identifier",
-        "@tink_backend//src/libraries/unleash",
     ],
 )

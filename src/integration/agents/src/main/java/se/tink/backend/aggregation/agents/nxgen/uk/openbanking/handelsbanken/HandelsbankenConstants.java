@@ -5,8 +5,6 @@ import java.time.ZoneId;
 public class HandelsbankenConstants {
 
     public static final int MAX_FETCH_PERIOD_MONTHS = 13;
-    public static final String PROVIDER_NAME = "handelsbanken";
-    public static final String CERT_ID = "DEFAULT";
 
     public static class Time {
         public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("UTC");
