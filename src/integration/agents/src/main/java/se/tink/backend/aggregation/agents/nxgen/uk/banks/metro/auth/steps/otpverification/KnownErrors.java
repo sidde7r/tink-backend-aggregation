@@ -11,6 +11,9 @@ import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.error.
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.rpc.tlc.ErrorResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentErrorBuilder;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.DeviceRegistrationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.IncorrectOtpError;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -61,6 +64,22 @@ enum KnownErrors {
                                             .filter(err -> err.hasErrorCode(4001))
                                             .isEmpty()),
                     new DeviceRegistrationError())),
+    AUTHENTICATION_FAILURE(
+            API.Case(
+                    $(
+                            res ->
+                                    !Option.of(res)
+                                            .filter(ResponseEntity::hasBody)
+                                            .map(
+                                                    r ->
+                                                            SerializationUtils
+                                                                    .deserializeFromString(
+                                                                            r.getBody(),
+                                                                            ErrorResponse.class))
+                                            .filter(er -> er.hasAssertionErrorCode(5))
+                                            .isEmpty()),
+                    new AuthenticationError(
+                            AgentErrorBuilder.buildError(AgentError.GENERAL_AUTHORIZATION_ERROR)))),
     UNKNOWN_ERROR(
             API.Case(
                     $(res -> res.getStatusCode().isError()),
