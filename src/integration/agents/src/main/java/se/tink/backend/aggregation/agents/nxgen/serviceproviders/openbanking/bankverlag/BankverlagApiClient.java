@@ -104,8 +104,7 @@ public class BankverlagApiClient {
                     .createRequest(new URL(url))
                     .put(AuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
         } catch (HttpResponseException hre) {
-            errorHandler.handleError(
-                    hre, BankverlagErrorHandler.ErrorSource.AUTHORISATION_USERNAME_PASSWORD);
+            errorHandler.handleError(hre, BankverlagErrorHandler.ErrorSource.OTP_STEP);
             throw hre;
         }
     }

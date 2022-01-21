@@ -92,9 +92,6 @@ public class BankverlagApiClientTest {
         Throwable thrown = catchThrowable(() -> apiClient.finalizeAuthorization(URL, OTP));
         // then
         assertThat(thrown).isInstanceOf(HttpResponseException.class);
-        verify(errorHandler)
-                .handleError(
-                        (HttpResponseException) thrown,
-                        ErrorSource.AUTHORISATION_USERNAME_PASSWORD);
+        verify(errorHandler).handleError((HttpResponseException) thrown, ErrorSource.OTP_STEP);
     }
 }

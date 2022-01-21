@@ -15,12 +15,26 @@ public class DegussabankErrorHandler extends BankverlagErrorHandler {
                     .code("FORMAT_ERROR")
                     .text("Fehler beim Registrieren der Nutzerdaten")
                     .build();
+    private static final TppMessage OTP_INVALID =
+            TppMessage.builder()
+                    .category(TppMessage.ERROR)
+                    .code("FORMAT_ERROR")
+                    .text("9050:Nachricht teilweise fehlerhaft.\\n9941:TAN ung?ltig.\\n")
+                    .build();
 
     @Override
     protected Optional<AgentError> handleUsernamePasswordErrors(ErrorResponse errorResponse) {
         if (ErrorResponse.anyTppMessageMatchesPredicate(PSU_CREDENTIALS_INVALID)
                 .test(errorResponse)) {
             return Optional.of(LoginError.INCORRECT_CREDENTIALS);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    protected Optional<AgentError> handleOtpErrors(ErrorResponse errorResponse) {
+        if (ErrorResponse.anyTppMessageMatchesPredicate(OTP_INVALID).test(errorResponse)) {
+            return Optional.of(LoginError.INCORRECT_CHALLENGE_RESPONSE);
         }
         return Optional.empty();
     }
