@@ -43,7 +43,11 @@ public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
                     Toggle.of("uk-handelsbanken-use-uk-certs")
                             .context(
                                     UnleashContext.builder()
-                                            .addProperty(Context.APP_ID.getValue(), appId)
+                                            .addProperty(
+                                                    Context.PROVIDER_NAME.getValue(),
+                                                    context.getProviderId())
+                                            .addProperty(
+                                                    Context.APP_ID.getValue(), context.getAppId())
                                             .build())
                             .build();
 
