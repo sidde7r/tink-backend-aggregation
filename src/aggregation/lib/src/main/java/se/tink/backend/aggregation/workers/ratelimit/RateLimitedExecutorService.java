@@ -99,7 +99,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent", 0.03)
                     .put("nxgen.demo.openbanking.demobank.DemobankAgent", 3.)
                     .put("nxgen.fi.openbanking.handelsbanken.HandelsbankenAgent", 0.003)
-                    .put("nxgen.fi.openbanking.nordea.NordeaFiAgent", 0.0025)
+                    .put("nxgen.fi.openbanking.nordea.NordeaFiAgent", 0.001)
                     .put("nxgen.fi.openbanking.spankki.SPankkiAgent", 0.003)
                     .put("nxgen.pt.openbanking.activobank.ActivoBankAgent", 0.015)
                     .put("nxgen.pt.openbanking.atlanticoeuropa.AtlanticoEuropaAgent", 0.015)
