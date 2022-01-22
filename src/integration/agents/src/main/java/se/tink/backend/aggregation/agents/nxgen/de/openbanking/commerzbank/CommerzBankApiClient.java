@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -56,9 +57,14 @@ public class CommerzBankApiClient extends Xs2aDevelopersApiClient {
                                 Xs2aDevelopersConstants.HeaderKeys.X_REQUEST_ID,
                                 randomValueGenerator.getUUID())
                         .body(createPaymentRequest);
-
         requestBuilder.headers(getUserSpecificHeaders());
-        return requestBuilder.post(HttpResponse.class);
+
+        try {
+            return requestBuilder.post(HttpResponse.class);
+        } catch (HttpResponseException httpResponseException) {
+            handleScaCreationFailed(httpResponseException);
+            throw httpResponseException;
+        }
     }
 
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {

@@ -126,15 +126,7 @@ public class Xs2aDevelopersApiClient {
                     .body(consentRequest)
                     .post(HttpResponse.class);
         } catch (HttpResponseException httpResponseException) {
-            ErrorResponse.fromHttpException(httpResponseException)
-                    .filter(ErrorResponse.anyTppMessageMatchesPredicate(SCA_CREATION_FAILED))
-                    .ifPresent(
-                            errResponse -> {
-                                throw BankServiceError.BANK_SIDE_FAILURE.exception(
-                                        "Failed to create consent due to error "
-                                                + SCA_CREATION_FAILED_MESSAGE);
-                            });
-
+            handleScaCreationFailed(httpResponseException);
             throw httpResponseException;
         }
     }
@@ -271,7 +263,25 @@ public class Xs2aDevelopersApiClient {
                                         .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                                         .orElseThrow(SessionError.SESSION_EXPIRED::exception));
         requestBuilder.headers(getUserSpecificHeaders());
-        return requestBuilder.post(CreatePaymentResponse.class);
+
+        try {
+            return requestBuilder.post(CreatePaymentResponse.class);
+        } catch (HttpResponseException httpResponseException) {
+            handleScaCreationFailed(httpResponseException);
+
+            throw httpResponseException;
+        }
+    }
+
+    protected void handleScaCreationFailed(HttpResponseException httpResponseException) {
+        ErrorResponse.fromHttpException(httpResponseException)
+                .filter(ErrorResponse.anyTppMessageMatchesPredicate(SCA_CREATION_FAILED))
+                .ifPresent(
+                        errResponse -> {
+                            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                                    "Failed to create consent due to error "
+                                            + SCA_CREATION_FAILED_MESSAGE);
+                        });
     }
 
     public GetPaymentResponse getPayment(String paymentId) {
