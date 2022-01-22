@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.DayOfWeek;
@@ -12,13 +11,11 @@ import java.util.Map;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;
-import org.assertj.core.api.Assertions;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreateRecurringPaymentRequest;
@@ -84,46 +81,6 @@ public class IngPaymentMapperTest {
                                 .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
                                 .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
                                 .build());
-    }
-
-    @Test
-    @Parameters(method = "instantPaymentTestParams")
-    public void shouldThrowExceptionForInstantPayment(
-            PaymentScheme paymentScheme, String expectedLocalInstrumentCode) {
-        // given
-        String debtorIban = randomIban(CountryCode.DE);
-        String creditorIban = randomIban(CountryCode.DE);
-
-        Payment payment =
-                new Payment.Builder()
-                        .withDebtor(new Debtor(new IbanIdentifier(debtorIban)))
-                        .withCreditor(
-                                new Creditor(
-                                        new IbanIdentifier(creditorIban), "Payment Creditor 123"))
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(2.1))
-                        .withRemittanceInformation(
-                                unstructuredRemittanceInformation("SOME_REMITTANCE_VALUE"))
-                        .withPaymentScheme(paymentScheme)
-                        .build();
-
-        // when
-        Throwable exception =
-                catchThrowable(() -> paymentMapper.toIngCreatePaymentRequest(payment));
-
-        // then
-        Assertions.assertThat(exception)
-                .isInstanceOf(PaymentRejectedException.class)
-                .hasMessage("[ING] Instant payment is not supported");
-    }
-
-    @SuppressWarnings("unused")
-    private static Object[] instantPaymentTestParams() {
-        return new Object[] {
-            new Object[] {PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, null},
-            new Object[] {
-                PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, IngBaseConstants.PaymentRequest.INST
-            }
-        };
     }
 
     @SneakyThrows

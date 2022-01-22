@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentResponse;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @Slf4j
@@ -53,6 +55,10 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     private IngCreatePaymentRequest createPaymentRequest(Payment payment)
             throws PaymentRejectedException {
+        // Temporary solution to be fixed in NZG-1112
+        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()) {
+            throw new PaymentValidationException("Instant payment is not supported");
+        }
         if (PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())) {
             return paymentMapper.toIngCreateRecurringPaymentRequest(payment);
         }

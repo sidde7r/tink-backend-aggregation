@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePa
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @RequiredArgsConstructor
 public class IngPaymentMapper {
@@ -22,9 +21,6 @@ public class IngPaymentMapper {
 
     public IngCreatePaymentRequest toIngCreatePaymentRequest(Payment payment)
             throws PaymentRejectedException {
-        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()) {
-            throw new PaymentRejectedException("[ING] Instant payment is not supported");
-        }
         CreatePaymentRequest baseRequest =
                 basePaymentMapper.getPaymentRequestWithoutDebtorAccount(payment).build();
 
