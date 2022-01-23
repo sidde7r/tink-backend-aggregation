@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
@@ -19,8 +21,8 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
-import se.tink.integration.webdriver.service.proxy.ProxyResponseMatcher;
-import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.proxy.ProxyResponse;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseMatcher;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 @RunWith(JUnitParamsRunner.class)
@@ -34,6 +36,7 @@ public class BankIdIframeAuthenticationControllerTest {
     private BankIdAuthenticationState authenticationState;
     private BankIdIframeInitializer iframeInitializer;
     private BankIdIframeAuthenticator iframeAuthenticator;
+    private BankIdAuthFinishProxyListener authFinishProxyListener;
     private BankIdIframeController iframeController;
 
     private Credentials credentials;
@@ -53,6 +56,7 @@ public class BankIdIframeAuthenticationControllerTest {
         authenticationState = mock(BankIdAuthenticationState.class);
         iframeInitializer = mock(BankIdIframeInitializer.class);
         iframeAuthenticator = mock(BankIdIframeAuthenticator.class);
+        authFinishProxyListener = mock(BankIdAuthFinishProxyListener.class);
         iframeController = mock(BankIdIframeController.class);
         credentials = mock(Credentials.class);
         userAvailability = mock(UserAvailability.class);
@@ -66,6 +70,7 @@ public class BankIdIframeAuthenticationControllerTest {
                         authenticationState,
                         iframeInitializer,
                         iframeAuthenticator,
+                        authFinishProxyListener,
                         iframeController);
 
         authenticationController =
@@ -75,6 +80,7 @@ public class BankIdIframeAuthenticationControllerTest {
                         authenticationState,
                         iframeInitializer,
                         iframeAuthenticator,
+                        authFinishProxyListener,
                         iframeController,
                         userAvailability);
     }
@@ -100,26 +106,26 @@ public class BankIdIframeAuthenticationControllerTest {
         // given
         when(iframeInitializer.initializeIframe(webDriver)).thenReturn(firstWindow);
 
-        ProxyResponseMatcher proxyResponseMatcher = mock(ProxyResponseMatcher.class);
-        when(iframeAuthenticator.getMatcherForResponseThatIndicatesAuthenticationWasFinished())
-                .thenReturn(proxyResponseMatcher);
+        ProxySaveResponseMatcher proxySaveResponseMatcher = mock(ProxySaveResponseMatcher.class);
+        when(iframeAuthenticator.getProxyResponseMatcherToDetectAuthenticationWasFinished())
+                .thenReturn(proxySaveResponseMatcher);
 
-        ResponseFromProxy responseFromProxy = mock(ResponseFromProxy.class);
-        when(webDriver.waitForMatchingProxyResponse(anyInt()))
-                .thenReturn(Optional.of(responseFromProxy));
+        ProxyResponse proxyResponse = mock(ProxyResponse.class);
+        when(authFinishProxyListener.waitForResponse(anyInt(), any()))
+                .thenReturn(Optional.of(proxyResponse));
 
         // when
         authenticationController.authenticate(credentials);
 
         // then
-        verifyStartsListeningForResponseMatchingMatcher(proxyResponseMatcher);
+        verifyStartsListeningForAuthFinishResponse();
         verifyIframeInitialization();
         verifySavesFirstIframeWindow(firstWindow);
         verifyAuthenticationWithIframeController();
         verifyWaitsForResponseFromUrl(10);
         verifyHandlesIframeAuthResult(
                 BankIdIframeAuthenticationResult.builder()
-                        .proxyResponseFromAuthFinishUrl(responseFromProxy)
+                        .proxyResponseFromAuthFinishUrl(proxyResponse)
                         .webDriver(webDriver)
                         .build());
 
@@ -141,10 +147,10 @@ public class BankIdIframeAuthenticationControllerTest {
         mocksToVerifyInOrder.verify(iframeInitializer).initializeIframe(webDriver);
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private void verifyStartsListeningForResponseMatchingMatcher(
-            ProxyResponseMatcher proxyResponseMatcher) {
-        mocksToVerifyInOrder.verify(webDriver).setProxyResponseMatcher(proxyResponseMatcher);
+    private void verifyStartsListeningForAuthFinishResponse() {
+        mocksToVerifyInOrder
+                .verify(webDriver)
+                .registerProxyListener("authFinishProxyListener", authFinishProxyListener);
     }
 
     private void verifyAuthenticationWithIframeController() {
@@ -153,7 +159,9 @@ public class BankIdIframeAuthenticationControllerTest {
 
     @SuppressWarnings("SameParameterValue")
     private void verifyWaitsForResponseFromUrl(int waitForSeconds) {
-        mocksToVerifyInOrder.verify(webDriver).waitForMatchingProxyResponse(waitForSeconds);
+        mocksToVerifyInOrder
+                .verify(authFinishProxyListener)
+                .waitForResponse(waitForSeconds, TimeUnit.SECONDS);
     }
 
     private void verifyHandlesIframeAuthResult(BankIdIframeAuthenticationResult result) {

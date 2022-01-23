@@ -2,33 +2,27 @@ package se.tink.integration.webdriver.service.proxy;
 
 import com.browserup.bup.BrowserUpProxy;
 import com.google.inject.Inject;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class ProxyManagerImpl implements ProxyManager {
 
     private final BrowserUpProxy browserUpProxy;
-    private final ProxyResponseListener responseListener;
+    private final ProxyFilter proxyFilter;
 
     @Inject
-    public ProxyManagerImpl(BrowserUpProxy browserUpProxy) {
+    public ProxyManagerImpl(BrowserUpProxy browserUpProxy, ProxyFilter proxyFilter) {
         this.browserUpProxy = browserUpProxy;
+        this.proxyFilter = proxyFilter;
 
-        this.responseListener = new ProxyResponseListener();
-        browserUpProxy.addResponseFilter(responseListener);
+        browserUpProxy.addRequestFilter(proxyFilter);
+        browserUpProxy.addResponseFilter(proxyFilter);
     }
 
     @Override
-    public void setProxyResponseMatcher(ProxyResponseMatcher proxyResponseMatcher) {
-        responseListener.changeProxyResponseMatcher(proxyResponseMatcher);
-    }
-
-    @Override
-    public Optional<ResponseFromProxy> waitForMatchingProxyResponse(int waitForSeconds) {
-        return responseListener.waitForResponse(waitForSeconds, TimeUnit.SECONDS);
+    public void registerProxyListener(String key, ProxyListener proxyListener) {
+        proxyFilter.addListener(key, proxyListener);
     }
 
     public void shutDownProxy() {
-        browserUpProxy.abort();
+        browserUpProxy.stop();
     }
 }

@@ -15,6 +15,7 @@ import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.integration.webdriver.service.basicutils.Sleeper;
 import se.tink.integration.webdriver.service.basicutils.WebDriverBasicUtils;
 import se.tink.integration.webdriver.service.basicutils.WebDriverBasicUtilsImpl;
+import se.tink.integration.webdriver.service.proxy.ProxyFilter;
 import se.tink.integration.webdriver.service.proxy.ProxyManager;
 import se.tink.integration.webdriver.service.proxy.ProxyManagerImpl;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearcher;
@@ -55,6 +56,7 @@ public class WebDriverServiceModule extends AbstractModule {
     protected void configure() {
         bind(Sleeper.class).toInstance(sleeper);
         bind(BrowserUpProxy.class).toInstance(proxy);
+        bind(ProxyFilter.class).toInstance(new ProxyFilter());
         bind(WebDriverWrapper.class).toInstance(webDriver);
         bind(JavascriptExecutor.class).toInstance(javascriptExecutor);
 

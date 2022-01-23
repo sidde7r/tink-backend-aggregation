@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.mock;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -9,6 +10,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthFinishProxyListener;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProvider;
@@ -19,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.proxy.ProxyManager;
-import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.proxy.ProxyResponse;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
@@ -44,15 +46,17 @@ public class BankIdIframeAuthenticationControllerProviderMock
 
         WebDriverService bankIdWebDriver = mock(WebDriverService.class);
 
-        ResponseFromProxy responseFromProxy =
+        BankIdAuthFinishProxyListener authFinishProxyListener =
+                mock(BankIdAuthFinishProxyListener.class);
+        ProxyResponse proxyResponse =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(
                                 "someKey1", "someValue1",
                                 "Location",
                                         "http://redirect.url?key1=value1&code=AUTH_CODE&key2=value2",
                                 "someKey2", "someValue2"));
-        when(bankIdWebDriver.waitForMatchingProxyResponse(anyInt()))
-                .thenReturn(Optional.of(responseFromProxy));
+        when(authFinishProxyListener.waitForResponse(anyInt(), any()))
+                .thenReturn(Optional.of(proxyResponse));
 
         BankIdAuthenticationState authenticationState = mock(BankIdAuthenticationState.class);
 
@@ -64,6 +68,7 @@ public class BankIdIframeAuthenticationControllerProviderMock
                 authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,
+                authFinishProxyListener,
                 iframeController,
                 userAvailability);
     }

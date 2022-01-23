@@ -8,9 +8,14 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ResponseFromProxy {
+public class ProxyResponse {
 
     private final HttpResponse response;
     private final HttpMessageContents contents;
     private final HttpMessageInfo messageInfo;
+
+    public boolean urlContainsLowerCase(String value) {
+        String url = messageInfo.getUrl();
+        return url.toLowerCase().contains(value.toLowerCase());
+    }
 }

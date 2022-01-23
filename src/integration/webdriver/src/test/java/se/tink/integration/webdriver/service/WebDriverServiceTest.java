@@ -10,8 +10,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
+import java.util.stream.Stream;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +22,6 @@ import org.mockito.InOrder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import se.tink.integration.webdriver.WebDriverWrapper;
-import se.tink.integration.webdriver.service.basicutils.Sleeper;
 import se.tink.integration.webdriver.service.basicutils.WebDriverBasicUtils;
 import se.tink.integration.webdriver.service.proxy.ProxyManager;
 import se.tink.integration.webdriver.service.searchelements.ElementLocator;
@@ -35,9 +37,10 @@ public class WebDriverServiceTest {
     /*
     Mocks
      */
-    private WebDriverWrapper driver;
-    private WebDriverBasicUtils driverBasicUtils;
+    private WebDriverWrapper driverWrapper;
+    private WebDriverBasicUtils basicUtils;
     private ElementsSearcher elementsSearcher;
+    private ProxyManager proxyManager;
 
     private InOrder mocksToVerifyInOrder;
 
@@ -48,95 +51,15 @@ public class WebDriverServiceTest {
 
     @Before
     public void setup() {
-        driver = mock(WebDriverWrapper.class);
-
-        driverBasicUtils = mock(WebDriverBasicUtils.class);
+        driverWrapper = mock(WebDriverWrapper.class);
+        basicUtils = mock(WebDriverBasicUtils.class);
         elementsSearcher = mock(ElementsSearcher.class);
-        Sleeper sleeper = mock(Sleeper.class);
+        proxyManager = mock(ProxyManager.class);
 
-        ProxyManager proxyManager = mock(ProxyManager.class);
-
-        mocksToVerifyInOrder =
-                inOrder(driver, driverBasicUtils, elementsSearcher, sleeper, proxyManager);
+        mocksToVerifyInOrder = inOrder(driverWrapper, basicUtils, elementsSearcher, proxyManager);
 
         driverService =
-                new WebDriverServiceImpl(driver, driverBasicUtils, elementsSearcher, proxyManager);
-    }
-
-    @Test
-    @Parameters(value = {"http://some.url", "https://other.url"})
-    public void should_get_url(String url) {
-        // when
-        driverService.get(url);
-
-        // then
-        mocksToVerifyInOrder.verify(driver).get(url);
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    @Parameters(value = {"http://some.url", "https://other.url"})
-    public void should_get_current_url(String expectedCurrentUrl) {
-        // given
-        when(driver.getCurrentUrl()).thenReturn(expectedCurrentUrl);
-
-        // when
-        String currentUrl = driverService.getCurrentUrl();
-
-        // then
-        assertThat(currentUrl).isEqualTo(expectedCurrentUrl);
-
-        mocksToVerifyInOrder.verify(driver).getCurrentUrl();
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void should_get_full_page_source_when_there_is_bank_id_iframe() {
-        // given
-        when(driverBasicUtils.trySwitchToIframe(any())).thenReturn(true);
-        when(driver.getPageSource())
-                .thenReturn("parent page source")
-                .thenReturn("iframe page source");
-
-        // when
-        String pageSourceLog = driverService.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
-
-        // then
-        assertThat(pageSourceLog)
-                .isEqualTo(
-                        String.format(
-                                "Main page source:%n" + "%s" + "%nIframe source:%n" + "%s",
-                                "parent page source", "iframe page source"));
-
-        mocksToVerifyInOrder.verify(driverBasicUtils).switchToParentWindow();
-        mocksToVerifyInOrder.verify(driver).getPageSource();
-        mocksToVerifyInOrder.verify(driverBasicUtils).trySwitchToIframe(EXAMPLE_BY_IFRAME);
-        mocksToVerifyInOrder.verify(driver).getPageSource();
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void should_omit_iframe_source_when_there_is_no_bank_id_iframe() {
-        // given
-        when(driverBasicUtils.trySwitchToIframe(any())).thenReturn(false);
-        when(driver.getPageSource())
-                .thenReturn("parent page source")
-                .thenReturn("iframe page source");
-
-        // when
-        String pageSourceLog = driverService.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
-
-        // then
-        assertThat(pageSourceLog)
-                .isEqualTo(
-                        String.format(
-                                "Main page source:%n" + "%s" + "%nIframe source:%n" + "%s",
-                                "parent page source", null));
-
-        mocksToVerifyInOrder.verify(driverBasicUtils).switchToParentWindow();
-        mocksToVerifyInOrder.verify(driver).getPageSource();
-        mocksToVerifyInOrder.verify(driverBasicUtils).trySwitchToIframe(EXAMPLE_BY_IFRAME);
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
+                new WebDriverServiceImpl(driverWrapper, basicUtils, elementsSearcher, proxyManager);
     }
 
     @Test
@@ -251,21 +174,89 @@ public class WebDriverServiceTest {
     }
 
     @Test
-    public void should_delegate_searching_for_elements_to_elements_searcher() {
+    public void should_get_full_page_source_including_iframe() {
         // given
-        ElementsSearchResult expectedSearchResult = mock(ElementsSearchResult.class);
-        when(elementsSearcher.searchForFirstMatchingLocator(any()))
-                .thenReturn(expectedSearchResult);
+        when(basicUtils.trySwitchToIframe(any())).thenReturn(true);
+        when(driverWrapper.getPageSource())
+                .thenReturn("parent page source")
+                .thenReturn("iframe page source");
 
         // when
-        ElementsSearchQuery searchQuery = mock(ElementsSearchQuery.class);
-        ElementsSearchResult searchResult =
-                driverService.searchForFirstMatchingLocator(searchQuery);
+        String pageSourceLog = driverService.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
 
         // then
-        assertThat(searchResult).isEqualTo(expectedSearchResult);
+        assertThat(pageSourceLog)
+                .isEqualTo(
+                        String.format(
+                                "Main page source:%n" + "%s" + "%nIframe source:%n" + "%s",
+                                "parent page source", "iframe page source"));
 
-        mocksToVerifyInOrder.verify(elementsSearcher).searchForFirstMatchingLocator(searchQuery);
+        mocksToVerifyInOrder.verify(basicUtils).switchToParentWindow();
+        mocksToVerifyInOrder.verify(driverWrapper).getPageSource();
+        mocksToVerifyInOrder.verify(basicUtils).trySwitchToIframe(EXAMPLE_BY_IFRAME);
+        mocksToVerifyInOrder.verify(driverWrapper).getPageSource();
         mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void should_omit_iframe_source_when_it_cant_be_found() {
+        // given
+        when(basicUtils.trySwitchToIframe(any())).thenReturn(false);
+        when(driverWrapper.getPageSource())
+                .thenReturn("parent page source")
+                .thenReturn("iframe page source");
+
+        // when
+        String pageSourceLog = driverService.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
+
+        // then
+        assertThat(pageSourceLog)
+                .isEqualTo(
+                        String.format(
+                                "Main page source:%n" + "%s" + "%nIframe source:%n" + "%s",
+                                "parent page source", null));
+
+        mocksToVerifyInOrder.verify(basicUtils).switchToParentWindow();
+        mocksToVerifyInOrder.verify(driverWrapper).getPageSource();
+        mocksToVerifyInOrder.verify(basicUtils).trySwitchToIframe(EXAMPLE_BY_IFRAME);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void should_delegate_extended_interfaces_to_its_components() {
+        verifyDelegation(driverService, WebDriverWrapper.class, driverWrapper);
+        verifyDelegation(driverService, WebDriverBasicUtils.class, basicUtils);
+        verifyDelegation(driverService, ElementsSearcher.class, elementsSearcher);
+        verifyDelegation(driverService, ProxyManager.class, proxyManager);
+    }
+
+    @SneakyThrows
+    private void verifyDelegation(
+            Object wrapperObject, Class<?> delegatedClass, Object delegatedObject) {
+        for (Method delegatedMethod : delegatedClass.getDeclaredMethods()) {
+
+            Class<?>[] parameterTypes = delegatedMethod.getParameterTypes();
+            Object[] arguments = Stream.of(parameterTypes).map(this::mockType).toArray();
+
+            Method wrapperMethod =
+                    wrapperObject.getClass().getMethod(delegatedMethod.getName(), parameterTypes);
+
+            // invoke wrapper method
+            wrapperMethod.invoke(wrapperObject, arguments);
+
+            // ensure the same method was called on delegate exactly once with the correct arguments
+            delegatedMethod.invoke(verify(delegatedObject), arguments);
+        }
+    }
+
+    /** Mock primitives and final classes */
+    private Object mockType(Class<?> objClass) {
+        if (objClass == int.class) {
+            return 0;
+        }
+        if (objClass == String.class) {
+            return "";
+        }
+        return mock(objClass);
     }
 }

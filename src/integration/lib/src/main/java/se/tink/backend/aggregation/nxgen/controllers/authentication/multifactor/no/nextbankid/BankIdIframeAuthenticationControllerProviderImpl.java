@@ -25,6 +25,11 @@ public class BankIdIframeAuthenticationControllerProviderImpl
         WebDriverService webDriverService =
                 WebDriverServiceModule.createWebDriverService(agentTemporaryStorage);
 
+        BankIdAuthFinishProxyListener authFinishProxyListener =
+                new BankIdAuthFinishProxyListener(
+                        iframeAuthenticator
+                                .getProxyResponseMatcherToDetectAuthenticationWasFinished());
+
         BankIdAuthenticationState authenticationState = new BankIdAuthenticationState();
 
         BankIdIframeController iframeController =
@@ -41,6 +46,7 @@ public class BankIdIframeAuthenticationControllerProviderImpl
                 authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,
+                authFinishProxyListener,
                 iframeController,
                 userAvailability);
     }

@@ -15,6 +15,4 @@ public interface WebDriverService
     void clickButton(ElementLocator selector);
 
     void setValueToElement(String value, ElementLocator selector);
-
-    void sleepFor(int millis);
 }

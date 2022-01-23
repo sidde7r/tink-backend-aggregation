@@ -11,13 +11,13 @@ public class ProxyResponseMatchers {
 
     @EqualsAndHashCode
     @RequiredArgsConstructor
-    public static class ProxyResponseUrlSubstringMatcher implements ProxyResponseMatcher {
+    public static class ProxyUrlSubstringMatcher implements ProxySaveResponseMatcher {
 
         private final String urlSubstring;
 
         @Override
-        public boolean matches(ResponseFromProxy responseFromProxy) {
-            String responseUrl = responseFromProxy.getMessageInfo().getUrl();
+        public boolean matchesResponse(ProxyResponse proxyResponse) {
+            String responseUrl = proxyResponse.getMessageInfo().getUrl();
             return StringUtils.containsIgnoreCase(responseUrl, urlSubstring);
         }
     }
