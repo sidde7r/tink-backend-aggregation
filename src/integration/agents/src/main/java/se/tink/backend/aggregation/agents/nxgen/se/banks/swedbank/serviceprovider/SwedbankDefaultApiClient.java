@@ -650,7 +650,7 @@ public class SwedbankDefaultApiClient {
     }
 
     private boolean hasValidProfile(ProfileResponse profileResponse) {
-        if (isFallbackWithBothBanks(profileResponse)) {
+        if (configuration.getName().contains(BankName.FALLBACK)) {
             for (BankEntity bankEntity : profileResponse.getBanks()) {
                 if (hasValidPrivateProfileForChosenBank(bankEntity)) {
                     return true;
@@ -665,12 +665,6 @@ public class SwedbankDefaultApiClient {
                         : profileResponse.isHasSwedbankProfile();
 
         return hasValidBank && profileResponse.getBanks().size() > 0;
-    }
-
-    private boolean isFallbackWithBothBanks(ProfileResponse profileResponse) {
-        return configuration.getName().contains(BankName.FALLBACK)
-                && (profileResponse.isHasSavingbankProfile()
-                        && profileResponse.isHasSwedbankProfile());
     }
 
     private boolean hasValidPrivateProfileForChosenBank(BankEntity bankEntity) {
