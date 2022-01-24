@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.OTPSMS_AUTH;
+
 import com.google.common.base.Strings;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
@@ -45,6 +47,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -278,7 +281,19 @@ public class LaCaixaApiClient {
 
     public ScaResponse authorizeSCA(String code) {
         final AuthenticationRequest body = new AuthenticationRequest(code);
-        return createRequest(Urls.AUTHORIZE_SCA).post(ScaResponse.class, body);
+        try {
+            return createRequest(Urls.AUTHORIZE_SCA).post(ScaResponse.class, body);
+        } catch (HttpResponseException e) {
+            HttpResponse exceptionResponse = e.getResponse();
+            LaCaixaErrorResponse errorResponse =
+                    exceptionResponse.getBody(LaCaixaErrorResponse.class);
+            if (errorResponse.getMessage().contains(OTPSMS_AUTH)) {
+                return initiateEnrolment();
+            }
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } catch (HttpClientException e) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
     }
 
     public StatusResponse finalizeEnrolment(@Nullable String code) {
