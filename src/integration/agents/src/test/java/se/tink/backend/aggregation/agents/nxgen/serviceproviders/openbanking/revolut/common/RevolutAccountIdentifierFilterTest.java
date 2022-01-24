@@ -1,10 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common;
 
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common.RevolutAccountIdentifierFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
