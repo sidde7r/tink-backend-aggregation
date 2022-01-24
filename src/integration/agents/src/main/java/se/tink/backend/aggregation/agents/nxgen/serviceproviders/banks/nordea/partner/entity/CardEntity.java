@@ -73,19 +73,13 @@ public class CardEntity {
     }
 
     @JsonIgnore
-    public Optional<CreditCardAccount> toTinkCreditCardAccount(boolean isOnStaging) {
+    public Optional<CreditCardAccount> toTinkCreditCardAccount() {
         if (!isCreditCard()) {
             return Optional.empty();
         }
 
         final String maskedCreditCardNumber = credit.getMaskedCreditCardNumber();
         final String cardAlias = MoreObjects.firstNonNull(nickname, maskedCreditCardNumber);
-        String accountName;
-        if (isOnStaging) {
-            accountName = MoreObjects.firstNonNull(nickname, productCode);
-        } else {
-            accountName = cardAlias;
-        }
 
         final CreditCardBuildStep builder =
                 CreditCardAccount.nxBuilder()
@@ -111,7 +105,8 @@ public class CardEntity {
                                 IdModule.builder()
                                         .withUniqueIdentifier(cardId)
                                         .withAccountNumber(maskedCreditCardNumber)
-                                        .withAccountName(accountName)
+                                        .withAccountName(
+                                                MoreObjects.firstNonNull(nickname, productCode))
                                         .addIdentifier(
                                                 new MaskedPanIdentifier(maskedCreditCardNumber))
                                         .build())

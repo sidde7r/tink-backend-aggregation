@@ -52,7 +52,6 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final NordeaPartnerJweHelper jweHelper;
-    private final boolean isOnStaging;
 
     @Inject
     public NordeaPartnerAgent(
@@ -60,10 +59,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
             NordeaPartnerKeystoreProvider keystoreProvider) {
         super(componentProvider);
         log.info("Nordea Partner: Start of the agent");
-        isOnStaging =
-                "neston-staging".equalsIgnoreCase(componentProvider.getContext().getClusterId())
-                        || "neston-preprod"
-                                .equalsIgnoreCase(componentProvider.getContext().getClusterId());
+
         User user = componentProvider.getUser();
         Provider provider = componentProvider.getProvider();
         apiClient =
@@ -177,7 +173,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
             LocalDateTimeSource dateTimeSource) {
         NordeaPartnerTransactionalAccountFetcher accountFetcher =
                 new NordeaPartnerTransactionalAccountFetcher(
-                        apiClient, getAccountMapper(), dateTimeSource, request, isOnStaging);
+                        apiClient, getAccountMapper(), dateTimeSource, request);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -203,8 +199,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     private CreditCardRefreshController constructCreditCardRefreshController(
             LocalDateTimeSource dateTimeSource) {
         final NordeaPartnerCreditCardAccountFetcher fetcher =
-                new NordeaPartnerCreditCardAccountFetcher(
-                        apiClient, dateTimeSource, request, isOnStaging);
+                new NordeaPartnerCreditCardAccountFetcher(apiClient, dateTimeSource, request);
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,

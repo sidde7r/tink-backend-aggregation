@@ -1,225 +1,199 @@
 {
     "accounts": [
         {
-            "accountNumber": "1234 **** **** 1234",
+            "accountNumber": "5228 **** **** 5332",
             "accountExclusion": "NONE",
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
-                "exactValue": 0,
-                "unscaledValue": 0,
-                "scale": 0,
-                "doubleValue": 0.0
+                "doubleValue": 2000.0,
+                "exactValue": 2000,
+                "unscaledValue": 2000,
+                "scale": 0
             },
             "exactBalance": {
                 "currencyCode": "SEK",
-                "exactValue": -68980.46,
-                "unscaledValue": -6898046,
-                "scale": 2,
-                "doubleValue": -68980.46
+                "doubleValue": 2000.0,
+                "exactValue": 2000.0,
+                "unscaledValue": 2,
+                "scale": -3
             },
             "currencyCode": "SEK",
-            "bankId": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "bankId": "3afb64334383ea44b02ed3f5247a22a818e9d27d",
             "excluded": false,
             "favored": false,
-            "name": "Sad Card",
+            "name": "FI83009",
             "ownership": 1.0,
             "type": "CREDIT_CARD",
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"masked-pan://1234+****+****+1234\"]",
+            "identifiers": "[\"masked-pan://5228+****+****+5332\"]",
             "closed": false,
-            "holderName": "Sven Svensson",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Sven Svensson",
-                        "role": "HOLDER"
-                    }
-                ]
+                "identities": []
             },
             "flags": "[]",
             "balances": [],
-            "availableCredit": 0.0,
-            "balance": -68980.46
+            "availableCredit": 2000.0,
+            "balance": 2000.0
         },
         {
-            "accountNumber": "30080012345",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "SEK",
-                "exactValue": 68892.6,
-                "unscaledValue": 688926,
-                "scale": 1,
-                "doubleValue": 68892.6
-            },
-            "currencyCode": "SEK",
-            "bankId": "SE3830000000030080012345",
-            "excluded": false,
-            "favored": false,
-            "name": "CHECKKONTO edited",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://SE3830000000030080012345\",\"se://30080012345\"]",
-            "closed": false,
-            "holderName": "Svensson,sven",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Svensson,sven",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 68892.6
-        },
-        {
-            "accountNumber": "33009901010000",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "SEK",
-                "exactValue": 83173.48,
-                "unscaledValue": 8317348,
-                "scale": 2,
-                "doubleValue": 83173.48
-            },
-            "currencyCode": "SEK",
-            "bankId": "SE6530000000009901010000",
-            "excluded": false,
-            "favored": false,
-            "name": "PERSONKONTO",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"se://33009901010000\",\"iban://SE6530000000009901010000\"]",
-            "closed": false,
-            "holderName": "Svensson,sven",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Svensson,sven",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 83173.48
-        },
-        {
-            "accountNumber": "1337 **** **** 1337",
+            "accountNumber": "5430 **** **** 7254",
             "accountExclusion": "NONE",
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
-                "exactValue": 0,
-                "unscaledValue": 0,
-                "scale": 0,
-                "doubleValue": 0.0
+                "doubleValue": 1500.0,
+                "exactValue": 1500.0,
+                "unscaledValue": 150000,
+                "scale": 2
             },
             "exactBalance": {
                 "currencyCode": "SEK",
-                "exactValue": 1030968.09,
-                "unscaledValue": 103096809,
-                "scale": 2,
-                "doubleValue": 1030968.09
+                "doubleValue": 1500.0,
+                "exactValue": 1500.0,
+                "unscaledValue": 150000,
+                "scale": 2
             },
             "currencyCode": "SEK",
-            "bankId": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+            "bankId": "00fadcd7835af6e82f1738f093972848b0911c60",
             "excluded": false,
             "favored": false,
-            "name": "Happy Card",
+            "name": "FI39300",
             "ownership": 1.0,
             "type": "CREDIT_CARD",
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"masked-pan://1337+****+****+1337\"]",
+            "identifiers": "[\"masked-pan://5430+****+****+7254\"]",
             "closed": false,
-            "holderName": "Sven Svensson",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Sven Svensson",
-                        "role": "HOLDER"
-                    }
-                ]
+                "identities": []
             },
             "flags": "[]",
             "balances": [],
+            "availableCredit": 1500.0,
+            "balance": 1500.0
+        },
+        {
+            "accountNumber": "5228 **** **** 9717",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "SEK",
+                "doubleValue": 2000.0,
+                "exactValue": 2000,
+                "unscaledValue": 2000,
+                "scale": 0
+            },
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 2000.0,
+                "exactValue": 2000.0,
+                "unscaledValue": 2,
+                "scale": -3
+            },
+            "currencyCode": "SEK",
+            "bankId": "2e5f625299d1ca2182cec17fb238d09c1a62b56c",
+            "excluded": false,
+            "favored": false,
+            "name": "FI83009",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"masked-pan://5228+****+****+9717\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 2000.0,
+            "balance": 2000.0
+        },
+        {
+            "accountNumber": "5228 **** **** 9476",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "SEK",
+                "doubleValue": 1000.0,
+                "exactValue": 1000,
+                "unscaledValue": 1000,
+                "scale": 0
+            },
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 1000.0,
+                "exactValue": 1000.0,
+                "unscaledValue": 1,
+                "scale": -3
+            },
+            "currencyCode": "SEK",
+            "bankId": "611b51583505c23d3d2aea77f54c7df163683b71",
+            "excluded": false,
+            "favored": false,
+            "name": "FI83009",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"masked-pan://5228+****+****+9476\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 1000.0,
+            "balance": 1000.0
+        },
+        {
+            "accountNumber": "nullnull",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 223902.0,
+                "exactValue": 223902.0,
+                "unscaledValue": 22390200,
+                "scale": 2
+            },
+            "currencyCode": "SEK",
+            "bankId": "FI0910203500006786",
+            "excluded": false,
+            "favored": false,
+            "name": "KÄYTTÖTILI",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://FI0910203500006786\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
             "availableCredit": 0.0,
-            "balance": 1030968.09
+            "balance": 223902.0
         }
     ],
     "transactions": [
         {
-            "amount": -10.14,
-            "date": 703245600000,
-            "description": "Betalning BG 123-4567 WIREMOCK TEST",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B001992-04-141992-04-14-12.26.44.509513"
-            },
-            "transactionDates": []
-        },
-        {
-            "amount": 10.3,
-            "date": 701949600000,
-            "description": "Retur BG 123-4567",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B001992-03-301992-03-30-11.43.40.436046"
-            },
-            "transactionDates": []
-        },
-        {
-            "amount": -10.3,
-            "date": 701949600000,
-            "description": "Betalning BG 123-4567 WIREMOCK TEST",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B001992-03-301992-03-30-11.35.52.638821"
-            },
-            "transactionDates": []
-        },
-        {
-            "amount": -10.3,
-            "date": 701949600000,
-            "description": "Betalning PG 123456-7 WIREMOCK TEST",
+            "amount": 1925.0,
+            "date": 1547118000000,
+            "description": "DebtorIdpcas08-20180",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -228,76 +202,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {},
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 10.27,
-            "date": 701694000000,
-            "description": "Retur BG 123-4567",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B001992-03-271992-03-27-11.31.42.725600"
-            },
-            "transactionDates": []
-        },
-        {
-            "amount": -10.14,
-            "date": 671623200000,
-            "description": "Betalning BG 123-4567 WIREMOCK TEST",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B001991-04-141991-04-14-12.26.44.509513"
-            },
-            "transactionDates": []
-        },
-        {
-            "amount": 10.3,
-            "date": 670330800000,
-            "description": "Retur BG 123-4567",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B001991-03-301991-03-30-11.43.40.436046"
-            },
-            "transactionDates": []
-        },
-        {
-            "amount": -10.3,
-            "date": 670330800000,
-            "description": "Betalning BG 123-4567 WIREMOCK TEST",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B001991-03-301991-03-30-11.35.52.638821"
-            },
-            "transactionDates": []
-        },
-        {
-            "amount": -10.3,
-            "date": 670330800000,
-            "description": "Betalning PG 123456-7 WIREMOCK TEST",
+            "amount": 1768.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -306,12 +217,133 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {},
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 10.27,
-            "date": 670071600000,
-            "description": "Retur BG 123-4567",
+            "amount": 9558.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 7626.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 1372.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 5434.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 6837.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 9321.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 1562.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 2153.0,
+            "date": 1491818400000,
+            "description": "DebtorIdpcas08-20170",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -60.0,
+            "date": 1599732000000,
+            "description": "Nosto",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -320,14 +352,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B001991-03-271991-03-27-11.31.42.725600"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "f1c61dfad6100a85088875d12c8cc8d8"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 702468000000,
-            "description": "Påminnelseavgift",
+            "amount": -3.5,
+            "date": 1599732000000,
+            "description": "Noston kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -336,14 +369,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1992040500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "391add342de7d1fdced63db1da5c2595"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 699793200000,
-            "description": "Påminnelseavgift",
+            "amount": -151.46,
+            "date": 1599732000000,
+            "description": "Nosto",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -352,14 +386,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1992030500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "ee6a042f7ab1801d0d234dbb634f308f"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 697287600000,
-            "description": "Påminnelseavgift",
+            "amount": -5.78,
+            "date": 1599732000000,
+            "description": "Noston kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -368,14 +403,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1992020500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "4ebc1be3577c8c1eac4a1b539ed4484f"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 694609200000,
-            "description": "Påminnelseavgift",
+            "amount": -227.38,
+            "date": 1599732000000,
+            "description": "Nosto",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -384,14 +420,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1992010500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "eac7d1ceaecf6171949da3ba24727ed4"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 691930800000,
-            "description": "Påminnelseavgift",
+            "amount": -151.59,
+            "date": 1599732000000,
+            "description": "Nosto",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -400,14 +437,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991120500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "ed0eae21cda1e76d6353dd5c5792705e"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 689338800000,
-            "description": "Påminnelseavgift",
+            "amount": -5.78,
+            "date": 1599732000000,
+            "description": "Noston kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -416,14 +454,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991110500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1c868e69b140166a41d90ddd8f6b2fc9"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 686660400000,
-            "description": "Påminnelseavgift",
+            "amount": -151.59,
+            "date": 1599732000000,
+            "description": "Nosto",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -432,14 +471,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991100500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9633d678115d0fa7898ca61ccab9a825"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 684064800000,
-            "description": "Påminnelseavgift",
+            "amount": -5.78,
+            "date": 1599732000000,
+            "description": "Noston kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -448,14 +488,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991090500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1c868e69b140166a41d90ddd8f6b2fc9"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 681386400000,
-            "description": "Påminnelseavgift",
+            "amount": -151.59,
+            "date": 1599732000000,
+            "description": "Nosto",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -464,14 +505,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991080500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "835fed6aeb605a208fe443f071643227"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 678708000000,
-            "description": "Påminnelseavgift",
+            "amount": -5.78,
+            "date": 1599732000000,
+            "description": "Noston kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -480,14 +522,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991070500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1c868e69b140166a41d90ddd8f6b2fc9"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 676116000000,
-            "description": "Påminnelseavgift",
+            "amount": -75.8,
+            "date": 1599732000000,
+            "description": "Nosto",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -496,14 +539,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991060500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "37fe5b1eb72cdc0ec694b427d648e324"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 673437600000,
-            "description": "Påminnelseavgift",
+            "amount": -75.8,
+            "date": 1599732000000,
+            "description": "Nosto",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -512,14 +556,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991050500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "3baec673136723a04242893a7c8ce327"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 670845600000,
-            "description": "Påminnelseavgift",
+            "amount": -3.89,
+            "date": 1599732000000,
+            "description": "Noston kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -528,14 +573,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991040500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "d55ff8ae6334b621220837c1251f02c5"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 668170800000,
-            "description": "Påminnelseavgift",
+            "amount": -5.0,
+            "date": 1590660000000,
+            "description": "Kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -544,14 +590,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991030500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "181b5a18cbb86e0eea0ea882327ae8dc"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 665751600000,
-            "description": "Påminnelseavgift",
+            "amount": -5.0,
+            "date": 1590660000000,
+            "description": "Kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -560,14 +607,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991020500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "2df07c3afb8a91ba4e0d50060116cc18"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 663073200000,
-            "description": "Påminnelseavgift",
+            "amount": -10.0,
+            "date": 1458039600000,
+            "description": "Kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -576,14 +624,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1991010500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "5e6f107f5ebc7a4397fbd8fa32074eea"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 660394800000,
-            "description": "Påminnelseavgift",
+            "amount": -10.0,
+            "date": 1446116400000,
+            "description": "Kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -592,14 +641,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1990120500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "85e74fedeedb37fed4ff3179a3e9889f"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 657802800000,
-            "description": "Påminnelseavgift",
+            "amount": -10.0,
+            "date": 1445248800000,
+            "description": "Kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -608,14 +658,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1990110500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9231df266f21176ff1f28f74af416083"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 655124400000,
-            "description": "Påminnelseavgift",
+            "amount": -10.0,
+            "date": 1443780000000,
+            "description": "Kulu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -624,14 +675,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1990100500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "3bcb4d3d650b4b0a99f0d895477a93e0"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -85.0,
-            "date": 652528800000,
-            "description": "Påminnelseavgift",
+            "amount": 291.81,
+            "date": 1430820000000,
+            "description": "Suoritus",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -640,14 +692,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "1990090500"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "8d6139edf93be27a048acd9e1c6b90d5"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": -86.0,
-            "date": 702468000000,
-            "description": "Påminnelseavgift",
+            "amount": -197.0,
+            "date": 1430647200000,
+            "description": "Days Inn Berlin West",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -656,14 +709,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "-2222222222"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "51456ba71b3f4fa269b09dabede5988f"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 88.0,
-            "date": 698497200000,
-            "description": "Inbetalning mess to rec",
+            "amount": -39.95,
+            "date": 1430647200000,
+            "description": "KADEWE",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -672,14 +726,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-191992-02-19-12.09.33.960092"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "e0ec0d370db20a055604b885dc6bb7d0"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 102.0,
-            "date": 697633200000,
-            "description": "Överföring SVENSSON,SVEN",
+            "amount": -37.0,
+            "date": 1430560800000,
+            "description": "TRATTORIA NARDINI",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -688,14 +743,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-091992-02-09-05.47.18.059769"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "7defc119cb7412abcd2454924686c6ca"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 12.0,
-            "date": 697546800000,
-            "description": "Inbetalning .",
+            "amount": -84.9,
+            "date": 1430560800000,
+            "description": "JACK WOLFSKIN STORE BE",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -704,14 +760,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-081992-02-08-05.46.22.992202"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "514389db33a48953b1cc83e47fd7e7f7"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 102.0,
-            "date": 697546800000,
-            "description": "Överföring SVENSSON,SVEN",
+            "amount": -47.88,
+            "date": 1430560800000,
+            "description": "URBAN CLASSICS",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -720,14 +777,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-081992-02-08-05.46.08.856335"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "aa81aa18fdf1c448b123206a772c8a1e"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 16.0,
-            "date": 697374000000,
-            "description": "Inbetalning R.",
+            "amount": -4.48,
+            "date": 1430560800000,
+            "description": "MCDONALD S",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -736,14 +794,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-061992-02-06-06.50.01.567411"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "d244026bfeb86d49401c59da24488e9c"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 12.0,
-            "date": 697374000000,
-            "description": "Inbetalning .",
+            "amount": -25.2,
+            "date": 1430388000000,
+            "description": "LEMKES SPEZIALITAETENB",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -752,14 +811,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-061992-02-06-05.56.15.689676"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "a3bc8c644ab3f05c763e36fb52ed4161"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 12.0,
-            "date": 697287600000,
-            "description": "Inbetalning .",
+            "amount": 1615.65,
+            "date": 1430301600000,
+            "description": "Suoritus",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -768,14 +828,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-051992-02-05-09.40.23.522801"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "a9f1b4c7967173d288151e8b08c1fe9e"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 102.0,
-            "date": 697287600000,
-            "description": "Överföring SVENSSON,SVEN",
+            "amount": 72.3,
+            "date": 1430215200000,
+            "description": "TRAVEL RESERVATION",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -784,14 +845,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-051992-02-05-09.40.05.232278"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "fc121cb16455e8a1b234b554f082e2d8"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 12.0,
-            "date": 696942000000,
-            "description": "Inbetalning .",
+            "amount": 72.3,
+            "date": 1430215200000,
+            "description": "TRAVEL RESERVATION",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -800,14 +862,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-011992-02-01-09.28.30.903571"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "fc121cb16455e8a1b234b554f082e2d8"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 52.0,
-            "date": 696942000000,
-            "description": "Överföring SVENSSON|ABCDEF,SVEN",
+            "amount": -9.99,
+            "date": 1430128800000,
+            "description": "SPOTIFY Spotify Premiu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -816,14 +879,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-011992-02-01-09.27.50.997082"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "25958846cb396250cbfd971df3e3649f"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 12.0,
-            "date": 696769200000,
-            "description": "Inbetalning .",
+            "amount": -334.4,
+            "date": 1429351200000,
+            "description": "Veljekset Halonen Oy   Ou",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -832,14 +896,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-301992-01-30-08.49.34.253004"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "0f0b6a17c9e6e8dc1e32c96939852298"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 52.0,
-            "date": 696769200000,
-            "description": "Överföring SVENSSON|ABCDEF,SVEN",
+            "amount": -280.05,
+            "date": 1429264800000,
+            "description": "SNUSKUNGEN",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -848,14 +913,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-301992-01-30-06.59.40.843995"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "4da0f301fc1d3e773f442a7fbd07cd7c"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 16.0,
-            "date": 696682800000,
-            "description": "Inbetalning R.",
+            "amount": 1343.53,
+            "date": 1429092000000,
+            "description": "Suoritus",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -864,14 +930,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-291992-01-29-08.37.05.831364"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "8548ec22be51804003034359654b3b4f"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 56.0,
-            "date": 696682800000,
-            "description": "R. SVENSSON|ABCDEF,SVEN",
+            "amount": -9.6,
+            "date": 1428141600000,
+            "description": "EURO PARK FINLAND OY",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -880,14 +947,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-291992-01-29-08.27.49.532974"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "06933bc377e969ab5450145f9be841a4"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 12.0,
-            "date": 696682800000,
-            "description": "Inbetalning .",
+            "amount": 74.5,
+            "date": 1427796000000,
+            "description": "Suoritus",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -896,14 +964,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-291992-01-29-06.17.45.926630"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9f7df4406a687c990cc479b9527597cc"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 52.0,
-            "date": 696682800000,
-            "description": "Överföring SVENSSON|ABCDEF,SVEN",
+            "amount": -9.99,
+            "date": 1427454000000,
+            "description": "SPOTIFY Spotify Premiu",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -912,14 +981,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-291992-01-29-06.17.15.149445"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "029ce83eea6fdc02a7038b66b0a32ac2"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 16.0,
-            "date": 696596400000,
-            "description": "Inbetalning R.",
+            "amount": 2000.0,
+            "date": 1427281200000,
+            "description": "Suoritus",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -928,14 +998,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-281992-01-28-10.29.41.410192"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "94f7d9cc70265436737aa6134f8241f2"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 56.0,
-            "date": 696596400000,
-            "description": "R. SVENSSON|ABCDEF,SVEN",
+            "amount": -150.65,
+            "date": 1427108400000,
+            "description": "AVIS RENT-A-CAR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -944,14 +1015,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-281992-01-28-10.19.10.259195"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "aaff25142993ac694324864d97a5efcd"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 52.0,
-            "date": 696596400000,
-            "description": "Överföring SVENSSON|ABCDEF,SVEN",
+            "amount": -77.0,
+            "date": 1427022000000,
+            "description": "Hotels com EMEA",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -960,14 +1032,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-281992-01-28-09.56.05.696480"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "205faa4c2dd4b89f622d51c7fd9b4f16"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 16.0,
-            "date": 696337200000,
-            "description": "Inbetalning R.",
+            "amount": -5.18,
+            "date": 1426935600000,
+            "description": "LIDL AVILA",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -976,14 +1049,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-251992-01-25-09.44.17.852679"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "c5b319c50f4122b88e6494c8a07cb836"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 56.0,
-            "date": 696337200000,
-            "description": "R. SVENSSON|ABCDEF,SVEN",
+            "amount": -113.3,
+            "date": 1426935600000,
+            "description": "Hotels com EMEA",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -992,14 +1066,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-251992-01-25-09.41.37.517792"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "a2f4611dcf5453aeb6a5c00da61bc993"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 12.0,
-            "date": 696337200000,
-            "description": "Inbetalning .",
+            "amount": -5.0,
+            "date": 1426849200000,
+            "description": "Hotels com EMEA",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1008,14 +1083,15 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-251992-01-25-08.49.35.616878"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "db0d62a30d70eea208c8a0a527eb88b0"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
         },
         {
-            "amount": 52.0,
-            "date": 696337200000,
-            "description": "Överföring SVENSSON|ABCDEF,SVEN",
+            "amount": -81.2,
+            "date": 1426762800000,
+            "description": "MESON JOSE MARIA",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1024,9 +1100,146 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-251992-01-25-08.48.36.325640"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "136485b8f9a9b482ee43dfb61731207a"
             },
-            "transactionDates": []
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -8.4,
+            "date": 1426762800000,
+            "description": "PERFECT DAY MOBIL FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "56da350edc2b08bd9e853f43775ccbee"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -72.3,
+            "date": 1426676400000,
+            "description": "TRAVEL RESERVATION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "2036b575cf15362e815725464e906af0"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -72.3,
+            "date": 1426676400000,
+            "description": "TRAVEL RESERVATION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "2036b575cf15362e815725464e906af0"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -72.3,
+            "date": 1426676400000,
+            "description": "TRAVEL RESERVATION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "2036b575cf15362e815725464e906af0"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": 86.85,
+            "date": 1426503600000,
+            "description": "RENTALCARS.COM",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "8a5c23cc05b8f8b4518d5cabe6a53b4c"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -86.85,
+            "date": 1426503600000,
+            "description": "RENTALCARS.COM",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "959a378c7f1a463e59151f10ae8f3d13"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -34.78,
+            "date": 1426503600000,
+            "description": "RENTALCARS.COM",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "ef0000fd9592e97a9ae51c602e3b1b4e"
+            },
+            "transactionDates": [],
+            "booked": true
+        },
+        {
+            "amount": -215.45,
+            "date": 1426071600000,
+            "description": "Budget Sport Tammisto",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "7b9dcc12b34da7b6cb93267adaa33a5e"
+            },
+            "transactionDates": [],
+            "booked": true
         }
     ]
 }

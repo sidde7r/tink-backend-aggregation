@@ -21,8 +21,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Slf4j
 public class DefaultPartnerAccountMapper implements NordeaPartnerAccountMapper {
     @Override
-    public Optional<TransactionalAccount> toTinkTransactionalAccount(
-            AccountEntity account, boolean isOnStaging) {
+    public Optional<TransactionalAccount> toTinkTransactionalAccount(AccountEntity account) {
         if (Strings.isNullOrEmpty(account.getIban())
                 || Strings.isNullOrEmpty(account.getCategory())
                 || Strings.isNullOrEmpty(account.getCurrency())) {
@@ -33,20 +32,7 @@ public class DefaultPartnerAccountMapper implements NordeaPartnerAccountMapper {
         final List<AccountIdentifier> identifiers = getAccountIdentifiers(account);
         Preconditions.checkState(
                 identifiers.size() != 0, "Account must have at least one identifier");
-        final String formattedAccountNumber =
-                MoreObjects.firstNonNull(
-                        Strings.emptyToNull(account.getDisplayAccountNumber()),
-                        identifiers.get(0).getIdentifier());
-        String accountName;
-        if (isOnStaging) {
-            accountName =
-                    MoreObjects.firstNonNull(
-                            Strings.emptyToNull(account.getNickname()), account.getProductName());
-        } else {
-            accountName =
-                    MoreObjects.firstNonNull(
-                            Strings.emptyToNull(account.getNickname()), formattedAccountNumber);
-        }
+
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         NordeaPartnerConstants.TRANSACTIONAL_ACCOUNT_TYPE_MAPPER,
@@ -61,7 +47,10 @@ public class DefaultPartnerAccountMapper implements NordeaPartnerAccountMapper {
                         IdModule.builder()
                                 .withUniqueIdentifier(account.getIban())
                                 .withAccountNumber(identifiers.get(0).getIdentifier())
-                                .withAccountName(accountName)
+                                .withAccountName(
+                                        MoreObjects.firstNonNull(
+                                                Strings.emptyToNull(account.getNickname()),
+                                                account.getProductName()))
                                 .addIdentifiers(identifiers)
                                 .build())
                 .addHolderName(account.getHolderName())

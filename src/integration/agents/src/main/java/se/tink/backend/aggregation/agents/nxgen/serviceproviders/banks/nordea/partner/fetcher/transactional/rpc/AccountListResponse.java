@@ -27,23 +27,20 @@ public class AccountListResponse {
     private List<CardEntity> cards;
 
     public Collection<TransactionalAccount> toTinkTransactionalAccounts(
-            NordeaPartnerAccountMapper accountMapper, boolean isOnStaging) {
+            NordeaPartnerAccountMapper accountMapper) {
         return Stream.of(result, accounts).filter(Objects::nonNull).findFirst()
                 .orElse(Collections.emptyList()).stream()
                 .filter(AccountEntity::hasIban)
-                .map(
-                        accountEntity ->
-                                accountMapper.toTinkTransactionalAccount(
-                                        accountEntity, isOnStaging))
+                .map(accountMapper::toTinkTransactionalAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     @JsonIgnore
-    public Collection<CreditCardAccount> toTinkCreditCardAccounts(boolean isOnStaging) {
+    public Collection<CreditCardAccount> toTinkCreditCardAccounts() {
         return Optional.ofNullable(cards).orElse(Collections.emptyList()).stream()
-                .map(cardEntity -> cardEntity.toTinkCreditCardAccount(isOnStaging))
+                .map(CardEntity::toTinkCreditCardAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
