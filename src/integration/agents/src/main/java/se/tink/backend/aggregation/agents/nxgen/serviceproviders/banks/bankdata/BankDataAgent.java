@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -101,6 +102,7 @@ public abstract class BankDataAgent extends NextGenerationAgent
         final NemIdIFrameController iFrameController =
                 iFrameControllerInitializer.initNemIdIframeController(
                         bankDataAuthenticator,
+                        NemIdCredentialsProvider.defaultProvider(),
                         catalog,
                         statusUpdater,
                         supplementalInformationController,

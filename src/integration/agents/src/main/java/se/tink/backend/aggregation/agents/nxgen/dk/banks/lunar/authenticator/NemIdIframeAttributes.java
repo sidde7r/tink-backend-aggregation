@@ -4,6 +4,7 @@ import lombok.Data;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -25,6 +26,7 @@ public class NemIdIframeAttributes {
     public NemIdIFrameController getNemIdIFrameController() {
         return iFrameControllerInitializer.initNemIdIframeController(
                 parametersFetcher,
+                NemIdCredentialsProvider.defaultProvider(),
                 catalog,
                 statusUpdater,
                 supplementalInformationController,

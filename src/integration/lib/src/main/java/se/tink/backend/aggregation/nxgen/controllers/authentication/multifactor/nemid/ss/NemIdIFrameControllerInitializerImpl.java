@@ -14,6 +14,7 @@ public class NemIdIFrameControllerInitializerImpl implements NemIdIFrameControll
     @Override
     public NemIdIFrameController initNemIdIframeController(
             NemIdParametersFetcher nemIdParametersFetcher,
+            NemIdCredentialsProvider credentialsProvider,
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
@@ -23,6 +24,7 @@ public class NemIdIFrameControllerInitializerImpl implements NemIdIFrameControll
         NemIdSSIFrameModule nemIdSSIFrameModule =
                 NemIdSSIFrameModule.initializeModule(
                         nemIdParametersFetcher,
+                        credentialsProvider,
                         catalog,
                         statusUpdater,
                         supplementalInformationController,

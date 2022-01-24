@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.loginpage;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.PASSWORD_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
@@ -6,55 +6,54 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 
 import com.google.inject.Inject;
-import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentials;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsStatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
-import se.tink.libraries.cryptography.hash.Hash;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdLoginPageStep {
 
-    private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
-    private static final String STATIC_SALT = "9hR2;Rm[j+Lypwt]gymg";
-
     private final NemIdWebDriverWrapper driverWrapper;
     private final NemIdCredentialsStatusUpdater statusUpdater;
+    private final NemIdCredentialsProvider credentialsProvider;
+    private final Catalog catalog;
+    private final SupplementalInformationController supplementalInformationController;
 
     public void login(Credentials credentials) {
-        logCredentialsHashes(credentials);
+        NemIdCredentials nemIdCredentials = getNemIdCredentials(credentials);
 
-        setUserName(credentials.getField(Field.Key.USERNAME));
-        setPassword(credentials.getField(Field.Key.PASSWORD));
+        setUserName(nemIdCredentials.getUserId());
+        setPassword(nemIdCredentials.getPassword());
         clickLogin();
 
         log.info("{} User credentials have been entered", NEM_ID_PREFIX);
         statusUpdater.updateStatusPayload(credentials, UserMessage.VERIFYING_CREDS);
     }
 
-    private void logCredentialsHashes(Credentials credentials) {
-        /*
-        ITE-3028
-        There seems to be an issue that user credentials remain the same even after user changes their
-        NemID password. To fix that, we added cleaning of data stored in credentials. These logs might help with
-        checking if the issue is resolved.
-         */
-        log.info(
-                "{} Hashes: {}, {}",
-                NEM_ID_PREFIX,
-                BASE64_ENCODER
-                        .encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
-                        .substring(0, 6),
-                BASE64_ENCODER
-                        .encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.PASSWORD) + STATIC_SALT))
-                        .substring(0, 6));
+    private NemIdCredentials getNemIdCredentials(Credentials credentials) {
+        NemIdCredentials nemIdCredentials = credentialsProvider.getNemIdCredentials(credentials);
+
+        List<Field> fieldsToAskUserFor = nemIdCredentials.getFieldsToAskUserFor(catalog);
+        if (!fieldsToAskUserFor.isEmpty()) {
+            Map<String, String> supplementalInfoResponse =
+                    supplementalInformationController.askSupplementalInformationSync(
+                            fieldsToAskUserFor.toArray(new Field[0]));
+            nemIdCredentials.setMissingCredentials(supplementalInfoResponse);
+        }
+
+        nemIdCredentials.assertNoMissingCredentials();
+        return nemIdCredentials;
     }
 
     private void setUserName(String username) {

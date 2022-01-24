@@ -15,6 +15,7 @@ public interface NemIdIFrameControllerInitializer {
 
     NemIdIFrameController initNemIdIframeController(
             NemIdParametersFetcher nemIdParametersFetcher,
+            NemIdCredentialsProvider credentialsProvider,
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
