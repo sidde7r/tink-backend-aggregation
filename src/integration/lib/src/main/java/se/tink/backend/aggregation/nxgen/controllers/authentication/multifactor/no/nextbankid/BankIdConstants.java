@@ -197,7 +197,9 @@ public class BankIdConstants {
                 inIframeLocator().element(BY_BUTTON_LINK).mustBeDisplayed().build();
 
         private static ElementLocator.Builder inIframeLocator() {
-            return ElementLocator.builder().iframe(BY_IFRAME).shadowHost(getIframeShadowHost());
+            return ElementLocator.builder()
+                    .topMostIframe(BY_IFRAME)
+                    .shadowHost(getIframeShadowHost());
         }
 
         /*

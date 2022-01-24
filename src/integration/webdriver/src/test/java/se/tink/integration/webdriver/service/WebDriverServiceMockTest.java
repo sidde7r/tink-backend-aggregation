@@ -19,7 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.integration.webdriver.service.basicutils.WebDriverBasicUtils;
@@ -30,9 +29,7 @@ import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult
 import se.tink.integration.webdriver.service.searchelements.ElementsSearcher;
 
 @RunWith(JUnitParamsRunner.class)
-public class WebDriverServiceTest {
-
-    private static final By EXAMPLE_BY_IFRAME = By.tagName("iframe");
+public class WebDriverServiceMockTest {
 
     /*
     Mocks
@@ -170,55 +167,6 @@ public class WebDriverServiceTest {
                                 .searchFor(elementLocator)
                                 .searchForSeconds(10)
                                 .build());
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void should_get_full_page_source_including_iframe() {
-        // given
-        when(basicUtils.trySwitchToIframe(any())).thenReturn(true);
-        when(driverWrapper.getPageSource())
-                .thenReturn("parent page source")
-                .thenReturn("iframe page source");
-
-        // when
-        String pageSourceLog = driverService.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
-
-        // then
-        assertThat(pageSourceLog)
-                .isEqualTo(
-                        String.format(
-                                "Main page source:%n" + "%s" + "%nIframe source:%n" + "%s",
-                                "parent page source", "iframe page source"));
-
-        mocksToVerifyInOrder.verify(basicUtils).switchToParentWindow();
-        mocksToVerifyInOrder.verify(driverWrapper).getPageSource();
-        mocksToVerifyInOrder.verify(basicUtils).trySwitchToIframe(EXAMPLE_BY_IFRAME);
-        mocksToVerifyInOrder.verify(driverWrapper).getPageSource();
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void should_omit_iframe_source_when_it_cant_be_found() {
-        // given
-        when(basicUtils.trySwitchToIframe(any())).thenReturn(false);
-        when(driverWrapper.getPageSource())
-                .thenReturn("parent page source")
-                .thenReturn("iframe page source");
-
-        // when
-        String pageSourceLog = driverService.getFullPageSourceLog(EXAMPLE_BY_IFRAME);
-
-        // then
-        assertThat(pageSourceLog)
-                .isEqualTo(
-                        String.format(
-                                "Main page source:%n" + "%s" + "%nIframe source:%n" + "%s",
-                                "parent page source", null));
-
-        mocksToVerifyInOrder.verify(basicUtils).switchToParentWindow();
-        mocksToVerifyInOrder.verify(driverWrapper).getPageSource();
-        mocksToVerifyInOrder.verify(basicUtils).trySwitchToIframe(EXAMPLE_BY_IFRAME);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

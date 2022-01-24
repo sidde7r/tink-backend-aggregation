@@ -8,7 +8,7 @@ import org.openqa.selenium.By;
 public class ExamplePageData {
 
     private static final String TEST_DATA_DIR =
-            "src/integration/webdriver/src/test/java/se/tink/integration/webdriver/service/searchelements/resources";
+            "src/integration/webdriver/src/test/java/se/tink/integration/webdriver/service/resources/search_elements";
     static final String EXAMPLE_HTML_PAGE_URL =
             Paths.get(TEST_DATA_DIR, "example_page.html").toUri().toString();
 

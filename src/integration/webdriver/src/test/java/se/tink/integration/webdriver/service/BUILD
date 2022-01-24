@@ -4,7 +4,7 @@ junit_test(
     name = "service",
     srcs = glob(["**/*.java"]),
     data = [
-        "//src/integration/webdriver/src/test/java/se/tink/integration/webdriver/service/searchelements/resources",
+        "//src/integration/webdriver/src/test/java/se/tink/integration/webdriver/service/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [

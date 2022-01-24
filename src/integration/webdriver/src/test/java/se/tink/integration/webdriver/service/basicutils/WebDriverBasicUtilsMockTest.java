@@ -21,7 +21,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
-public class WebDriverBasicUtilsTest {
+public class WebDriverBasicUtilsMockTest {
 
     /*
     Mocks

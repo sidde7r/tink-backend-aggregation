@@ -99,13 +99,12 @@ public class BankIdIframeAuthenticationController
             log.error(
                     "{} BankID iframe authentication error: {}\n{}",
                     e.getMessage(),
-                    webDriver.getFullPageSourceLog(BankIdConstants.HtmlSelectors.BY_IFRAME),
+                    webDriver.getFullPageSourceLog(3),
                     e);
             throw e;
 
         } finally {
-            webDriver.shutDownProxy();
-            agentTemporaryStorage.remove(webDriver.getDriverId());
+            webDriver.terminate(agentTemporaryStorage);
         }
     }
 

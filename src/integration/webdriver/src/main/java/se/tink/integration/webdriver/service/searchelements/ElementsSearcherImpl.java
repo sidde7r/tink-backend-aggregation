@@ -26,10 +26,9 @@ public class ElementsSearcherImpl implements ElementsSearcher {
 
     @Override
     public ElementsSearchResult searchForFirstMatchingLocator(ElementsSearchQuery query) {
-
         // always search at least once
         ElementsSearchResult firstSearchResult = searchForFirstMatchingLocator(query.getLocators());
-        if (firstSearchResult.isNotEmpty() || query.isSearchOnlyOnce()) {
+        if (firstSearchResult.isNotEmpty()) {
             return firstSearchResult;
         }
 
@@ -45,6 +44,41 @@ public class ElementsSearcherImpl implements ElementsSearcher {
         }
 
         return ElementsSearchResult.empty();
+    }
+
+    @Override
+    public List<ElementsSearchResult> searchForAllMatchingLocators(ElementsSearchQuery query) {
+        // always search at least once
+        List<ElementsSearchResult> firstSearchResult =
+                searchForAllMatchingLocators(query.getLocators());
+        // if at least one element was found, we assume that the page was already refreshed and all
+        // other elements should've been visible, if they are present on this page
+        if (!firstSearchResult.isEmpty()) {
+            return firstSearchResult;
+        }
+
+        int secondsSlept = 0;
+        while (secondsSlept++ < query.getSearchForSeconds()) {
+
+            List<ElementsSearchResult> searchResult =
+                    searchForAllMatchingLocators(query.getLocators());
+            // same assumption here - if 1 element is found, other elements should've
+            // also been found
+            if (!searchResult.isEmpty()) {
+                return searchResult;
+            }
+
+            basicUtils.sleepFor(1_000);
+        }
+
+        return Collections.emptyList();
+    }
+
+    private List<ElementsSearchResult> searchForAllMatchingLocators(List<ElementLocator> locators) {
+        return locators.stream()
+                .map(this::searchForLocator)
+                .filter(ElementsSearchResult::isNotEmpty)
+                .collect(Collectors.toList());
     }
 
     private ElementsSearchResult searchForFirstMatchingLocator(List<ElementLocator> locators) {
@@ -75,15 +109,10 @@ public class ElementsSearcherImpl implements ElementsSearcher {
     }
 
     private boolean trySwitchWindowForLocator(ElementLocator locator) {
-        By iframeSelector = locator.getIframeSelector();
-
-        if (iframeSelector == EMPTY_BY) {
-            basicUtils.switchToParentWindow();
-            return true;
-        }
-
         basicUtils.switchToParentWindow();
-        return basicUtils.trySwitchToIframe(iframeSelector);
+        return locator.getIframeSelectors().stream()
+                .map(basicUtils::trySwitchToIframe)
+                .reduce(true, Boolean::logicalAnd);
     }
 
     private Optional<? extends SearchContext> tryFindSearchContextForLocator(
@@ -111,7 +140,7 @@ public class ElementsSearcherImpl implements ElementsSearcher {
 
     private boolean doesElementMatchAdditionalFilters(WebElement element, ElementLocator locator) {
         try {
-            return locator.matchesAdditionalFilters(element);
+            return locator.matchesAdditionalFilters(element, driver, basicUtils);
 
         } catch (StaleElementReferenceException e) {
             /*

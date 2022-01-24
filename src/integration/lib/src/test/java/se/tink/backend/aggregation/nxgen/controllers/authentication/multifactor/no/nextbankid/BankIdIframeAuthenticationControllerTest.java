@@ -51,7 +51,6 @@ public class BankIdIframeAuthenticationControllerTest {
     @Before
     public void setup() {
         webDriver = mock(WebDriverService.class);
-        when(webDriver.getDriverId()).thenReturn("SAMPLE_DRIVER_ID");
         agentTemporaryStorage = mock(AgentTemporaryStorage.class);
         authenticationState = mock(BankIdAuthenticationState.class);
         iframeInitializer = mock(BankIdIframeInitializer.class);
@@ -129,8 +128,7 @@ public class BankIdIframeAuthenticationControllerTest {
                         .webDriver(webDriver)
                         .build());
 
-        mocksToVerifyInOrder.verify(webDriver).shutDownProxy();
-        mocksToVerifyInOrder.verify(agentTemporaryStorage).remove("SAMPLE_DRIVER_ID");
+        mocksToVerifyInOrder.verify(webDriver).terminate(agentTemporaryStorage);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

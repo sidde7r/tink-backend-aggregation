@@ -51,10 +51,12 @@ public class BankIdIframeAuthenticationControllerProviderMock
         ProxyResponse proxyResponse =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(
-                                "someKey1", "someValue1",
+                                "someKey1",
+                                "someValue1",
                                 "Location",
-                                        "http://redirect.url?key1=value1&code=AUTH_CODE&key2=value2",
-                                "someKey2", "someValue2"));
+                                "http://redirect.url?key1=value1&code=AUTH_CODE&key2=value2",
+                                "someKey2",
+                                "someValue2"));
         when(authFinishProxyListener.waitForResponse(anyInt(), any()))
                 .thenReturn(Optional.of(proxyResponse));
 
