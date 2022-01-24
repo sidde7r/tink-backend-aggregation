@@ -7,6 +7,7 @@ import com.google.inject.Module;
 import com.google.inject.util.Modules;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.configuration.guice.modules.agentcapabilities.AgentCapabilitiesModule;
+import se.tink.backend.aggregation.configuration.guice.modules.authentication.options.AuthenticationOptionsModule;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.libraries.discovery.CoordinationModule;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientModule;
@@ -46,7 +47,9 @@ public class AggregationModuleFactory {
     private static ImmutableList.Builder<Module> baseBuilder(
             Environment environment, AggregationServiceConfiguration configuration) {
         Builder<Module> builder =
-                new Builder<Module>().add(new AgentCapabilitiesModule(environment.jersey()));
+                new Builder<Module>()
+                        .add(new AgentCapabilitiesModule(environment.jersey()))
+                        .add(new AuthenticationOptionsModule(environment.jersey()));
         if (configuration.getJaegerConfig() != null) {
             builder.addAll(TracingModuleFactory.getModules(configuration.getJaegerConfig()));
         }

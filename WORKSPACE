@@ -141,7 +141,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "6983f713a4df01f5b3e4950a263fc527e2f03d65",
+    commit = "5fe155b708e3df2647eef347e22b148e1a2ef0cb",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1640855783 +0000",
 )
@@ -1512,6 +1512,7 @@ maven_install(
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.68",
         "org.bouncycastle:bcprov-jdk15on:1.68",
+        "org.codehaus.mojo:animal-sniffer-annotations:1.18",
         "org.codehaus.plexus:plexus-utils:3.0.17",
         "org.codehaus.woodstox:stax2-api:4.2.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
@@ -1706,6 +1707,7 @@ maven_install(
         "net.sourceforge.htmlunit:htmlunit:2.37.0",
         "org.apache.httpcomponents:httpclient:4.5.12",
         "org.apache.httpcomponents:httpcore:4.4.13",
+        "org.codehaus.mojo:animal-sniffer-annotations:1.18",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-api:3.8.1",
         "org.seleniumhq.selenium:selenium-chrome-driver:3.8.1",
