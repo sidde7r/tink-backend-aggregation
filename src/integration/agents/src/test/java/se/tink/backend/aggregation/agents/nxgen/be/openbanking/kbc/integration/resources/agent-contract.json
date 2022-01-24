@@ -1,7 +1,7 @@
 {
     "accounts": [
         {
-            "accountNumber": "BE39000000076000",
+            "accountNumber": "BE13456225778439",
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "EUR",
@@ -11,7 +11,7 @@
                 "exactValue": 789.01
             },
             "currencyCode": "EUR",
-            "bankId": "BE39000000076000",
+            "bankId": "BE13456225778439",
             "excluded": false,
             "favored": false,
             "name": "DUMMY_NAME",
@@ -20,7 +20,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[]",
+            "identifiers": "[\"iban://BE13456225778439\",\"sepa-eur://BE13456225778439\"]",
             "closed": false,
             "holderName": "Dummy_name",
             "accountHolder": {

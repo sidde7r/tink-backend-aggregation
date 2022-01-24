@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -11,59 +13,24 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class AccountsItemEntity {
 
-    @JsonProperty("cashAccountType")
     private String cashAccountType;
-
-    @JsonProperty("balances")
     private List<BalancesItemEntity> balances;
-
-    @JsonProperty("product")
     private String product;
-
-    @JsonProperty("resourceId")
     private String resourceId;
+    private String iban;
+    private String name;
+    private String currency;
 
     @JsonProperty("_links")
     private LinksEntity linksEntity;
-
-    @JsonProperty("iban")
-    private String iban;
-
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("currency")
-    private String currency;
-
-    public String getCashAccountType() {
-        return cashAccountType;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public String getIban() {
-        return iban;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
 
     public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
@@ -77,9 +44,7 @@ public class AccountsItemEntity {
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
                                 .withAccountName(product)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.SEPA_EUR, iban, name))
+                                .addIdentifiers(accountIdentifiers())
                                 .build())
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
@@ -93,5 +58,9 @@ public class AccountsItemEntity {
                 .findFirst()
                 .map(BalancesItemEntity::getBalanceAmountEntity)
                 .orElseThrow(() -> new IllegalStateException("Could not get balance"));
+    }
+
+    private List<AccountIdentifier> accountIdentifiers() {
+        return Arrays.asList(new SepaEurIdentifier(iban), new IbanIdentifier(iban));
     }
 }

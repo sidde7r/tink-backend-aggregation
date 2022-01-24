@@ -18,11 +18,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class KbcAccountFetcherTest {
+
+    private static final String FAKE_BELGIUM_IBAN = "BE13456225778439";
+
     private BerlinGroupApiClient apiClient;
     private BerlinGroupAccountFetcher fetcher;
 
@@ -48,7 +53,7 @@ public class KbcAccountFetcherTest {
                                 accountType, TransactionalAccountType.CHECKING))
                 .isTrue();
         TransactionalAccount account = accounts.iterator().next();
-        assertThat(account.getAccountNumber()).isEqualTo("PL666");
+        assertThat(account.getAccountNumber()).isEqualTo(FAKE_BELGIUM_IBAN);
         assertThat(account.getName()).isEqualTo(accountType);
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(12.12));
     }
@@ -69,9 +74,13 @@ public class KbcAccountFetcherTest {
                                 accountType, TransactionalAccountType.SAVINGS))
                 .isTrue();
         TransactionalAccount account = accounts.iterator().next();
-        assertThat(account.getAccountNumber()).isEqualTo("PL666");
+        assertThat(account.getAccountNumber()).isEqualTo(FAKE_BELGIUM_IBAN);
         assertThat(account.getName()).isEqualTo(accountType);
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(12.12));
+        assertThat(account.getIdentifiers())
+                .containsExactlyInAnyOrder(
+                        new SepaEurIdentifier(FAKE_BELGIUM_IBAN),
+                        new IbanIdentifier(FAKE_BELGIUM_IBAN));
     }
 
     @SuppressWarnings("unused")
@@ -86,7 +95,9 @@ public class KbcAccountFetcherTest {
 
     private static AccountResponse getAccountsResponse(String accountType) {
         return SerializationUtils.deserializeFromString(
-                "{\"accounts\" : [{\"iban\" : \"PL666\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"currency\" : \"EUR\", \"product\" : \""
+                "{\"accounts\" : [{\"iban\" : \""
+                        + FAKE_BELGIUM_IBAN
+                        + "\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"currency\" : \"EUR\", \"product\" : \""
                         + accountType
                         + "\", \"balances\" : [ { \"balanceType\" : \"closingBooked\", \"balanceAmount\" : {\"currency\" : \"EUR\", \"amount\" : 12.12 }}, { \"balanceType\" : \"expected\", \"balanceAmount\" : {\"currency\" : \"EUR\", \"amount\" : 12.12 }} ]  }]}",
                 AccountResponse.class);
