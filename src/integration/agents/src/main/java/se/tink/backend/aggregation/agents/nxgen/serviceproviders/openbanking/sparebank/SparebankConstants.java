@@ -46,12 +46,8 @@ public final class SparebankConstants {
         public static final String GET_CARD_TRANSACTIONS =
                 "/v1/card-accounts/{resourceId}/transactions";
         public static final String GET_SCA_REDIRECT = "/v1/bank-offered-consents";
-        public static final String CREATE_PAYMENT = "/v1/payments/{paymentProduct}";
-        public static final String GET_PAYMENT = "/v1/payments/{paymentProduct}/{paymentId}";
-        public static final String SIGN_PAYMENT =
-                "/v1/payments/{paymentProduct}/{paymentId}/authorisations";
-        public static final String GET_PAYMENT_STATUS =
-                "/v1/payments/{paymentProduct}/{paymentId}/status";
+        public static final String CREATE_PAYMENT = "/v1/{serviceType}/{paymentProduct}";
+        public static final String GET_PAYMENT = "/v1/{serviceType}/{paymentProduct}/{paymentId}";
     }
 
     public static class QueryKeys {
@@ -101,6 +97,14 @@ public final class SparebankConstants {
         public static final String X_ACCEPT_FIX_AMOUNT_SWITCH =
                 "cardaccount-switch-originalamount-and-transactionamount";
         public static final String PSU_CONTEXT_PRIVATE = "PRIVATE";
+        public static final String AMOUNT_AS_STRING = "amount-as-string";
+        public static final String SHA_256 = "SHA-256=";
+    }
+
+    public static class StorageKeys {
+        public static final String FIELD_PSU_ID = "psu-id";
+        public static final String FIELD_TPP_SESSION_ID = "tpp-session-id";
+        public static final String FIELD_MESSAGE = "message";
     }
 
     public static class FormKeys {
@@ -116,6 +120,7 @@ public final class SparebankConstants {
     public static class IdTags {
         public static final String RESOURCE_ID = "resourceId";
         public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String SERVICE_TYPE = "serviceType";
         public static final String PAYMENT_ID = "paymentId";
     }
 
@@ -140,24 +145,5 @@ public final class SparebankConstants {
                 "Fetching domestic payments not supported by this bank";
         public static final String SCA_REDIRECT_MESSAGE = "scaRedirect";
         public static final String CONSENT_REVOKED_MESSAGE = "CONSENT_UNKNOWN";
-    }
-
-    enum HEADERS_TO_SIGN {
-        DATE("date"),
-        DIGEST("digest"),
-        X_REQUEST_ID("x-request-id"),
-        PSU_ID("psu-id"),
-        PSU_CORPORATE_ID("psu-corporate-id"),
-        TPP_REDIRECT_URI("tpp-redirect-uri");
-
-        private String header;
-
-        HEADERS_TO_SIGN(String header) {
-            this.header = header;
-        }
-
-        public String getHeader() {
-            return header;
-        }
     }
 }

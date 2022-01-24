@@ -20,7 +20,8 @@ public class GenericResponse {
 
     @JsonIgnore
     public boolean isMissingBankAgreement() {
-        return containsError(ErrorCodes.MISSING_BANK_AGREEMENT);
+        return containsError(ErrorCodes.MISSING_BANK_AGREEMENT)
+                || containsError(ErrorCodes.INTERNET_BANK_AGREEMENT);
     }
 
     public boolean isNoProfileAvailable() {

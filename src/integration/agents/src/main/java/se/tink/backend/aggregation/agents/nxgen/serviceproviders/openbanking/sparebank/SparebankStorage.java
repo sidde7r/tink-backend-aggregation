@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.TimeZone;
 import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.rpc.CardResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
@@ -97,5 +98,21 @@ public class SparebankStorage {
                                 LocalDateTime.ofInstant(
                                         Instant.ofEpochMilli(consentCreationTimestamp.get()),
                                         TimeZone.getDefault().toZoneId()));
+    }
+
+    public void storePaymentUrls(String id, LinksEntity links) {
+        persistentStorage.put(id, links);
+    }
+
+    public Optional<LinksEntity> getPaymentUrls(String id) {
+        return persistentStorage.get(id, LinksEntity.class);
+    }
+
+    public void storeSessionData(String psuId, String tppSessionId) {
+        this.storePsuId(psuId);
+        this.storeTppSessionId(tppSessionId);
+
+        long now = Instant.now().toEpochMilli();
+        this.storeConsentCreationTimestamp(now);
     }
 }

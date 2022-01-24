@@ -1,20 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HEADERS_TO_SIGN;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.IdTags;
@@ -22,17 +19,26 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankApiConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.rpc.CardResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.rpc.CardTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.filters.ConsentErrorsFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.utils.SparebankUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.cryptography.hash.Hash;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 public class SparebankApiClient {
@@ -60,8 +66,10 @@ public class SparebankApiClient {
     }
 
     private RequestBuilder createRequest(URL url, Optional<String> digest) {
-        Map<String, Object> headers = getHeaders(UUID.randomUUID().toString(), digest);
-        headers.put(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
+        Map<String, Object> headers = getHeaders(digest);
+        headers.put(
+                HeaderKeys.SIGNATURE,
+                SparebankUtils.generateSignatureHeader(apiConfiguration, signer, headers));
         return client.request(url).headers(headers);
     }
 
@@ -160,6 +168,49 @@ public class SparebankApiClient {
                 .get(CardTransactionResponse.class);
     }
 
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest paymentRequest, SparebankPaymentType paymentType) {
+
+        return createRequest(
+                        new URL(apiConfiguration.getBaseUrl().concat(Urls.CREATE_PAYMENT))
+                                .parameter(IdTags.SERVICE_TYPE, paymentType.getTypePath())
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentType.getSubtypePath()),
+                        createDigest(SerializationUtils.serializeToString(paymentRequest)))
+                .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.AMOUNT_AS_STRING)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .body(paymentRequest)
+                .post(CreatePaymentResponse.class);
+    }
+
+    public GetPaymentResponse fetchPayment(String getPaymentUrl) {
+        return createRequest(new URL(apiConfiguration.getBaseUrl() + new URL(getPaymentUrl)))
+                .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.AMOUNT_AS_STRING)
+                .get(GetPaymentResponse.class);
+    }
+
+    public PaymentStatusResponse fetchPaymentStatus(String paymentStatusUrl) {
+        return createRequest(new URL(apiConfiguration.getBaseUrl() + new URL(paymentStatusUrl)))
+                .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.AMOUNT_AS_STRING)
+                .get(PaymentStatusResponse.class);
+    }
+
+    public PaymentStatusResponse authorizePayment(String paymentAuthorizeUrl) {
+
+        return createRequest(new URL(apiConfiguration.getBaseUrl() + paymentAuthorizeUrl))
+                .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.AMOUNT_AS_STRING)
+                .post(PaymentStatusResponse.class);
+    }
+
+    public PaymentStatusResponse cancelPayment(String paymentId, SparebankPaymentType paymentType) {
+        return createRequest(
+                        new URL(apiConfiguration.getBaseUrl() + Urls.GET_PAYMENT)
+                                .parameter(IdTags.SERVICE_TYPE, paymentType.getTypePath())
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentType.getSubtypePath())
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.AMOUNT_AS_STRING)
+                .delete(PaymentStatusResponse.class);
+    }
+
     private RequestBuilder fetchTransactions(String transactionUrl, String resourceId) {
         LocalDate fromDate;
         if (storage.isStoredConsentTooOldForFullFetch()) {
@@ -188,7 +239,7 @@ public class SparebankApiClient {
                         SparebankConstants.QueryValues.BOOKING_STATUS);
     }
 
-    private Map<String, Object> getHeaders(String requestId, Optional<String> digest) {
+    private Map<String, Object> getHeaders(Optional<String> digest) {
         String tppRedirectUrl =
                 new URL(apiConfiguration.getRedirectUrl())
                         .queryParam(QueryKeys.STATE, storage.getState())
@@ -198,7 +249,7 @@ public class SparebankApiClient {
         headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
         headers.put(
                 HeaderKeys.DATE, ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
-        headers.put(HeaderKeys.X_REQUEST_ID, requestId);
+        headers.put(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
         headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, apiConfiguration.getQsealcBase64());
 
@@ -216,41 +267,10 @@ public class SparebankApiClient {
         return headers;
     }
 
-    private String generateSignatureHeader(Map<String, Object> headers) {
-        StringBuilder signedWithHeaderKeys = new StringBuilder();
-        StringBuilder signedWithHeaderKeyValues = new StringBuilder();
-
-        Arrays.stream(HEADERS_TO_SIGN.values())
-                .map(HEADERS_TO_SIGN::getHeader)
-                .filter(headers::containsKey)
-                .forEach(
-                        header -> {
-                            signedWithHeaderKeyValues.append(
-                                    String.format("%s: %s\n", header, headers.get(header)));
-                            signedWithHeaderKeys.append(
-                                    (signedWithHeaderKeys.length() == 0) ? header : " " + header);
-                        });
-
-        String signature =
-                signer.getSignatureBase64(signedWithHeaderKeyValues.toString().trim().getBytes());
-
-        String encodedSignature =
-                Base64.getEncoder()
-                        .encodeToString(
-                                String.format(
-                                                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"",
-                                                prepareSignatureHeaderKeyId(),
-                                                signedWithHeaderKeys.toString(),
-                                                signature)
-                                        .getBytes(StandardCharsets.UTF_8));
-
-        return String.format("=?utf-8?B?%s?=", encodedSignature);
-    }
-
-    private String prepareSignatureHeaderKeyId() {
-        return String.format(
-                "SN=%s,CA=%s",
-                apiConfiguration.getCertificateSerialNumberInHex(),
-                apiConfiguration.getCertificateIssuerDN());
+    private Optional<String> createDigest(final String data) {
+        return Optional.of(
+                String.format(
+                        SparebankConstants.HeaderValues.SHA_256.concat("%s"),
+                        Base64.getEncoder().encodeToString(Hash.sha256(data))));
     }
 }

@@ -16,9 +16,10 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Getter
 @JsonObject
 public class AccountEntity {
-    @Getter private String resourceId;
+    private String resourceId;
     private String iban;
     private String currency;
     private String name;
