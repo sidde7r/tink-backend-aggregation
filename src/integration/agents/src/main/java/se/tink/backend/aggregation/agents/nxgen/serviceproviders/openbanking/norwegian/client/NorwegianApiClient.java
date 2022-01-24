@@ -181,10 +181,8 @@ public class NorwegianApiClient {
                         response.getRedirectUrl()
                                 .replaceAll(WHITESPACE, ESCAPED_WHITESPACE)
                                 .replace(CODE_CHALLENGE_FIELD_PLACEHOLDER, codeChallenge))
-                .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE)
-                .queryParam(QueryKeys.RESPONSE_MODE, QueryValues.QUERY);
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE);
     }
 
     public ConsentDetailsResponse getConsentDetails() {
