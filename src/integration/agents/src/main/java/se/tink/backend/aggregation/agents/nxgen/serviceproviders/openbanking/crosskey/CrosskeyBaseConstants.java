@@ -81,6 +81,7 @@ public class CrosskeyBaseConstants {
                 "Consent Id not found in session storage.";
         public static final String NOT_AUTHENTICATED = "User is not authenticated.";
         public static final String NOT_AUTHORIZED = "User is not authorized.";
+        public static final String WRONG_INTERVAL = "The request transaction interval";
     }
 
     @UtilityClass
