@@ -19,7 +19,7 @@ public class DegussabankErrorHandler extends BankverlagErrorHandler {
             TppMessage.builder()
                     .category(TppMessage.ERROR)
                     .code("FORMAT_ERROR")
-                    .text("9050:Nachricht teilweise fehlerhaft.\\n9941:TAN ung?ltig.\\n")
+                    .text("9050:Nachricht teilweise fehlerhaft.\\n9941:TAN ungültig.\\n")
                     .build();
 
     @Override

@@ -3,7 +3,7 @@
         {
             "category": "ERROR",
             "code": "PSU_CREDENTIALS_INVALID",
-            "text": "3999:***Die TAN ist ung?ltig.***"
+            "text": "3999:***Die TAN ist ungültig.***"
         }
     ]
 }

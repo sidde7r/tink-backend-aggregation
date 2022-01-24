@@ -3,7 +3,7 @@
         {
             "category": "ERROR",
             "code": "FORMAT_ERROR",
-            "text": "9050:Nachricht teilweise fehlerhaft.\\n9941:TAN ung?ltig.\\n"
+            "text": "9050:Nachricht teilweise fehlerhaft.\\n9941:TAN ungültig.\\n"
         }
     ]
 }
