@@ -148,6 +148,28 @@ public class SwedbankDefaultApiClientTest {
                 .hasMessage("Cause: LoginError.NOT_CUSTOMER");
     }
 
+    @Test
+    public void shouldThrowNotCustomerExceptionWhenFallbackOneBankButNoPrivateProfileAtAll() {
+        configuration =
+                new SwedbankConfiguration(
+                        getProfileParameters("swedbank-fallback", false), "host", true);
+        SwedbankDefaultApiClient apiClient =
+                new SwedbankDefaultApiClient(
+                        client, configuration, swedbankStorage, profileSelector, componentProvider);
+        SwedbankDefaultApiClient spyClient = spy(apiClient);
+
+        doReturn(getOnlyServiceProfile())
+                .when(spyClient)
+                .makeRequest(linkEntity, ProfileResponse.class, false);
+
+        Throwable throwable =
+                Assertions.catchThrowable(() -> spyClient.completeAuthentication(linkEntity));
+
+        assertThat(throwable)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.NOT_CUSTOMER");
+    }
+
     private ProfileParameters getProfileParameters(String providerName, boolean isSavingsbank) {
         return new ProfileParameters(providerName, "apiKey", isSavingsbank, "userAgent");
     }
@@ -450,6 +472,47 @@ public class SwedbankDefaultApiClientTest {
                         + "    ,\"hasSavingbankProfile\": "
                         + isSavingsbank
                         + "    ,\"userId\": \"**HASHED:XH**\""
+                        + "}",
+                ProfileResponse.class);
+    }
+
+    private ProfileResponse getOnlyServiceProfile() {
+        return SerializationUtils.deserializeFromString(
+                "{"
+                        + "  \"banks\": ["
+                        + "    {"
+                        + "      \"name\": \"Hälsinglands Sparbank\","
+                        + "      \"bankId\": \"08129\","
+                        + "      \"url\": \"https://www.halsinglandssparbank.se\","
+                        + "      \"corporateProfiles\": [],"
+                        + "      \"servicePortalProfile\": {"
+                        + "        \"activeProfileLanguage\": \"sv\","
+                        + "        \"numberOfUnreadDocuments\": 2,"
+                        + "        \"targetType\": \"NEUTRAL\","
+                        + "        \"customerName\": \"Esbjorn Fakename\","
+                        + "        \"customerNumber\": \"customerNumber\","
+                        + "        \"id\": \"Id\","
+                        + "        \"bankId\": \"08129\","
+                        + "        \"bankName\": \"Hälsinglands Sparbank\","
+                        + "        \"url\": \"https://www.halsinglandssparbank.se\","
+                        + "        \"customerInternational\": false,"
+                        + "        \"youthProfile\": false,"
+                        + "        \"links\": {"
+                        + "          \"edit\": {"
+                        + "            \"method\": \"PUT\","
+                        + "            \"uri\": \"/v5/profile/subscription/Id\""
+                        + "          },"
+                        + "          \"next\": {"
+                        + "            \"method\": \"POST\","
+                        + "            \"uri\": \"/v5/profile/Id\""
+                        + "          }"
+                        + "        }"
+                        + "      }"
+                        + "    }"
+                        + "  ],"
+                        + "  \"hasSwedbankProfile\": false,"
+                        + "  \"hasSavingbankProfile\": true,"
+                        + "  \"userId\": \"**HASHED:Xx**\""
                         + "}",
                 ProfileResponse.class);
     }
