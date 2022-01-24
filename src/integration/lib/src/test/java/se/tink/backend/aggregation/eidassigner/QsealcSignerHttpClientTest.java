@@ -237,6 +237,7 @@ public class QsealcSignerHttpClientTest {
         @JsonProperty private String environment;
         @JsonProperty private boolean localEidasDev;
         @JsonProperty private boolean useEidasProxyQsealcSignerHttpClient;
+        @JsonProperty private String eidasProxyQsealcSignerHttpClientRate;
 
         public EidasProxy() {}
 
@@ -248,7 +249,8 @@ public class QsealcSignerHttpClientTest {
                     tlsKeyPath,
                     environment,
                     localEidasDev,
-                    useEidasProxyQsealcSignerHttpClient);
+                    useEidasProxyQsealcSignerHttpClient,
+                    eidasProxyQsealcSignerHttpClientRate);
         }
 
         public String getHost() {
@@ -297,6 +299,11 @@ public class QsealcSignerHttpClientTest {
 
         public void setLocalEidasDev(boolean localEidasDev) {
             this.localEidasDev = localEidasDev;
+        }
+
+        public void setEidasProxyQsealcSignerHttpClientRate(
+                String eidasProxyQsealcSignerHttpClientRate) {
+            this.eidasProxyQsealcSignerHttpClientRate = eidasProxyQsealcSignerHttpClientRate;
         }
     }
 }

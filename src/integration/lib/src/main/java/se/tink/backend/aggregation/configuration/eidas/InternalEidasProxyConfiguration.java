@@ -23,6 +23,7 @@ public class InternalEidasProxyConfiguration {
     private final String environment;
     private final boolean localEidasDev;
     private final boolean useEidasProxyQsealcSignerHttpClient;
+    private final String eidasProxyQsealcSignerHttpClientRate;
 
     // For lazy one-time initialization
     private static Certificate localEidasDevCertificate = null;
@@ -34,7 +35,8 @@ public class InternalEidasProxyConfiguration {
             String tlsKeyPath,
             String environment,
             boolean localEidasDev,
-            boolean useEidasProxyQsealcSignerHttpClient) {
+            boolean useEidasProxyQsealcSignerHttpClient,
+            String eidasProxyQsealcSignerHttpClientRate) {
         this.host = host;
         this.caPath = caPath;
         this.tlsCrtPath = tlsCrtPath;
@@ -42,6 +44,7 @@ public class InternalEidasProxyConfiguration {
         this.environment = environment;
         this.localEidasDev = localEidasDev;
         this.useEidasProxyQsealcSignerHttpClient = useEidasProxyQsealcSignerHttpClient;
+        this.eidasProxyQsealcSignerHttpClientRate = eidasProxyQsealcSignerHttpClientRate;
     }
 
     public String getHost() {
@@ -54,6 +57,10 @@ public class InternalEidasProxyConfiguration {
 
     public boolean isUseEidasProxyQsealcSignerHttpClient() {
         return useEidasProxyQsealcSignerHttpClient;
+    }
+
+    public String getEidasProxyQsealcSignerHttpClientRate() {
+        return eidasProxyQsealcSignerHttpClientRate;
     }
 
     public boolean getLocalEidasDev() {

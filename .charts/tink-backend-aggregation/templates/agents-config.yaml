@@ -36,6 +36,7 @@ data:
         tlsKeyPath: /etc/client-certificate/tls.key
         {{- if $eidasProxy }}
         useEidasProxyQsealcSignerHttpClient: {{ $eidasProxy.useEidasProxyQsealcSignerHttpClient | default false }}
+        eidasProxyQsealcSignerHttpClientRate: {{ $eidasProxy.eidasProxyQsealcSignerHttpClientRate | default "0.0" }}
         {{- end }}
         environment: {{ .Values.Environment }}
 
