@@ -49,7 +49,7 @@ public class SocieteGeneraleRetryFilterTest {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "  \"timestamp\": \"2021-10-06T10:11:47.052+00:00\",\n"
-                        + "  \"path\": \"/sg/prod/pri/v1.4.2.4/psd2/xs2a/end-user-identity\",\n"
+                        + "  \"path\": \"/sg/prod/pri/v1.4.2.17/psd2/xs2a/end-user-identity\",\n"
                         + "  \"status\": 504,\n"
                         + "  \"error\": \"Gateway Timeout\",\n"
                         + "  \"message\": \"Response took longer than timeout: PT10S\",\n"

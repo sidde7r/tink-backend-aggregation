@@ -12,7 +12,7 @@ Content-Type: application/json
 {"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":900,"state":"f2533843-785d-4499-b92f-61711101feed","scope":"aisp","refresh_token":"DUMMY_REFRESH_TOKEN"}
 
 REQUEST 2
-GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a/end-user-identity
+GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.17/psd2/xs2a/end-user-identity
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -24,7 +24,7 @@ Content-Type: application/json
 {"connectedPsu":"DUMMY_USER","_links":{"self":{"href":"/end-user-identity"},"parent-list":{"href":"/accounts"}}}
 
 REQUEST 3
-GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a/accounts
+GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.17/psd2/xs2a/accounts
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Bearer DUMMY_ACCESS_TOKEN
@@ -36,7 +36,7 @@ Content-Type: application/json
 {"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":"SOGEFRPP","accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","balances":[{"name":"Solde instantané au 04/05/2020","balanceAmount":{"currency":"EUR","amount":"27873.93"},"balanceType":"XPCD","lastChangeDateTime":"2020-05-04T00:00:00Z","referenceDate":"2020-05-04"}],"psuStatus":"Account Holder","_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}],"_links":{"self":{"href":"/accounts"},"endUserIdentity":{"href":"/end-user-identity"},"beneficiaries":{"href":"/trusted-beneficiaries"}}}
 
 REQUEST 4
-GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a/accounts/DUMMY_RESOURCE_ID/transactions
+GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.17/psd2/xs2a/accounts/DUMMY_RESOURCE_ID/transactions
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -44,10 +44,10 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"transactions":[{"entryReference":"2020-05-04T00:0012710917","transactionAmount":{"currency":"EUR","amount":"47.57"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-05-04","valueDate":"2020-05-04","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_1"]}},{"entryReference":"2020-05-02T00:0012710916","transactionAmount":{"currency":"EUR","amount":"0.80"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-05-02","valueDate":"2020-05-02","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_2"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"next":null}}
+{"transactions":[{"entryReference":"2020-05-04T00:0012710917","transactionAmount":{"currency":"EUR","amount":"47.57"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-05-04T00:00:00+01:00","valueDate":"2020-05-04T00:00:00+01:00","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_1"]}},{"entryReference":"2020-05-02T00:0012710916","transactionAmount":{"currency":"EUR","amount":"0.80"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-05-02T00:00:00+01:00","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_2"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"next":null}}
 
 REQUEST 5
-GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a/trusted-beneficiaries
+GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.17/psd2/xs2a/trusted-beneficiaries
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -58,7 +58,7 @@ Content-Type: application/json
 {"beneficiaries":[{"creditorAgent":{"bicFi":"AXUBFRPP"},"creditor":{"name":"MON COMPTE JOINT 1","postalAddress":{"country":"FR","addressLine":["79 rue DES TPPL","75019 PARIS"]}},"creditorAccount":{"iban":"FR7612548029981234567890161"}}],"_links":{"self":{"href":"/trusted-beneficiaries?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"first":{"href":"/trusted-beneficiaries?page\u003d1","templated":true},"last":{"href":"/trusted-beneficiaries?page\u003d2","templated":true},"next":{"href":"/trusted-beneficiaries?page\u003d2","templated":true}}}
 
 REQUEST 6 MATCH BENEFICIARIES_FIRST_PAGE_LOADED
-GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a/trusted-beneficiaries?page=2
+GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.17/psd2/xs2a/trusted-beneficiaries?page=2
 Accept: application/json
 X-Aggregator: Tink Testing
 
