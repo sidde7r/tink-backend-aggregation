@@ -508,7 +508,7 @@ tppSecretsServiceConfiguration:
   useSecretsServiceInternalClient: false
 
 debugLogFrequencyPercent: 100
-debugLogHarFrequencyPercent: 1
+debugLogHarFrequencyPercent: 10
 longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
 
 eventProducerServiceConfiguration:
