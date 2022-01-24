@@ -1,0 +1,13 @@
+{
+  "errorManagement": {
+    "errorCode": "PSD2_01.000.A0040",
+    "errorDescription": "Operation not allowed: authentication required."
+  },
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "GENERIC_ERROR",
+      "text": "Generic error"
+    }
+  ]
+}
