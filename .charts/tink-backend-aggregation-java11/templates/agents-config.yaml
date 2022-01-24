@@ -35,7 +35,7 @@ data:
         tlsCrtPath: /etc/client-certificate-java11/tls.crt
         tlsKeyPath: /etc/client-certificate-java11/tls.key
         {{- if $eidasProxy }}
-          useEidasProxyQsealcSignerHttpClient: {{ $eidasProxy.useEidasProxyQsealcSignerHttpClient | default false }}
+        useEidasProxyQsealcSignerHttpClient: {{ $eidasProxy.useEidasProxyQsealcSignerHttpClient | default false }}
         {{- end }}
         environment: {{ .Values.Environment }}
 
