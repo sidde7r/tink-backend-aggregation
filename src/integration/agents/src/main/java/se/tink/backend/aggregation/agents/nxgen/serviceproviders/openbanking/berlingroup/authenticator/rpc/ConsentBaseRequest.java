@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
@@ -20,6 +22,19 @@ public class ConsentBaseRequest {
 
     @JsonProperty protected int frequencyPerDay;
     @JsonProperty protected boolean combinedServiceIndicator;
+
+    public ConsentBaseRequest(LocalDate localDate) {
+        this.recurringIndicator = true;
+        this.validUntil =
+                Date.from(
+                        localDate
+                                .atStartOfDay()
+                                .plusMonths(11)
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant());
+        this.frequencyPerDay = 4;
+        this.combinedServiceIndicator = false;
+    }
 
     public ConsentBaseRequest() {
         final Calendar now = Calendar.getInstance();

@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sam
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -28,6 +29,7 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
     private final LogMasker logMasker;
     private final SystemUpdater systemUpdater;
     private final Credentials credentials;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public SamlinkAgent(
             AgentComponentProvider componentProvider,
@@ -37,7 +39,8 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
         this.logMasker = componentProvider.getContext().getLogMasker();
         this.agentConfiguration = agentConfiguration;
         this.qsealcSigner = qsealcSigner;
-        this.apiClient = createApiClient();
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.apiClient = createApiClient(componentProvider);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.creditCardRefreshController = getCreditCardRefreshController();
         this.systemUpdater = componentProvider.getSystemUpdater();
@@ -46,6 +49,10 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
 
     @Override
     protected SamlinkApiClient createApiClient() {
+        throw new UnsupportedOperationException("This api client is not used");
+    }
+
+    protected SamlinkApiClient createApiClient(AgentComponentProvider componentProvider) {
         return new SamlinkApiClient(
                 client,
                 persistentStorage,
@@ -56,7 +63,8 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
                 agentConfiguration,
                 logMasker,
                 systemUpdater,
-                credentials);
+                credentials,
+                componentProvider);
     }
 
     @Override
@@ -94,7 +102,8 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
     private CreditCardRefreshController getCreditCardRefreshController() {
         final SamlinkCardFetcher cardFetcher = new SamlinkCardFetcher(apiClient);
         final SamlinkCardTransactionFetcher transactionFetcher =
-                new SamlinkCardTransactionFetcher(apiClient, agentConfiguration);
+                new SamlinkCardTransactionFetcher(
+                        apiClient, agentConfiguration, localDateTimeSource);
 
         return new CreditCardRefreshController(
                 metricRefreshController, updateController, cardFetcher, transactionFetcher);

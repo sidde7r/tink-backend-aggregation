@@ -1,0 +1,210 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "FI1111111111111111",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 6785,
+      "doubleValue" : 67.85,
+      "exactValue" : 67.85
+    },
+    "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 6785,
+      "doubleValue" : 67.85,
+      "exactValue" : 67.85
+    },
+    "bankId" : "FI1111111111111111",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CASH",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Checking Account Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Checking Account Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 67.85
+  }, {
+    "accountNumber" : "424397XXXXXX7780",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 109824,
+      "doubleValue" : 1098.24,
+      "exactValue" : 1098.24
+    },
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 90176,
+      "doubleValue" : 901.76,
+      "exactValue" : 901.76
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "897fa6559245407b990bf950f43485e3",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Visa Credit/Debit",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 1098.24,
+    "balance" : 901.76
+  }, {
+    "accountNumber" : "FI2222222222222222",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 200324,
+      "doubleValue" : 2003.24,
+      "exactValue" : 2003.24
+    },
+    "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 200324,
+      "doubleValue" : 2003.24,
+      "exactValue" : 2003.24
+    },
+    "bankId" : "FI2222222222222222",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CASH",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Savings Account Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Savings Account Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 2003.24
+  } ],
+  "transactions" : [ {
+    "amount" : -225.75,
+    "date" : 1642330800000,
+    "description" : "INTRUM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : false
+  }, {
+    "amount" : -1234.56,
+    "date" : 1642330800000,
+    "description" : "INTRUM2",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : false
+  }, {
+    "amount" : -39.94,
+    "date" : 1642417200000,
+    "description" : "Hyvitys SWE Malmoe Booztlet.com",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -124.92,
+    "date" : 1642158000000,
+    "description" : "Osto SWE Malmoe Booztlet.com",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : -17.09,
+    "date" : 1642071600000,
+    "description" : "Osto GBR CAMBRIDGE help.jagex.com",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  }, {
+    "amount" : 12.6,
+    "date" : 1632391200000,
+    "description" : "Hyvitys DEU 35314369001 PAYPAL *ZALANDOSE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ],
+    "booked" : true
+  } ]
+}

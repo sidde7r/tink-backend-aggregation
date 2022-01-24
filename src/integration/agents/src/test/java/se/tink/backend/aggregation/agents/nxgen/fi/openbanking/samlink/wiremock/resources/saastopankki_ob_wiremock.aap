@@ -1,0 +1,464 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1a
+POST https://sp-psdapi.samlink.fi/psd2/v1/consents
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+Content-Type: application/json
+
+{
+  "access": {
+    "accounts": [],
+    "transactions": [],
+    "balances": []
+  },
+  "recurringIndicator": true,
+  "validUntil": "1993-03-10",
+  "frequencyPerDay": 4,
+  "combinedServiceIndicator": false
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1a
+201
+Content-Type: application/json
+Location: https://sp-psdapi.samlink.fi:8445/v1/consents/**HASHED:PG**
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Length: 277
+
+{
+  "consentStatus": "received",
+  "consentId": "**HASHED:PG**",
+  "_links": {
+    "scaOAuth": "https://authservice.samlink.fi/.wellknown/sp/oauth-authorization-server",
+    "self": "/psd2/v1/consents/**HASHED:PG**",
+    "status": "/psd2/v1/consents/**HASHED:PG**/status"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2a
+POST https://authservice.samlink.fi/sp/oauthproxy/token
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 2a
+200
+Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'; object-src 'self';frame-src 'self'
+X-Frame-Options: DENY
+Content-Type: application/json;charset=utf-8
+Content-Length: 163
+
+{
+  "access_token": "**HASHED:BC**",
+  "token_type": "Bearer",
+  "expires_in": 123,
+  "tokenType": "Bearer",
+  "expiresIn": 123,
+  "accessToken": "**HASHED:BC**"
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://sp-psdapi.samlink.fi/psd2/v1/accounts
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Mon, 17 Jan 2022 08:31:02 GMT
+Date: Mon, 17 Jan 2022 08:31:02 GMT
+Content-Type: application/json
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Length: 1118
+
+{
+    "accounts": [
+        {
+            "resourceId": "4fc092b4-095c-4495-acb8-886f52c62fd6",
+            "iban": "FI1111111111111111",
+            "currency": "EUR",
+            "name": "Checking Account FirstName LastName",
+            "cashAccountType": "CASH",
+            "status": "enabled",
+            "bic": "ITELFIHH",
+            "_links": {
+                "balances": "/psd2/v1/accounts/4fc092b4-095c-4495-acb8-886f52c62fd6/balances",
+                "transactions": "/psd2/v1/accounts/4fc092b4-095c-4495-acb8-886f52c62fd6/transactions"
+            }
+        },
+        {
+            "resourceId": "dfc446ad-6076-4408-b627-ae200e7e4920",
+            "iban": "FI2222222222222222",
+            "currency": "EUR",
+            "name": "Savings Account FirstName LastName",
+            "cashAccountType": "CASH",
+            "status": "enabled",
+            "bic": "ITELFIHH",
+            "_links": {
+                "balances": "/psd2/v1/accounts/dfc446ad-6076-4408-b627-ae200e7e4920/balances",
+                "transactions": "/psd2/v1/accounts/dfc446ad-6076-4408-b627-ae200e7e4920/transactions"
+            }
+        }
+    ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://sp-psdapi.samlink.fi/psd2/v1/accounts/4fc092b4-095c-4495-acb8-886f52c62fd6/balances
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Mon, 17 Jan 2022 08:31:03 GMT
+Date: Mon, 17 Jan 2022 08:31:03 GMT
+Content-Type: application/json
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Length: 304
+
+{
+  "account": {
+    "iban": "FI1111111111111111"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "67.85"
+      },
+      "balanceType": "forwardAvailable",
+      "lastChangeDateTime": "2022-01-17T00:00:00Z",
+      "referenceDate": "2022-01-17"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2b
+GET https://sp-psdapi.samlink.fi/psd2/v1/accounts/dfc446ad-6076-4408-b627-ae200e7e4920/balances
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 2b
+200
+Date: Mon, 17 Jan 2022 08:31:03 GMT
+Date: Mon, 17 Jan 2022 08:31:03 GMT
+Content-Type: application/json
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Length: 372
+
+{
+    "account": {
+        "iban": "FI2222222222222222"
+    },
+    "balances": [
+        {
+            "balanceAmount": {
+                "currency": "EUR",
+                "amount": "2003.24"
+            },
+            "balanceType": "forwardAvailable",
+            "lastChangeDateTime": "2022-01-12T00:00:00Z",
+            "referenceDate": "2022-01-12"
+        }
+    ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://sp-psdapi.samlink.fi/psd2/v1/card-accounts
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Mon, 17 Jan 2022 08:31:03 GMT
+Date: Mon, 17 Jan 2022 08:31:05 GMT
+Content-Type: application/json
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Length: 1047
+
+{
+    "cardAccounts": [
+        {
+            "resourceId": "897fa655-9245-407b-990b-f950f43485e3",
+            "maskedPan": "424397XXXXXX7780",
+            "currency": "EUR",
+            "product": "Visa Credit/Debit",
+            "status": "enabled",
+            "creditLimit": {
+                "currency": "EUR",
+                "amount": "2000.00"
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "currency": "EUR",
+                        "amount": "1098.24"
+                    },
+                    "balanceType": "interimAvailable"
+                },
+                {
+                    "balanceAmount": {
+                        "currency": "EUR",
+                        "amount": "-901.76"
+                    },
+                    "balanceType": "interimBooked"
+                }
+            ],
+            "_links": {
+                "transactions": "/psd2/v1/card-accounts/897fa655-9245-407b-990b-f950f43485e3/transactions"
+            }
+        }
+    ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://sp-psdapi.samlink.fi/psd2/v1/accounts/4fc092b4-095c-4495-acb8-886f52c62fd6/transactions?bookingStatus=pending
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Mon, 17 Jan 2022 08:31:05 GMT
+Date: Mon, 17 Jan 2022 08:31:06 GMT
+Content-Type: application/json
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Length: 876
+
+{
+    "account": {
+        "iban": "FI1111111111111111"
+    },
+    "transactions": {
+        "pending": [
+            {
+                "valueDate": "2022-01-16",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "225.75"
+                },
+                "creditorName": "INTRUM",
+                "creditorAccount": {
+                    "iban": "FI2222222222222222"
+                },
+                "debtorAccount": {
+                    "iban": "FI1111111111111111"
+                }
+            },
+            {
+                "valueDate": "2022-01-16",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "1234.56"
+                },
+                "creditorName": "INTRUM2",
+                "creditorAccount": {
+                    "iban": "FI2222222222222222"
+                },
+                "debtorAccount": {
+                    "iban": "FI1111111111111111"
+                }
+            }
+        ]
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://sp-psdapi.samlink.fi/psd2/v1/accounts/4fc092b4-095c-4495-acb8-886f52c62fd6/transactions?bookingStatus=booked
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Mon, 17 Jan 2022 08:31:06 GMT
+Date: Mon, 17 Jan 2022 08:31:07 GMT
+Content-Type: application/json
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+
+{
+  "account": {
+    "iban": "FI1111111111111111"
+  },
+  "transactions": {
+    "booked": []
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5savings
+GET https://sp-psdapi.samlink.fi/psd2/v1/accounts/dfc446ad-6076-4408-b627-ae200e7e4920/transactions?bookingStatus=booked
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 5savings
+200
+Date: Mon, 17 Jan 2022 08:31:06 GMT
+Date: Mon, 17 Jan 2022 08:31:07 GMT
+Content-Type: application/json
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+
+{
+    "account": {
+        "iban": "FI2222222222222222"
+    },
+    "transactions": {
+        "booked": []
+    }
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://sp-psdapi.samlink.fi/psd2/v1/accounts/4fc092b4-095c-4495-acb8-886f52c62fd6/transactions?bookingStatus=booked&entryReferenceFrom=000000000006531
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digestyabct5pTUsp0mrqCH7ho92oVkl0PXW1krHD7qmyE0y+z/RW64U2NH+SJeTUK1S/ppODS4L/PVnSHWBY1IgeIZVYFZ8GpQdDmb3jV9TrfoFzEHqp9hykmMfFrmuNKqjuWzhPLyKdWG8DoaaevXodXqu+UaR3b8e7SxRvLLr/VxX5z3asARizOagsOnaohz6MdQbABemrlMHjv95THtU2sYX8ZJczRuYHUqpwpFLsX83dazvXCQKy9IZQbh7HGIlu8DEJdNEkgNSqaET7BW7XCvWhIc+iX59KAGTJxFDmjsXY6P16UNzLWLxTujv8SyJifUaAdz4qi6QtcHA=="
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Mon, 17 Jan 2022 08:31:07 GMT
+Date: Mon, 17 Jan 2022 08:31:08 GMT
+Content-Type: application/json
+Expires: 0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 7cards
+GET https://sp-psdapi.samlink.fi/psd2/v1/card-accounts/897fa655-9245-407b-990b-f950f43485e3/transactions?bookingStatus=both&dateFrom=1991-12-10
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 7cards
+200
+Date: Mon, 17 Jan 2022 08:31:07 GMT
+Date: Mon, 17 Jan 2022 08:31:08 GMT
+Content-Type: application/json
+Content-Length: 2747
+
+{
+    "cardAccount": {
+        "maskedPan": "424397XXXXXX7780"
+    },
+    "cardTransactions": {
+        "booked": [
+            {
+                "cardTransactionId": "201710405394",
+                "transactionDate": "2022-01-17",
+                "bookingDate": "2022-01-17",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-39.94"
+                },
+                "cardAcceptorAddress": {
+                    "city": "Malmoe",
+                    "country": "SWE"
+                },
+                "merchantCategoryCode": "5699",
+                "maskedPAN": "424397XXXXXX7780",
+                "transactionDetails": "Hyvitys SWE Malmoe Booztlet.com",
+                "invoiced": false
+            },
+            {
+                "transactionDate": "2022-01-13",
+                "bookingDate": "2022-01-14",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-124.92"
+                },
+                "cardAcceptorAddress": {
+                    "city": "Malmoe       ",
+                    "country": "SWE"
+                },
+                "merchantCategoryCode": "5699",
+                "maskedPAN": "424397XXXXXX7780",
+                "transactionDetails": "Osto SWE Malmoe Booztlet.com",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2022-01-12",
+                "bookingDate": "2022-01-13",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-17.09"
+                },
+                "cardAcceptorAddress": {
+                    "city": "CAMBRIDGE    ",
+                    "country": "GBR"
+                },
+                "merchantCategoryCode": "5816",
+                "maskedPAN": "424397XXXXXX7780",
+                "transactionDetails": "Osto GBR CAMBRIDGE help.jagex.com",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2021-09-21",
+                "bookingDate": "2021-09-23",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "12.60"
+                },
+                "cardAcceptorAddress": {
+                    "city": "35314369001  ",
+                    "country": "DEU"
+                },
+                "merchantCategoryCode": "5651",
+                "maskedPAN": "424397XXXXXX7780",
+                "transactionDetails": "Hyvitys DEU 35314369001 PAYPAL *ZALANDOSE",
+                "invoiced": true
+            }
+        ],
+        "pending": [],
+        "_links": {
+            "cardAccount": "/psd2/v1/card-accounts/897fa655-9245-407b-990b-f950f43485e3"
+        }
+    }
+}
