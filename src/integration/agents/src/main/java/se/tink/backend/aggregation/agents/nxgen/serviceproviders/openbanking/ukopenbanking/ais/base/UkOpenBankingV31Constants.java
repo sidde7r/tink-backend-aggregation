@@ -103,9 +103,4 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
         public static final ZoneOffset DEFAULT_OFFSET = ZoneOffset.UTC;
         public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("UTC");
     }
-
-    public static class TimeoutFilter {
-        public static final int MAX_RETRIES_AFTER_TIMEOUT = 3;
-        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
-    }
 }

@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.TimeoutFilter.MAX_RETRIES_AFTER_TIMEOUT;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -93,8 +90,8 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
@@ -249,9 +246,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         addFilter(new TerminatedHandshakeRetryFilter());
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        addFilter(
-                new TimeoutRetryFilter(
-                        MAX_RETRIES_AFTER_TIMEOUT, TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        addFilter(new TimeoutFilter());
         addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
         addFilter(new ConsentErrorFilter(persistentStorage));
         addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
