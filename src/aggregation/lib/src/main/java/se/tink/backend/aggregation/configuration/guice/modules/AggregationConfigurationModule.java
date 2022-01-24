@@ -56,6 +56,13 @@ public class AggregationConfigurationModule extends AbstractModule {
         bindConstant()
                 .annotatedWith(Names.named("accountInformationServiceEvents"))
                 .to(configuration.isSendAccountInformationServiceEvents());
+        bindConstant()
+                .annotatedWith(Names.named("useSecretsServiceInternalClient"))
+                .to(
+                        configuration
+                                .getAgentsServiceConfiguration()
+                                .getTppSecretsServiceConfiguration()
+                                .isUseSecretsServiceInternalClient());
 
         bind(CacheConfiguration.class)
                 .toProvider(Providers.of(configuration.getCacheConfiguration()));
