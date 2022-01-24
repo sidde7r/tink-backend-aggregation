@@ -249,6 +249,14 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
 
+        bindConstant()
+                .annotatedWith(Names.named("useSecretsServiceInternalClient"))
+                .to(
+                        configuration
+                                .getAgentsServiceConfiguration()
+                                .getTppSecretsServiceConfiguration()
+                                .isUseSecretsServiceInternalClient());
+
         bind(ExceptionProcessor.class).in(Scopes.SINGLETON);
         Multibinder<ExceptionHandler> actionBinder =
                 Multibinder.newSetBinder(binder(), ExceptionHandler.class);
