@@ -6,6 +6,5 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public interface NordeaPartnerAccountMapper {
 
-    Optional<TransactionalAccount> toTinkTransactionalAccount(
-            AccountEntity accountEntity, boolean isOnStaging);
+    Optional<TransactionalAccount> toTinkTransactionalAccount(AccountEntity accountEntity);
 }
