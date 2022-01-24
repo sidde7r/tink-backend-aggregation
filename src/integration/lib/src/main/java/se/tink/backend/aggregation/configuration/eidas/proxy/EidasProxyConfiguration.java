@@ -11,6 +11,7 @@ public class EidasProxyConfiguration {
     private String tlsKeyPath;
     private String environment;
     private boolean localEidasDev;
+    private boolean useEidasProxyQsealcSignerHttpClient = false;
 
     public EidasProxyConfiguration() {}
 
@@ -26,8 +27,18 @@ public class EidasProxyConfiguration {
         return host;
     }
 
+    public boolean isUseEidasProxyQsealcSignerHttpClient() {
+        return useEidasProxyQsealcSignerHttpClient;
+    }
+
     public InternalEidasProxyConfiguration toInternalConfig() {
         return new InternalEidasProxyConfiguration(
-                host, caPath, tlsCrtPath, tlsKeyPath, environment, localEidasDev);
+                host,
+                caPath,
+                tlsCrtPath,
+                tlsKeyPath,
+                environment,
+                localEidasDev,
+                useEidasProxyQsealcSignerHttpClient);
     }
 }

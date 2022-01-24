@@ -21,6 +21,7 @@ agentsServiceConfiguration:
     localEidasDev: true
     tlsCrtPath: data/eidas_dev_certificates/tls.crt
     tlsKeyPath: data/eidas_dev_certificates/tls.key
+    useEidasProxyQsealcSignerHttpClient: false
   featureFlags:
     beProxy: false
     esProxy: false

@@ -68,15 +68,42 @@ java_library(
     srcs = ["@tink_backend//src/tink-integration-eidas-proxy/client:client_srcjar"],
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_google_guava_guava",
+        "eidas_cryptography_parsing",
+        "eidas_dev_issuer_client",
         "//third_party/log4j",
+        "@aggregation//:com_google_code_findbugs_jsr305",
+        "@aggregation//:com_google_errorprone_error_prone_annotations",
+        "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_nimbusds_nimbus_jose_jwt",
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
+        "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@maven//:io_prometheus_simpleclient",
         "@maven//:org_apache_httpcomponents_client5_httpclient5",
         "@maven//:org_apache_httpcomponents_core5_httpcore5",
         "@org_slf4j_slf4j_api//jar",
-        "@tink_backend//src/eidas-dev-issuer/client",
-        "@tink_backend//src/libraries/cryptography:parsing",
+    ],
+)
+
+java_library(
+    name = "eidas_dev_issuer_client",
+    srcs = ["@tink_backend//src/eidas-dev-issuer/client:client_srcjar"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "@aggregation//:org_apache_httpcomponents_httpclient",
+        "@aggregation//:org_apache_httpcomponents_httpcore",
+        "@aggregation//:org_slf4j_slf4j_api",
+    ],
+)
+
+java_library(
+    name = "eidas_cryptography_parsing",
+    srcs = ["@tink_backend//src/libraries/cryptography/src/main/java/tink/libraries/cryptography/parsing:parsing_srcjar"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
+        "@aggregation//:org_bouncycastle_bcprov_jdk15on",
     ],
 )
 
