@@ -115,6 +115,11 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
+        // Stefan Edqvist userId - will be removed after tests.
+        if (request.getUser()
+                .contains("160885a5a682477983600bc3c73cd417")) { // pragma: allowlist secret;
+            log.info("Debug updateTransactionAsynchronously {}", request);
+        }
         return requestExecuter(
                 () ->
                         getProcessService(hostConfiguration)
