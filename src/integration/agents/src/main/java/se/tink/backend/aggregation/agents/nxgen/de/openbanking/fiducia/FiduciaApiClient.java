@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.ErrorChecker.mapError;
+
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.ErrorChecker;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
@@ -83,7 +84,7 @@ public class FiduciaApiClient {
                     .header(HeaderKeys.PSU_ID, username)
                     .post(ConsentResponse.class, createConsentRequest);
         } catch (HttpResponseException e) {
-            throw ErrorChecker.errorChecker(e);
+            throw mapError(e);
         }
     }
 
@@ -101,7 +102,7 @@ public class FiduciaApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .post(AuthorizationResponse.class, authorizationRequest);
         } catch (HttpResponseException e) {
-            throw ErrorChecker.errorChecker(e);
+            throw mapError(e);
         }
     }
 
@@ -114,7 +115,7 @@ public class FiduciaApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .put(AuthorizationResponse.class, request);
         } catch (HttpResponseException e) {
-            throw ErrorChecker.errorChecker(e);
+            throw mapError(e);
         }
     }
 
@@ -131,7 +132,7 @@ public class FiduciaApiClient {
                     .contains(ErrorMessageKeys.PSU_CREDENTIALS_INVALID)) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             }
-            throw e;
+            throw mapError(e);
         }
     }
 

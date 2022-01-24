@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.ErrorChecker.mapError;
+
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPay
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
@@ -48,30 +51,43 @@ public class FiduciaPaymentApiClient implements PaymentApiClient {
     }
 
     public CreatePaymentResponse createPayment(PaymentRequest paymentRequest) {
-        if (PaymentServiceType.PERIODIC == paymentRequest.getPayment().getPaymentServiceType()) {
-            return createRecurringPayment(paymentRequest);
-        } else {
-            return createPaymentRequestBuilder(paymentRequest)
-                    .type(MediaType.APPLICATION_XML_TYPE)
-                    .post(
-                            CreatePaymentResponse.class,
-                            paymentMapper.getPaymentRequest(paymentRequest.getPayment()));
+        try {
+            if (PaymentServiceType.PERIODIC
+                    == paymentRequest.getPayment().getPaymentServiceType()) {
+                return createRecurringPayment(paymentRequest);
+            } else {
+                return createPaymentRequestBuilder(paymentRequest)
+                        .type(MediaType.APPLICATION_XML_TYPE)
+                        .post(
+                                CreatePaymentResponse.class,
+                                paymentMapper.getPaymentRequest(paymentRequest.getPayment()));
+            }
+        } catch (HttpResponseException hre) {
+            throw mapError(hre);
         }
     }
 
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
-        String xmlResponse =
-                apiClient
-                        .createRequest(
-                                createPaymentUrl(FETCH_PAYMENT_STATUS, paymentRequest)
-                                        .parameter(
-                                                PaymentConstants.PathVariables.PAYMENT_ID,
-                                                paymentRequest.getPayment().getUniqueId()))
-                        .get(String.class);
-        PaymentStatusXmlResponse paymentStatusXmlResponse = tryParseXmlResponse(xmlResponse);
+        try {
+            String xmlResponse =
+                    apiClient
+                            .createRequest(
+                                    createPaymentUrl(FETCH_PAYMENT_STATUS, paymentRequest)
+                                            .parameter(
+                                                    PaymentConstants.PathVariables.PAYMENT_ID,
+                                                    paymentRequest.getPayment().getUniqueId()))
+                            .get(String.class);
+            PaymentStatusXmlResponse paymentStatusXmlResponse = tryParseXmlResponse(xmlResponse);
 
-        return new FetchPaymentStatusResponse(
-                paymentStatusXmlResponse.getCstmrPmtStsRpt().getOrgnlGrpInfAndSts().getGrpSts());
+            return new FetchPaymentStatusResponse(
+                    paymentStatusXmlResponse
+                            .getCstmrPmtStsRpt()
+                            .getOrgnlGrpInfAndSts()
+                            .getGrpSts());
+
+        } catch (HttpResponseException hre) {
+            throw mapError(hre);
+        }
     }
 
     private URL createPaymentUrl(String path, PaymentRequest paymentRequest) {
