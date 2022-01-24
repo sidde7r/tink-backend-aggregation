@@ -23,13 +23,14 @@ import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.entity
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.entity.tlc.asserts.AssertionEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.entity.tlc.asserts.AssertionType;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.entity.tlc.asserts.MethodType;
+import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.error.UnknownError;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.rpc.tlc.asserts.ConfirmChallengeRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.rpc.tlc.device.OtpVerificationResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.persistance.MetroAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.persistance.MetroProcessState;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.fetcher.common.error.UnknownError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.DeviceRegistrationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.IncorrectOtpError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
@@ -58,6 +59,11 @@ public class OtpVerificationCallTest {
             ResponseEntity.status(HttpStatus.OK)
                     .body(
                             "{\"error_code\":7,\"error_message\":\"\",\"data\":{\"assertion_error_code\":0,\"assertion_error_message\":\"\",\"data\":{\"retries_left\":0,\"account_locked\":false}},\"headers\":[]}");
+
+    private static final ResponseEntity<String> AUTHENTICATION_FAILURE =
+            ResponseEntity.status(HttpStatus.OK)
+                    .body(
+                            "{\"error_code\":0,\"error_message\":\"\",\"data\":{\"assertion_error_code\":5,\"assertion_error_message\":\"Authentication resulted in failure\",\"data\":{\"retries_left\":2,\"account_locked\":false}},\"headers\":[]}");
 
     private static final ResponseEntity<String> UNKNOWN_ERROR =
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{}");
@@ -93,6 +99,7 @@ public class OtpVerificationCallTest {
                 ProcessDataUtil.nextStepAuthRequest(
                         MetroProcessState::new, MetroAuthenticationData::new);
         when(httpClient.exchange(any(), eq(String.class), any())).thenReturn(SUCCESS);
+
         // when
         ExternalApiCallResult<OtpVerificationResponse> execute =
                 call.execute(
@@ -182,6 +189,32 @@ public class OtpVerificationCallTest {
         assertThat(execute.getAgentBankApiError()).isNotEmpty();
         assertThat(execute.getAgentBankApiError().get())
                 .isInstanceOf(DeviceRegistrationError.class);
+    }
+
+    @Test
+    public void shouldCatchAuthenticationFailure() {
+        // given
+        OtpVerificationParameters parameters =
+                new OtpVerificationParameters(
+                        SESSION_ID, DEVICE_ID, keyPair.getPrivate(), buildRequest());
+        AgentProceedNextStepAuthenticationRequest request =
+                ProcessDataUtil.nextStepAuthRequest(
+                        MetroProcessState::new, MetroAuthenticationData::new);
+        when(httpClient.exchange(any(), eq(String.class), any()))
+                .thenReturn(AUTHENTICATION_FAILURE);
+
+        // when
+        ExternalApiCallResult<OtpVerificationResponse> execute =
+                call.execute(
+                        parameters,
+                        request.getAgentExtendedClientInfo(),
+                        AuthenticationPersistedDataCookieStoreAccessorFactory.create(
+                                request.getAuthenticationPersistedData()));
+
+        // then
+        assertThat(execute.getResponse()).isEmpty();
+        assertThat(execute.getAgentBankApiError()).isNotEmpty();
+        assertThat(execute.getAgentBankApiError().get()).isInstanceOf(AuthenticationError.class);
     }
 
     @Test
