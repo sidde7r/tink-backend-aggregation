@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -21,8 +20,9 @@ import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data.AuthenticationDataStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data.ConsentDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorDescriptions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -49,7 +49,8 @@ public class OpenIdAuthenticationController
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
-    private final PersistentStorage persistentStorage;
+    private final AuthenticationDataStorage authenticationDataStorage;
+    private final ConsentDataStorage consentDataStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
@@ -104,7 +105,8 @@ public class OpenIdAuthenticationController
             RandomValueGenerator randomValueGenerator,
             OpenIdAuthenticationValidator authenticationValidator,
             LogMasker logMasker) {
-        this.persistentStorage = persistentStorage;
+        this.authenticationDataStorage = new AuthenticationDataStorage(persistentStorage);
+        this.consentDataStorage = new ConsentDataStorage(persistentStorage);
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
@@ -124,11 +126,8 @@ public class OpenIdAuthenticationController
     @Override
     public ThirdPartyAppResponse<String> init() {
         OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
-
         authenticationValidator.validateClientToken(clientOAuth2Token);
-
         instantiateAuthFilter(clientOAuth2Token);
-
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
@@ -191,8 +190,8 @@ public class OpenIdAuthenticationController
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         oAuth2Token, tokenLifetime, tokenLifetimeUnit));
 
-        saveStrongAuthenticationTime();
-        saveAccessToken(oAuth2Token);
+        authenticationDataStorage.saveStrongAuthenticationTime();
+        authenticationDataStorage.saveAccessToken(oAuth2Token);
 
         instantiateAuthFilter(oAuth2Token);
 
@@ -202,17 +201,7 @@ public class OpenIdAuthenticationController
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
 
-        OAuth2Token oAuth2Token =
-                persistentStorage
-                        .get(
-                                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
-                                OAuth2Token.class)
-                        .orElseThrow(
-                                () -> {
-                                    log.warn(
-                                            "[OpenIdAuthenticationController] Failed to retrieve access token from persistent storage.");
-                                    return SessionError.SESSION_EXPIRED.exception();
-                                });
+        OAuth2Token oAuth2Token = authenticationDataStorage.restoreAccessToken();
 
         log.info(
                 "[OpenIdAuthenticationController] OAuth2 token retrieved from persistent storage {} ",
@@ -225,13 +214,15 @@ public class OpenIdAuthenticationController
 
         if (oAuth2Token.canNotRefreshAccessToken()) {
             log.info(
-                    "[OpenIdAuthenticationController] Access token has expired and refreshing impossible. Expiring the session.");
-            cleanAuthenticationPersistentStorage();
+                    "[OpenIdAuthenticationController] Access token has expired and refreshing "
+                            + "impossible. Expiring the session.");
+            consentDataStorage.removeConsentId();
+            authenticationDataStorage.removeAccessToken();
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
         OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
-        saveAccessToken(refreshedToken);
+        authenticationDataStorage.saveAccessToken(refreshedToken);
         oAuth2Token = refreshedToken;
 
         apiClient.instantiateAisAuthFilter(oAuth2Token);
@@ -240,11 +231,6 @@ public class OpenIdAuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private void cleanAuthenticationPersistentStorage() {
-        persistentStorage.remove(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
-        persistentStorage.remove(PersistentStorageKeys.AIS_ACCESS_TOKEN);
     }
 
     private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {
@@ -267,7 +253,8 @@ public class OpenIdAuthenticationController
 
             if (!refreshedOAuth2Token.isValid()) {
                 log.warn(
-                        "[OpenIdAuthenticationController] Access token refreshed, but it is invalid. Expiring the session.");
+                        "[OpenIdAuthenticationController] Access token refreshed, but it is invalid. "
+                                + "Expiring the session.");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
@@ -282,7 +269,8 @@ public class OpenIdAuthenticationController
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() >= 500) {
                 log.warn(
-                        "[OpenIdAuthenticationController] Bank side error (status code {}) during refreshing token",
+                        "[OpenIdAuthenticationController] Bank side error (status code {}) during "
+                                + "refreshing token",
                         e.getResponse().getStatus());
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
             }
@@ -293,7 +281,8 @@ public class OpenIdAuthenticationController
             throw SessionError.SESSION_EXPIRED.exception();
         }
         log.info(
-                "[OpenIdAuthenticationController] Token refreshed successfully. New token - Access Expires: [{}] Has Refresh Token: [{}] Refresh Expires: [{}]",
+                "[OpenIdAuthenticationController] Token refreshed successfully. New token - Access "
+                        + "Expires: [{}] Has Refresh Token: [{}] Refresh Expires: [{}]",
                 LocalDateTime.ofEpochSecond(oAuth2Token.getAccessExpireEpoch(), 0, ZoneOffset.UTC),
                 oAuth2Token.isRefreshNullOrEmpty(),
                 oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
@@ -301,17 +290,6 @@ public class OpenIdAuthenticationController
                                 oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
                         : "N/A");
         return oAuth2Token;
-    }
-
-    private void saveStrongAuthenticationTime() {
-        persistentStorage.put(
-                OpenIdConstants.PersistentStorageKeys.LAST_SCA_TIME,
-                LocalDateTime.now().toString());
-    }
-
-    private void saveAccessToken(OAuth2Token oAuth2Token) {
-        persistentStorage.rotateStorageValue(
-                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, oAuth2Token);
     }
 
     private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
@@ -348,10 +326,12 @@ public class OpenIdAuthenticationController
             String serializedCallbackData, String errorType, String errorDescription)
             throws LoginException {
 
+        String consentId = consentDataStorage.restoreConsentId();
+
         log.info(
                 "[OpenIdAuthenticationController] OpenId callback data: {} for consentId {}",
                 serializedCallbackData,
-                getConsentId());
+                consentId);
 
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
@@ -381,11 +361,5 @@ public class OpenIdAuthenticationController
                         "[OpenIdAuthenticationController] Unknown error with details: "
                                 + "{errorType: %s, errorDescription: %s}",
                         errorType, errorDescription));
-    }
-
-    private String getConsentId() {
-        return persistentStorage
-                .get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class)
-                .orElse(StringUtils.EMPTY);
     }
 }
