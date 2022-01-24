@@ -30,7 +30,6 @@ public class ElementsSearchQuery {
         private final List<ElementLocator> elements = new ArrayList<>();
         private Integer searchForSeconds =
                 WebDriverConstants.DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS;
-        private boolean searchOnlyOnce;
 
         public ElementsSearchQueryBuilder searchFor(ElementLocator... locators) {
             this.elements.addAll(asList(locators));
