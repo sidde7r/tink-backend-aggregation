@@ -237,6 +237,7 @@ public final class SwedbankConstants {
         public static final String INVALID_AUTH_TOKEN = "TOKEN_INVALID";
         public static final String RESOURCE_ALREADY_SIGNED = "RESOURCE_ALREADY_SIGNED";
         public static final String MISSING_BANK_ID = "MISSING_BANK_ID";
+        public static final String INTERNET_BANK_AGREEMENT = "INTERNET_BANK_AGREEMENT";
     }
 
     public static final class AccountIdentifierPrefix {
