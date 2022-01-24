@@ -227,7 +227,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             return Double.parseDouble(rate);
         } catch (NumberFormatException e) {
             log.error("incorrect number format of rate {}", rate);
-            return 0;
+            return 0.0;
         }
     }
 

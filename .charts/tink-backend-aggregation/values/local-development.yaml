@@ -35,6 +35,7 @@ tppSecretsServiceConfiguration:
   enabled: true
   enabledRetryPolicy: true
   useSecretsServiceInternalClient: true
+  rate: "1.0"
 
 providerConfigurationServiceConfiguration:
   enabled: false
