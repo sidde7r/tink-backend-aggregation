@@ -27,7 +27,7 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
     private final TinkHttpClient tinkHttpClient;
     // Determines the percentage of operations for which we will emit raw bank data event for
     // all HTTP traffic
-    private static final double RAW_BANK_DATA_EVENT_EMISSION_RATE = 0;
+    private static final double RAW_BANK_DATA_EVENT_EMISSION_RATE = 0.1;
 
     @Inject
     public NextGenTinkHttpClientProvider(

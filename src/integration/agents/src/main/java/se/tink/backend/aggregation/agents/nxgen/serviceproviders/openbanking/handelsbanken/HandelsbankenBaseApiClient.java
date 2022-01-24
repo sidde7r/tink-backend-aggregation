@@ -43,7 +43,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.HandelsbankenErrorResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -502,10 +501,5 @@ public class HandelsbankenBaseApiClient {
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .body(tokenForm.serialize())
                 .post(RedirectResponse.class);
-    }
-
-    // TODO: IFD-3379 Remove whole method when all UK customers have been migrated to UK certs
-    public void setEidasEntity(EidasIdentity eidasEntity) {
-        this.client.setEidasIdentity(eidasEntity);
     }
 }
