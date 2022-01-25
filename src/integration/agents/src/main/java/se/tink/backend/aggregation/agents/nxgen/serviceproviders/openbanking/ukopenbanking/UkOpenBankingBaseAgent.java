@@ -247,7 +247,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         addFilter(new TerminatedHandshakeRetryFilter());
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
         addFilter(new TimeoutFilter());
-        addFilter(new FinancialApiHeaderFilter(aisConfig.getOrganisationId()));
+        String interactionId = randomValueGenerator.getUUID().toString();
+        addFilter(
+                new FinancialApiHeaderFilter(
+                        aisConfig.getOrganisationId(), interactionId, componentProvider));
         addFilter(new ConsentErrorFilter(persistentStorage));
         addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
 
