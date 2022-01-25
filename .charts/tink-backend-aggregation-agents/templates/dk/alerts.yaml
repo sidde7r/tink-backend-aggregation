@@ -19,8 +19,8 @@ spec:
         severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: <{ $value | humanizePercentage }> refresh failure rate of <{ $labels.type }> by <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
@@ -32,8 +32,8 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: <{ $value | humanizePercentage }> refresh failure rate of <{ $labels.type }> by <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
@@ -50,8 +50,8 @@ spec:
         severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: <{ $value | humanizePercentage }> on-demand login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
@@ -63,8 +63,8 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: <{ $value | humanizePercentage }> on-demand login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
@@ -81,7 +81,7 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs1h }}
-          {{ .Values.grafanaClassLinkAbs1h }}
+        description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: <{ $value | humanizePercentage }> background login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>

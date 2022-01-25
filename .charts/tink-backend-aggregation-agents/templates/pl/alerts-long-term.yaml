@@ -4,62 +4,38 @@ metadata:
   name: alerts-pl-long-term
   namespace: agents
 spec:
-  interval: 15m
+  interval: 1h
   rules:
-    - record: internal:sum:all_logins_by_outcome_action_pl:delta4h
+    - alert: UserLoginErrorRateAbove75%PL
       expr: |
-        sum by (className, action, outcome) (
-          (floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[4h]))
-           and
-           (tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"} offset 4h
-            unless tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}))
-          or
-          (1 + floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[4h])) - floor(count_over_time(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[4h]) / 1440))
-        ) > 0
-
-    - record: internal:sum:all_refreshes_by_type_outcome_pl:delta4h
-      expr: |
-        sum by (className, type, outcome) (
-          (floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[4h]))
-           and
-           (tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"} offset 4h
-            unless tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}))
-          or
-          (1 + floor(increase(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[4h])) - floor(count_over_time(tink_agent_refresh_total{action="refresh", market="PL", provider_type!="test"}[4h]) / 1440))
-        ) > 0
-
-    - record: sum:cancelled_or_unavailable_logins_pl:delta4h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta4h{outcome=~"unavailable|cancelled.*"})
-    - record: sum:all_logins_pl:delta4h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta4h)
-
-    - alert: BankSideOrUserLoginErrorRateAbove75%PL
-      expr: sum:cancelled_or_unavailable_logins_pl:delta4h / (sum:all_logins_pl:delta4h >= 3) >= 0.75
-      for: 15m
+        sum by (className) (sum_over_time(internal:sum:all_logins_by_outcome_action_pl:delta1h{outcome=~"cancelled.*"}[4h:1h]))
+        /
+        (sum by (className) (sum_over_time(internal:sum:all_logins_by_outcome_action_pl:delta1h[4h:1h])) >= 3) > 0.75
       labels:
         priority: P3
         severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs4h }}
-          {{ .Values.grafanaClassLinkAbs4h }}
+        description: <{{ .Values.kibanaClassLinkAbs4h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs4h }} |Grafana>
+          TUBBIES_EXPERIMENTAL
         summary: <{ $value | humanizePercentage }> bank-side or user error login error rate for <{ $labels.className }> over the last 4 hours.
         tags: <{ $labels.className }>
 
-    - record: sum:unavailable_refreshes_pl:delta4h
-      expr: sum by (className) (internal:sum:all_refreshes_by_type_outcome_pl:delta4h{outcome="unavailable"})
-    - record: sum:all_refreshes_pl:delta4h
-      expr: sum by (className) (internal:sum:all_refreshes_by_type_outcome_pl:delta4h)
-
-    - alert: RefreshUnavailabilityRateAbove75%PL
-      expr: sum:unavailable_refreshes_pl:delta4h / (sum:all_refreshes_pl:delta4h >= 3) >= 0.75
-      for: 15m
+    - alert: BankUnavailabilityAbove50%PL
+      expr: |
+        avg_over_time(
+          (group by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{outcome="unavailable"})
+           or
+           0 * group by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h)
+        )[24h:1h])
       labels:
-        priority: P3
+        priority: P2
         severity: ping
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaClassLinkAbs4h }}
-          {{ .Values.grafanaClassLinkAbs4h }}
-        summary: <{ $value | humanizePercentage }> refresh unavailability rate for <{ $labels.className }> over the last 4 hours.
+        description: <{{ .Values.kibanaClassLinkAbs24h }} |Kibana>
+          <{{ .Values.grafanaClassLinkAbs24h }} |Grafana>
+          TUBBIES_EXPERIMENTAL
+        summary: <{ $value | humanizePercentage }> bank unavailability for <{ $labels.className }> over the last 24 hours.
         tags: <{ $labels.className }>
