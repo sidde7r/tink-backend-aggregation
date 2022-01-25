@@ -18,6 +18,7 @@ public final class LaCaixaConstants {
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     public static final String DATE_REGEX_DDMMYYYY =
             "^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]$";
+    public static final String OTPSMS_AUTH = "n por OTPSMS";
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAPPER =
             TypeMapper.<Instrument.Type>builder()
                     .put(Instrument.Type.STOCK, "10160", "15888", "15890")
@@ -131,7 +132,8 @@ public final class LaCaixaConstants {
                 new URL(BASE + "autorizacion/pushAutDiferido");
         public static final URL VERIFY_AUTH_SIGNATURE =
                 new URL(BASE + "autorizacion/verificaFirmaOperacion");
-        public static final URL AUTHORIZE_SCA = new URL(BASE + "autorizacion/autorizacionSCA");
+        public static final URL AUTHORIZE_SCA =
+                new URL(BASE + "login/enrolmentDispositivo/autorizacion/resultado");
         public static final URL FINALIZE_ENROLMENT =
                 new URL(BASE + "login/enrolmentDispositivo/autorizacion/resultado");
         public static final URL CHECK_LOGIN_RESULT = new URL(BASE + "login/loginResultado");

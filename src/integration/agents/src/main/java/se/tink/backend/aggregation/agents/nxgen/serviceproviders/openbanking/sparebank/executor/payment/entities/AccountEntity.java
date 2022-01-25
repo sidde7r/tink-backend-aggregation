@@ -28,11 +28,12 @@ public class AccountEntity {
                 this.iban = accountNumber;
                 break;
             case NO:
+            case BBAN:
                 this.bban = accountNumber;
                 this.currency = "NOK";
                 break;
             default:
-                throw new IllegalStateException("Unknown account type: " + accountType.toString());
+                throw new IllegalStateException("Unknown account type: " + accountType);
         }
     }
 

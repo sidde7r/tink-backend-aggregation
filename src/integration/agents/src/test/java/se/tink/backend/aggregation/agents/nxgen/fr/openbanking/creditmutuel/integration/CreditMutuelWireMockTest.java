@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentCon
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditmutuel.integration.module.CreditMutuelWireMockTestModule;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -49,7 +48,6 @@ public class CreditMutuelWireMockTest {
                         .withPayment(
                                 createRealDomesticPayment(
                                         PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, null))
-                        .withAgentModule(new CreditMutuelWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
@@ -76,7 +74,6 @@ public class CreditMutuelWireMockTest {
                                 createRealDomesticPayment(
                                         PaymentScheme.SEPA_CREDIT_TRANSFER,
                                         LocalDate.of(2021, 4, 20)))
-                        .withAgentModule(new CreditMutuelWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
@@ -98,7 +95,6 @@ public class CreditMutuelWireMockTest {
                                 MarketCode.FR, "fr-creditmutuel-oauth2", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .withAgentModule(new CreditMutuelWireMockTestModule())
                         .dumpContentForContractFile()
                         .build();
 
@@ -131,7 +127,6 @@ public class CreditMutuelWireMockTest {
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentTestModule(new CreditMutuelWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .enableHttpDebugTrace()
@@ -159,7 +154,6 @@ public class CreditMutuelWireMockTest {
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentTestModule(new CreditMutuelWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .enableHttpDebugTrace()
@@ -187,7 +181,6 @@ public class CreditMutuelWireMockTest {
                         .testAutoAuthentication()
                         .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentTestModule(new CreditMutuelWireMockTestModule())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .enableHttpDebugTrace()

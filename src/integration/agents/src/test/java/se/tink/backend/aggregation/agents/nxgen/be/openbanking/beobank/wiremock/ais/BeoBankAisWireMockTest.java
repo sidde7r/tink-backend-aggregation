@@ -36,7 +36,6 @@ public class BeoBankAisWireMockTest {
                         .withConfigFile(configuration)
                         .testFullAuthentication()
                         .addRefreshableItems(refreshableItems.toArray(new RefreshableItem[0]))
-                        .withAgentTestModule(new BeoBankWireMockTestModuleConfig())
                         .addCallbackData("code", "DUMMY_CODE")
                         .build();
 

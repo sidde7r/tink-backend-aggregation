@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import java.time.ZoneId;
 import java.util.Optional;
 import se.tink.agent.sdk.operation.User;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -18,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.CrossKeyTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -48,7 +48,6 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
 
     public CrosskeyBaseAgent(
             AgentComponentProvider componentProvider,
-            QsealcSigner qsealcSigner,
             CrosskeyMarketConfiguration marketConfiguration) {
         super(componentProvider);
         agentConfiguration =
@@ -58,7 +57,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         configureHttpClient();
         apiClient =
                 createApiClient(
-                        qsealcSigner,
+                        componentProvider.getQsealcSigner(),
                         marketConfiguration,
                         componentProvider.getUser(),
                         componentProvider.getCredentialsRequest().getProvider().getMarket());

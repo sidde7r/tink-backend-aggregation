@@ -9,7 +9,8 @@ import org.junit.Ignore;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CmcicTestFixtures {
 
-    public static final String SIGNATURE = "DUMMY_SIGNATURE";
+    public static final String SIGNATURE_RAW = "FAKE_SIGNATURE\n";
+    public static final String SIGNATURE_BASE64 = "RkFLRV9TSUdOQVRVUkUK";
     public static final String DIGEST = "DUMMY_DIGEST";
     public static final String KEY_ID = "DUMMY_KEY_ID";
     public static final String REQUEST_ID = "DUMMY_REQUEST_ID";
@@ -32,11 +33,11 @@ public final class CmcicTestFixtures {
     public static final String EXPECTED_GET_SIGNATURE_HEADER_VALUE =
             String.format(
                     "keyId=%s,algorithm=\"rsa-sha256\",headers=\"(request-target) host date x-request-id\",signature=\"%s\"",
-                    KEY_ID, SIGNATURE);
+                    KEY_ID, SIGNATURE_BASE64);
     public static final String EXPECTED_POST_SIGNATURE_HEADER_VALUE =
             String.format(
                     "keyId=%s,algorithm=\"rsa-sha256\",headers=\"(request-target) host date x-request-id digest content-type\",signature=\"%s\"",
-                    KEY_ID, SIGNATURE);
+                    KEY_ID, SIGNATURE_BASE64);
     public static final String EXPECTED_GET_STRING_TO_SIGN =
             String.format(
                     "(request-target): get %s\nhost: %s\ndate: %s\nx-request-id: %s",

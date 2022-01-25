@@ -12,14 +12,10 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
-import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, TRANSFERS, LIST_BENEFICIARIES, CREDIT_CARDS})
 @AgentPisCapability(
         capabilities = {
@@ -35,10 +31,9 @@ public final class CreditMutuelAgent extends CmcicAgent {
     private static final String PRIMARY_LANGUAGE = "fr";
 
     @Inject
-    public CreditMutuelAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+    public CreditMutuelAgent(AgentComponentProvider componentProvider) {
         super(
                 componentProvider,
-                qsealcSigner,
                 new CmcicAgentConfig(
                         "https://oauth2-apisi.e-i.com",
                         "/cm/",

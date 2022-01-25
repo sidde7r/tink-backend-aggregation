@@ -9,7 +9,6 @@ junit_test(
     visibility = ["//visibility:public"],
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/creditmutuel"],
     deps = [
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/creditmutuel/integration/module",
         "//src/integration/amount",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
