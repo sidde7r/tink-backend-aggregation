@@ -11,6 +11,7 @@ public class TestDataReader {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/degussabank/resources";
 
     public static final String INCORRECT_CREDENTIALS = "incorrectCredentials.json";
+    public static final String INCORRECT_CHALLENGE_RESPONSE = "incorrectChallengeResponse.json";
 
     public static <T> T readFromFile(String filename, Class<T> klass) {
         return SerializationUtils.deserializeFromString(

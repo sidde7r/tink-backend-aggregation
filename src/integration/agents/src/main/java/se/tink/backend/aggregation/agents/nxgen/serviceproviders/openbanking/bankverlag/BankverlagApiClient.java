@@ -99,9 +99,14 @@ public class BankverlagApiClient {
     }
 
     public AuthorizationResponse finalizeAuthorization(String url, String otp) {
-        return requestBuilder
-                .createRequest(new URL(url))
-                .put(AuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
+        try {
+            return requestBuilder
+                    .createRequest(new URL(url))
+                    .put(AuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
+        } catch (HttpResponseException hre) {
+            errorHandler.handleError(hre, BankverlagErrorHandler.ErrorSource.OTP_STEP);
+            throw hre;
+        }
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentId) {
