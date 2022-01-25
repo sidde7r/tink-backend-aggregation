@@ -11,7 +11,7 @@ public final class SocieteGeneraleConstants {
     public static class Urls {
         private static final String BASE_AUTH = "https://particuliers.sg-signin.societegenerale.fr";
         public static final String AIS_BASE_URL =
-                "https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a";
+                "https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.17/psd2/xs2a";
         public static final String PIS_BASE_URL =
                 "https://mtls.api.societegenerale.fr/sg/prod/dsp2/pisp/pri/v1.4.2.15";
 
