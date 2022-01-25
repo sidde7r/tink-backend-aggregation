@@ -103,6 +103,10 @@ public class SebCommonConstants {
         public static final String RESERVED = "reserved";
     }
 
+    public static class TransactionDates {
+        public static final int DEFAULT_MONTHS_TO_FETCH = 13;
+    }
+
     public static class ErrorMessages {
         public static final String PAGINATING_ERROR_CODE = "301";
         public static final String PAGINATING_ERROR_MESSAGE =

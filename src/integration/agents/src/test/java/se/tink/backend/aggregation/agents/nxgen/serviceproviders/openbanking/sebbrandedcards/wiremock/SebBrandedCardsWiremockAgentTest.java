@@ -42,4 +42,33 @@ public class SebBrandedCardsWiremockAgentTest {
 
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
+
+    @Test
+    public void testSasEurobonusShouldNotAskForMoreThan13MonthsOfTransactions() throws Exception {
+        final String wireMockServerFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/wiremock/resources/sas-eurobonus-mock-13-months-of-transactions.aap";
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/wiremock/resources/sas-eurobonus-contract-13-months-of-transactions.json";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-saseurobonusmastercard-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addCallbackData("code", "dummyCode")
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        agentWireMockRefreshTest.executeRefresh();
+
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 }

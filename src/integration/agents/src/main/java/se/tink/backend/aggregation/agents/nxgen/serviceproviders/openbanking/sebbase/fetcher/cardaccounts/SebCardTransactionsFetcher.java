@@ -7,6 +7,7 @@ import java.time.temporal.TemporalAdjusters;
 import lombok.AllArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.TransactionDates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -30,6 +31,10 @@ public class SebCardTransactionsFetcher implements TransactionMonthPaginator<Cre
         LocalDate now = localDateTimeSource.now().toLocalDate();
         if (toDate.isAfter(now)) {
             toDate = now;
+        }
+
+        if (fromDate.until(now).toTotalMonths() > TransactionDates.DEFAULT_MONTHS_TO_FETCH) {
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
         try {
