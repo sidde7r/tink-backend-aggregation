@@ -35,7 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.PartyMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.ConsentErrorFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.FinancialOrganisationIdFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.FinancialApiHeaderFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
@@ -247,7 +247,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         addFilter(new TerminatedHandshakeRetryFilter());
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
         addFilter(new TimeoutFilter());
-        addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
+        String interactionId = randomValueGenerator.getUUID().toString();
+        addFilter(
+                new FinancialApiHeaderFilter(
+                        aisConfig.getOrganisationId(), interactionId, componentProvider));
         addFilter(new ConsentErrorFilter(persistentStorage));
         addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
 
