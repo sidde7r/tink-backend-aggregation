@@ -4,7 +4,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.integration.module.BnpParibasFortisWireMockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.enums.MarketCode;
@@ -29,7 +28,6 @@ public class BnpParibasFortisWireMockTest {
                                 MarketCode.BE, "be-bnpparibasfortis-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_CODE")
-                        .withAgentModule(new BnpParibasFortisWireMockTestModule())
                         .build();
 
         final AgentContractEntity expected =

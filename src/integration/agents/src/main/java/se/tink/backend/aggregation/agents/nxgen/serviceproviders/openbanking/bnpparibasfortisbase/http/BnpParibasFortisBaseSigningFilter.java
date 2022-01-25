@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcAlgorithm;
+import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibasfortisbase.BnpParibasFortisBaseConstants;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
@@ -56,9 +57,10 @@ public class BnpParibasFortisBaseSigningFilter extends Filter {
 
     private String computeSignature(
             HttpRequest request, Long now, Long expires, String requestId, String digest) {
+        byte[] dataToSign = computeSignatureInput(request, now, expires, requestId, digest);
+
         String signatureValue =
-                signer.getSignatureBase64(
-                        computeSignatureInput(request, now, expires, requestId, digest));
+                signer.sign(QsealcAlgorithm.RSA_SHA256, dataToSign).getBase64Encoded();
         return String.format(SIGNATURE_HEADER_FORMAT, keyId, now, expires, signatureValue);
     }
 
