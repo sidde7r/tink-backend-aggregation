@@ -4,13 +4,17 @@ import java.awt.image.BufferedImage;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
+import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurSessionState;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.LoginRequestParams;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.ObfuscatedLoginJavaScriptFetchRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.PasswordVirtualKeyboardImageFetchRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.SegmentIdFetchRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.PasswordVirtualKeyboardOcr;
+import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.mainview.MainViewRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.mainview.PostLoginFormSubmitRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
 
 @AllArgsConstructor
@@ -52,5 +56,14 @@ public class CajasurAuthenticationApiClient {
     public String callLogin(LoginRequestParams params) {
         return new LoginRequest(authenticationUrlDomain, passwordVirtualKeyboardOcr, params)
                 .call(tinkHttpClient);
+    }
+
+    public URL submitPostLoginForm(CajasurSessionState sessionState) {
+        return new PostLoginFormSubmitRequest(authenticationUrlDomain, sessionState)
+                .call(tinkHttpClient);
+    }
+
+    public String callForGlobalPositionBody(URL url) {
+        return new MainViewRequest(url).call(tinkHttpClient);
     }
 }

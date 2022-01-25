@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 @Getter
 @Setter
 @JsonObject
+@EqualsAndHashCode
 public class CajasurSessionState {
 
     @JsonIgnore private SessionStorage sessionStorage;
@@ -43,6 +45,7 @@ public class CajasurSessionState {
 
     public void scaPerformed() {
         scaPerformed = true;
+        save();
     }
 
     public void saveGlobalPosition(String globalPosition) {

@@ -1,0 +1,46 @@
+[
+    {
+      "accessType": "OTHER",
+      "agentSources": [
+        "AGGREGATION_SERVICE"
+      ],
+      "authenticationUserType": "PERSONAL",
+      "backgroundRefreshEnabled": true,
+      "backgroundRefreshMaxFrequency": 1,
+      "className": "nxgen.es.webpage.cajasur.CajasurAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Cajasur",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "minLength": 1,
+          "name": "password",
+          "sensitive": true
+        }
+      ],
+      "financialInstitutionId": "d3a226b4792411ec90d60242ac120003",
+      "financialInstitutionName": "Cajasur",
+      "financialServices": [
+        {
+          "segment": "PERSONAL"
+        }
+      ],
+      "imageUrls": {
+        "icon": "https://cdn.tink.se/provider-images/es/es-ibercaja.png"
+      },
+      "market": "ES",
+      "name": "es-cajasur-webpage",
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+      "popular": true,
+      "releaseStatus": "GENERALLY_AVAILABLE",
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    }
+]
