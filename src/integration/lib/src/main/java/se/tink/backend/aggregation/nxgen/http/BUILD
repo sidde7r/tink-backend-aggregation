@@ -26,6 +26,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
     ],
     deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
@@ -57,6 +58,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/serializecontainer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/truststrategy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/libraries/agent-storage",
         "//src/libraries/rate_limit_service",
         "//src/libraries/serialization",
         "//src/tink_backend_libs:har_logger",
@@ -74,6 +76,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_proto",

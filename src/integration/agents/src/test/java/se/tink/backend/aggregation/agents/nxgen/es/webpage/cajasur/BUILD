@@ -4,7 +4,7 @@ junit_test(
     name = "cajasur",
     srcs = glob(
         ["**/*.java"],
-        exclude = ["CajasurAgentTest.java"]
+        exclude = ["CajasurAgentTest.java"],
     ),
     data = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/webpage/cajasur/resources",
@@ -44,17 +44,13 @@ junit_test(
 )
 
 junit_test(
-    name = "bbva_manual",
+    name = "cajasur_agent_test",
     srcs = glob(["CajasurAgentTest.java"]),
     data = [
         "//data:agent_unit_tests",
         "//data:aggregation_test",
         "//data:provider_configurations",
         "//etc:development",
-    ],
-    tags = [
-        "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [

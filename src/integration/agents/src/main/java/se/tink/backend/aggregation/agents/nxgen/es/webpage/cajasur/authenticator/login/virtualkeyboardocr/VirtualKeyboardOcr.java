@@ -111,7 +111,7 @@ public class VirtualKeyboardOcr {
         }
     }
 
-    public static final Map<String, String> KEYBOARD_NUMBERS = new HashMap<>(30);
+    private static final Map<String, String> KEYBOARD_NUMBERS = new HashMap<>(30);
 
     static {
         // Sca movs
