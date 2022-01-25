@@ -9,7 +9,7 @@ public final class FiduciaConstants {
     public static class Patterns {
 
         public static final Pattern STARTCODE_CHIP_PATTERN =
-                Pattern.compile("Startcode\\s\\\"(\\d+)");
+                Pattern.compile("Startcode\\s\"(\\d+)");
         public static final Pattern CHIP_TAN_INSTRUCTION_LINE_DELIMITER =
                 Pattern.compile("(<br>)+");
     }
@@ -70,6 +70,18 @@ public final class FiduciaConstants {
                 "Phone locked for mobileTAN. Please contact your bank (SERVICE_BLOCKED)";
         public static final String ORDER_NOT_PROCESSED_OR_REJECTED =
                 "Order could not be processed and was rejected. (SERVICE_BLOCKED)";
+
+        public static final String ORDER_LIMIT_EXCEEDED =
+                "Order not executed because limit exceeded";
+        public static final String MISSING_COVERAGE = "Missing coverage (PAYMENT_FAILED)";
+        public static final String ORDER_BLOCKED =
+                "Payment order rejected due to block (PAYMENT_FAILED)";
+        public static final String ORDER_REJECTED = "Payment order rejected (PAYMENT_FAILED)";
+        public static final String READ_TIME_OUT = "Read timed out";
+        public static final String ORDER_DUPLICATED =
+                "Order rejected because this order has already been submitted (SERVICE_BLOCKED)";
+        public static final String NO_PAYMENT_AUTHORIZATION =
+                "No authorization for transaction (SERVICE_BLOCKED)";
     }
 
     public static class EndUserErrorMessageKeys {
