@@ -5,12 +5,16 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
@@ -30,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.fetcher.Sp
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.RedirectPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -46,6 +51,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentCo
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
@@ -55,7 +61,9 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
 public class SpardaAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshTransferDestinationExecutor {
     private final SpardaAuthApiClient authApiClient;
     private final SpardaTokenApiClient tokenApiClient;
     private final SpardaFetcherApiClient fetcherApiClient;
@@ -234,5 +242,11 @@ public class SpardaAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts, AccountIdentifierType.IBAN);
     }
 }
