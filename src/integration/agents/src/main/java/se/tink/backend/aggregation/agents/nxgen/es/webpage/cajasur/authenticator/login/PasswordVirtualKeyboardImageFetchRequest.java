@@ -42,9 +42,9 @@ public class PasswordVirtualKeyboardImageFetchRequest
 
     @Override
     public BufferedImage execute(RequestBuilder requestBuilder) {
-        byte[] response = requestBuilder.get(byte[].class);
+        byte[] responseBody = requestBuilder.get(byte[].class);
         try {
-            return ImageIO.read(new BufferedInputStream(new ByteArrayInputStream(response)));
+            return ImageIO.read(new BufferedInputStream(new ByteArrayInputStream(responseBody)));
         } catch (IOException e) {
             throw new ConnectivityException(
                             ConnectivityErrorDetails.TinkSideErrors.TINK_INTERNAL_SERVER_ERROR)

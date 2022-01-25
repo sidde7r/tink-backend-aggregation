@@ -23,7 +23,7 @@ import se.tink.connectivity.errors.ConnectivityErrorDetails;
 public class LoginRequest implements ConnectivityRequest<String> {
 
     private static final String URL_PATH =
-            "/NASApp/BesaideNet2/Gestor?PORTAL_CON_DCT=SI&PRESTACION=login&FUNCION=directoportalImage&ACCION=control";
+            "/NASApp/BesaideNet2/Gestor?PORTAL_CON_DCT=SI&PRESTACION=login&FUNCION=directoportal&ACCION=control&destino=";
     public static final String FROM_INDIVIDUALS =
             "https://portal.cajasur.es/cs/Satellite/cajasur/es/particulares-0";
 

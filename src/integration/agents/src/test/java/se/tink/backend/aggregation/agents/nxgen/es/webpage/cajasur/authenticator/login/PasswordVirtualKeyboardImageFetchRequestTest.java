@@ -8,9 +8,12 @@ import java.nio.file.Paths;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurTestConstants;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
 
 public class PasswordVirtualKeyboardImageFetchRequestTest extends WireMockIntegrationTest {
+
+    private SessionStorage sessionStorage = new SessionStorage();
 
     @Test
     public void shouldFetchPasswordVirtualKeyboardImage() throws IOException {
@@ -38,7 +41,7 @@ public class PasswordVirtualKeyboardImageFetchRequestTest extends WireMockIntegr
                 new PasswordVirtualKeyboardImageFetchRequest(getOrigin());
 
         // when
-        BufferedImage result = objectUnderTest.call(httpClient);
+        BufferedImage result = objectUnderTest.call(httpClient, sessionStorage);
 
         // then
         Assertions.assertThat(result).isNotNull();

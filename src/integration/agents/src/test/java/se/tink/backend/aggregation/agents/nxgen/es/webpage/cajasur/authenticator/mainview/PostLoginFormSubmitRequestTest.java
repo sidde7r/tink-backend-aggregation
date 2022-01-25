@@ -60,7 +60,7 @@ public class PostLoginFormSubmitRequestTest extends WireMockIntegrationTest {
                 new PostLoginFormSubmitRequest(getOrigin(), sessionState);
 
         // when
-        URL redirectUrl = objectUnderTest.call(httpClient);
+        URL redirectUrl = objectUnderTest.call(httpClient, sessionStorage);
 
         // then
         Assertions.assertThat(redirectUrl)

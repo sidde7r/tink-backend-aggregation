@@ -48,7 +48,7 @@ public class CajasurLoginProcessorTest {
         final String encryptedObfuscatedLoginJs = "dummyTestEncryptedObfuscatedLoginJs";
         final String loginResponse = "dummyTestLoginResponse";
         when(apiClient.callForSegmentId()).thenReturn(segmentId);
-        when(apiClient.encryptObfuscatedLogin()).thenReturn(encryptedObfuscatedLoginJs);
+        when(apiClient.callForEncryptObfuscatedLoginJS()).thenReturn(encryptedObfuscatedLoginJs);
         when(apiClient.callLogin(
                         new LoginRequestParams(
                                 USERNAME,

@@ -8,9 +8,12 @@ import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurTestConstants;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
 
 public class ObfuscatedLoginJavaScriptFetchRequestTest extends WireMockIntegrationTest {
+
+    private SessionStorage sessionStorage = new SessionStorage();
 
     @Test
     public void shouldBuildExpectedJavaScriptContext() throws IOException {
@@ -42,7 +45,7 @@ public class ObfuscatedLoginJavaScriptFetchRequestTest extends WireMockIntegrati
                 new ObfuscatedLoginJavaScriptFetchRequest(getOrigin());
 
         // when
-        String result = objectUnderTest.call(httpClient);
+        String result = objectUnderTest.call(httpClient, sessionStorage);
 
         // then
         Assertions.assertThat(result).startsWith("var _0x2a98=");

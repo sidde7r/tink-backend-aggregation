@@ -1,6 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +25,8 @@ public class CajasurSessionState {
     private String globalPosition;
 
     private boolean scaPerformed;
+
+    private List<Cookie> cookies = new LinkedList<>();
 
     private CajasurSessionState() {}
 
@@ -51,6 +58,10 @@ public class CajasurSessionState {
     public void saveGlobalPosition(String globalPosition) {
         this.globalPosition = globalPosition;
         save();
+    }
+
+    public void addCookies(Collection<NewCookie> cookiesToAdd) {
+        cookies.addAll(cookiesToAdd);
     }
 
     private void save() {

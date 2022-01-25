@@ -16,18 +16,22 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurTestConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.PasswordVirtualKeyboardOcr;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.VirtualKeyboardImageParameters;
+import se.tink.backend.aggregation.nxgen.http.CookieRepository;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoginRequestTest extends WireMockIntegrationTest {
 
-    private static final String USERNAME = "00000000J";
+    private static final String USERNAME = "76884252J";
     private static final String PASSWORD = "000000";
     private static final String SEGMENT_ID = "1298549581011";
 
     @Mock private BufferedImage passwordVirtualKeyboard;
 
     @Mock private PasswordVirtualKeyboardOcr passwordVirtualKeyboardOcr;
+
+    private SessionStorage sessionStorage = new SessionStorage();
 
     @Before
     public void init() {
@@ -36,7 +40,10 @@ public class LoginRequestTest extends WireMockIntegrationTest {
                                 passwordVirtualKeyboard,
                                 PASSWORD,
                                 VirtualKeyboardImageParameters.createEnterpriseConfiguration()))
-                .thenReturn("000000");
+                .thenReturn("092809");
+        CookieRepository cookieRepository = CookieRepository.getInstance(sessionStorage);
+        cookieRepository.addCookie("JSESSIONID", "324532345345");
+        cookieRepository.save(sessionStorage);
     }
 
     @Test
@@ -60,7 +67,7 @@ public class LoginRequestTest extends WireMockIntegrationTest {
                 WireMock.post(WireMock.urlPathEqualTo("/NASApp/BesaideNet2/Gestor"))
                         .withQueryParam("PORTAL_CON_DCT", WireMock.equalTo("SI"))
                         .withQueryParam("PRESTACION", WireMock.equalTo("login"))
-                        .withQueryParam("FUNCION", WireMock.equalTo("directoportalImage"))
+                        .withQueryParam("FUNCION", WireMock.equalTo("directoportal"))
                         .withQueryParam("ACCION", WireMock.equalTo("control"))
                         .withHeader("Accept-Encoding", WireMock.equalTo("gzip, deflate"))
                         .withHeader("Connection", WireMock.equalTo("keep-alive"))
@@ -71,9 +78,10 @@ public class LoginRequestTest extends WireMockIntegrationTest {
                         .withHeader(
                                 "Content-Type",
                                 WireMock.equalTo("application/x-www-form-urlencoded"))
+                        .withCookie("JSESSIONID", WireMock.matching(".+"))
                         .withRequestBody(
                                 WireMock.containing(
-                                        "idioma=ES&password=000000&tecladoVirtual=SI&usuarioInsertado=00000000J&usuarioSinFormatear=00000000J&activador=MP&sitioWeb=&destino=&tipoacceso=&idSegmento=1298549581011&DATA_LOGON_PORTAL=V01%"))
+                                        "idioma=ES&password=092809&tecladoVirtual=SI&usuarioInsertado=76884252J&usuarioSinFormatear=76884252J&activador=MP&sitioWeb=&destino=&tipoacceso=&idSegmento=1298549581011&DATA_LOGON_PORTAL=V01%"))
                         .willReturn(WireMock.aResponse().withBody(responseBody)));
         LoginRequest objectUnderTest =
                 new LoginRequest(
@@ -87,7 +95,7 @@ public class LoginRequestTest extends WireMockIntegrationTest {
                                 passwordVirtualKeyboard));
 
         // when
-        String result = objectUnderTest.call(httpClient);
+        String result = objectUnderTest.call(httpClient, sessionStorage);
 
         // then
         Assertions.assertThat(result).contains("name=\"frmLogin\"");

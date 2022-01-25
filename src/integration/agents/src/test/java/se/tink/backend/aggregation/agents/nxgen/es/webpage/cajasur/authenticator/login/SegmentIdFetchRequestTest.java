@@ -8,9 +8,12 @@ import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurTestConstants;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
 
 public class SegmentIdFetchRequestTest extends WireMockIntegrationTest {
+
+    private SessionStorage sessionStorage = new SessionStorage();
 
     @Test
     public void shouldOpenPortalHomePage() throws IOException {
@@ -39,7 +42,7 @@ public class SegmentIdFetchRequestTest extends WireMockIntegrationTest {
         SegmentIdFetchRequest objectUnderTest = new SegmentIdFetchRequest(getOrigin());
 
         // when
-        String segmentId = objectUnderTest.call(httpClient);
+        String segmentId = objectUnderTest.call(httpClient, sessionStorage);
 
         // then
         Assertions.assertThat(segmentId).isEqualTo("1298549581011");
