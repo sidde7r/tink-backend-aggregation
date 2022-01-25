@@ -4,14 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN;
 
 import java.util.Optional;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnitParamsRunner.class)
 public class KnabStorageTest {
 
     private static final String CONSENT_ID = "consent_id";
@@ -96,6 +97,31 @@ public class KnabStorageTest {
 
         // then
         assertThat(storage.findBearerToken()).contains(tokenToBePersisted);
+    }
+
+    @Test
+    @Parameters
+    public void shouldInvalidateBearerToken(boolean withBearerToken) {
+        // given
+        prepareStorageWithBearerToken(withBearerToken);
+
+        // when
+        storage.invalidatePersistedBearerToken();
+
+        // then
+        assertThat(storage.findBearerToken()).isEmpty();
+    }
+
+    @SuppressWarnings("unused")
+    private Object[] parametersForShouldInvalidateBearerToken() {
+        return new Object[] {true, false};
+    }
+
+    private void prepareStorageWithBearerToken(boolean withBearerToken) {
+        if (withBearerToken) {
+            storage.persistBearerToken(
+                    OAuth2Token.createBearer("new-access-token", "new-refresh-token", 10));
+        }
     }
 
     private void emptyStorage() {

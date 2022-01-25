@@ -1,13 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -15,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnitParamsRunner.class)
 public class KnabAuthenticatorTest {
 
     private final String authenticationState = "00000000-0000-5000-0000-000000000000";
@@ -51,6 +55,7 @@ public class KnabAuthenticatorTest {
 
     @Before
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         authenticator =
                 new KnabAuthenticator(
                         new StrongAuthenticationState(authenticationState), apiClient, storage);
@@ -116,27 +121,49 @@ public class KnabAuthenticatorTest {
     }
 
     @Test
-    public void shouldNotPersistAccessTokenWithoutConsent() {
+    @Parameters(method = "prepareStorageData")
+    public void shouldInvalidateAccessTokenAndThrowExceptionWhenNoConsent(boolean isPersisted) {
         // given
+        accessTokenIsPersistedAlready(isPersisted);
+
+        // and
         noConsent();
 
-        // when
-        authenticator.useAccessToken(accessToken);
-
         // then
+        assertThatThrownBy(() -> authenticator.useAccessToken(accessToken))
+                .hasFieldOrPropertyWithValue("error", SessionError.SESSION_EXPIRED);
+
+        // and
         assertThat(storage.findBearerToken()).isEmpty();
     }
 
     @Test
-    public void shouldNotPersistAccessTokenWithoutValidConsent() {
+    @Parameters(method = "prepareStorageData")
+    public void shouldInvalidateAccessTokenAndThrowExceptionWhenInvalidConsent(
+            boolean isPersisted) {
         // given
+        accessTokenIsPersistedAlready(isPersisted);
+
+        // and
         bankRespondsWithInvalidConsentStatus();
 
-        // when
-        authenticator.useAccessToken(accessToken);
-
         // then
+        assertThatThrownBy(() -> authenticator.useAccessToken(accessToken))
+                .hasFieldOrPropertyWithValue("error", SessionError.SESSION_EXPIRED);
+
+        // and
         assertThat(storage.findBearerToken()).isEmpty();
+    }
+
+    @SuppressWarnings("unused")
+    private Object[] prepareStorageData() {
+        return new Object[] {true, false};
+    }
+
+    private void accessTokenIsPersistedAlready(boolean isPersisted) {
+        if (isPersisted) {
+            storage.persistBearerToken(new OAuth2Token());
+        }
     }
 
     private String scope() {
@@ -167,11 +194,11 @@ public class KnabAuthenticatorTest {
     }
 
     private void bankRespondsWithValidConsentStatus() {
-        when(apiClient.consentStatus(consentId, accessToken)).thenReturn(true);
+        when(apiClient.consentIsValid(consentId, accessToken)).thenReturn(true);
     }
 
     private void bankRespondsWithInvalidConsentStatus() {
-        when(apiClient.consentStatus(consentId, accessToken)).thenReturn(false);
+        when(apiClient.consentIsValid(consentId, accessToken)).thenReturn(false);
     }
 
     private void noConsent() {
