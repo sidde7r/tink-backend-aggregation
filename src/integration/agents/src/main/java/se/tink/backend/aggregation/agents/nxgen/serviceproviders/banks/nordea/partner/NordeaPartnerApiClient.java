@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.Formatter.DATE_FORMATTER;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.HttpHeaders;
@@ -75,7 +77,7 @@ public class NordeaPartnerApiClient {
                     request(EndPoints.ACCOUNT_TRANSACTIONS, PathParamsKeys.ACCOUNT_ID, accountId)
                             .queryParam(
                                     QueryParamsKeys.START_DATE,
-                                    startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                                    startDate.format(DateTimeFormatter.ofPattern(DATE_FORMATTER)))
                             .queryParam(QueryParamsKeys.CONTINUATION_KEY, key),
                     AccountTransactionsResponse.class);
         }
@@ -148,17 +150,24 @@ public class NordeaPartnerApiClient {
                 CardTransactionListResponse.class);
     }
 
-    public void fetchAllData(LocalDate startDate) {
+    public void fetchAllData(LocalDate startDate, LocalDate endDate) {
         log.info("Nordea Partner: before fetching all");
         log.info("Fetching all data from date: " + startDate);
+        RequestBuilder requestBuilder =
+                request(EndPoints.ALL_DATA)
+                        .queryParam(
+                                QueryParamsKeys.START_DATE,
+                                startDate.format(DateTimeFormatter.ofPattern(DATE_FORMATTER)));
+        if (provider.getName().equals("se-nordeapartner-jwt")) {
+            requestBuilder.queryParam(
+                    QueryParamsKeys.END_DATE,
+                    endDate.format(DateTimeFormatter.ofPattern(DATE_FORMATTER)));
+        }
+
         AccountListResponse accountListResponse =
                 requestRefreshableGet(
-                        request(EndPoints.ALL_DATA)
-                                .queryParam(
-                                        QueryParamsKeys.START_DATE,
-                                        startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                                .queryParam(
-                                        QueryParamsKeys.INCLUDE, QueryParamsValues.INCLUDE_VALUES),
+                        requestBuilder.queryParam(
+                                QueryParamsKeys.INCLUDE, QueryParamsValues.INCLUDE_VALUES),
                         AccountListResponse.class);
         storeDataInSessionStorage(accountListResponse);
         log.info("Nordea Partner: After fetching all");
@@ -169,7 +178,7 @@ public class NordeaPartnerApiClient {
             log.info(
                     "Session storage empty. Getting all data from date: "
                             + LocalDate.now().minusYears(1));
-            fetchAllData(LocalDate.now().minusYears(1));
+            fetchAllData(LocalDate.now().minusYears(1), LocalDate.now());
         }
         String accounts = sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA);
         return SerializationUtils.deserializeFromString(accounts, AccountListResponse.class);

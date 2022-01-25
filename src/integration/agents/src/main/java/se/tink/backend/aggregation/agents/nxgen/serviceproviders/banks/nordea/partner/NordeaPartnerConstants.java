@@ -35,6 +35,7 @@ public class NordeaPartnerConstants {
     public class QueryParamsKeys {
         public static final String CONTINUATION_KEY = "continuation_key";
         public static final String START_DATE = "start_date";
+        public static final String END_DATE = "end_date";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
         public static final String INCLUDE = "include";
@@ -69,5 +70,9 @@ public class NordeaPartnerConstants {
 
     public static class SessionStorage {
         public static final String ALL_DATA = "all_data";
+    }
+
+    public static class Formatter {
+        public static final String DATE_FORMATTER = "yyyy-MM-dd";
     }
 }

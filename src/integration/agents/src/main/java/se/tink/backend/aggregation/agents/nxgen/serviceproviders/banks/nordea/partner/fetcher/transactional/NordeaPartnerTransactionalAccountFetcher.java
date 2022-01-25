@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +46,8 @@ public class NordeaPartnerTransactionalAccountFetcher
                                                 !account.isClosed()
                                                         && account.getCertainDate() != null)
                                 .collect(Collectors.toList()),
-                        dateTimeSource));
+                        dateTimeSource),
+                dateTimeSource.now(ZoneId.systemDefault()).toLocalDate());
         return apiClient.getAllData().toTinkTransactionalAccounts(accountMapper);
     }
 
