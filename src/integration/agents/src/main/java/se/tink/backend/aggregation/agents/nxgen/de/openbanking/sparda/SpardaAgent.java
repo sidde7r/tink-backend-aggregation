@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda;
 
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
 import java.util.Optional;
@@ -46,14 +47,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 
-@AgentCapabilities({
-    CHECKING_ACCOUNTS,
-    SAVINGS_ACCOUNTS,
-})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,
-            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_FUTURE_DATE,
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
