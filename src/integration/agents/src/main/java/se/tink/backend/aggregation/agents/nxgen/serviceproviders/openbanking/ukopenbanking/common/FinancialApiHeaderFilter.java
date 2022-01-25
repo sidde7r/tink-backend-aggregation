@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
-public class FinancialOrganisationIdFilter extends Filter {
+public class FinancialApiHeaderFilter extends Filter {
 
     private final String organisationId;
 

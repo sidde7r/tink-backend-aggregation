@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,7 +10,6 @@ import com.sun.jersey.core.header.OutBoundHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.FinancialOrganisationIdFilter;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
@@ -18,17 +17,17 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class FinancialOrganisationalFilterTest {
+public class FinancialApiHeaderFilterTest {
 
     private static final String ORG_ID = "DUMMY_ORG_ID";
-    private FinancialOrganisationIdFilter sut;
+    private FinancialApiHeaderFilter financialApiHeaderFilter;
     private HttpRequest httpRequest;
     private HttpResponse httpResponse;
     private Filter nextFilter;
 
     @Before
     public void setUp() {
-        sut = new FinancialOrganisationIdFilter(ORG_ID);
+        financialApiHeaderFilter = new FinancialApiHeaderFilter(ORG_ID);
         httpRequest = mock(HttpRequest.class);
         httpResponse = mock(HttpResponse.class);
         nextFilter = mock(Filter.class);
@@ -39,11 +38,11 @@ public class FinancialOrganisationalFilterTest {
         // given
         httpRequest = setupHttpRequestWithSingleFinancialId();
         httpResponse = setupHttpResponse();
-        sut.setNext(nextFilter);
+        financialApiHeaderFilter.setNext(nextFilter);
         when(nextFilter.handle(any())).thenReturn(httpResponse);
 
         // when
-        sut.handle(httpRequest);
+        financialApiHeaderFilter.handle(httpRequest);
 
         // then
         assertThat((httpRequest.getHeaders().get(X_FAPI_FINANCIAL_ID).size())).isEqualTo(1);
