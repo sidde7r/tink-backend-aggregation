@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CR
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.PisCapability.FASTER_PAYMENTS;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tsb.TsbConstants.TIMEOUT_LIMIT_MS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -54,6 +55,10 @@ public final class TsbV31Agent extends UkOpenBankingBaseAgent {
                 createPisRequestFilterUsingPs256Base64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+
+        // Temporary workaround until TSB improves performance on their side
+        // https://openbanking.atlassian.net/servicedesk/customer/portal/1/OBSD-26782
+        this.client.setTimeout(TIMEOUT_LIMIT_MS);
     }
 
     @Override
