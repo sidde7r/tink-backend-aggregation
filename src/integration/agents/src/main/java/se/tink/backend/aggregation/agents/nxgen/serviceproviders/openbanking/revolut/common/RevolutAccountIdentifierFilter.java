@@ -8,9 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 
 @Slf4j
-public class RevolutAccountIdentifierFilter {
+final class RevolutAccountIdentifierFilter {
 
-    private RevolutAccountIdentifierFilter() {}
+    private RevolutAccountIdentifierFilter() {
+        throw new UnsupportedOperationException(
+                "This is a utility class and cannot be instantiated.");
+    }
 
     public static List<AccountIdentifierEntity> getFilteredAccountIdentifiers(
             AccountEntity account) {
