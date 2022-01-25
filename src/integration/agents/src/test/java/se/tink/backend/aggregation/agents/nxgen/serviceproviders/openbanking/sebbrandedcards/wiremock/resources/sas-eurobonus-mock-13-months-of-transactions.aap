@@ -1,0 +1,809 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://tpp-api.sebgroup.com/mga4/sps/oauth/oauth20/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=dummyClient&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=dummyCode&scope=psd2_accounts+psd2_payments
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Sun, 16 Jan 2022 15:27:59 GMT
+Date: Sun, 16 Jan 2022 15:27:59 GMT
+Content-Language: en-US
+Content-Type: application/json;charset=utf-8
+x-frame-options: SAMEORIGIN
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Content-Length: 173
+
+{
+    "access_token": "dummyToken",
+    "refresh_token": "dummyRefreshToken",
+    "scope": "psd2_accounts psd2_payments",
+    "token_type": "Bearer",
+    "expires_in": 599
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Sun, 16 Jan 2022 15:27:59 GMT
+Date: Sun, 16 Jan 2022 15:28:00 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Content-Length: 618
+
+{
+  "cardAccounts": [
+    {
+      "resourceId": "0020521111111111111100000000000010102",
+      "maskedPan": "111111******1111",
+      "currency": "SEK",
+      "name": "11111111111111",
+      "product": "SAS EuroBonus World Mastercard",
+      "balances": [
+        {
+          "balanceType": "interimAvaliable",
+          "balanceAmount": {
+            "currency": "SEK",
+            "amount": 63431.31
+          },
+          "creditLimitincluded": true
+        },
+        {
+          "balanceType": "expected",
+          "balanceAmount": {
+            "currency": "SEK",
+            "amount": 36568.69
+          },
+          "creditLimitincluded": false
+        },
+        {
+          "balanceType": "nonInvoiced",
+          "balanceAmount": {
+            "currency": "SEK",
+            "amount": 7196.71
+          },
+          "creditLimitincluded": false
+        }
+      ],
+      "creditLimit": {
+        "currency": "SEK",
+        "amount": 100000.0
+      },
+      "status": "enabled",
+      "usage": "202"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1992-04-01&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Sun, 16 Jan 2022 15:28:00 GMT
+Date: Sun, 16 Jan 2022 15:28:00 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Content-Length: 6207
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202201140175136",
+                "bookingDate": "2022-01-14",
+                "valueDate": "2022-01-13",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 420.0
+                },
+                "cardAcceptorCity": "STOCKHOLM",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 420.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "SUSHI SHOPEN",
+                "maskedPan": "111111******1111",
+                "invoiced": false,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        [
+            {
+                "cardTransactionId": "590022564156079",
+                "valueDate": "2022-01-16",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 442.0
+                },
+                "cardAcceptorCity": "LIDINGO",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 442.0
+                },
+                "proprietaryBankTransactionCode": "UNKNOWN",
+                "exchangeRate":
+                {
+                    "currencyFrom": "SEK",
+                    "rate": 1.0,
+                    "currencyTo": "SEK",
+                    "rateDate": ""
+                },
+                "transactionDetails": "ICA NARA RUDBODA",
+                "maskedPan": "111111******1111",
+                "invoiced": false,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ]
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1992-03-01&dateTo=1992-03-31&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Sun, 16 Jan 2022 15:28:01 GMT
+Date: Sun, 16 Jan 2022 15:28:02 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202112300406743",
+                "bookingDate": "2021-12-30",
+                "valueDate": "2021-12-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 12.5
+                },
+                "cardAcceptorCity": "GOETEBORG",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 12.5
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "MATCHI - 37116390",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1992-02-01&dateTo=1992-02-29&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Sun, 16 Jan 2022 15:28:02 GMT
+Date: Sun, 16 Jan 2022 15:28:02 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202111300406984",
+                "bookingDate": "2021-11-30",
+                "valueDate": "2021-11-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 4846.8
+                },
+                "cardAcceptorCity": "NACKA",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 4846.8
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "SYSTEMBOLAGET",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1992-01-01&dateTo=1992-01-31&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Sun, 16 Jan 2022 15:28:02 GMT
+Date: Sun, 16 Jan 2022 15:28:02 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202111010631964",
+                "bookingDate": "2021-11-01",
+                "valueDate": "2021-10-31",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 308.46
+                },
+                "cardAcceptorCity": "STOCKHOLM",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 308.46
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "CIRCLE K",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-12-01&dateTo=1991-12-31&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Sun, 16 Jan 2022 15:28:03 GMT
+Date: Sun, 16 Jan 2022 15:28:03 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202110010217435",
+                "bookingDate": "2021-10-01",
+                "valueDate": "2021-09-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 1100.0
+                },
+                "cardAcceptorCity": "STOCKHOLM",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 1100.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "NK FISK . MELANDERS",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-11-01&dateTo=1991-11-30&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Date: Sun, 16 Jan 2022 15:28:03 GMT
+Date: Sun, 16 Jan 2022 15:28:03 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202108310393149",
+                "bookingDate": "2021-08-31",
+                "valueDate": "2021-08-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 511.5
+                },
+                "cardAcceptorCity": "STOCKHOLM",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 511.5
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "URBAN DELI AB - S44",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-10-01&dateTo=1991-10-31&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Date: Sun, 16 Jan 2022 15:28:04 GMT
+Date: Sun, 16 Jan 2022 15:28:03 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Content-Length: 7556
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202107300423265",
+                "bookingDate": "2021-07-30",
+                "valueDate": "2021-07-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 585.0
+                },
+                "cardAcceptorCity": "GOETEBORG",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 585.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "MATCHI - 30500380",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-09-01&dateTo=1991-09-30&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Date: Sun, 16 Jan 2022 15:28:04 GMT
+Date: Sun, 16 Jan 2022 15:28:04 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202106300453511",
+                "bookingDate": "2021-06-30",
+                "valueDate": "2021-06-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 550.0
+                },
+                "cardAcceptorCity": "GOETEBORG",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 550.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "MATCHI - 29340815",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-08-01&dateTo=1991-08-31&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Date: Sun, 16 Jan 2022 15:28:04 GMT
+Date: Sun, 16 Jan 2022 15:28:04 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202105310772817",
+                "bookingDate": "2021-05-31",
+                "valueDate": "2021-05-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 249.0
+                },
+                "cardAcceptorCity": "STOCKHOLM",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 249.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "CIRCLE K STOCKHOLM HAM",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-07-01&dateTo=1991-07-31&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Date: Sun, 16 Jan 2022 15:28:05 GMT
+Date: Sun, 16 Jan 2022 15:28:04 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202105030550544",
+                "bookingDate": "2021-05-03",
+                "valueDate": "2021-04-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 1257.5
+                },
+                "cardAcceptorCity": "STOCKHOLM",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 1257.5
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "SYSTEMBOLAGET STOCKHOL",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-06-01&dateTo=1991-06-30&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Date: Sun, 16 Jan 2022 15:28:05 GMT
+Date: Sun, 16 Jan 2022 15:28:05 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202103300180256",
+                "bookingDate": "2021-03-30",
+                "valueDate": "2021-03-30",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 440.0
+                },
+                "cardAcceptorCity": "GOETEBORG",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 440.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "MATCHI - 26103612",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 14
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-05-01&dateTo=1991-05-31&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 14
+200
+Date: Sun, 16 Jan 2022 15:28:05 GMT
+Date: Sun, 16 Jan 2022 15:28:05 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202102240180854",
+                "bookingDate": "2021-02-24",
+                "valueDate": "2021-02-21",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 440.0
+                },
+                "cardAcceptorCity": "GOETEBORG",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 440.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "MATCHI - 24675897",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 15
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-04-01&dateTo=1991-04-30&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 15
+200
+Date: Sun, 16 Jan 2022 15:28:06 GMT
+Date: Sun, 16 Jan 2022 15:28:05 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Transfer-Encoding: chunked
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202102010477599",
+                "bookingDate": "2021-02-01",
+                "valueDate": "2021-01-31",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 399.0
+                },
+                "cardAcceptorCity": "MSBILL.INFO",
+                "cardAcceptorCountryCode": "IE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 399.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "MICROSOFT*XBOX",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 16
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-03-01&dateTo=1991-03-31&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 16
+200
+Date: Sun, 16 Jan 2022 15:28:06 GMT
+Date: Sun, 16 Jan 2022 15:28:07 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Content-Length: 7638
+
+{
+    "transactions":
+    {
+        "booked":
+        [
+            {
+                "cardTransactionId": "202101040701344",
+                "bookingDate": "2021-01-04",
+                "valueDate": "2020-12-31",
+                "originalAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 288.0
+                },
+                "cardAcceptorCity": "STOCKHOLM",
+                "cardAcceptorCountryCode": "SE",
+                "transactionAmount":
+                {
+                    "currency": "SEK",
+                    "amount": 288.0
+                },
+                "proprietaryBankTransactionCode": "PURCHASE",
+                "transactionDetails": "STORYTEL SWEDEN AB",
+                "maskedPan": "111111******1111",
+                "invoiced": true,
+                "nameOnCard": "SURNAME FORENAME"
+            }
+        ],
+        "pending":
+        []
+    }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 17
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/0020521111111111111100000000000010102/transactions?dateFrom=1991-02-01&dateTo=1991-02-28&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 17
+400
+Date: Sun, 16 Jan 2022 15:28:07 GMT
+Date: Sun, 16 Jan 2022 15:28:07 GMT
+Content-Type: application/json;charset=utf-8
+Via: kong/2.4.1.3-enterprise-edition
+Content-Length: 195
+
+{
+  "error": {
+    "errorCode": "201",
+    "correlationId": "8bebb7e9-ca48-44a6-b4bd-7cb9e933e906",
+    "developerMessage": "Invalid query parameters, check that date range is correct and not more than 13 month ago"
+  }
+}

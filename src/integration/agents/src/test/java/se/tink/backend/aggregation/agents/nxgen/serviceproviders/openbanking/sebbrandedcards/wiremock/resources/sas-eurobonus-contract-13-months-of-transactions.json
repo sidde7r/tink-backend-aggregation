@@ -1,0 +1,535 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "111111******1111",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "unscaledValue" : 6343131,
+            "doubleValue" : 63431.31,
+            "exactValue" : 63431.31,
+            "scale" : 2
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "unscaledValue" : -3656869,
+            "doubleValue" : -36568.69,
+            "exactValue" : -36568.69,
+            "scale" : 2
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "1111111111",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "SAS EuroBonus World Mastercard",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"masked-pan://111111******1111\"]",
+        "closed" : false,
+        "holderName" : "11111111111111",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "11111111111111",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 63431.31,
+        "balance" : -36568.69
+    } ],
+    "transactions" : [ {
+        "amount" : -420.0,
+        "date" : 1642071600000,
+        "description" : "SUSHI SHOPEN",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202201140175136"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2022-01-13",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2022-01-14",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -442.0,
+        "date" : 1642330800000,
+        "description" : "ICA NARA RUDBODA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "590022564156079"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2022-01-16",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "UNKNOWN",
+        "providerMarket" : "SE",
+        "booked" : false
+    }, {
+        "amount" : -12.5,
+        "date" : 1640862000000,
+        "description" : "MATCHI - 37116390",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202112300406743"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-12-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-12-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -4846.8,
+        "date" : 1638270000000,
+        "description" : "SYSTEMBOLAGET",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111300406984"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-11-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -308.46,
+        "date" : 1635678000000,
+        "description" : "CIRCLE K",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202111010631964"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-10-31",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-11-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -1100.0,
+        "date" : 1632996000000,
+        "description" : "NK FISK . MELANDERS",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202110010217435"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-09-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-10-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -511.5,
+        "date" : 1630317600000,
+        "description" : "URBAN DELI AB - S44",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202108310393149"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-08-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-31",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -585.0,
+        "date" : 1627639200000,
+        "description" : "MATCHI - 30500380",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202107300423265"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -550.0,
+        "date" : 1625047200000,
+        "description" : "MATCHI - 29340815",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202106300453511"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -249.0,
+        "date" : 1622368800000,
+        "description" : "CIRCLE K STOCKHOLM HAM",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202105310772817"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-05-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-05-31",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -1257.5,
+        "date" : 1619776800000,
+        "description" : "SYSTEMBOLAGET STOCKHOL",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202105030550544"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-04-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-05-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -440.0,
+        "date" : 1617098400000,
+        "description" : "MATCHI - 26103612",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202103300180256"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-03-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -440.0,
+        "date" : 1613905200000,
+        "description" : "MATCHI - 24675897",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202102240180854"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-02-21",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-02-24",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -399.0,
+        "date" : 1612090800000,
+        "description" : "MICROSOFT*XBOX",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202102010477599"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-01-31",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-02-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    }, {
+        "amount" : -288.0,
+        "date" : 1609412400000,
+        "description" : "STORYTEL SWEDEN AB",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "SURNAME FORENAME",
+            "CREDIT_CARD_NUMBER" : "111111******1111"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "202101040701344"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-12-31",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-01-04",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE",
+        "booked" : true
+    } ]
+}
