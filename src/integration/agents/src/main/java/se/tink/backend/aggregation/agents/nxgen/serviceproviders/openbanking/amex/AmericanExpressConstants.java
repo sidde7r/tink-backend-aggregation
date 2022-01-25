@@ -50,6 +50,7 @@ public class AmericanExpressConstants {
         public static final String QUERY_PARAM_END_DATE = "end_date";
         public static final String QUERY_PARAM_STATEMENT_END_DATE = "statement_end_date";
         public static final String QUERY_PARAM_LIMIT = "limit";
+        public static final String QUERY_PARAM_OFFSET = "offset";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE_LIST = "scope_list";
