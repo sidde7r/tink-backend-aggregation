@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
-public class ConsentDataStorage {
+public final class ConsentDataStorage {
 
     private final PersistentStorage persistentStorage;
 
@@ -48,6 +48,10 @@ public class ConsentDataStorage {
                 .orElseThrow(exceptionSupplier);
     }
 
+    public void removeConsentId() {
+        persistentStorage.remove(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
+    }
+
     public void saveConsentCreationDate(Instant creationDate) {
         checkNotNull(creationDate, "Consent creation date can not be null!");
         persistentStorage.put(
@@ -63,5 +67,9 @@ public class ConsentDataStorage {
         return persistentStorage
                 .get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE, Instant.class)
                 .orElseThrow(exceptionSupplier);
+    }
+
+    public void removeConsentCreationDate() {
+        persistentStorage.remove(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE);
     }
 }

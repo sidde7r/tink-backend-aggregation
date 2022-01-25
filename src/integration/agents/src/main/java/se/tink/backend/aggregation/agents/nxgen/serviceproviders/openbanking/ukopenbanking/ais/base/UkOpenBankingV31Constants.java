@@ -93,6 +93,7 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
         public static final String AIS_ACCOUNT_CONSENT_ID = "ais_account_consent_id";
         public static final String AIS_ACCOUNT_CONSENT_CREATION_DATE =
                 "ais_account_consent_creation_date";
+        public static final String LAST_SCA_TIME = "last_SCA_time";
     }
 
     public static class Limits {
