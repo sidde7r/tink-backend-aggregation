@@ -110,17 +110,16 @@ public class ErrorChecker {
                 .orElse(httpResponseException);
     }
 
-    public static PaymentRejectedException getExceptionWithThrowable(HttpResponseException hre) {
+    private static PaymentRejectedException getExceptionWithThrowable(HttpResponseException hre) {
         return new PaymentRejectedException(hre);
     }
 
-    public static boolean toBeMappedWithThrowable(String errorMessage) {
-        return errorMessage != null
-                && (errorMessage.equals(ErrorMessageKeys.MISSING_COVERAGE)
-                        || errorMessage.equals(ErrorMessageKeys.READ_TIME_OUT));
+    private static boolean toBeMappedWithThrowable(String errorMessage) {
+        return StringUtils.containsIgnoreCase(errorMessage, ErrorMessageKeys.MISSING_COVERAGE)
+                || StringUtils.containsIgnoreCase(errorMessage, ErrorMessageKeys.READ_TIME_OUT);
     }
 
-    public static boolean hasNonEmptyResponseBody(HttpResponseException hre) {
+    private static boolean hasNonEmptyResponseBody(HttpResponseException hre) {
         return Optional.ofNullable(hre.getResponse())
                 .map(response -> response.getBody(String.class))
                 .filter(body -> !body.isEmpty())
