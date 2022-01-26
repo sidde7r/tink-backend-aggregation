@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.mock;
 
+import org.junit.Ignore;
+
+@Ignore
 public class ApiErrorHandlerSampleResponses {
     static final String OAUTH2_ERROR_RESPONSE_WITH_INVALID_GRANT =
             "{\"error_description\":\"unknown, invalid, or expired refresh token\",\"error\":\"invalid_grant\"}";
