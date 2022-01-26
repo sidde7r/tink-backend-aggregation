@@ -13,17 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data.AuthenticationDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data.ConsentDataStorage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorDescriptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -158,7 +154,9 @@ public class OpenIdAuthenticationController
                                 TimeUnit.MINUTES)
                         .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
-        handlePossibleErrors(callbackData);
+        ErrorHandler errorHandler =
+                new OpenIdAuthenticationErrorHandler(consentDataStorage, apiClient);
+        errorHandler.handle(callbackData);
 
         String code =
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
@@ -303,64 +301,5 @@ public class OpenIdAuthenticationController
 
     private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
         apiClient.instantiateAisAuthFilter(oAuth2Token);
-    }
-
-    private void handlePossibleErrors(Map<String, String> callbackData)
-            throws AuthenticationException {
-        Optional<String> error =
-                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR);
-        Optional<String> errorDescription =
-                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR_DESCRIPTION);
-
-        if (!error.isPresent()) {
-            log.info("[OpenIdAuthenticationController] OpenId callback success.");
-            return;
-        }
-
-        handleError(
-                SerializationUtils.serializeToString(callbackData),
-                error.orElse(""),
-                errorDescription.orElse(""));
-    }
-
-    private void handleError(
-            String serializedCallbackData, String errorType, String errorDescription)
-            throws LoginException {
-
-        String consentId = consentDataStorage.restoreConsentId();
-
-        log.info(
-                "[OpenIdAuthenticationController] OpenId callback data: {} for consentId {}",
-                serializedCallbackData,
-                consentId);
-
-        if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
-                || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
-            // Store error information to make it possible for agent to determine cause and
-            // give end user a proper error message.
-            apiClient.storeOpenIdError(ErrorEntity.create(errorType, errorDescription));
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-
-        } else if (OpenIdConstants.Errors.SERVER_ERROR.equalsIgnoreCase(errorType)) {
-            if (ErrorDescriptions.SERVER_ERROR_PROCESSING.equalsIgnoreCase(errorDescription)) {
-                throw ThirdPartyAppError.CANCELLED.exception(errorDescription);
-            }
-            throw BankServiceError.BANK_SIDE_FAILURE.exception(errorDescription);
-
-        } else if (OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE.equalsIgnoreCase(errorType)) {
-            throw BankServiceError.NO_BANK_SERVICE.exception(errorDescription);
-
-        } else if (OpenIdConstants.Errors.UNAUTHORISED.equalsIgnoreCase(errorType)) {
-            throw BankServiceError.SESSION_TERMINATED.exception(errorDescription);
-
-        } else if (OpenIdConstants.Errors.INVALID_INTENT_ID.equalsIgnoreCase(errorType)) {
-            throw SessionError.CONSENT_INVALID.exception();
-        }
-
-        throw new IllegalStateException(
-                String.format(
-                        "[OpenIdAuthenticationController] Unknown error with details: "
-                                + "{errorType: %s, errorDescription: %s}",
-                        errorType, errorDescription));
     }
 }
