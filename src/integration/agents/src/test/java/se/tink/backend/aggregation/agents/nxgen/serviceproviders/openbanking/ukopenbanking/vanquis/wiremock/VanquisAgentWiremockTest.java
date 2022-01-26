@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.vanquis.wiremock;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -8,6 +9,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
+@Ignore
 public class VanquisAgentWiremockTest {
 
     private static final String PROVIDER_NAME = "uk-vanquis-ob";

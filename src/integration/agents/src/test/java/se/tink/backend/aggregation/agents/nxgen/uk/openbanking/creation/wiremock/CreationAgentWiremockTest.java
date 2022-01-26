@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.creation.wiremock;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
+@Ignore
 public class CreationAgentWiremockTest {
 
     private static final String PROVIDER_NAME = "uk-creation-ob";
