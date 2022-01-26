@@ -49,7 +49,7 @@ Content-Type: application/json
 }
 
 REQUEST 3
-GET https://psd.bancairediensten.nl/psd2/snsbank/v1/accounts
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1.1/accounts
 
 RESPONSE 3
 200
@@ -58,27 +58,36 @@ Content-Type: application/json
 {"accounts":[{"resourceId":"ff01d251-c885-4b86-b01e-c86ea7e9a3bd","iban":"NL2222222222","currency":"EUR","name":"SNS something","ownerName":"owner name","product":"SNS Compleet","customerBic":"SNSBNL2A"}]}
 
 REQUEST 4
-GET https://psd.bancairediensten.nl/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/balances
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1.1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/balances
 
 RESPONSE 4
 200
 Content-Type: application/json
 
-{"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"4495.30"},"lastChangeDateTime":"2021-04-28T22:00:00.000Z"}]}
+{"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"4495.30"},"lastChangeDateTime":"2021-04-28T22:00:00Z"}]}
 
 REQUEST 5
-GET https://psd.bancairediensten.nl/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?dateFrom=1992-01-11&dateTo=1992-04-09&bookingStatus=booked&pageDirection=next&limit=1000
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1.1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?dateFrom=1992-01-11&dateTo=1992-04-09&bookingStatus=booked&limit=1000
 
 RESPONSE 5
 200
 Content-Type: application/json
 
-{"account":{"iban":"NL2222222222","currency":"EUR"},"transactions":{"booked":[{"entryReference":"19920101-90010221","endToEndId":"1992-01-01 21:53 0050005208137334","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-54.99"},"creditorName":"WEHKAMP FINANCE","creditorAccount":{"iban":"NL05INGB0702278378","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"610000000000000005017830000521541370050005208137334 61000000000000000501783000052154137 Referentie: 1992-01-01 21:53 005000520813733","purposeCode":"","bankTransactionCode":9856,"proprietaryBankTransactionCode":"FIDM"},{"entryReference":"19920101-90198540","endToEndId":"1992-01-019 06:09 1150001436686883","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-2.00"},"creditorName":"HERSENSTICHTING NEDERLAND VIA MOLLIE","creditorAccount":{"iban":"NL51DEUT0265262461","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"M06068464M951OVC 1150001436686883 DigiCollect Referentie: 2021-01-29 06:09 1150001436686883","purposeCode":"","bankTransactionCode":9856,"proprietaryBankTransactionCode":"FIDM"},{"entryReference":"19920101-90570084","endToEndId":"K2BWGW000000023941027","mandateId":"1382011","creditorId":"NL63ZZZ547500160000","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-16.36"},"creditorName":"SVHW","creditorAccount":{"iban":"NL81BNGH0285084321","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"LOKALE BELASTINGEN JANUARI Betaalkenmerk 406563708  2020","purposeCode":"","bankTransactionCode":9714,"proprietaryBankTransactionCode":"FEIC"}],"_links":{"account":{"href":"/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd"},"next":{"href":"/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?bookingStatus=booked&limit=1000&pageDirection=next&entryReferenceFrom=20210129-90570084"},"previous":{"href":"/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?bookingStatus=booked&limit=1000&pageDirection=previous&entryReferenceFrom=20201101-90184560"}}}}
+{"account":{"iban":"NL2222222222","currency":"EUR"},"transactions":{"booked":[{"entryReference":"19920101-90010221","endToEndId":"1992-01-01 21:53 0050005208137334","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-54.99"},"creditorName":"WEHKAMP FINANCE","creditorAccount":{"iban":"","bban":"NL52ASNB0934972362"},"debtorAccount":{"iban":"","bban":""},"remittanceInformationUnstructured":"610000000000000005017830000521541370050005208137334 61000000000000000501783000052154137 Referentie: 1992-01-01 21:53 005000520813733","purposeCode":"","bankTransactionCode":9856,"proprietaryBankTransactionCode":"FIDM"},{"entryReference":"19920101-90198540","endToEndId":"1992-01-019 06:09 1150001436686883","mandateId":"","creditorId":"","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-2.00"},"creditorName":"HERSENSTICHTING NEDERLAND VIA MOLLIE","creditorAccount":{"iban":"","bban":""},"debtorAccount":{"iban":"NL51DEUT0265262461","bban":""},"remittanceInformationUnstructured":"M06068464M951OVC 1150001436686883 DigiCollect Referentie: 2021-01-29 06:09 1150001436686883","purposeCode":"","bankTransactionCode":9856,"proprietaryBankTransactionCode":"FIDM"},{"entryReference":"19920101-90570084","endToEndId":"K2BWGW000000023941027","mandateId":"1382011","creditorId":"NL63ZZZ547500160000","bookingDate":"1992-01-01","valueDate":"1992-01-01","transactionAmount":{"currency":"EUR","amount":"-16.36"},"creditorName":"SVHW","creditorAccount":{"iban":"","bban":""},"debtorAccount":{"iban":"NL81BNGH0285084321","bban":""},"remittanceInformationUnstructured":"LOKALE BELASTINGEN JANUARI Betaalkenmerk 406563708  2020","purposeCode":"","bankTransactionCode":9714,"proprietaryBankTransactionCode":"FEIC"}],"_links":{"account":{"href":"/psd2/snsbank/v1.1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd"},"next":{"href":"/psd2/snsbank/v1.1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?bookingStatus=booked&limit=1000&entryReferenceFrom=19920101-90570084"}}}}
 
 REQUEST 6
-GET https://psd.bancairediensten.nl/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1.1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?bookingStatus=booked&limit=1000&entryReferenceFrom=19920101-90570084
 
 RESPONSE 6
+200
+Content-Type: application/json
+
+{"account":null,"transactions":{"booked":[],"_links":null}}
+
+REQUEST 7
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1.1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions
+
+RESPONSE 7
 200
 Content-Type: application/json
 

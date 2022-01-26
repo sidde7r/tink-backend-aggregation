@@ -17,7 +17,7 @@ public class BalanceEntity implements BalanceMappable {
     private BalanceAmountEntity balanceAmount;
     private String balanceType;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private Date lastChangeDateTime;
 
     @Override
