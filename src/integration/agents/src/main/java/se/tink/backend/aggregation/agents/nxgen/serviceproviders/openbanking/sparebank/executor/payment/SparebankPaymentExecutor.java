@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -28,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -38,6 +41,8 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     private final SparebankApiClient apiClient;
     private final SparebankStorage storage;
     private final SparebankPaymentSigner signer;
+
+    private static final CountryDateHelper dateHelper = new CountryDateHelper(Locale.getDefault());
 
     public SparebankPaymentExecutor(
             SparebankApiClient apiClient,
@@ -109,18 +114,20 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     }
 
     protected PaymentResponse getPaymentResponse(PaymentRequest paymentRequest) {
-        final AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
+        final Payment payment = paymentRequest.getPayment();
+
+        if (Objects.isNull(payment.getExecutionDate())) {
+            payment.setExecutionDate(dateHelper.getNowAsLocalDate());
+        }
+
+        final AccountEntity creditor = AccountEntity.creditorOf(payment);
         final AccountEntity debtor = getDebtorAccount();
-        final String creditorName = paymentRequest.getPayment().getCreditor().getName();
+        final String creditorName = payment.getCreditor().getName();
         final SparebankPaymentType paymentType =
-                SparebankPaymentType.getSpareBankPaymentType(paymentRequest);
-        final RemittanceInformation remittanceInformation =
-                paymentRequest.getPayment().getRemittanceInformation();
+                SparebankPaymentType.getSpareBankPaymentType(payment);
+        final RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
         final String requestedExecutionDate =
-                paymentRequest
-                        .getPayment()
-                        .getExecutionDate()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                payment.getExecutionDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         CreatePaymentRequest createPaymentRequest =
                 CreatePaymentRequest.builder()
