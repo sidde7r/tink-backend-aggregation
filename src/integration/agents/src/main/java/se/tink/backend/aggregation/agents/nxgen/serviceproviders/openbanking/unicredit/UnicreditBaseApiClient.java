@@ -105,24 +105,26 @@ public class UnicreditBaseApiClient {
                         new URL(headerValues.getRedirectUrl())
                                 .queryParam(HeaderKeys.STATE, state)
                                 .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
-                .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, true) // true for redirect auth
                 .post(getConsentResponseType(), getConsentRequest());
     }
 
-    public ConsentDetailsResponse getConsentDetails() {
+    public ConsentDetailsResponse getConsentDetails(String consentId) {
         HttpResponse response =
                 createRequest(
                                 new URL(
                                                 providerConfiguration.getBaseUrl()
                                                         + Endpoints.CONSENT_DETAILS)
-                                        .parameter(
-                                                PathParameters.CONSENT_ID,
-                                                getConsentIdFromStorage()))
+                                        .parameter(PathParameters.CONSENT_ID, consentId))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .get(HttpResponse.class);
         logLastMRHCookie(response);
 
         return response.getBody(ConsentDetailsResponse.class);
+    }
+
+    public ConsentDetailsResponse getConsentDetails() {
+        return getConsentDetails(getConsentIdFromStorage());
     }
 
     private String getConsentIdFromStorage() {
@@ -195,7 +197,7 @@ public class UnicreditBaseApiClient {
                                                         .getAuthenticationState()
                                                         .orElse(null))
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
-                        .header(HeaderKeys.TPP_REDIRECT_PREFERED, true)
+                        .header(HeaderKeys.TPP_REDIRECT_PREFERRED, true)
                         .post(getCreatePaymentResponseType(), request);
 
         unicreditStorage.saveScaRedirectUrlForPayment(

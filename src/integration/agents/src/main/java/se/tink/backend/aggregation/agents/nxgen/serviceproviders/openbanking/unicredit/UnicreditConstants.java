@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
@@ -25,6 +26,11 @@ public class UnicreditConstants {
                             .build();
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Patterns {
+        public static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
@@ -43,6 +49,8 @@ public class UnicreditConstants {
         public static final String CONSENTS = "/hydrogen/v1/consents";
         public static final String CONSENT_STATUS = "/hydrogen/v1/consents/{consent-id}/status";
         public static final String CONSENT_DETAILS = "/hydrogen/v1/consents/{consent-id}";
+        public static final String CONSENT_AUTHORIZATION =
+                "/hydrogen/v1/consents/{consent-id}/authorisations";
         public static final String ACCOUNTS = "/hydrogen/v1/accounts";
         public static final String ACCOUNT_DETAILS = "/hydrogen/v1/accounts/{account-id}";
         public static final String BALANCES = "/hydrogen/v1/accounts/{account-id}/balances";
@@ -95,10 +103,11 @@ public class UnicreditConstants {
     public static class HeaderKeys {
 
         public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String PSU_ID = "PSU-ID";
         public static final String PSU_ID_TYPE = "PSU-ID-Type";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String CONSENT_ID = "Consent-ID";
-        public static final String TPP_REDIRECT_PREFERED = "TPP-Redirect-Preferred";
+        public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
         public static final String STATE = "state";
         public static final String CODE = "code";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
