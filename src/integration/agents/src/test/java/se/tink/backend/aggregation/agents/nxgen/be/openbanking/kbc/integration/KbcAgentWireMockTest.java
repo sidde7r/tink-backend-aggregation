@@ -25,6 +25,7 @@ public class KbcAgentWireMockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/kbc/integration/resources/";
     private static final String CONFIGURATION_PATH = BASE_PATH + "configuration.yml";
     private static final String PROVIDER_NAME = "be-kbc-ob";
+    private static final String FAKE_BELGIUM_IBAN = "BE13456225778439";
 
     private AgentsServiceConfiguration configuration;
 
@@ -48,7 +49,7 @@ public class KbcAgentWireMockTest {
                         .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .addCredentialField("iban", "BE39000000076000")
+                        .addCredentialField("iban", FAKE_BELGIUM_IBAN)
                         .build();
 
         final AgentContractEntity expected =
@@ -76,9 +77,7 @@ public class KbcAgentWireMockTest {
                         .testOnlyAuthentication()
                         .addPersistentStorageData("oauth2_access_token", getToken())
                         .addPersistentStorageData("consentId", "dummy_consent_id")
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
-                        .addCredentialField("iban", "BE39000000076000")
+                        .addCredentialField("iban", FAKE_BELGIUM_IBAN)
                         .build();
 
         // when
@@ -106,9 +105,7 @@ public class KbcAgentWireMockTest {
                         .testOnlyAuthentication()
                         .addPersistentStorageData("oauth2_access_token", getExpiredToken())
                         .addPersistentStorageData("consentId", "dummy_consent_id")
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
-                        .addCredentialField("iban", "BE39000000076000")
+                        .addCredentialField("iban", FAKE_BELGIUM_IBAN)
                         .build();
 
         // when
@@ -134,9 +131,7 @@ public class KbcAgentWireMockTest {
                         .withConfigFile(configuration)
                         .testFullAuthentication()
                         .testOnlyAuthentication()
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
-                        .addCredentialField("iban", "BE39000000076000")
+                        .addCredentialField("iban", FAKE_BELGIUM_IBAN)
                         .build();
 
         // when
