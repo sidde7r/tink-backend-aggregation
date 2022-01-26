@@ -82,10 +82,10 @@ public class SwedbankFallbackHttpFilter extends Filter {
                         headers, eidasProxyConfig, eidasIdentity, qSealcBase64);
 
         for (Entry<String, Object> header : headers.entrySet()) {
-            request.getHeaders().add(header.getKey(), header.getValue());
+            request.getHeaders().putSingle(header.getKey(), header.getValue());
         }
-        request.getHeaders().add(Keys.SIGNATURE, signature);
-        request.getHeaders().add(Headers.DSID, generateDSID());
+        request.getHeaders().putSingle(Keys.SIGNATURE, signature);
+        request.getHeaders().putSingle(Headers.DSID, generateDSID());
     }
 
     private Map<String, Object> getHeaders(String digest) {
