@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
-import com.google.common.base.Strings;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.MapExtractor.getCallbackElement;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
@@ -302,14 +303,6 @@ public class OpenIdAuthenticationController
 
     private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
         apiClient.instantiateAisAuthFilter(oAuth2Token);
-    }
-
-    private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {
-        String value = callbackData.getOrDefault(key, null);
-        if (Strings.isNullOrEmpty(value)) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
     }
 
     private void handlePossibleErrors(Map<String, String> callbackData)
