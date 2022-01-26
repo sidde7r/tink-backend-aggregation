@@ -37,6 +37,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/cryptography/hash",
+        "//src/libraries/date",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//src/libraries/strings",
