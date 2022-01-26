@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.MapExtractor.getCallbackElement;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Token.DEFAULT_TOKEN_LIFETIME;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Token.DEFAULT_TOKEN_LIFETIME_UNIT;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -14,7 +12,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -34,19 +31,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBa
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.retrypolicy.RetryExecutor;
-import se.tink.libraries.retrypolicy.RetryPolicy;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 public class OpenIdAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-
-    private static final int DEFAULT_TOKEN_LIFETIME = 90;
-    private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
     private final AuthenticationDataStorage authenticationDataStorage;
     private final ConsentDataStorage consentDataStorage;
@@ -54,18 +45,12 @@ public class OpenIdAuthenticationController
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
     private final Credentials credentials;
-    private final int tokenLifetime;
-    private final TemporalUnit tokenLifetimeUnit;
-
     private final String strongAuthenticationState;
     private final String strongAuthenticationStateSupplementalKey;
-
     private final RandomValueGenerator randomValueGenerator;
     private final String callbackUri;
     private final OpenIdAuthenticationValidator authenticationValidator;
     private final LogMasker logMasker;
-
-    private final RetryExecutor retryExecutor = new RetryExecutor();
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -78,59 +63,26 @@ public class OpenIdAuthenticationController
             RandomValueGenerator randomValueGenerator,
             OpenIdAuthenticationValidator authenticationValidator,
             LogMasker logMasker) {
-        this(
-                persistentStorage,
-                supplementalInformationHelper,
-                apiClient,
-                authenticator,
-                credentials,
-                strongAuthenticationState,
-                callbackUri,
-                DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT,
-                randomValueGenerator,
-                authenticationValidator,
-                logMasker);
-    }
-
-    private OpenIdAuthenticationController(
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            OpenIdApiClient apiClient,
-            OpenIdAuthenticator authenticator,
-            Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState,
-            String callbackUri,
-            int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit,
-            RandomValueGenerator randomValueGenerator,
-            OpenIdAuthenticationValidator authenticationValidator,
-            LogMasker logMasker) {
         this.authenticationDataStorage = new AuthenticationDataStorage(persistentStorage);
         this.consentDataStorage = new ConsentDataStorage(persistentStorage);
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
         this.credentials = credentials;
-        this.tokenLifetime = tokenLifetime;
-        this.tokenLifetimeUnit = tokenLifetimeUnit;
         this.callbackUri = callbackUri;
-
         this.strongAuthenticationStateSupplementalKey =
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
         this.randomValueGenerator = randomValueGenerator;
         this.authenticationValidator = authenticationValidator;
         this.logMasker = logMasker;
-
-        this.retryExecutor.setRetryPolicy(new RetryPolicy(2, RuntimeException.class));
     }
 
     @Override
     public ThirdPartyAppResponse<String> init() {
         OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
         authenticationValidator.validateClientToken(clientOAuth2Token);
-        instantiateAuthFilter(clientOAuth2Token);
+        apiClient.instantiateAisAuthFilter(clientOAuth2Token);
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
@@ -194,12 +146,11 @@ public class OpenIdAuthenticationController
 
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                        oAuth2Token, tokenLifetime, tokenLifetimeUnit));
+                        oAuth2Token, DEFAULT_TOKEN_LIFETIME, DEFAULT_TOKEN_LIFETIME_UNIT));
 
         authenticationDataStorage.saveStrongAuthenticationTime();
         authenticationDataStorage.saveAccessToken(oAuth2Token);
-
-        instantiateAuthFilter(oAuth2Token);
+        apiClient.instantiateAisAuthFilter(oAuth2Token);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
@@ -240,66 +191,8 @@ public class OpenIdAuthenticationController
     }
 
     private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {
-        log.info(
-                "[OpenIdAuthenticationController] Trying to refresh access token. "
-                        + "Issued: [{}] Access Expires: [{}] "
-                        + "Has Refresh Token: [{}] Refresh Token Expires: [{}]",
-                LocalDateTime.ofEpochSecond(oAuth2Token.getIssuedAt(), 0, ZoneOffset.UTC),
-                LocalDateTime.ofEpochSecond(oAuth2Token.getAccessExpireEpoch(), 0, ZoneOffset.UTC),
-                oAuth2Token.isRefreshNullOrEmpty(),
-                oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
-                        ? LocalDateTime.ofEpochSecond(
-                                oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
-                        : "N/A");
-
-        String refreshToken = oAuth2Token.getOptionalRefreshToken().get();
-        try {
-            OAuth2Token refreshedOAuth2Token =
-                    retryExecutor.execute(
-                            () -> apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS));
-
-            if (!refreshedOAuth2Token.isValid()) {
-                log.warn(
-                        "[OpenIdAuthenticationController] Access token refreshed, but it is invalid. "
-                                + "Expiring the session.");
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-
-            if (refreshedOAuth2Token.isRefreshTokenExpirationPeriodSpecified()) {
-                credentials.setSessionExpiryDate(
-                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                                refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
-            }
-
-            oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
-
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() >= 500) {
-                log.warn(
-                        "[OpenIdAuthenticationController] Bank side error (status code {}) during "
-                                + "refreshing token",
-                        e.getResponse().getStatus());
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
-            }
-            log.error(
-                    "[OpenIdAuthenticationController] Access token refresh failed: {}",
-                    e.getResponse().getBody(String.class));
-
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-        log.info(
-                "[OpenIdAuthenticationController] Token refreshed successfully. New token - Access "
-                        + "Expires: [{}] Has Refresh Token: [{}] Refresh Expires: [{}]",
-                LocalDateTime.ofEpochSecond(oAuth2Token.getAccessExpireEpoch(), 0, ZoneOffset.UTC),
-                oAuth2Token.isRefreshNullOrEmpty(),
-                oAuth2Token.isRefreshTokenExpirationPeriodSpecified()
-                        ? LocalDateTime.ofEpochSecond(
-                                oAuth2Token.getRefreshExpireEpoch(), 0, ZoneOffset.UTC)
-                        : "N/A");
-        return oAuth2Token;
-    }
-
-    private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
-        apiClient.instantiateAisAuthFilter(oAuth2Token);
+        AccessTokenRefresher accessTokenRefresher =
+                new OpenIdAccessTokenRefresher(apiClient, credentials);
+        return accessTokenRefresher.refresh(oAuth2Token);
     }
 }
