@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 import se.tink.libraries.authentication_options.AuthenticationOptionDto;
+import se.tink.libraries.authentication_options.AuthenticationOptionsGroupDto;
 import se.tink.libraries.authentication_options.SupportedChannel;
 
 public class AuthenticationOptionsExtractorTest {
@@ -31,7 +32,7 @@ public class AuthenticationOptionsExtractorTest {
 
         // when
         extractor.validateAuthenticationOptions(klass);
-        Set<AuthenticationOptionDto> AuthenticationOptionDto =
+        Set<AuthenticationOptionsGroupDto> AuthenticationOptionDto =
                 extractor.readAuthenticationOptions(klass);
 
         // then
@@ -46,19 +47,25 @@ public class AuthenticationOptionsExtractorTest {
 
         // when
         extractor.validateAuthenticationOptions(klass);
-        Set<AuthenticationOptionDto> AuthenticationOptionDtoSet =
+        Set<AuthenticationOptionsGroupDto> authenticationOptionDtoSet =
                 extractor.readAuthenticationOptions(klass);
 
         // then
-        assertThat(AuthenticationOptionDtoSet.size()).isEqualTo(1);
+        assertThat(authenticationOptionDtoSet.size()).isEqualTo(1);
 
-        List<AuthenticationOptionDto> AuthenticationOptionDtoList =
-                new ArrayList<>(AuthenticationOptionDtoSet);
-        AuthenticationOptionDto AuthenticationOptionDto = AuthenticationOptionDtoList.get(0);
-        assertThat(AuthenticationOptionDto.getName())
+        List<AuthenticationOptionsGroupDto> AuthenticationOptionsGroupDtoList =
+                new ArrayList<>(authenticationOptionDtoSet);
+        AuthenticationOptionsGroupDto authenticationOptionsGroupDto =
+                AuthenticationOptionsGroupDtoList.get(0);
+        assertThat(authenticationOptionsGroupDto.getAuthenticationOptions().size()).isEqualTo(1);
+
+        ArrayList<AuthenticationOptionDto> authenticationOptionDtoList =
+                new ArrayList<>(authenticationOptionsGroupDto.getAuthenticationOptions());
+        AuthenticationOptionDto authenticationOptionDto = authenticationOptionDtoList.get(0);
+        assertThat(authenticationOptionDto.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
-        assertThat(AuthenticationOptionDto.isOverallDefault()).isTrue();
-        assertThat(AuthenticationOptionDto.getDefaultForChannel())
+        assertThat(authenticationOptionDto.isOverallDefault()).isTrue();
+        assertThat(authenticationOptionDto.getDefaultForChannel())
                 .isEqualTo(SupportedChannel.MOBILE);
     }
 
@@ -70,24 +77,29 @@ public class AuthenticationOptionsExtractorTest {
         extractor.validateAuthenticationOptions(klass);
 
         // when
-        Set<AuthenticationOptionDto> AuthenticationOptionDtoSet =
+        Set<AuthenticationOptionsGroupDto> authenticationOptionsGroupDtoSet =
                 extractor.readAuthenticationOptions(klass);
 
         // then
-        assertThat(AuthenticationOptionDtoSet.size()).isEqualTo(2);
+        assertThat(authenticationOptionsGroupDtoSet.size()).isEqualTo(1);
 
-        List<AuthenticationOptionDto> AuthenticationOptionDtoList =
-                AuthenticationOptionDtoSet.stream()
+        ArrayList<AuthenticationOptionsGroupDto> authenticationOptionsGroupDtos =
+                new ArrayList<>(authenticationOptionsGroupDtoSet);
+        AuthenticationOptionsGroupDto authenticationOptionsGroupDtoList =
+                authenticationOptionsGroupDtos.get(0);
+        List<AuthenticationOptionDto> authenticationOptionDtoList =
+                authenticationOptionsGroupDtoList.getAuthenticationOptions().stream()
                         .sorted(Comparator.comparing(AuthenticationOptionDto::getName))
                         .collect(Collectors.toList());
+        assertThat(authenticationOptionDtoList.size()).isEqualTo(2);
 
-        AuthenticationOptionDto AuthenticationOptionDtoOther = AuthenticationOptionDtoList.get(0);
+        AuthenticationOptionDto AuthenticationOptionDtoOther = authenticationOptionDtoList.get(0);
         assertThat(AuthenticationOptionDtoOther.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE.name());
         assertThat(AuthenticationOptionDtoOther.getDefaultForChannel())
                 .isEqualTo(SupportedChannel.DESKTOP);
 
-        AuthenticationOptionDto AuthenticationOptionDtoSame = AuthenticationOptionDtoList.get(1);
+        AuthenticationOptionDto AuthenticationOptionDtoSame = authenticationOptionDtoList.get(1);
         assertThat(AuthenticationOptionDtoSame.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
         assertThat(AuthenticationOptionDtoSame.isOverallDefault()).isTrue();

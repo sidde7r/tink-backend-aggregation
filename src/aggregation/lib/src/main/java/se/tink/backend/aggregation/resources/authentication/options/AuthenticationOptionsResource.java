@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.authentication.options.AuthenticationOptionsExtractor;
 import se.tink.backend.aggregation.api.AuthenticationOptionsService;
-import se.tink.libraries.authentication_options.AuthenticationOptionDto;
+import se.tink.libraries.authentication_options.AuthenticationOptionsGroupDto;
 
 public class AuthenticationOptionsResource implements AuthenticationOptionsService {
 
@@ -18,7 +18,7 @@ public class AuthenticationOptionsResource implements AuthenticationOptionsServi
     }
 
     @Override
-    public Map<String, Set<AuthenticationOptionDto>> getAgentsAuthenticationOptions() {
+    public Map<String, Set<AuthenticationOptionsGroupDto>> getAgentsAuthenticationOptions() {
         return authenticationOptionsExtractor.getAgentsAuthenticationOptions();
     }
 }

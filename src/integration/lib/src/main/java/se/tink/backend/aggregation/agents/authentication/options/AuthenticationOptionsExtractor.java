@@ -16,6 +16,8 @@ import se.tink.libraries.authentication_options.AuthenticationOption.Authenticat
 import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 import se.tink.libraries.authentication_options.AuthenticationOptionDto;
 import se.tink.libraries.authentication_options.AuthenticationOptionField;
+import se.tink.libraries.authentication_options.AuthenticationOptionsGroup;
+import se.tink.libraries.authentication_options.AuthenticationOptionsGroupDto;
 import se.tink.libraries.authentication_options.Field;
 import se.tink.libraries.authentication_options.SupportedChannel;
 
@@ -36,7 +38,7 @@ public class AuthenticationOptionsExtractor {
         log.warn("Instantiating AuthenticationOptionsExtractor without validating agents first.");
     }
 
-    public Map<String, Set<AuthenticationOptionDto>> getAgentsAuthenticationOptions() {
+    public Map<String, Set<AuthenticationOptionsGroupDto>> getAgentsAuthenticationOptions() {
         return reflections.getSubTypesOf(Agent.class).stream()
                 .filter(hasAuthenticationOptions)
                 .collect(Collectors.toMap(getAgentName, this::readAuthenticationOptions));
@@ -51,28 +53,48 @@ public class AuthenticationOptionsExtractor {
             klass -> klass.getName().replace(DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + ".", "");
 
     @VisibleForTesting
-    Set<AuthenticationOptionDto> readAuthenticationOptions(Class<? extends Agent> klass) {
+    Set<AuthenticationOptionsGroupDto> readAuthenticationOptions(Class<? extends Agent> klass) {
         AuthenticationOption[] authenticationOptions =
                 klass.getAnnotationsByType(AuthenticationOption.class);
-        Set<AuthenticationOptionDto> result = new HashSet<>();
+        Map<AuthenticationOptionsGroup, Set<AuthenticationOptionDto>>
+                mapGroupsAuthenticationOptions = new HashMap<>();
         for (AuthenticationOption authenticationOption : authenticationOptions) {
             AuthenticationOptionDefinition definition = authenticationOption.definition();
             Set<Field> fields =
                     definition.getFields().stream()
                             .map(AuthenticationOptionField::getField)
                             .collect(Collectors.toSet());
-            result.add(
-                    AuthenticationOptionDto.newBuilder()
-                            .name(definition.name())
-                            .fields(fields)
-                            .displayText(definition.getDisplayText())
-                            .helpText(definition.getHelpText())
-                            .overallDefault(authenticationOption.overallDefault())
-                            .defaultForChannel(authenticationOption.defaultForChannel())
-                            .supportedChannels(definition.getSupportedChannels())
-                            .build());
+            mapGroupsAuthenticationOptions.putIfAbsent(definition.getGroup(), new HashSet<>());
+            mapGroupsAuthenticationOptions
+                    .get(definition.getGroup())
+                    .add(
+                            AuthenticationOptionDto.newBuilder()
+                                    .name(definition.name())
+                                    .fields(fields)
+                                    .displayText(definition.getDisplayText())
+                                    .helpText(definition.getHelpText())
+                                    .overallDefault(authenticationOption.overallDefault())
+                                    .defaultForChannel(authenticationOption.defaultForChannel())
+                                    .supportedChannels(definition.getSupportedChannels())
+                                    .build());
         }
-        return result;
+
+        return mapToDtos(mapGroupsAuthenticationOptions);
+    }
+
+    private Set<AuthenticationOptionsGroupDto> mapToDtos(
+            Map<AuthenticationOptionsGroup, Set<AuthenticationOptionDto>>
+                    mapGroupsAuthenticationOptions) {
+        return mapGroupsAuthenticationOptions.entrySet().stream()
+                .map(
+                        e ->
+                                AuthenticationOptionsGroupDto.newBuilder()
+                                        .name(e.getKey().name())
+                                        .helpText(e.getKey().getHelpText())
+                                        .displayText(e.getKey().getDisplayText())
+                                        .authenticationOptions(e.getValue())
+                                        .build())
+                .collect(Collectors.toSet());
     }
 
     private void validateAuthenticationOptions() {
