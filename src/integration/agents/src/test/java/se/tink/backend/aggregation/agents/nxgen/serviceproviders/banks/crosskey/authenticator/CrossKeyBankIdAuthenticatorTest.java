@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
@@ -34,14 +34,18 @@ public class CrossKeyBankIdAuthenticatorTest {
     }
 
     @Test
-    public void shouldReturnBankIdStatusWaiting() {
+    public void shouldThrowBankServiceErrorBankSideFailure() {
         BankIdAutostartTokenResponse token = getBankIdAutostartTokenResponse();
         BankiIdResponse bankiIdResponse = getBankiIdResponse();
         // when
         when(apiClient.collectBankId()).thenReturn(bankiIdResponse);
 
         // then
-        assertEquals(BankIdStatus.WAITING, authenticator.collect(token));
+        assertThatThrownBy(() -> authenticator.collect(token))
+                .isInstanceOf(BankServiceError.BANK_SIDE_FAILURE.exception().getClass());
+        assertEquals(
+                "The bank service has temporarily failed; please try again later.",
+                BankServiceError.BANK_SIDE_FAILURE.exception().getError().userMessage().get());
     }
 
     @Test

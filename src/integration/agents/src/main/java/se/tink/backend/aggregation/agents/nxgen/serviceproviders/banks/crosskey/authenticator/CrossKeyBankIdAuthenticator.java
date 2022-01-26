@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyApiClient;
@@ -86,11 +87,13 @@ public class CrossKeyBankIdAuthenticator
             if (!Strings.isNullOrEmpty(body.toString()) && body.contains("USER_LOCKED")) {
                 throw LoginError.NOT_CUSTOMER.exception();
             }
+            if (!Strings.isNullOrEmpty(body.toString()) && body.contains("INTERNAL_SERVER_ERROR")) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
         }
 
         Optional<BankIdStatus> bankIdStatus =
                 body.stream()
-                        .filter(s -> !s.matches("AUTHENTICATION_FAILURE"))
                         .map(
                                 s ->
                                         CrossKeyConstants.MultiFactorAuthentication
