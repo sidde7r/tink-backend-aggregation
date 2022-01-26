@@ -5,8 +5,8 @@ import static se.tink.libraries.payments.common.model.PaymentScheme.NORWEGIAN_DO
 import static se.tink.libraries.transfer.rpc.PaymentServiceType.PERIODIC;
 import static se.tink.libraries.transfer.rpc.PaymentServiceType.SINGLE;
 
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
@@ -40,9 +40,9 @@ public enum SparebankPaymentType {
         return this.paymentType;
     }
 
-    public static SparebankPaymentType getSpareBankPaymentType(PaymentRequest paymentRequest) {
-        PaymentScheme paymentScheme = paymentRequest.getPayment().getPaymentScheme();
-        PaymentServiceType paymentServiceType = paymentRequest.getPayment().getPaymentServiceType();
+    public static SparebankPaymentType getSpareBankPaymentType(Payment payment) {
+        PaymentScheme paymentScheme = payment.getPaymentScheme();
+        PaymentServiceType paymentServiceType = payment.getPaymentServiceType();
 
         if (paymentScheme == NORWEGIAN_DOMESTIC_CREDIT_TRANSFER && paymentServiceType == PERIODIC) {
             return NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS_PERIODIC;

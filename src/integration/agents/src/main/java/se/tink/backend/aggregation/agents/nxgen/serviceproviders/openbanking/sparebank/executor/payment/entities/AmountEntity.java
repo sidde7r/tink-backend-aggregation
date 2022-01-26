@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -17,8 +17,8 @@ public class AmountEntity {
     @Getter private String currency;
 
     @JsonIgnore
-    public static AmountEntity amountOf(PaymentRequest paymentRequest) {
-        ExactCurrencyAmount amount = paymentRequest.getPayment().getExactCurrencyAmount();
+    public static AmountEntity amountOf(Payment payment) {
+        ExactCurrencyAmount amount = payment.getExactCurrencyAmount();
         return new AmountEntity(
                 String.format("%.2f", amount.getExactValue()), amount.getCurrencyCode());
     }

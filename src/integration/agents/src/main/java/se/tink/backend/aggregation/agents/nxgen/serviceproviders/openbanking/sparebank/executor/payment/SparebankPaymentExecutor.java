@@ -68,17 +68,17 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
-
-        String paymentId = paymentRequest.getPayment().getUniqueId();
-        SparebankPaymentType paymentType =
-                SparebankPaymentType.getSpareBankPaymentType(paymentRequest);
+        final Payment payment = paymentRequest.getPayment();
+        final String paymentId = payment.getUniqueId();
+        final SparebankPaymentType paymentType =
+                SparebankPaymentType.getSpareBankPaymentType(payment);
 
         final String paymentStatus =
                 apiClient.fetchPaymentStatus(getPaymentStatusUrl(paymentId)).getTransactionStatus();
 
         return apiClient
                 .fetchPayment(getPaymentResponseUrl(paymentId))
-                .toTinkPaymentResponse(paymentRequest.getPayment(), paymentType, paymentStatus);
+                .toTinkPaymentResponse(payment, paymentType, paymentStatus);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
                         .debtorAccount(debtor.toBban())
                         .creditorAccount(creditor.toBban())
                         .creditorName(creditorName)
-                        .amount(AmountEntity.amountOf(paymentRequest))
+                        .amount(AmountEntity.amountOf(payment))
                         .requestedExecutionDate(requestedExecutionDate)
                         .creditorAddress(new CreditorAddressEntity())
                         .remittanceInformationUnstructured(remittanceInformation.getValue())
@@ -154,8 +154,8 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
         return paymentResponse.toTinkPaymentResponse(
                 createPaymentRequest,
                 paymentType,
-                paymentRequest.getPayment().getPaymentServiceType(),
-                paymentRequest.getPayment().getPaymentScheme());
+                payment.getPaymentServiceType(),
+                payment.getPaymentScheme());
     }
 
     private boolean isRemittanceInformationStructured(RemittanceInformation remittanceInformation) {
