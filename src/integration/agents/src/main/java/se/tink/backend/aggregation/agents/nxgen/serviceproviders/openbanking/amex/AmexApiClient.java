@@ -211,6 +211,27 @@ public class AmexApiClient {
                     AmericanExpressConstants.QueryValues.PENDING);
         }
 
+        if (limit > AmericanExpressConstants.QueryValues.TRANSACTION_TO_FETCH) {
+
+            return urlWithBaseQueryParams
+                    .queryParam(
+                            QueryParams.EXTENDED_DETAILS,
+                            AmericanExpressConstants.QueryValues.MERCHANT)
+                    .queryParam(
+                            AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
+                            Integer.toString(
+                                    AmericanExpressConstants.QueryValues.TRANSACTION_TO_FETCH))
+                    .queryParam(
+                            AmericanExpressConstants.QueryParams.QUERY_PARAM_OFFSET,
+                            Integer.toString(
+                                    limit
+                                            - AmericanExpressConstants.QueryValues
+                                                    .TRANSACTION_TO_FETCH))
+                    .queryParam(
+                            AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
+                            toDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        }
+
         // Posted transactions, from documentation "if status is not specified, this API returns
         // posted transactions by default."
         return urlWithBaseQueryParams
