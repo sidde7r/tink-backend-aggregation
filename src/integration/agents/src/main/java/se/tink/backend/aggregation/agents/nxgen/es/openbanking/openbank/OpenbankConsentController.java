@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.NewConsent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
@@ -14,8 +15,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.pair.Pair;
 
 public class OpenbankConsentController implements ConsentController {
     private static final int TIMEOUT_MINUTES = 5;
@@ -46,22 +45,22 @@ public class OpenbankConsentController implements ConsentController {
 
     @Override
     public void requestConsent() {
-        final Pair<String, URL> consentRequest =
+        final NewConsent newConsent =
                 apiClient.requestConsent(
                         strongAuthenticationState.getState(), consentGenerator.generate());
-        final String consentId = consentRequest.first;
-        final URL consentUrl = consentRequest.second;
-        supplementalInformationHelper.openThirdPartyApp(
-                ThirdPartyAppAuthenticationPayload.of(consentUrl));
-        LocalDateTime timeoutThreshold = LocalDateTime.now().plusMinutes(TIMEOUT_MINUTES);
-        while (isTimout(timeoutThreshold)) {
-            ConsentResponse consentResponse =
-                    executeWithDelay(() -> apiClient.fetchConsent(consentId));
-            if (consentResponse.isConsentValid()) {
-                consentStorage.useConsentId(consentId);
-                break;
+        if (newConsent.getScaRedirectUrl().isPresent()) {
+            supplementalInformationHelper.openThirdPartyApp(
+                    ThirdPartyAppAuthenticationPayload.of(newConsent.getScaRedirectUrl().get()));
+            LocalDateTime timeoutThreshold = LocalDateTime.now().plusMinutes(TIMEOUT_MINUTES);
+            while (isTimout(timeoutThreshold)) {
+                ConsentResponse consentResponse =
+                        executeWithDelay(() -> apiClient.fetchConsent(newConsent.getConsentId()));
+                if (consentResponse.isConsentValid()) {
+                    break;
+                }
             }
         }
+        consentStorage.useConsentId(newConsent.getConsentId());
     }
 
     @Override
