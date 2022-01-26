@@ -261,7 +261,8 @@ public class Field {
         EMAIL("email"),
         IBAN("iban"),
         BANKID_PASSWORD("bankid-password"),
-        SESSION_EXPIRY_TIME("sessionExpiryTime");
+        SESSION_EXPIRY_TIME("sessionExpiryTime"),
+        AUTH_METHOD_SELECTOR("auth-method-selector");
 
         private final String fieldKey;
 
