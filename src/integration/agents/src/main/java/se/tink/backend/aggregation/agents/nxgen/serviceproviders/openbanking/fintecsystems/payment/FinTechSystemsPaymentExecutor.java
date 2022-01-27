@@ -40,6 +40,9 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @RequiredArgsConstructor
@@ -63,7 +66,7 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
                 apiClient.createPayment(paymentRequest);
         URL wizardUrl = buildWizardUrl(finTechSystemsPaymentResponse.getWizardSessionKey());
         handleRedirect(wizardUrl);
-        return finTechSystemsPaymentResponse.toTinkPaymentResponse();
+        return finTechSystemsPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
     private void validateThatCredentialDidNotSucceedWithPaymentAlready() {
@@ -104,22 +107,24 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
 
     private PaymentMultiStepResponse handleSuccessfulPayment(
             PaymentMultiStepRequest paymentMultiStepRequest) {
-        FinTechSystemsPayment paymentResponse =
+        Payment tinkPayment = paymentMultiStepRequest.getPayment();
+
+        FinTechSystemsPayment ftsPaymentResponse =
                 apiClient.fetchPaymentStatus(paymentMultiStepRequest);
 
-        switch (PaymentStatus.fromString(paymentResponse.getPaymentStatus())) {
+        switch (PaymentStatus.fromString(ftsPaymentResponse.getPaymentStatus())) {
             case NONE:
             case RECEIVED:
-                paymentMultiStepRequest.getPayment().setStatus(SIGNED);
+                tinkPayment.setStatus(SIGNED);
                 break;
             default:
                 log.error(
                         "Unknow status received from Fintech Systems={}",
-                        paymentResponse.getPaymentStatus());
+                        ftsPaymentResponse.getPaymentStatus());
                 throw new PaymentCancelledException();
         }
 
-        storage.storeTransactionId(paymentResponse.getTransaction());
+        storage.storeTransactionId(ftsPaymentResponse.getTransaction());
 
         // The line below is supposed to make sure that persistent storage gets saved.
         // Currently, we think that operation command for payment does not include, in any way,
@@ -128,8 +133,15 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
         // is saved.
         persistentAgent.persistLoginSession();
 
-        return new PaymentMultiStepResponse(
-                paymentMultiStepRequest.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
+        fillTinkPaymentWithDebtorData(tinkPayment, ftsPaymentResponse);
+
+        return new PaymentMultiStepResponse(tinkPayment, AuthenticationStepConstants.STEP_FINALIZE);
+    }
+
+    private Payment fillTinkPaymentWithDebtorData(
+            Payment tinkPayment, FinTechSystemsPayment ftsPaymentResponse) {
+        tinkPayment.setDebtor(new Debtor(new IbanIdentifier(ftsPaymentResponse.getSenderIban())));
+        return tinkPayment;
     }
 
     private PaymentException getPaymentExceptionFromFtsErrorMessage(String lastError) {

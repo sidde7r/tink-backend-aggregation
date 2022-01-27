@@ -20,7 +20,8 @@ public class FinTechSystemsPaymentResponse {
     String transaction;
 
     @JsonIgnore
-    public PaymentResponse toTinkPaymentResponse() {
-        return new PaymentResponse(new Payment.Builder().withUniqueId(transaction).build());
+    public PaymentResponse toTinkPaymentResponse(Payment payment) {
+        payment.setUniqueId(transaction);
+        return new PaymentResponse(payment);
     }
 }

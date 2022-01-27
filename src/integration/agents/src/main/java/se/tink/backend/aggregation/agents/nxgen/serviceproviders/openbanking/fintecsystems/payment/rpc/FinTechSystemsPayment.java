@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @NoArgsConstructor
@@ -40,7 +42,8 @@ public class FinTechSystemsPayment {
     String object;
 
     @JsonIgnore
-    public PaymentResponse toTinkPayment(Payment payment) {
+    public PaymentResponse fillDebtorDataOnPayment(Payment payment) {
+        payment.setDebtor(new Debtor(new IbanIdentifier(senderBic, senderIban)));
         return new PaymentResponse(payment);
     }
 }
