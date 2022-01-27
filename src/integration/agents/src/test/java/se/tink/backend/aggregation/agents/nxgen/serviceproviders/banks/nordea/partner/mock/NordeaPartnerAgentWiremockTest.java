@@ -30,8 +30,8 @@ public class NordeaPartnerAgentWiremockTest {
     public void testRefresh() throws Exception {
 
         // given
-        final String wireMockFilePath = RESOURCES_PATH + "refresh.aap";
-        final String contractFilePath = RESOURCES_PATH + "contract.json";
+        final String wireMockFilePath = RESOURCES_PATH + "refresh-old-api.aap";
+        final String contractFilePath = RESOURCES_PATH + "contract-old-api.json";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(RESOURCES_PATH + "configuration.yml");
 
