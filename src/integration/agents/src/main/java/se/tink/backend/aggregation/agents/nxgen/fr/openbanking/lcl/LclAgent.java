@@ -36,6 +36,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.trans
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transferdestination.LclTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.LclPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.LclPaymentDatePolicy;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.LclRequestFactory;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.TokenFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.signature.LclSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
@@ -107,13 +109,16 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                 new LclTokenApiClient(this.client, lclHeaderValueProvider, this.agentConfiguration);
         this.lclApiClient =
                 new LclApiClient(this.client, lclHeaderValueProvider, this.tokenStorage);
+        TokenFetcher tokenFetcher = new TokenFetcher(this.tokenApiClient, this.sessionStorage);
+        LclRequestFactory lclRequestFactory =
+                new LclRequestFactory(
+                        lclHeaderValueProvider,
+                        client,
+                        componentProvider.getUnleashClient(),
+                        tokenFetcher);
         this.paymentApiClient =
                 new LclPaymentApiClient(
-                        this.client,
-                        lclHeaderValueProvider,
-                        this.sessionStorage,
-                        this.tokenApiClient,
-                        agentConfiguration);
+                        this.sessionStorage, agentConfiguration, lclRequestFactory, tokenFetcher);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
