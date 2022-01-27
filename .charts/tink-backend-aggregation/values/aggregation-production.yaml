@@ -509,7 +509,7 @@ tppSecretsServiceConfiguration:
   enabled: true
   enabledRetryPolicy: true
   useSecretsServiceInternalClient: true
-  rate: "0.05"
+  rate: "0.15"
 
 debugLogFrequencyPercent: 100
 debugLogHarFrequencyPercent: 10
