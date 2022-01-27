@@ -118,6 +118,10 @@ public class Payment {
         return debtor;
     }
 
+    public void setDebtor(Debtor debtor) {
+        this.debtor = debtor;
+    }
+
     public ExactCurrencyAmount getExactCurrencyAmount() {
         return new ExactCurrencyAmount(BigDecimal.valueOf(amount.getValue()), amount.getCurrency());
     }

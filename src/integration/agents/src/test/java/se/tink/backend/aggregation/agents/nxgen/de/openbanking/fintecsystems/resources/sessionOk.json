@@ -1,0 +1,36 @@
+{
+    "id": "ws_03huKeWSaXCOac7O",
+    "transaction": "**HASHED:To**",
+    "wizard_session_key": "6Ro6tEmVBZ8tiVIoUBakPNgaxFcorYpXxgR3ifiz",
+    "product": "xs2a_pay",
+    "parameters": {
+        "recipient_holder": "Test s.r.l.",
+        "recipient_bic": "",
+        "recipient_iban": "DE41113910060265984335",
+        "recipient_country_id": "DE",
+        "recipient_street": "",
+        "recipient_zip": "",
+        "recipient_city": "",
+        "sender_holder": "MUSTERMANN, HARTMUT",
+        "sender_iban": "DE62888888880012345678",
+        "sender_bic": "TESTDE88XXX",
+        "sender_country_id": "DE",
+        "amount": "10.0",
+        "currency_id": "EUR",
+        "purpose": "numero di riferimento 1234",
+        "metadata": null,
+        "recipient_bank_name": "",
+        "sender_bank_name": "",
+        "reconciliation_key": ""
+    },
+    "account": {
+        "bic": "TESTDE88XXX",
+        "bank_name": "Testbank"
+    },
+    "last_error": "",
+    "testmode": true,
+    "finished": true,
+    "current_step": "WizardFinishStep",
+    "created_at": "2022-01-27 13:46:52",
+    "object": "wizard_session"
+}
