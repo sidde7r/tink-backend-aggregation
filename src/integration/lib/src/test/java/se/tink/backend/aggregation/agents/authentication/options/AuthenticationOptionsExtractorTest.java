@@ -49,18 +49,21 @@ public class AuthenticationOptionsExtractorTest {
 
         // when
         extractor.validateAuthenticationOptions(klass);
-        Set<AuthenticationOptionsGroupDto> authenticationOptionDtoSet =
+        Set<AuthenticationOptionsGroupDto> authenticationOptionsGroupsDtoSet =
                 extractor.readAuthenticationOptions(klass);
 
         // then
-        assertThat(authenticationOptionDtoSet.size()).isEqualTo(1);
+        // one authentication options group found
+        assertThat(authenticationOptionsGroupsDtoSet.size()).isEqualTo(1);
 
+        // one authentication option found in that group
         List<AuthenticationOptionsGroupDto> AuthenticationOptionsGroupDtoList =
-                new ArrayList<>(authenticationOptionDtoSet);
+                new ArrayList<>(authenticationOptionsGroupsDtoSet);
         AuthenticationOptionsGroupDto authenticationOptionsGroupDto =
                 AuthenticationOptionsGroupDtoList.get(0);
         assertThat(authenticationOptionsGroupDto.getAuthenticationOptions().size()).isEqualTo(1);
 
+        // assertions on that authentication option found, verifying it is the one we expect
         ArrayList<AuthenticationOptionDto> authenticationOptionDtoList =
                 new ArrayList<>(authenticationOptionsGroupDto.getAuthenticationOptions());
         AuthenticationOptionDto authenticationOptionDto = authenticationOptionDtoList.get(0);
@@ -79,14 +82,16 @@ public class AuthenticationOptionsExtractorTest {
         extractor.validateAuthenticationOptions(klass);
 
         // when
-        Set<AuthenticationOptionsGroupDto> authenticationOptionsGroupDtoSet =
+        Set<AuthenticationOptionsGroupDto> authenticationOptionsGroupsDtoSet =
                 extractor.readAuthenticationOptions(klass);
 
         // then
-        assertThat(authenticationOptionsGroupDtoSet.size()).isEqualTo(1);
+        // one authentication options group found
+        assertThat(authenticationOptionsGroupsDtoSet.size()).isEqualTo(1);
 
+        // two authentication options found in that group
         ArrayList<AuthenticationOptionsGroupDto> authenticationOptionsGroupDtos =
-                new ArrayList<>(authenticationOptionsGroupDtoSet);
+                new ArrayList<>(authenticationOptionsGroupsDtoSet);
         AuthenticationOptionsGroupDto authenticationOptionsGroupDtoList =
                 authenticationOptionsGroupDtos.get(0);
         List<AuthenticationOptionDto> authenticationOptionDtoList =
@@ -95,6 +100,7 @@ public class AuthenticationOptionsExtractorTest {
                         .collect(Collectors.toList());
         assertThat(authenticationOptionDtoList.size()).isEqualTo(2);
 
+        // assertions on the first of authentication options, including verification of fields
         AuthenticationOptionDto authenticationOptionDtoOther = authenticationOptionDtoList.get(0);
         assertThat(authenticationOptionDtoOther.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE.name());
@@ -108,6 +114,7 @@ public class AuthenticationOptionsExtractorTest {
         assertThat(fieldsNames)
                 .contains(AuthenticationOptionField.SE_SOCIAL_SECURITY_NUMBER.getField().getName());
 
+        // assertions on the second authentication option
         AuthenticationOptionDto authenticationOptionDtoSame = authenticationOptionDtoList.get(1);
         assertThat(authenticationOptionDtoSame.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
