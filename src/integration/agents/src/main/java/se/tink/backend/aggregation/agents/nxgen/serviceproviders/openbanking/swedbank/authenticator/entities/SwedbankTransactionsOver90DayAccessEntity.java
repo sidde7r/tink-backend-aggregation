@@ -3,26 +3,21 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.IbanEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @EqualsAndHashCode
-public class SwedbankAccessEntity {
+public class SwedbankTransactionsOver90DayAccessEntity {
 
-    private List<IbanEntity> accounts = new ArrayList<>();
-    private List<IbanEntity> transactions = new ArrayList<>();
-    private List<IbanEntity> balances = new ArrayList<>();
+    private List<IbanEntity> transactionsOver90Days = new ArrayList<>();
 
     @JsonIgnore
-    public SwedbankAccessEntity addIbans(List<String> ibans) {
-        for (String iban : ibans) {
-            IbanEntity ibanEntity = new IbanEntity(iban);
-            accounts.add(ibanEntity);
-            transactions.add(ibanEntity);
-            balances.add(ibanEntity);
-        }
+    public SwedbankTransactionsOver90DayAccessEntity addIbans(List<String> ibans) {
+        this.transactionsOver90Days =
+                ibans.stream().map(IbanEntity::new).collect(Collectors.toList());
         return this;
     }
 }

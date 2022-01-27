@@ -49,10 +49,10 @@ public final class SwedbankConstants {
     public static class Endpoints {
         public static final String AUTHORIZATION_DECOUPLED = "/psd2/v4/authorize-decoupled";
         public static final String TOKEN = "/psd2/token";
-        public static final String ACCOUNTS = "/v3/accounts";
-        public static final String ACCOUNT_BALANCES = "/v3/accounts/{account-id}/balances";
-        public static final String ACCOUNT_TRANSACTIONS = "/v3/accounts/{account-id}/transactions";
-        public static final String CONSENTS = "/v3/consents";
+        public static final String ACCOUNTS = "/v4/accounts";
+        public static final String ACCOUNT_BALANCES = "/v4/accounts/{account-id}/balances";
+        public static final String ACCOUNT_TRANSACTIONS = "/v4/accounts/{account-id}/transactions";
+        public static final String CONSENTS = "/v4/consents";
         public static final String CONSENT_STATUS = CONSENTS + "/{consent-id}/status";
         public static final String INITIATE_PAYMENT = "/v3/payments/{paymentType}";
         public static final String GET_PAYMENT = "/v3/payments/{paymentType}/{paymentId}";
@@ -74,6 +74,8 @@ public final class SwedbankConstants {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String CONSENT = "CONSENT";
         public static final String HOLDER_NAME = "HOLDER_NAME";
+        public static final String CONSENT_TRANSACTIONS_OVER_90_DAYS =
+                "CONSENT_TRANSACTIONS_OVER_90_DAYS";
     }
 
     public static class QueryKeys {
@@ -137,7 +139,7 @@ public final class SwedbankConstants {
         public static final String PSD2 = "PSD2";
         public static final String MOBILE_ID = "MOBILE_ID";
         public static final String SMART_ID = "SMART_ID";
-        public static final String ALL_ACCOUNTS_SCOPES = "PSD2";
+        public static final String ALL_ACCOUNTS_SCOPES = "PSD2 PSD2account_list";
     }
 
     public static class BICProduction {
@@ -172,6 +174,8 @@ public final class SwedbankConstants {
                 "To add a new recipient, activate Mobile BankID for extended use.";
         public static final String AUTHORIZATION_FAILED = "authorization_failed";
         public static final String UNKNOWN_AUTHORIZATION_ID = "Unknown authorizationId";
+        public static final String ERROR_INVESTIGATION_MESSAGE =
+                "It's expected to be valid, this needs to be investigated.";
     }
 
     public static class ConsentStatus {
@@ -218,17 +222,14 @@ public final class SwedbankConstants {
         public static final String SCA_REQUIRED = "SCA_REQUIRED";
         public static final String REFRESH_TOKEN_EXPIRED = "Provided refresh_token expired";
         public static final String WRONG_USER_ID = "Wrong UserId parameter";
-        public static final String MISSING_BANK_AGREEMENT = "MISSING_BANK_AGREEMENT";
         public static final String NO_PROFILE_AVAILABLE = "No profile available";
-        public static final String USER_CANCEL = "USER_CANCEL";
         public static final String LOGIN_SESSION_INTERRUPTED = "Other login session is ongoing";
         public static final String EMPTY_USER_ID = "Mandatory header value is empty: PSU-ID";
         public static final String AUTHORIZATION_EXPIRED = "Authorization expired";
         public static final String CONSENT_INVALID = "CONSENT_INVALID";
         public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
-        public static final String CONSENT_UNKNOWN = "CONSENT_UNKNOWN";
-        public static final String RESOURCE_UNKNOWN = "RESOURCE_UNKNOWN";
-        public static final String USER_INTERUPTION = "USER_INTERUPTION";
+        public static final String RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND";
+        public static final String USER_INTERRUPTION = "USER_INTERRUPTION";
         public static final String MOBILE_ID_EXCEPTION = "MOBILE_ID_EXCEPTION";
         public static final String FORMAT_ERROR = "FORMAT_ERROR";
         public static final String INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS";
