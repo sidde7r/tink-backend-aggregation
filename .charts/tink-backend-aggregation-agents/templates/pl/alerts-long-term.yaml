@@ -28,7 +28,7 @@ spec:
           (1 + 0 * sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{outcome="unavailable"})
            or
            0 * sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h)
-        )[24h:1h])
+        )[24h:1h]) >= 0.5
       labels:
         priority: P2
         severity: ping
