@@ -77,8 +77,8 @@ public class SwedbankDecoupledAuthenticatorTestData {
                             + "  \"tppMessages\": [\n"
                             + "    {\n"
                             + "      \"category\": \"ERROR\",\n"
-                            + "      \"code\": \"USER_INTERRUPTION\",\n"
-                            + "      \"text\": \"Interrupted by user\"\n"
+                            + "      \"code\": \"USER_CANCEL\",\n"
+                            + "      \"text\": \"Login process canceled by PSU\"\n"
                             + "    }\n"
                             + "  ]\n"
                             + "}",

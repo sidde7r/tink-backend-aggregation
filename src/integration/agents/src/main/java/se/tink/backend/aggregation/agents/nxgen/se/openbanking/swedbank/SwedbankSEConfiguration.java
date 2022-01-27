@@ -29,7 +29,6 @@ public class SwedbankSEConfiguration implements SwedbankMarketConfiguration {
     public Set<SwedbankScope> getScopes() {
         return Sets.newHashSet(
                 SwedbankScope.PSD2,
-                SwedbankScope.READ_ACCOUNT_LIST,
                 SwedbankScope.READ_ACCOUNTS_BALANCES,
                 SwedbankScope.READ_TRANSACTIONS_HISTORY,
                 SwedbankScope.READ_TRANSACTIONS_HISTORY_OVER90);

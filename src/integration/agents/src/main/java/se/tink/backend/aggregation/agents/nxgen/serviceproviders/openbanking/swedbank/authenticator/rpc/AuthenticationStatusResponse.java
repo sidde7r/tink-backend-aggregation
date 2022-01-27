@@ -26,7 +26,6 @@ public class AuthenticationStatusResponse {
         return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(
                         tppMessage ->
-                                ErrorCodes.USER_INTERRUPTION.equalsIgnoreCase(
-                                        tppMessage.getCode()));
+                                ErrorCodes.USER_CANCEL.equalsIgnoreCase(tppMessage.getCode()));
     }
 }

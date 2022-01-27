@@ -5,7 +5,7 @@ Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_list PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
 
 RESPONSE 1
 200
@@ -91,7 +91,7 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 282
 
-#todo here should be only "scope":"PSD2 PSD2account_list PSD2account_balances"
+#todo here should be only "scope":"PSD2 PSD2account_balances"
 
 {
 
@@ -108,7 +108,7 @@ Content-Length: 282
 }
 
 REQUEST 7
-POST https://psd2.api.swedbank.com/v4/consents?bic=SWEDSESS&app-id=dummyClientId
+POST https://psd2.api.swedbank.com/v3/consents?bic=SWEDSESS&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -127,7 +127,7 @@ Content-Length: 49
 {"consentId":"consentId","consentStatus":"valid"}
 
 REQUEST 9
-GET https://psd2.api.swedbank.com/v4/accounts?bic=SWEDSESS&app-id=dummyClientId
+GET https://psd2.api.swedbank.com/v3/accounts?bic=SWEDSESS&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -142,7 +142,7 @@ Content-Length: 435
 {"accounts":[{"resourceId":"bf6265426add55b6bed3d4f694bcad02","iban":"SE1230000815059436018123","bban":"8150-5,923 123 573-4","currency":"SEK","product":"Privatkonto","cashAccountType":"CACC","name":"Firstname Secondname Surname","bankId":"08999"}]}
 
 REQUEST 10
-POST https://psd2.api.swedbank.com/v4/consents?bic=SWEDSESS&app-id=dummyClientId
+POST https://psd2.api.swedbank.com/v3/consents?bic=SWEDSESS&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -162,7 +162,7 @@ Content-Length: 53
 {"consentId":"**HASHED:u7**","consentStatus":"valid"}
 
 REQUEST 12
-GET https://psd2.api.swedbank.com/v4/accounts/bf6265426add55b6bed3d4f694bcad02/balances?bic=SWEDSESS
+GET https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/balances?bic=SWEDSESS
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -177,7 +177,7 @@ Content-Length: 232
 {"account":{"iban":"SE1230000815059436018123"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"SEK","amount":"5675.60"}},{"balanceType":"authorised","balanceAmount":{"currency":"SEK","amount":"5675.60"}}]}
 
 REQUEST 13
-GET https://psd2.api.swedbank.com/v4/accounts/41ef8ad8a4d9428f7ab6c500b11c6333/balances?bic=SWEDSESS
+GET https://psd2.api.swedbank.com/v3/accounts/41ef8ad8a4d9428f7ab6c500b11c6333/balances?bic=SWEDSESS
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink

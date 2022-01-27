@@ -20,7 +20,8 @@ public class GenericResponse {
 
     @JsonIgnore
     public boolean isMissingBankAgreement() {
-        return containsError(ErrorCodes.INTERNET_BANK_AGREEMENT);
+        return containsError(ErrorCodes.MISSING_BANK_AGREEMENT)
+                || containsError(ErrorCodes.INTERNET_BANK_AGREEMENT);
     }
 
     public boolean isNoProfileAvailable() {
@@ -54,7 +55,8 @@ public class GenericResponse {
 
     @JsonIgnore
     public boolean isConsentInvalid() {
-        return containsError(ErrorCodes.CONSENT_INVALID);
+        return containsError(ErrorCodes.CONSENT_INVALID)
+                || containsError(ErrorCodes.CONSENT_UNKNOWN);
     }
 
     @JsonIgnore
@@ -63,8 +65,8 @@ public class GenericResponse {
     }
 
     @JsonIgnore
-    public boolean isResourceNotFound() {
-        return containsError(ErrorCodes.RESOURCE_NOT_FOUND);
+    public boolean isResourceUnknown() {
+        return containsError(ErrorCodes.RESOURCE_UNKNOWN);
     }
 
     @JsonIgnore

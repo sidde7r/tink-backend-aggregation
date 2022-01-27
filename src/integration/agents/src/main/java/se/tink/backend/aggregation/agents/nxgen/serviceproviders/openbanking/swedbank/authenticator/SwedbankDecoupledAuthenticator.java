@@ -104,9 +104,7 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
 
         consentHandler.getAndStoreConsentForAllAccounts();
-        consentHandler.getListOfAccounts();
         consentHandler.getAndStoreDetailedConsent();
-        consentHandler.getAndStoreConsentForTransactionsOver90Days();
 
         // Handle the case where the user has single engagement at Swedbank and selects
         // Savingsbank provider by mistake
