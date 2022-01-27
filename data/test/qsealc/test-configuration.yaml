@@ -3,3 +3,4 @@ caPath: data/test/qsealc/ca.crt
 tlsCrtPath: data/test/qsealc/proxytls.crt
 tlsKeyPath: data/test/qsealc/proxytls.key
 environment: development
+eidasProxyQsealcSignerHttpClientRate: "1.0"

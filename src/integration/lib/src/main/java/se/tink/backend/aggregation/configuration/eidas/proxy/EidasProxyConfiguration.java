@@ -11,7 +11,8 @@ public class EidasProxyConfiguration {
     private String tlsKeyPath;
     private String environment;
     private boolean localEidasDev;
-    private boolean useEidasProxyQsealcSignerHttpClient = false;
+    private boolean useEidasProxyQsealcSignerHttpClient;
+    private String eidasProxyQsealcSignerHttpClientRate = "0.0";
 
     public EidasProxyConfiguration() {}
 
@@ -39,6 +40,7 @@ public class EidasProxyConfiguration {
                 tlsKeyPath,
                 environment,
                 localEidasDev,
-                useEidasProxyQsealcSignerHttpClient);
+                useEidasProxyQsealcSignerHttpClient,
+                eidasProxyQsealcSignerHttpClientRate);
     }
 }

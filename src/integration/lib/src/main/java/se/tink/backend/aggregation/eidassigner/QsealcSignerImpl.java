@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -52,6 +53,7 @@ public class QsealcSignerImpl
     private final se.tink.backend.tink_integration_eidas_proxy.client.EidasIdentity
             proxyEidasIdentity;
     private final boolean isUseEidasProxyQsealcSignerHttpClient;
+    private final double eidasProxyQsealcSignerHttpClientRate;
     private Span span;
     private Scope scope;
 
@@ -61,7 +63,8 @@ public class QsealcSignerImpl
             QsealcAlg alg,
             String host,
             EidasIdentity eidasIdentity,
-            boolean isUseEidasProxyQsealcSignerHttpClient) {
+            boolean isUseEidasProxyQsealcSignerHttpClient,
+            double eidasProxyQsealcSignerHttpClientRate) {
         this.qsealcSignerHttpClient = qsealcSignerHttpClient;
         this.eidasProxyFacade = eidasProxyFacade;
         this.alg = alg;
@@ -77,6 +80,7 @@ public class QsealcSignerImpl
                                 eidasIdentity.getRequester())
                         : null;
         this.isUseEidasProxyQsealcSignerHttpClient = isUseEidasProxyQsealcSignerHttpClient;
+        this.eidasProxyQsealcSignerHttpClientRate = eidasProxyQsealcSignerHttpClientRate;
     }
 
     private QsealcSignerImpl(
@@ -84,14 +88,16 @@ public class QsealcSignerImpl
             EidasProxyFacade eidasProxyFacade,
             String host,
             EidasIdentity eidasIdentity,
-            boolean isUseEidasProxyQsealcSignerHttpClient) {
+            boolean isUseEidasProxyQsealcSignerHttpClient,
+            double eidasProxyQsealcSignerHttpClientRate) {
         this(
                 qsealcSignerHttpClient,
                 eidasProxyFacade,
                 null,
                 host,
                 eidasIdentity,
-                isUseEidasProxyQsealcSignerHttpClient);
+                isUseEidasProxyQsealcSignerHttpClient,
+                eidasProxyQsealcSignerHttpClientRate);
     }
 
     /**
@@ -109,7 +115,8 @@ public class QsealcSignerImpl
                     alg,
                     conf.getHost(),
                     eidasIdentity,
-                    conf.isUseEidasProxyQsealcSignerHttpClient());
+                    conf.isUseEidasProxyQsealcSignerHttpClient(),
+                    getRateAsDouble(conf.getEidasProxyQsealcSignerHttpClientRate()));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -140,7 +147,8 @@ public class QsealcSignerImpl
                     EidasProxyFacadeImpl.build(configuration),
                     conf.getHost(),
                     eidasIdentity,
-                    conf.isUseEidasProxyQsealcSignerHttpClient());
+                    conf.isUseEidasProxyQsealcSignerHttpClient(),
+                    getRateAsDouble(conf.getEidasProxyQsealcSignerHttpClientRate()));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -148,9 +156,11 @@ public class QsealcSignerImpl
 
     private byte[] callSecretsServiceThroughEidasProxyClient(
             QsealcAlg algorithm, byte[] signingData) {
+        log.info("Calling callSecretsServiceThroughEidasProxyClient");
         se.tink.backend.tink_integration_eidas_proxy.client.QsealcAlg proxyAlgorithm =
                 se.tink.backend.tink_integration_eidas_proxy.client.QsealcAlg.valueOf(
                         algorithm.name());
+        log.info("Called callSecretsServiceThroughEidasProxyClient");
         return this.eidasProxyFacade.signData(signingData, proxyAlgorithm, proxyEidasIdentity);
     }
 
@@ -199,7 +209,7 @@ public class QsealcSignerImpl
 
     @Override
     public String getSignatureBase64(byte[] signingData) {
-        if (this.isUseEidasProxyQsealcSignerHttpClient) {
+        if (isFeatureFlagSetAndRateWithinRange()) {
             byte[] encodedData =
                     Base64.getEncoder()
                             .encode(
@@ -210,9 +220,15 @@ public class QsealcSignerImpl
         return new String(callSecretsService(this.alg, signingData), StandardCharsets.US_ASCII);
     }
 
+    private boolean isFeatureFlagSetAndRateWithinRange() {
+        double randomValue = ThreadLocalRandom.current().nextDouble(0.000_01, 1.0);
+        return this.isUseEidasProxyQsealcSignerHttpClient
+                && randomValue <= this.eidasProxyQsealcSignerHttpClientRate;
+    }
+
     @Override
     public String getJWSToken(byte[] jwsTokenData) {
-        if (this.isUseEidasProxyQsealcSignerHttpClient) {
+        if (isFeatureFlagSetAndRateWithinRange()) {
             return new String(callSecretsServiceThroughEidasProxyClient(this.alg, jwsTokenData));
         }
         return new String(Base64.getDecoder().decode(callSecretsService(this.alg, jwsTokenData)));
@@ -239,7 +255,7 @@ public class QsealcSignerImpl
      */
     @Override
     public byte[] getSignature(byte[] signingData) {
-        if (this.isUseEidasProxyQsealcSignerHttpClient) {
+        if (isFeatureFlagSetAndRateWithinRange()) {
             return callSecretsServiceThroughEidasProxyClient(this.alg, signingData);
         }
         return Base64.getDecoder().decode(callSecretsService(this.alg, signingData));
@@ -249,7 +265,7 @@ public class QsealcSignerImpl
     public Signature sign(QsealcAlgorithm algorithm, byte[] dataToSign) {
         QsealcAlg internalAlgorithm = convertQsealcAlgorithm(algorithm);
         byte[] signatureData;
-        if (isUseEidasProxyQsealcSignerHttpClient) {
+        if (isFeatureFlagSetAndRateWithinRange()) {
             signatureData =
                     callSecretsServiceThroughEidasProxyClient(internalAlgorithm, dataToSign);
         } else {
@@ -327,6 +343,15 @@ public class QsealcSignerImpl
         @Override
         public void put(String key, String value) {
             request.addHeader(key, value);
+        }
+    }
+
+    private static double getRateAsDouble(String rate) {
+        try {
+            return Double.parseDouble(rate);
+        } catch (NumberFormatException e) {
+            log.error("incorrect number format of rate {}", rate);
+            return 0.0;
         }
     }
 }

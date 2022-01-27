@@ -94,7 +94,8 @@ clients:
     aggregatorIdentifier: "BG refresh load test 11"
 
 eidasProxy:
-  useEidasProxyQsealcSignerHttpClient: false
+  useEidasProxyQsealcSignerHttpClient: true
+  eidasProxyQsealcSignerHttpClientRate: "1.0"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
