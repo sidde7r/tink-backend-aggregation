@@ -15,7 +15,6 @@ import se.tink.libraries.authentication_options.AuthenticationOptionDto;
 import se.tink.libraries.authentication_options.AuthenticationOptionField;
 import se.tink.libraries.authentication_options.AuthenticationOptionsGroupDto;
 import se.tink.libraries.authentication_options.Field;
-import se.tink.libraries.authentication_options.SupportedChannel;
 
 public class AuthenticationOptionsExtractorTest {
 
@@ -70,8 +69,6 @@ public class AuthenticationOptionsExtractorTest {
         assertThat(authenticationOptionDto.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
         assertThat(authenticationOptionDto.isOverallDefault()).isTrue();
-        assertThat(authenticationOptionDto.getDefaultForChannel())
-                .isEqualTo(SupportedChannel.MOBILE);
     }
 
     @Test
@@ -104,8 +101,6 @@ public class AuthenticationOptionsExtractorTest {
         AuthenticationOptionDto authenticationOptionDtoOther = authenticationOptionDtoList.get(0);
         assertThat(authenticationOptionDtoOther.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE.name());
-        assertThat(authenticationOptionDtoOther.getDefaultForChannel())
-                .isEqualTo(SupportedChannel.DESKTOP);
 
         Set<String> fieldsNames =
                 authenticationOptionDtoOther.getFields().stream()
@@ -119,42 +114,6 @@ public class AuthenticationOptionsExtractorTest {
         assertThat(authenticationOptionDtoSame.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
         assertThat(authenticationOptionDtoSame.isOverallDefault()).isTrue();
-        assertThat(authenticationOptionDtoSame.getDefaultForChannel())
-                .isEqualTo(SupportedChannel.MOBILE);
-    }
-
-    @Test
-    public void shouldThrowWhenAuthenticationOptionIsChannelDefaultForNonSupportedChannel() {
-        // given
-        Class<TestAgentWithAuthenticationOptionChannelDefaultForNonSupportedChannel> klass =
-                TestAgentWithAuthenticationOptionChannelDefaultForNonSupportedChannel.class;
-
-        // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> extractor.validateAuthenticationOptions(klass));
-
-        // then
-        assertThat(throwable).isInstanceOf(IllegalStateException.class);
-        assertThat(throwable.getMessage())
-                .isEqualTo(
-                        "Agent authentication.options.TestAgentWithAuthenticationOptionChannelDefaultForNonSupportedChannel has an authentication option set as default for channel DESKTOP but that is not among its supported channels [MOBILE]");
-    }
-
-    @Test
-    public void shouldThrowWhenMultipleChannelDefaultAuthenticationOptions() {
-        // given
-        Class<TestAgentWithMultipleChannelDefaultAuthenticationOptions> klass =
-                TestAgentWithMultipleChannelDefaultAuthenticationOptions.class;
-
-        // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> extractor.validateAuthenticationOptions(klass));
-
-        // then
-        assertThat(throwable).isInstanceOf(IllegalStateException.class);
-        assertThat(throwable.getMessage())
-                .isEqualTo(
-                        "Agent authentication.options.TestAgentWithMultipleChannelDefaultAuthenticationOptions has more than one authentication option which is the default for channel MOBILE");
     }
 
     @Test

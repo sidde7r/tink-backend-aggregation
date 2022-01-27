@@ -76,7 +76,6 @@ public class AuthenticationOptionsExtractor {
                                     .displayText(definition.getDisplayText())
                                     .helpText(definition.getHelpText())
                                     .overallDefault(authenticationOption.overallDefault())
-                                    .defaultForChannel(authenticationOption.defaultForChannel())
                                     .supportedChannels(definition.getSupportedChannels())
                                     .build());
         }
@@ -131,27 +130,6 @@ public class AuthenticationOptionsExtractor {
                                     agentName));
                 }
                 overallDefaultFound = true;
-            }
-
-            SupportedChannel defaultForChannel = authenticationOption.defaultForChannel();
-            if (defaultForChannel != SupportedChannel.NONE) {
-                if (defaultForChannelFound.getOrDefault(defaultForChannel, false)) {
-                    throw new IllegalStateException(
-                            String.format(
-                                    "Agent %s has more than one authentication option which is the default for channel %s",
-                                    agentName, defaultForChannel.name()));
-                } else if (!authenticationOption
-                        .definition()
-                        .getSupportedChannels()
-                        .contains(defaultForChannel)) {
-                    throw new IllegalStateException(
-                            String.format(
-                                    "Agent %s has an authentication option set as default for channel %s but that is not among its supported channels %s",
-                                    agentName,
-                                    defaultForChannel.name(),
-                                    authenticationOption.definition().getSupportedChannels()));
-                }
-                defaultForChannelFound.put(defaultForChannel, true);
             }
         }
     }
