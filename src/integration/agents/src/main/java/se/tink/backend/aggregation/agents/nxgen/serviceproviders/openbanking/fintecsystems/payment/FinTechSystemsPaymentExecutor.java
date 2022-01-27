@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
@@ -49,6 +50,7 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
     private final StrongAuthenticationState strongAuthenticationState;
     private final String redirectUrl;
     private final FinTecSystemsStorage storage;
+    private final PersistentLogin persistentAgent;
     SessionStatusRetryer sessionStatusRetryer = new SessionStatusRetryer();
 
     private static final long WAIT_FOR_MINUTES = 3L;
@@ -118,6 +120,13 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
         }
 
         storage.storeTransactionId(paymentResponse.getTransaction());
+
+        // The line below is supposed to make sure that persistent storage gets saved.
+        // Currently, we think that operation command for payment does not include, in any way,
+        // making sure that persistent storage gets saved.
+        // To make the FTS payment + pseudo acc check work, we need to make sure persistent storage
+        // is saved.
+        persistentAgent.persistLoginSession();
 
         return new PaymentMultiStepResponse(
                 paymentMultiStepRequest.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
