@@ -21,7 +21,7 @@ spec:
         description: <{{ .Values.kibanaClassLinkAbs4h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs4h }} |Grafana>
           TUBBIES_EXPERIMENTAL
-        summary: <{ $value | humanizePercentage }> bank-side or user error login error rate for <{ $labels.className }> over the last 4 hours.
+        summary: <{ $value | humanizePercentage }> user error login error rate for <{ $labels.className }> over the last 4 hours.
         tags: <{ $labels.className }>
 
     # for every hour within last 24 hours in which there was any traffic for a specific agent,
@@ -30,9 +30,9 @@ spec:
     - alert: BankUnavailabilityAbove50%DK
       expr: |
         avg_over_time(
-          (group by (className) (internal:sum:all_logins_by_outcome_action_dk:delta1h{outcome="unavailable"})
+          (1 + 0 * sum by (className) (internal:sum:all_logins_by_outcome_action_dk:delta1h{outcome="unavailable"})
            or
-           0 * group by (className) (internal:sum:all_logins_by_outcome_action_dk:delta1h)
+           0 * sum by (className) (internal:sum:all_logins_by_outcome_action_dk:delta1h)
         )[24h:1h])
       labels:
         priority: P2
