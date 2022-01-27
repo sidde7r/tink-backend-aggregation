@@ -307,7 +307,7 @@ public class SwedbankDecoupledAuthenticatorTest {
                         ReflectionTestUtils.invokeMethod(
                                 objectUnderTest,
                                 "handleBankIdError",
-                                GenericResponseTestData.INTERNET_BANK_AGREEMENT);
+                                GenericResponseTestData.MISSING_BANK_AGREEMENT);
 
         // then
         assertThatThrownBy(callable)

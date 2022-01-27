@@ -57,7 +57,6 @@ public class SwedbankConsentGenerator implements ConsentGenerator<String> {
     public List<String> withObligatoryScopes() {
         List<String> withObligatoryScopes = new ArrayList<>();
         withObligatoryScopes.add(SwedbankScope.PSD2.toString());
-        withObligatoryScopes.add(SwedbankScope.READ_ACCOUNT_LIST.toString());
         withObligatoryScopes.addAll(scopesSupplier.getStrings());
         return withObligatoryScopes;
     }

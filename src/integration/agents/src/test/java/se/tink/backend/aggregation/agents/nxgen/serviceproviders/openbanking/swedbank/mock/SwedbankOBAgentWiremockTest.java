@@ -180,7 +180,6 @@ public class SwedbankOBAgentWiremockTest {
     }
 
     @Test
-    @Ignore
     public void testRefreshAccountCheck() throws Exception {
 
         // given

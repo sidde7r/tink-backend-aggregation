@@ -4,7 +4,7 @@ Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"authenticationMethodId":"SMART_ID","clientID":"dummyClientId","psuData":{"personalID":"200012121213"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_list"}
+{"authenticationMethodId":"SMART_ID","clientID":"dummyClientId","psuData":{"personalID":"200012121213"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2"}
 
 RESPONSE 1
 200
@@ -76,7 +76,7 @@ Server: Layer7-API-Gateway
 {"access_token":"ACCESS_TOKEN", "token_type":"Bearer", "expires_in":599, "refresh_token":"REFRESH_TOKEN", "scope":"PSD2 PSD2account_list"}
 
 REQUEST 4
-POST https://psd2.api.swedbank.com/v4/consents?bic=HABALT22&app-id=dummyClientId
+POST https://psd2.api.swedbank.com/v3/consents?bic=HABALT22&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -94,11 +94,11 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 717
 
-{"consentId":"12345678-abcd-abcd-abcd-123456789123","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"scaMethods":[{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},{"authenticationMethodId":"SIMPLE_ID","authenticationType":"Biometric verification"}],"_links":{"status":{"href":"/v4/consents/12345678-abcd-abcd-abcd-123456789123/status"},"scaStatus":{"href":"/v4/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321"},"startAuthorisationWithAuthenticationMethodSelection":{"href":"/v4/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321"}},"consentStatus":"received"}
+{"consentId":"12345678-abcd-abcd-abcd-123456789123","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"scaMethods":[{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},{"authenticationMethodId":"SIMPLE_ID","authenticationType":"Biometric verification"}],"_links":{"status":{"href":"/v3/consents/12345678-abcd-abcd-abcd-123456789123/status"},"scaStatus":{"href":"/v3/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321"},"startAuthorisationWithAuthenticationMethodSelection":{"href":"/v3/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321"}},"consentStatus":"received"}
 
 
 REQUEST 5
-PUT https://psd2.api.swedbank.com/v4/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321?bic=HABALT22
+PUT https://psd2.api.swedbank.com/v3/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321?bic=HABALT22
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -117,10 +117,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 321
 
-{"scaStatus":"started","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"challengeData":{"code":"3722"},"_links":{"scaStatus":{"href":"/v4/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321"}},"psuMessage":"Account numbers to Tink AB"}
+{"scaStatus":"started","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"challengeData":{"code":"3722"},"_links":{"scaStatus":{"href":"/v3/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321"}},"psuMessage":"Account numbers to Tink AB"}
 
 REQUEST 6 MATCH AUTH_POLL_1
-GET https://psd2.api.swedbank.com/v4/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321?bic=HABALT22
+GET https://psd2.api.swedbank.com/v3/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321?bic=HABALT22
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -139,7 +139,7 @@ Content-Length: 23
 {"scaStatus":"started"}
 
 REQUEST 7 MATCH AUTH_POLL_2
-GET https://psd2.api.swedbank.com/v4/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321?bic=HABALT22
+GET https://psd2.api.swedbank.com/v3/consents/12345678-abcd-abcd-abcd-123456789123/authorisations/12345677-abcd-abcd-abcd-123456789321?bic=HABALT22
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -158,7 +158,7 @@ Content-Length: 25
 {"scaStatus":"finalised"}
 
 REQUEST 8 MATCH ACC_1
-GET https://psd2.api.swedbank.com/v4/accounts?bic=HABALT22&app-id=dummyClientId
+GET https://psd2.api.swedbank.com/v3/accounts?bic=HABALT22&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -177,7 +177,7 @@ Content-Length: 448
 {"accounts":[{"resourceId":"12341122333444466666655555aaaaaa","iban":"LT411234598765432109","cashAccountType":"CACC","currency":"XXX","product":"CURRENT"},{"resourceId":"12341122333444466666655555aaaabb","iban":"LT681234598765432108","cashAccountType":"CACC","currency":"EUR","product":"LIMIT_REVOLVING"}]}
 
 REQUEST 9
-POST https://psd2.api.swedbank.com/v4/consents?bic=HABALT22&app-id=dummyClientId
+POST https://psd2.api.swedbank.com/v3/consents?bic=HABALT22&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -198,10 +198,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 632
 
-{"consentId":"22222233-4444-4444-4444-223332255555","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"scaMethods":[{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"}],"_links":{"status":{"href":"/v4/consents/22222233-4444-4444-4444-223332255555/status"},"scaStatus":{"href":"/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566"},"startAuthorisationWithAuthenticationMethodSelection":{"href":"/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566"}},"consentStatus":"received"}
+{"consentId":"22222233-4444-4444-4444-223332255555","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"scaMethods":[{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"}],"_links":{"status":{"href":"/v3/consents/22222233-4444-4444-4444-223332255555/status"},"scaStatus":{"href":"/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566"},"startAuthorisationWithAuthenticationMethodSelection":{"href":"/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566"}},"consentStatus":"received"}
 
 REQUEST 10
-PUT https://psd2.api.swedbank.com/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566?bic=HABALT22
+PUT https://psd2.api.swedbank.com/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566?bic=HABALT22
  Accept: application/json
  PSU-IP-Address: 127.0.0.1
  PSU-User-Agent: Tink
@@ -220,10 +220,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 327
 
-{"scaStatus":"started","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"challengeData":{"code":"4884"},"_links":{"scaStatus":{"href":"/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566"}},"psuMessage":"Detailed info for 3 acc. Tink AB"}
+{"scaStatus":"started","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"challengeData":{"code":"4884"},"_links":{"scaStatus":{"href":"/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566"}},"psuMessage":"Detailed info for 3 acc. Tink AB"}
 
 REQUEST 11
-GET https://psd2.api.swedbank.com/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566?bic=HABALT22
+GET https://psd2.api.swedbank.com/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566?bic=HABALT22
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -242,7 +242,7 @@ Content-Length: 23
 {"scaStatus":"started"}
 
 REQUEST 12 MATCH CONS_POLL_1
-GET https://psd2.api.swedbank.com/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566?bic=HABALT22
+GET https://psd2.api.swedbank.com/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/022222233-4444-4444-4444-223332255566?bic=HABALT22
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -261,7 +261,7 @@ Content-Length: 25
 {"scaStatus":"finalised"}
 
 REQUEST 14
-GET https://psd2.api.swedbank.com/v4/accounts?bic=HABALT22&app-id=dummyClientId
+GET https://psd2.api.swedbank.com/v3/accounts?bic=HABALT22&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -277,10 +277,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 967
 
-{"accounts":[{"resourceId":"12341122333444466666655555aaaaaa","iban":"LT411234598765432109","cashAccountType":"CACC","currency":"XXX","product":"CURRENT","_links":{"balances":{"href":"/v4/accounts/12341122333444466666655555aaaaaa/balances"},"transactions":{"href":"/v4/accounts/12341122333444466666655555aaaaaa/transactions"}}},{"resourceId":"12341122333444466666655555aaaabb","iban":"LT681234598765432108","cashAccountType":"CACC","currency":"EUR","product":"LIMIT_REVOLVING","_links":{"balances":{"href":"/v4/accounts/12341122333444466666655555aaaabb/balances"},"transactions":{"href":"/v4/accounts/12341122333444466666655555aaaabb/transactions"}}}]}
+{"accounts":[{"resourceId":"12341122333444466666655555aaaaaa","iban":"LT411234598765432109","cashAccountType":"CACC","currency":"XXX","product":"CURRENT","_links":{"balances":{"href":"/v3/accounts/12341122333444466666655555aaaaaa/balances"},"transactions":{"href":"/v3/accounts/12341122333444466666655555aaaaaa/transactions"}}},{"resourceId":"12341122333444466666655555aaaabb","iban":"LT681234598765432108","cashAccountType":"CACC","currency":"EUR","product":"LIMIT_REVOLVING","_links":{"balances":{"href":"/v3/accounts/12341122333444466666655555aaaabb/balances"},"transactions":{"href":"/v3/accounts/12341122333444466666655555aaaabb/transactions"}}}]}
 
 REQUEST 15
-GET https://psd2.api.swedbank.com/v4/accounts/12341122333444466666655555aaaaaa/balances?bic=HABALT22
+GET https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaaaa/balances?bic=HABALT22
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -299,7 +299,7 @@ Content-Length: 284
 {"account":{"iban":"LT411234598765432109"},"balances":[{"balanceType":"authorised","balanceAmount":{"currency":"EUR","amount":"503.53"},"referenceDate":"1992-09-08"},{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"503.53"},"referenceDate":"1992-09-08"}]}
 
 REQUEST 16
-GET https://psd2.api.swedbank.com/v4/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALT22&dateFrom=1992-03-11&dateTo=1992-04-10&bookingStatus=both
+GET https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALT22&dateFrom=1992-03-11&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -318,7 +318,7 @@ Content-Length: 284
 {"account":{"iban":"LT681234598765432108","ownerName":"USER NAME"},"transactions":{"booked":[{"transactionId":"2021070512345678-1","creditorName":"USER NAME","creditorAccount":{"iban":"LT411234598765432109"},"transactionAmount":{"currency":"EUR","amount":"-330.10"},"bankTransactionCode":"PMNT","bookingDate":"1992-04-05","valueDate":"1992-04-05","remittanceInformationUnstructured":"Pervedimas tarp savo sąskaitų"},{"transactionId":"2021070512345678-1","debtorName":"USER NAME","debtorAccount":{"iban":"LT411234598765432109"},"transactionAmount":{"currency":"EUR","amount":"660.20"},"bankTransactionCode":"PMNT","bookingDate":"1992-04-05","valueDate":"1992-04-05","remittanceInformationUnstructured":"Pervedimas tarp savo sąskaitų"},{"transactionId":"2021080712345678-1","transactionAmount":{"currency":"EUR","amount":"-35.27"},"bankTransactionCode":"PMNT","bookingDate":"1992-08-07","valueDate":"1992-08-07","remittanceInformationUnstructured":"PIRKINYS 224444******4444 2021.07.08 4121.59 RSD Name Name 111.123456 (123456) GAGA MOTORS DOO 11000 BEOGRAD"}],"pending":[]}}
 
 REQUEST 17
-GET https://psd2.api.swedbank.com/v4/accounts/12341122333444466666655555aaaabb/balances?bic=HABALT22
+GET https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaabb/balances?bic=HABALT22
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -337,7 +337,7 @@ Content-Length: 284
 {"account":{"iban":"LT681234598765432108"},"balances":[{"balanceType":"authorised","balanceAmount":{"currency":"EUR","amount":"894.83"},"referenceDate":"1992-09-08"},{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"294.83"},"referenceDate":"1992-09-08"}]}
 
 REQUEST 18
-POST https://psd2.api.swedbank.com/v4/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALT22&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
+POST https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALT22&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -355,10 +355,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 3008
 
-{"statementStatus":"received","statementId":"22222255-4444-4444-4444-223332255577","psuMessage":"Authorise LT411234598765432109 account statement from 2019-08-08 to 1992-06-11","_links":{"status":{"href":"/v4/accounts/12341122333444466666655555aaaaaa/transactions/44445555-4444-4444-4444-ccbbbaaa4444/status"},"scaStatus":{"href":"/v4/accounts/12341122333444466666655555aaaaaa/transactions/44445555-4444-4444-4444-ccbbbaaa4444/authorisations/44445555-4444-4444-4444-333322555111"},"scaRedirect":{"href":"https://psd2.swedbank.lt/account/transactions/123456789987654321"}}}
+{"statementStatus":"received","statementId":"22222255-4444-4444-4444-223332255577","psuMessage":"Authorise LT411234598765432109 account statement from 2019-08-08 to 1992-06-11","_links":{"status":{"href":"/v3/accounts/12341122333444466666655555aaaaaa/transactions/44445555-4444-4444-4444-ccbbbaaa4444/status"},"scaStatus":{"href":"/v3/accounts/12341122333444466666655555aaaaaa/transactions/44445555-4444-4444-4444-ccbbbaaa4444/authorisations/44445555-4444-4444-4444-333322555111"},"scaRedirect":{"href":"https://psd2.swedbank.lt/account/transactions/123456789987654321"}}}
 
 REQUEST 19
-POST https://psd2.api.swedbank.com/v4/accounts/12341122333444466666655555aaaabb/transactions?bic=HABALT22&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
+POST https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaabb/transactions?bic=HABALT22&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -376,10 +376,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 3008
 
-{"statementStatus":"received","statementId":"22222255-4444-5555-4444-223332255333","psuMessage":"Authorise LT681234598765432108 account statement from 2019-08-08 to 1992-06-11","_links":{"status":{"href":"/v4/accounts/12341122333444466666655555aaaabb/transactions/22222255-4444-5555-4444-223332255333/status"},"scaStatus":{"href":"/v4/accounts/12341122333444466666655555aaaabb/transactions/22222255-4444-5555-4444-223332255333/authorisations/44445555-4444-4444-4444-ccbbbaaa4444"},"scaRedirect":{"href":"https://psd2.swedbank.lt/account/transactions/123456789987654320"}}}
+{"statementStatus":"received","statementId":"22222255-4444-5555-4444-223332255333","psuMessage":"Authorise LT681234598765432108 account statement from 2019-08-08 to 1992-06-11","_links":{"status":{"href":"/v3/accounts/12341122333444466666655555aaaabb/transactions/22222255-4444-5555-4444-223332255333/status"},"scaStatus":{"href":"/v3/accounts/12341122333444466666655555aaaabb/transactions/22222255-4444-5555-4444-223332255333/authorisations/44445555-4444-4444-4444-ccbbbaaa4444"},"scaRedirect":{"href":"https://psd2.swedbank.lt/account/transactions/123456789987654320"}}}
 
 REQUEST 20
-GET https://psd2.api.swedbank.com/v4/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALT22&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+GET https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaaaa/transactions?bic=HABALT22&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -398,7 +398,7 @@ Transfer-Encoding: chunked
 {"account":{"iban":"LT411234598765432109","ownerName":"Owner name"},"transactions":{"booked":[{"transactionId":"2021061112345687-1","endToEndId":"529B641A5937418697C42CC3CE225E7C","debtorName":"STATICUS UAB","debtorAccount":{"iban":"LT111223330003334444"},"transactionAmount":{"currency":"EUR","amount":"2139.00"},"bankTransactionCode":"PMNT","bookingDate":"1992-06-11","valueDate":"1992-06-11","remittanceInformationUnstructured":"DU-05"},{"transactionId":"2021061112345687-1","creditorName":"Owner name","creditorAccount":{"iban":"LT111223330003334445"},"transactionAmount":{"currency":"EUR","amount":"-1145.00"},"bankTransactionCode":"PMNT","bookingDate":"1992-06-11","valueDate":"1992-06-11","remittanceInformationUnstructured":"Sau"},{"transactionId":"202106111234568d-1","creditorName":"Owner name","creditorAccount":{"iban":"LT123456789123456780"},"transactionAmount":{"currency":"EUR","amount":"-500.00"},"bankTransactionCode":"PMNT","bookingDate":"1992-06-11","valueDate":"1992-06-11","remittanceInformationUnstructured":"Transfer between own accounts"},{"transactionId":"202106151234568-1","creditorName":"RIMAS LITVINAS","creditorAccount":{"iban":"LT111223330003334455"},"transactionAmount":{"currency":"EUR","amount":"-711.36"},"bankTransactionCode":"PMNT","bookingDate":"1992-06-15","valueDate":"1992-06-15","remittanceInformationUnstructured":"Konarskio 5-2 komunaliniai 2020-11--1992-01"},{"transactionId":"202106151234568-1","creditorName":"RIMAS LITVINAS","creditorAccount":{"iban":"LT111223330003334455"},"transactionAmount":{"currency":"EUR","amount":"-475.26"},"bankTransactionCode":"PMNT","bookingDate":"1992-06-15","valueDate":"1992-06-15","remittanceInformationUnstructured":"Konarskio 5-2 komunaliniai 1992-02--1992-04"},{"transactionId":"202109041234568-1","transactionAmount":{"currency":"EUR","amount":"-0.70"},"bankTransactionCode":"ACMT","bookingDate":"1992-09-04","valueDate":"1992-09-04","remittanceInformationUnstructured":"Paslaugų plano \"Patogu\" programos \"Auksinė paslauga\" dalyviams mokestis 2021.08"},{"transactionId":"202109051234568-1","endToEndId":"76307939","creditorId":"302458056","creditorName":"SWEDBANK LIFE INSURANCE SE LIETUVOS FILIALAS","creditorAccount":{"iban":"LT111223330003334466"},"transactionAmount":{"currency":"EUR","amount":"-30.00"},"ultimateDebtor":"Owner name","bankTransactionCode":"PMNT","bookingDate":"1992-09-05","valueDate":"1992-09-05","remittanceInformationUnstructured":"/RFB/123412341234/TXT/Name draudimo įmoka"},{"transactionId":"202109061234568-1","transactionAmount":{"currency":"EUR","amount":"-98.26"},"bankTransactionCode":"PMNT","bookingDate":"1992-09-06","valueDate":"1992-09-06","remittanceInformationUnstructured":"PIRKINYS 666666******4444 2021.09.05 98.26 EUR (654321) NAME programele        123123455     00000"},{"transactionId":"202109081234568-1","transactionAmount":{"currency":"EUR","amount":"-1880.00"},"bankTransactionCode":"XTND","bookingDate":"1992-09-08","valueDate":"1992-09-08","remittanceInformationUnstructured":"EE1234561234 +4000@.47 TALLINK GRUPP AS"},{"transactionId":"202109081234568-1","transactionAmount":{"currency":"EUR","amount":"-329.00"},"bankTransactionCode":"XTND","bookingDate":"1992-09-08","valueDate":"1992-09-08","remittanceInformationUnstructured":"EE1234561234 +700@.47 TALLINK GRUPP AS"},{"transactionId":"202109081234568-1","transactionAmount":{"currency":"EUR","amount":"-141.00"},"bankTransactionCode":"XTND","bookingDate":"1992-09-08","valueDate":"1992-09-08","remittanceInformationUnstructured":"EE1234561234 +300@.47 TALLINK GRUPP AS"}],"pending":[]}}
 
 REQUEST 21
-GET https://psd2.api.swedbank.com/v4/accounts/12341122333444466666655555aaaabb/transactions?bic=HABALT22&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+GET https://psd2.api.swedbank.com/v3/accounts/12341122333444466666655555aaaabb/transactions?bic=HABALT22&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink

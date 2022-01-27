@@ -4,7 +4,7 @@ Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"authenticationMethodId":"SMART_ID","clientID":"dummyClientId","psuData":{"personalID":"200012121212"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_list"}
+{"authenticationMethodId":"SMART_ID","clientID":"dummyClientId","psuData":{"personalID":"200012121212"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2"}
 
 RESPONSE 1
 200
@@ -88,7 +88,7 @@ Server: Layer7-API-Gateway
 {"access_token":"ACCESS_TOKEN", "token_type":"Bearer", "expires_in":599, "refresh_token":"REFRESH_TOKEN", "scope":"PSD2 PSD2account_list"}
 
 REQUEST 7
-POST https://psd2.api.swedbank.com/v4/consents?bic=HABAEE2X&app-id=dummyClientId
+POST https://psd2.api.swedbank.com/v3/consents?bic=HABAEE2X&app-id=dummyClientId
 Accept: application/json
 PSU-User-Agent: Tink
 TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
@@ -110,7 +110,7 @@ Content-Length: 50
 {"consentId":"consent_id","consentStatus":"valid"}
 
 REQUEST 8 MATCH CONSENT_1
-GET https://psd2.api.swedbank.com/v4/accounts?bic=HABAEE2X&app-id=dummyClientId
+GET https://psd2.api.swedbank.com/v3/accounts?bic=HABAEE2X&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -128,7 +128,7 @@ Content-Length: 296
 {"accounts":[{"resourceId":"20444455555333555558888888855555","iban":"EE032311123456789015","cashAccountType":"CACC","currency":"EUR","product":"CURRENT"},{"resourceId":"20444455555333555558888888855522","iban":"EE182311987654321015","cashAccountType":"CACC","currency":"EUR","product":"LIMIT"}]}
 
 REQUEST 9
-POST https://psd2.api.swedbank.com/v4/consents?bic=HABAEE2X&app-id=dummyClientId
+POST https://psd2.api.swedbank.com/v3/consents?bic=HABAEE2X&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -149,10 +149,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 632
 
-{"consentId":"22222233-4444-4444-4444-223332255555","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"scaMethods":[{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"}],"_links":{"status":{"href":"/v4/consents/22222233-4444-4444-4444-223332255555/status"},"scaStatus":{"href":"/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554"},"startAuthorisationWithAuthenticationMethodSelection":{"href":"/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554"}},"consentStatus":"received"}
+{"consentId":"22222233-4444-4444-4444-223332255555","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"scaMethods":[{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"}],"_links":{"status":{"href":"/v3/consents/22222233-4444-4444-4444-223332255555/status"},"scaStatus":{"href":"/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554"},"startAuthorisationWithAuthenticationMethodSelection":{"href":"/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554"}},"consentStatus":"received"}
 
 REQUEST 10 MATCH CONSENT_2
-PUT https://psd2.api.swedbank.com/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554?bic=HABAEE2X
+PUT https://psd2.api.swedbank.com/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554?bic=HABAEE2X
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -170,10 +170,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 327
 
-{"scaStatus":"started","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"challengeData":{"code":"9109"},"_links":{"scaStatus":{"href":"/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554"}},"psuMessage":"Detailed info for 2 acc. Tink AB"}
+{"scaStatus":"started","chosenScaMethod":{"authenticationMethodId":"SMART_ID","authenticationType":"Smart-ID"},"challengeData":{"code":"9109"},"_links":{"scaStatus":{"href":"/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554"}},"psuMessage":"Detailed info for 2 acc. Tink AB"}
 
 REQUEST 11
-GET https://psd2.api.swedbank.com/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554?bic=HABAEE2X
+GET https://psd2.api.swedbank.com/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554?bic=HABAEE2X
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -191,7 +191,7 @@ Content-Length: 23
 {"scaStatus":"started"}
 
 REQUEST 12 MATCH CONSENT_POLL_1
-GET https://psd2.api.swedbank.com/v4/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554?bic=HABAEE2X
+GET https://psd2.api.swedbank.com/v3/consents/22222233-4444-4444-4444-223332255555/authorisations/22222233-4444-4444-4444-223332255554?bic=HABAEE2X
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -209,7 +209,7 @@ Content-Length: 25
 {"scaStatus":"finalised"}
 
 REQUEST 14
-GET https://psd2.api.swedbank.com/v4/accounts?bic=HABAEE2X&app-id=dummyClientId
+GET https://psd2.api.swedbank.com/v3/accounts?bic=HABAEE2X&app-id=dummyClientId
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -224,10 +224,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 642
 
-{"accounts":[{"resourceId":"20444455555333555558888888855555","iban":"EE032311123456789015","cashAccountType":"CACC","currency":"EUR","product":"CURRENT","_links":{"balances":{"href":"/v4/accounts/20444455555333555558888888855555/balances"},"transactions":{"href":"/v4/accounts/20444455555333555558888888855555/transactions"}}},{"resourceId":"20444455555333555558888888855522","iban":"EE182311987654321015","cashAccountType":"CACC","currency":"EUR","product":"LIMIT","_links":{"balances":{"href":"/v4/accounts/20444455555333555558888888855522/balances"},"transactions":{"href":"/v4/accounts/20444455555333555558888888855522/transactions"}}}]}
+{"accounts":[{"resourceId":"20444455555333555558888888855555","iban":"EE032311123456789015","cashAccountType":"CACC","currency":"EUR","product":"CURRENT","_links":{"balances":{"href":"/v3/accounts/20444455555333555558888888855555/balances"},"transactions":{"href":"/v3/accounts/20444455555333555558888888855555/transactions"}}},{"resourceId":"20444455555333555558888888855522","iban":"EE182311987654321015","cashAccountType":"CACC","currency":"EUR","product":"LIMIT","_links":{"balances":{"href":"/v3/accounts/20444455555333555558888888855522/balances"},"transactions":{"href":"/v3/accounts/20444455555333555558888888855522/transactions"}}}]}
 
 REQUEST 15
-GET https://psd2.api.swedbank.com/v4/accounts/20444455555333555558888888855555/balances?bic=HABAEE2X
+GET https://psd2.api.swedbank.com/v3/accounts/20444455555333555558888888855555/balances?bic=HABAEE2X
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -245,7 +245,7 @@ Content-Length: 286
 {"account":{"iban":"EE032311123456789015"},"balances":[{"balanceType":"authorised","balanceAmount":{"currency":"EUR","amount":"3665.99"},"referenceDate":"2021-07-13"},{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"3676.89"},"referenceDate":"2021-07-13"}]}
 
 REQUEST 16
-GET https://psd2.api.swedbank.com/v4/accounts/20444455555333555558888888855555/transactions?bic=HABAEE2X&dateFrom=1992-03-11&dateTo=1992-04-10&bookingStatus=both
+GET https://psd2.api.swedbank.com/v3/accounts/20444455555333555558888888855555/transactions?bic=HABAEE2X&dateFrom=1992-03-11&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -262,7 +262,7 @@ Content-Length: 3050
 {"account":{"iban":"EE032311123456789015","ownerName":"Owner Name"},"transactions":{"booked":[{"transactionId":"2021042100264444-1","creditorName":"RAHANDUSMINISTEERIUM","creditorAccount":{"iban":"EE123345678912123456"},"transactionAmount":{"currency":"EUR","amount":"-245.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-04-21","valueDate":"2021-04-21","remittanceInformationUnstructured":"18522050 2021/SM/1170; 2021/SM/1170","remittanceInformationStructured":"77760005399814"},{"transactionId":"2021060101874444-1","transactionAmount":{"currency":"EUR","amount":"-8.66"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-01","valueDate":"2021-06-01","remittanceInformationUnstructured":"111222******4444 29.05.21  HIIU RIMI SM ISETEENIN 11612 TALLINN      "},{"transactionId":"2021060600024444-1","creditorName":"TRIOGAMES OÜ","creditorAccount":{"iban":"EE123345678912123465"},"transactionAmount":{"currency":"EUR","amount":"-500.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-06","valueDate":"2021-06-06","remittanceInformationUnstructured":"SEB Money Transfer","remittanceInformationStructured":"3507015490358959461"},{"transactionId":"2021060601424444-1","creditorName":"LAUR HALDMA","creditorAccount":{"iban":"EE123345678912123466"},"transactionAmount":{"currency":"EUR","amount":"-20.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-06","valueDate":"2021-06-06","remittanceInformationUnstructured":"Prangli notid"},{"transactionId":"2021060701534444-1","transactionAmount":{"currency":"EUR","amount":"-17.50"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-07","valueDate":"2021-06-07","remittanceInformationUnstructured":"111222******4444 04.06.21  V&V BALTICS            12618 TALLINN      "},{"transactionId":"2021060801054444-1","endToEndId":"NOTPROVIDED","debtorName":"TRIOGAMES OÜ","debtorAccount":{"iban":"EE123345678912123477"},"transactionAmount":{"currency":"EUR","amount":"3805.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-08","valueDate":"2021-06-08","remittanceInformationUnstructured":"Valjamakse Betsafe"},{"transactionId":"2021060801064444-1","endToEndId":"NOTPROVIDED","debtorName":"Name Name","debtorAccount":{"iban":"EE123345678912123488"},"transactionAmount":{"currency":"EUR","amount":"3200.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-08","valueDate":"2021-06-08","remittanceInformationUnstructured":"raha"},{"transactionId":"2021060801064444-1","creditorName":"Name Name","creditorAccount":{"iban":"EE182311987654321015"},"transactionAmount":{"currency":"EUR","amount":"-172.39"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-08","valueDate":"2021-06-08","remittanceInformationUnstructured":"Krediidi tagasimakse"},{"transactionId":"2021060802774444-1","creditorName":"TRIOGAMES OÜ","creditorAccount":{"iban":"EE123345678912123465"},"transactionAmount":{"currency":"EUR","amount":"-300.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-08","valueDate":"2021-06-08","remittanceInformationUnstructured":"SEB Money Transfer","remittanceInformationStructured":"2324138793696292473"},{"transactionId":"2021060900984444-1","endToEndId":"3645","debtorName":"Funderbeam Markets AS","debtorAccount":{"iban":"EE123345678912123499"},"transactionAmount":{"currency":"EUR","amount":"536.70"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-09","valueDate":"2021-06-09","remittanceInformationUnstructured":"Withdrawal"},{"transactionId":"2021062600064444-1","creditorName":"AS EESTI LIINIRONGID","creditorAccount":{"iban":"EE123345678912123412"},"transactionAmount":{"currency":"EUR","amount":"-10.63"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-26","valueDate":"2021-06-26","remittanceInformationUnstructured":"RD/EL; Ostukorv nr 12671754","remittanceInformationStructured":"126717549"},{"transactionId":"2021062600744444-1","transactionAmount":{"currency":"EUR","amount":"-2.50"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-26","valueDate":"2021-06-26","remittanceInformationUnstructured":"111222******4444 24.06.21  PUHAJARVE RANNAKOHVIK  67408 OTEPAA LINN  "},{"transactionId":"2021062600814444-1","transactionAmount":{"currency":"EUR","amount":"-10.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-26","valueDate":"2021-06-26","remittanceInformationUnstructured":"111222******4444 23.06.21  KAARIKU SPORDIKESKUS/H 67301 VALGAMAA"},{"transactionId":"2021062800264444-1","creditorName":"Name Name","creditorAccount":{"iban":"EE182311987654321015"},"transactionAmount":{"currency":"EUR","amount":"-171.98"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-28","valueDate":"2021-06-28","remittanceInformationUnstructured":"Krediidi tagasimakse"},{"transactionId":"2021071000034444-1","transactionAmount":{"currency":"EUR","amount":"-12.90"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-10","valueDate":"2021-07-10","remittanceInformationUnstructured":"Krediitkaardi 111222******3333 kuutasu"},{"transactionId":"2021071000584444-1","transactionAmount":{"currency":"EUR","amount":"-250.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-10","valueDate":"2021-07-10","remittanceInformationUnstructured":"K111222******4444 HAN00383 10.07.21 03:26 (567377)"},{"transactionId":"2021071102024444-1","transactionAmount":{"currency":"EUR","amount":"-250.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-11","valueDate":"2021-07-11","remittanceInformationUnstructured":"111222******4444 10.07.21  OLYMPIC TARTU             Tartu linn    00000"},{"transactionId":"2021071102494444-1","transactionAmount":{"currency":"EUR","amount":"-1.30"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-11","valueDate":"2021-07-11","remittanceInformationUnstructured":"111222******4444 09.07.21  CIRCLE K PEETRI        EE 75312 HARJUMAA     "},{"transactionId":"2021071300184444-1","creditorName":"TALLINN, KIVINUKA TN 8 KÜ","creditorAccount":{"iban":"EE123345678912123400"},"transactionAmount":{"currency":"EUR","amount":"-99.99"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-13","valueDate":"2021-07-13","remittanceInformationUnstructured":"Arve nr 1223","remittanceInformationStructured":"11080051"}],"pending":[{"transactionAmount":{"currency":"EUR","amount":"10.9"},"valueDate":"2021-07-12","remittanceInformationUnstructured":"OST 111222******4444 12.07.21 11:57 10.90 EUR (613900) GELATO ITALIANO ROCCA TALLINN ESTEE"}]}}
 
 REQUEST 17
-GET https://psd2.api.swedbank.com/v4/accounts/20444455555333555558888888855522/balances?bic=HABAEE2X
+GET https://psd2.api.swedbank.com/v3/accounts/20444455555333555558888888855522/balances?bic=HABAEE2X
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -283,7 +283,7 @@ Content-Length: 285
 {"account":{"iban":"EE182311987654321015"},"balances":[{"balanceType":"authorised","balanceAmount":{"currency":"EUR","amount":"1744.56"},"referenceDate":"2021-07-13"},{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"395.81"},"referenceDate":"2021-07-13"}]}
 
 REQUEST 18
-POST https://psd2.api.swedbank.com/v4/accounts/20444455555333555558888888855555/transactions?bic=HABAEE2X&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
+POST https://psd2.api.swedbank.com/v3/accounts/20444455555333555558888888855555/transactions?bic=HABAEE2X&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -300,10 +300,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 3050
 
-{"statementStatus":"received","statementId":"22222255-4444-4444-4444-223332255558","psuMessage":"Authorise EE032311123456789015 account statement from 2019-06-13 to 2021-04-15","_links":{"status":{"href":"/v4/accounts/20444455555333555558888888855555/transactions/22222255-4444-4444-4444-223332255558/status"},"scaStatus":{"href":"/v4/accounts/20444455555333555558888888855555/transactions/22222255-4444-4444-4444-223332255558/authorisations/dba9c680-257a-4f16-9429-ed1ffd376f9e"},"scaRedirect":{"href":"https://psd2.swedbank.ee/account/transactions/123456789987654321"}}}
+{"statementStatus":"received","statementId":"22222255-4444-4444-4444-223332255558","psuMessage":"Authorise EE032311123456789015 account statement from 2019-06-13 to 2021-04-15","_links":{"status":{"href":"/v3/accounts/20444455555333555558888888855555/transactions/22222255-4444-4444-4444-223332255558/status"},"scaStatus":{"href":"/v3/accounts/20444455555333555558888888855555/transactions/22222255-4444-4444-4444-223332255558/authorisations/dba9c680-257a-4f16-9429-ed1ffd376f9e"},"scaRedirect":{"href":"https://psd2.swedbank.ee/account/transactions/123456789987654321"}}}
 
 REQUEST 19
-POST https://psd2.api.swedbank.com/v4/accounts/20444455555333555558888888855522/transactions?bic=HABAEE2X&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
+POST https://psd2.api.swedbank.com/v3/accounts/20444455555333555558888888855522/transactions?bic=HABAEE2X&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=booked
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -320,10 +320,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 572
 
-{"statementStatus":"received","statementId":"22222255-4444-5555-4444-223332255558","psuMessage":"Authorise EE182311987654321015 account statement from 2019-06-13 to 2021-04-15","_links":{"status":{"href":"/v4/accounts/20444455555333555558888888855522/transactions/22222255-4444-5555-4444-223332255558/status"},"scaStatus":{"href":"/v4/accounts/20444455555333555558888888855522/transactions/22222255-4444-5555-4444-223332255558/authorisations/61a78dba-adbd-445a-bf9d-06a524a51f79"},"scaRedirect":{"href":"https://psd2.swedbank.ee/account/transactions/123456789987654322"}}}
+{"statementStatus":"received","statementId":"22222255-4444-5555-4444-223332255558","psuMessage":"Authorise EE182311987654321015 account statement from 2019-06-13 to 2021-04-15","_links":{"status":{"href":"/v3/accounts/20444455555333555558888888855522/transactions/22222255-4444-5555-4444-223332255558/status"},"scaStatus":{"href":"/v3/accounts/20444455555333555558888888855522/transactions/22222255-4444-5555-4444-223332255558/authorisations/61a78dba-adbd-445a-bf9d-06a524a51f79"},"scaRedirect":{"href":"https://psd2.swedbank.ee/account/transactions/123456789987654322"}}}
 
 REQUEST 20
-GET https://psd2.api.swedbank.com/v4/accounts/20444455555333555558888888855555/transactions?bic=HABAEE2X&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+GET https://psd2.api.swedbank.com/v3/accounts/20444455555333555558888888855555/transactions?bic=HABAEE2X&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink
@@ -341,7 +341,7 @@ Transfer-Encoding: chunked
 {"account":{"iban":"EE032311123456789015","ownerName":"Owner Name"},"transactions":{"booked":[{"transactionId":"2021042100264444-1","creditorName":"RAHANDUSMINISTEERIUM","creditorAccount":{"iban":"EE123345678912123456"},"transactionAmount":{"currency":"EUR","amount":"-245.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-04-21","valueDate":"2021-04-21","remittanceInformationUnstructured":"18522050 2021/SM/1170; 2021/SM/1170","remittanceInformationStructured":"77760005399814"},{"transactionId":"2021060101874444-1","transactionAmount":{"currency":"EUR","amount":"-8.66"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-01","valueDate":"2021-06-01","remittanceInformationUnstructured":"111222******4444 29.05.21  HIIU RIMI SM ISETEENIN 11612 TALLINN      "},{"transactionId":"2021060600024444-1","creditorName":"TRIOGAMES OÜ","creditorAccount":{"iban":"EE123345678912123465"},"transactionAmount":{"currency":"EUR","amount":"-500.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-06","valueDate":"2021-06-06","remittanceInformationUnstructured":"SEB Money Transfer","remittanceInformationStructured":"3507015490358959461"},{"transactionId":"2021060601424444-1","creditorName":"LAUR HALDMA","creditorAccount":{"iban":"EE123345678912123466"},"transactionAmount":{"currency":"EUR","amount":"-20.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-06","valueDate":"2021-06-06","remittanceInformationUnstructured":"Prangli notid"},{"transactionId":"2021060701534444-1","transactionAmount":{"currency":"EUR","amount":"-17.50"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-07","valueDate":"2021-06-07","remittanceInformationUnstructured":"111222******4444 04.06.21  V&V BALTICS            12618 TALLINN      "},{"transactionId":"2021060801054444-1","endToEndId":"NOTPROVIDED","debtorName":"TRIOGAMES OÜ","debtorAccount":{"iban":"EE123345678912123477"},"transactionAmount":{"currency":"EUR","amount":"3805.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-08","valueDate":"2021-06-08","remittanceInformationUnstructured":"Valjamakse Betsafe"},{"transactionId":"2021060801064444-1","endToEndId":"NOTPROVIDED","debtorName":"Name Name","debtorAccount":{"iban":"EE123345678912123488"},"transactionAmount":{"currency":"EUR","amount":"3200.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-08","valueDate":"2021-06-08","remittanceInformationUnstructured":"raha"},{"transactionId":"2021060801064444-1","creditorName":"Name Name","creditorAccount":{"iban":"EE182311987654321015"},"transactionAmount":{"currency":"EUR","amount":"-172.39"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-08","valueDate":"2021-06-08","remittanceInformationUnstructured":"Krediidi tagasimakse"},{"transactionId":"2021060802774444-1","creditorName":"TRIOGAMES OÜ","creditorAccount":{"iban":"EE123345678912123465"},"transactionAmount":{"currency":"EUR","amount":"-300.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-08","valueDate":"2021-06-08","remittanceInformationUnstructured":"SEB Money Transfer","remittanceInformationStructured":"2324138793696292473"},{"transactionId":"2021060900984444-1","endToEndId":"3645","debtorName":"Funderbeam Markets AS","debtorAccount":{"iban":"EE123345678912123499"},"transactionAmount":{"currency":"EUR","amount":"536.70"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-09","valueDate":"2021-06-09","remittanceInformationUnstructured":"Withdrawal"},{"transactionId":"2021062600064444-1","creditorName":"AS EESTI LIINIRONGID","creditorAccount":{"iban":"EE123345678912123412"},"transactionAmount":{"currency":"EUR","amount":"-10.63"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-26","valueDate":"2021-06-26","remittanceInformationUnstructured":"RD/EL; Ostukorv nr 12671754","remittanceInformationStructured":"126717549"},{"transactionId":"2021062600744444-1","transactionAmount":{"currency":"EUR","amount":"-2.50"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-26","valueDate":"2021-06-26","remittanceInformationUnstructured":"111222******4444 24.06.21  PUHAJARVE RANNAKOHVIK  67408 OTEPAA LINN  "},{"transactionId":"2021062600814444-1","transactionAmount":{"currency":"EUR","amount":"-10.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-26","valueDate":"2021-06-26","remittanceInformationUnstructured":"111222******4444 23.06.21  KAARIKU SPORDIKESKUS/H 67301 VALGAMAA"},{"transactionId":"2021062800264444-1","creditorName":"Name Name","creditorAccount":{"iban":"EE182311987654321015"},"transactionAmount":{"currency":"EUR","amount":"-171.98"},"bankTransactionCode":"PMNT","bookingDate":"2021-06-28","valueDate":"2021-06-28","remittanceInformationUnstructured":"Krediidi tagasimakse"},{"transactionId":"2021071000034444-1","transactionAmount":{"currency":"EUR","amount":"-12.90"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-10","valueDate":"2021-07-10","remittanceInformationUnstructured":"Krediitkaardi 111222******3333 kuutasu"},{"transactionId":"2021071000584444-1","transactionAmount":{"currency":"EUR","amount":"-250.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-10","valueDate":"2021-07-10","remittanceInformationUnstructured":"K111222******4444 HAN00383 10.07.21 03:26 (567377)"},{"transactionId":"2021071102024444-1","transactionAmount":{"currency":"EUR","amount":"-250.00"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-11","valueDate":"2021-07-11","remittanceInformationUnstructured":"111222******4444 10.07.21  OLYMPIC TARTU             Tartu linn    00000"},{"transactionId":"2021071102494444-1","transactionAmount":{"currency":"EUR","amount":"-1.30"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-11","valueDate":"2021-07-11","remittanceInformationUnstructured":"111222******4444 09.07.21  CIRCLE K PEETRI        EE 75312 HARJUMAA     "},{"transactionId":"2021071300184444-1","creditorName":"TALLINN, KIVINUKA TN 8 KÜ","creditorAccount":{"iban":"EE123345678912123400"},"transactionAmount":{"currency":"EUR","amount":"-99.99"},"bankTransactionCode":"PMNT","bookingDate":"2021-07-13","valueDate":"2021-07-13","remittanceInformationUnstructured":"Arve nr 1223","remittanceInformationStructured":"11080051"}],"pending":[{"transactionAmount":{"currency":"EUR","amount":"10.9"},"valueDate":"2021-07-12","remittanceInformationUnstructured":"OST 111222******4444 12.07.21 11:57 10.90 EUR (613900) GELATO ITALIANO ROCCA TALLINN ESTEE"}]}}
 
 REQUEST 21
-GET https://psd2.api.swedbank.com/v4/accounts/20444455555333555558888888855522/transactions?bic=HABAEE2X&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+GET https://psd2.api.swedbank.com/v3/accounts/20444455555333555558888888855522/transactions?bic=HABAEE2X&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 PSU-IP-Address: 127.0.0.1
 PSU-User-Agent: Tink

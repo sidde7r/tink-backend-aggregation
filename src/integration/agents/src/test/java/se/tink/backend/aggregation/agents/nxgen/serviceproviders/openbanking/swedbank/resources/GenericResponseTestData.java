@@ -20,13 +20,13 @@ public class GenericResponseTestData {
                             + "}",
                     GenericResponse.class);
 
-    public static final GenericResponse INTERNET_BANK_AGREEMENT =
+    public static final GenericResponse MISSING_BANK_AGREEMENT =
             SerializationUtils.deserializeFromString(
                     "{\n"
                             + "  \"tppMessages\": [\n"
                             + "    {\n"
                             + "      \"category\": \"ERROR\",\n"
-                            + "      \"code\": \"INTERNET_BANK_AGREEMENT\",\n"
+                            + "      \"code\": \"MISSING_BANK_AGREEMENT\",\n"
                             + "      \"text\": \"Missing bank agreement error message\"\n"
                             + "    }\n"
                             + "  ]\n"

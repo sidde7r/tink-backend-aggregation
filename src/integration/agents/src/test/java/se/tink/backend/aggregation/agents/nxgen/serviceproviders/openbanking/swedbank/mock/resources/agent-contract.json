@@ -5,18 +5,11 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "exactValue" : 5675.6,
-            "doubleValue" : 5675.6,
+            "scale" : 2,
             "unscaledValue" : 567560,
-            "scale" : 2
+            "doubleValue" : 5675.6
         },
         "currencyCode" : "SEK",
-        "availableBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 5675.6,
-            "doubleValue" : 5675.6,
-            "unscaledValue" : 567560,
-            "scale" : 2
-        },
         "bankId" : "815059231235734",
         "excluded" : false,
         "favored" : false,
@@ -38,86 +31,5 @@
         "availableCredit" : 0.0,
         "balance" : 5675.6
     } ],
-    "transactions" : [ {
-        "amount" : -3000.0,
-        "date" : 1641985200000,
-        "description" : "832797341381171",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : "2022-01-12",
-                "instant" : null
-            }
-        }, {
-            "type" : "BOOKING_DATE",
-            "value" : {
-                "date" : "2022-01-13",
-                "instant" : null
-            }
-        } ],
-        "providerMarket" : "SE",
-        "booked" : true
-    }, {
-        "amount" : -100.0,
-        "date" : 1640862000000,
-        "description" : "BILLOGRAM AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : "2021-12-30",
-                "instant" : null
-            }
-        }, {
-            "type" : "BOOKING_DATE",
-            "value" : {
-                "date" : "2021-12-30",
-                "instant" : null
-            }
-        } ],
-        "providerMarket" : "SE",
-        "booked" : true
-    }, {
-        "amount" : -5000.0,
-        "date" : 1640430000000,
-        "description" : "ISK spar",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ {
-            "type" : "VALUE_DATE",
-            "value" : {
-                "date" : "2021-12-25",
-                "instant" : null
-            }
-        }, {
-            "type" : "BOOKING_DATE",
-            "value" : {
-                "date" : "2021-12-27",
-                "instant" : null
-            }
-        } ],
-        "providerMarket" : "SE",
-        "booked" : true
-    } ]
+    "transactions" : [ ]
 }

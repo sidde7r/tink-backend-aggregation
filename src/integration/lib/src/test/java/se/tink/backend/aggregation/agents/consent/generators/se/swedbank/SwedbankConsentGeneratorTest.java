@@ -67,7 +67,6 @@ public class SwedbankConsentGeneratorTest {
     public static Set<SwedbankScope> getSwedbankScopes() {
         return Sets.newHashSet(
                 SwedbankScope.PSD2,
-                SwedbankScope.READ_ACCOUNT_LIST,
                 SwedbankScope.READ_ACCOUNTS_BALANCES,
                 SwedbankScope.READ_TRANSACTIONS_HISTORY,
                 SwedbankScope.READ_TRANSACTIONS_HISTORY_OVER90);
@@ -76,7 +75,6 @@ public class SwedbankConsentGeneratorTest {
     private Set<String> getAccountsScopes() {
         LinkedHashSet<String> set = new LinkedHashSet<>();
         set.add(SwedbankScope.PSD2.toString());
-        set.add(SwedbankScope.READ_ACCOUNT_LIST.toString());
         set.add(SwedbankScope.READ_ACCOUNTS_BALANCES.toString());
         return set;
     }
@@ -84,7 +82,6 @@ public class SwedbankConsentGeneratorTest {
     private Set<String> getAllScopes() {
         LinkedHashSet<String> set = new LinkedHashSet<>();
         set.add(SwedbankScope.PSD2.toString());
-        set.add(SwedbankScope.READ_ACCOUNT_LIST.toString());
         set.add(SwedbankScope.READ_ACCOUNTS_BALANCES.toString());
         set.add(SwedbankScope.READ_TRANSACTIONS_HISTORY.toString());
         set.add(SwedbankScope.READ_TRANSACTIONS_HISTORY_OVER90.toString());
