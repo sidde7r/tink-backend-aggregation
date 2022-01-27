@@ -38,9 +38,9 @@ public class SupplementaryAccountsItem {
         return status;
     }
 
-    public CreditCardAccount toCreditCardAccount(Map<Integer, String> statementMap) {
-        final ExactCurrencyAmount balance =
-                new ExactCurrencyAmount(BigDecimal.ZERO, holder.getCurrencyCode());
+    public CreditCardAccount toCreditCardAccount(
+            Map<Integer, String> statementMap, String currencyCode) {
+        final ExactCurrencyAmount balance = new ExactCurrencyAmount(BigDecimal.ZERO, currencyCode);
         final String uniqueId =
                 AmericanExpressUtils.formatAccountId(identifiers.getDisplayAccountNumber());
         final String pan = identifiers.getDisplayAccountNumber();

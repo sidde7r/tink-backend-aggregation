@@ -32,7 +32,7 @@ public class AccountsResponseDto {
     private List<SupplementaryAccountsItem> supplementaryAccounts;
 
     public CreditCardAccount toCreditCardAccount(
-            List<BalanceDto> balances, StatementPeriodsDto statementPeriods) {
+            List<BalanceDto> balances, StatementPeriodsDto statementPeriods, String currencyCode) {
         if (Strings.isNullOrEmpty(identifiers.getAccountKey())) {
             log.warn("Account Key missing!");
         }
@@ -42,16 +42,12 @@ public class AccountsResponseDto {
                 AmericanExpressUtils.formatAccountId(identifiers.getDisplayAccountNumber());
         final String cardName =
                 product.getDigitalInfo().getProductDesc() + " - " + uniqueId.substring(4);
-        final String currencyCode =
-                balances.stream()
-                        .findFirst()
-                        .map(BalanceDto::getIsoAlphaCurrencyCode)
-                        .orElse(holder.getCurrencyCode());
+
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(pan)
-                                .withBalance(getBalance(balances))
+                                .withBalance(getBalance(balances, currencyCode))
                                 .withAvailableCredit(
                                         new ExactCurrencyAmount(new BigDecimal(0), currencyCode))
                                 .withCardAlias(cardName)
@@ -72,17 +68,25 @@ public class AccountsResponseDto {
                 .build();
     }
 
-    public List<CreditCardAccount> toSubCreditCardAccount(StatementPeriodsDto statementPeriods) {
+    public List<CreditCardAccount> toSubCreditCardAccount(
+            StatementPeriodsDto statementPeriods, List<BalanceDto> balanceDtos) {
+
+        String currencyCode =
+                balanceDtos.stream()
+                        .findFirst()
+                        .map(BalanceDto::getIsoAlphaCurrencyCode)
+                        .orElse(holder.getCurrencyCode());
+
         return supplementaryAccounts.stream()
                 .filter(Objects::nonNull)
-                .map(t -> t.toCreditCardAccount(getStatementMap(statementPeriods)))
+                .map(t -> t.toCreditCardAccount(getStatementMap(statementPeriods), currencyCode))
                 .collect(Collectors.toList());
     }
 
-    private ExactCurrencyAmount getBalance(List<BalanceDto> balances) {
+    private ExactCurrencyAmount getBalance(List<BalanceDto> balances, String currencyCode) {
         if (!identifiers.isBasic()) {
             // supplementary card has no balance
-            return new ExactCurrencyAmount(new BigDecimal(0), holder.getCurrencyCode());
+            return new ExactCurrencyAmount(new BigDecimal(0), currencyCode);
         }
 
         return balances.stream()
