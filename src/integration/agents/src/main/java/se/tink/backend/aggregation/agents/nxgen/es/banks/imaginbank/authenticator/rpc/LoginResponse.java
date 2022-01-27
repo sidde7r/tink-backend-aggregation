@@ -33,4 +33,8 @@ public class LoginResponse {
     public LocalDate getFormattedDateOfBirth() {
         return LocalDate.parse(dateOfBirth(), DATE_FORMATTER);
     }
+
+    public ImaginLoginResponse getImaginLoginResponse() {
+        return imaginLoginResponse;
+    }
 }

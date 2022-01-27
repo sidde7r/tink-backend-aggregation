@@ -14,13 +14,13 @@ public class SessionRequest {
     private boolean deferredPushAutAdapted;
     private String operatingSystem;
 
-    public SessionRequest() {
+    public SessionRequest(String appInstallationId) {
         this.origin = ImaginBankConstants.DefaultRequestParams.ORIGIN;
         this.channel = ImaginBankConstants.DefaultRequestParams.CHANNEL;
         this.deferredPushAutAdapted =
                 ImaginBankConstants.DefaultRequestParams.DEFERRED_PUSH_AUT_ADAPTER;
-        this.instalationId = DefaultRequestParams.INSTALATION_ID;
-        this.language = ImaginBankConstants.DefaultRequestParams.LANGUAGE_EN;
+        this.instalationId = appInstallationId;
+        this.language = ImaginBankConstants.DefaultRequestParams.LANGUAGE_ES;
         this.operatingSystem = DefaultRequestParams.OPERATING_SYSTEM;
         this.virtualKeyboard = ImaginBankConstants.DefaultRequestParams.VIRTUAL_KEYBOARD;
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.ErrorCode;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
@@ -20,6 +21,11 @@ public class ImaginBankErrorResponse {
     public boolean isAccountBlocked() {
         return ImaginBankConstants.ErrorCode.ACCOUNT_BLOCKED.contains(
                 Strings.nullToEmpty(code).trim());
+    }
+
+    @JsonIgnore
+    public boolean isAccessBanned() {
+        return ErrorCode.ACCESS_BANNED.contains(Strings.nullToEmpty(code).trim());
     }
 
     @JsonIgnore

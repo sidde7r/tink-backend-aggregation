@@ -12,11 +12,18 @@ public class ImaginLoginResponse {
     @JsonProperty("fechaNacimiento")
     private String dateOfBirth;
 
+    @JsonProperty("flagEnrolamientoDispositivo")
+    private String enrollmentIndicator;
+
     public String getName() {
         return name;
     }
 
     public String getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public String getEnrollmentIndicator() {
+        return enrollmentIndicator;
     }
 }
