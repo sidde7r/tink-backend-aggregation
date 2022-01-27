@@ -12,7 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 import se.tink.libraries.authentication_options.AuthenticationOptionDto;
-import se.tink.libraries.authentication_options.SupportedChannel;
+import se.tink.libraries.authentication_options.AuthenticationOptionField;
+import se.tink.libraries.authentication_options.AuthenticationOptionsGroupDto;
+import se.tink.libraries.authentication_options.Field;
 
 public class AuthenticationOptionsExtractorTest {
 
@@ -31,7 +33,7 @@ public class AuthenticationOptionsExtractorTest {
 
         // when
         extractor.validateAuthenticationOptions(klass);
-        Set<AuthenticationOptionDto> AuthenticationOptionDto =
+        Set<AuthenticationOptionsGroupDto> AuthenticationOptionDto =
                 extractor.readAuthenticationOptions(klass);
 
         // then
@@ -46,20 +48,27 @@ public class AuthenticationOptionsExtractorTest {
 
         // when
         extractor.validateAuthenticationOptions(klass);
-        Set<AuthenticationOptionDto> AuthenticationOptionDtoSet =
+        Set<AuthenticationOptionsGroupDto> authenticationOptionsGroupsDtoSet =
                 extractor.readAuthenticationOptions(klass);
 
         // then
-        assertThat(AuthenticationOptionDtoSet.size()).isEqualTo(1);
+        // one authentication options group found
+        assertThat(authenticationOptionsGroupsDtoSet.size()).isEqualTo(1);
 
-        List<AuthenticationOptionDto> AuthenticationOptionDtoList =
-                new ArrayList<>(AuthenticationOptionDtoSet);
-        AuthenticationOptionDto AuthenticationOptionDto = AuthenticationOptionDtoList.get(0);
-        assertThat(AuthenticationOptionDto.getName())
+        // one authentication option found in that group
+        List<AuthenticationOptionsGroupDto> AuthenticationOptionsGroupDtoList =
+                new ArrayList<>(authenticationOptionsGroupsDtoSet);
+        AuthenticationOptionsGroupDto authenticationOptionsGroupDto =
+                AuthenticationOptionsGroupDtoList.get(0);
+        assertThat(authenticationOptionsGroupDto.getAuthenticationOptions().size()).isEqualTo(1);
+
+        // assertions on that authentication option found, verifying it is the one we expect
+        ArrayList<AuthenticationOptionDto> authenticationOptionDtoList =
+                new ArrayList<>(authenticationOptionsGroupDto.getAuthenticationOptions());
+        AuthenticationOptionDto authenticationOptionDto = authenticationOptionDtoList.get(0);
+        assertThat(authenticationOptionDto.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
-        assertThat(AuthenticationOptionDto.isOverallDefault()).isTrue();
-        assertThat(AuthenticationOptionDto.getDefaultForChannel())
-                .isEqualTo(SupportedChannel.MOBILE);
+        assertThat(authenticationOptionDto.isOverallDefault()).isTrue();
     }
 
     @Test
@@ -70,63 +79,41 @@ public class AuthenticationOptionsExtractorTest {
         extractor.validateAuthenticationOptions(klass);
 
         // when
-        Set<AuthenticationOptionDto> AuthenticationOptionDtoSet =
+        Set<AuthenticationOptionsGroupDto> authenticationOptionsGroupsDtoSet =
                 extractor.readAuthenticationOptions(klass);
 
         // then
-        assertThat(AuthenticationOptionDtoSet.size()).isEqualTo(2);
+        // one authentication options group found
+        assertThat(authenticationOptionsGroupsDtoSet.size()).isEqualTo(1);
 
-        List<AuthenticationOptionDto> AuthenticationOptionDtoList =
-                AuthenticationOptionDtoSet.stream()
+        // two authentication options found in that group
+        ArrayList<AuthenticationOptionsGroupDto> authenticationOptionsGroupDtos =
+                new ArrayList<>(authenticationOptionsGroupsDtoSet);
+        AuthenticationOptionsGroupDto authenticationOptionsGroupDtoList =
+                authenticationOptionsGroupDtos.get(0);
+        List<AuthenticationOptionDto> authenticationOptionDtoList =
+                authenticationOptionsGroupDtoList.getAuthenticationOptions().stream()
                         .sorted(Comparator.comparing(AuthenticationOptionDto::getName))
                         .collect(Collectors.toList());
+        assertThat(authenticationOptionDtoList.size()).isEqualTo(2);
 
-        AuthenticationOptionDto AuthenticationOptionDtoOther = AuthenticationOptionDtoList.get(0);
-        assertThat(AuthenticationOptionDtoOther.getName())
+        // assertions on the first of authentication options, including verification of fields
+        AuthenticationOptionDto authenticationOptionDtoOther = authenticationOptionDtoList.get(0);
+        assertThat(authenticationOptionDtoOther.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE.name());
-        assertThat(AuthenticationOptionDtoOther.getDefaultForChannel())
-                .isEqualTo(SupportedChannel.DESKTOP);
 
-        AuthenticationOptionDto AuthenticationOptionDtoSame = AuthenticationOptionDtoList.get(1);
-        assertThat(AuthenticationOptionDtoSame.getName())
+        Set<String> fieldsNames =
+                authenticationOptionDtoOther.getFields().stream()
+                        .map(Field::getName)
+                        .collect(Collectors.toSet());
+        assertThat(fieldsNames)
+                .contains(AuthenticationOptionField.SE_SOCIAL_SECURITY_NUMBER.getField().getName());
+
+        // assertions on the second authentication option
+        AuthenticationOptionDto authenticationOptionDtoSame = authenticationOptionDtoList.get(1);
+        assertThat(authenticationOptionDtoSame.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
-        assertThat(AuthenticationOptionDtoSame.isOverallDefault()).isTrue();
-        assertThat(AuthenticationOptionDtoSame.getDefaultForChannel())
-                .isEqualTo(SupportedChannel.MOBILE);
-    }
-
-    @Test
-    public void shouldThrowWhenAuthenticationOptionIsChannelDefaultForNonSupportedChannel() {
-        // given
-        Class<TestAgentWithAuthenticationOptionChannelDefaultForNonSupportedChannel> klass =
-                TestAgentWithAuthenticationOptionChannelDefaultForNonSupportedChannel.class;
-
-        // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> extractor.validateAuthenticationOptions(klass));
-
-        // then
-        assertThat(throwable).isInstanceOf(IllegalStateException.class);
-        assertThat(throwable.getMessage())
-                .isEqualTo(
-                        "Agent authentication.options.TestAgentWithAuthenticationOptionChannelDefaultForNonSupportedChannel has an authentication option set as default for channel DESKTOP but that is not among its supported channels [MOBILE]");
-    }
-
-    @Test
-    public void shouldThrowWhenMultipleChannelDefaultAuthenticationOptions() {
-        // given
-        Class<TestAgentWithMultipleChannelDefaultAuthenticationOptions> klass =
-                TestAgentWithMultipleChannelDefaultAuthenticationOptions.class;
-
-        // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> extractor.validateAuthenticationOptions(klass));
-
-        // then
-        assertThat(throwable).isInstanceOf(IllegalStateException.class);
-        assertThat(throwable.getMessage())
-                .isEqualTo(
-                        "Agent authentication.options.TestAgentWithMultipleChannelDefaultAuthenticationOptions has more than one authentication option which is the default for channel MOBILE");
+        assertThat(authenticationOptionDtoSame.isOverallDefault()).isTrue();
     }
 
     @Test

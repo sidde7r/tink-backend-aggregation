@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.libraries.authentication_options.AuthenticationOptionDto;
+import se.tink.libraries.authentication_options.AuthenticationOptionsGroupDto;
 
 @Path("/authentication-options")
 @Produces(MediaType.APPLICATION_JSON)
@@ -17,5 +17,5 @@ public interface AuthenticationOptionsService {
 
     @GET
     @TeamOwnership(CORE_AGGREGATION)
-    Map<String, Set<AuthenticationOptionDto>> getAgentsAuthenticationOptions();
+    Map<String, Set<AuthenticationOptionsGroupDto>> getAgentsAuthenticationOptions();
 }
