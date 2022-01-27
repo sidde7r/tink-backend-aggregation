@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.NewConsent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
@@ -65,7 +66,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
@@ -205,19 +205,21 @@ public class RedsysApiClient {
                 .toTinkToken();
     }
 
-    public Pair<String, URL> requestConsent(String scaState, ConsentRequestBody body) {
+    public NewConsent requestConsent(String scaState, ConsentRequestBody body) {
         final String url = makeApiUrl(Urls.CONSENTS);
         final GetConsentResponse getConsentResponse =
                 redsysSignedRequestFactory
                         .createSignedRequest(url, body, getTppRedirectHeaders(scaState))
                         .post(GetConsentResponse.class);
-        final String consentId = getConsentResponse.getConsentId();
-        final String consentRedirectUrl =
-                getConsentResponse
-                        .getLink(RedsysConstants.Links.SCA_REDIRECT)
-                        .map(LinkEntity::getHref)
-                        .get();
-        return new Pair<>(consentId, new URL(consentRedirectUrl));
+        final NewConsent consent = new NewConsent(getConsentResponse.getConsentId());
+        getConsentResponse
+                .getLink(RedsysConstants.Links.SCA_REDIRECT)
+                .map(LinkEntity::getHref)
+                .ifPresent(scaLink -> consent.setScaRedirectUrl(new URL(scaLink)));
+        if (consent.getScaRedirectUrl().isPresent()) {
+            log.info("SCA link empty");
+        }
+        return consent;
     }
 
     public ConsentResponse fetchConsent(String consentId) {

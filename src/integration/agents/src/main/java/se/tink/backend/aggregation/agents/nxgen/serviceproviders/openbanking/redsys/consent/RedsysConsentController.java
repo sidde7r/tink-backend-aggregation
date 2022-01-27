@@ -10,8 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.pair.Pair;
 
 @Slf4j
 public class RedsysConsentController implements ConsentController {
@@ -43,16 +41,15 @@ public class RedsysConsentController implements ConsentController {
     public void requestConsent() {
         final String supplementalKey = strongAuthenticationState.getSupplementalKey();
         final String state = strongAuthenticationState.getState();
-        final Pair<String, URL> consentRequest =
-                apiClient.requestConsent(state, consentGenerator.generate());
-        final String consentId = consentRequest.first;
-        final URL consentUrl = consentRequest.second;
-        supplementalInformationHelper.openThirdPartyApp(
-                ThirdPartyAppAuthenticationPayload.of(consentUrl));
-        supplementalInformationHelper
-                .waitForSupplementalInformation(supplementalKey, 5, TimeUnit.MINUTES)
-                .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
-        consentStorage.useConsentId(consentId);
+        final NewConsent newConsent = apiClient.requestConsent(state, consentGenerator.generate());
+        if (newConsent.getScaRedirectUrl().isPresent()) {
+            supplementalInformationHelper.openThirdPartyApp(
+                    ThirdPartyAppAuthenticationPayload.of(newConsent.getScaRedirectUrl().get()));
+            supplementalInformationHelper
+                    .waitForSupplementalInformation(supplementalKey, 5, TimeUnit.MINUTES)
+                    .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
+        }
+        consentStorage.useConsentId(newConsent.getConsentId());
     }
 
     @Override
