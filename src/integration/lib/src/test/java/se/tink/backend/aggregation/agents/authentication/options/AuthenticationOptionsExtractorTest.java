@@ -12,7 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 import se.tink.libraries.authentication_options.AuthenticationOptionDto;
+import se.tink.libraries.authentication_options.AuthenticationOptionField;
 import se.tink.libraries.authentication_options.AuthenticationOptionsGroupDto;
+import se.tink.libraries.authentication_options.Field;
 import se.tink.libraries.authentication_options.SupportedChannel;
 
 public class AuthenticationOptionsExtractorTest {
@@ -93,17 +95,24 @@ public class AuthenticationOptionsExtractorTest {
                         .collect(Collectors.toList());
         assertThat(authenticationOptionDtoList.size()).isEqualTo(2);
 
-        AuthenticationOptionDto AuthenticationOptionDtoOther = authenticationOptionDtoList.get(0);
-        assertThat(AuthenticationOptionDtoOther.getName())
+        AuthenticationOptionDto authenticationOptionDtoOther = authenticationOptionDtoList.get(0);
+        assertThat(authenticationOptionDtoOther.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE.name());
-        assertThat(AuthenticationOptionDtoOther.getDefaultForChannel())
+        assertThat(authenticationOptionDtoOther.getDefaultForChannel())
                 .isEqualTo(SupportedChannel.DESKTOP);
 
-        AuthenticationOptionDto AuthenticationOptionDtoSame = authenticationOptionDtoList.get(1);
-        assertThat(AuthenticationOptionDtoSame.getName())
+        Set<String> fieldsNames =
+                authenticationOptionDtoOther.getFields().stream()
+                        .map(Field::getName)
+                        .collect(Collectors.toSet());
+        assertThat(fieldsNames)
+                .contains(AuthenticationOptionField.SE_SOCIAL_SECURITY_NUMBER.getField().getName());
+
+        AuthenticationOptionDto authenticationOptionDtoSame = authenticationOptionDtoList.get(1);
+        assertThat(authenticationOptionDtoSame.getName())
                 .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
-        assertThat(AuthenticationOptionDtoSame.isOverallDefault()).isTrue();
-        assertThat(AuthenticationOptionDtoSame.getDefaultForChannel())
+        assertThat(authenticationOptionDtoSame.isOverallDefault()).isTrue();
+        assertThat(authenticationOptionDtoSame.getDefaultForChannel())
                 .isEqualTo(SupportedChannel.MOBILE);
     }
 

@@ -4,6 +4,7 @@ import org.junit.Ignore;
 import se.tink.libraries.authentication_options.AuthenticationOption;
 import se.tink.libraries.authentication_options.AuthenticationOption.AuthenticationOptions;
 import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
+import se.tink.libraries.authentication_options.AuthenticationOptionField;
 import se.tink.libraries.authentication_options.SupportedChannel;
 
 @Ignore
@@ -14,6 +15,7 @@ import se.tink.libraries.authentication_options.SupportedChannel;
             overallDefault = true),
     @AuthenticationOption(
             definition = AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE,
-            defaultForChannel = SupportedChannel.DESKTOP)
+            defaultForChannel = SupportedChannel.DESKTOP,
+            fields = {AuthenticationOptionField.SE_SOCIAL_SECURITY_NUMBER})
 })
 public class TestAgentWithMultipleAuthenticationOptions extends BaseTestAgent {}

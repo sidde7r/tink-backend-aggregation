@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.authentication.options;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -61,7 +62,8 @@ public class AuthenticationOptionsExtractor {
         for (AuthenticationOption authenticationOption : authenticationOptions) {
             AuthenticationOptionDefinition definition = authenticationOption.definition();
             Set<Field> fields =
-                    definition.getFields().stream()
+                    Arrays.stream(authenticationOption.fields())
+                            .sequential()
                             .map(AuthenticationOptionField::getField)
                             .collect(Collectors.toSet());
             mapGroupsAuthenticationOptions.putIfAbsent(definition.getGroup(), new HashSet<>());
