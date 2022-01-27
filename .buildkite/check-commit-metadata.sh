@@ -36,6 +36,10 @@ BORS_COMMIT_MSG_SUBJECT_FORMAT="^Merge( #[0-9]+)+$"
 # Commit message for Try: https://github.com/bors-ng/bors-ng/blob/2121fae8bd0b6e6e3779b5aa563cce4b2f9aea03/lib/worker/attemptor.ex#L206
 BORS_COMMIT_MSG_SUBJECT_FORMAT="^Try #[0-9]+:(.*?)$|${BORS_COMMIT_MSG_SUBJECT_FORMAT}"
 
+# The commit message generated when doing `git revert`.
+BORS_COMMIT_MSG_SUBJECT_FORMAT="^Revert \".+\"$|${BORS_COMMIT_MSG_SUBJECT_FORMAT}"
+
+
 # The exact format of commit messages is described in `/CONTRIBUTING.md`.
 EXPECTED_COMMIT_MSG_SUBJECT_FORMAT='^(build|chore|ci|copy|docs|feat|fix|log|perf|refactor|revert|style|test)(\([^()]+\))?: .+[^.]$'
 
