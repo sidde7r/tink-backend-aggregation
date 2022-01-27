@@ -1,0 +1,90 @@
+REQUEST 1
+POST https://psd2.sr-bank.no/api/v1/bank-offered-consents
+accept: application/json
+
+RESPONSE 1
+201
+Date: Wed, 19 Jan 2022 12:52:15 GMT
+Content-Type: application/json
+
+{"_links":{"scaRedirect":{"href":"https://psd2.sr-bank.no/tap/3201/?route_secesb_id=1&flow=psd2&state=5846347f-7c32-40b3-9418-09849ee69cb5&context=PRIVATE","verbs":["GET"]}}}
+
+REQUEST 2
+GET https://psd2.sr-bank.no/api/v1/accounts?withBalance=false
+accept: application/json
+
+RESPONSE 2
+200
+Date: Wed, 19 Jan 2022 12:53:04 GMT
+Content-Type: application/json
+
+{"accounts":[{"resourceId":"enc!!Z78gcpH6xE0VxGzTRYfxwjcmvBV18MklHi3kbijBREU=","bban":"33333333333","iban":"NO3133333333333","currency":"NOK","name":"Wiremock","product":"BRUKSKONTO","cashAccountType":"Current","bic":"SPTRNO22","_links":{"self":{"href":"/v1/accounts/enc!!Z78gcpH6xE0VxGzTRYfxwjcmvBV18MklHi3kbijBREU=","verbs":["GET"]},"balances":{"href":"/v1/accounts/enc!!Z78gcpH6xE0VxGzTRYfxwjcmvBV18MklHi3kbijBREU=/balances","verbs":["GET"]},"transactions":{"href":"/v1/accounts/enc!!Z78gcpH6xE0VxGzTRYfxwjcmvBV18MklHi3kbijBREU=/transactions?bookingStatus=both","verbs":["GET"]}}}]}
+
+REQUEST 3
+POST https://psd2.sr-bank.no/api/v1/payments/norwegian-domestic-credit-transfers
+Content-Type: application/json
+accept: application/json
+
+{"creditorName":"Creditor","debtorAccount":{"bban":"33333333333","currency":"NOK"},"creditorAccount":{"bban":"88888888888","currency":"NOK"},"creditorAddress":{"country":"NO"},"remittanceInformationUnstructured":"PIS Wiremock Test","requestedExecutionDate":"2022-01-19","instructedAmount":{"amount":"2.00","currency":"NOK"}}
+
+RESPONSE 3
+201
+Date: Wed, 19 Jan 2022 12:53:05 GMT
+Content-Type: application/json
+
+{"paymentId":"enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","transactionStatus":"RCVD","transactionFees":{"amount":"0.00","currency":"NOK"},"transactionFeeIndicator":true,"_links":{"self":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","verbs":["GET","DELETE"]},"status":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status","verbs":["GET"]},"startAuthorisation":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/authorisations","verbs":["POST"]}}}
+
+REQUEST 4
+POST https://psd2.sr-bank.no/api/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/authorisations
+accept: application/json
+
+RESPONSE 4
+201
+Date: Wed, 19 Jan 2022 12:53:05 GMT
+Content-Type: application/json
+
+{"scaStatus":"started","_links":{"scaRedirect":{"href":"https://psd2.sr-bank.no/tap/3201/?route_secesb_id=1&flow=psd2&state=1c551e76-e9df-40fe-b094-9dff3579b81f&context=PRIVATE","verbs":["GET"]}}}
+
+REQUEST 5
+GET https://psd2.sr-bank.no/api/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status
+accept: application/json
+
+RESPONSE 5 SET STATUS_1
+200
+Date: Wed, 19 Jan 2022 12:53:06 GMT
+Content-Type: application/json
+
+{"paymentId":"enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","transactionStatus":"RCVD","_links":{"self":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","verbs":["GET","DELETE"]},"status":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status","verbs":["GET"]},"startAuthorisation":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/authorisations","verbs":["POST"]}}}
+
+REQUEST 6 MATCH STATUS_1
+GET https://psd2.sr-bank.no/api/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4
+accept: application/json
+
+RESPONSE 6 SET STATUS_2
+200
+Date: Wed, 19 Jan 2022 12:53:07 GMT
+Content-Type: application/json
+
+{"instructedAmount":{"amount":"2.00","currency":"NOK"},"creditorName":"Vegard","creditorAccount":{"bban":"88888888888","currency":"NOK"},"creditorAddress":{"country":"NO"},"debtorAccount":{"bban":"33333333333","currency":"NOK"},"remittanceInformationUnstructured":"PIS Wiremock Test","paymentId":"enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","requestedExecutionDate":"2022-01-19","_links":{"self":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","verbs":["GET","DELETE"]},"status":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status","verbs":["GET"]},"startAuthorisation":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/authorisations","verbs":["POST"]}}}
+
+REQUEST 7 MATCH STATUS_2
+GET https://psd2.sr-bank.no/api/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status
+accept: application/json
+
+RESPONSE 7
+200
+Date: Wed, 19 Jan 2022 12:53:32 GMT
+Content-Type: application/json
+
+{"paymentId":"enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","transactionStatus":"PDNG","_links":{"self":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","verbs":["GET"]},"status":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status","verbs":["GET"]}}}
+
+REQUEST 8
+GET https://psd2.sr-bank.no/api/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4
+accept: application/json
+
+RESPONSE 8
+200
+Date: Wed, 19 Jan 2022 12:53:32 GMT
+Content-Type: application/json
+
+{"instructedAmount":{"amount":"2.00","currency":"NOK"},"creditorName":"Vegard","creditorAccount":{"bban":"88888888888","currency":"NOK"},"creditorAddress":{"country":"NO"},"debtorAccount":{"bban":"33333333333","currency":"NOK"},"remittanceInformationUnstructured":"PIS Wiremock Test","paymentId":"enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","requestedExecutionDate":"2022-01-19","_links":{"self":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","verbs":["GET"]},"status":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status","verbs":["GET"]}}}

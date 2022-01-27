@@ -19,7 +19,8 @@ public class AmountEntity {
     @JsonIgnore
     public static AmountEntity amountOf(PaymentRequest paymentRequest) {
         ExactCurrencyAmount amount = paymentRequest.getPayment().getExactCurrencyAmount();
-        return new AmountEntity(String.valueOf(amount.getExactValue()), amount.getCurrencyCode());
+        return new AmountEntity(
+                String.format("%.2f", amount.getExactValue()), amount.getCurrencyCode());
     }
 
     @JsonIgnore
