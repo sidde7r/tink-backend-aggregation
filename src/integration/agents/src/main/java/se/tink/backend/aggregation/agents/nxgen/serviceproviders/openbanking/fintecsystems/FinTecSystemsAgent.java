@@ -100,7 +100,8 @@ public class FinTecSystemsAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         strongAuthenticationState,
                         REDIRECT_URL,
-                        storage);
+                        storage,
+                        this);
 
         return Optional.of(
                 new PaymentController(paymentExecutor, new PaymentControllerExceptionMapper()));
