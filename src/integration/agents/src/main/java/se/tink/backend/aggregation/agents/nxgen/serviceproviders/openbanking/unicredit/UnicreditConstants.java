@@ -49,8 +49,6 @@ public class UnicreditConstants {
         public static final String CONSENTS = "/hydrogen/v1/consents";
         public static final String CONSENT_STATUS = "/hydrogen/v1/consents/{consent-id}/status";
         public static final String CONSENT_DETAILS = "/hydrogen/v1/consents/{consent-id}";
-        public static final String CONSENT_AUTHORIZATION =
-                "/hydrogen/v1/consents/{consent-id}/authorisations";
         public static final String ACCOUNTS = "/hydrogen/v1/accounts";
         public static final String ACCOUNT_DETAILS = "/hydrogen/v1/accounts/{account-id}";
         public static final String BALANCES = "/hydrogen/v1/accounts/{account-id}/balances";

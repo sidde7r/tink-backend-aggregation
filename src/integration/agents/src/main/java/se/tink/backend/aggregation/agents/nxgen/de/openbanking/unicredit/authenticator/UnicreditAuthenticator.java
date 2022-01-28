@@ -15,10 +15,12 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.Unicred
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.detail.UnicreditEmbeddedFieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditStorage;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -26,7 +28,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 
 @Slf4j
 @RequiredArgsConstructor
-public class UnicreditAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+public class UnicreditAuthenticator
+        implements MultiFactorAuthenticator, AutoAuthenticator, PaymentAuthenticator {
 
     private final UnicreditApiClient apiClient;
     private final UnicreditStorage storage;
@@ -52,19 +55,28 @@ public class UnicreditAuthenticator implements MultiFactorAuthenticator, AutoAut
         UnicreditConsentResponse consent = createAndSaveConsent();
 
         AuthorizationResponse initializeAuthorizationResponse =
-                apiClient.initializeAuthorization(
-                        consent.getLinks().getStartAuthorisation(),
-                        strongAuthenticationState.getState(),
-                        credentials.getField(Key.USERNAME));
+                initializeAuthorization(consent.getLinks().getStartAuthorisation(), credentials);
 
         AuthorizationResponse authorizationResponse =
-                apiClient.authorizeWithPassword(
+                authorizeWithPassword(
                         initializeAuthorizationResponse.getLinks().getUpdatePsuAuthentication(),
-                        credentials.getField(Key.USERNAME),
-                        credentials.getField(Field.Key.PASSWORD));
+                        credentials);
 
         authorizeWithOtp(authorizationResponse);
         verifyConsentValidity(consent.getConsentId());
+    }
+
+    @Override
+    public void authenticatePayment(LinksEntity scaLinks) {
+        AuthorizationResponse initializePaymentResponse =
+                initializeAuthorization(scaLinks.getStartAuthorisation(), credentials);
+
+        AuthorizationResponse authorizationPaymentResponse =
+                authorizeWithPassword(
+                        initializePaymentResponse.getLinks().getUpdatePsuAuthentication(),
+                        credentials);
+
+        authorizeWithOtp(authorizationPaymentResponse);
     }
 
     private UnicreditConsentResponse createAndSaveConsent() {
@@ -72,6 +84,16 @@ public class UnicreditAuthenticator implements MultiFactorAuthenticator, AutoAut
                 apiClient.createConsent(strongAuthenticationState.getState());
         storage.saveConsentId(consent.getConsentId());
         return consent;
+    }
+
+    private AuthorizationResponse initializeAuthorization(String url, Credentials credentials) {
+        return apiClient.initializeAuthorization(
+                url, strongAuthenticationState.getState(), credentials.getField(Key.USERNAME));
+    }
+
+    private AuthorizationResponse authorizeWithPassword(String url, Credentials credentials) {
+        return apiClient.authorizeWithPassword(
+                url, credentials.getField(Key.USERNAME), credentials.getField(Key.PASSWORD));
     }
 
     private void authorizeWithOtp(AuthorizationResponse authorizationResponse) {

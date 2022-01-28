@@ -4,11 +4,14 @@ import java.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PasswordArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -24,6 +27,10 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class UnicreditAgentPaymentTest {
 
+    private final ArgumentManager<UsernameArgumentEnum> usernameManager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
+    private final ArgumentManager<PasswordArgumentEnum> passwordManager =
+            new ArgumentManager<>(PasswordArgumentEnum.values());
     private final ArgumentManager<PsuIdArgumentEnum> psuIdManager =
             new ArgumentManager<>(PsuIdArgumentEnum.values());
     private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
@@ -32,11 +39,19 @@ public class UnicreditAgentPaymentTest {
 
     @Before
     public void setup() {
+        usernameManager.before();
+        passwordManager.before();
         psuIdManager.before();
         creditorDebtorManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("de", "de-unicredit-ob")
+                        .addCredentialField(
+                                Field.Key.USERNAME,
+                                usernameManager.get(UsernameArgumentEnum.USERNAME))
+                        .addCredentialField(
+                                Field.Key.PASSWORD,
+                                passwordManager.get(PasswordArgumentEnum.PASSWORD))
                         .addCredentialField(
                                 Key.ADDITIONAL_INFORMATION,
                                 psuIdManager.get(PsuIdArgumentEnum.PSU_ID_TYPE))

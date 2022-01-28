@@ -5,12 +5,15 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.UnicreditAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.detail.UnicreditEmbeddedFieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.detail.UnicreditIconUrlMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.payment.UnicreditEmbeddedPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditApiClientRetryer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseHeaderValues;
@@ -20,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
@@ -41,16 +46,32 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        UnicreditAuthenticator authenticator =
-                new UnicreditAuthenticator(
-                        (UnicreditApiClient) apiClient,
-                        unicreditStorage,
-                        credentials,
-                        strongAuthenticationState,
-                        supplementalInformationController,
-                        new UnicreditEmbeddedFieldBuilder(catalog, new UnicreditIconUrlMapper()));
+        UnicreditAuthenticator authenticator = constructUnicreditAuthenticator();
 
         return new AutoAuthenticationController(request, context, authenticator, authenticator);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        UnicreditAuthenticator authenticator = constructUnicreditAuthenticator();
+
+        UnicreditEmbeddedPaymentExecutor paymentExecutor =
+                new UnicreditEmbeddedPaymentExecutor(
+                        apiClient, new UnicreditApiClientRetryer(), authenticator, sessionStorage);
+
+        return Optional.of(
+                new PaymentController(
+                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
+    }
+
+    private UnicreditAuthenticator constructUnicreditAuthenticator() {
+        return new UnicreditAuthenticator(
+                (UnicreditApiClient) apiClient,
+                unicreditStorage,
+                credentials,
+                strongAuthenticationState,
+                supplementalInformationController,
+                new UnicreditEmbeddedFieldBuilder(catalog, new UnicreditIconUrlMapper()));
     }
 
     @Override
@@ -58,7 +79,7 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
         return new UnicreditApiClient(
-                client, unicreditStorage, providerConfiguration, headerValues);
+                client, unicreditStorage, providerConfiguration, headerValues, sessionStorage);
     }
 
     @Override

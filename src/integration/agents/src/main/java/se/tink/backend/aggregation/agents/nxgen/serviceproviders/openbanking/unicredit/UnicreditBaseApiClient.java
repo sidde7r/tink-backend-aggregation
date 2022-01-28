@@ -223,13 +223,13 @@ public class UnicreditBaseApiClient {
                 .get(FetchPaymentStatusResponse.class);
     }
 
-    private String getPaymentProduct(PaymentRequest paymentRequest) {
+    protected String getPaymentProduct(PaymentRequest paymentRequest) {
         return UnicreditConstants.PAYMENT_PRODUCT_MAPPER
                 .translate(paymentRequest.getPayment().getPaymentScheme())
                 .orElse(UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString());
     }
 
-    private String getPaymentService(PaymentRequest paymentRequest) {
+    protected String getPaymentService(PaymentRequest paymentRequest) {
         return PaymentServiceType.PERIODIC == paymentRequest.getPayment().getPaymentServiceType()
                 ? UnicreditConstants.PathParameterValues.PAYMENT_SERVICE_PERIODIC_PAYMENTS
                 : UnicreditConstants.PathParameterValues.PAYMENT_SERVICE_PAYMENTS;
