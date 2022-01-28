@@ -319,7 +319,11 @@ public class AggregationControllerAggregationClientImpl
     private <T> T requestExecuter(RequestOperation<T> operation, String name) {
         for (int i = 1; i <= MAXIMUM_RETRY_ATTEMPT; i++) {
             try {
+                long start = System.currentTimeMillis();
                 final T successfulResponse = operation.execute();
+                log.info(
+                        "Call towards Aggregation Controller executed in {}ms",
+                        System.currentTimeMillis() - start);
                 metricRegistry
                         .meter(
                                 AGGREGATION_CONTROLLER_RETRIES
