@@ -16,7 +16,7 @@ public class CardListResponse {
     @JsonProperty private List<CardEntity> cards;
 
     @JsonIgnore
-    public Collection<CreditCardAccount> toTinkCreditCardAccounts(boolean isOnStaging) {
+    public Collection<CreditCardAccount> toTinkCreditCardAccounts() {
         return Optional.ofNullable(cards).orElse(Collections.emptyList()).stream()
                 .map(CardEntity::toTinkCreditCardAccount)
                 .filter(Optional::isPresent)
