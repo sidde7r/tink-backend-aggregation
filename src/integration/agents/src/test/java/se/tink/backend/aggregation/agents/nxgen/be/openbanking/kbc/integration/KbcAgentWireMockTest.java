@@ -65,7 +65,7 @@ public class KbcAgentWireMockTest {
     @Test
     public void shouldFailWithExpiredConsent() {
         // given
-        final String wireMockFilePath = BASE_PATH + "expired_consent_log.app";
+        final String wireMockFilePath = BASE_PATH + "expired_consent_log.aap";
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.BE)
@@ -95,7 +95,7 @@ public class KbcAgentWireMockTest {
     @Test
     public void shouldFailWithExpiredConsentAfterTokenRefresh() {
         // given
-        final String wireMockFilePath = BASE_PATH + "expired_token_expired_consent_log.app";
+        final String wireMockFilePath = BASE_PATH + "expired_token_expired_consent_log.aap";
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.BE)
@@ -125,7 +125,7 @@ public class KbcAgentWireMockTest {
     @Test
     public void shouldFailWithInvalidConsent() {
         // given
-        final String wireMockFilePath = BASE_PATH + "invalid_consent_log.app";
+        final String wireMockFilePath = BASE_PATH + "invalid_consent_log.aap";
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.BE)
