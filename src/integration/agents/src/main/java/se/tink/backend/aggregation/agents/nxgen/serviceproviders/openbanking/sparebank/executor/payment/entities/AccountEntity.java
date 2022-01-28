@@ -7,11 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
@@ -44,8 +44,8 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public static AccountEntity creditorOf(PaymentRequest paymentRequest) {
-        Creditor creditor = paymentRequest.getPayment().getCreditor();
+    public static AccountEntity creditorOf(Payment payment) {
+        Creditor creditor = payment.getCreditor();
         return new AccountEntity(creditor.getAccountIdentifierType(), creditor.getAccountNumber());
     }
 
