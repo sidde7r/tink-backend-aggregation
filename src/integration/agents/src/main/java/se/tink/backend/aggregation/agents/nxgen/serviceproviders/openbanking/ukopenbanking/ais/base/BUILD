@@ -2,13 +2,28 @@ load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "base",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(
+        include = ["**/*.java"],
+        exclude = [
+            "UkOpenBankingV31Constants.java",
+            "interfaces/UkOpenBankingConstants.java",
+            "UkObInstantDeserializer.java",
+            "api/*java",
+            "authenticator/entities/*.java",
+        ],
+    ),
     visibility = ["//visibility:public"],
     exports = [
+        ":deserialiser",
+        ":v31constants",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/api",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/authenticator/entities",
     ],
     deps = [
+        ":deserialiser",
+        ":v31constants",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/api",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/authenticator/entities",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/storage/data",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid/jwt/signer/iface",
@@ -50,7 +65,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@com_google_code_gson_gson",
@@ -69,5 +83,16 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "@tink_backend//src/libraries/account_identifier",
+    ],
+)
+
+java_library(
+    name = "deserialiser",
+    srcs = [
+        "UkObInstantDeserializer.java",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
     ],
 )
