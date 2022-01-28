@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -107,6 +108,27 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         assertThat(thrown).isExactlyInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void shouldRetryRefreshingAccessTokenOnceIfRuntimeExceptionOccurred() {
+        // given
+        OAuth2Token invalidOAuth2Token = createInvalidOAuth2Token();
+        OAuth2Token refreshedOAuth2Token = createValidOAuth2Token();
+
+        when(persistentStorage.get(
+                        OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAuth2Token.class))
+                .thenReturn(Optional.of(invalidOAuth2Token));
+        when(apiClient.refreshAccessToken("dummy_refresh_token", ClientMode.ACCOUNTS))
+                .thenThrow(new RuntimeException())
+                .thenReturn(refreshedOAuth2Token);
+
+        // when
+        openIdAuthenticationController.autoAuthenticate();
+
+        // then
+        verify(apiClient, times(2)).refreshAccessToken("dummy_refresh_token", ClientMode.ACCOUNTS);
+        verify(apiClient).instantiateAisAuthFilter(refreshedOAuth2Token);
     }
 
     @Test

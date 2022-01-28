@@ -41,6 +41,7 @@ java_library(
         "//src/libraries/cryptography",
         "//src/libraries/encoding",
         "//src/libraries/i18n",
+        "//src/libraries/retrypolicy",
         "//src/libraries/serialization",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_nimbusds_nimbus_jose_jwt",

@@ -40,6 +40,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.retrypolicy.RetryExecutor;
+import se.tink.libraries.retrypolicy.RetryPolicy;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -65,6 +67,8 @@ public class OpenIdAuthenticationController
     private final String callbackUri;
     private final OpenIdAuthenticationValidator authenticationValidator;
     private final LogMasker logMasker;
+
+    private final RetryExecutor retryExecutor = new RetryExecutor();
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -121,6 +125,8 @@ public class OpenIdAuthenticationController
         this.randomValueGenerator = randomValueGenerator;
         this.authenticationValidator = authenticationValidator;
         this.logMasker = logMasker;
+
+        this.retryExecutor.setRetryPolicy(new RetryPolicy(2, RuntimeException.class));
     }
 
     @Override
@@ -249,7 +255,8 @@ public class OpenIdAuthenticationController
         String refreshToken = oAuth2Token.getOptionalRefreshToken().get();
         try {
             OAuth2Token refreshedOAuth2Token =
-                    apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS);
+                    retryExecutor.execute(
+                            () -> apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS));
 
             if (!refreshedOAuth2Token.isValid()) {
                 log.warn(
