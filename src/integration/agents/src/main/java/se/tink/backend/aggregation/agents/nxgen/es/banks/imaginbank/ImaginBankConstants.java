@@ -215,6 +215,7 @@ public class ImaginBankConstants {
         public static final int MAX_ENROLLMENT_REQUESTS = 3;
         public static final String VALIDATION_TYPE_SCA = "PIN1_SCA";
         public static final String VALIDATION_TYPE_SMS = "OTPSMS";
+        public static final String VALIDATION_TYPE_PUSH = "OTP_PUSH";
         public static final String ENROLLMENT_REQUIRED = "S";
         public static final String ENROLLMENT_OK = "OK";
     }

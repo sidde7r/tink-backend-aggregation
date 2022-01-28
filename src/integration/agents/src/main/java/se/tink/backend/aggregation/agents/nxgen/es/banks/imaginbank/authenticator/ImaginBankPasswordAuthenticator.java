@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticat
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.EnrollmentValues.ENROLLMENT_OK;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.EnrollmentValues.ENROLLMENT_REQUIRED;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.EnrollmentValues.MAX_ENROLLMENT_REQUESTS;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.EnrollmentValues.VALIDATION_TYPE_PUSH;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.EnrollmentValues.VALIDATION_TYPE_SCA;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.EnrollmentValues.VALIDATION_TYPE_SMS;
 
@@ -103,7 +104,8 @@ public class ImaginBankPasswordAuthenticator implements MultiFactorAuthenticator
                                 Integer.parseInt(scaEntity.getIterations()),
                                 password);
                 enrollmentResponse = apiClient.doPasswordEnrollment(secondPasswordHash);
-            } else if (VALIDATION_TYPE_SMS.equals(enrollmentResponse.getValidationType())) {
+            } else if (VALIDATION_TYPE_SMS.equals(enrollmentResponse.getValidationType())
+                    || VALIDATION_TYPE_PUSH.equals(enrollmentResponse.getValidationType())) {
                 SmsEntity smsEntity = enrollmentResponse.getSms();
                 String otpCode = supplementalInformationHelper.waitForOtpInput();
                 final String thirdPasswordHash =
