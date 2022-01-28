@@ -2,6 +2,7 @@ package se.tink.libraries.credentials.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
@@ -16,6 +17,7 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
     private String refreshId;
     private RefreshScope refreshScope;
     private Integer refreshPriority;
+    private LocalDateTime expiryDate;
 
     public static Builder builder() {
         return new Builder();
@@ -33,6 +35,7 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
         private Set<String> requestedAccountIds;
         private UserAvailability userAvailability;
         private RefreshScope refreshScope;
+        private LocalDateTime expiryDate;
 
         public Builder credentials(Credentials credentials) {
             this.credentials = credentials;
@@ -89,6 +92,11 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
             return this;
         }
 
+        public Builder expiryDate(LocalDateTime expiryDate) {
+            this.expiryDate = expiryDate;
+            return this;
+        }
+
         public RefreshInformationRequest build() {
             RefreshInformationRequest refreshInformationRequest = new RefreshInformationRequest();
 
@@ -103,6 +111,7 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
             refreshInformationRequest.setRequestedAccountIds(requestedAccountIds);
             refreshInformationRequest.setUserAvailability(userAvailability);
             refreshInformationRequest.setRefreshScope(refreshScope);
+            refreshInformationRequest.setExpiryDate(expiryDate);
             return refreshInformationRequest;
         }
     }
@@ -165,5 +174,13 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
 
     public void setRefreshPriority(Integer refreshPriority) {
         this.refreshPriority = refreshPriority;
+    }
+
+    public LocalDateTime getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDateTime expiryDate) {
+        this.expiryDate = expiryDate;
     }
 }
