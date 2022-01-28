@@ -82,7 +82,11 @@ public class RuralviaAgent extends NextGenerationAgent
                         agentTemporaryStorage);
 
         return new RuralviaAuthenticator(
-                apiClient, agentTemporaryStorage, context.getRawHttpTrafficLogger(), driver);
+                apiClient,
+                agentTemporaryStorage,
+                context.getRawHttpTrafficLogger(),
+                context.getHarLogCollector(),
+                driver);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(

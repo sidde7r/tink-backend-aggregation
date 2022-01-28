@@ -27,6 +27,7 @@ java_library(
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/retrypolicy",
         "//src/libraries/serialization",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.authenticator.
 import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.WebDriverWrapper;
+import se.tink.libraries.har_logger.src.model.HarEntry;
 
 public class RuralviaAuthenticatorTest {
     private RuralviaAuthenticator ruralviaAuthenticator;
@@ -33,8 +35,10 @@ public class RuralviaAuthenticatorTest {
         driver = createMockedWebDriver();
         AgentTemporaryStorage storage = mock(AgentTemporaryStorage.class);
         RawHttpTrafficLogger rawHttpTrafficLogger = mock(RawHttpTrafficLogger.class);
+        Consumer<HarEntry> harEntryConsumer = mock(Consumer.class);
         ruralviaAuthenticator =
-                new RuralviaAuthenticator(apiClient, storage, rawHttpTrafficLogger, driver);
+                new RuralviaAuthenticator(
+                        apiClient, storage, rawHttpTrafficLogger, harEntryConsumer, driver);
     }
 
     private WebDriverWrapper createMockedWebDriver() {

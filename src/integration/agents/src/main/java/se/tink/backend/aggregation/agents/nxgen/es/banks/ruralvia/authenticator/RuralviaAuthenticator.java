@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.Ruralvi
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.USER_FIELD_INPUT;
 
 import com.google.common.base.Strings;
+import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.raw.RawHttpTrafficLog
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.integration.webdriver.logger.HtmlLogger;
+import se.tink.libraries.har_logger.src.model.HarEntry;
 import se.tink.libraries.retrypolicy.RetryCallback;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;
@@ -44,11 +46,12 @@ public class RuralviaAuthenticator implements Authenticator {
             RuralviaApiClient apiClient,
             AgentTemporaryStorage agentTemporaryStorage,
             RawHttpTrafficLogger rawHttpTrafficLogger,
+            Consumer<HarEntry> harEntryConsumer,
             WebDriverWrapper driver) {
         this.apiClient = apiClient;
         this.agentTemporaryStorage = agentTemporaryStorage;
         this.driver = driver;
-        this.htmlLogger = new HtmlLogger(driver, rawHttpTrafficLogger);
+        this.htmlLogger = new HtmlLogger(driver, rawHttpTrafficLogger, harEntryConsumer);
         this.retryExecutor.setRetryPolicy(
                 new RetryPolicy(3, GlobalPositionNotFoundException.class));
     }

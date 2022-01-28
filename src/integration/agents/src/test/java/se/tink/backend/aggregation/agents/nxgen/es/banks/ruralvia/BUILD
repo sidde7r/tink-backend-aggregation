@@ -41,6 +41,7 @@ junit_test(
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/date",
         "//src/libraries/serialization",
+        "//src/tink_backend_libs:har_logger",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_mockito_mockito_core",
