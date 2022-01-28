@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -44,7 +45,8 @@ public final class DkDemoAgent extends NextGenerationDemoAgent {
         DkDemoMitIdAuthenticator mitIdAuthenticator =
                 new DkDemoMitIdAuthenticator(supplementalInformationController);
 
-        return new DkDemoAuthenticator(provider, nemIdAuthenticator, mitIdAuthenticator);
+        return new DkDemoAuthenticator(
+                provider, persistentStorage, nemIdAuthenticator, mitIdAuthenticator);
     }
 
     @Override
@@ -96,5 +98,10 @@ public final class DkDemoAgent extends NextGenerationDemoAgent {
     @Override
     public DemoIdentityData getIdentityDataResponse() {
         return null;
+    }
+
+    @Override
+    public SessionHandler constructSessionHandler() {
+        return new DkDemoSessionHandler(persistentStorage);
     }
 }

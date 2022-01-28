@@ -14,8 +14,7 @@ public final class DkDemoAgentTest {
                                 Field.Key.AUTH_METHOD_SELECTOR,
                                 DkAuthMethod.NEM_ID.getSupplementalInfoKey())
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .saveCredentialsAfter(false);
 
         builder.build().testRefresh();
     }
@@ -28,8 +27,7 @@ public final class DkDemoAgentTest {
                                 Field.Key.AUTH_METHOD_SELECTOR,
                                 DkAuthMethod.MIT_ID.getSupplementalInfoKey())
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .saveCredentialsAfter(false);
 
         builder.build().testRefresh();
     }
@@ -42,8 +40,7 @@ public final class DkDemoAgentTest {
                                 Field.Key.AUTH_METHOD_SELECTOR,
                                 DkAuthMethod.NEM_ID.getSupplementalInfoKey())
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .saveCredentialsAfter(false);
 
         builder.build().testRefresh();
     }
@@ -56,8 +53,7 @@ public final class DkDemoAgentTest {
                                 Field.Key.AUTH_METHOD_SELECTOR,
                                 DkAuthMethod.MIT_ID.getSupplementalInfoKey())
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .saveCredentialsAfter(false);
 
         builder.build().testRefresh();
     }
@@ -70,8 +66,7 @@ public final class DkDemoAgentTest {
                                 Field.Key.AUTH_METHOD_SELECTOR,
                                 DkAuthMethod.NEM_ID.getSupplementalInfoKey())
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .saveCredentialsAfter(false);
 
         builder.build().testRefresh();
     }
@@ -84,8 +79,7 @@ public final class DkDemoAgentTest {
                                 Field.Key.AUTH_METHOD_SELECTOR,
                                 DkAuthMethod.MIT_ID.getSupplementalInfoKey())
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .saveCredentialsAfter(false);
 
         builder.build().testRefresh();
     }
