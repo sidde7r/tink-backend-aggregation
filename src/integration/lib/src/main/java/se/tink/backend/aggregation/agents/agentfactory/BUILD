@@ -77,6 +77,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/bankid",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/customsupplemental",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/demofinancialinstitution",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/dk",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/finovate",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/multisupplemental",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/password",
