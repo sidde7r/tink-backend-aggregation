@@ -1,57 +1,143 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
-import java.time.LocalDate;
-import java.util.HashMap;
-import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Test;
-import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
-import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-public class KbcFetchConsentExternalApiCallTest extends WireMockIntegrationTest {
+import agents_platform_agents_framework.org.springframework.http.HttpStatus;
+import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.Urls;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
+
+@RunWith(JUnitParamsRunner.class)
+public class KbcFetchConsentExternalApiCallTest {
+
+    @Mock private AgentHttpClient httpClient;
+    @Mock private ResponseEntity<String> httpResponse;
+
+    private final KbcFetchConsentExternalApiCall fetchConsentApiCall =
+            new KbcFetchConsentExternalApiCall(httpClient, Urls.BASE_URL);
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
-    public void shouldFetchNewConsent() {
+    public void shouldThrowInvalidCredentialsErrorWhenBankRespondsWithFormatError() {
         // given
-        LocalDate expectedValidUntilDate = LocalDate.now().plusYears(1).minusMonths(1);
-        final String expectedRequestBody =
-                "{\"access\":{\"transactions\":[{\"iban\":\"BE68539007547034\"}],\"balances\":[{\"iban\":\"BE68539007547034\"}]},\"recurringIndicator\":true,\"validUntil\":\""
-                        + expectedValidUntilDate
-                        + "\",\"frequencyPerDay\":4,\"combinedServiceIndicator\":false}";
-        WireMock.stubFor(
-                WireMock.post(WireMock.urlPathEqualTo("/psd2/v2/consents"))
-                        .withHeader("PSU-IP-Address", WireMock.equalTo("0.0.0.0"))
-                        .withHeader(
-                                "X-Request-ID",
-                                WireMock.matching(
-                                        "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}"))
-                        .withRequestBody(WireMock.equalTo(expectedRequestBody))
-                        .willReturn(
-                                WireMock.aResponse()
-                                        .withBody(
-                                                "{\"consentStatus\":\"received\",\"consentId\":\"4017482272\",\"_links\":{}}")
-                                        .withHeader("Content-Type", "application/json")));
-        KbcFetchConsentExternalApiCallParameters inputParameters =
-                new KbcFetchConsentExternalApiCallParameters(
-                        "BE68539007547034", "https://redirectUrl", "0.0.0.0");
-        KbcFetchConsentExternalApiCall objectUnderTest =
-                new KbcFetchConsentExternalApiCall(
-                        new AgentPlatformHttpClient(httpClient), getOrigin());
+        httpResponse =
+                bankRespondsWith(
+                        400,
+                        "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"FORMAT_ERROR\"}]}");
 
         // when
-        ExternalApiCallResult<String> result =
-                objectUnderTest.execute(
-                        inputParameters,
-                        null,
-                        AuthenticationPersistedDataCookieStoreAccessorFactory.create(
-                                new AgentAuthenticationPersistedData(new HashMap<>())));
+        ExternalApiCallResult<String> apiCallResult =
+                fetchConsentApiCall.parseResponse(httpResponse);
 
         // then
-        Assert.assertTrue(result.getResponse().isPresent());
-        Assertions.assertThat(result.getResponse().get()).isEqualTo("4017482272");
+        assertThat(apiCallResult.getAgentBankApiError())
+                .containsInstanceOf(InvalidCredentialsError.class);
+        assertThat(apiCallResult.getAgentBankApiError())
+                .map(bankApiError -> bankApiError.getDetails().getErrorCode())
+                .hasValue(AgentError.INVALID_CREDENTIALS.getCode());
+        assertThat(apiCallResult.getAgentBankApiError())
+                .map(bankApiError -> bankApiError.getDetails().getErrorMessage())
+                .hasValue("Incorrect login credentials. Please try again.");
+    }
+
+    @Test
+    @Parameters(
+            method =
+                    "parametersForShouldThrowAuthorizationErrorWhenBankRespondsWithBadRequestOrUnauthorizedAndUnexpectedBody")
+    public void
+            shouldThrowAuthorizationErrorWhenBankRespondsWithBadRequestOrUnauthorizedAndUnexpectedBody(
+                    int statusCode, String responseBody) {
+        // given
+        httpResponse = bankRespondsWith(statusCode, responseBody);
+
+        // when
+        ExternalApiCallResult<String> apiCallResult =
+                fetchConsentApiCall.parseResponse(httpResponse);
+
+        // then
+        assertThat(apiCallResult.getAgentBankApiError())
+                .containsInstanceOf(AuthorizationError.class);
+    }
+
+    @SuppressWarnings("unused")
+    private Object[]
+            parametersForShouldThrowAuthorizationErrorWhenBankRespondsWithBadRequestOrUnauthorizedAndUnexpectedBody() {
+        return new Object[][] {
+            {400, null},
+            {401, null}
+        };
+    }
+
+    @Test
+    public void shouldThrowAuthenticationErrorWhenBankRespondsWithInvalidConsent() {
+        // given
+        httpResponse =
+                bankRespondsWith(
+                        401,
+                        "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"CONSENT_INVALID\"}]}");
+
+        // when
+        ExternalApiCallResult<String> apiCallResult =
+                fetchConsentApiCall.parseResponse(httpResponse);
+
+        // then
+        assertThat(apiCallResult.getAgentBankApiError())
+                .containsInstanceOf(AuthenticationError.class);
+        assertThat(apiCallResult.getAgentBankApiError())
+                .map(bankApiError -> bankApiError.getDetails().getErrorCode())
+                .hasValue(AgentError.INVALID_CREDENTIALS.getCode());
+        assertThat(apiCallResult.getAgentBankApiError())
+                .map(bankApiError -> bankApiError.getDetails().getErrorMessage())
+                .hasValue(ErrorCodes.CONSENT_INVALID);
+    }
+
+    @Test
+    @Parameters(method = "parametersForShouldThrowServerErrorWhenBankRespondsWithServerError")
+    public void shouldThrowServerErrorWhenBankRespondsWithServerError(int statusCode) {
+        // given
+        httpResponse = bankRespondsWith(statusCode, null);
+
+        // when
+        ExternalApiCallResult<String> apiCallResult =
+                fetchConsentApiCall.parseResponse(httpResponse);
+
+        // then
+        assertThat(apiCallResult.getAgentBankApiError()).containsInstanceOf(ServerError.class);
+        assertThat(apiCallResult.getAgentBankApiError())
+                .map(bankApiError -> bankApiError.getDetails().getErrorCode())
+                .hasValue(AgentError.HTTP_RESPONSE_ERROR.getCode());
+        assertThat(apiCallResult.getAgentBankApiError())
+                .map(bankApiError -> bankApiError.getDetails().getErrorMessage())
+                .hasValue(AgentError.HTTP_RESPONSE_ERROR.getMessage());
+    }
+
+    @SuppressWarnings("unused")
+    private Object[] parametersForShouldThrowServerErrorWhenBankRespondsWithServerError() {
+        return new Object[] {500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511};
+    }
+
+    private ResponseEntity<String> bankRespondsWith(int statusCode, String responseBody) {
+        when(httpResponse.getStatusCode()).thenReturn(HttpStatus.valueOf(statusCode));
+        when(httpResponse.getBody()).thenReturn(responseBody);
+        return httpResponse;
     }
 }

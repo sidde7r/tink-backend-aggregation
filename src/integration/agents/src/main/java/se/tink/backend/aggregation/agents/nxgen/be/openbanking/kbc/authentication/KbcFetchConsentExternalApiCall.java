@@ -8,6 +8,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication.errors.rpc.KbcErrorMessage;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentEx
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidRequestError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
@@ -66,6 +68,8 @@ public class KbcFetchConsentExternalApiCall
             return handleSuccessfulResponse(httpResponse);
         } else if (HttpStatus.UNAUTHORIZED.equals(statusCode)) {
             return handleUnauthorizedResponse(httpResponse);
+        } else if (HttpStatus.BAD_REQUEST.equals(statusCode)) {
+            return handleBadRequestResponse(httpResponse);
         } else if (statusCode.is5xxServerError()) {
             return new ExternalApiCallResult<>(new ServerError());
         }
@@ -93,6 +97,24 @@ public class KbcFetchConsentExternalApiCall
                                     .uniqueId(UUID.randomUUID().toString())
                                     .errorCode(AgentError.INVALID_CREDENTIALS.getCode())
                                     .errorMessage(ErrorCodes.CONSENT_INVALID)
+                                    .build()));
+        }
+        return new ExternalApiCallResult<>(new AuthorizationError());
+    }
+
+    private ExternalApiCallResult<String> handleBadRequestResponse(
+            ResponseEntity<String> httpResponse) {
+        KbcErrorMessage errorMessage =
+                SerializationUtils.deserializeFromString(
+                        httpResponse.getBody(), KbcErrorMessage.class);
+        if (KbcAuthenticationUtils.doesResponseContainCode(errorMessage, "FORMAT_ERROR")) {
+            return new ExternalApiCallResult<>(
+                    new InvalidCredentialsError(
+                            Error.builder()
+                                    .uniqueId(UUID.randomUUID().toString())
+                                    .errorCode(AgentError.INVALID_CREDENTIALS.getCode())
+                                    .errorMessage(
+                                            LoginError.INCORRECT_CREDENTIALS.userMessage().get())
                                     .build()));
         }
         return new ExternalApiCallResult<>(new AuthorizationError());
