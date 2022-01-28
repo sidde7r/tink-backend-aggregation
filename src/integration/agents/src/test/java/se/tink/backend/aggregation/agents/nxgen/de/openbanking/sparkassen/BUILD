@@ -32,6 +32,8 @@ junit_test(
         "//src/libraries/agent-storage",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
+        "//third_party:commons_io_commons_io",
+        "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",

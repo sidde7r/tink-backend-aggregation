@@ -15,6 +15,11 @@ import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.payment.DuplicatePaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -26,17 +31,21 @@ public class SparkassenErrorHandler {
         AUTHORISATION_USERNAME_PASSWORD,
         AUTHORISATION_OTP,
         AUTHORISATION_SELECT_METHOD,
-        CONSENT_DETAILS
+        CONSENT_DETAILS,
+        CREATE_PAYMENT,
+        FETCH_PAYMENT
     }
 
-    public static void handleError(
+    public static void handeHttpException(
             HttpResponseException httpResponseException, ErrorSource errorSource) {
         Optional<ErrorResponse> maybeErrorResponse =
                 ErrorResponse.fromHttpException(httpResponseException);
 
         if (maybeErrorResponse.isPresent()) {
             ErrorResponse errorResponse = maybeErrorResponse.get();
-            AgentError error;
+            AgentError error = null;
+            PaymentException paymentException = null;
+
             switch (errorSource) {
                 case AUTHORISATION_OTP:
                     error = handleAuthorisationOtpErrors(errorResponse);
@@ -50,9 +59,19 @@ public class SparkassenErrorHandler {
                 case CONSENT_DETAILS:
                     error = handleConsentDetailsErrors(errorResponse);
                     break;
+                case CREATE_PAYMENT:
+                case FETCH_PAYMENT:
+                    paymentException =
+                            handlePaymentContextErrors(errorResponse, httpResponseException);
+                    break;
                 default:
                     return;
             }
+
+            if (error == null) {
+                error = handleGeneralContextErrors(errorResponse);
+            }
+
             if (error != null) {
                 if (error == LoginError.NOT_CUSTOMER) {
                     throw error.exception(
@@ -63,6 +82,10 @@ public class SparkassenErrorHandler {
                 } else {
                     throw error.exception(httpResponseException);
                 }
+            }
+
+            if (paymentException != null) {
+                throw paymentException;
             }
         }
     }
@@ -123,6 +146,50 @@ public class SparkassenErrorHandler {
         if (ErrorResponse.anyTppMessageMatchesPredicate(CONSENT_UNKNOWN).test(errorResponse)) {
             return SessionError.SESSION_EXPIRED;
         }
+        return null;
+    }
+
+    private static AgentError handleGeneralContextErrors(ErrorResponse errorResponse) {
+        if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.INCORRECT_TAN)
+                .test(errorResponse)) {
+            return LoginError.INCORRECT_CHALLENGE_RESPONSE;
+        }
+        if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.ENTER_LOGIN_AND_PIN)
+                .test(errorResponse)) {
+            return AuthorizationError.UNAUTHORIZED;
+        }
+
+        return null;
+    }
+
+    private static PaymentException handlePaymentContextErrors(
+            ErrorResponse errorResponse, HttpResponseException exception) {
+        if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.JOB_NOT_EXECUTED_DUPLICATE)
+                .test(errorResponse)) {
+            return new DuplicatePaymentException();
+        }
+        if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.NO_ORDER_AUTHORIZATION)
+                .test(errorResponse)) {
+            return new PaymentAuthorizationException(exception);
+        }
+        if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.JOB_NOT_EXECUTED)
+                .test(errorResponse)) {
+            return new PaymentRejectedException(exception);
+        }
+        if (ErrorResponse.anyTppMessageMatchesPredicate(
+                        SparkassenKnownErrors.PAYMENT_STATUS_UNKNOWN)
+                .test(errorResponse)) {
+            return new PaymentAuthorizationException(exception);
+        }
+        if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.PAYMENT_LIMIT_EXCEEDED)
+                .test(errorResponse)) {
+            return PaymentRejectedException.tooManyTransactions();
+        }
+        if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.ORDER_NOT_EXECUTED)
+                .test(errorResponse)) {
+            return new InsufficientFundsException();
+        }
+
         return null;
     }
 }

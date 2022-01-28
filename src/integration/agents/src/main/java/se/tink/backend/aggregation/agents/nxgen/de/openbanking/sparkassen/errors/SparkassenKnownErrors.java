@@ -15,6 +15,19 @@ public class SparkassenKnownErrors {
         static final String PLEASE_CHANGE_PIN = "Bitte führen Sie eine PIN-Änderung durch.";
         static final String CUSTOMER_NOT_FOUND =
                 "9070- Der Auftrag wurde nicht ausgeführt. - 9931- Anmeldename oder PIN ist falsch.";
+
+        static final String JOB_NOT_EXECUTED = "9010- Der Auftrag wurde nicht ausgeführt";
+        static final String JOB_NOT_EXECUTED_DUPLICATE =
+                "9010- Der Auftrag wurde nicht ausgeführt. - 9390- Auftrag wegen Doppeleinreichung abgelehnt. - 3900- Ggf neuen Auftrag mit ge?ndertem Verwendungszweck einreichen";
+        static final String INCORRECT_TAN = "9941- Die eingegebene TAN ist falsch";
+        static final String PAYMENT_LIMIT_EXCEEDED =
+                "9010- Auftrag führt zu Überschreitung des vereinbarten ZV-Tageslimits";
+        static final String NO_ORDER_AUTHORIZATION =
+                "9370- Es ist keine Auftragsberechtigung vorhanden";
+        static final String ORDER_NOT_EXECUTED =
+                "9010- Der Auftrag wurde nicht ausgeführt. - 3909- Bitte wenden Sie sich an Ihren Berater";
+        static final String ENTER_LOGIN_AND_PIN =
+                "Bitte geben Sie Ihren Anmeldenamen/Legitimations-ID und Ihre PIN ein.";
     }
 
     private static final String FORMAT_ERROR = "FORMAT_ERROR";

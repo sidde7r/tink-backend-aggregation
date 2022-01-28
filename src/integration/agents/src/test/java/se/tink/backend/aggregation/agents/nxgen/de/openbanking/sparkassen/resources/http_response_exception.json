@@ -1,0 +1,19 @@
+{
+    "scaStatus": "failed",
+    "_links": {
+        "scaStatus": {
+            "href": "https://tink-test.de:8443/tink-env/xs2a-api/v1/payments/sepa-credit-transfers/test-test-test/authorisations/test-authorisation"
+        },
+        "startAuthorisationWithPsuAuthentication": {
+            "href": "https://tink-test.de:8443/fixs2aop-env/xs2a-api/v1/payments/sepa-credit-transfers/test-authorisation/authorisations"
+        }
+    },
+    "tppMessages": [
+        {
+            "category": "ERROR",
+            "code": "SCA_INVALID",
+            "text": "TEST"
+        }
+    ],
+    "psuMessage": "PSU_MESSAGE"
+}

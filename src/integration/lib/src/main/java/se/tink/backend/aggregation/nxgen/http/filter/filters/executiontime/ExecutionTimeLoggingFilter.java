@@ -33,10 +33,10 @@ public class ExecutionTimeLoggingFilter extends Filter {
                         .apply(httpRequest);
         if (executionDetails.shouldBeLogged()) {
             log.info(
-                    "Request with url `{}` has exceeded the time of execution [{}ms execution time | {}ms threshold].",
-                    httpRequest.getUrl(),
+                    "[ExecutionTimeLoggingFilter] {}ms exceeded: {}ms  {}",
+                    executionDetails.getThreshold(),
                     executionDetails.getExecutionTime(),
-                    executionDetails.getThreshold());
+                    httpRequest.getUrl());
         }
         return executionDetails.getResponse();
     }

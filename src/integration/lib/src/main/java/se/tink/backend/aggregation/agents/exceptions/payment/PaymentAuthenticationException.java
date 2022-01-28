@@ -9,6 +9,10 @@ public class PaymentAuthenticationException extends PaymentException {
         super(DEFAULT_MESSAGE, internalStatus);
     }
 
+    public PaymentAuthenticationException(String message, InternalStatus internalStatus) {
+        super(message, internalStatus);
+    }
+
     public PaymentAuthenticationException(String message, Throwable cause) {
         super(message, cause);
     }
