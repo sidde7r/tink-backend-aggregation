@@ -1,0 +1,9 @@
+{
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "PAYMENT_FAILED",
+      "text": "9210:Die Empfängerbank bietet den Empfang von Echtzeitüberweisungen aktuell nicht an."
+    }
+  ]
+}

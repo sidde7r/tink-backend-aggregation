@@ -9,8 +9,6 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagErrorHandler.ErrorSource;
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
@@ -25,7 +23,7 @@ public class DegussabankErrorHandlerTest {
     @Test
     @Parameters
     public void handleErrorShouldThrowExpectedError(
-            String fileSource, ErrorSource errorSource, AgentError expectedError) {
+            String fileSource, ErrorSource errorSource, RuntimeException runtimeException) {
         // given
         HttpResponseException httpResponseException = mockHttpResponseException(fileSource);
         // when
@@ -33,9 +31,8 @@ public class DegussabankErrorHandlerTest {
                 catchThrowable(() -> errorHandler.handleError(httpResponseException, errorSource));
         // then
         assertThat(thrown)
-                .isInstanceOf(AgentException.class)
-                .extracting("error")
-                .isEqualTo(expectedError);
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining(runtimeException.getMessage());
     }
 
     private Object[] parametersForHandleErrorShouldThrowExpectedError() {
@@ -43,12 +40,12 @@ public class DegussabankErrorHandlerTest {
             new Object[] {
                 TestDataReader.INCORRECT_CREDENTIALS,
                 ErrorSource.AUTHORISATION_USERNAME_PASSWORD,
-                LoginError.INCORRECT_CREDENTIALS
+                LoginError.INCORRECT_CREDENTIALS.exception()
             },
             new Object[] {
                 TestDataReader.INCORRECT_CHALLENGE_RESPONSE,
                 ErrorSource.OTP_STEP,
-                LoginError.INCORRECT_CHALLENGE_RESPONSE
+                LoginError.INCORRECT_CHALLENGE_RESPONSE.exception()
             },
         };
     }

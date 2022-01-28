@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.TppMessage;
@@ -14,41 +13,51 @@ public abstract class BankverlagErrorHandler {
 
     public enum ErrorSource {
         AUTHORISATION_USERNAME_PASSWORD,
-        OTP_STEP
+        SELECT_AUTHORIZATION_METHOD,
+        OTP_STEP,
+        GET_AUTHORIZATION_STATUS
     }
 
     public void handleError(HttpResponseException httpResponseException, ErrorSource errorSource) {
         ErrorResponse.fromHttpException(httpResponseException)
-                .flatMap(errorResponse -> findErrorForResponse(errorResponse, errorSource))
+                .flatMap(
+                        errorResponse ->
+                                findErrorForResponse(
+                                        errorResponse, errorSource, httpResponseException))
                 .ifPresent(
-                        x -> {
-                            throw x.exception(httpResponseException);
+                        exception -> {
+                            throw exception;
                         });
     }
 
-    private Optional<AgentError> findErrorForResponse(
-            ErrorResponse errorResponse, ErrorSource errorSource) {
+    protected Optional<RuntimeException> findErrorForResponse(
+            ErrorResponse errorResponse,
+            ErrorSource errorSource,
+            HttpResponseException httpResponseException) {
         if (errorSource == ErrorSource.AUTHORISATION_USERNAME_PASSWORD) {
-            return handleUsernamePasswordErrors(errorResponse);
+            return handleUsernamePasswordErrors(errorResponse, httpResponseException);
         }
         if (errorSource == ErrorSource.OTP_STEP) {
-            return handleOtpErrors(errorResponse);
+            return handleOtpErrors(errorResponse, httpResponseException);
         }
         return Optional.empty();
     }
 
-    protected Optional<AgentError> handleUsernamePasswordErrors(ErrorResponse errorResponse) {
+    protected Optional<RuntimeException> handleUsernamePasswordErrors(
+            ErrorResponse errorResponse, HttpResponseException httpResponseException) {
         if (ErrorResponse.anyTppMessageMatchesPredicate(PSU_CREDENTIALS_INVALID)
                 .test(errorResponse)) {
-            return Optional.of(LoginError.INCORRECT_CREDENTIALS);
+            return Optional.of(LoginError.INCORRECT_CREDENTIALS.exception(httpResponseException));
         }
         return Optional.empty();
     }
 
-    protected Optional<AgentError> handleOtpErrors(ErrorResponse errorResponse) {
+    protected Optional<RuntimeException> handleOtpErrors(
+            ErrorResponse errorResponse, HttpResponseException httpResponseException) {
         if (ErrorResponse.anyTppMessageMatchesPredicate(PSU_CREDENTIALS_INVALID)
                 .test(errorResponse)) {
-            return Optional.of(LoginError.INCORRECT_CHALLENGE_RESPONSE);
+            return Optional.of(
+                    LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(httpResponseException));
         }
         return Optional.empty();
     }

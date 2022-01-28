@@ -1,0 +1,15 @@
+{
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "PAYMENT_FAILED",
+      "text": "9380:Berechtigung reicht zur Ausführung des Auftrags nicht aus."
+    },
+    {
+      "category": "ERROR",
+      "code": "PAYMENT_FAILED",
+      "text": "3999:***Wir haben Rückfragen zum Auftrag. Bitte rufen Sie uns an: 0211-56156096.***"
+    }
+  ]
+}
+
