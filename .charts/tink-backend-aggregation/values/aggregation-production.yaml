@@ -502,7 +502,8 @@ clients:
     aggregatorIdentifier: "OpenWrks MyBudget"
 
 eidasProxy:
-  useEidasProxyQsealcSignerHttpClient: false
+  useEidasProxyQsealcSignerHttpClient: true
+  eidasProxyQsealcSignerHttpClientRate: "0.01"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
