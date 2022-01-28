@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.session.Imag
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -63,7 +62,7 @@ public final class ImaginBankAgent extends NextGenerationAgent
         super(componentProvider);
         configureHttpClient(client);
         imaginBankSessionStorage = new ImaginBankSessionStorage(sessionStorage);
-        apiClient = new ImaginBankApiClient(client);
+        apiClient = new ImaginBankApiClient(client, persistentStorage, imaginBankSessionStorage);
 
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -80,8 +79,8 @@ public final class ImaginBankAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new ImaginBankPasswordAuthenticator(apiClient, imaginBankSessionStorage));
+        return new ImaginBankPasswordAuthenticator(
+                apiClient, imaginBankSessionStorage, supplementalInformationHelper);
     }
 
     @Override

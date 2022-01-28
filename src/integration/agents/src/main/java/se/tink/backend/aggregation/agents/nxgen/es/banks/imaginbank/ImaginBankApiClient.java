@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.Storage.APP_INSTALLATION_ID;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.Storage.USER_AGENT_ID;
+
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +18,9 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.EnrollmentResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.EnrollmentScaRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.ImaginSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginResponse;
@@ -31,12 +37,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.rpc.ImaginBankErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.utils.ImaginBankRegistrationDataGenerator;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
 public class ImaginBankApiClient {
@@ -44,22 +52,30 @@ public class ImaginBankApiClient {
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TinkHttpClient client;
+    private PersistentStorage persistentStorage;
+    private ImaginBankSessionStorage imaginBankSessionStorage;
 
-    public ImaginBankApiClient(TinkHttpClient client) {
+    public ImaginBankApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            ImaginBankSessionStorage imaginBankSessionStorage) {
         this.client = client;
+        this.persistentStorage = persistentStorage;
+        this.imaginBankSessionStorage = imaginBankSessionStorage;
     }
 
     public SessionResponse initializeSession(String username) {
 
-        ImaginSessionRequest request = new ImaginSessionRequest(username, new SessionRequest());
+        ImaginSessionRequest request =
+                new ImaginSessionRequest(username, new SessionRequest(retrieveAppInstallationId()));
 
-        return createRequest(ImaginBankConstants.Urls.INIT_LOGIN)
+        return createPostRequest(ImaginBankConstants.Urls.INIT_LOGIN)
                 .post(SessionResponse.class, request);
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws LoginException {
         try {
-            return createRequest(ImaginBankConstants.Urls.SUBMIT_LOGIN)
+            return createPostRequest(ImaginBankConstants.Urls.SUBMIT_LOGIN)
                     .post(LoginResponse.class, loginRequest);
 
         } catch (HttpResponseException e) {
@@ -70,6 +86,8 @@ public class ImaginBankApiClient {
                     throw AuthorizationError.ACCOUNT_BLOCKED.exception();
                 } else if (errorResponse.isIdentificationIncorrect()) {
                     throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+                } else if (errorResponse.isAccessBanned()) {
+                    throw LoginError.NOT_SUPPORTED.exception();
                 }
             }
             log.info(
@@ -81,7 +99,7 @@ public class ImaginBankApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-        return createRequest(
+        return createGetRequest(
                         ImaginBankConstants.Urls.FETCH_ACCOUNTS.queryParam(
                                 ImaginBankConstants.QueryParams.FROM_BEGIN, "true"))
                 .get(AccountsResponse.class);
@@ -90,7 +108,7 @@ public class ImaginBankApiClient {
     public AccountTransactionResponse fetchNextAccountTransactions(
             String accountReference, boolean fromBegin) {
 
-        return createRequest(ImaginBankConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
+        return createGetRequest(ImaginBankConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
                 .queryParam(ImaginBankConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
                 .queryParam(ImaginBankConstants.QueryParams.ACCOUNT_NUMBER, accountReference)
                 .get(AccountTransactionResponse.class);
@@ -99,7 +117,7 @@ public class ImaginBankApiClient {
     public void initiateCardFetching() {
         try {
             String initCardsResponse =
-                    createRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
+                    createPostRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
                             .post(String.class, "{}");
             logger.info("Initiated card fetching {}", initCardsResponse);
         } catch (HttpResponseException e) {
@@ -118,7 +136,7 @@ public class ImaginBankApiClient {
     }
 
     public CardsResponse fetchCards() {
-        return createRequest(
+        return createGetRequest(
                         ImaginBankConstants.Urls.FETCH_CARDS
                                 .queryParam(
                                         ImaginBankConstants.QueryParams.INITIALIZED_BOXES,
@@ -142,7 +160,7 @@ public class ImaginBankApiClient {
     }
 
     private ListHoldersResponse fetchHolderList(String accountReference) {
-        return createRequest(ImaginBankConstants.Urls.HOLDERS_LIST)
+        return createGetRequest(ImaginBankConstants.Urls.HOLDERS_LIST)
                 .queryParam(ImaginBankConstants.QueryParams.FROM_BEGIN, "true")
                 .queryParam(ImaginBankConstants.QueryParams.ACCOUNT_NUMBER, accountReference)
                 .get(ListHoldersResponse.class);
@@ -154,19 +172,19 @@ public class ImaginBankApiClient {
                 CardTransactionsRequest.createCardTransactionsRequest(
                         moreData, cardKey, fromDate, toDate);
 
-        return createRequest(ImaginBankConstants.Urls.FETCH_CARD_TRANSACTIONS)
+        return createPostRequest(ImaginBankConstants.Urls.FETCH_CARD_TRANSACTIONS)
                 .post(CardTransactionsResponse.class, request);
     }
 
     public void logout() {
-        createRequest(ImaginBankConstants.Urls.LOGOUT).post();
+        createPostRequest(ImaginBankConstants.Urls.LOGOUT).post();
     }
 
     public boolean isAlive() {
 
         try {
 
-            createRequest(ImaginBankConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
+            createGetRequest(ImaginBankConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
         } catch (HttpResponseException e) {
 
             return false;
@@ -178,16 +196,71 @@ public class ImaginBankApiClient {
     public UserDataResponse fetchDni() {
         UserDataRequest request = new UserDataRequest(ImaginBankConstants.IdentityData.DNI);
 
-        return createRequest(ImaginBankConstants.Urls.USER_DATA)
+        return createPostRequest(ImaginBankConstants.Urls.USER_DATA)
                 .post(UserDataResponse.class, request);
     }
 
-    private RequestBuilder createRequest(URL url) {
+    public EnrollmentResponse initEnrollment() {
+        return createGetRequest(ImaginBankConstants.Urls.INIT_ENROLLMENT)
+                .get(EnrollmentResponse.class);
+    }
+
+    public EnrollmentResponse doPasswordEnrollment(String code) {
+        EnrollmentScaRequest enrollmentScaRequest = new EnrollmentScaRequest(code);
+        return createPostRequest(Urls.SCA_ENROLLMENT)
+                .post(EnrollmentResponse.class, enrollmentScaRequest);
+    }
+
+    public EnrollmentResponse doOtpEnrollment(String code) {
+        EnrollmentScaRequest enrollmentScaRequest = new EnrollmentScaRequest(code);
+        return createPostRequest(Urls.SCA_ENROLLMENT_RESULT)
+                .post(EnrollmentResponse.class, enrollmentScaRequest);
+    }
+
+    private RequestBuilder createPostRequest(URL url) {
         return client.request(url)
-                .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT_VALUE)
+                .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString().toUpperCase())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .acceptLanguage("en-us")
                 .accept(MediaType.WILDCARD);
+    }
+
+    private RequestBuilder createGetRequest(URL url) {
+        return client.request(url)
+                .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString().toUpperCase())
+                .acceptLanguage("en-us")
+                .accept(MediaType.WILDCARD);
+    }
+
+    private String retrieveUserAgent() {
+        String userAgent = persistentStorage.get(USER_AGENT_ID);
+        if (userAgent == null) {
+            userAgent =
+                    ImaginBankRegistrationDataGenerator.generateUserAgent(
+                            imaginBankSessionStorage.getUsername(), false);
+            if (StringUtils.isNotEmpty(imaginBankSessionStorage.getUsername())) {
+                persistentStorage.put(USER_AGENT_ID, userAgent);
+            }
+        }
+        return userAgent;
+    }
+
+    private String retrieveAppInstallationId() {
+        String appInstallationId = persistentStorage.get(APP_INSTALLATION_ID);
+        if (appInstallationId == null) {
+            appInstallationId =
+                    ImaginBankRegistrationDataGenerator.generateAppInstallationId(
+                            imaginBankSessionStorage.getUsername(), false);
+            if (StringUtils.isNotEmpty(imaginBankSessionStorage.getUsername())) {
+                persistentStorage.put(APP_INSTALLATION_ID, appInstallationId);
+            }
+        }
+        return appInstallationId;
+    }
+
+    public TinkHttpClient getClient() {
+        return client;
     }
 }

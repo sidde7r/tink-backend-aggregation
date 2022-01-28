@@ -45,6 +45,13 @@ public class ImaginBankConstants {
         private static final String USER_DATA_PATH = "login/loginDatosUsuario";
 
         private static final String HOLDERS_PATH = "cuentas/listaTitulares";
+
+        private static final String ENROLLMENT_INIT_PATH =
+                "login/enrolmentDispositivo/autorizacion/inicio";
+        private static final String ENROLLMENT_SCA_PATH = "autorizacion/autorizacionSCA";
+
+        private static final String ENROLLMENT_RESULT_PATH =
+                "login/enrolmentDispositivo/autorizacion/resultado";
     }
 
     public static class Urls {
@@ -70,16 +77,18 @@ public class ImaginBankConstants {
                 new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
 
         public static final URL USER_DATA = new URL(BASE + ApiService.USER_DATA_PATH);
+        public static final URL INIT_ENROLLMENT = new URL(BASE + ApiService.ENROLLMENT_INIT_PATH);
+        public static final URL SCA_ENROLLMENT = new URL(BASE + ApiService.ENROLLMENT_SCA_PATH);
+        public static final URL SCA_ENROLLMENT_RESULT =
+                new URL(BASE + ApiService.ENROLLMENT_RESULT_PATH);
     }
 
     public static class DefaultRequestParams {
         private DefaultRequestParams() {}
 
-        public static final String LANGUAGE_EN = "en";
+        public static final String LANGUAGE_ES = "es";
         public static final String ORIGIN = "13190";
         public static final String CHANNEL = "3";
-        public static final String INSTALATION_ID =
-                "eIAPPLPh9,3TtCd45WIsPRyd1SH2i01eQtLYP3I"; // App install ID
         public static final boolean VIRTUAL_KEYBOARD = false;
         public static final boolean DEMO = false;
         public static final boolean EXISTS_USER = true;
@@ -115,6 +124,7 @@ public class ImaginBankConstants {
         private ErrorCode() {}
 
         public static final List<String> ACCOUNT_BLOCKED = ImmutableList.of("0207", "0246");
+        public static final List<String> ACCESS_BANNED = ImmutableList.of("MENSAJE_ERROR_BLOQUEO");
         public static final List<String> INCORRECT_CREDENTIALS =
                 ImmutableList.of("0250", "ERLOG001");
         public static final String UNAVAILABLE = "001";
@@ -142,6 +152,9 @@ public class ImaginBankConstants {
         private Storage() {}
 
         public static final String LOGIN_RESPONSE = "loginResponse";
+        public static final String USER_AGENT_ID = "user-agent-id";
+        public static final String APP_INSTALLATION_ID = "app-installation-id";
+        public static final String USERNAME_ID = "username-id";
     }
 
     public static class IdentityData {
@@ -165,8 +178,6 @@ public class ImaginBankConstants {
     }
 
     public static final class HeaderValues {
-        public static final String USER_AGENT_VALUE =
-                "IMAGINBANK_eIAPPLPh9,3TtCd45WIsPRyd1SH2i01eQtLYP3I_IPHONE_4.9.2_Apple_iPhone9,3_13.2.2_ADAM";
         public static final String CACHE_CONTROL_VALUE = "no-cache";
         public static final String ACCEPT_ENCODING_VALUE = "gzip, deflate";
         public static final String HOST_VALUE = "api.imagin.com";
@@ -180,5 +191,31 @@ public class ImaginBankConstants {
         public static final String ACCEPT_ENCODING = "Accept-Encoding";
         public static final String HOST = "Host";
         public static final String CONNECTION = "keep-alive";
+    }
+
+    public static final class UserAgentValues {
+        public static final String UA_APP_NAME_PREFIX = "IMAGINBANK_";
+        public static final String UA_E_CONSTANT = "e";
+        public static final String UA_SHORT_COMPANY = "APPL";
+        public static final String UA_IPHONE_BRAND = "_IPHONE_";
+        public static final String UA_IPAD_BRAND = "_IPAD_";
+        public static final String UA_IPHONE_INDICATOR = "I";
+        public static final String UA_IPAD_INDICATOR = "P";
+        public static final String UA_COMPANY = "_Apple_";
+        public static final String UA_ADAM = "_ADAM";
+        public static final String UA_IOS_VERSION = "14.4.2";
+        public static final String UA_APP_VERSION = "4.13.2";
+        public static final String UA_SHORT_PHONE_MODEL = "h10,4";
+        public static final String UA_PHONE_MODEL = "iPhone10,4";
+
+        public static final String APP_NAME_AND_VARIANT = "es.lacaixa.mobile.imaginBank_iPhone";
+    }
+
+    public static final class EnrollmentValues {
+        public static final int MAX_ENROLLMENT_REQUESTS = 3;
+        public static final String VALIDATION_TYPE_SCA = "PIN1_SCA";
+        public static final String VALIDATION_TYPE_SMS = "OTPSMS";
+        public static final String ENROLLMENT_REQUIRED = "S";
+        public static final String ENROLLMENT_OK = "OK";
     }
 }

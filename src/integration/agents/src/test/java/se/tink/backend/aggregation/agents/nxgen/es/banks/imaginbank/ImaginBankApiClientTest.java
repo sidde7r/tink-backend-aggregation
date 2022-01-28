@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
@@ -43,11 +44,17 @@ public class ImaginBankApiClientTest {
 
     private ImaginBankApiClient imaginApiClient;
     private TinkHttpClient httpClientMock;
+    private PersistentStorage persistentStorage;
+    private ImaginBankSessionStorage imaginBankSessionStorage;
 
     @Before
     public void setUp() {
         httpClientMock = mock(TinkHttpClient.class);
-        imaginApiClient = new ImaginBankApiClient(httpClientMock);
+        persistentStorage = mock(PersistentStorage.class);
+        imaginBankSessionStorage = mock(ImaginBankSessionStorage.class);
+        imaginApiClient =
+                new ImaginBankApiClient(
+                        httpClientMock, persistentStorage, imaginBankSessionStorage);
     }
 
     @Test
