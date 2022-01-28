@@ -58,9 +58,9 @@ public class FinancialApiHeaderFilter extends Filter {
     private UnleashContext getUnleashContext() {
         String credentialsId = getCredentialsId();
         CompositeAgentContext agentContext = agentComponentProvider.getContext();
-        String providerName = Constants.Context.PROVIDER_NAME.name();
+        String providerName = Constants.Context.PROVIDER_NAME.getValue();
         String providerIdValue = agentContext.getProviderId();
-        String appIdName = Constants.Context.APP_ID.name();
+        String appIdName = Constants.Context.APP_ID.getValue();
         String appIdValue = agentContext.getAppId();
         return UnleashContext.builder()
                 .sessionId(credentialsId)
