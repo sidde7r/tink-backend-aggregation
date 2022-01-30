@@ -22,7 +22,7 @@ public class AuthenticationOptionsExtractorTest {
 
     @Before
     public void setUp() {
-        extractor = new AuthenticationOptionsExtractor(true);
+        extractor = new AuthenticationOptionsExtractor(false);
     }
 
     @Test
@@ -66,8 +66,8 @@ public class AuthenticationOptionsExtractorTest {
         ArrayList<AuthenticationOptionDto> authenticationOptionDtoList =
                 new ArrayList<>(authenticationOptionsGroupDto.getAuthenticationOptions());
         AuthenticationOptionDto authenticationOptionDto = authenticationOptionDtoList.get(0);
-        assertThat(authenticationOptionDto.getName())
-                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
+        assertThat(authenticationOptionDto.getDefinition())
+                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE);
         assertThat(authenticationOptionDto.isOverallDefault()).isTrue();
     }
 
@@ -93,17 +93,21 @@ public class AuthenticationOptionsExtractorTest {
                 authenticationOptionsGroupDtos.get(0);
         List<AuthenticationOptionDto> authenticationOptionDtoList =
                 authenticationOptionsGroupDtoList.getAuthenticationOptions().stream()
-                        .sorted(Comparator.comparing(AuthenticationOptionDto::getName))
+                        .sorted(
+                                Comparator.comparing(
+                                        authenticationOptionDto ->
+                                                authenticationOptionDto.getDefinition().name()))
                         .collect(Collectors.toList());
         assertThat(authenticationOptionDtoList.size()).isEqualTo(2);
 
         // assertions on the first of authentication options, including verification of fields
         AuthenticationOptionDto authenticationOptionDtoOther = authenticationOptionDtoList.get(0);
-        assertThat(authenticationOptionDtoOther.getName())
-                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE.name());
+        assertThat(authenticationOptionDtoOther.getDefinition())
+                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE);
 
         Set<String> fieldsNames =
                 authenticationOptionDtoOther.getFields().stream()
+                        .map(AuthenticationOptionField::getField)
                         .map(Field::getName)
                         .collect(Collectors.toSet());
         assertThat(fieldsNames)
@@ -111,8 +115,8 @@ public class AuthenticationOptionsExtractorTest {
 
         // assertions on the second authentication option
         AuthenticationOptionDto authenticationOptionDtoSame = authenticationOptionDtoList.get(1);
-        assertThat(authenticationOptionDtoSame.getName())
-                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE.name());
+        assertThat(authenticationOptionDtoSame.getDefinition())
+                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE);
         assertThat(authenticationOptionDtoSame.isOverallDefault()).isTrue();
     }
 
